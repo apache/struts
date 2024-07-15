@@ -19,18 +19,21 @@
 package com.opensymphony.xwork2.config;
 
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
  * ConfigurationUtil
- * 
+ *
  * @author Jason Carreira Created May 23, 2003 11:22:49 PM
  */
 public class ConfigurationUtil {
@@ -82,5 +85,13 @@ public class ConfigurationUtil {
         }
 
         return parents;
+    }
+
+    public static Set<Class<?>> getAllClassTypes(Class<?> clazz) {
+        HashSet<Class<?>> classes = new HashSet<>();
+        classes.add(clazz);
+        classes.addAll(ClassUtils.getAllSuperclasses(clazz));
+        classes.addAll(ClassUtils.getAllInterfaces(clazz));
+        return classes;
     }
 }

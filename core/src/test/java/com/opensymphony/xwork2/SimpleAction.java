@@ -21,7 +21,12 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.inject.Inject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -56,7 +61,7 @@ public class SimpleAction extends ActionSupport {
     private Map<String, String> existingMap = new HashMap<>();
 
     private List<TestBean> beanList;
-    
+
     public static boolean resultCalled;
 
 
@@ -64,11 +69,11 @@ public class SimpleAction extends ActionSupport {
         resultCalled = false;
         existingMap.put("existingKey", "value");
     }
-    
+
     public Map<String,String> getTheProtectedMap() {
         return protectedMap;
     }
-    
+
     protected Map<String,String> getTheSemiProtectedMap() {
         return protectedMap;
     }
@@ -80,7 +85,6 @@ public class SimpleAction extends ActionSupport {
     public Map<String,String> getTheExistingMap() {
         return existingMap;
     }
-
 
     public void setBar(int bar) {
         this.bar = bar;
@@ -187,15 +191,15 @@ public class SimpleAction extends ActionSupport {
     public ArrayList<String> getSomeList() {
         return someList;
     }
-    
+
     public String getIndexedProp(int index) {
     	return indexedProps.get(index);
     }
-    
+
     public void setIndexedProp(int index, String val) {
     	indexedProps.put(index, val);
     }
-    
+
 
     public void setThrowException(boolean   throwException) {
         this.throwException = throwException;
@@ -204,7 +208,7 @@ public class SimpleAction extends ActionSupport {
     public String commandMethod() throws Exception {
         return COMMAND_RETURN_CODE;
     }
-    
+
     public Result resultAction() throws Exception {
     	return new Result() {
             public Configuration configuration;
@@ -217,7 +221,7 @@ public class SimpleAction extends ActionSupport {
                 if (configuration != null)
                     resultCalled = true;
             }
-    	    
+
     	};
     }
 
@@ -251,7 +255,7 @@ public class SimpleAction extends ActionSupport {
 
         return SUCCESS;
     }
-    
+
     public long getLongFoo() {
         return longFoo;
     }

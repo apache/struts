@@ -27,7 +27,6 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -37,7 +36,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -595,6 +593,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -605,6 +604,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         tempDir.mkdirs();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         tempDir.delete();
         interceptor.destroy();

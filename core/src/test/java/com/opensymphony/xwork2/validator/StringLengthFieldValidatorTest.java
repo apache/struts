@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -220,6 +221,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return this.myField;
         }
 
+        @StrutsParameter
         public void setMyField(String myField) {
             this.myField = myField;
         }
@@ -228,6 +230,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return trimValue;
         }
 
+        @StrutsParameter
         public void setTrimValue(boolean trimValue) {
             this.trimValue = trimValue;
         }
@@ -236,6 +239,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return minLengthValue;
         }
 
+        @StrutsParameter
         public void setMinLengthValue(int minLengthValue) {
             this.minLengthValue = minLengthValue;
         }
@@ -244,6 +248,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return maxLengthValue;
         }
 
+        @StrutsParameter
         public void setMaxLengthValue(int maxLengthValue) {
             this.maxLengthValue = maxLengthValue;
         }
@@ -252,6 +257,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return strings;
         }
 
+        @StrutsParameter
         public void setStrings(String[] strings) {
             this.strings = strings;
         }
@@ -260,6 +266,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
             return stringCollection;
         }
 
+        @StrutsParameter
         public void setStringCollection(Collection<String> stringCollection) {
             this.stringCollection = stringCollection;
         }

@@ -87,6 +87,7 @@ public class AnnotationValidationAction extends ActionSupport {
             messageParams = {"one", "two", "three"})
     @VisitorFieldValidator(message = "Foo isn't valid!", key = "visitorfield.key", fieldName = "foo", appendPrefix = false,
             shortCircuit = true, messageParams = {"one", "two", "three"})
+    @Override
     public String execute() {
         return SUCCESS;
     }

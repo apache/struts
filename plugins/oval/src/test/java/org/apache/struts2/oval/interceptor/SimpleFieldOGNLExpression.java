@@ -18,8 +18,9 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import net.sf.oval.constraint.Assert;
 import com.opensymphony.xwork2.ActionSupport;
+import net.sf.oval.constraint.Assert;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SimpleFieldOGNLExpression extends ActionSupport {
 
@@ -30,6 +31,7 @@ public class SimpleFieldOGNLExpression extends ActionSupport {
         return name;
     }
 
+    @StrutsParameter
     public void setName(String name) {
         this.name = name;
     }

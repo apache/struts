@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.TestBean;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,15 +50,16 @@ public class VisitorValidatorTestAction extends ActionSupport {
         }
     }
 
-
     public void setBean(TestBean bean) {
         this.bean = bean;
     }
 
+    @StrutsParameter(depth = 2)
     public TestBean getBean() {
         return bean;
     }
 
+    @StrutsParameter
     public void setContext(String context) {
         this.context = context;
     }
@@ -70,6 +72,7 @@ public class VisitorValidatorTestAction extends ActionSupport {
         this.testBeanArray = testBeanArray;
     }
 
+    @StrutsParameter(depth = 3)
     public TestBean[] getTestBeanArray() {
         return testBeanArray;
     }
@@ -78,6 +81,7 @@ public class VisitorValidatorTestAction extends ActionSupport {
         this.testBeanList = testBeanList;
     }
 
+    @StrutsParameter(depth = 3)
     public List<TestBean> getTestBeanList() {
         return testBeanList;
     }
@@ -86,6 +90,7 @@ public class VisitorValidatorTestAction extends ActionSupport {
         return birthday;
     }
 
+    @StrutsParameter
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }

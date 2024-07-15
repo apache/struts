@@ -68,6 +68,7 @@ public class HttpMethodsTestAction extends ActionSupport implements HttpMethodAw
         return "onDelete";
     }
 
+    @Override
     public void setMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
@@ -76,6 +77,7 @@ public class HttpMethodsTestAction extends ActionSupport implements HttpMethodAw
         return httpMethod;
     }
 
+    @Override
     public String getBadRequestResultName() {
         return resultName;
     }

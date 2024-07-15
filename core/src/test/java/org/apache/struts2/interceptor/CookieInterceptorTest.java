@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
@@ -503,6 +504,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         private String cookie2;
         private String cookie3;
 
+        @Override
         public void setCookiesMap(Map<String, String> cookies) {
             this.cookies = cookies;
         }
@@ -515,6 +517,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie1;
         }
 
+        @StrutsParameter
         public void setCookie1(String cookie1) {
             this.cookie1 = cookie1;
         }
@@ -523,6 +526,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie2;
         }
 
+        @StrutsParameter
         public void setCookie2(String cookie2) {
             this.cookie2 = cookie2;
         }
@@ -531,6 +535,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie3;
         }
 
+        @StrutsParameter
         public void setCookie3(String cookie3) {
             this.cookie3 = cookie3;
         }
@@ -543,6 +548,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         private String cookie2;
         private String cookie3;
 
+        @Override
         public void withCookies(Map<String, String> cookies) {
             this.cookies = cookies;
         }
@@ -555,6 +561,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie1;
         }
 
+        @StrutsParameter
         public void setCookie1(String cookie1) {
             this.cookie1 = cookie1;
         }
@@ -563,6 +570,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie2;
         }
 
+        @StrutsParameter
         public void setCookie2(String cookie2) {
             this.cookie2 = cookie2;
         }
@@ -571,6 +579,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie3;
         }
 
+        @StrutsParameter
         public void setCookie3(String cookie3) {
             this.cookie3 = cookie3;
         }

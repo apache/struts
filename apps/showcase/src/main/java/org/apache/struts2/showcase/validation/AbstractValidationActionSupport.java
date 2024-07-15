@@ -30,6 +30,7 @@ public abstract class AbstractValidationActionSupport extends ActionSupport {
 		return "success";
 	}
 
+	@Override
 	public String input() throws Exception {
 		return "input";
 	}

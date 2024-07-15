@@ -20,6 +20,7 @@ package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
 import net.sf.oval.constraint.NotNull;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.oval.annotation.Profiles;
 
 public class FieldsWithProfiles extends ActionSupport {
@@ -46,6 +47,7 @@ public class FieldsWithProfiles extends ActionSupport {
         return firstName;
     }
 
+    @StrutsParameter
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -54,6 +56,7 @@ public class FieldsWithProfiles extends ActionSupport {
         return lastName;
     }
 
+    @StrutsParameter
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -62,6 +65,7 @@ public class FieldsWithProfiles extends ActionSupport {
         return middleName;
     }
 
+    @StrutsParameter
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }

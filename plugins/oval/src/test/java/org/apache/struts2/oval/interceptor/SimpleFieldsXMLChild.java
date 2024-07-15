@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 public class SimpleFieldsXMLChild extends SimpleFieldsXML {
     private String middleName;
 
@@ -25,6 +27,7 @@ public class SimpleFieldsXMLChild extends SimpleFieldsXML {
         return middleName;
     }
 
+    @StrutsParameter
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }

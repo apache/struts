@@ -19,9 +19,10 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
+import net.sf.oval.configuration.annotation.IsInvariant;
 import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.NotNull;
-import net.sf.oval.configuration.annotation.IsInvariant;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SimpleMethod extends ActionSupport {
     private String name;
@@ -33,6 +34,7 @@ public class SimpleMethod extends ActionSupport {
         return name;
     }
 
+    @StrutsParameter
     public void setSomeName(String name) {
         this.name = name;
     }

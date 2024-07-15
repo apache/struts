@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <p>
@@ -34,20 +34,23 @@ import com.opensymphony.xwork2.inject.Container;
  * </p>
  */
 public class ClasspathPackageProvider implements PackageProvider {
-     private ActionConfigBuilder actionConfigBuilder;
+    private final ActionConfigBuilder actionConfigBuilder;
 
     @Inject
     public ClasspathPackageProvider(Container container) {
         this.actionConfigBuilder = container.getInstance(ActionConfigBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_ACTION_CONFIG_BUILDER));
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
+    @Override
     public boolean needsReload() {
-        return actionConfigBuilder.needsReload(); 
+        return actionConfigBuilder.needsReload();
     }
 
+    @Override
     public void loadPackages() throws ConfigurationException {
         actionConfigBuilder.buildActionConfigs();
     }

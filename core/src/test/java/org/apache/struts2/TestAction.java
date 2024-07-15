@@ -184,6 +184,7 @@ public class TestAction extends ActionSupport {
         this.fooInt = fooInt;
     }
 
+    @Override
     public String execute() throws Exception {
         if (result == null) {
             result = Action.SUCCESS;

@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -83,6 +84,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     public static class MyAction extends ActionSupport {
         private Bar testBean2;
 
+        @StrutsParameter(depth = 1)
         public Bar getBarObj() {
             return testBean2;
         }
@@ -460,7 +462,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     /**
      * Test the {@link StrutsLocalizedTextProvider#findText(java.lang.Class, java.lang.String, java.util.Locale, java.lang.String, java.lang.Object[], com.opensymphony.xwork2.util.ValueStack) }
      * method for basic correctness.
-     * 
+     *
      * It is the version of the method that will search the class hierarchy resource bundles first, unless {@link StrutsLocalizedTextProvider#searchDefaultBundlesFirst}
      * is true (in which case it will search the default resource bundles first).  No matter the flag setting, it should search until it finds a match, or fails to find
      * a match and returns the default message parameter that was passed.
@@ -611,7 +613,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         /**
          * Attempt to force the resource bundles to be reloaded, even if configuration would otherwise prevent it.
-         * It will preserve the current reloadBundles state, attempt to force a reload and then restore the 
+         * It will preserve the current reloadBundles state, attempt to force a reload and then restore the
          * original reloadBundles value.
          */
         public void callReloadBundlesForceReload() {
@@ -625,9 +627,9 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         }
 
         /**
-         * Returns the value of the resource bundles reloaded state from the context, provided that one was 
+         * Returns the value of the resource bundles reloaded state from the context, provided that one was
          * previously set.  If no value is found, the result will be false (same as if bundles had not been reloaded).
-         * 
+         *
          * @return true if resource bundles reloaded indicator is true, false otherwise (including if value was never set).
          */
         public boolean getBundlesReloadedIndicatorValue() {

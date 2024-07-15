@@ -45,7 +45,6 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -149,9 +148,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
         Class<?> clazz = loadClass(className);
-        allowlistClasses.add(clazz);
-        allowlistClasses.addAll(ClassUtils.getAllSuperclasses(clazz));
-        allowlistClasses.addAll(ClassUtils.getAllInterfaces(clazz));
+        allowlistClasses.addAll(ConfigurationUtil.getAllClassTypes(clazz));
         providerAllowlist.registerAllowlist(this, allowlistClasses);
         return clazz;
     }

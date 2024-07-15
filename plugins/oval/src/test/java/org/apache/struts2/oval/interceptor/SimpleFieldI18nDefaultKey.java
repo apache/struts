@@ -20,8 +20,7 @@ package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
 import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.Length;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SimpleFieldI18nDefaultKey extends ActionSupport {
     @NotNull(message = "notnull.field")
@@ -31,6 +30,7 @@ public class SimpleFieldI18nDefaultKey extends ActionSupport {
         return name;
     }
 
+    @StrutsParameter
     public void setName(String name) {
         this.name = name;
     }

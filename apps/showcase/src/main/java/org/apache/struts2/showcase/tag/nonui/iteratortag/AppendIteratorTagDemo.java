@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.tag.nonui.iteratortag;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Validateable;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  *
@@ -47,25 +48,25 @@ public class AppendIteratorTagDemo extends ActionSupport implements Validateable
 		}
 	}
 
-
 	public String getIteratorValue1() {
 		return iteratorValue1;
 	}
 
+	@StrutsParameter
 	public void setIteratorValue1(String iteratorValue1) {
 		this.iteratorValue1 = iteratorValue1;
 	}
-
 
 	public String getIteratorValue2() {
 		return iteratorValue2;
 	}
 
+	@StrutsParameter
 	public void setIteratorValue2(String iteratorValue2) {
 		this.iteratorValue2 = iteratorValue2;
 	}
 
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}

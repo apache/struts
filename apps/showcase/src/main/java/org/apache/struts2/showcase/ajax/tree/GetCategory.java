@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.ajax.tree;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  */
@@ -28,6 +29,7 @@ public class GetCategory extends ActionSupport {
 	private long catId;
 	private Category category;
 
+	@Override
 	public String execute() throws Exception {
 		if (catId < 1) {
 			// force the root
@@ -39,6 +41,7 @@ public class GetCategory extends ActionSupport {
 		return SUCCESS;
 	}
 
+	@StrutsParameter
 	public void setCatId(long catId) {
 		this.catId = catId;
 	}

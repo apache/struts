@@ -23,6 +23,7 @@ package org.apache.struts2.showcase.source;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.struts2.action.ServletContextAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import jakarta.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -98,8 +99,9 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     /**
      * @param className the className to set
      */
+    @StrutsParameter
     public void setClassName(String className) {
-        if (className != null && className.trim().length() > 0) {
+        if (className != null && !className.trim().isEmpty()) {
             this.className = className;
         }
     }
@@ -107,8 +109,9 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     /**
      * @param config the config to set
      */
+    @StrutsParameter
     public void setConfig(String config) {
-        if (config != null && config.trim().length() > 0) {
+        if (config != null && !config.trim().isEmpty()) {
             this.config = config;
         }
     }
@@ -116,8 +119,9 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     /**
      * @param page the page to set
      */
+    @StrutsParameter
     public void setPage(String page) {
-        if (page != null && page.trim().length() > 0) {
+        if (page != null && !page.trim().isEmpty()) {
             this.page = page;
         }
     }
@@ -125,6 +129,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     /**
      * @param padding the padding to set
      */
+    @StrutsParameter
     public void setPadding(int padding) {
         this.padding = padding;
     }
@@ -222,6 +227,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
         return snippet;
     }
 
+    @Override
     public void withServletContext(ServletContext arg0) {
         this.servletContext = arg0;
     }

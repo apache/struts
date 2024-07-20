@@ -19,6 +19,7 @@
 package org.apache.struts2.showcase.actionchaining;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class ActionChain1 extends ActionSupport {
 
@@ -26,6 +27,7 @@ public class ActionChain1 extends ActionSupport {
 
 	private String actionChain1Property1 = "Property Set In Action Chain 1";
 
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}
@@ -34,6 +36,7 @@ public class ActionChain1 extends ActionSupport {
 		return actionChain1Property1;
 	}
 
+	@StrutsParameter
 	public void setActionChain1Property1(String actionChain1Property1) {
 		this.actionChain1Property1 = actionChain1Property1;
 	}

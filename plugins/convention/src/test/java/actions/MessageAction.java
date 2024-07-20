@@ -31,7 +31,7 @@ public class MessageAction extends ActionSupport {
         return message;
     }
 
-
+    @Override
     public String execute() {
         message = "Hello World";
         return SUCCESS;

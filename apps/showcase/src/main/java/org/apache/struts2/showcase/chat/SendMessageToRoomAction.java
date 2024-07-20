@@ -21,16 +21,16 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.SessionAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Map;
-
-import org.apache.struts2.action.SessionAware;
 
 public class SendMessageToRoomAction extends ActionSupport implements SessionAware {
 
 	private static final long serialVersionUID = 1L;
 
-	private ChatService chatService;
+	private final ChatService chatService;
 
 	private String roomName;
 	private String message;
@@ -45,6 +45,7 @@ public class SendMessageToRoomAction extends ActionSupport implements SessionAwa
 		return this.roomName;
 	}
 
+	@StrutsParameter
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
@@ -53,11 +54,12 @@ public class SendMessageToRoomAction extends ActionSupport implements SessionAwa
 		return this.message;
 	}
 
+	@StrutsParameter
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
-
+	@Override
 	public String execute() throws Exception {
 		User user = (User) session.get(ChatAuthenticationInterceptor.USER_SESSION_KEY);
 		try {

@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.ajax.tree.Category;
 
 //START SNIPPET: treeExampleDynamicJavaSelected
@@ -30,7 +31,7 @@ public class DynamicTreeSelectAction extends ActionSupport {
 	private long nodeId;
 	private Category currentCategory;
 
-
+	@StrutsParameter
 	public void setNodeId(long nodeId) {
 		this.nodeId = nodeId;
 	}

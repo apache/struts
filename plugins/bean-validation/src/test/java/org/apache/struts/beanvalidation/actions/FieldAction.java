@@ -19,6 +19,7 @@
 package org.apache.struts.beanvalidation.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class FieldAction extends ActionSupport {
@@ -30,6 +31,7 @@ public class FieldAction extends ActionSupport {
         return test;
     }
 
+    @StrutsParameter
     public void setTest(String test) {
         this.test = test;
     }

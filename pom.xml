@@ -114,9 +114,9 @@
         <byte-buddy.version>1.14.11</byte-buddy.version>
         <freemarker.version>2.3.33</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <jackson.version>2.17.1</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
         <log4j2.version>2.23.1</log4j2.version>
-        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>
         <sitemesh.version>2.5.0</sitemesh.version>

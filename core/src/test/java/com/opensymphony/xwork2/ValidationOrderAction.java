@@ -18,14 +18,16 @@
  */
 package com.opensymphony.xwork2;
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 /**
  * A sample action to test validation order.
- * 
+ *
  * @author tm_jee
  * @version $Date$ $Id$
  */
 public class ValidationOrderAction extends ActionSupport {
-	
+
 	private String username;
 	private String password;
 	private String confirmPassword;
@@ -38,9 +40,9 @@ public class ValidationOrderAction extends ActionSupport {
 	private String email;
 	private String website;
 	private String passwordHint;
-	
-	
-	
+
+
+
 	@Override
     public String execute() throws Exception {
 		return SUCCESS;
@@ -53,7 +55,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setCity(String city) {
 		this.city = city;
 	}
@@ -65,7 +67,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
@@ -77,7 +79,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setCountry(String country) {
 		this.country = country;
 	}
@@ -89,7 +91,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -101,7 +103,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -113,7 +115,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
@@ -125,7 +127,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -137,7 +139,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setPasswordHint(String passwordHint) {
 		this.passwordHint = passwordHint;
 	}
@@ -149,7 +151,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
@@ -161,7 +163,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setProvince(String province) {
 		this.province = province;
 	}
@@ -173,7 +175,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -185,7 +187,7 @@ public class ValidationOrderAction extends ActionSupport {
 	}
 
 
-
+	@StrutsParameter
 	public void setWebsite(String website) {
 		this.website = website;
 	}

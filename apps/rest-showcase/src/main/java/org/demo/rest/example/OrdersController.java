@@ -18,30 +18,30 @@
  */
 package org.demo.rest.example;
 
-import java.util.Collection;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.rest.DefaultHttpHeaders;
-import org.apache.struts2.rest.HttpHeaders;
-import org.apache.struts2.convention.annotation.Results;
-import org.apache.struts2.convention.annotation.Result;
-
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.ValidationAwareSupport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.rest.DefaultHttpHeaders;
+import org.apache.struts2.rest.HttpHeaders;
+
+import java.util.Collection;
 
 @Results({
     @Result(name="success", type="redirectAction", params = {"actionName" , "orders"})
 })
-public class OrdersController extends ValidationAwareSupport implements ModelDriven<Object>, Validateable{
+public class OrdersController extends ValidationAwareSupport implements ModelDriven<Object>, Validateable {
 
     private static final Logger log = LogManager.getLogger(OrdersController.class);
 
     private Order model = new Order();
     private String id;
     private Collection<Order> list;
-    private OrdersService ordersService = new OrdersService();
+    private final OrdersService ordersService = new OrdersService();
 
     // GET /orders/1
     public HttpHeaders show() {
@@ -54,7 +54,7 @@ public class OrdersController extends ValidationAwareSupport implements ModelDri
         return new DefaultHttpHeaders("index")
             .disableCaching();
     }
-    
+
     // GET /orders/1/edit
     public String edit() {
         return "edit";
@@ -101,13 +101,15 @@ public class OrdersController extends ValidationAwareSupport implements ModelDri
         }
     }
 
+    @StrutsParameter
     public void setId(String id) {
         if (id != null) {
             this.model = ordersService.get(id);
         }
         this.id = id;
     }
-    
+
+    @Override
     public Object getModel() {
         return (list != null ? list : model);
     }

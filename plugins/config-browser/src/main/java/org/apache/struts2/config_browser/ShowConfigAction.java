@@ -21,10 +21,11 @@ package org.apache.struts2.config_browser;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.beans.PropertyDescriptor;
 import java.util.Set;
@@ -43,8 +44,8 @@ public class ShowConfigAction extends ActionNamesAction {
     private Set<String> actionNames;
     private String detailView = "results";
     private PropertyDescriptor[] properties;
-    private static Logger LOG = LogManager.getLogger(ShowConfigAction.class);
-    
+    private static final Logger LOG = LogManager.getLogger(ShowConfigAction.class);
+
     private ObjectFactory objectFactory;
     private ReflectionProvider reflectionProvider;
 
@@ -52,23 +53,26 @@ public class ShowConfigAction extends ActionNamesAction {
         return detailView;
     }
 
+    @StrutsParameter
     public void setDetailView(String detailView) {
         this.detailView = detailView;
     }
 
+    @Override
     public Set<String> getActionNames() {
         return actionNames;
     }
 
+    @Override
     public String getNamespace() {
         return StringEscapeUtils.escapeHtml4(namespace);
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
-    
+
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
@@ -78,6 +82,7 @@ public class ShowConfigAction extends ActionNamesAction {
         return clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
     }
 
+    @StrutsParameter
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
@@ -86,6 +91,7 @@ public class ShowConfigAction extends ActionNamesAction {
         return actionName;
     }
 
+    @StrutsParameter
     public void setActionName(String actionName) {
         this.actionName = actionName;
     }
@@ -98,16 +104,17 @@ public class ShowConfigAction extends ActionNamesAction {
         return properties;
     }
 
+    @Override
     public String execute() throws Exception {
         super.execute();
         config = configHelper.getActionConfig(namespace, actionName);
-        actionNames = new TreeSet<String>(configHelper.getActionNames(namespace));
+        actionNames = new TreeSet<>(configHelper.getActionNames(namespace));
         try {
             Object action = objectFactory.buildAction(actionName, namespace, config, null);
             properties = reflectionProvider.getPropertyDescriptors(action);
         } catch (Exception e) {
-            LOG.error("Unable to get properties for action " + actionName, e);
-            addActionError("Unable to retrieve action properties: " + e.toString());
+            LOG.error("Unable to get properties for action {}", actionName, e);
+            addActionError("Unable to retrieve action properties: " + e);
         }
 
         if (hasErrors()) //super might have set some :)

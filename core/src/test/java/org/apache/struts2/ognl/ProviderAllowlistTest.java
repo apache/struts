@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,10 +38,10 @@ public class ProviderAllowlistTest {
     private ProviderAllowlist providerAllowlist;
 
     @Mock
-    private ConfigurationProvider provider1;
+    private Object key1;
 
     @Mock
-    private ConfigurationProvider provider2;
+    private Object key2;
 
     @Before
     public void setUp() throws Exception {
@@ -51,37 +50,37 @@ public class ProviderAllowlistTest {
 
     @Test
     public void registerAllowlist() {
-        providerAllowlist.registerAllowlist(provider1, new HashSet<>(asList(String.class, Integer.class)));
-        providerAllowlist.registerAllowlist(provider2, new HashSet<>(asList(Double.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key1, new HashSet<>(asList(String.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key2, new HashSet<>(asList(Double.class, Integer.class)));
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(String.class, Integer.class, Double.class);
     }
 
     @Test
     public void registerAllowlist_twice() {
-        providerAllowlist.registerAllowlist(provider1, new HashSet<>(asList(String.class, Integer.class)));
-        providerAllowlist.registerAllowlist(provider1, new HashSet<>(asList(Double.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key1, new HashSet<>(asList(String.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key1, new HashSet<>(asList(Double.class, Integer.class)));
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(Integer.class, Double.class);
     }
 
     @Test
     public void clearAllowlist() {
-        providerAllowlist.registerAllowlist(provider1, new HashSet<>(asList(String.class, Integer.class)));
-        providerAllowlist.registerAllowlist(provider2, new HashSet<>(asList(Double.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key1, new HashSet<>(asList(String.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key2, new HashSet<>(asList(Double.class, Integer.class)));
 
-        providerAllowlist.clearAllowlist(provider1);
+        providerAllowlist.clearAllowlist(key1);
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(Integer.class, Double.class);
     }
 
     @Test
     public void clearAllowlist_both() {
-        providerAllowlist.registerAllowlist(provider1, new HashSet<>(asList(String.class, Integer.class)));
-        providerAllowlist.registerAllowlist(provider2, new HashSet<>(asList(Double.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key1, new HashSet<>(asList(String.class, Integer.class)));
+        providerAllowlist.registerAllowlist(key2, new HashSet<>(asList(Double.class, Integer.class)));
 
-        providerAllowlist.clearAllowlist(provider1);
-        providerAllowlist.clearAllowlist(provider2);
+        providerAllowlist.clearAllowlist(key1);
+        providerAllowlist.clearAllowlist(key2);
 
         assertThat(providerAllowlist.getProviderAllowlist()).isEmpty();
     }

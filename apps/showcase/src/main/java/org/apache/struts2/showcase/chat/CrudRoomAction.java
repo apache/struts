@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class CrudRoomAction extends ActionSupport {
 
@@ -36,6 +37,7 @@ public class CrudRoomAction extends ActionSupport {
 		return description;
 	}
 
+	@StrutsParameter
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -44,6 +46,7 @@ public class CrudRoomAction extends ActionSupport {
 		return name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -23,10 +23,10 @@ package org.apache.struts2.showcase.person;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,13 +42,14 @@ public class EditPersonAction extends ActionSupport {
 
 	@Autowired
 	private PersonManager personManager;
-	private List<Person> persons = new ArrayList<Person>();
+	private List<Person> persons = new ArrayList<>();
 
 	/**
 	 * A default implementation that does nothing an returns "success".
 	 *
 	 * @return {@link #INPUT}
 	 */
+	@Override
 	public String execute() throws Exception {
 		persons.addAll(personManager.getPeople());
 		return INPUT;
@@ -68,6 +69,7 @@ public class EditPersonAction extends ActionSupport {
 		return "list";
 	}
 
+	@StrutsParameter(depth = 2)
 	public List<Person> getPersons() {
 		return persons;
 	}

@@ -28,11 +28,15 @@ import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import java.util.List;
 
 /**
- * Showcase action - mutiple file upload using array.
+ * Showcase action - multiple file upload using array.
  */
 public class MultipleFileUploadUsingArrayAction extends ActionSupport implements UploadedFilesAware {
 
     private List<UploadedFile> uploadedFiles;
+
+    public List<UploadedFile> getUpload() {
+        return this.uploadedFiles;
+    }
 
     public String upload() throws Exception {
         System.out.println("\n\n upload2");

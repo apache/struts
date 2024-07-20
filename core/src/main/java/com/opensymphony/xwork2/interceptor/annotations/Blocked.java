@@ -28,9 +28,11 @@ import java.lang.annotation.Target;
  * a HttpRequest parameter.
  *
  * @author martin.gilday
+ * @deprecated since 6.6.0, use {@code struts.parameters.requireAnnotations=true} to block all parameters globally.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface Blocked {
 
 }

@@ -72,7 +72,7 @@ public class JVMAction implements ServletRequestAware {
 		this.info = info;
 	}
 
-	public class ImportantInfo {
+	public static class ImportantInfo {
 		private String classpath;
 		private Properties systemProperties;
 

@@ -21,10 +21,10 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.SessionAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Map;
-
-import org.apache.struts2.action.SessionAware;
 
 public class ChatLoginAction extends ActionSupport implements SessionAware {
 
@@ -43,6 +43,7 @@ public class ChatLoginAction extends ActionSupport implements SessionAware {
 		return this.name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -36,7 +36,7 @@ import org.apache.struts2.dispatcher.DispatcherListener;
  * </p>
  */
 public class ClasspathConfigurationProvider implements ConfigurationProvider, DispatcherListener {
-    private ActionConfigBuilder actionConfigBuilder;
+    private final ActionConfigBuilder actionConfigBuilder;
     private boolean devMode;
     private boolean reload;
     private boolean listeningToDispatcher;
@@ -59,6 +59,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
     /**
      * Not used.
      */
+    @Override
     public void destroy() {
         if (this.listeningToDispatcher) {
             Dispatcher.removeDispatcherListener(this);
@@ -71,6 +72,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
      *
      * @param configuration configuration
      */
+    @Override
     public void init(Configuration configuration) {
         if (devMode && reload && !listeningToDispatcher) {
             //this is the only way I found to be able to get added to to ConfigurationProvider list
@@ -88,6 +90,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
      *
      * @throws ConfigurationException in case of configuration errors
      */
+    @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties locatableProperties)
             throws ConfigurationException {
     }
@@ -97,20 +100,24 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
      *
      * @throws ConfigurationException in case of configuration errors
      */
+    @Override
     public void loadPackages() throws ConfigurationException {
     }
 
     /**
      * @return true if devMode, reload and actionConfigBuilder.needsReload()
      */
+    @Override
     public boolean needsReload() {
         return devMode && reload && actionConfigBuilder.needsReload();
     }
 
+    @Override
     public void dispatcherInitialized(Dispatcher du) {
         du.getConfigurationManager().addContainerProvider(this);
     }
 
+    @Override
     public void dispatcherDestroyed(Dispatcher du) {
     }
 }

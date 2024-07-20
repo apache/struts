@@ -29,6 +29,7 @@ import jakarta.servlet.http.Cookie;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.action.CookiesAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
@@ -474,6 +475,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie1;
         }
 
+        @StrutsParameter
         public void setCookie1(String cookie1) {
             this.cookie1 = cookie1;
         }
@@ -482,6 +484,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie2;
         }
 
+        @StrutsParameter
         public void setCookie2(String cookie2) {
             this.cookie2 = cookie2;
         }
@@ -490,6 +493,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             return cookie3;
         }
 
+        @StrutsParameter
         public void setCookie3(String cookie3) {
             this.cookie3 = cookie3;
         }

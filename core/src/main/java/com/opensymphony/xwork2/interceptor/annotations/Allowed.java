@@ -28,9 +28,11 @@ import java.lang.annotation.Target;
  * a HttpRequest parameter.
  *
  * @author martin.gilday
+ * @deprecated since 6.6.0, use {@link org.apache.struts2.interceptor.parameter.StrutsParameter}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface Allowed {
 
 }

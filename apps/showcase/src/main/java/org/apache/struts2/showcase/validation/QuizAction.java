@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.validation;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  */
@@ -39,6 +40,7 @@ public class QuizAction extends ActionSupport {
 		return name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -47,6 +49,7 @@ public class QuizAction extends ActionSupport {
 		return age;
 	}
 
+	@StrutsParameter
 	public void setAge(int age) {
 		this.age = age;
 	}
@@ -55,6 +58,7 @@ public class QuizAction extends ActionSupport {
 		return answer;
 	}
 
+	@StrutsParameter
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}

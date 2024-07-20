@@ -50,15 +50,12 @@ public class ChatRoomAction extends ActionSupport {
     }
 
     public Callable<String> receiveNewMessages() throws Exception {
-        return new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                while (lastIndex >= messages.size()) {
-                    Thread.sleep(3000);
-                }
-                newMessages = messages.subList(lastIndex, messages.size());
-                return SUCCESS;
+        return () -> {
+            while (lastIndex >= messages.size()) {
+                Thread.sleep(3000);
             }
+            newMessages = messages.subList(lastIndex, messages.size());
+            return SUCCESS;
         };
     }
 

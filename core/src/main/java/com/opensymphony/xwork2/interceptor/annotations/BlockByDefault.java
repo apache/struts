@@ -31,9 +31,11 @@ import java.lang.annotation.Target;
  * To allow access to a field it must be annotated with {@link Allowed}
  *
  * @author martin.gilday
+ * @deprecated since 6.6.0, use {@code struts.parameters.requireAnnotations=true} to block all parameters globally.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Deprecated
 public @interface BlockByDefault {
 
 }

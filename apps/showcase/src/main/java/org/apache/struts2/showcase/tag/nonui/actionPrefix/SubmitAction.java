@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.tag.nonui.actionPrefix;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SubmitAction extends ActionSupport {
 
@@ -32,10 +33,12 @@ public class SubmitAction extends ActionSupport {
 		return text;
 	}
 
+	@StrutsParameter
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	@Override
 	public String execute() throws Exception {
 		return SUCCESS;
 	}

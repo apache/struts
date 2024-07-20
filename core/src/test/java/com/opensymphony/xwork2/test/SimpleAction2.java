@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.SimpleAction;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 
 /**
@@ -31,7 +32,7 @@ public class SimpleAction2 extends SimpleAction {
 
     private int count;
 
-
+    @StrutsParameter
     public void setCount(int count) {
         this.count = count;
     }

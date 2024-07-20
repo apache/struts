@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.validation;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  * @version $Date$ $Id$
@@ -30,6 +31,7 @@ public class SubmitApplication extends ActionSupport {
 	private String name;
 	private Integer age;
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -38,6 +40,7 @@ public class SubmitApplication extends ActionSupport {
 		return this.name;
 	}
 
+	@StrutsParameter
 	public void setAge(Integer age) {
 		this.age = age;
 	}

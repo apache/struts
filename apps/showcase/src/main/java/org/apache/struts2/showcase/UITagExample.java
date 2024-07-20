@@ -200,6 +200,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 		return bestFriend;
 	}
 
+	@StrutsParameter
 	public void setBestFriend(String bestFriend) {
 		this.bestFriend = bestFriend;
 	}
@@ -231,6 +232,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 		this.region = region;
 	}
 
+	@StrutsParameter
 	public void setPicture(File picture) {
 		this.picture = picture;
 	}
@@ -239,10 +241,12 @@ public class UITagExample extends ActionSupport implements Validateable {
 		return this.picture;
 	}
 
+	@StrutsParameter
 	public void setPictureContentType(String pictureContentType) {
 		this.pictureContentType = pictureContentType;
 	}
 
+	@StrutsParameter
 	public void setPictureFileName(String pictureFileName) {
 		this.pictureFileName = pictureFileName;
 	}
@@ -323,6 +327,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 			return this.description;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof VehicalType)) {
 				return false;
@@ -331,6 +336,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 			}
 		}
 
+		@Override
 		public int hashCode() {
 			return key.hashCode();
 		}
@@ -354,6 +360,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 			return this.description;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof VehicalSpecific)) {
 				return false;
@@ -362,6 +369,7 @@ public class UITagExample extends ActionSupport implements Validateable {
 			}
 		}
 
+		@Override
 		public int hashCode() {
 			return key.hashCode();
 		}

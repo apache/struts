@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.modelDriven;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import org.apache.struts2.showcase.modelDriven.model.Gangster;
 
 /**
  * Action to demonstrate simple model-driven feature of the framework.
@@ -30,14 +31,17 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
 	private static final long serialVersionUID = 1271130427666936592L;
 
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}
 
+	@Override
 	public String execute() throws Exception {
 		return SUCCESS;
 	}
 
+	@Override
 	public Object getModel() {
 		return new Gangster();
 	}

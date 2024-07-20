@@ -622,6 +622,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -633,6 +634,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertThat(tempDir.mkdirs()).isTrue();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         interceptor.destroy();
         super.tearDown();

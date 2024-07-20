@@ -26,6 +26,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.hibernate.validator.constraints.URL;
@@ -95,6 +96,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return dateValidatorField;
     }
 
+    @StrutsParameter
     public void setDateValidatorField(Date dateValidatorField) {
         this.dateValidatorField = dateValidatorField;
     }
@@ -103,6 +105,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return emailValidatorField;
     }
 
+    @StrutsParameter
     public void setEmailValidatorField(String emailValidatorField) {
         this.emailValidatorField = emailValidatorField;
     }
@@ -111,6 +114,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return integerValidatorField;
     }
 
+    @StrutsParameter
     public void setIntegerValidatorField(Integer integerValidatorField) {
         this.integerValidatorField = integerValidatorField;
     }
@@ -119,6 +123,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return regexValidatorField;
     }
 
+    @StrutsParameter
     public void setRegexValidatorField(String regexValidatorField) {
         this.regexValidatorField = regexValidatorField;
     }
@@ -127,6 +132,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return requiredStringValidatorField;
     }
 
+    @StrutsParameter
     public void setRequiredStringValidatorField(String requiredStringValidatorField) {
         this.requiredStringValidatorField = requiredStringValidatorField;
     }
@@ -135,6 +141,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return requiredValidatorField;
     }
 
+    @StrutsParameter
     public void setRequiredValidatorField(String requiredValidatorField) {
         this.requiredValidatorField = requiredValidatorField;
     }
@@ -143,6 +150,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return stringLengthValidatorField;
     }
 
+    @StrutsParameter
     public void setStringLengthValidatorField(String stringLengthValidatorField) {
         this.stringLengthValidatorField = stringLengthValidatorField;
     }
@@ -151,8 +159,8 @@ public class BeanValidationExampleAction extends ActionSupport {
         return fieldExpressionValidatorField;
     }
 
-    public void setFieldExpressionValidatorField(
-        String fieldExpressionValidatorField) {
+    @StrutsParameter
+    public void setFieldExpressionValidatorField(String fieldExpressionValidatorField) {
         this.fieldExpressionValidatorField = fieldExpressionValidatorField;
     }
 
@@ -160,6 +168,7 @@ public class BeanValidationExampleAction extends ActionSupport {
         return urlValidatorField;
     }
 
+    @StrutsParameter
     public void setUrlValidatorField(String urlValidatorField) {
         this.urlValidatorField = urlValidatorField;
     }

@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -75,11 +76,11 @@ public class MoreSelectsAction extends ActionSupport {
 		return list;
 	}
 
-
 	public List getPrioritisedFavouriteCartoonCharacters() {
 		return _prioritisedFavouriteCartoonCharacters;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCartoonCharacters(List prioritisedFavouriteCartoonCharacters) {
 		_prioritisedFavouriteCartoonCharacters = prioritisedFavouriteCartoonCharacters;
 	}
@@ -88,15 +89,16 @@ public class MoreSelectsAction extends ActionSupport {
 		return _prioritisedFavouriteCars;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCars(List prioritisedFavouriteCars) {
 		_prioritisedFavouriteCars = prioritisedFavouriteCars;
 	}
-
 
 	public List getPrioritisedFavouriteCountries() {
 		return _prioritisedFavouriteCountries;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCountries(List prioritisedFavouriteCountries) {
 		_prioritisedFavouriteCountries = prioritisedFavouriteCountries;
 	}
@@ -105,6 +107,7 @@ public class MoreSelectsAction extends ActionSupport {
 		return favouriteNumbers;
 	}
 
+	@StrutsParameter
 	public void setFavouriteNumbers(List favouriteNumbers) {
 		this.favouriteNumbers = favouriteNumbers;
 	}
@@ -129,12 +132,13 @@ public class MoreSelectsAction extends ActionSupport {
 		return favouriteCities;
 	}
 
+	@StrutsParameter
 	public void setFavouriteCities(List favouriteCities) {
 		this.favouriteCities = favouriteCities;
 	}
 
 	// actions
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}

@@ -18,7 +18,18 @@
  */
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.validator.annotations.*;
+import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
+import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.UrlValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,8 +60,6 @@ public class SimpleAnnotationAction extends ActionSupport {
 
     private String aliasSource;
     private String aliasDest;
-    
-    
 
     //~ Constructors ///////////////////////////////////////////////////////////
 
@@ -61,6 +70,7 @@ public class SimpleAnnotationAction extends ActionSupport {
 
     @RequiredFieldValidator(type = ValidatorType.FIELD, message = "You must enter a value for bar.")
     @IntRangeFieldValidator(type = ValidatorType.FIELD, min = "6", max = "10", message = "bar must be between ${min} and ${max}, current value is ${bar}.")
+    @StrutsParameter
     public void setBar(int bar) {
         this.bar = bar;
     }
@@ -70,6 +80,7 @@ public class SimpleAnnotationAction extends ActionSupport {
     }
 
     @IntRangeFieldValidator(min = "0", key = "baz.range", message = "Could not find baz.range!")
+    @StrutsParameter
     public void setBaz(int baz) {
         this.baz = baz;
     }
@@ -83,6 +94,7 @@ public class SimpleAnnotationAction extends ActionSupport {
     }
 
     @DoubleRangeFieldValidator(minInclusive = "0.123", key = "baz.range", message = "Could not find percentage.range!")
+    @StrutsParameter
     public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
@@ -91,10 +103,12 @@ public class SimpleAnnotationAction extends ActionSupport {
         this.bean = bean;
     }
 
+    @StrutsParameter(depth = 2)
     public AnnotatedTestBean getBean() {
         return bean;
     }
 
+    @StrutsParameter
     public void setBlah(String blah) {
         this.blah = blah;
     }
@@ -112,6 +126,7 @@ public class SimpleAnnotationAction extends ActionSupport {
     }
 
     @DateRangeFieldValidator(min = "12/22/2002", max = "12/25/2002", message = "The date must be between 12-22-2002 and 12-25-2002.")
+    @StrutsParameter
     public void setDate(Date date) {
         this.date = date;
     }
@@ -120,6 +135,7 @@ public class SimpleAnnotationAction extends ActionSupport {
         return date;
     }
 
+    @StrutsParameter
     public void setFoo(int foo) {
         this.foo = foo;
     }
@@ -128,6 +144,7 @@ public class SimpleAnnotationAction extends ActionSupport {
         return foo;
     }
 
+    @StrutsParameter
     public void setName(String name) {
         this.name = name;
     }
@@ -140,15 +157,16 @@ public class SimpleAnnotationAction extends ActionSupport {
         this.settings = settings;
     }
 
+    @StrutsParameter(depth = 1)
     public Properties getSettings() {
         return settings;
     }
-
 
     public String getAliasDest() {
         return aliasDest;
     }
 
+    @StrutsParameter
     public void setAliasDest(String aliasDest) {
         this.aliasDest = aliasDest;
     }
@@ -157,11 +175,12 @@ public class SimpleAnnotationAction extends ActionSupport {
         return aliasSource;
     }
 
+    @StrutsParameter
     public void setAliasSource(String aliasSource) {
         this.aliasSource = aliasSource;
     }
 
-    
+    @StrutsParameter
     public void setSomeList(ArrayList<String> someList) {
         this.someList = someList;
     }
@@ -170,6 +189,7 @@ public class SimpleAnnotationAction extends ActionSupport {
         return someList;
     }
 
+    @StrutsParameter
     public void setThrowException(boolean throwException) {
         this.throwException = throwException;
     }
@@ -186,7 +206,6 @@ public class SimpleAnnotationAction extends ActionSupport {
         return "OK";
     }
 
-    @Override
     @Validations(
             requiredFields =
                     {@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "customfield", message = "You must enter a value for field.")},
@@ -210,6 +229,7 @@ public class SimpleAnnotationAction extends ActionSupport {
                 @ExpressionValidator(expression = "foo &gt; 5", message = "Foo must be greater than Bar 5. Foo = ${foo}, Bar = ${bar}.")
     }
     )
+    @Override
     public String execute() throws Exception {
         if (foo == bar) {
             return ERROR;

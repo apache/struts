@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 
 /**
@@ -32,7 +33,7 @@ public class Bar extends ActionSupport {
     String title;
     int somethingElse;
 
-
+    @StrutsParameter
     public void setId(Long id) {
         this.id = id;
     }
@@ -41,6 +42,7 @@ public class Bar extends ActionSupport {
         return this.id;
     }
 
+    @StrutsParameter
     public void setSomethingElse(int somethingElse) {
         this.somethingElse = somethingElse;
     }
@@ -49,6 +51,7 @@ public class Bar extends ActionSupport {
         return somethingElse;
     }
 
+    @StrutsParameter
     public void setTitle(String title) {
         this.title = title;
     }

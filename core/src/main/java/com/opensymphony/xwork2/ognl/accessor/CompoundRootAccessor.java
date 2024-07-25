@@ -147,8 +147,7 @@ public class CompoundRootAccessor implements RootAccessor {
         CompoundRoot root = (CompoundRoot) target;
         OgnlContext ognlContext = (OgnlContext) context;
 
-        if (name instanceof Integer) {
-            Integer index = (Integer) name;
+        if (name instanceof Integer index) {
             return root.cutStack(index);
         } else if (name instanceof String) {
             if ("top".equals(name)) {

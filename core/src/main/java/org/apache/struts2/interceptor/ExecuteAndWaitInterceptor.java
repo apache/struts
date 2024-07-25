@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -36,7 +37,7 @@ import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import jakarta.servlet.http.HttpSession;
+import java.io.Serial;
 import java.util.Map;
 
 /**
@@ -177,6 +178,7 @@ import java.util.Map;
  */
 public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -2754639196749652512L;
 
     private static final Logger LOG = LogManager.getLogger(ExecuteAndWaitInterceptor.class);

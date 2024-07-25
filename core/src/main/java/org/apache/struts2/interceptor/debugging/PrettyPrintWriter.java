@@ -32,7 +32,7 @@ public class PrettyPrintWriter {
     private int depth;
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
-    private String newLine;
+    private final String newLine;
     private boolean escape = true;
 
     private static final char[] NULL = "&#x0;".toCharArray();

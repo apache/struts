@@ -26,8 +26,8 @@ import java.util.Map;
  * @since 2.1
  */
 public class NamespaceMatch {
-    private String pattern;
-    private Map<String,String> variables;
+    private final String pattern;
+    private final Map<String,String> variables;
 
     public NamespaceMatch(String pattern, Map<String, String> variables) {
         this.pattern = pattern;

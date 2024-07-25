@@ -45,8 +45,7 @@ public class UploadedFileConverter extends DefaultTypeConverter {
                 obj = value;
             }
 
-            if (obj instanceof UploadedFile) {
-                UploadedFile file = (UploadedFile) obj;
+            if (obj instanceof UploadedFile file) {
                 if (file.getContent() instanceof File) {
                     return file.getContent();
                 }

@@ -28,19 +28,24 @@ import java.util.Iterator;
 
 public class PropertiesConfigurationProvider implements ConfigurationProvider {
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
+    @Override
     public void loadPackages() throws ConfigurationException {
     }
 
+    @Override
     public boolean needsReload() {
         return false;
     }
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
         final DefaultSettings settings = new DefaultSettings();
         loadSettings(props, settings);

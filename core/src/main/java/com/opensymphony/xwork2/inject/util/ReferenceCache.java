@@ -22,7 +22,13 @@ package com.opensymphony.xwork2.inject.util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.concurrent.*;
+import java.io.Serial;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
 
@@ -34,6 +40,7 @@ import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
  */
 public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
 
+    @Serial
     private static final long serialVersionUID = 0;
 
     transient ConcurrentMap<Object, Future<V>> futures = new ConcurrentHashMap<>();
@@ -177,18 +184,19 @@ public abstract class ReferenceCache<K, V> extends ReferenceMap<K, V> {
             ReferenceType valueReferenceType,
             final Function<? super K, ? extends V> function) {
         ensureNotNull(function);
-        return new ReferenceCache<K, V>(keyReferenceType, valueReferenceType) {
+        return new ReferenceCache<>(keyReferenceType, valueReferenceType) {
             @Override
             protected V create(K key) {
                 return function.apply(key);
             }
 
+            @Serial
             private static final long serialVersionUID = 0;
         };
     }
 
-    private void readObject(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         this.futures = new ConcurrentHashMap<>();
         this.localFuture = new ThreadLocal<>();

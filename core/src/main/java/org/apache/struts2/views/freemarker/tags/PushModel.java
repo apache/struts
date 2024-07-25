@@ -34,6 +34,7 @@ public class PushModel extends TagModel {
         super(stack, req, res);
     }
 
+    @Override
     protected Component getBean() {
         return new Push(stack);
     }

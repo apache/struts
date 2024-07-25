@@ -44,9 +44,11 @@ public abstract class AbstractResourceStore implements ResourceStore {
         }
     }
 
+    @Override
     public void write(String pResourceName, byte[] pResourceData) {
     }
 
+    @Override
     public String toString() {
         return this.getClass().getName() + file.toString();
     }

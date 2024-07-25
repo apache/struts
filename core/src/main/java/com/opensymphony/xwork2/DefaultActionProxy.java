@@ -22,11 +22,12 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -40,6 +41,7 @@ import java.util.Locale;
  */
 public class DefaultActionProxy implements ActionProxy, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3293074152487468527L;
 
     private static final Logger LOG = LogManager.getLogger(DefaultActionProxy.class);
@@ -201,7 +203,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     protected String getErrorMessage() {
-        if ((namespace != null) && (namespace.trim().length() > 0)) {
+        if (namespace != null && !namespace.trim().isEmpty()) {
             return localizedTextProvider.findDefaultText(
                     "xwork.exception.missing-package-action",
                     Locale.getDefault(),

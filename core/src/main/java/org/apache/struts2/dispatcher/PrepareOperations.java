@@ -33,6 +33,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
  * Contains preparation operations for a request before execution
  */
@@ -185,11 +187,7 @@ public class PrepareOperations {
         if (mappingAttr == null || forceLookup) {
             try {
                 mapping = dispatcher.getActionMapper().getMapping(request, dispatcher.getConfigurationManager());
-                if (mapping != null) {
-                    request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
-                } else {
-                    request.setAttribute(STRUTS_ACTION_MAPPING_KEY, NO_ACTION_MAPPING);
-                }
+                request.setAttribute(STRUTS_ACTION_MAPPING_KEY, requireNonNullElse(mapping, NO_ACTION_MAPPING));
             } catch (Exception ex) {
                 if (dispatcher.isHandleException() || dispatcher.isDevMode()) {
                     dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);

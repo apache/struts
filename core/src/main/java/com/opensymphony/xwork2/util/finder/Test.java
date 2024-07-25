@@ -28,5 +28,5 @@ public interface Test<T> {
      * @param   t The resource object to test.
      * @return  True if the resource should be accepted, false otherwise.
      */
-    public boolean test(T t);
+    boolean test(T t);
 }

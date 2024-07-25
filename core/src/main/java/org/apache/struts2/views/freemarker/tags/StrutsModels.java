@@ -18,11 +18,9 @@
  */
 package org.apache.struts2.views.freemarker.tags;
 
+import com.opensymphony.xwork2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.components.Script;
 
 /**
  * Provides @s.tag access for various tags.

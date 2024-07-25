@@ -19,15 +19,16 @@
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.nio.charset.Charset;
 
 /**
@@ -60,6 +61,7 @@ public class PlainTextResult extends StrutsResultSupport {
 
     private static final Logger LOG = LogManager.getLogger(PlainTextResult.class);
 
+    @Serial
     private static final long serialVersionUID = 3633371605905583950L;
 
     private String charSet;
@@ -156,7 +158,6 @@ public class PlainTextResult extends StrutsResultSupport {
                 charset = Charset.forName(charSet);
             } else {
                 LOG.warn("charset [{}] is not recognized", charset);
-                charset = null;
             }
         }
         return charset;

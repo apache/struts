@@ -23,7 +23,15 @@ import com.opensymphony.xwork2.util.location.Location;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -85,6 +93,7 @@ public class ActionConfig extends Located implements Serializable {
         this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
         this.allowedMethods = orig.allowedMethods;
         this.location = orig.location;
+        this.strictMethodInvocation = orig.strictMethodInvocation;
     }
 
     public String getName() {
@@ -139,50 +148,49 @@ public class ActionConfig extends Located implements Serializable {
         return strictMethodInvocation;
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
 
-        if (!(o instanceof ActionConfig)) {
+        if (!(o instanceof ActionConfig actionConfig)) {
             return false;
         }
 
-        final ActionConfig actionConfig = (ActionConfig) o;
-
-        if ((className != null) ? (!className.equals(actionConfig.className)) : (actionConfig.className != null)) {
+        if (!Objects.equals(className, actionConfig.className)) {
             return false;
         }
 
-        if ((name != null) ? (!name.equals(actionConfig.name)) : (actionConfig.name != null)) {
+        if (!Objects.equals(name, actionConfig.name)) {
             return false;
         }
 
-        if ((interceptors != null) ? (!interceptors.equals(actionConfig.interceptors)) : (actionConfig.interceptors != null))
-        {
+        if (!Objects.equals(interceptors, actionConfig.interceptors)) {
             return false;
         }
 
-        if ((methodName != null) ? (!methodName.equals(actionConfig.methodName)) : (actionConfig.methodName != null)) {
+        if (!Objects.equals(methodName, actionConfig.methodName)) {
             return false;
         }
 
-        if ((params != null) ? (!params.equals(actionConfig.params)) : (actionConfig.params != null)) {
+        if (!Objects.equals(params, actionConfig.params)) {
             return false;
         }
 
-        if ((results != null) ? (!results.equals(actionConfig.results)) : (actionConfig.results != null)) {
+        if (!Objects.equals(results, actionConfig.results)) {
             return false;
         }
 
-        if ((allowedMethods != null) ? (!allowedMethods.equals(actionConfig.allowedMethods)) : (actionConfig.allowedMethods != null)) {
+        if (!Objects.equals(allowedMethods, actionConfig.allowedMethods)) {
             return false;
         }
 
         return true;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         int result;
         result = (interceptors != null ? interceptors.hashCode() : 0);
         result = 31 * result + (params != null ? params.hashCode() : 0);
@@ -196,7 +204,8 @@ public class ActionConfig extends Located implements Serializable {
         return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{ActionConfig ");
         sb.append(name).append(" (");
@@ -276,11 +285,13 @@ public class ActionConfig extends Located implements Serializable {
             return this;
         }
 
+        @Override
         public Builder addInterceptor(InterceptorMapping interceptor) {
             target.interceptors.add(interceptor);
             return this;
         }
 
+        @Override
         public Builder addInterceptors(List<InterceptorMapping> interceptors) {
             target.interceptors.addAll(interceptors);
             return this;

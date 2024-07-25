@@ -27,22 +27,22 @@ import java.util.Map;
 
 /**
  * Holds the necessary information for configuring an instance of a Validator.
- * 
- * 
+ *
+ *
  * @author James House
  * @author Rainer Hermanns
  * @author tm_jee
- * @author Martin Gilday 
+ * @author Martin Gilday
  */
 public class ValidatorConfig extends Located {
 
-    private String type;
+    private final String type;
     private Map<String, Object> params;
     private String defaultMessage;
     private String messageKey;
     private boolean shortCircuit;
     private String[] messageParams;
-    
+
     /**
      * @param validatorType validator type
      */
@@ -59,36 +59,36 @@ public class ValidatorConfig extends Located {
         this.shortCircuit = orig.shortCircuit;
         this.messageParams = orig.messageParams;
     }
-    
+
     /**
      * @return Returns the defaultMessage for the validator.
      */
     public String getDefaultMessage() {
         return defaultMessage;
     }
-    
+
     /**
      * @return Returns the messageKey for the validator.
      */
     public String getMessageKey() {
         return messageKey;
     }
-    
+
     /**
-     * @return Returns wether the shortCircuit flag should be set on the 
+     * @return Returns wether the shortCircuit flag should be set on the
      * validator.
      */
     public boolean isShortCircuit() {
         return shortCircuit;
     }
-    
+
     /**
-     * @return Returns the configured params to set on the validator. 
+     * @return Returns the configured params to set on the validator.
      */
     public Map<String, Object> getParams() {
         return params;
     }
-    
+
     /**
      * @return Returns the type of validator to configure.
      */
@@ -123,7 +123,7 @@ public class ValidatorConfig extends Located {
         }
 
         public Builder defaultMessage(String msg) {
-            if ((msg != null) && (msg.trim().length() > 0)) {
+            if (msg != null && !msg.trim().isEmpty()) {
                 target.defaultMessage = msg;
             }
             return this;
@@ -135,7 +135,7 @@ public class ValidatorConfig extends Located {
         }
 
         public Builder messageKey(String key) {
-            if ((key != null) && (key.trim().length() > 0)) {
+            if (key != null && !key.trim().isEmpty()) {
                 target.messageKey = key;
             }
             return this;

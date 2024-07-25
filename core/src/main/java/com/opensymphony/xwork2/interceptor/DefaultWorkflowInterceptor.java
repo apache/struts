@@ -26,10 +26,12 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Serial;
+
 /**
  * <!-- START SNIPPET: description -->
  * <p>
- * An interceptor that makes sure there are not validation, conversion or action errors before allowing the interceptor chain to continue. 
+ * An interceptor that makes sure there are not validation, conversion or action errors before allowing the interceptor chain to continue.
  * If a single FieldError or ActionError (including the ones replicated by the Message Store Interceptor in a redirection) is found, the INPUT result will be triggered.
  * <b>This interceptor does not perform any validation</b>.
  * </p>
@@ -132,6 +134,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = 7563014655616490865L;
 
     private static final Logger LOG = LogManager.getLogger(DefaultWorkflowInterceptor.class);
@@ -161,8 +164,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ValidationAware) {
-            ValidationAware validationAwareAction = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAwareAction) {
 
             if (validationAwareAction.hasErrors()) {
                 LOG.debug("Errors on action [{}], returning result name [{}]", validationAwareAction, inputResultName);

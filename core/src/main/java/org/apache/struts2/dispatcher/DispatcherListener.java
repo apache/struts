@@ -29,12 +29,12 @@ public interface DispatcherListener {
      *
      * @param du The dispatcher instance
      */
-    public void dispatcherInitialized(Dispatcher du);
+    void dispatcherInitialized(Dispatcher du);
 
     /**
      * Called when the dispatcher is destroyed
      *
      * @param du The dispatcher instance
      */
-    public void dispatcherDestroyed(Dispatcher du);
+    void dispatcherDestroyed(Dispatcher du);
 }

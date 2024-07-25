@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  *    <li>expression - The Ognl expression (must evaluate to a boolean) which is to be evalidated the stack</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  *    &lt;!-- Plain Validator Syntax --&gt;
@@ -44,7 +44,7 @@ import org.apache.logging.log4j.Logger;
  *           &lt;param name="expression"&gt;&lt;![CDATA[#myCreditLimit &gt; #myGirfriendCreditLimit]]&gt;&lt;/param&gt;
  *           &lt;message&gt;My credit limit should be MORE than my girlfriend&lt;/message&gt;
  *        &lt;validator&gt;
- *        
+ *
  *        &lt;!-- Field Validator Syntax --&gt;
  *        &lt;field name="myField"&gt;
  *            &lt;field-validator type="fieldexpression"&gt;
@@ -52,7 +52,7 @@ import org.apache.logging.log4j.Logger;
  *                &lt;message&gt;My credit limit should be MORE than my girlfriend&lt;/message&gt;
  *            &lt;/field-validator&gt;
  *        &lt;/field&gt;
- *        
+ *
  *    &lt;/vaidators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -85,7 +85,7 @@ public class FieldExpressionValidator extends FieldValidatorSupport {
             // let this pass, but it will be logged right below
         }
 
-        if ((obj != null) && (obj instanceof Boolean)) {
+        if (obj instanceof Boolean) {
             answer = (Boolean) obj;
         } else {
             LOG.warn("Got result of {} when trying to get Boolean.", obj);

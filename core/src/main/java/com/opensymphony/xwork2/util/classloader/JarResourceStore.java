@@ -21,7 +21,11 @@ package com.opensymphony.xwork2.util.classloader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,6 +39,7 @@ public class JarResourceStore extends AbstractResourceStore {
         super(file);
     }
 
+    @Override
     public byte[] read(String pResourceName) {
         InputStream in = null;
         try(ZipFile jarFile = new ZipFile(file)) {

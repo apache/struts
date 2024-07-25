@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -159,16 +158,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             ctx.getParameters().remove(DEBUG_PARAM);
             if (XML_MODE.equals(type)) {
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String result) {
-                            printContext();
-                        }
-                    });
+                        (inv1, result) -> printContext());
             } else if (CONSOLE_MODE.equals(type)) {
                 consoleEnabled = true;
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
+                        (inv12, actionResult) -> {
                             String xml = "";
                             if (enableXmlWithConsole) {
                                 StringWriter writer = new StringWriter();
@@ -186,13 +180,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                             result.setLocation("/org/apache/struts2/interceptor/debugging/console.ftl");
                             result.setParse(false);
                             try {
-                                result.execute(inv);
+                                result.execute(inv12);
                             } catch (Exception ex) {
                                 LOG.error("Unable to create debugging console", ex);
                             }
 
-                        }
-                    });
+                        });
             } else if (COMMAND_MODE.equals(type)) {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 if (stack == null) {
@@ -216,8 +209,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             } else if (BROWSER_MODE.equals(type)) {
                 actionOnly = true;
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
+                        (inv13, actionResult) -> {
                             String rootObjectExpression = getParameter(OBJECT_PARAM);
                             if (rootObjectExpression == null) {
                                 rootObjectExpression = "action";
@@ -243,13 +235,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                                 result.setFreemarkerManager(freemarkerManager);
                                 result.setContentType("text/html");
                                 result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
-                                result.execute(inv);
+                                result.execute(inv13);
                             } catch (Exception ex) {
                                 LOG.error("Unable to create debugging console", ex);
                             }
 
-                        }
-                    });
+                        });
             }
         }
         if (cont) {
@@ -366,8 +357,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.startNode(name);
 
         // It depends on the object and it's value what todo next:
-        if (bean instanceof Collection) {
-            Collection col = (Collection) bean;
+        if (bean instanceof Collection col) {
 
             // Iterate through components, and call ourselves to process
             // elements

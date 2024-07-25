@@ -41,7 +41,7 @@ public class OgnlLRUCache<K, V> implements OgnlCache<K, V> {
     public OgnlLRUCache(int evictionLimit, int initialCapacity, float loadFactor) {
         cacheEvictionLimit = new AtomicInteger(evictionLimit);
         // Access-order mode selected (order mode true in LinkedHashMap constructor).
-        ognlLRUCache = Collections.synchronizedMap(new LinkedHashMap<K, V>(initialCapacity, loadFactor, true) {
+        ognlLRUCache = Collections.synchronizedMap(new LinkedHashMap<>(initialCapacity, loadFactor, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
                 return size() > cacheEvictionLimit.get();

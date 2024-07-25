@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <code>InterceptorMapping</code>
@@ -32,8 +33,8 @@ import java.util.Map;
  */
 public class InterceptorMapping implements Serializable {
 
-    private String name;
-    private Interceptor interceptor;
+    private final String name;
+    private final Interceptor interceptor;
     private final Map<String, String> params;
 
     public InterceptorMapping(String name, Interceptor interceptor) {
@@ -65,9 +66,7 @@ public class InterceptorMapping implements Serializable {
 
         final InterceptorMapping that = (InterceptorMapping) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+        return Objects.equals(name, that.name);
     }
 
     @Override

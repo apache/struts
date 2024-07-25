@@ -228,10 +228,9 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         if (this == o) {
             return true;
         }
-        if (!(o instanceof XmlConfigurationProvider)) {
+        if (!(o instanceof XmlConfigurationProvider xmlConfigurationProvider)) {
             return false;
         }
-        XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
         return Objects.equals(configFileName, xmlConfigurationProvider.configFileName);
     }
 

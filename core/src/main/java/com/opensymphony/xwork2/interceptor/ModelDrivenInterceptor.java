@@ -88,8 +88,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ModelDriven) {
-            ModelDriven modelDriven = (ModelDriven) action;
+        if (action instanceof ModelDriven modelDriven) {
             ValueStack stack = invocation.getStack();
             Object model = modelDriven.getModel();
             if (model !=  null) {
@@ -106,7 +105,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
      * Refreshes the model instance on the value stack, if it has changed
      */
     protected static class RefreshModelBeforeResult implements PreResultListener {
-        private Object originalModel;
+        private final Object originalModel;
         protected ModelDriven action;
 
 

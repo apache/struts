@@ -73,10 +73,9 @@ public class MessageStorePreResultListener implements PreResultListener {
                 (MessageStoreInterceptor.AUTOMATIC_MODE.equalsIgnoreCase(interceptor.getOperationModel()) && isRedirect)) {
 
             Object action = invocation.getAction();
-            if (action instanceof ValidationAware) {
+            if (action instanceof ValidationAware validationAwareAction) {
                 LOG.debug("Storing action [{}] error/messages into session ", action);
 
-                ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(MessageStoreInterceptor.actionErrorsSessionKey, validationAwareAction.getActionErrors());
                 session.put(MessageStoreInterceptor.actionMessagesSessionKey, validationAwareAction.getActionMessages());
                 session.put(MessageStoreInterceptor.fieldErrorsSessionKey, validationAwareAction.getFieldErrors());

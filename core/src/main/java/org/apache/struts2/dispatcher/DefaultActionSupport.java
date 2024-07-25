@@ -18,18 +18,19 @@
  */
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.ActionSupport;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
-import com.opensymphony.xwork2.ActionSupport;
+import java.io.Serial;
 
 /**
  * A simple action support class that sets properties to be able to serve
  */
 public class DefaultActionSupport extends ActionSupport {
 
+    @Serial
     private static final long serialVersionUID = -2426166391283746095L;
 
     private String successResultValue;

@@ -87,9 +87,7 @@ public class ContainUtil {
             }
         } else if (obj1.toString().equals(obj2.toString())) {
             return true;
-        } else if (obj1.equals(obj2)) {
-            return true;
-        }
+        } else return obj1.equals(obj2);
 
         return false;
     }

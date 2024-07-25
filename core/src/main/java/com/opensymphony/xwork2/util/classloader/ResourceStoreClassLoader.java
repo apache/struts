@@ -85,13 +85,13 @@ public final class ResourceStoreClassLoader extends ClassLoader {
      * @param className the class name of for which the package information
      *                  is to be determined.
      */
-    protected void definePackage(String className){
+    private void definePackage(String className){
         int classIndex = className.lastIndexOf('.');
         if (classIndex == -1) {
             return;
         }
         String packageName = className.substring(0, classIndex);
-        if (getPackage(packageName) != null) {
+        if (getDefinedPackage(packageName) != null) {
             return;
         }
         definePackage(packageName, null, null, null, null, null, null, null);

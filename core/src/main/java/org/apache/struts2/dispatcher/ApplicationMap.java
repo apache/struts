@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.dispatcher;
 
+import jakarta.servlet.ServletContext;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-
-import jakarta.servlet.ServletContext;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of attributes and
@@ -34,6 +35,7 @@ import jakarta.servlet.ServletContext;
  */
 public class ApplicationMap extends AbstractMap<String, Object> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 9136809763083228202L;
 
     private final ServletContext context;

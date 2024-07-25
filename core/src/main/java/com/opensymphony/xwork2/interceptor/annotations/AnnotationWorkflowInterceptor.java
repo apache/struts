@@ -26,8 +26,6 @@ import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -117,15 +115,11 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
         invocation.addPreResultListener(this);
         List<Method> methods = new ArrayList<>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), Before.class,
                 true, true));
-        if (methods.size() > 0) {
+        if (!methods.isEmpty()) {
             // methods are only sorted by priority
-            Collections.sort(methods, new Comparator<Method>() {
-                public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, Before.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, Before.class, true,
-                            true).priority());
-                }
-            });
+            methods.sort((method1, method2) -> comparePriorities(
+                    MethodUtils.getAnnotation(method1, Before.class, true, true).priority(),
+                    MethodUtils.getAnnotation(method2, Before.class, true, true).priority()));
             for (Method m : methods) {
                 final String resultCode = (String) MethodUtils.invokeMethod(action, true, m.getName());
                 if (resultCode != null) {
@@ -138,18 +132,13 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
         String invocationResult = invocation.invoke();
 
         // invoke any @After methods
-        methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), After.class,
-                true, true));
+        methods = new ArrayList<>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), After.class, true, true));
 
-        if (methods.size() > 0) {
+        if (!methods.isEmpty()) {
             // methods are only sorted by priority
-            Collections.sort(methods, new Comparator<Method>() {
-                public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, After.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, After.class, true,
-                            true).priority());
-                }
-            });
+            methods.sort((method1, method2) -> comparePriorities(
+                    MethodUtils.getAnnotation(method1, After.class, true, true).priority(),
+                    MethodUtils.getAnnotation(method2, After.class, true, true).priority()));
             for (Method m : methods) {
                 MethodUtils.invokeMethod(action, true, m.getName());
             }
@@ -159,13 +148,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     }
 
     protected static int comparePriorities(int val1, int val2) {
-        if (val2 < val1) {
-            return -1;
-        } else if (val2 > val1) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(val2, val1);
     }
 
     /**
@@ -175,18 +158,14 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
      */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         Object action = invocation.getAction();
-        List<Method> methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(),
+        List<Method> methods = new ArrayList<>(MethodUtils.getMethodsListWithAnnotation(action.getClass(),
                 BeforeResult.class, true, true));
 
-        if (methods.size() > 0) {
+        if (!methods.isEmpty()) {
             // methods are only sorted by priority
-            Collections.sort(methods, new Comparator<Method>() {
-                public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, BeforeResult.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, BeforeResult.class,
-                            true, true).priority());
-                }
-            });
+            methods.sort((method1, method2) -> comparePriorities(
+                    MethodUtils.getAnnotation(method1, BeforeResult.class, true, true).priority(),
+                    MethodUtils.getAnnotation(method2, BeforeResult.class, true, true).priority()));
             for (Method m : methods) {
                 try {
                     MethodUtils.invokeMethod(action, true, m.getName());

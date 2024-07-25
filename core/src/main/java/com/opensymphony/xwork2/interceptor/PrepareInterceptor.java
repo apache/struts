@@ -20,9 +20,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Preparable;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
+import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -101,6 +100,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PrepareInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -5216969014510719786L;
 
     private final static String PREPARE_PREFIX = "prepare";

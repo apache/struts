@@ -18,6 +18,6 @@ package com.opensymphony.xwork2.ognl;
 /**
  * A proxy interface to be used with Struts DI mechanism
  */
-public interface BeanInfoCacheFactory<Key, Value> extends OgnlCacheFactory <Key, Value> {
+public interface BeanInfoCacheFactory<Key, Value> extends OgnlCacheFactory<Key, Value> {
 
 }

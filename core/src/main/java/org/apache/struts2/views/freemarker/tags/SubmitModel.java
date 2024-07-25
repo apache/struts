@@ -34,6 +34,7 @@ public class SubmitModel extends TagModel {
         super(stack, req, res);
     }
 
+    @Override
     protected Component getBean() {
         return new Submit(stack, req, res);
     }

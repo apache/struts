@@ -34,6 +34,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.url.QueryStringBuilder;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -82,6 +83,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_FOUND;
  */
 public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler, Redirectable {
 
+    @Serial
     private static final long serialVersionUID = 6316947346435301270L;
 
     private static final Logger LOG = LogManager.getLogger(ServletRedirectResult.class);
@@ -173,7 +175,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                     namespace = mapping.getNamespace();
                 }
 
-                if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {
+                if (namespace != null && !namespace.isEmpty() && !"/".equals(namespace)) {
                     finalLocation = namespace + "/" + finalLocation;
                 } else {
                     finalLocation = "/" + finalLocation;
@@ -181,7 +183,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             }
 
             // if the URL's are relative to the servlet context, append the servlet context path
-            if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
+            if (prependServletContext && request.getContextPath() != null && !request.getContextPath().isEmpty()) {
                 finalLocation = request.getContextPath() + finalLocation;
             }
         }

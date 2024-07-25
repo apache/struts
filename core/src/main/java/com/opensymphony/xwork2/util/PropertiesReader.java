@@ -18,7 +18,11 @@
  */
 package com.opensymphony.xwork2.util;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class PropertiesReader extends LineNumberReader {
     /**
      * Stores the comment lines for the currently processed property.
      */
-    private List<String> commentLines;
+    private final List<String> commentLines;
 
     /**
      * Stores the name of the last read property.
@@ -54,7 +58,7 @@ public class PropertiesReader extends LineNumberReader {
     /**
      * Stores the list delimiter character.
      */
-    private char delimiter;
+    private final char delimiter;
 
     /**
      * Constant for the supported comment characters.
@@ -100,7 +104,7 @@ public class PropertiesReader extends LineNumberReader {
      */
     public PropertiesReader(Reader reader, char listDelimiter) {
         super(reader);
-        commentLines = new ArrayList<String>();
+        commentLines = new ArrayList<>();
         delimiter = listDelimiter;
     }
 
@@ -115,7 +119,7 @@ public class PropertiesReader extends LineNumberReader {
     boolean isCommentLine(String line) {
         String s = line.trim();
         // blanc lines are also treated as comment lines
-        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
+        return s.isEmpty() || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
     }
 
     /**
@@ -335,7 +339,7 @@ public class PropertiesReader extends LineNumberReader {
         }
         int sz = str.length();
         StringBuilder out = new StringBuilder(sz);
-        StringBuffer unicode = new StringBuffer(UNICODE_LEN);
+        StringBuilder unicode = new StringBuilder(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++) {
@@ -475,7 +479,7 @@ public class PropertiesReader extends LineNumberReader {
             return;
         }
         int sz = str.length();
-        StringBuffer unicode = new StringBuffer(4);
+        StringBuilder unicode = new StringBuilder(4);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++) {

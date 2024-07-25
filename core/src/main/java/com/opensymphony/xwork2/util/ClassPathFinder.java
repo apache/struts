@@ -53,7 +53,7 @@ public class ClassPathFinder {
      */
     private PatternMatcher<int[]> patternMatcher = new WildcardHelper();
 
-    private Vector<String> compared = new Vector<>();
+    private final Vector<String> compared = new Vector<>();
 
     /**
      * @return the pattern in use
@@ -93,14 +93,14 @@ public class ClassPathFinder {
 
             // debug docker build for JDK 9+
             if (entryURI.getRawQuery() != null) {
-                throw new StrutsException("Currently URI with query component isn't supported: " + entryURI.toString());
+                throw new StrutsException("Currently URI with query component isn't supported: " + entryURI);
             }
 
             File entry = new File(entryURI);
             if (entry.isFile() && entry.toString().endsWith(".jar")) {
                 try(ZipInputStream zip = new ZipInputStream(new FileInputStream(entry))) {
                     for (ZipEntry zipEntry = zip.getNextEntry(); zipEntry != null; zipEntry = zip.getNextEntry()) {
-                        boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), zipEntry.getName(), compiledPattern);
+                        boolean doesMatch = patternMatcher.match(new HashMap<>(), zipEntry.getName(), compiledPattern);
                         if (doesMatch) {
                             matches.add(zipEntry.getName());
                         }
@@ -154,7 +154,7 @@ public class ClassPathFinder {
                     compared.add(entryToCheck);
                 }
 
-                boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), entryToCheck, compiledPattern);
+                boolean doesMatch = patternMatcher.match(new HashMap<>(), entryToCheck, compiledPattern);
                 if (doesMatch) {
                     matches.add(entryToCheck);
                 }

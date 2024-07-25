@@ -23,9 +23,15 @@ package com.opensymphony.xwork2.inject.util;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.ref.Reference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -58,6 +64,7 @@ import static com.opensymphony.xwork2.inject.util.ReferenceType.STRONG;
 @SuppressWarnings("unchecked")
 public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 0;
 
     transient ConcurrentMap<Object, Object> delegate;
@@ -87,7 +94,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
 
     V internalGet(K key) {
         Object valueReference = delegate.get(makeKeyReferenceAware(key));
-        return valueReference == null ? null : (V) dereferenceValue(valueReference);
+        return valueReference == null ? null : dereferenceValue(valueReference);
     }
 
     public V get(final Object key) {
@@ -99,7 +106,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
         ensureNotNull(key, value);
         Object keyReference = referenceKey(key);
         Object valueReference = strategy.execute(this, keyReference, referenceValue(keyReference, value));
-        return valueReference == null ? null : (V) dereferenceValue(valueReference);
+        return valueReference == null ? null : dereferenceValue(valueReference);
     }
 
     public V put(K key, V value) {
@@ -110,7 +117,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
         ensureNotNull(key);
         Object referenceAwareKey = makeKeyReferenceAware(key);
         Object valueReference = delegate.remove(referenceAwareKey);
-        return valueReference == null ? null : (V) dereferenceValue(valueReference);
+        return valueReference == null ? null : dereferenceValue(valueReference);
     }
 
     public int size() {
@@ -218,16 +225,12 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
      * Creates a reference for a key.
      */
     Object referenceKey(K key) {
-        switch (keyReferenceType) {
-            case STRONG:
-                return key;
-            case SOFT:
-                return new SoftKeyReference(key);
-            case WEAK:
-                return new WeakKeyReference(key);
-            default:
-                throw new AssertionError();
-        }
+        return switch (keyReferenceType) {
+            case STRONG -> key;
+            case SOFT -> new SoftKeyReference(key);
+            case WEAK -> new WeakKeyReference(key);
+            default -> throw new AssertionError();
+        };
     }
 
     /**
@@ -255,16 +258,12 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
      * Creates a reference for a value.
      */
     Object referenceValue(Object keyReference, Object value) {
-        switch (valueReferenceType) {
-            case STRONG:
-                return value;
-            case SOFT:
-                return new SoftValueReference(keyReference, value);
-            case WEAK:
-                return new WeakValueReference(keyReference, value);
-            default:
-                throw new AssertionError();
-        }
+        return switch (valueReferenceType) {
+            case STRONG -> value;
+            case SOFT -> new SoftValueReference(keyReference, value);
+            case WEAK -> new WeakValueReference(keyReference, value);
+            default -> throw new AssertionError();
+        };
     }
 
     /**
@@ -476,7 +475,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
     }
 
     protected interface Strategy {
-        public Object execute(ReferenceMap map, Object keyReference, Object valueReference);
+        Object execute(ReferenceMap map, Object keyReference, Object valueReference);
     }
 
     protected Strategy putStrategy() {
@@ -508,7 +507,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
             public Object execute(ReferenceMap map, Object keyReference, Object valueReference) {
                 return map.delegate.putIfAbsent(keyReference, valueReference);
             }
-        };
+        }
     }
 
     private static PutStrategy defaultPutStrategy;
@@ -575,6 +574,7 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
         }
     }
 
+    @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeInt(size());
@@ -591,11 +591,11 @@ public class ReferenceMap<K, V> implements Map<K, V>, Serializable {
         out.writeObject(null);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         int size = in.readInt();
-        this.delegate = new ConcurrentHashMap<Object, Object>(size);
+        this.delegate = new ConcurrentHashMap<>(size);
         while (true) {
             K key = (K) in.readObject();
             if (key == null) {

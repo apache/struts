@@ -20,14 +20,14 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -286,10 +286,8 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
                 response.setHeader("Expires", "-1");
             }
 
-            try {
+            try (is) {
                 copy(is, response.getOutputStream());
-            } finally {
-                is.close();
             }
         }
     }

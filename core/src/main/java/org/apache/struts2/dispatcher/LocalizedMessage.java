@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class LocalizedMessage {
     private final Class clazz;
     private final String textKey;
-    private final String defaultMessage; 
+    private final String defaultMessage;
     private final Object[] args;
 
     public LocalizedMessage(Class clazz, String textKey, String defaultMessage, Object[] args) {
@@ -90,12 +90,7 @@ public class LocalizedMessage {
             return false;
         }
         if (textKey == null) {
-            if (other.textKey != null) {
-                return false;
-            }
-        } else if (!textKey.equals(other.textKey)) {
-            return false;
-        }
-        return true;
+            return other.textKey == null;
+        } else return textKey.equals(other.textKey);
     }
 }

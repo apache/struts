@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.action.CookiesAware;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -175,6 +176,7 @@ import java.util.Set;
  */
 public class CookieInterceptor extends AbstractInterceptor {
 
+    @Serial
     private static final long serialVersionUID = 4153142432948747305L;
 
     private static final Logger LOG = LogManager.getLogger(CookieInterceptor.class);
@@ -229,6 +231,7 @@ public class CookieInterceptor extends AbstractInterceptor {
         acceptedPatternsChecker.setAcceptedPatterns(commaDelimitedPattern);
     }
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         LOG.debug("start interception");
 

@@ -132,6 +132,7 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {

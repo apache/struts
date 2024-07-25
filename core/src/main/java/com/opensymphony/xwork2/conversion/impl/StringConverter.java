@@ -80,14 +80,14 @@ public class StringConverter extends DefaultTypeConverter {
     }
 
     protected String convertToString(Locale locale, Object value) {
-        if (Number.class.isInstance(value)) {
+        if (value instanceof Number) {
             NumberFormat format = NumberFormat.getNumberInstance(locale);
             format.setGroupingUsed(false);
             // TODO: delete this variable and corresponding if statement when jdk fixed java.text.NumberFormat.format's behavior with Float
             Object fixedValue = value;
-            if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
+            if (value instanceof BigDecimal || value instanceof Double || value instanceof Float) {
                 format.setMaximumFractionDigits(Integer.MAX_VALUE);
-                if (Float.class.isInstance(value)) {
+                if (value instanceof Float) {
                     fixedValue = Double.valueOf(value.toString());
                 }
             }

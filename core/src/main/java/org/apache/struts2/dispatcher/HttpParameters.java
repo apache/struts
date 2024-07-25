@@ -55,7 +55,7 @@ public class HttpParameters implements Map<String, Parameter> {
     }
 
     public HttpParameters remove(final String paramToRemove) {
-        return remove(new HashSet<String>() {{
+        return remove(new HashSet<>() {{
             add(paramToRemove);
         }});
     }

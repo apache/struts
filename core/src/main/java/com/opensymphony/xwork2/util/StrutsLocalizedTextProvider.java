@@ -22,7 +22,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +38,7 @@ import java.util.ResourceBundle;
 public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
+    private transient ReflectionProvider reflectionProvider;
 
     public StrutsLocalizedTextProvider() {
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
@@ -276,9 +278,9 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             if (prop != null) {
                 Object obj = valueStack.findValue(prop);
                 try {
-                    Object actionObj = ReflectionProviderFactory.getInstance().getRealTarget(prop, valueStack.getContext(), valueStack.getRoot());
+                    Object actionObj = reflectionProvider.getRealTarget(prop, valueStack.getContext(), valueStack.getRoot());
                     if (actionObj != null) {
-                        PropertyDescriptor propertyDescriptor = ReflectionProviderFactory.getInstance().getPropertyDescriptor(actionObj.getClass(), prop);
+                        PropertyDescriptor propertyDescriptor = reflectionProvider.getPropertyDescriptor(actionObj.getClass(), prop);
 
                         if (propertyDescriptor != null) {
                             Class clazz = propertyDescriptor.getPropertyType();
@@ -373,4 +375,8 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         return findText(bundle, aTextName, locale, defaultMessage, args, valueStack);
     }
 
+    @Inject
+    public void setReflectionProvider(ReflectionProvider reflectionProvider) {
+        this.reflectionProvider = reflectionProvider;
+    }
 }

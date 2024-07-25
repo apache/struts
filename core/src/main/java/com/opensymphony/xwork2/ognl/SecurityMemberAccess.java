@@ -112,20 +112,6 @@ public class SecurityMemberAccess implements MemberAccess {
         this.threadAllowlist = threadAllowlist;
     }
 
-    /**
-     * SecurityMemberAccess
-     * - access decisions based on whether member is static (or not)
-     * - block or allow access to properties (configurable-after-construction)
-     *
-     * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
-     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist, ThreadAllowlist)} instead.
-     */
-    @Deprecated
-    public SecurityMemberAccess(boolean allowStaticFieldAccess) {
-        this(null, null);
-        useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
-    }
-
     @Override
     public Object setup(Map context, Object target, Member member, String propertyName) {
         Object result = null;

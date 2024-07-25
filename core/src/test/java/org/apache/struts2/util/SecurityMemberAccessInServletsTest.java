@@ -38,7 +38,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageAccess() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
 
         sma.useExcludedPackageNamePatterns("^(?!jakarta\\.servlet\\..+)(jakarta\\..+)");
 
@@ -54,7 +54,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageExclusion() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
 
         sma.useExcludedPackageNamePatterns("^jakarta\\..+");
 

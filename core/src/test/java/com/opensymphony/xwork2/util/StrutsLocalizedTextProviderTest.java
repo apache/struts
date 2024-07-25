@@ -581,7 +581,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      *
      * @since 6.0.0
      */
-    class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
+    static class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
 
         /**
          * Some test correctness depends on this {@link #RELOADED} value matching that of the private ancestor
@@ -624,9 +624,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
          * @return true if resource bundles reloaded indicator is true, false otherwise (including if value was never set).
          */
         public boolean getBundlesReloadedIndicatorValue() {
-            final ActionContext actionContext = ActionContext.getContext();
-            final Object reloadedObject = actionContext.get(RELOADED);
-            return ((reloadedObject instanceof Boolean) ? ((Boolean) reloadedObject).booleanValue() : false);
+            final Object reloadedObject = ActionContext.getContext().get(RELOADED);
+            return reloadedObject instanceof Boolean && (Boolean) reloadedObject;
         }
     }
 }

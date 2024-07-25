@@ -29,12 +29,6 @@ import java.util.Map;
 public interface QueryStringParser extends Serializable {
 
     /**
-     * @deprecated since Struts 6.2.0, use {@link #parse(String)} instead
-     */
-    @Deprecated
-    Map<String, Object> parse(String queryString, boolean forceValueArray);
-
-    /**
      * @param queryString a query string to parse
      * @return a {@link Result} of parsing the query string
      * @since Struts 6.2.0

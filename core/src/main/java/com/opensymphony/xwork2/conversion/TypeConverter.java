@@ -48,7 +48,4 @@ public interface TypeConverter {
 
     Object NO_CONVERSION_POSSIBLE = "ognl.NoConversionPossible";
 
-    @Deprecated
-    String TYPE_CONVERTER_CONTEXT_KEY = "_typeConverter";
-
 }

@@ -305,11 +305,6 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after retrievals ?",
             6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
-        // Expect the call to be ineffective due to deprecation and change to a "no-op" (but shouldn't throw an Exception or cause failure).
-        testStrutsLocalizedTextProvider.callClearBundleNoLocale("com/opensymphony/xwork2/test");
-        assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after non-locale clear call ?",
-            6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
-
         // Expect the call to function with bundle name + locale.  Remove all four of the non-default
         //   bundles and confirm the bundle map size changes.
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/test", Locale.ENGLISH);
@@ -594,10 +589,6 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
          * field's value is updated to match it exactly.
          */
         private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
-
-        public void callClearBundleNoLocale(String bundleName) {
-            super.clearBundle(bundleName);
-        }
 
         public void callClearBundleWithLocale(String bundleName, Locale locale) {
             super.clearBundle(bundleName, locale);

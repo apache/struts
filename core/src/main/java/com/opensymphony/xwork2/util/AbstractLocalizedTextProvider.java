@@ -227,21 +227,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Clear a specific bundle from the <code>bundlesMap</code>.
-     *
-     * Warning: This method is <b>now a "no-op"</b>.  It <b>was ineffective</b> due
-     *   to the way the <code>bundlesMap</code> is used in combination with locale.
-     *   Descendants should use the method {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
-     *
-     * @param bundleName The bundle to remove from the bundle map
-     *
-     * @deprecated A "no-op" since 6.0.0.  Use {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
-     */
-    public void clearBundle(final String bundleName) {
-        LOG.debug("No-op.  Did NOT clear resource bundle [{}], result: false.", bundleName);
-    }
-
-    /**
      * Clear a specific bundle + locale combination from the <code>bundlesMap</code>.
      *   Intended for descendants to use clear a bundle + locale combination.
      *
@@ -492,16 +477,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Clears all the internal lists.
-     *
-     * @deprecated used only in tests
-     */
-    @Deprecated
-    public void reset() {
-        // no-op
-    }
-
-    /**
      * Determines if we found the text in the bundles.
      *
      * @param result the result so far
@@ -513,12 +488,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // did we find it in the bundle, then no problem?
-        if (result.foundInBundle) {
-            return false;
-        }
-
-        // not found in bundle
-        return true;
+        return !result.foundInBundle;
     }
 
     /**

@@ -18,13 +18,22 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.CompositeTextProvider;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.LocaleProviderFactory;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * A default implementation of the {@link ValidatorContext} interface.
@@ -65,49 +74,42 @@ public class DelegatingValidatorContext implements ValidatorContext {
         this.textProvider = makeTextProvider(object, textProviderFactory);
     }
 
-    /**
-     * Create a new validation context given a Class definition. The locale provider, text provider and
-     * the validation context are created based on the class.
-     *
-     * @param clazz the class to initialize the context with.
-     *
-     * @deprecated will be removed, do not use!
-     */
-    @Deprecated
-    public DelegatingValidatorContext(Class clazz) {
-        localeProvider = new ActionContextLocaleProvider();
-        textProvider = new StrutsTextProviderFactory().createInstance(clazz);
-        validationAware = new LoggingValidationAware(clazz);
-    }
-
+    @Override
     public void setActionErrors(Collection<String> errorMessages) {
         validationAware.setActionErrors(errorMessages);
     }
 
+    @Override
     public Collection<String> getActionErrors() {
         return validationAware.getActionErrors();
     }
 
+    @Override
     public void setActionMessages(Collection<String> messages) {
         validationAware.setActionMessages(messages);
     }
 
+    @Override
     public Collection<String> getActionMessages() {
         return validationAware.getActionMessages();
     }
 
+    @Override
     public void setFieldErrors(Map<String, List<String>> errorMap) {
         validationAware.setFieldErrors(errorMap);
     }
 
+    @Override
     public Map<String, List<String>> getFieldErrors() {
         return validationAware.getFieldErrors();
     }
 
+    @Override
     public String getFullFieldName(String fieldName) {
         return fieldName;
     }
 
+    @Override
     public Locale getLocale() {
         return localeProvider.getLocale();
     }
@@ -127,78 +129,97 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return localeProvider.toLocale(localeStr);
     }
 
+    @Override
     public boolean hasKey(String key) {
     	return textProvider.hasKey(key);
     }
 
+    @Override
     public String getText(String aTextName) {
         return textProvider.getText(aTextName);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue) {
         return textProvider.getText(aTextName, defaultValue);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue, String obj) {
         return textProvider.getText(aTextName, defaultValue, obj);
     }
 
+    @Override
     public String getText(String aTextName, List<?> args) {
         return textProvider.getText(aTextName, args);
     }
 
+    @Override
     public String getText(String key, String[] args) {
         return textProvider.getText(key, args);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue, List<?> args) {
         return textProvider.getText(aTextName, defaultValue, args);
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args) {
         return textProvider.getText(key, defaultValue, args);
     }
 
+    @Override
     public ResourceBundle getTexts(String aBundleName) {
         return textProvider.getTexts(aBundleName);
     }
 
+    @Override
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         return textProvider.getText(key, defaultValue, args, stack);
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         return textProvider.getText(key, defaultValue, args, stack);
     }
 
+    @Override
     public ResourceBundle getTexts() {
         return textProvider.getTexts();
     }
 
+    @Override
     public void addActionError(String anErrorMessage) {
         validationAware.addActionError(anErrorMessage);
     }
 
+    @Override
     public void addActionMessage(String aMessage) {
         validationAware.addActionMessage(aMessage);
     }
 
+    @Override
     public void addFieldError(String fieldName, String errorMessage) {
         validationAware.addFieldError(fieldName, errorMessage);
     }
 
+    @Override
     public boolean hasActionErrors() {
         return validationAware.hasActionErrors();
     }
 
+    @Override
     public boolean hasActionMessages() {
         return validationAware.hasActionMessages();
     }
 
+    @Override
     public boolean hasErrors() {
         return validationAware.hasErrors();
     }
 
+    @Override
     public boolean hasFieldErrors() {
         return validationAware.hasFieldErrors();
     }
@@ -307,62 +328,73 @@ public class DelegatingValidatorContext implements ValidatorContext {
             log = LogManager.getLogger(obj.getClass());
         }
 
+        @Override
         public void setActionErrors(Collection<String> errorMessages) {
-            for (Object errorMessage : errorMessages) {
-                String s = (String) errorMessage;
-                addActionError(s);
+            for (String errorMessage : errorMessages) {
+                addActionError(errorMessage);
             }
         }
 
+        @Override
         public Collection<String> getActionErrors() {
             return null;
         }
 
+        @Override
         public void setActionMessages(Collection<String> messages) {
-            for (Object message : messages) {
-                String s = (String) message;
-                addActionMessage(s);
+            for (String message : messages) {
+                addActionMessage(message);
             }
         }
 
+        @Override
         public Collection<String> getActionMessages() {
             return null;
         }
 
+        @Override
         public void setFieldErrors(Map<String, List<String>> errorMap) {
             for (Map.Entry<String, List<String>> entry : errorMap.entrySet()) {
                 addFieldError(entry.getKey(), entry.getValue().toString());
             }
         }
 
+        @Override
         public Map<String, List<String>> getFieldErrors() {
             return null;
         }
 
+        @Override
         public void addActionError(String anErrorMessage) {
             log.error("Validation error: {}", anErrorMessage);
         }
 
+        @Override
         public void addActionMessage(String aMessage) {
             log.info("Validation Message: {}", aMessage);
         }
 
+        @Override
         public void addFieldError(String fieldName, String errorMessage) {
             log.error("Validation error for {}:{}", fieldName, errorMessage);
         }
 
+        @Override
         public boolean hasActionErrors() {
             return false;
         }
 
+        @Override
         public boolean hasActionMessages() {
             return false;
         }
 
+        @Override
         public boolean hasErrors() {
             return false;
         }
 
+        @Override
         public boolean hasFieldErrors() {
             return false;
         }

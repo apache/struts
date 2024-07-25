@@ -375,15 +375,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return hasValidAnnotatedField(action, rootProperty, paramDepth);
     }
 
-    /**
-     * @deprecated since 6.5.0, use {@link #hasValidAnnotatedPropertyDescriptor(Object, PropertyDescriptor, long)}
-     * instead.
-     */
-    @Deprecated
-    protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
-        return hasValidAnnotatedPropertyDescriptor(null, propDesc, paramDepth);
-    }
-
     protected boolean hasValidAnnotatedPropertyDescriptor(Object action, PropertyDescriptor propDesc, long paramDepth) {
         Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
         if (relevantMethod == null) {

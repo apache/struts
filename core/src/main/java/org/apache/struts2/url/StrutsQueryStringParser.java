@@ -42,11 +42,6 @@ public class StrutsQueryStringParser implements QueryStringParser {
     }
 
     @Override
-    public Map<String, Object> parse(String queryString, boolean forceValueArray) {
-        return parse(queryString).getQueryParams();
-    }
-
-    @Override
     public Result parse(String queryString) {
         if (StringUtils.isEmpty(queryString)) {
             LOG.debug("Query String is empty, returning an empty map");

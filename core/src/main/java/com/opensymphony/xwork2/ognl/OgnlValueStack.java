@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
 
+    @Serial
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";

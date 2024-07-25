@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.ognl.SecurityMemberAccessTest;
 public class ExternalSecurityMemberAccessTest extends SecurityMemberAccessTest {
 
     @Override
-    protected void assignNewSma(boolean allowStaticFieldAccess) {
-        sma = new ExternalSecurityMemberAccess(allowStaticFieldAccess);
+    protected void assignNewSmaHelper() {
+        sma = new ExternalSecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
     }
 }

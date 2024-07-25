@@ -18,21 +18,33 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.interceptor.StaticParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -68,18 +80,18 @@ public class MockConfigurationProvider implements ConfigurationProvider {
      */
     public void destroy() {
     }
-    
+
     public void init(Configuration config) {
         this.configuration = config;
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
 
     public void loadPackages() {
-        
+
         PackageConfig.Builder defaultPackageContext = new PackageConfig.Builder("defaultPackage");
         Map<String, String> params = new HashMap<>();
         params.put("bar", "5");
@@ -109,7 +121,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
         defaultPackageContext.addActionConfig(PARAM_INTERCEPTOR_ACTION_NAME, paramInterceptorActionConfig);
 
         interceptors = new ArrayList<>();
-        interceptors.add(new InterceptorMapping("model", 
+        interceptors.add(new InterceptorMapping("model",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
         interceptors.add(new InterceptorMapping("params",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
@@ -119,7 +131,7 @@ public class MockConfigurationProvider implements ConfigurationProvider {
             .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
             .build();
         defaultPackageContext.addActionConfig(MODEL_DRIVEN_PARAM_TEST, modelParamActionConfig);
-        
+
         //List paramFilterInterceptor=new ArrayList();
         //paramFilterInterceptor.add(new ParameterFilterInterC)
         //ActionConfig modelParamFilterActionConfig = new ActionConfig(null, ModelDrivenAction.class, null, null, interceptors);
@@ -132,13 +144,13 @@ public class MockConfigurationProvider implements ConfigurationProvider {
         results.put(Action.ERROR, new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build());
 
         interceptors = new ArrayList<>();
-        interceptors.add(new InterceptorMapping("staticParams", 
+        interceptors.add(new InterceptorMapping("staticParams",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", StaticParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
-        interceptors.add(new InterceptorMapping("model", 
+        interceptors.add(new InterceptorMapping("model",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ModelDrivenInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
-        interceptors.add(new InterceptorMapping("params", 
+        interceptors.add(new InterceptorMapping("params",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ParametersInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
-        interceptors.add(new InterceptorMapping("validation", 
+        interceptors.add(new InterceptorMapping("validation",
                 objectFactory.buildInterceptor(new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), EMPTY_STRING_MAP)));
 
         //Explicitly set an out-of-range date for DateRangeValidatorTest

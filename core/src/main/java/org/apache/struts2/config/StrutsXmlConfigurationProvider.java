@@ -69,16 +69,6 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     }
 
     /**
-     * Constructs the configuration provider
-     *
-     * @param errorIfMissing If we should throw an exception if the file can't be found
-     */
-    @Deprecated
-    public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
-        this("struts.xml", null);
-    }
-
-    /**
      * Constructs the configuration provider based on the provided config file
      *
      * @param filename file with Struts configuration

@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
@@ -38,9 +37,10 @@ import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.interceptor.TokenInterceptor;
 import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      */
     public void destroy() {
     }
-    
+
     public void init(Configuration config) {
         this.configuration = config;
     }

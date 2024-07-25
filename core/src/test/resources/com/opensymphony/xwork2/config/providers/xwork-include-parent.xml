@@ -30,7 +30,7 @@
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
         </result-types>
         <interceptors>
-            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+            <interceptor name="params" class="org.apache.struts2.interceptor.parameter.ParametersInterceptor"/>
         </interceptors>
     </package>
 

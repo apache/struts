@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -36,21 +37,20 @@ import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -95,17 +95,18 @@ import java.util.Map;
  */
 public class DebuggingInterceptor extends AbstractInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -3097324155953078783L;
 
     private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
     private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "com.opensymphony.xwork2.", "xwork."};
-    private final HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(
+    private final Set<String> ignoreKeys = Set.of(
         DispatcherConstants.APPLICATION,
         DispatcherConstants.SESSION,
         DispatcherConstants.PARAMETERS,
         DispatcherConstants.REQUEST
-    ));
+    );
 
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";

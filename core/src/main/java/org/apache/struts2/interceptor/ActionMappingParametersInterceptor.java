@@ -83,9 +83,9 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
     protected HttpParameters retrieveParameters(ActionContext actionContext) {
         ActionMapping mapping = actionContext.getActionMapping();
         if (mapping != null) {
-            return HttpParameters.create(mapping.getParams()).buildNoNestedWrapping();
+            return HttpParameters.create(mapping.getParams()).build();
         } else {
-            return HttpParameters.create().buildNoNestedWrapping();
+            return HttpParameters.create().build();
         }
     }
 
@@ -101,7 +101,6 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
         HttpParameters previousParams = ac.getParameters();
         HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(newParams);
-
-        ac.withParameters(combinedParams.buildNoNestedWrapping());
+        ac.withParameters(combinedParams.build());
     }
 }

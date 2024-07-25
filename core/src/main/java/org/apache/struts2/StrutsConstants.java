@@ -325,23 +325,10 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT = "struts.ognl.valueStackFallbackToContext";
 
     /**
-     * Logs properties that are not found (very verbose)
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
-
-    /**
      * Enables caching of parsed OGNL expressions
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
-
-    /**
-     * Enables caching of parsed OGNL expressions
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
-     */
-    public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = STRUTS_OGNL_ENABLE_EXPRESSION_CACHE;
 
     /**
      * Specifies the type of cache to use for parsed OGNL expressions. Valid values defined in
@@ -370,12 +357,6 @@ public final class StrutsConstants {
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EVAL_EXPRESSION = "struts.ognl.enableEvalExpression";
-
-    /**
-     * Enables evaluation of OGNL expressions
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EVAL_EXPRESSION} instead.
-     */
-    public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = STRUTS_OGNL_ENABLE_EVAL_EXPRESSION;
 
     /** The maximum length of an expression (OGNL) */
     public static final String STRUTS_OGNL_EXPRESSION_MAX_LENGTH = "struts.ognl.expressionMaxLength";

@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.TestBean2;
@@ -1059,9 +1058,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testConstructorWithAStack() {
         vs.push("Hello World");
 
-        OgnlValueStack stack2 = new OgnlValueStack(vs,
-            container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(RootAccessor.class), new SecurityMemberAccess(true));
+        OgnlValueStack stack2 = new OgnlValueStack(
+                vs,
+                container.getInstance(XWorkConverter.class),
+                container.getInstance(RootAccessor.class),
+                new SecurityMemberAccess(null, null));
         container.inject(stack2);
 
         assertEquals(vs.getRoot(), stack2.getRoot());

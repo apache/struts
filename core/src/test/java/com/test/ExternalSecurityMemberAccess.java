@@ -19,11 +19,13 @@
 package com.test;
 
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
+import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 class ExternalSecurityMemberAccess extends SecurityMemberAccess {
 
-    ExternalSecurityMemberAccess(boolean allowStaticFieldAccess) {
-        super(allowStaticFieldAccess);
+    public ExternalSecurityMemberAccess(ProviderAllowlist providerAllowlist, ThreadAllowlist threadAllowlist) {
+        super(providerAllowlist, threadAllowlist);
     }
 
     @Override

@@ -28,7 +28,6 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-import freemarker.ext.jakarta.servlet.WebappTemplateLoader;
 import freemarker.core.HTMLOutputFormat;
 import freemarker.core.TemplateClassResolver;
 import freemarker.ext.jakarta.jsp.TaglibFactory;
@@ -36,6 +35,7 @@ import freemarker.ext.jakarta.servlet.HttpRequestHashModel;
 import freemarker.ext.jakarta.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.jakarta.servlet.HttpSessionHashModel;
 import freemarker.ext.jakarta.servlet.ServletContextHashModel;
+import freemarker.ext.jakarta.servlet.WebappTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateException;
@@ -43,6 +43,11 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.Version;
 import freemarker.template.utility.StringUtil;
+import jakarta.servlet.GenericServlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -50,11 +55,6 @@ import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.TagLibraryModelProvider;
 import org.apache.struts2.views.util.ContextUtil;
 
-import jakarta.servlet.GenericServlet;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,27 +136,6 @@ public class FreemarkerManager {
     public static final String KEY_REQUEST_PARAMETERS_STRUTS = "Parameters";
 
     public static final String EXPIRATION_DATE;
-
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_INCLUDE = "include_page";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
 
     /**
      * Adds individual settings.

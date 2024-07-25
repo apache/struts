@@ -44,12 +44,6 @@ public interface CspSettings {
     String HTTPS = "https:";
     String CSP_REPORT_TYPE = "application/csp-report";
 
-    /**
-     * @deprecated use {@link #addCspHeaders(HttpServletRequest, HttpServletResponse)} instead
-     */
-    @Deprecated
-    void addCspHeaders(HttpServletResponse response);
-
     void addCspHeaders(HttpServletRequest request, HttpServletResponse response);
 
     /**

@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.DynamicAttributes;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
-import jakarta.servlet.jsp.JspException;
-import jakarta.servlet.jsp.tagext.DynamicAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,14 +134,6 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     }
 
     public void setCssClass(String cssClass) {
-        this.cssClass = cssClass;
-    }
-
-    /**
-     * @deprecated Use {@link #setCssClass(String)} instead
-     */
-    @Deprecated
-    public void setClass(String cssClass) {
         this.cssClass = cssClass;
     }
 

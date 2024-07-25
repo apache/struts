@@ -27,7 +27,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import junit.framework.TestCase;
-import org.apache.struts2.rest.handler.AbstractContentTypeHandler;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.FormUrlEncodedHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,7 +37,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -76,7 +74,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
     public void testHandleResultOK() throws IOException {
 
         String obj = "mystring";
-        ContentTypeHandler handler = new AbstractContentTypeHandler() {
+        ContentTypeHandler handler = new ContentTypeHandler() {
             public void toObject(ActionInvocation invocation, Reader in, Object target) {}
             public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
                 stream.write(obj.toString());

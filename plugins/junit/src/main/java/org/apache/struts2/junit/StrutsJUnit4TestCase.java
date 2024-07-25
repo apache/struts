@@ -25,6 +25,10 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.After;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -39,10 +43,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -130,7 +130,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
 
-        ServletActionContext.getContext().put(ServletActionContext.ACTION_MAPPING, mapping);
+        ServletActionContext.getActionContext().put(ServletActionContext.ACTION_MAPPING, mapping);
 
         return proxy;
     }

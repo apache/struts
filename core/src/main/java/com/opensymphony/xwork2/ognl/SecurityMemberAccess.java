@@ -33,13 +33,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassObjectsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
@@ -49,8 +48,6 @@ import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableSet;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 
@@ -62,20 +59,20 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
-    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = unmodifiableSet(new HashSet<>(Arrays.asList(
+    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = Set.of(
             "com.opensymphony.xwork2.validator.validators",
             "org.apache.struts2.components",
             "org.apache.struts2.views.jsp"
-    )));
+    );
 
-    private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
+    private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = Set.of(
             java.lang.Enum.class,
             java.lang.String.class,
             java.util.Date.class,
             java.util.HashMap.class,
             java.util.Map.class,
             java.util.Map.Entry.class
-    )));
+    );
 
     private final ProviderAllowlist providerAllowlist;
     private final ThreadAllowlist threadAllowlist;
@@ -85,7 +82,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
 
-    private Set<String> excludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
+    private Set<String> excludedClasses = Set.of(Object.class.getName());
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
@@ -93,7 +90,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private static volatile boolean isDevModeLogged = false;
     private volatile boolean isDevModeInit;
     private boolean isDevMode;
-    private Set<String> devModeExcludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
+    private Set<String> devModeExcludedClasses = Set.of(Object.class.getName());
     private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
     private Set<String> devModeExcludedPackageNames = emptySet();
     private Set<String> devModeExcludedPackageExemptClasses = emptySet();
@@ -110,20 +107,6 @@ public class SecurityMemberAccess implements MemberAccess {
     public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist, @Inject ThreadAllowlist threadAllowlist) {
         this.providerAllowlist = providerAllowlist;
         this.threadAllowlist = threadAllowlist;
-    }
-
-    /**
-     * SecurityMemberAccess
-     * - access decisions based on whether member is static (or not)
-     * - block or allow access to properties (configurable-after-construction)
-     *
-     * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
-     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist, ThreadAllowlist)} instead.
-     */
-    @Deprecated
-    public SecurityMemberAccess(boolean allowStaticFieldAccess) {
-        this(null, null);
-        useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 
     @Override
@@ -409,14 +392,10 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        List<String> packageParts = Arrays.asList(toPackageName(clazz).split("\\."));
-        for (int i = 0; i < packageParts.size(); i++) {
-            String parentPackage = String.join(".", packageParts.subList(0, i + 1));
-            if (matchingPackages.contains(parentPackage)) {
-                return true;
-            }
-        }
-        return false;
+        List<String> packageParts = List.of(toPackageName(clazz).split("\\."));
+        return IntStream.range(0, packageParts.size())
+                .mapToObj(i -> String.join(".", packageParts.subList(0, i + 1)))
+                .anyMatch(matchingPackages::contains);
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {

@@ -75,17 +75,6 @@ public abstract class AbstractMatcher<E> implements Serializable {
     }
 
     /**
-     * Creates a matcher with {@link #appendNamedParameters} set to true to keep backward compatibility
-     *
-     * @param helper an instance of {@link PatternMatcher}
-     * @deprecated use @{link {@link AbstractMatcher(PatternMatcher, boolean)} instead
-     */
-    @Deprecated
-    public AbstractMatcher(PatternMatcher<?> helper) {
-        this(helper, true);
-    }
-
-    /**
      * <p>
      * Finds and precompiles the wildcard patterns. Patterns will be evaluated
      * in the order they were added. Only patterns that actually contain a
@@ -108,7 +97,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
         Object pattern;
 
         if (!wildcard.isLiteral(name)) {
-            if (looseMatch && (name.length() > 0) && (name.charAt(0) == '/')) {
+            if (looseMatch && (!name.isEmpty()) && (name.charAt(0) == '/')) {
                 name = name.substring(1);
             }
 
@@ -142,14 +131,14 @@ public abstract class AbstractMatcher<E> implements Serializable {
     public E match(String potentialMatch) {
         E config = null;
 
-        if (compiledPatterns.size() > 0) {
+        if (!compiledPatterns.isEmpty()) {
             LOG.debug("Attempting to match '{}' to a wildcard pattern, {} available", potentialMatch, compiledPatterns.size());
 
             Map<String, String> vars = new LinkedHashMap<>();
             for (Mapping<E> m : compiledPatterns) {
-                if (wildcard.match(vars, potentialMatch, m.getPattern())) {
-                    LOG.debug("Value matches pattern '{}'", m.getOriginalPattern());
-                    config = convert(potentialMatch, m.getTarget(), vars);
+                if (wildcard.match(vars, potentialMatch, m.pattern())) {
+                    LOG.debug("Value matches pattern '{}'", m.originalPattern());
+                    config = convert(potentialMatch, m.target(), vars);
                     break;
                 }
             }
@@ -216,7 +205,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
 
         Matcher wildcardMatcher = WILDCARD_PATTERN.matcher(val);
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         while (wildcardMatcher.find()) {
             wildcardMatcher.appendReplacement(result, vars.getOrDefault(wildcardMatcher.group(1), ""));
         }
@@ -228,62 +217,11 @@ public abstract class AbstractMatcher<E> implements Serializable {
     /**
      * <p> Stores a compiled wildcard pattern and the object it came
      * from. </p>
+     *
+     * @param originalPattern <p> The original pattern. </p>
+     * @param pattern         <p> The compiled pattern. </p>
+     * @param target          <p> The original object. </p>
      */
-    private static class Mapping<E> implements Serializable {
-        /**
-         * <p> The original pattern. </p>
-         */
-        private final String original;
-
-
-        /**
-         * <p> The compiled pattern. </p>
-         */
-        private final Object pattern;
-
-        /**
-         * <p> The original object. </p>
-         */
-        private final E config;
-
-        /**
-         * <p> Contructs a read-only Mapping instance. </p>
-         *
-         * @param original The original pattern
-         * @param pattern  The compiled pattern
-         * @param config   The original object
-         */
-        public Mapping(String original, Object pattern, E config) {
-            this.original = original;
-            this.pattern = pattern;
-            this.config = config;
-        }
-
-        /**
-         * <p> Gets the compiled wildcard pattern. </p>
-         *
-         * @return The compiled pattern
-         */
-        public Object getPattern() {
-            return this.pattern;
-        }
-
-        /**
-         * <p> Gets the object that contains the pattern. </p>
-         *
-         * @return The associated object
-         */
-        public E getTarget() {
-            return this.config;
-        }
-
-        /**
-         * <p> Gets the original wildcard pattern. </p>
-         *
-         * @return The original pattern
-         */
-        public String getOriginalPattern() {
-            return this.original;
-        }
+    private record Mapping<E>(String originalPattern, Object pattern, E target) implements Serializable {
     }
 }

@@ -38,63 +38,9 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
 
-    /**
-     * Clears the internal list of resource bundles.
-     *
-     * @deprecated used only in tests
-     */
-    @Deprecated
-    public static void clearDefaultResourceBundles() {
-        // no-op
-    }
-
     public StrutsLocalizedTextProvider() {
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
-    }
-
-    /**
-     * Builds a {@link java.util.Locale} from a String of the form en_US_foo into a Locale
-     * with language "en", country "US" and variant "foo". This will parse the output of
-     * {@link java.util.Locale#toString()}.
-     *
-     * @param localeStr     The locale String to parse.
-     * @param defaultLocale The locale to use if localeStr is <tt>null</tt>.
-     * @return requested Locale
-     * @deprecated please use {@link org.apache.commons.lang3.LocaleUtils#toLocale(String)}
-     */
-    @Deprecated
-    public static Locale localeFromString(String localeStr, Locale defaultLocale) {
-        if ((localeStr == null) || (localeStr.trim().length() == 0) || ("_".equals(localeStr))) {
-            if (defaultLocale != null) {
-                return defaultLocale;
-            }
-            return Locale.getDefault();
-        }
-
-        int index = localeStr.indexOf('_');
-        if (index < 0) {
-            return new Locale(localeStr);
-        }
-
-        String language = localeStr.substring(0, index);
-        if (index == localeStr.length()) {
-            return new Locale(language);
-        }
-
-        localeStr = localeStr.substring(index + 1);
-        index = localeStr.indexOf('_');
-        if (index < 0) {
-            return new Locale(language, localeStr);
-        }
-
-        String country = localeStr.substring(0, index);
-        if (index == localeStr.length()) {
-            return new Locale(language, country);
-        }
-
-        localeStr = localeStr.substring(index + 1);
-        return new Locale(language, country, localeStr);
     }
 
     /**
@@ -135,7 +81,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles 
+     * <li>If still not found, look for the message in the default resource bundles
      * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>
@@ -190,7 +136,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles 
+     * <li>If still not found, look for the message in the default resource bundles
      * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>

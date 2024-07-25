@@ -22,10 +22,10 @@ import java.util.Map;
 
 /**
  * Compiles and matches a pattern against a value
- * 
+ *
  * @since 2.1
  */
-public interface PatternMatcher<E extends Object> {
+public interface PatternMatcher<E> {
 
     /**
      * Determines if the pattern is a simple literal string or contains wildcards that will need to be processed
@@ -36,16 +36,16 @@ public interface PatternMatcher<E extends Object> {
 
     /**
      * <p> Translate the given <code>String</code> into an object
-     * representing the pattern matchable by this class. 
+     * representing the pattern matchable by this class.
      *
      * @param data The string to translate.
-     * @return The encoded string 
+     * @return The encoded string
      * @throws NullPointerException If data is null.
      */
     E compilePattern(String data);
 
     /**
-     * Match a pattern against a string 
+     * Match a pattern against a string
      *
      * @param map  The map to store matched values
      * @param data The string to match
@@ -54,5 +54,5 @@ public interface PatternMatcher<E extends Object> {
      * @throws NullPointerException If any parameters are null
      */
     boolean match(Map<String,String> map, String data, E expr);
-    
+
 }

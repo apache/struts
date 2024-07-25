@@ -118,7 +118,7 @@ class ContainerImpl implements Container {
     }
 
     void addInjectorsForMethods(Method[] methods, boolean statics, List<Injector> injectors) {
-        addInjectorsForMembers(Arrays.asList(methods), statics, injectors, MethodInjector::new);
+        addInjectorsForMembers(List.of(methods), statics, injectors, MethodInjector::new);
     }
 
     void addInjectorsForFields(Field[] fields, boolean statics, List<Injector> injectors) {

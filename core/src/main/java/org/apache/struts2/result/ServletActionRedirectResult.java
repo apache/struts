@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -210,7 +209,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     protected List<String> getProhibitedResultParams() {
-        return Arrays.asList(
+        return List.of(
                 DEFAULT_PARAM,
                 "namespace",
                 "method",

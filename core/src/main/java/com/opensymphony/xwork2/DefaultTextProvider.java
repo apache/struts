@@ -103,7 +103,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
 
             return format.format(params);
         }
-        return text;        
+        return text;
     }
 
     public String getText(String key, String defaultValue, String[] args) {
@@ -136,7 +136,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
 
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         //we're not using the value stack here
-        List<Object> values = new ArrayList<Object>(Arrays.asList(args));
+        List<Object> values = new ArrayList<>(Arrays.asList(args));
         return getText(key, defaultValue, values);
     }
 

@@ -20,12 +20,17 @@
  */
 package org.apache.struts2.showcase.hangman;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hangman implements Serializable {
+
+	private static final Logger log = LogManager.getLogger(Hangman.class);
 
 	@Serial
 	private static final long serialVersionUID = 8566954355839652509L;
@@ -64,8 +69,8 @@ public class Hangman implements Serializable {
 			}
 			if (vocab.containsAllCharacter(charactersGuessed)) {
 				win = true;
+				log.info("Game won");
 			}
-			System.out.println(" *********************************** " + win);
 		}
 	}
 

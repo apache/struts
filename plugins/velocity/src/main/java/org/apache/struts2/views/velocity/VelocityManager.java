@@ -65,6 +65,7 @@ public class VelocityManager implements VelocityManagerInterface {
 
     private ObjectFactory objectFactory;
 
+    public static final String DEFAULT_CONFIG_FILE = "velocity.properties";
     public static final String KEY_VELOCITY_STRUTS_CONTEXT = ".KEY_velocity.struts2.context";
 
     private VelocityEngine velocityEngine;
@@ -173,7 +174,7 @@ public class VelocityManager implements VelocityManagerInterface {
         }
     }
 
-    public Properties loadConfiguration(ServletContext context) {
+    protected Properties loadConfiguration(ServletContext context) {
         if (context == null) {
             throw new IllegalArgumentException("Error attempting to create a loadConfiguration from a null ServletContext!");
         }
@@ -207,7 +208,7 @@ public class VelocityManager implements VelocityManagerInterface {
      * </ul>
      */
     private void applyUserConfiguration(ServletContext context, Properties properties) {
-        String configFile = requireNonNullElse(customConfigFile, "velocity.properties").trim();
+        String configFile = requireNonNullElse(customConfigFile, DEFAULT_CONFIG_FILE).trim();
         try {
             if (loadFile(properties, context.getRealPath(configFile))) {
                 return;

@@ -1,12 +1,12 @@
-/*
+/**
  * Copyright (C) 2006 Google Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * </p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,14 +75,14 @@ class ContainerImpl implements Container {
      * Field and method injectors.
      */
     final Map<Class<?>, List<Injector>> injectors =
-        new ReferenceCache<Class<?>, List<Injector>>() {
-            @Override
-            protected List<Injector> create(Class<?> key) {
-                List<Injector> injectors = new ArrayList<>();
-                addInjectors(key, injectors);
-                return injectors;
-            }
-        };
+            new ReferenceCache<>() {
+                @Override
+                protected List<Injector> create(Class<?> key) {
+                    List<Injector> injectors = new ArrayList<>();
+                    addInjectors(key, injectors);
+                    return injectors;
+                }
+            };
 
     /**
      * Recursively adds injectors for fields and methods from the given class to the given list. Injects parent classes
@@ -306,7 +306,7 @@ class ContainerImpl implements Container {
         }
     }
 
-    Map<Class<?>, ConstructorInjector<?>> constructors = new ReferenceCache<Class<?>, ConstructorInjector<?>>() {
+    Map<Class<?>, ConstructorInjector<?>> constructors = new ReferenceCache<>() {
         @Override
         protected ConstructorInjector<?> create(Class<?> implementation) {
             return new ConstructorInjector<>(ContainerImpl.this, implementation);

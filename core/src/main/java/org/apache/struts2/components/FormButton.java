@@ -18,14 +18,11 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 /**
  * FormButton.
@@ -131,11 +128,6 @@ public abstract class FormButton extends ClosingUIBean {
      * @return <tt>true</tt> if type image is supported.
      */
     protected abstract boolean supportsImageType();
-
-    @Inject
-    public void setActionMapper(ActionMapper mapper) {
-        this.actionMapper = mapper;
-    }
 
     @StrutsTagAttribute(description = "Set action attribute.")
     public void setAction(String action) {

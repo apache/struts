@@ -26,18 +26,16 @@ import com.opensymphony.xwork2.util.ValueStack;
 import freemarker.core.ParseException;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Freemarker based template engine.
@@ -135,7 +133,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         Writer writer = templateContext.getWriter();
         final Writer wrapped = writer;
         writer = new Writer() {
-            public void write(char cbuf[], int off, int len) throws IOException {
+            public void write(char[] cbuf, int off, int len) throws IOException {
                 wrapped.write(cbuf, off, len);
             }
 

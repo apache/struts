@@ -78,6 +78,7 @@ import org.apache.struts2.util.fs.JBossFileManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -90,8 +91,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -363,9 +362,8 @@ public class Dispatcher {
             actionExcludedPatterns = emptyList();
             return;
         }
-        actionExcludedPatterns = unmodifiableList(
-                Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
-                        .map(String::trim).map(Pattern::compile).collect(toList()));
+        actionExcludedPatterns = Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
+                .map(String::trim).map(Pattern::compile).toList();
     }
 
     @Inject
@@ -550,9 +548,9 @@ public class Dispatcher {
             for (String cname : classes) {
                 try {
                     Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
-                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.newInstance();
+                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.getDeclaredConstructor().newInstance();
                     configurationManager.addContainerProvider(createJavaConfigurationProvider(config));
-                } catch (InstantiationException e) {
+                } catch (InvocationTargetException | NoSuchMethodException | InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate java configuration: " + cname, e);
                 } catch (IllegalAccessException e) {
                     throw new ConfigurationException("Unable to access java configuration: " + cname, e);
@@ -574,12 +572,12 @@ public class Dispatcher {
             for (String cname : classes) {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
-                    ConfigurationProvider prov = (ConfigurationProvider) cls.newInstance();
+                    ConfigurationProvider prov = (ConfigurationProvider) cls.getDeclaredConstructor().newInstance();
                     if (prov instanceof ServletContextAwareConfigurationProvider) {
                         ((ServletContextAwareConfigurationProvider) prov).initWithContext(servletContext);
                     }
                     configurationManager.addContainerProvider(prov);
-                } catch (InstantiationException e) {
+                } catch (InvocationTargetException | NoSuchMethodException | InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate provider: " + cname, e);
                 } catch (IllegalAccessException e) {
                     throw new ConfigurationException("Unable to access provider: " + cname, e);
@@ -1078,10 +1076,9 @@ public class Dispatcher {
     public void cleanUpRequest(HttpServletRequest request) {
         ContainerHolder.clear();
         threadAllowlist.clearAllowlist();
-        if (!(request instanceof MultiPartRequestWrapper)) {
+        if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {
             return;
         }
-        MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
         multiWrapper.cleanUp();
     }
 

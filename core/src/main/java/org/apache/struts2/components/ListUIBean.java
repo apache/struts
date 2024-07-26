@@ -64,7 +64,7 @@ public abstract class ListUIBean extends UIBean {
 
     @Override
     public void evaluateExtraParams() {
-        Object value = null;
+        Object value;
 
         if (list == null) {
             list = parameters.get("list");
@@ -75,13 +75,13 @@ public abstract class ListUIBean extends UIBean {
             if (value == null) {
                 if (throwExceptionOnNullValueAttribute) {
                     // will throw an exception if not found
-                    value = findValue((list == null) ? (String) list : list.toString(), "list",
+                    value = findValue(list == null ? null : list.toString(), "list",
                             "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
                                     "Example: people or people.{name}");
                 } else {
                     // ww-1010, allows value with null value to be compatible with ww
                     // 2.1.7 behaviour
-                    value = findValue((list == null) ? (String) list : list.toString());
+                    value = findValue(list == null ? null : list.toString());
                 }
             }
         } else {

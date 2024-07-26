@@ -30,15 +30,13 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 /**
- * Default type conversion. Converts among numeric types and also strings.  Contains the basic 
+ * Default type conversion. Converts among numeric types and also strings.  Contains the basic
  * type mapping code from OGNL.
- * 
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
@@ -48,24 +46,19 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     private static final String NULL_STRING = "null";
 
-    private static final Map<Class<?>, Object> baseTypeDefaults;
+    private static final Map<Class<?>, Object> baseTypeDefaults = Map.of(
+            Boolean.TYPE, Boolean.FALSE,
+            Byte.TYPE, (byte) 0,
+            Short.TYPE, (short) 0,
+            Character.TYPE, (char) 0,
+            Integer.TYPE, 0,
+            Long.TYPE, 0L,
+            Float.TYPE, 0.0f,
+            Double.TYPE, 0.0,
+            BigInteger.class, BigInteger.ZERO,
+            BigDecimal.class, BigDecimal.ZERO);
 
     private Container container;
-
-    static {
-        Map<Class<?>, Object> map = new HashMap<>();
-        map.put(Boolean.TYPE, Boolean.FALSE);
-        map.put(Byte.TYPE, Byte.valueOf((byte) 0));
-        map.put(Short.TYPE, Short.valueOf((short) 0));
-        map.put(Character.TYPE, new Character((char) 0));
-        map.put(Integer.TYPE, Integer.valueOf(0));
-        map.put(Long.TYPE, Long.valueOf(0L));
-        map.put(Float.TYPE, new Float(0.0f));
-        map.put(Double.TYPE, new Double(0.0));
-        map.put(BigInteger.class, BigInteger.ZERO);
-        map.put(BigDecimal.class, BigDecimal.ZERO);
-        baseTypeDefaults = Collections.unmodifiableMap(map);
-    }
 
     @Inject
     public void setContainer(Container container) {
@@ -81,7 +74,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             String propertyName, Object value, Class toType) {
         return convertValue(context, value, toType);
     }
-    
+
     public TypeConverter getTypeConverter( Map<String, Object> context ) {
         ognl.TypeConverter converter = null;
 
@@ -102,10 +95,10 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     /**
      * Returns the value converted numerically to the given class type
-     * 
+     *
      * This method also detects when arrays are being converted and converts the
      * components of one array to the type of the other.
-     * 
+     *
      * @param value
      *            an object to be converted to the given type
      * @param toType
@@ -121,11 +114,9 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             if (value.getClass().isArray() && toType.isArray()) {
                 final Class<?> componentType = toType.getComponentType();
 
-                result = Array.newInstance(componentType, Array
-                        .getLength(value));
+                result = Array.newInstance(componentType, Array.getLength(value));
                 for (int i = 0, icount = Array.getLength(value); i < icount; i++) {
-                    Array.set(result, i, convertValue(Array.get(value, i),
-                            componentType));
+                    Array.set(result, i, convertValue(Array.get(value, i), componentType));
                 }
             } else {
                 if ((toType == Integer.class) || (toType == Integer.TYPE))
@@ -143,7 +134,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                 if ((toType == Long.class) || (toType == Long.TYPE))
                     result = longValue(value);
                 if ((toType == Float.class) || (toType == Float.TYPE))
-                    result = new Float(doubleValue(value));
+                    result = (float) doubleValue(value);
                 if (toType == BigInteger.class)
                     result = bigIntValue(value);
                 if (toType == BigDecimal.class)
@@ -163,7 +154,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * Evaluates the given object as a boolean: if it is a Boolean object, it's
      * easy; if it's a Number or a Character, returns true for non-zero objects;
      * and otherwise returns true for non-null objects.
-     * 
+     *
      * @param value
      *            an object to interpret as a boolean
      * @return the boolean value implied by the given object
@@ -182,12 +173,10 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             return ((Number) value).doubleValue() != 0;
         return true; // non-null
     }
-    
+
     public Enum<?> enumValue(Class toClass, Object o) {
         Enum<?> result = null;
-        if (o == null) {
-            result = null;
-        } else if (o instanceof String[]) {
+        if (o instanceof String[]) {
             result = Enum.valueOf(toClass, ((String[]) o)[0]);
         } else if (o instanceof String) {
             result = Enum.valueOf(toClass, (String) o);
@@ -197,7 +186,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     /**
      * Evaluates the given object as a long integer.
-     * 
+     *
      * @param value
      *            an object to interpret as a long integer
      * @return the long integer value implied by the given object
@@ -217,7 +206,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     /**
      * Evaluates the given object as a double-precision floating-point number.
-     * 
+     *
      * @param value
      *            an object to interpret as a double
      * @return the double value implied by the given object
@@ -233,12 +222,12 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c == Character.class)
             return (Character) value;
         final String s = stringValue(value, true);
-        return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
+        return s.isEmpty() ? 0.0 : Double.parseDouble(s);
     }
 
     /**
      * Evaluates the given object as a BigInteger.
-     * 
+     *
      * @param value
      *            an object to interpret as a BigInteger
      * @return the BigInteger value implied by the given object
@@ -256,13 +245,13 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c == Boolean.class)
             return BigInteger.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)
-            return BigInteger.valueOf(((Character) value).charValue());
+            return BigInteger.valueOf((Character) value);
         return new BigInteger(stringValue(value, true));
     }
 
     /**
      * Evaluates the given object as a BigDecimal.
-     * 
+     *
      * @param value
      *            an object to interpret as a BigDecimal
      * @return the BigDecimal value implied by the given object
@@ -280,14 +269,14 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c == Boolean.class)
             return BigDecimal.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)
-            return BigDecimal.valueOf(((Character) value).charValue());
+            return BigDecimal.valueOf((Character) value);
         return new BigDecimal(stringValue(value, true));
     }
 
     /**
      * Evaluates the given object as a String and trims it if the trim flag is
      * true.
-     * 
+     *
      * @param value
      *            an object to interpret as a String
      * @param trim
@@ -311,7 +300,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     /**
      * Evaluates the given object as a String.
-     * 
+     *
      * @param value
      *            an object to interpret as a String
      * @return the String value implied by the given object as returned by the

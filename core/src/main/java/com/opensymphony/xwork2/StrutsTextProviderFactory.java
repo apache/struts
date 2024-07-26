@@ -22,6 +22,8 @@ import com.opensymphony.xwork2.inject.Inject;
 
 import java.util.ResourceBundle;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 /**
  * This factory enables users to provide and correctly initialize a custom TextProvider.
  */
@@ -67,19 +69,19 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
     }
 
     protected TextProvider getTextProvider(Class clazz) {
-        if (defaultTextProvider != null) {
-            return defaultTextProvider;
-        }
+        return requireNonNullElseGet(defaultTextProvider,
+                () -> new TextProviderSupport(clazz,
+                        localeProviderFactory.createLocaleProvider(),
+                        localizedTextProvider));
 
-        return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
     protected TextProvider getTextProvider(ResourceBundle bundle) {
-        if (defaultTextProvider != null) {
-            return defaultTextProvider;
-        }
+        return requireNonNullElseGet(defaultTextProvider,
+                () -> new TextProviderSupport(bundle,
+                        localeProviderFactory.createLocaleProvider(),
+                        localizedTextProvider));
 
-        return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
 }

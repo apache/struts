@@ -22,7 +22,11 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * This is a composite {@link TextProvider} that takes in an array or {@link java.util.List} of {@link TextProvider}s, it will
@@ -35,7 +39,7 @@ public class CompositeTextProvider implements TextProvider {
 
     private static final Logger LOG = LogManager.getLogger(CompositeTextProvider.class);
 
-    private List<TextProvider> textProviders = new ArrayList<>();
+    private final List<TextProvider> textProviders = new ArrayList<>();
 
     /**
      * Instantiates a {@link CompositeTextProvider} with some predefined <code>textProviders</code>.
@@ -64,6 +68,7 @@ public class CompositeTextProvider implements TextProvider {
      * @see com.opensymphony.xwork2.TextProvider#hasKey(String)
      *
      */
+    @Override
     public boolean hasKey(String key) {
         // if there's a key in either text providers we are ok, else try the next text provider
         for (TextProvider tp : textProviders) {
@@ -82,6 +87,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return The i18n text for the requested key.
      * @see com.opensymphony.xwork2.TextProvider#getText(String)
      */
+    @Override
     public String getText(String key) {
         return getText(key, key, Collections.emptyList());
     }
@@ -95,6 +101,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String)
      */
+    @Override
     public String getText(String key, String defaultValue) {
         return getText(key, defaultValue, Collections.emptyList());
     }
@@ -110,12 +117,9 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String, String)
      */
+    @Override
     public String getText(String key, String defaultValue, final String obj) {
-        return getText(key, defaultValue, new ArrayList<Object>() {
-            {
-                add(obj);
-            }
-        });
+        return getText(key, defaultValue, List.of(obj));
     }
 
     /**
@@ -127,6 +131,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key
      * @see com.opensymphony.xwork2.TextProvider#getText(String, java.util.List)
      */
+    @Override
     public String getText(String key, List<?> args) {
         return getText(key, key, args);
     }
@@ -140,6 +145,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String[])
      */
+    @Override
     public String getText(String key, String[] args) {
         return getText(key, key, args);
     }
@@ -155,6 +161,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String, java.util.List)
      */
+    @Override
     public String getText(String key, String defaultValue, List<?> args) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
@@ -179,6 +186,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String, String[])
      */
+    @Override
     public String getText(String key, String defaultValue, String[] args) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
@@ -204,6 +212,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String, java.util.List, com.opensymphony.xwork2.util.ValueStack)
      */
+    @Override
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
@@ -228,6 +237,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the first valid message for the key or default value
      * @see com.opensymphony.xwork2.TextProvider#getText(String, String, String[], com.opensymphony.xwork2.util.ValueStack)
      */
+    @Override
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         // if there's one text provider that gives us a msg not the same as defaultValue
         // for this key, we are ok, else try the next
@@ -249,6 +259,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the resource bundle found for bundle name
      * @see TextProvider#getTexts(String)
      */
+    @Override
     public ResourceBundle getTexts(String bundleName) {
         // if there's one text provider that gives us a non-null resource bundle for this bundleName, we are ok, else try the next
         // text provider
@@ -267,6 +278,7 @@ public class CompositeTextProvider implements TextProvider {
      * @return the resource bundle
      * @see TextProvider#getTexts()
      */
+    @Override
     public ResourceBundle getTexts() {
         // if there's one text provider that gives us a non-null resource bundle, we are ok, else try the next
         // text provider

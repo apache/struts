@@ -24,13 +24,23 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.providers.XmlHelper;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.DomHelper;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.w3c.dom.*;
+import org.apache.logging.log4j.Logger;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Parse the validation file. (eg. MyAction-validation.xml, MyAction-actionAlias-validation.xml)
@@ -42,12 +52,12 @@ import java.util.*;
  * @author Rob Harrop
  * @author Rene Gielen
  * @author Martin Gilday
- * 
+ *
  * @see com.opensymphony.xwork2.validator.ValidatorConfig
  */
 public class DefaultValidatorFileParser implements ValidatorFileParser {
 
-    private static Logger LOG = LogManager.getLogger(DefaultValidatorFileParser.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultValidatorFileParser.class);
 
     static final String DEFAULT_MULTI_TEXTVALUE_SEPARATOR = " ";
     static final String MULTI_TEXTVALUE_SEPARATOR_CONFIG_KEY = "xwork.validatorfileparser.multi_textvalue_separator";
@@ -86,18 +96,18 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         if (doc != null) {
             NodeList fieldNodes = doc.getElementsByTagName("field");
 
-            // BUG: xw-305: Let validator be parsed first and hence added to 
+            // BUG: xw-305: Let validator be parsed first and hence added to
             // the beginning of list and therefore evaluated first, so short-circuting
             // it will not cause field-level validator to be kicked off.
             {
                 NodeList validatorNodes = doc.getElementsByTagName("validator");
-                addValidatorConfigs(validatorFactory, validatorNodes, new HashMap<String, Object>(), validatorCfgs);
+                addValidatorConfigs(validatorFactory, validatorNodes, new HashMap<>(), validatorCfgs);
             }
 
             for (int i = 0; i < fieldNodes.getLength(); i++) {
                 Element fieldElement = (Element) fieldNodes.item(i);
                 String fieldName = fieldElement.getAttribute("name");
-                Map<String, Object> extraParams = new HashMap<String, Object>();
+                Map<String, Object> extraParams = new HashMap<>();
                 extraParams.put("fieldName", fieldName);
 
                 NodeList validatorNodes = fieldElement.getElementsByTagName("field-validator");
@@ -130,7 +140,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                 try {
                     // catch any problems here
-                    objectFactory.buildValidator(className, new HashMap<String, Object>(), ActionContext.getContext().getContextMap());
+                    objectFactory.buildValidator(className, new HashMap<>(), ActionContext.getContext().getContextMap());
                     validators.put(name, className);
                 } catch (Exception e) {
                     throw new ConfigurationException("Unable to load validator class " + className, e, validatorElement);
@@ -176,7 +186,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
         for (int j = 0; j < validatorNodes.getLength(); j++) {
             Element validatorElement = (Element) validatorNodes.item(j);
             String validatorType = validatorElement.getAttribute("type");
-            Map<String, Object> params = new HashMap<String, Object>(extraParams);
+            Map<String, Object> params = new HashMap<>(extraParams);
 
             params.putAll(XmlHelper.getParams(validatorElement));
 
@@ -190,7 +200,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
             ValidatorConfig.Builder vCfg = new ValidatorConfig.Builder(validatorType)
                     .addParams(params)
                     .location(DomHelper.getLocationObject(validatorElement))
-                    .shortCircuit(Boolean.valueOf(validatorElement.getAttribute("short-circuit")));
+                    .shortCircuit(Boolean.parseBoolean(validatorElement.getAttribute("short-circuit")));
 
             NodeList messageNodes = validatorElement.getElementsByTagName("message");
             Element messageElement = (Element) messageNodes.item(0);
@@ -203,7 +213,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
             String key = messageElement.getAttribute("key");
 
 
-            if ((key != null) && (key.trim().length() > 0)) {
+            if (!key.trim().isEmpty()) {
                 vCfg.messageKey(key);
 
                 // Get the default message when pattern 2 is used. We are only interested in the
@@ -223,7 +233,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                 // Sort the message param. those with keys as '1', '2', '3' etc. (numeric values)
                 // are i18n message parameter, others are excluded.
-                TreeMap<Integer, String> sortedMessageParameters = new TreeMap<Integer, String>();
+                TreeMap<Integer, String> sortedMessageParameters = new TreeMap<>();
                 for (Map.Entry<String, String> messageParamEntry : messageParams.entrySet()) {
 
                     try {
@@ -234,13 +244,13 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
                         // ignore if its not numeric.
                     }
                 }
-                vCfg.messageParams(sortedMessageParameters.values().toArray(new String[sortedMessageParameters.values().size()]));
+                vCfg.messageParams(sortedMessageParameters.values().toArray(new String[0]));
             } else {
-                if (messageParams != null && (messageParams.size() > 0)) {
+                if (!messageParams.isEmpty()) {
                     // we are i18n message parameters defined but no i18n message,
                     // let's warn the user.
                     if (LOG.isWarnEnabled()) {
-                	LOG.warn("validator of type ["+validatorType+"] have i18n message parameters defined but no i18n message key, it's parameters will be ignored");
+                        LOG.warn("validator of type [{}] have i18n message parameters defined but no i18n message key, it's parameters will be ignored", validatorType);
                     }
                 }
             }

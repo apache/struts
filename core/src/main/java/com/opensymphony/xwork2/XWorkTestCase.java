@@ -98,7 +98,8 @@ public abstract class XWorkTestCase extends TestCase {
                 if (impl instanceof String || ClassUtils.isPrimitiveOrWrapper(impl.getClass())) {
                     props.setProperty(name, "" + impl);
                 } else {
-                    builder.factory(type, name, new Factory<T>() {
+                    builder.factory(type, name, new Factory<>() {
+                        @Override
                         public T create(Context context) throws Exception {
                             return impl;
                         }

@@ -22,6 +22,9 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import freemarker.template.Template;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,9 +32,6 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -109,10 +109,9 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
         try {
             List<Throwable> chain = new ArrayList<>();
             Throwable cur = e;
-            chain.add(cur);
-            while ((cur = cur.getCause()) != null) {
+            do {
                 chain.add(cur);
-            }
+            } while ((cur = cur.getCause()) != null);
 
             Writer writer = new StringWriter();
             template.process(createReportData(e, chain), writer);

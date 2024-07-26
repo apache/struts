@@ -18,18 +18,20 @@
  */
 package com.opensymphony.xwork2.util;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
  * A Stack that is implemented using a List.
- * 
+ *
  * @author plightbo
  * @version $Revision$
  */
 public class CompoundRoot extends CopyOnWriteArrayList<Object> {
 
+    @Serial
     private static final long serialVersionUID = 8563229069192473995L;
 
     public CompoundRoot() {

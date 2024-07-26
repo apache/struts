@@ -146,6 +146,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#getContext()
      */
+    @Override
     public Map<String, Object> getContext() {
         return context;
     }
@@ -158,6 +159,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
      */
+    @Override
     public void setDefaultType(Class defaultType) {
         this.defaultType = defaultType;
     }
@@ -176,6 +178,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#getExprOverrides()
      */
+    @Override
     public Map<Object, Object> getExprOverrides() {
         return this.overrides;
     }
@@ -183,6 +186,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#getRoot()
      */
+    @Override
     public CompoundRoot getRoot() {
         return root;
     }
@@ -190,6 +194,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setParameter(String, Object)
      */
+    @Override
     public void setParameter(String expr, Object value) {
         setValue(expr, value, devMode);
     }
@@ -197,6 +202,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
      */
+    @Override
     public void setValue(String expr, Object value) {
         setValue(expr, value, devMode);
     }
@@ -204,6 +210,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
      */
+    @Override
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
         Map<String, Object> context = getContext();
         try {
@@ -261,10 +268,12 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#findString(java.lang.String)
      */
+    @Override
     public String findString(String expr) {
         return (String) findValue(expr, String.class);
     }
 
+    @Override
     public String findString(String expr, boolean throwExceptionOnFailure) {
         return (String) findValue(expr, String.class, throwExceptionOnFailure);
     }
@@ -272,6 +281,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String)
      */
+    @Override
     public Object findValue(String expr, boolean throwExceptionOnFailure) {
         try {
             setupExceptionOnFailure(throwExceptionOnFailure);
@@ -318,6 +328,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return expr;
     }
 
+    @Override
     public Object findValue(String expr) {
         return findValue(expr, false);
     }
@@ -325,6 +336,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String, java.lang.Class)
      */
+    @Override
     public Object findValue(String expr, Class asType, boolean throwExceptionOnFailure) {
         try {
             setupExceptionOnFailure(throwExceptionOnFailure);
@@ -394,6 +406,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return getContext().get(name);
     }
 
+    @Override
     public Object findValue(String expr, Class asType) {
         return findValue(expr, asType, false);
     }
@@ -416,6 +429,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#peek()
      */
+    @Override
     public Object peek() {
         return root.peek();
     }
@@ -423,6 +437,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#pop()
      */
+    @Override
     public Object pop() {
         return root.pop();
     }
@@ -430,6 +445,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#push(java.lang.Object)
      */
+    @Override
     public void push(Object o) {
         root.push(o);
     }
@@ -437,6 +453,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
      */
+    @Override
     public void set(String key, Object o) {
         //set basically is backed by a Map pushed on the stack with a key being put on the map and the Object being the value
         Map setMap = retrieveSetMap();
@@ -466,6 +483,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#size()
      */
+    @Override
     public int size() {
         return root.size();
     }
@@ -487,16 +505,19 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return aStack;
     }
 
+    @Override
     public void clearContextValues() {
         //this is an OGNL ValueStack so the context will be an OgnlContext
         //it would be better to make context of type OgnlContext
         ((OgnlContext) context).getValues().clear();
     }
 
+    @Override
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {
         securityMemberAccess.useAcceptProperties(acceptedProperties);
     }
 
+    @Override
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         securityMemberAccess.useExcludeProperties(excludeProperties);
     }

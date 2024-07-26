@@ -30,17 +30,18 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.result.StrutsResultSupport;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Writer;
 import java.util.Locale;
 
@@ -49,6 +50,7 @@ import java.util.Locale;
  */
 public class FreemarkerResult extends StrutsResultSupport {
 
+    @Serial
     private static final long serialVersionUID = -3778230771704661631L;
 
     private static final Logger LOG = LogManager.getLogger(FreemarkerResult.class);
@@ -126,7 +128,7 @@ public class FreemarkerResult extends StrutsResultSupport {
             absoluteLocation = location;
         } else {
             String namespace = invocation.getProxy().getNamespace();
-            if (namespace == null || namespace.length() == 0 || namespace.equals("/")) {
+            if (namespace == null || namespace.isEmpty() || namespace.equals("/")) {
                 absoluteLocation = "/" + location;
             } else if (namespace.startsWith("/")) {
                 absoluteLocation = namespace + "/" + location;

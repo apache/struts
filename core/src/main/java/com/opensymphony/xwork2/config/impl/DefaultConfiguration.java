@@ -114,6 +114,7 @@ import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.ThreadAllowlist;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -651,6 +652,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     class ContainerProperties extends LocatableProperties {
+        @Serial
         private static final long serialVersionUID = -7320625750836896089L;
 
         @Override

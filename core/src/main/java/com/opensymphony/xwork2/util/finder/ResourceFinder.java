@@ -26,8 +26,21 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -61,11 +74,11 @@ public class ResourceFinder {
     /**
      * Create a ResourceFinder instance for looking up resources (via ClassLoader or via specific URLs
      * specifying resource locations).
-     * 
+     *
      * This class was functional in Struts 2.3.x, but broken for Struts 2.5.x (before 2.5.24), when dealing with
      * JAR resources in certain circumstances.  The current logic permits the base path to be "" (empty string),
      * which is required to also match JAR entries rooted at "" and not just file entries rooted at "/".
-     * 
+     *
      * @param path  Base path from which to look for resources (typically "xyz/abc/klm" form for file or
      *              jar contents).
      * @param classLoaderInterface  ClassLoader to perform the resource lookup.  If null, a default Thread
@@ -88,7 +101,7 @@ public class ResourceFinder {
                 continue;
             }
             try {
-                urls[i] = new URL("jar", "", -1, url.toString() + "!/");
+                urls[i] = new URL("jar", "", -1, url + "!/");
             } catch (MalformedURLException e) {
                 // Leave original entry intact if jar URL conversion fails.
             }
@@ -101,7 +114,7 @@ public class ResourceFinder {
             throw new IllegalArgumentException("Cannot test if a null URL is a directory");
         }
         String file = url.getFile();
-        return (file.length() > 0 && file.charAt(file.length() - 1) == '/');
+        return !file.isEmpty() && file.charAt(file.length() - 1) == '/';
     }
 
     /**
@@ -333,9 +346,7 @@ public class ResourceFinder {
             LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
             throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
         }
-        resourcesMap.entrySet().forEach(entry -> {
-            String name = entry.getKey();
-            URL url = entry.getValue();
+        resourcesMap.forEach((name, url) -> {
             try {
                 String value = readContents(url);
                 strings.put(name, value);
@@ -363,7 +374,7 @@ public class ResourceFinder {
      */
     public Class findClass(String uri) throws IOException, ClassNotFoundException {
         String className = findString(uri);
-        return (Class) classLoaderInterface.loadClass(className);
+        return classLoaderInterface.loadClass(className);
     }
 
     /**
@@ -515,9 +526,7 @@ public class ResourceFinder {
             LOG.trace("Null strings map for [{}], should not be possible!", uri);
             throw new IllegalStateException("Null strings map produced for uri: " + uri);
         }
-        map.entrySet().forEach(entry -> {
-            String string = entry.getKey();
-            String className = entry.getValue();
+        map.forEach((string, className) -> {
             try {
                 Class clazz = classLoaderInterface.loadClass(className);
                 classes.put(string, clazz);
@@ -775,9 +784,7 @@ public class ResourceFinder {
             LOG.trace("Null strings map for [{}], should not be possible!", interfase.getName());
             throw new IllegalStateException("Null strings map produced for interface: " + interfase.getName());
         }
-        map.entrySet().forEach(entry -> {
-            String string = entry.getKey();
-            String className = entry.getValue();
+        map.forEach((string, className) -> {
             try {
                 Class impl = classLoaderInterface.loadClass(className);
                 if (interfase.isAssignableFrom(impl)) {
@@ -1016,9 +1023,7 @@ public class ResourceFinder {
             LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
             throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
         }
-        map.entrySet().forEach(entry -> {
-            String string = entry.getKey();
-            URL url = entry.getValue();
+        map.forEach((string, url) -> {
             try {
                 Properties properties = loadProperties(url);
                 propertiesMap.put(string, properties);
@@ -1154,9 +1159,7 @@ public class ResourceFinder {
 
     private Set<String> convertPathsToPackages(Set<String> resources) {
         Set<String> packageNames = new HashSet<>(resources.size());
-        resources.forEach(resource -> {
-            packageNames.add(StringUtils.removeEnd(StringUtils.replace(resource, "/", "."), "."));
-        });
+        resources.forEach(resource -> packageNames.add(StringUtils.removeEnd(StringUtils.replace(resource, "/", "."), ".")));
 
         return packageNames;
     }
@@ -1198,7 +1201,7 @@ public class ResourceFinder {
         jarfile = conn.getJarFile();
 
         Enumeration<JarEntry> entries = jarfile.entries();
-        while (entries != null && entries.hasMoreElements()) {
+        while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
 
@@ -1225,19 +1228,19 @@ public class ResourceFinder {
 
         Enumeration<JarEntry> entries = jarfile.entries();
 
-        if (entries == null || ! entries.hasMoreElements()) {
+        if (! entries.hasMoreElements()) {
             LOG.debug("           JAR entries null or empty");
         }
-        LOG.debug("           Looking for entries matching basePath: " + basePath);
+        LOG.debug("           Looking for entries matching basePath: {}", basePath);
 
-        while (entries != null && entries.hasMoreElements()) {
+        while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
 
             if (entry.isDirectory() && StringUtils.startsWith(name, basePath)) {
                 resources.add(name);
             } else if (entry.isDirectory()) {
-               LOG.trace("           entry: " + name + " , isDirectory: " + entry.isDirectory() + " but does not start with basepath");
+                LOG.trace("           entry: {} , isDirectory: {}} but does not start with basepath", name, true);
             }
         }
     }
@@ -1281,7 +1284,7 @@ public class ResourceFinder {
 
         LOG.debug("    urls (member) non-null, using findResource to get resources");
 
-        ArrayList<URL> resources = new ArrayList<>(urls != null ? urls.length : 0);
+        ArrayList<URL> resources = new ArrayList<>(urls.length);
         for (URL url : urls) {
             URL resource = findResource(fulluri, url);
 
@@ -1332,10 +1335,7 @@ public class ResourceFinder {
                             continue;
                         }
                         sepIdx += 2;
-                        StringBuilder sb = new StringBuilder(file.length() - sepIdx + resourceName.length());
-                        sb.append(file.substring(sepIdx));
-                        sb.append(resourceName);
-                        entryName = sb.toString();
+                        entryName = file.substring(sepIdx) + resourceName;
                     }
                     if ("META-INF/".equals(entryName) && jarFile.getEntry("META-INF/MANIFEST.MF") != null){
                         return targetURL(currentUrl, "META-INF/MANIFEST.MF");
@@ -1398,10 +1398,7 @@ public class ResourceFinder {
     }
 
     private URL targetURL(URL base, String name) throws MalformedURLException {
-        StringBuilder sb = new StringBuilder(base.getFile().length() + name.length());
-        sb.append(base.getFile());
-        sb.append(name);
-        String file = sb.toString();
+        String file = base.getFile() + name;
         return new URL(base.getProtocol(), base.getHost(), base.getPort(), file, null);
     }
 }

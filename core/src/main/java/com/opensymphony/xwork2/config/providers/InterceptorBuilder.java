@@ -59,28 +59,28 @@ public class InterceptorBuilder {
      * @throws ConfigurationException in case of any configuration errors
      */
     public static List<InterceptorMapping> constructInterceptorReference(InterceptorLocator interceptorLocator,
-                                                                         String refName, Map<String,String> refParams, Location location, ObjectFactory objectFactory) throws ConfigurationException {
+                                                                         String refName,
+                                                                         Map<String,String> refParams,
+                                                                         Location location,
+                                                                         ObjectFactory objectFactory) throws ConfigurationException {
         Object referencedConfig = interceptorLocator.getInterceptorConfig(refName);
         List<InterceptorMapping> result = new ArrayList<>();
 
         if (referencedConfig == null) {
             throw new ConfigurationException("Unable to find interceptor class referenced by ref-name " + refName, location);
         } else {
-            if (referencedConfig instanceof InterceptorConfig) {
-                InterceptorConfig config = (InterceptorConfig) referencedConfig;
-                Interceptor inter;
+            if (referencedConfig instanceof InterceptorConfig config) {
                 try {
-                    inter = objectFactory.buildInterceptor(config, refParams);
+                    Interceptor inter = objectFactory.buildInterceptor(config, refParams);
                     result.add(new InterceptorMapping(refName, inter, refParams));
                 } catch (ConfigurationException ex) {
               	    LOG.warn(new ParameterizedMessage("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
                             config.getClassName(), ex.getLocation(), config.getName()), ex);
                 }
 
-            } else if (referencedConfig instanceof InterceptorStackConfig) {
-                InterceptorStackConfig stackConfig = (InterceptorStackConfig) referencedConfig;
+            } else if (referencedConfig instanceof InterceptorStackConfig stackConfig) {
 
-                if ((refParams != null) && (refParams.size() > 0)) {
+                if (refParams != null && !refParams.isEmpty()) {
                     result = constructParameterizedInterceptorReferences(interceptorLocator, stackConfig, refParams, objectFactory);
                 } else {
                     result.addAll(stackConfig.getInterceptors());
@@ -104,7 +104,9 @@ public class InterceptorBuilder {
      * @return list of interceptors referenced by the refName in the supplied PackageConfig overridden with refParams.
      */
     private static List<InterceptorMapping> constructParameterizedInterceptorReferences(
-            InterceptorLocator interceptorLocator, InterceptorStackConfig stackConfig, Map<String,String> refParams,
+            InterceptorLocator interceptorLocator,
+            InterceptorStackConfig stackConfig,
+            Map<String,String> refParams,
             ObjectFactory objectFactory) {
         List<InterceptorMapping> result;
         Map<String, Map<String, String>> params = new LinkedHashMap<>();
@@ -177,8 +179,7 @@ public class InterceptorBuilder {
              *    ...
              *  </interceptor-ref>
              */
-            if (interceptorCfgObj instanceof InterceptorConfig) {  //  interceptor-ref param refer to an interceptor
-                InterceptorConfig cfg = (InterceptorConfig) interceptorCfgObj;
+            if (interceptorCfgObj instanceof InterceptorConfig cfg) {  //  interceptor-ref param refer to an interceptor
                 Interceptor interceptor = objectFactory.buildInterceptor(cfg, map);
 
                 InterceptorMapping mapping = new InterceptorMapping(key, interceptor);
@@ -194,13 +195,12 @@ public class InterceptorBuilder {
                     result.add(mapping);
                 }
             } else
-            if (interceptorCfgObj instanceof InterceptorStackConfig) {  // interceptor-ref param refer to an interceptor stack
+            if (interceptorCfgObj instanceof InterceptorStackConfig stackCfg) {  // interceptor-ref param refer to an interceptor stack
 
                 // If its an interceptor-stack, we call this method recursively until,
                 // all the params (eg. interceptorStack1.interceptor1.param etc.)
                 // are resolved down to a specific interceptor.
 
-                InterceptorStackConfig stackCfg = (InterceptorStackConfig) interceptorCfgObj;
                 List<InterceptorMapping> tmpResult = constructParameterizedInterceptorReferences(interceptorLocator, stackCfg, map, objectFactory);
                 for (InterceptorMapping tmpInterceptorMapping : tmpResult) {
                     if (result.contains(tmpInterceptorMapping)) {

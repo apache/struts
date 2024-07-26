@@ -134,7 +134,7 @@ public class Property extends Component {
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        String actualValue = null;
+        String actualValue;
 
         if (value == null) {
             value = "top";

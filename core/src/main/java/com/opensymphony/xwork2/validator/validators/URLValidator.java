@@ -51,7 +51,7 @@ public class URLValidator extends FieldValidatorSupport {
 
     private static final Logger LOG = LogManager.getLogger(URLValidator.class);
 
-    public static final String DEFAULT_URL_REGEX = "^(?:https?|ftp):\\/\\/" +
+    public static final String DEFAULT_URL_REGEX = "^(?:https?|ftp)://" +
             "(?:(?:[a-z0-9$_.+!*'(),;?&=\\-]|%[0-9a-f]{2})+" +
             "(?::(?:[a-z0-9$_.+!*'(),;?&=\\-]|%[0-9a-f]{2})+)?" +
             "@)?#?" +
@@ -60,8 +60,8 @@ public class URLValidator extends FieldValidatorSupport {
             "|(?:(?:[1-9]?\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\.){3}" +
             "(?:[1-9]?\\d|1\\d{2}|2[0-4]\\d|25[0-5])" +
             ")(?::\\d+)?" +
-            ")(?:(?:\\/(?:[a-z0-9$_.+!*'(),;:@&=\\-]|%[0-9a-f]{2})*)*" +
-            "(?:\\?(?:[a-z0-9$_.+!*'(),;:@&=\\-\\/:]|%[0-9a-f]{2})*)?)?" +
+            ")(?:(?:/(?:[a-z0-9$_.+!*'(),;:@&=\\-]|%[0-9a-f]{2})*)*" +
+            "(?:\\?(?:[a-z0-9$_.+!*'(),;:@&=\\-/]|%[0-9a-f]{2})*)?)?" +
             "(?:#(?:[a-z0-9$_.+!*'(),;:@&=\\-]|%[0-9a-f]{2})*)?" +
             "$";
 
@@ -72,7 +72,7 @@ public class URLValidator extends FieldValidatorSupport {
         Object value = getFieldValue(fieldName, object);
 
         String stringValue = Objects.toString(value, EMPTY_STRING).trim();
-        if (stringValue.length() == 0) {
+        if (stringValue.isEmpty()) {
             LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
             return;
         }
@@ -97,7 +97,7 @@ public class URLValidator extends FieldValidatorSupport {
 
     protected void validateValue(Object object, Object value) {
         String stringValue = Objects.toString(value, EMPTY_STRING).trim();
-        if (stringValue.length() == 0) {
+        if (stringValue.isEmpty()) {
             LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
             return;
         }

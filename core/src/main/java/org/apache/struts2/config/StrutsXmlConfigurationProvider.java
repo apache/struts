@@ -34,12 +34,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Collections.unmodifiableMap;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
@@ -47,15 +44,15 @@ import static java.util.Collections.unmodifiableMap;
 public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsXmlConfigurationProvider.class);
-    private static final Map<String, String> STRUTS_DTD_MAPPINGS = unmodifiableMap(new HashMap<String, String>() {{
-        put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 6.0//EN", "struts-6.0.dtd");
-        put("-//Apache Software Foundation//DTD Struts Configuration 6.5//EN", "struts-6.5.dtd");
-    }});
+    private static final Map<String, String> STRUTS_DTD_MAPPINGS = Map.of(
+            "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN", "struts-6.0.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 6.5//EN", "struts-6.5.dtd");
+
     private File baseDir = null;
     private final String filename;
     private final String reloadKey;
@@ -101,10 +98,13 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
         if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
-            containerBuilder.factory(ServletContext.class, new Factory<ServletContext>() {
+            containerBuilder.factory(ServletContext.class, new Factory<>() {
+                @Override
                 public ServletContext create(Context context) throws Exception {
                     return servletContext;
                 }
+
+                @Override
                 public Class<? extends ServletContext> type() {
                     return servletContext.getClass();
                 }

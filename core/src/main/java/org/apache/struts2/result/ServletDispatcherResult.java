@@ -20,6 +20,10 @@ package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.PageContext;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,10 +33,7 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.url.QueryStringParser;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.jsp.PageContext;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -94,6 +95,7 @@ import jakarta.servlet.jsp.PageContext;
  */
 public class ServletDispatcherResult extends StrutsResultSupport {
 
+    @Serial
     private static final long serialVersionUID = -1970659272360685627L;
 
     private static final Logger LOG = LogManager.getLogger(ServletDispatcherResult.class);

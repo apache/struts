@@ -25,16 +25,18 @@ import java.util.Map;
 public class OgnlNullHandlerWrapper implements ognl.NullHandler {
 
     private final NullHandler wrapped;
-    
+
     public OgnlNullHandlerWrapper(NullHandler target) {
         this.wrapped = target;
     }
-    
+
+    @Override
     public Object nullMethodResult(Map context, Object target,
             String methodName, Object[] args) {
         return wrapped.nullMethodResult(context, target, methodName, args);
     }
 
+    @Override
     public Object nullPropertyValue(Map context, Object target, Object property) {
         return wrapped.nullPropertyValue(context, target, property);
     }

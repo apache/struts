@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -121,6 +122,7 @@ import java.util.List;
  */
 public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler, Redirectable {
 
+    @Serial
     private static final long serialVersionUID = -9042425229314584066L;
 
     /* The default parameter */

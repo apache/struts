@@ -25,8 +25,8 @@ package com.opensymphony.xwork2.util.location;
 public interface Locatable {
     /**
      * Get the location of this object
-     * 
+     *
      * @return the location
      */
-    public Location getLocation();
+    Location getLocation();
 }

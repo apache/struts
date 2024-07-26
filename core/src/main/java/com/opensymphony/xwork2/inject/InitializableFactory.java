@@ -25,7 +25,7 @@ class InitializableFactory<T> implements InternalFactory<T> {
 
     private static final Logger LOG = LogManager.getLogger(InitializableFactory.class);
 
-    private InternalFactory<T> internalFactory;
+    private final InternalFactory<T> internalFactory;
 
     private InitializableFactory(InternalFactory<T> internalFactory) {
         this.internalFactory = internalFactory;
@@ -42,7 +42,7 @@ class InitializableFactory<T> implements InternalFactory<T> {
     public T create(InternalContext context) {
         T instance = internalFactory.create(context);
         if (Initializable.class.isAssignableFrom(instance.getClass())) {
-            Initializable.class.cast(instance).init();
+            ((Initializable) instance).init();
         } else {
             LOG.error("Class {} is not marked as {}!", internalFactory.getClass().getName(), Initializable.class.getName());
         }

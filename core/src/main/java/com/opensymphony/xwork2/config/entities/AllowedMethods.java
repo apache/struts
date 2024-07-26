@@ -30,9 +30,9 @@ public class AllowedMethods {
 
     private static final Logger LOG = LogManager.getLogger(AllowedMethods.class);
 
-    private Set<AllowedMethod> allowedMethods;
+    private final Set<AllowedMethod> allowedMethods;
     private final boolean strictMethodInvocation;
-    private String defaultRegex;
+    private final String defaultRegex;
 
     public static AllowedMethods build(boolean strictMethodInvocation, Set<String> methods, String defaultRegex) {
 
@@ -133,7 +133,7 @@ public class AllowedMethods {
     private static class PatternAllowedMethod implements AllowedMethod {
 
         private final Pattern allowedMethodPattern;
-        private String original;
+        private final String original;
 
         public PatternAllowedMethod(String pattern, String original) {
             this.original = original;
@@ -177,7 +177,7 @@ public class AllowedMethods {
 
     private static class LiteralAllowedMethod implements AllowedMethod {
 
-        private String allowedMethod;
+        private final String allowedMethod;
 
         public LiteralAllowedMethod(String allowedMethod) {
             this.allowedMethod = allowedMethod;

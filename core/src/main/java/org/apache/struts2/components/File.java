@@ -19,13 +19,12 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -95,7 +94,7 @@ public class File extends UIBean {
         this.accept = accept;
     }
 
-    @StrutsTagAttribute(description="HTML size attribute", required=false, type="Integer")
+    @StrutsTagAttribute(description="HTML size attribute", type="Integer")
     public void setSize(String size) {
         this.size = size;
     }

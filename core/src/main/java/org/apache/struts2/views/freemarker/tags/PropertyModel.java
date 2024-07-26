@@ -34,6 +34,7 @@ public class PropertyModel extends TagModel {
         super(stack, req, res);
     }
 
+    @Override
     protected Component getBean() {
         return new Property(stack);
     }

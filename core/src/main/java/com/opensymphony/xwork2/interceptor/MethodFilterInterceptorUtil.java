@@ -24,18 +24,20 @@ import com.opensymphony.xwork2.util.WildcardHelper;
 import java.util.HashMap;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
- * Utility class contains common methods used by 
+ * Utility class contains common methods used by
  * {@link com.opensymphony.xwork2.interceptor.MethodFilterInterceptor}.
- * 
+ *
  * @author tm_jee
  */
 public class MethodFilterInterceptorUtil {
 
 	/**
      * Static method to decide if the specified <code>method</code> should be
-     * apply (not filtered) depending on the set of <code>excludeMethods</code> and 
-     * <code>includeMethods</code>. 
+     * apply (not filtered) depending on the set of <code>excludeMethods</code> and
+     * <code>includeMethods</code>.
      *
      * <ul>
      * <li>
@@ -50,7 +52,7 @@ public class MethodFilterInterceptorUtil {
      * @return <tt>true</tt> if the method should be applied.
      */
     public static boolean applyMethod(Set<String> excludeMethods, Set<String> includeMethods, String method) {
-        
+
         // quick check to see if any actual pattern matching is needed
         boolean needsPatternMatch = false;
         for (String includeMethod : includeMethods) {
@@ -59,7 +61,7 @@ public class MethodFilterInterceptorUtil {
                 break;
             }
         }
-        
+
         for (String excludeMethod : excludeMethods) {
             if (!"*".equals(excludeMethod) && excludeMethod.contains("*")) {
                 needsPatternMatch = true;
@@ -67,25 +69,19 @@ public class MethodFilterInterceptorUtil {
             }
         }
 
-        // this section will try to honor the original logic, while 
+        // this section will try to honor the original logic, while
         // still allowing for wildcards later
-        if (!needsPatternMatch && (includeMethods.contains("*") || includeMethods.size() == 0) ) {
-            if (excludeMethods != null 
-                    && excludeMethods.contains(method) 
-                    && !includeMethods.contains(method) ) {
+        if (!needsPatternMatch && (includeMethods.contains("*") || includeMethods.isEmpty()) ) {
+            if (excludeMethods.contains(method) && !includeMethods.contains(method)) {
                 return false;
             }
         }
-        
+
         // test the methods using pattern matching
         WildcardHelper wildcard = new WildcardHelper();
         String methodCopy ;
-        if (method == null ) { // no method specified
-            methodCopy = "";
-        }
-        else {
-            methodCopy = new String(method);
-        }
+        // no method specified
+        methodCopy = requireNonNullElse(method, "");
         for (String pattern : includeMethods) {
             if (pattern.contains("*")) {
                 int[] compiledPattern = wildcard.compilePattern(pattern);
@@ -105,7 +101,7 @@ public class MethodFilterInterceptorUtil {
             return false;
         }
 
-        // CHECK ME: Previous implementation used include method 
+        // CHECK ME: Previous implementation used include method
         for ( String pattern : excludeMethods) {
             if (pattern.contains("*")) {
                 int[] compiledPattern = wildcard.compilePattern(pattern);
@@ -113,26 +109,26 @@ public class MethodFilterInterceptorUtil {
                 boolean matches = wildcard.match(matchedPatterns, methodCopy, compiledPattern);
                 if (matches) {
                     // if found, and wasn't included earlier, don't run it
-                    return false; 
+                    return false;
                 }
             }
             else {
                 if (pattern.equals(methodCopy)) {
                     // if found, and wasn't included earlier, don't run it
-                    return false; 
+                    return false;
                 }
             }
         }
-    
+
 
         // default fall-back from before changes
-        return includeMethods.size() == 0 || includeMethods.contains(method) || includeMethods.contains("*");
+        return includeMethods.isEmpty() || includeMethods.contains(method) || includeMethods.contains("*");
     }
-    
+
     /**
      * Same as {@link #applyMethod(Set, Set, String)}, except that <code>excludeMethods</code>
      * and <code>includeMethods</code> are supplied as comma separated string.
-     * 
+     *
      * @param excludeMethods  comma seperated string of methods to exclude.
      * @param includeMethods  comma seperated string of methods to include.
      * @param method the specified method to check
@@ -141,7 +137,7 @@ public class MethodFilterInterceptorUtil {
     public static boolean applyMethod(String excludeMethods, String includeMethods, String method) {
     	Set<String> includeMethodsSet = TextParseUtil.commaDelimitedStringToSet(includeMethods == null? "" : includeMethods);
     	Set<String> excludeMethodsSet = TextParseUtil.commaDelimitedStringToSet(excludeMethods == null? "" : excludeMethods);
-    	
+
     	return applyMethod(excludeMethodsSet, includeMethodsSet, method);
     }
 

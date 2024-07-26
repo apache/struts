@@ -22,14 +22,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -97,6 +98,7 @@ import jakarta.servlet.http.HttpSession;
  */
 public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -9032347965469098195L;
 
     @Override
@@ -116,15 +118,15 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
      * Handles processing of invalid tokens.  If a previously stored invocation is
      * available, the method will attempt to return and render its result.  Otherwise
      * it will return INVALID_TOKEN_CODE.
-     * 
+     *
      * Note: Because a stored (previously completed) invocation's PageContext will be closed,
      *   this method must replace the stored PageContext with the current invocation's one (or a null).
      *   See {@link org.apache.struts2.util.InvocationSessionStore#loadInvocation(String key, String token)} for details.
-     * 
+     *
      * @param invocation
-     * 
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
@@ -171,11 +173,11 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
      * Handles processing of valid tokens.  Stores the current invocation for
      * later use by {@see #handleValidToken(ActionInvocation)}.
      * See {@link org.apache.struts2.util.InvocationSessionStore#storeInvocation(String key, String token, ActionInvocation invocation)} for details.
-     * 
+     *
      * @param invocation
-     * 
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected String handleValidToken(ActionInvocation invocation) throws Exception {

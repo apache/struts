@@ -26,25 +26,30 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 public class StubConfigurationProvider implements ConfigurationProvider {
 
+    @Override
     public void destroy() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void loadPackages() throws ConfigurationException {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public boolean needsReload() {
         // TODO Auto-generated method stub
         return false;
     }
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props)
             throws ConfigurationException {
         // TODO Auto-generated method stub

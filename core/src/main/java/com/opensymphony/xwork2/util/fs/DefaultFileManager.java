@@ -35,18 +35,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 /**
  * Default implementation of {@link FileManager}
  */
 public class DefaultFileManager implements FileManager {
 
-    private static Logger LOG = LogManager.getLogger(DefaultFileManager.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultFileManager.class);
 
-    private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
+    private static final Pattern JAR_PATTERN = Pattern.compile(
+            "^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
 
-    protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
-    private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<URL>());
+    protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<>());
+    private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<>());
 
     protected boolean reloadingConfigs = false;
 
@@ -117,11 +120,7 @@ public class DefaultFileManager implements FileManager {
         } else {
             revision = FileRevision.build(fileUrl);
         }
-        if (revision == null) {
-            files.put(fileName, Revision.build(fileUrl));
-        } else {
-            files.put(fileName, revision);
-        }
+        files.put(fileName, requireNonNullElseGet(revision, () -> Revision.build(fileUrl)));
     }
 
     /**

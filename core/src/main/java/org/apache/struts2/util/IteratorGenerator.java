@@ -110,10 +110,12 @@ public class IteratorGenerator implements Iterator, Action {
     }
 
     // Iterator implementation ---------------------------------------
+    @Override
     public boolean hasNext() {
-        return (value == null) ? false : ((currentCount < count) || (count == -1));
+        return value != null && ((currentCount < count) || (count == -1));
     }
 
+    @Override
     public Object next() {
         try {
             return values.get(currentCount % values.size());
@@ -122,6 +124,7 @@ public class IteratorGenerator implements Iterator, Action {
         }
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException("Remove is not supported in IteratorGenerator.");
     }
@@ -131,7 +134,7 @@ public class IteratorGenerator implements Iterator, Action {
     /**
      * Interface for converting each separated token into an Object of choice.
      */
-    public static interface Converter {
+    public interface Converter {
         Object convert(String token) throws Exception;
     }
 }

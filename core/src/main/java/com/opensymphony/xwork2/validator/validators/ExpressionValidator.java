@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  * </ul>
  * <!-- END SNIPPET: parameters -->
  *
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  *     &lt;validators&gt;
@@ -73,7 +73,7 @@ public class ExpressionValidator extends ValidatorSupport {
             // let this pass, but it will be logged right below
         }
 
-        if ((obj != null) && (obj instanceof Boolean)) {
+        if (obj instanceof Boolean) {
             answer = (Boolean) obj;
         } else {
             LOG.warn("Got result of [{}] when trying to get Boolean.", obj);

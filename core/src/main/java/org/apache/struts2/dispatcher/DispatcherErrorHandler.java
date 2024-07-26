@@ -32,7 +32,7 @@ public interface DispatcherErrorHandler {
      * Init instance after creating {@link org.apache.struts2.dispatcher.Dispatcher}
      * @param ctx current {@link jakarta.servlet.ServletContext}
      */
-    public void init(ServletContext ctx);
+    void init(ServletContext ctx);
 
     /**
      * Handle passed error code or exception
@@ -42,6 +42,6 @@ public interface DispatcherErrorHandler {
      * @param code HTTP Error Code, see {@link jakarta.servlet.http.HttpServletResponse} for possible error codes
      * @param e Exception to report
      */
-    public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e);
+    void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e);
 
 }

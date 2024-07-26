@@ -18,16 +18,15 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.SessionMap;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.SessionMap;
+
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -79,6 +78,7 @@ import jakarta.servlet.http.HttpSession;
  */
 public class CreateSessionInterceptor extends AbstractInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -4590322556118858869L;
 
     private static final Logger LOG = LogManager.getLogger(CreateSessionInterceptor.class);

@@ -49,27 +49,27 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     //to access properties of the objects in the Set
     //so that nothing is put in the context to screw things up
     private final ObjectPropertyAccessor _accessor = new ObjectPropertyAccessor();
-    
+
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
     private OgnlUtil ognlUtil;
-    
+
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
         this.xworkConverter = conv;
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
-    
+
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer ot) {
         this.objectTypeDeterminer = ot;
     }
-    
+
     @Inject
     public void setOgnlUtil(OgnlUtil util) {
         this.ognlUtil = util;
@@ -145,26 +145,26 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
                     && ReflectionContextState.isCreatingNullObjects(context)
                     && objectTypeDeterminer
                     .shouldCreateIfNew(lastBeanClass,lastPropertyClass,c,keyProperty,false)) {
-                	//create a new element and 
+                	//create a new element and
                     //set the value of keyProperty
                     //to be the given value
                 	try {
                 	    value=objectFactory.buildBean(collClass, context);
-                	    
+
                 	    //set the value of the keyProperty
                 	    _accessor.setProperty(context,value,keyProperty,realKey);
-                	    
-                	    //add the new object to the collection 
+
+                	    //add the new object to the collection
                 	    c.add(value);
-                	    
+
                 	    //add to the Map if accessed later
                 	    collMap.put(realKey, value);
-                	    
-                	    
+
+
                 	}	catch (Exception exc) {
                 	    throw new OgnlException("Error adding new element to collection", exc);
                 	}
-                
+
             }
             return value;
         } else {
@@ -260,7 +260,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
             return value;
         }
         return xworkConverter.convertValue(context, value, convertToClass);
-    }  
+    }
 }
 
 /**
@@ -268,7 +268,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
  */
 class SurrugateList extends ArrayList {
 
-    private Collection surrugate;
+    private final Collection surrugate;
 
     public SurrugateList(Collection surrugate) {
         this.surrugate = surrugate;

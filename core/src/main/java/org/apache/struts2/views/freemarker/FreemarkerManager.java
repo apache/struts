@@ -40,7 +40,6 @@ import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
 import freemarker.template.Version;
 import freemarker.template.utility.StringUtil;
 import jakarta.servlet.GenericServlet;
@@ -387,7 +386,7 @@ public class FreemarkerManager {
             model.put(KEY_APPLICATION, servletContextModel);
             model.putUnlistedModel(KEY_APPLICATION_PRIVATE, servletContextModel);
         }
-        model.put(KEY_JSP_TAGLIBS, (TemplateModel) servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
+        model.put(KEY_JSP_TAGLIBS, servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
 
         // Create hash model wrapper for session
         HttpSession session = request.getSession(false);
@@ -495,23 +494,18 @@ public class FreemarkerManager {
                     addSetting(name, value);
                 }
             }
-        } catch (IOException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         }
     }
 
     public void addSetting(String name, String value) throws TemplateException {
         // Process all other init-params:
-        if (name.equals(INITPARAM_NOCACHE)) {
-            nocache = StringUtil.getYesNo(value);
-        } else if (name.equals(INITPARAM_DEBUG)) {
-            debug = StringUtil.getYesNo(value);
-        } else if (name.equals(INITPARAM_CONTENT_TYPE)) {
-            contentType = value;
-        } else {
-            config.setSetting(name, value);
+        switch (name) {
+            case INITPARAM_NOCACHE -> nocache = StringUtil.getYesNo(value);
+            case INITPARAM_DEBUG -> debug = StringUtil.getYesNo(value);
+            case INITPARAM_CONTENT_TYPE -> contentType = value;
+            default -> config.setSetting(name, value);
         }
 
         if (contentType != null && !contentTypeEvaluated) {

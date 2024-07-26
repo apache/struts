@@ -34,6 +34,8 @@ import org.apache.struts2.action.ServletResponseAware;
 import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 
+import java.io.Serial;
+
 /**
  * <!-- START SNIPPET: description -->
  * <p>
@@ -101,6 +103,7 @@ import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
  */
 public class ServletConfigInterceptor extends AbstractInterceptor implements StrutsStatics {
 
+    @Serial
     private static final long serialVersionUID = 605261777858676638L;
 
     /**
@@ -110,6 +113,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when setting action properties.
      */
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         final ActionContext context = invocation.getInvocationContext();

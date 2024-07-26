@@ -303,6 +303,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
      */
+    @Override
     public List<LocalizedMessage> getErrors() {
         return errors;
     }
@@ -310,6 +311,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileParameterNames()
      */
+    @Override
     public Enumeration<String> getFileParameterNames() {
         return Collections.enumeration(uploadedFiles.keySet());
     }
@@ -317,6 +319,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getContentType(java.lang.String)
      */
+    @Override
     public String[] getContentType(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList()).stream()
                 .map(UploadedFile::getContentType)
@@ -326,6 +329,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
+    @Override
     public UploadedFile[] getFile(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList())
                 .toArray(UploadedFile[]::new);
@@ -334,6 +338,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileNames(java.lang.String)
      */
+    @Override
     public String[] getFileNames(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList()).stream()
                 .map(file -> getCanonicalName(file.getOriginalName()))
@@ -343,6 +348,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFilesystemName(java.lang.String)
      */
+    @Override
     public String[] getFilesystemName(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList()).stream()
                 .map(UploadedFile::getAbsolutePath)
@@ -352,6 +358,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameter(java.lang.String)
      */
+    @Override
     public String getParameter(String name) {
         List<String> paramValue = parameters.getOrDefault(name, Collections.emptyList());
         if (!paramValue.isEmpty()) {
@@ -364,6 +371,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterNames()
      */
+    @Override
     public Enumeration<String> getParameterNames() {
         return Collections.enumeration(parameters.keySet());
     }
@@ -371,6 +379,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterValues(java.lang.String)
      */
+    @Override
     public String[] getParameterValues(String name) {
         List<String> values = parameters.get(name);
         if (values == null) {
@@ -382,6 +391,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
      */
+    @Override
     public void cleanUp() {
         try {
             LOG.debug("Performing File Upload temporary storage cleanup.");

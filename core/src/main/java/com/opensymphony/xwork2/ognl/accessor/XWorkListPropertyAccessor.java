@@ -44,7 +44,7 @@ import java.util.Map;
 public class XWorkListPropertyAccessor extends ListPropertyAccessor {
 
     private XWorkCollectionPropertyAccessor _sAcc = new XWorkCollectionPropertyAccessor();
-    
+
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
@@ -60,22 +60,22 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     public void setXWorkCollectionPropertyAccessor(PropertyAccessor acc) {
         this._sAcc = (XWorkCollectionPropertyAccessor) acc;
     }
-    
+
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
         this.xworkConverter = conv;
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
-    
+
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer ot) {
         this.objectTypeDeterminer = ot;
     }
-    
+
     @Inject
     public void setOgnlUtil(OgnlUtil util) {
         this.ognlUtil = util;
@@ -93,7 +93,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
         ReflectionContextState.updateCurrentPropertyPath(context, name);
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
-        
+
         if (name instanceof Number
                 && ReflectionContextState.isCreatingNullObjects(context)
                 && objectTypeDeterminer.shouldCreateIfNew(lastClass,lastProperty,target,null,true)) {
@@ -168,9 +168,8 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
 
         Object realValue = getRealValue(context, value, convertToClass);
 
-        if (target instanceof List && name instanceof Number) {
+        if (target instanceof List list && name instanceof Number) {
             //make sure there are enough spaces in the List to set
-            List list = (List) target;
             int listSize = list.size();
             int count = ((Number) name).intValue();
             if(count > autoGrowCollectionLimit)

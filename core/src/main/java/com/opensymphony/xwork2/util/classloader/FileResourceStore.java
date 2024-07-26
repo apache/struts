@@ -36,6 +36,7 @@ public final class FileResourceStore extends AbstractResourceStore {
         super(file);
     }
 
+    @Override
     public byte[] read(final String pResourceName) {
         FileInputStream fis = null;
         try {

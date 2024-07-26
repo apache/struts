@@ -23,10 +23,11 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,10 +48,11 @@ import java.util.Map;
  */
 public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
+    @Serial
     private static final long serialVersionUID = 5551686380141886764L;
 
-    private HttpServletRequest request;
-    private ServletContext servletContext;
+    private final HttpServletRequest request;
+    private final ServletContext servletContext;
     private ValueStack stack;
     private final Map<String, TemplateModel> unlistedModels = new HashMap<>();
     private volatile Object parametersCache;

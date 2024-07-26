@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Attaches location information to the factory.
@@ -32,10 +32,10 @@ import java.util.LinkedHashMap;
 public class LocatableFactory<T> extends Located implements Factory<T> {
 
 
-    private Class implementation;
-    private Class type;
-    private String name;
-    private Scope scope;
+    private final Class implementation;
+    private final Class type;
+    private final String name;
+    private final Scope scope;
 
     public LocatableFactory(String name, Class type, Class implementation, Scope scope, Object location) {
         this.implementation = implementation;
@@ -58,18 +58,7 @@ public class LocatableFactory<T> extends Located implements Factory<T> {
 
     @Override
     public String toString() {
-        String fields = new LinkedHashMap<String, Object>() {
-            {
-                put("type", type);
-                put("name", name);
-                put("implementation", implementation);
-                put("scope", scope);
-            }
-        }.toString();
-        StringBuilder sb = new StringBuilder(fields);
-        sb.append(super.toString());
-        sb.append(" defined at ");
-        sb.append(getLocation().toString());
-        return sb.toString();
+        var fields = Map.of("type", type,"name", name,"implementation", implementation,"scope", scope);
+        return fields + super.toString() + " defined at " + getLocation().toString();
     }
 }

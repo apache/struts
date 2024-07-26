@@ -18,12 +18,21 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.conversion.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
+import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
+import com.opensymphony.xwork2.conversion.TypeConverter;
+import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.AnnotationUtils;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -143,8 +152,8 @@ public class XWorkConverter extends DefaultTypeConverter {
 
     public static final String LAST_BEAN_CLASS_ACCESSED = "last.bean.accessed";
     public static final String LAST_BEAN_PROPERTY_ACCESSED = "last.property.accessed";
-    public static final String MESSAGE_INDEX_PATTERN = "\\[\\d+\\]\\.";
-    public static final String MESSAGE_INDEX_BRACKET_PATTERN = "[\\[\\]\\.]";
+    public static final String MESSAGE_INDEX_PATTERN = "\\[\\d+]\\.";
+    public static final String MESSAGE_INDEX_BRACKET_PATTERN = "[\\[\\].]";
     public static final String PERIOD = ".";
     public static final Pattern messageIndexPattern = Pattern.compile(MESSAGE_INDEX_PATTERN);
 
@@ -228,7 +237,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         Matcher matcher = messageIndexPattern.matcher(propertyName);
         List<String> indexes = new ArrayList<>();
         while (matcher.find()) {
-            Integer index = new Integer(matcher.group().replaceAll(MESSAGE_INDEX_BRACKET_PATTERN, "")) + 1;
+            int index = Integer.parseInt(matcher.group().replaceAll(MESSAGE_INDEX_BRACKET_PATTERN, "")) + 1;
             indexes.add(Integer.toString(index));
         }
         return indexes;
@@ -297,7 +306,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         }
 
         if (tc == null) {
-            if (toClass.equals(String.class) && (value != null) && !(value.getClass().equals(String.class) || value.getClass().equals(String[].class))) {
+            if (toClass.equals(String.class) && value != null && !value.getClass().equals(String[].class)) {
                 // when converting to a string, use the source target's class's converter
                 tc = lookup(value.getClass());
             } else {
@@ -484,8 +493,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         Annotation[] annotations = clazz.getAnnotations();
 
         for (Annotation annotation : annotations) {
-            if (annotation instanceof Conversion) {
-                Conversion conversion = (Conversion) annotation;
+            if (annotation instanceof Conversion conversion) {
                 for (TypeConversion tc : conversion.conversions()) {
                     if (mapping.containsKey(tc.key())) {
                         break;
@@ -506,29 +514,19 @@ public class XWorkConverter extends DefaultTypeConverter {
         for (Method method : clazz.getMethods()) {
             annotations = method.getAnnotations();
             for (Annotation annotation : annotations) {
-                if (annotation instanceof TypeConversion) {
-                    TypeConversion tc = (TypeConversion) annotation;
+                if (annotation instanceof TypeConversion tc) {
                     String key = tc.key();
                     // Default to the property name with prefix
                     if (StringUtils.isEmpty(key)) {
                         key = AnnotationUtils.resolvePropertyName(method);
-                        switch (tc.rule()) {
-                            case COLLECTION:
-                                key = DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
-                                break;
-                            case CREATE_IF_NULL:
-                                key = DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
-                                break;
-                            case ELEMENT:
-                                key = DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
-                                break;
-                            case KEY:
-                                key = DefaultObjectTypeDeterminer.KEY_PREFIX + key;
-                                break;
-                            case KEY_PROPERTY:
-                                key = DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
-                                break;
-                        }
+                        key = switch (tc.rule()) {
+                            case COLLECTION -> DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
+                            case CREATE_IF_NULL -> DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
+                            case ELEMENT -> DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
+                            case KEY -> DefaultObjectTypeDeterminer.KEY_PREFIX + key;
+                            case KEY_PROPERTY -> DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
+                            default -> key;
+                        };
                         LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
                     }
                     if (mapping.containsKey(key)) {
@@ -570,7 +568,7 @@ public class XWorkConverter extends DefaultTypeConverter {
             curClazz = curClazz.getSuperclass();
         }
 
-        if (mapping.size() > 0) {
+        if (!mapping.isEmpty()) {
             converterHolder.addMapping(clazz, mapping);
         } else {
             converterHolder.addNoMapping(clazz);

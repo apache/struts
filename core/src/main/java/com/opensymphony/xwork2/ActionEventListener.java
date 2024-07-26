@@ -25,20 +25,20 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public interface ActionEventListener {
     /**
-     * Called after an action has been created. 
-     * 
+     * Called after an action has been created.
+     *
      * @param action The action
      * @param stack The current value stack
      * @return The action to use
      */
-    public Object prepare(Object action, ValueStack stack);
-    
+    Object prepare(Object action, ValueStack stack);
+
     /**
      * Called when an exception is thrown by the action
-     * 
+     *
      * @param t The exception/error that was thrown
      * @param stack The current value stack
      * @return A result code to execute, can be null
      */
-    public String handleException(Throwable t, ValueStack stack);
+    String handleException(Throwable t, ValueStack stack);
 }

@@ -22,10 +22,13 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 
+import java.io.Serial;
+
 /**
  */
 public class JspSupportServlet extends HttpServlet {
 
+    @Serial
     private static final long serialVersionUID = 8302309812391541933L;
 
     public static JspSupportServlet jspSupportServlet;

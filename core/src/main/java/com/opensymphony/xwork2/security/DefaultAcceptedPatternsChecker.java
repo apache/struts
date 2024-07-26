@@ -44,7 +44,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     /**
      * Must match {@link #ACCEPTED_PATTERNS} RegEx. Signifies characters which result in a nested lookup via OGNL.
      */
-    public static final Set<Character> NESTING_CHARS = unmodifiableSet(new HashSet<>(asList('.', '[', '(')));
+    public static final Set<Character> NESTING_CHARS = Set.of('.', '[', '(');
     public static final String NESTING_CHARS_STR = NESTING_CHARS.stream().map(String::valueOf).collect(joining());
 
     public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {

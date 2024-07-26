@@ -28,10 +28,12 @@ class DateHttpHeader implements HttpHeader<Long> {
         this.value = value;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Long getValue() {
         return value;
     }

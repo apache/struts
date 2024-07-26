@@ -18,8 +18,8 @@
  */
 package com.opensymphony.xwork2.util;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,10 +62,10 @@ import java.util.jar.JarInputStream;
  *resolver.find(new CustomTest(), pkg1);
  *resolver.find(new CustomTest(), pkg2);
  *Collection&lt;ActionBean&gt; beans = resolver.getClasses();
- *</pre> 
+ *</pre>
  *
  * <p>This class was copied from Stripes - http://stripes.mc4j.org/confluence/display/stripes/Home</p>
- * 
+ *
  * @author Tim Fennell
  */
 public class ResolverUtil<T> {
@@ -75,7 +76,7 @@ public class ResolverUtil<T> {
      * A simple interface that specifies how to test classes to determine if they
      * are to be included in the results produced by the ResolverUtil.
      */
-    public static interface Test {
+    public interface Test {
         /**
          * Will be called repeatedly with candidate classes.
          *
@@ -83,13 +84,13 @@ public class ResolverUtil<T> {
          * @return True if a class is to be included in the results, false otherwise.
          */
         boolean matches(Class type);
-        
+
         boolean matches(URL resource);
 
         boolean doesMatchClass();
         boolean doesMatchResource();
     }
-    
+
     public static abstract class ClassTest implements Test {
         public boolean matches(URL resource) {
             throw new UnsupportedOperationException();
@@ -102,7 +103,7 @@ public class ResolverUtil<T> {
             return false;
         }
     }
-    
+
     public static abstract class ResourceTest implements Test {
         public boolean matches(Class cls) {
             throw new UnsupportedOperationException();
@@ -121,7 +122,7 @@ public class ResolverUtil<T> {
      * that this test will match the parent type itself if it is presented for matching.
      */
     public static class IsA extends ClassTest {
-        private Class parent;
+        private final Class parent;
 
         /** Constructs an IsA test using the supplied Class as the parent class/interface.
          * @param parentType the parent type class
@@ -140,12 +141,12 @@ public class ResolverUtil<T> {
             return "is assignable to " + parent.getSimpleName();
         }
     }
-    
+
     /**
      * A Test that checks to see if each class name ends with the provided suffix.
      */
     public static class NameEndsWith extends ClassTest {
-        private String suffix;
+        private final String suffix;
 
         /**
          * Constructs a NameEndsWith test using the supplied suffix.
@@ -171,7 +172,7 @@ public class ResolverUtil<T> {
      * is, then the test returns true, otherwise false.
      */
     public static class AnnotatedWith extends ClassTest {
-        private Class<? extends Annotation> annotation;
+        private final Class<? extends Annotation> annotation;
 
         /**
          * Constructs an AnnotatedWith test for the specified annotation type.
@@ -192,26 +193,26 @@ public class ResolverUtil<T> {
             return "annotated with @" + annotation.getSimpleName();
         }
     }
-    
+
     public static class NameIs extends ResourceTest {
-        private String name;
-        
+        private final String name;
+
         public NameIs(String name) { this.name = "/" + name; }
-        
+
         public boolean matches(URL resource) {
             return (resource.getPath().endsWith(name));
         }
-        
+
         @Override public String toString() {
             return "named " + name;
         }
     }
 
     /** The set of matches being accumulated. */
-    private Set<Class<? extends T>> classMatches = new HashSet<Class<?extends T>>();
-    
+    private final Set<Class<? extends T>> classMatches = new HashSet<>();
+
     /** The set of matches being accumulated. */
-    private Set<URL> resourceMatches = new HashSet<>();
+    private final Set<URL> resourceMatches = new HashSet<>();
 
     /**
      * The ClassLoader to use when looking for classes. If null then the ClassLoader returned
@@ -228,11 +229,11 @@ public class ResolverUtil<T> {
     public Set<Class<? extends T>> getClasses() {
         return classMatches;
     }
-    
+
     public Set<URL> getResources() {
         return resourceMatches;
     }
-    
+
 
     /**
      * Returns the classloader that will be used for scanning for classes. If no explicit
@@ -269,7 +270,7 @@ public class ResolverUtil<T> {
             findInPackage(test, pkg);
         }
     }
-    
+
     /**
      * Attempts to discover classes who's name ends with the provided suffix. Accumulated classes can be
      * accessed by calling {@link #getClasses()}.
@@ -301,16 +302,16 @@ public class ResolverUtil<T> {
             findInPackage(test, pkg);
         }
     }
-    
+
     public void findNamedResource(String name, String... pathNames) {
         if (pathNames == null) return;
-        
+
         Test test = new NameIs(name);
         for (String pkg : pathNames) {
             findInPackage(test, pkg);
         }
     }
-    
+
     /**
      * Attempts to discover classes that pass the test. Accumulated
      * classes can be accessed by calling {@link #getClasses()}.
@@ -352,35 +353,28 @@ public class ResolverUtil<T> {
         }
 
         while (urls.hasMoreElements()) {
-            try {
-                String urlPath = urls.nextElement().getFile();
-                urlPath = URLDecoder.decode(urlPath, "UTF-8");
+            String urlPath = urls.nextElement().getFile();
+            urlPath = URLDecoder.decode(urlPath, StandardCharsets.UTF_8);
 
-                // If it's a file in a directory, trim the stupid file: spec
-                if ( urlPath.startsWith("file:") ) {
-                    urlPath = urlPath.substring(5);
-                }
-
-                // Else it's in a JAR, grab the path to the jar
-                if (urlPath.indexOf('!') > 0) {
-                    urlPath = urlPath.substring(0, urlPath.indexOf('!'));
-                }
-
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("Scanning for classes in [" + urlPath + "] matching criteria: " + test);
-                }
-                File file = new File(urlPath);
-                if ( file.isDirectory() ) {
-                    loadImplementationsInDirectory(test, packageName, file);
-                }
-                else {
-                    loadImplementationsInJar(test, packageName, file);
-                }
+            // If it's a file in a directory, trim the stupid file: spec
+            if ( urlPath.startsWith("file:") ) {
+                urlPath = urlPath.substring(5);
             }
-            catch (IOException ioe) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("could not read entries", ioe);
-                }
+
+            // Else it's in a JAR, grab the path to the jar
+            if (urlPath.indexOf('!') > 0) {
+                urlPath = urlPath.substring(0, urlPath.indexOf('!'));
+            }
+
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Scanning for classes in [" + urlPath + "] matching criteria: " + test);
+            }
+            File file = new File(urlPath);
+            if ( file.isDirectory() ) {
+                loadImplementationsInDirectory(test, packageName, file);
+            }
+            else {
+                loadImplementationsInJar(test, packageName, file);
             }
         }
     }
@@ -400,7 +394,7 @@ public class ResolverUtil<T> {
      */
     private void loadImplementationsInDirectory(Test test, String parent, File location) {
         File[] files = location.listFiles();
-        StringBuilder builder = null;
+        StringBuilder builder;
 
         for (File file : files) {
             builder = new StringBuilder(100);
@@ -459,7 +453,7 @@ public class ResolverUtil<T> {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Checking to see if class " + externalName + " matches criteria [" + test + "]");
                 }
-    
+
                 Class type = loader.loadClass(externalName);
                 if (test.matches(type) ) {
                     classMatches.add( (Class<T>) type);

@@ -364,7 +364,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
                 .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
-        if (!propDescOpt.isPresent()) {
+        if (propDescOpt.isEmpty()) {
             return hasValidAnnotatedField(action, rootProperty, paramDepth);
         }
 

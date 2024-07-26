@@ -31,21 +31,21 @@ public interface Action {
      * The action execution was successful. Show result
      * view to the end user.
      */
-    public static final String SUCCESS = "success";
+    String SUCCESS = "success";
 
     /**
      * The action execution was successful but do not
      * show a view. This is useful for actions that are
      * handling the view in another fashion like redirect.
      */
-    public static final String NONE = "none";
+    String NONE = "none";
 
     /**
      * The action execution was a failure.
      * Show an error view, possibly asking the
      * user to retry entering data.
      */
-    public static final String ERROR = "error";
+    String ERROR = "error";
 
     /**
      * <p>
@@ -64,14 +64,14 @@ public interface Action {
      * should try providing input again.
      * </p>
      */
-    public static final String INPUT = "input";
+    String INPUT = "input";
 
     /**
      * The action could not execute, since the
      * user most was not logged in. The login view
      * should be shown.
      */
-    public static final String LOGIN = "login";
+    String LOGIN = "login";
 
 
     /**
@@ -83,6 +83,6 @@ public interface Action {
      *                   <b>Note:</b> Application level exceptions should be handled by returning
      *                   an error value, such as <code>Action.ERROR</code>.
      */
-    public String execute() throws Exception;
+    String execute() throws Exception;
 
 }

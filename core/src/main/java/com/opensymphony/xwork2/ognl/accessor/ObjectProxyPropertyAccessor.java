@@ -20,10 +20,10 @@ package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.ognl.ObjectProxy;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
-import ognl.OgnlContext;
 
 import java.util.Map;
 
@@ -40,6 +40,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
     /**
      * Used by OGNl to generate bytecode
      */
+    @Override
     public String getSourceAccessor(OgnlContext context, Object target, Object index) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -47,10 +48,12 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
     /**
      * Used by OGNl to generate bytecode
      */
+    @Override
     public String getSourceSetter(OgnlContext context, Object target, Object index) {
-        return null;  
+        return null;
     }
 
+    @Override
     public Object getProperty(Map context, Object target, Object name) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
@@ -59,6 +62,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
 
     }
 
+    @Override
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);

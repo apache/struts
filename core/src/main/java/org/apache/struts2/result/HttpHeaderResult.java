@@ -18,16 +18,15 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,6 +75,7 @@ import java.util.Map;
  */
 public class HttpHeaderResult implements Result {
 
+    @Serial
     private static final long serialVersionUID = 195648957144219214L;
     private static final Logger LOG = LogManager.getLogger(HttpHeaderResult.class);
 
@@ -85,7 +85,7 @@ public class HttpHeaderResult implements Result {
     public static final String DEFAULT_PARAM = null;
 
     private boolean parse = true;
-    private Map<String, String> headers;
+    private final Map<String, String> headers;
     private int status = -1;
     private String error = null;
     private String errorMessage;

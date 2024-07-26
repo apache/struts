@@ -54,7 +54,7 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map<String, String> interceptorRefParams) throws ConfigurationException {
         String interceptorClassName = interceptorConfig.getClassName();
         Map<String, String> thisInterceptorClassParams = interceptorConfig.getParams();
-        Map<String, String> params = (thisInterceptorClassParams == null) ? new HashMap<String, String>() : new HashMap<>(thisInterceptorClassParams);
+        Map<String, String> params = (thisInterceptorClassParams == null) ? new HashMap<>() : new HashMap<>(thisInterceptorClassParams);
         params.putAll(interceptorRefParams);
 
         String message;
@@ -70,8 +70,7 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 reflectionProvider.setProperties(params, o);
             }
 
-            if (o instanceof Interceptor) {
-                Interceptor interceptor = (Interceptor) o;
+            if (o instanceof Interceptor interceptor) {
                 interceptor.init();
                 return interceptor;
             }

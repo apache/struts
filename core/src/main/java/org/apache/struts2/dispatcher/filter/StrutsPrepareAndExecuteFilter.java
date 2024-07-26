@@ -49,6 +49,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
         Dispatcher dispatcher = null;
@@ -108,6 +109,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     protected void postInit(Dispatcher dispatcher, FilterConfig filterConfig) {
     }
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
@@ -156,6 +158,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         }
     }
 
+    @Override
     public void destroy() {
         prepare.cleanupDispatcher();
     }

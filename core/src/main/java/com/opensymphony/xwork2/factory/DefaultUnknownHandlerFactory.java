@@ -36,6 +36,7 @@ public class DefaultUnknownHandlerFactory implements UnknownHandlerFactory {
         this.container = container;
     }
 
+    @Override
     public UnknownHandler buildUnknownHandler(String unknownHandlerName, Map<String, Object> extraContext) throws Exception {
         return container.getInstance(UnknownHandler.class, unknownHandlerName);
     }

@@ -26,11 +26,14 @@ import org.apache.struts2.components.Property;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+import java.io.Serial;
+
 /**
  * @see Property
  */
 public class PropertyTag extends ComponentTagSupport {
 
+    @Serial
     private static final long serialVersionUID = 435308349113743852L;
 
     private String defaultValue;
@@ -86,17 +89,17 @@ public class PropertyTag extends ComponentTagSupport {
         this.escapeXml = escapeXml;
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

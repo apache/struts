@@ -21,11 +21,13 @@ package com.opensymphony.xwork2.config.entities;
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -40,6 +42,7 @@ import java.util.List;
  */
 public class InterceptorStackConfig extends Located implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2897260918170270343L;
 
     /**
@@ -102,17 +105,15 @@ public class InterceptorStackConfig extends Located implements Serializable {
             return true;
         }
 
-        if (!(o instanceof InterceptorStackConfig)) {
+        if (!(o instanceof InterceptorStackConfig interceptorStackConfig)) {
             return false;
         }
 
-        final InterceptorStackConfig interceptorStackConfig = (InterceptorStackConfig) o;
-
-        if ((interceptors != null) ? (!interceptors.equals(interceptorStackConfig.interceptors)) : (interceptorStackConfig.interceptors != null)) {
+        if (!Objects.equals(interceptors, interceptorStackConfig.interceptors)) {
             return false;
         }
 
-        if ((name != null) ? (!name.equals(interceptorStackConfig.name)) : (interceptorStackConfig.name != null)) {
+        if (!Objects.equals(name, interceptorStackConfig.name)) {
             return false;
         }
 
@@ -162,6 +163,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
          *
          * @return this builder
          */
+        @Override
         public Builder addInterceptor(InterceptorMapping interceptor) {
             target.interceptors.add(interceptor);
             return this;
@@ -174,6 +176,7 @@ public class InterceptorStackConfig extends Located implements Serializable {
          *
          * @return this builder
          */
+        @Override
         public Builder addInterceptors(List<InterceptorMapping> interceptors) {
             target.interceptors.addAll(interceptors);
             return this;

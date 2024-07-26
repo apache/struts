@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
  * DefaultTextProvider gets texts from only the default resource bundles associated with the default bundles.
  */
@@ -45,14 +47,17 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         this.localizedTextProvider = localizedTextProvider;
     }
 
+    @Override
     public boolean hasKey(String key) {
         return getText(key) != null;
     }
 
+    @Override
     public String getText(String key) {
         return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale());
     }
 
+    @Override
     public String getText(String key, String defaultValue) {
         String text = getText(key);
         if (text == null) {
@@ -61,6 +66,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return text;
     }
 
+    @Override
     public String getText(String key, List<?> args) {
         Object[] params;
         if (args != null) {
@@ -72,17 +78,15 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale(), params);
     }
 
+    @Override
     public String getText(String key, String[] args) {
         Object[] params;
-        if (args != null) {
-            params = args;
-        } else {
-            params = EMPTY_ARGS;
-        }
+        params = requireNonNullElse(args, EMPTY_ARGS);
 
         return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale(), params);
     }
 
+    @Override
     public String getText(String key, String defaultValue, List<?> args) {
         String text = getText(key, args);
         if(text == null && defaultValue == null) {
@@ -106,6 +110,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
         return text;
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args) {
         String text = getText(key, args);
         if (text == null) {
@@ -113,37 +118,38 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
             format.setLocale(ActionContext.getContext().getLocale());
             format.applyPattern(defaultValue);
 
-            if (args == null) {
-                return format.format(EMPTY_ARGS);
-            }
+            return format.format(requireNonNullElse(args, EMPTY_ARGS));
 
-            return format.format(args);
         }
         return text;
     }
 
-
+    @Override
     public String getText(String key, String defaultValue, String obj) {
         List<Object> args = new ArrayList<>(1);
         args.add(obj);
         return getText(key, defaultValue, args);
     }
 
+    @Override
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         //we're not using the value stack here
         return getText(key, defaultValue, args);
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         //we're not using the value stack here
         List<Object> values = new ArrayList<>(Arrays.asList(args));
         return getText(key, defaultValue, values);
     }
 
+    @Override
     public ResourceBundle getTexts(String bundleName) {
         return localizedTextProvider.findResourceBundle(bundleName, ActionContext.getContext().getLocale());
     }
 
+    @Override
     public ResourceBundle getTexts() {
         return null;
     }

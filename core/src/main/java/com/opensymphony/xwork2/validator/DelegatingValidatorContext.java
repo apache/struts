@@ -227,16 +227,16 @@ public class DelegatingValidatorContext implements ValidatorContext {
     public TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
         // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
-        if (object != null && object instanceof DelegatingValidatorContext) {
-            return ((DelegatingValidatorContext) object).getTextProvider();
+        if (object instanceof DelegatingValidatorContext cast) {
+            return cast.getTextProvider();
         }
 
-        if ((object != null) && (object instanceof TextProvider)) {
-            if (object instanceof CompositeTextProvider) {
-                return (CompositeTextProvider) object;
+        if (object instanceof TextProvider cast) {
+            if (object instanceof CompositeTextProvider castAgain) {
+                return castAgain;
             }
             return new CompositeTextProvider(new TextProvider[]{
-                    ((TextProvider) object),
+                    cast,
                     textProviderFactory.createInstance(object.getClass())
             });
         } else {
@@ -318,7 +318,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
      */
     private static class LoggingValidationAware implements ValidationAware {
 
-        private Logger log;
+        private final Logger log;
 
         public LoggingValidationAware(Class clazz) {
             log = LogManager.getLogger(clazz);

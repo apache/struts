@@ -47,7 +47,7 @@
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
-                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="actionFileUpload"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="datetime"/>
                 <interceptor-ref name="multiselect"/>

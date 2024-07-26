@@ -181,9 +181,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testLRUCacheEnabledMaxSize() throws OgnlException {
         // Force usage of LRU cache factories for the OgnlUtil instance
-        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories();
-        ognlUtil.setEnableExpressionCache("true");
-        ognlUtil.setExpressionCacheMaxSize("1");
+        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories(1, 25);
         Object expr0 = ognlUtil.compile("test");
         Object expr2 = ognlUtil.compile("test");
         assertSame(expr0, expr2);
@@ -410,8 +408,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testBeanInfoLRUCacheLimits() throws IntrospectionException {
         // Force usage of LRU cache factories for the OgnlUtil instance
-        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories();
-        ognlUtil.setBeanInfoCacheMaxSize("1");
+        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 1);
         final TestBean1 testBean1 = new TestBean1();
         final TestBean2 testBean2 = new TestBean2();
         // Test that the BeanInfo cache is functioning as expected.
@@ -434,7 +431,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         // LRU cache should not contain TestBean1 beaninfo anymore.  A new entry should exist in the cache.
         Object beanInfo1_4 = ognlUtil.getBeanInfo(testBean1);
         assertNotSame("BeanInfo dropped from LRU cache is the same as newly added ?", beanInfo1_1, beanInfo1_4);
-        ognlUtil.setBeanInfoCacheMaxSize(String.valueOf(Integer.MAX_VALUE));
     }
 
     public void testClearRuntimeCache() {
@@ -1648,16 +1644,20 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertThrows(OgnlException.class, () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null));
     }
 
+    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
+        return generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 25);
+    }
+
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.
      *
      * @return OgnlUtil instance with LRU enabled Expression and BeanInfo factories
      */
-    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
+    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories(int expressionCacheMaxSize, int beanInfoCacheMaxSize) {
         final OgnlUtil result;
-        final DefaultOgnlExpressionCacheFactory<String, Object> expressionFactory = new DefaultOgnlExpressionCacheFactory<>(String.valueOf(25), LRU.toString());
-        final DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo> beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(25), LRU.toString());
+        final DefaultOgnlExpressionCacheFactory<String, Object> expressionFactory = new DefaultOgnlExpressionCacheFactory<>(String.valueOf(expressionCacheMaxSize), LRU.toString());
+        final DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo> beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(beanInfoCacheMaxSize), LRU.toString());
         result = new OgnlUtil(expressionFactory, beanInfoFactory, new StrutsOgnlGuard());
         return result;
     }

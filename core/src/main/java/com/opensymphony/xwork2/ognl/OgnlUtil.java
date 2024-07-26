@@ -103,22 +103,6 @@ public class OgnlUtil {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
-    /**
-     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
-     */
-    @Deprecated
-    protected void setExpressionCacheMaxSize(String maxSize) {
-        expressionCache.setEvictionLimit(Integer.parseInt(maxSize));
-    }
-
-    /**
-     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
-     */
-    @Deprecated
-    protected void setBeanInfoCacheMaxSize(String maxSize) {
-        beanInfoCache.setEvictionLimit(Integer.parseInt(maxSize));
-    }
-
     @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, required = false)
     protected void setEnableEvalExpression(String evalExpression) {
         this.enableEvalExpression = BooleanUtils.toBoolean(evalExpression);

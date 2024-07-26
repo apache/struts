@@ -86,7 +86,7 @@
                 <interceptor-ref name="modelDriven">
                     <param name="refreshModelBeforeResult">true</param>
                 </interceptor-ref>
-                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="actionFileUpload"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="params"/>

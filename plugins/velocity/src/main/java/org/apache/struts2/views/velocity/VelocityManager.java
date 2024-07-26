@@ -208,25 +208,24 @@ public class VelocityManager implements VelocityManagerInterface {
      */
     private void applyUserConfiguration(ServletContext context, Properties properties) {
         String configFile = requireNonNullElse(customConfigFile, "velocity.properties").trim();
-        boolean isLoaded = false;
         try {
-            isLoaded = loadFile(properties, context.getRealPath(configFile));
+            if (loadFile(properties, context.getRealPath(configFile))) {
+                return;
+            }
         } catch (IOException e) {
             LOG.warn("Unable to load Velocity configuration from servlet context path", e);
         }
-        if (!isLoaded) {
-            try {
-                isLoaded = loadFile(properties, context.getRealPath("/WEB-INF/" + configFile));
-            } catch (IOException e) {
-                LOG.warn("Unable to load Velocity configuration from WEB-INF path", e);
+        try {
+            if (loadFile(properties, context.getRealPath("/WEB-INF/" + configFile))) {
+                return;
             }
+        } catch (IOException e) {
+            LOG.warn("Unable to load Velocity configuration from WEB-INF path", e);
         }
-        if (!isLoaded) {
-            try {
-                isLoaded = loadClassPathFile(properties, configFile);
-            } catch (IOException e) {
-                LOG.warn("Unable to load Velocity configuration from classpath", e);
-            }
+        try {
+            loadClassPathFile(properties, configFile);
+        } catch (IOException e) {
+            LOG.warn("Unable to load Velocity configuration from classpath", e);
         }
     }
 

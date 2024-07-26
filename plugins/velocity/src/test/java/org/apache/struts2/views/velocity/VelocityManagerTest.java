@@ -20,6 +20,8 @@ package org.apache.struts2.views.velocity;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.apache.velocity.context.Context;
@@ -28,8 +30,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Properties;
 
 import static org.apache.struts2.views.velocity.VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT;
@@ -75,7 +75,7 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
         velocityManager.init(servletContext);
 
         assertNotNull(velocityManager.getVelocityEngine());
-        assertNotNull(velocityManager.getToolboxManager());
+        assertNotNull(velocityManager.getVelocityTools());
     }
 
     @Test

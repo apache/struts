@@ -87,6 +87,14 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>

@@ -20,6 +20,9 @@ package org.apache.struts2.views.velocity;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.apache.velocity.context.Context;
@@ -28,8 +31,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Properties;
 
 import static org.apache.struts2.views.velocity.VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT;
@@ -37,6 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 public class VelocityManagerTest extends StrutsJUnit4TestCase {
 
@@ -54,32 +58,72 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
     }
 
     @Test
-    public void testProperties() {
-        Properties props = new Properties();
+    public void overridingPropertiesLoaded() {
+        var props = new Properties();
+        props.setProperty("test", "value");
         velocityManager.setVelocityProperties(props);
 
+        velocityManager.init(servletContext);
+
+        assertEquals("value", velocityManager.getVelocityEngine().getProperty("test"));
         assertEquals(props, velocityManager.getVelocityProperties());
     }
 
     @Test
-    public void testInitSuccess() {
+    public void initSuccessful() {
         velocityManager.init(servletContext);
 
         assertNotNull(velocityManager.getVelocityEngine());
     }
 
     @Test
-    public void testInitWithToolbox() {
+    public void exceptionThrownOnNoServletContext() {
+        assertThrows(IllegalArgumentException.class, () -> velocityManager.init(null));
+    }
+
+    @Test
+    public void initMethodIdempotent() {
+        velocityManager.init(servletContext);
+
+        var engine = velocityManager.getVelocityEngine();
+
+        velocityManager.init(servletContext);
+
+        assertEquals(engine, velocityManager.getVelocityEngine());
+    }
+
+    @Test
+    public void loadsConfigFromWebInfPath() {
+        velocityManager.setCustomConfigFile("webinf-velocity.properties");
+
+        velocityManager.init(servletContext);
+
+        assertEquals("webinf", velocityManager.getVelocityEngine().getProperty("test"));
+    }
+
+    @Test
+    public void loadsConfigFromClassPath() {
+        var servletContext = mock(ServletContext.class);
+        doReturn(null).when(servletContext).getRealPath(anyString());
+        velocityManager.setCustomConfigFile("test-velocity.properties");
+
+        velocityManager.init(servletContext);
+
+        assertEquals("value", velocityManager.getVelocityEngine().getProperty("test"));
+    }
+
+    @Test
+    public void initWithToolboxLocation() {
         velocityManager.setToolBoxLocation("tools.xml");
 
         velocityManager.init(servletContext);
 
         assertNotNull(velocityManager.getVelocityEngine());
-        assertNotNull(velocityManager.getToolboxManager());
+        assertNotNull(velocityManager.getVelocityTools());
     }
 
     @Test
-    public void testInitFailsWithInvalidToolBoxLocation() {
+    public void initFailsWithInvalidToolBoxLocation() {
         velocityManager.setToolBoxLocation("invalid.xml");
 
         Exception e = assertThrows(Exception.class, () -> velocityManager.init(servletContext));
@@ -87,7 +131,7 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
     }
 
     @Test
-    public void testCreateContext() {
+    public void createContext() {
         velocityManager.init(servletContext);
 
         Context context = velocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
@@ -101,7 +145,7 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
     }
 
     @Test
-    public void testCreateToolboxContext() {
+    public void createToolboxContext() {
         velocityManager.setToolBoxLocation("tools.xml");
         velocityManager.init(servletContext);
 

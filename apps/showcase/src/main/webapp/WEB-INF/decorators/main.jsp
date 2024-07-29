@@ -226,7 +226,6 @@
                             <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
                             <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
                             <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
-                            <li><s:a href="%{quizDwr}">Validation (DWR)</s:a></li>
                             <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
                             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
                             <li><s:a href="%{ajaxFormSubmitUrl}">AJAX Form Submit</s:a></li>

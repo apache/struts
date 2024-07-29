@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -155,7 +156,7 @@ public class LocationImpl implements Location, Serializable {
         List<String> snippet = new ArrayList<>();
         if (getLineNumber() > 0) {
             try (InputStream in = new URL(getURI()).openStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
                 int lineno = 0;
                 int errno = getLineNumber();
                 String line;
@@ -178,8 +179,7 @@ public class LocationImpl implements Location, Serializable {
             return true;
         }
 
-        if (obj instanceof Location) {
-            Location other = (Location)obj;
+        if (obj instanceof Location other) {
             return this.line == other.getLineNumber() && this.column == other.getColumnNumber()
                    && testEquals(this.uri, other.getURI())
                    && testEquals(this.description, other.getDescription());
@@ -207,6 +207,7 @@ public class LocationImpl implements Location, Serializable {
      *
      * @return resolved location as object
      */
+    @Serial
     private Object readResolve() {
         return this.equals(Location.UNKNOWN) ? Location.UNKNOWN : this;
     }

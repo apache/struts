@@ -26,8 +26,8 @@ import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 
 /**
  * Core Filter for integrating SiteMesh + Freemarker into

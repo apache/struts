@@ -87,8 +87,8 @@ public class OgnlTextParser implements TextParser {
                         expression = left.concat(right);
                         result = expression;
                     }
-                    pos = (left != null && left.length() > 0 ? left.length() - 1: 0) +
-                            (middle != null && middle.length() > 0 ? middle.length() - 1: 0) +
+                    pos = (!left.isEmpty() ? left.length() - 1: 0) +
+                            (middle != null && !middle.isEmpty() ? middle.length() - 1: 0) +
                             1;
                     pos = Math.max(pos, 1);
                 } else {

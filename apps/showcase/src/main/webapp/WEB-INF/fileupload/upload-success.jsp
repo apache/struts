@@ -41,7 +41,8 @@
 		        <li>FileName: <s:property value="fileName" /></li>
 		        <li>Original FileName: <s:property value="originalName" /></li>
 		        <li>File: <s:property value="uploadedFile" /></li>
-		        <li>Caption:<s:property value="caption" /></li>
+				<li>Size: <s:property value="uploadSize" /></li>
+				<li>Caption: <s:property value="caption" /></li>
 	        </ul>
 		</div>
 	</div>

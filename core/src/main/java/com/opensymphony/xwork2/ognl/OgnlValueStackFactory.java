@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -158,13 +157,5 @@ public class OgnlValueStackFactory implements ValueStackFactory {
             OgnlRuntime.setPropertyAccessor(cls, propertyAccessor);
             LOG.debug("Registered custom OGNL PropertyAccessor [{}] for class [{}]", propertyAccessor.getClass().getName(), cls.getName());
         }
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected boolean containerAllowsStaticFieldAccess() {
-        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
     }
 }

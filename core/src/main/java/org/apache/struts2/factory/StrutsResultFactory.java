@@ -23,10 +23,10 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.result.ParamNameAwareResult;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import com.opensymphony.xwork2.result.ParamNameAwareResult;
 
 import java.util.Map;
 
@@ -48,6 +48,7 @@ public class StrutsResultFactory implements ResultFactory {
         this.reflectionProvider = provider;
     }
 
+    @Override
     public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
         String resultClassName = resultConfig.getClassName();
         Result result = null;

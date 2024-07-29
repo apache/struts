@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.validator.validators;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.text.StringEscapeUtils;
@@ -146,6 +145,7 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
         this.repopulateField = repopulateField;
     }
 
+    @Override
     public void validate(Object object) throws ValidationException {
         doValidate(object);
         if (repopulateField) {
@@ -163,33 +163,29 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
         if (conversionErrors.containsKey(fullFieldName)) {
             Object value = conversionErrors.get(fullFieldName).getValue();
 
-            final Map<Object, Object> fakeParams = new LinkedHashMap<Object, Object>();
+            final Map<Object, Object> fakeParams = new LinkedHashMap<>();
             boolean doExprOverride = false;
 
-            if (value instanceof String[]) {
+            if (value instanceof String[] tmpValue) {
                 // take the first element, if possible
-                String[] tmpValue = (String[]) value;
                 if ((tmpValue.length > 0)) {
                     doExprOverride = true;
                     fakeParams.put(fullFieldName, escape(tmpValue[0]));
                 } else {
                     LOG.warn("value is an empty array of String or with first element in it as null [{}], will not repopulate conversion error", value);
                 }
-            } else if (value instanceof String) {
-                String tmpValue = (String) value;
+            } else if (value instanceof String tmpValue) {
                 doExprOverride = true;
                 fakeParams.put(fullFieldName, escape(tmpValue));
             } else {
-                // opps... it should be 
+                // opps... it should be
                 LOG.warn("conversion error value is not a String or array of String but instead is [{}], will not repopulate conversion error", value);
             }
 
             if (doExprOverride) {
-                invocation.addPreResultListener(new PreResultListener() {
-                    public void beforeResult(ActionInvocation invocation, String resultCode) {
-                        ValueStack stack = ActionContext.getContext().getValueStack();
-                        stack.setExprOverrides(fakeParams);
-                    }
+                invocation.addPreResultListener((invocation1, resultCode) -> {
+                    ValueStack stack = ActionContext.getContext().getValueStack();
+                    stack.setExprOverrides(fakeParams);
                 });
             }
         }

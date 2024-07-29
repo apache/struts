@@ -18,9 +18,9 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.conversion.TypeConversionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.conversion.TypeConversionException;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
@@ -55,7 +55,7 @@ public class NumberConverter extends DefaultTypeConverter {
 
                 return convertedValue;
             } else {
-                if (!toType.isPrimitive() && stringValue.isEmpty()) {
+                if (stringValue.isEmpty()) {
                     return null;
                 }
                 NumberFormat numFormat = NumberFormat.getInstance(getLocale(context));
@@ -76,8 +76,7 @@ public class NumberConverter extends DefaultTypeConverter {
                     value = super.convertValue(context, number, toType);
                 }
             }
-        } else if (value instanceof Object[]) {
-            Object[] objArray = (Object[]) value;
+        } else if (value instanceof Object[] objArray) {
 
             if (objArray.length == 1) {
                 return convertValue(context, null, null, null, objArray[0], toType);
@@ -180,9 +179,9 @@ public class NumberConverter extends DefaultTypeConverter {
     }
 
     protected boolean isInRange(Number value, String stringValue, Class toType) {
-        Number bigValue = null;
-        Number lowerBound = null;
-        Number upperBound = null;
+        Number bigValue;
+        Number lowerBound;
+        Number upperBound;
 
         try {
             if (double.class == toType || Double.class == toType) {
@@ -227,12 +226,8 @@ public class NumberConverter extends DefaultTypeConverter {
     }
 
     private boolean isIntegerType(Class type) {
-        if (double.class == type || float.class == type || Double.class == type || Float.class == type
-                || char.class == type || Character.class == type) {
-            return false;
-        }
-
-        return true;
+        return double.class != type && float.class != type && Double.class != type && Float.class != type
+                && char.class != type && Character.class != type;
     }
 
 }

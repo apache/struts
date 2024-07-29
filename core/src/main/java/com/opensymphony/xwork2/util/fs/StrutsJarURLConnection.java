@@ -20,12 +20,12 @@ package com.opensymphony.xwork2.util.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -71,7 +71,7 @@ class StrutsJarURLConnection extends URLConnection implements AutoCloseable {
     /**
     * A fixed copy of {@link JarURLConnection#parseSpecs(URL)}
     */
-    private void parseSpecs(URL url) throws MalformedURLException, UnsupportedEncodingException {
+    private void parseSpecs(URL url) throws MalformedURLException {
         String spec = url.getFile();
 
         int separator = spec.indexOf("!/");
@@ -100,8 +100,8 @@ class StrutsJarURLConnection extends URLConnection implements AutoCloseable {
 
         /* if ! is the last letter of the innerURL, entryName is null */
         if (++separator != spec.length()) {
-            entryName = spec.substring(separator, spec.length());
-            entryName = URLDecoder.decode (entryName, "UTF-8");
+            entryName = spec.substring(separator);
+            entryName = URLDecoder.decode(entryName, StandardCharsets.UTF_8);
         }
     }
 
@@ -118,24 +118,20 @@ class StrutsJarURLConnection extends URLConnection implements AutoCloseable {
 
         try (final InputStream in = jarFileURL.openConnection().getInputStream()) {
             jarFile = AccessController.doPrivileged(
-                    new PrivilegedExceptionAction<JarFile>() {
-                        public JarFile run() throws IOException {
-                            Path tmpFile = Files.createTempFile("jar_cache", null);
+                    (PrivilegedExceptionAction<JarFile>) () -> {
+                        Path tmpFile = Files.createTempFile("jar_cache", null);
+                        try {
+                            Files.copy(in, tmpFile, StandardCopyOption.REPLACE_EXISTING);
+                            return new JarFile(tmpFile.toFile(), true, JarFile.OPEN_READ | JarFile.OPEN_DELETE);
+                        } catch (Throwable thr) {
                             try {
-                                Files.copy(in, tmpFile, StandardCopyOption.REPLACE_EXISTING);
-                                JarFile jarFile = new JarFile(tmpFile.toFile(), true, JarFile.OPEN_READ
-                                        | JarFile.OPEN_DELETE);
-                                return jarFile;
-                            } catch (Throwable thr) {
-                                try {
-                                    Files.delete(tmpFile);
-                                } catch (IOException ioe) {
-                                    thr.addSuppressed(ioe);
-                                }
-                                throw thr;
-                            } finally {
-                                in.close();
+                                Files.delete(tmpFile);
+                            } catch (IOException ioe) {
+                                thr.addSuppressed(ioe);
                             }
+                            throw thr;
+                        } finally {
+                            in.close();
                         }
                     });
             connected = true;

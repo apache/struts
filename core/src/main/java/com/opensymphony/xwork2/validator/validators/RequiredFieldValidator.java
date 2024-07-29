@@ -37,26 +37,26 @@ import java.util.Collection;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 	   &lt;validators&gt;
- * 
+ *
  *         &lt;!-- Plain Validator Syntax --&gt;
  *         &lt;validator type="required"&gt;
  *             &lt;param name="fieldName"&gt;username&lt;/param&gt;
  *             &lt;message&gt;username must not be null&lt;/message&gt;
  *         &lt;/validator&gt;
- * 
- * 
+ *
+ *
  *         &lt;!-- Field Validator Syntax --&gt;
  *         &lt;field name="username"&gt;
  *             &lt;field-validator type="required"&gt;
  *             	   &lt;message&gt;username must not be null&lt;/message&gt;
  *             &lt;/field-validator&gt;
  *         &lt;/field&gt;
- * 
+ *
  *     &lt;/validators&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
- * 
+ *
+ *
  *
  * @author rainerh
  */
@@ -70,7 +70,7 @@ public class RequiredFieldValidator extends FieldValidatorSupport {
             addFieldError(fieldName, object);
         } else if (value.getClass().isArray() && Array.getLength(value) == 0) {
             addFieldError(fieldName, object);
-        } else if (Collection.class.isAssignableFrom(value.getClass()) && ((Collection) value).size() == 0) {
+        } else if (Collection.class.isAssignableFrom(value.getClass()) && ((Collection) value).isEmpty()) {
             addFieldError(fieldName, object);
         }
     }

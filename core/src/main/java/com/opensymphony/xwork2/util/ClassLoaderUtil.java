@@ -21,7 +21,12 @@ package com.opensymphony.xwork2.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 
 /**
@@ -39,7 +44,7 @@ public class ClassLoaderUtil {
 
     /**
      * <p>
-     * Load all resources with a given name, potentially aggregating all results 
+     * Load all resources with a given name, potentially aggregating all results
      * from the searched classloaders.  If no results are found, the resource name
      * is prepended by '/' and tried again.
      * </p>
@@ -80,7 +85,7 @@ public class ClassLoaderUtil {
              }
          }
 
-         if (!iterator.hasNext() && (resourceName != null) && ((resourceName.length() == 0) || (resourceName.charAt(0) != '/'))) { 
+         if (!iterator.hasNext() && (resourceName != null) && ((resourceName.isEmpty()) || (resourceName.charAt(0) != '/'))) {
              return getResources('/' + resourceName, callingClass, aggregate);
          }
 
@@ -119,7 +124,7 @@ public class ClassLoaderUtil {
             }
         }
 
-        if ((url == null) && (resourceName != null) && ((resourceName.length() == 0) || (resourceName.charAt(0) != '/'))) { 
+        if ((url == null) && (resourceName != null) && ((resourceName.isEmpty()) || (resourceName.charAt(0) != '/'))) {
             return getResource('/' + resourceName, callingClass);
         }
 
@@ -214,7 +219,7 @@ public class ClassLoaderUtil {
         LinkedList<Enumeration<E>> enums = new LinkedList<>();
         Enumeration<E> cur = null;
         E next = null;
-        Set<E> loaded = new HashSet<E>();
+        Set<E> loaded = new HashSet<>();
 
         public AggregateIterator<E> addEnumeration(Enumeration<E> e) {
             if (e.hasMoreElements()) {
@@ -245,7 +250,7 @@ public class ClassLoaderUtil {
 
         private Enumeration<E> determineCurrentEnumeration() {
             if (cur != null && !cur.hasMoreElements()) {
-                if (enums.size() > 0) {
+                if (!enums.isEmpty()) {
                     cur = enums.removeLast();
                 } else {
                     cur = null;

@@ -28,13 +28,11 @@ import org.apache.logging.log4j.Logger;
 public final class DebugUtils {
 
     public static void notifyDeveloperOfError(Logger log, Object action, String message) {
-        if (action instanceof TextProvider) {
-            TextProvider tp = (TextProvider) action;
+        if (action instanceof TextProvider tp) {
             message = tp.getText("devmode.notification", "Developer Notification:\n{0}", new String[]{message});
         }
         log.error(message);
-        if (action instanceof ValidationAware) {
-            ValidationAware validationAware = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAware) {
             validationAware.addActionError(message);
         }
     }

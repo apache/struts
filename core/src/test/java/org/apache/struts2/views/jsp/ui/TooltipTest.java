@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;
 import org.apache.struts2.views.jsp.StrutsMockBodyContent;
-
-import com.mockobjects.servlet.MockJspWriter;
+import org.springframework.mock.web.MockJspWriter;
 
 /**
  * UI components Tooltip test case.
@@ -883,7 +883,7 @@ public class TooltipTest extends AbstractUITagTest {
         ParamTag formParamTag = new ParamTag();
         formParamTag.setPageContext(pageContext);
         formParamTag.setName("tooltipConfig");
-        StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         bodyContent.setString(
                 "tooltipIcon=/static/tooltip/myTooltip.gif| " +
                 "tooltipDelay=500| " +
@@ -901,7 +901,7 @@ public class TooltipTest extends AbstractUITagTest {
         ParamTag textFieldParamTag = new ParamTag();
         textFieldParamTag.setPageContext(pageContext);
         textFieldParamTag.setName("tooltipConfig");
-        StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         bodyContent2.setString(
                 "tooltipIcon=/static/tooltip/myTooltip2.gif| " +
                 "tooltipDelay=5000 "
@@ -956,7 +956,7 @@ public class TooltipTest extends AbstractUITagTest {
         ParamTag formParamTag = new ParamTag();
         formParamTag.setPageContext(pageContext);
         formParamTag.setName("tooltipConfig");
-        StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         bodyContent.setString(
                 "tooltipIcon=/static/tooltip/myTooltip.gif| " +
                 "tooltipDelay=500| " +
@@ -976,7 +976,7 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         textFieldParamTag.setPageContext(pageContext);
         textFieldParamTag.setName("tooltipConfig");
-        StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         bodyContent2.setString(
                 "tooltipIcon=/static/tooltip/myTooltip2.gif| " +
                 "tooltipDelay=5000 "

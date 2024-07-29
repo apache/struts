@@ -19,11 +19,9 @@
 package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.net.JarURLConnection;
 import java.net.URL;
 
 /**
@@ -31,10 +29,10 @@ import java.net.URL;
  */
 public class JarEntryRevision extends Revision {
 
-    private static Logger LOG = LogManager.getLogger(JarEntryRevision.class);
+    private static final Logger LOG = LogManager.getLogger(JarEntryRevision.class);
 
-    private URL jarFileURL;
-    private long lastModified;
+    private final URL jarFileURL;
+    private final long lastModified;
 
     public static Revision build(URL fileUrl, FileManager fileManager) {
         try (StrutsJarURLConnection conn = StrutsJarURLConnection.openConnection(fileUrl)) {
@@ -59,6 +57,7 @@ public class JarEntryRevision extends Revision {
         this.lastModified = lastModified;
     }
 
+    @Override
     public boolean needsReloading() {
         long lastLastModified = lastModified;
         try (StrutsJarURLConnection conn = StrutsJarURLConnection.openConnection(jarFileURL)) {

@@ -157,14 +157,12 @@ public class TextParseUtil {
      */
     public static Object translateVariables(char[] openChars, String expression, final ValueStack stack, final Class asType, final ParsedValueEvaluator evaluator, int maxLoopCount) {
 
-        ParsedValueEvaluator ognlEval = new ParsedValueEvaluator() {
-            public Object evaluate(String parsedValue) {
-                Object o = stack.findValue(parsedValue, asType);
-                if (evaluator != null && o != null) {
-                    o = evaluator.evaluate(o.toString());
-                }
-                return o;
+        ParsedValueEvaluator ognlEval = parsedValue -> {
+            Object o = stack.findValue(parsedValue, asType);
+            if (evaluator != null && o != null) {
+                o = evaluator.evaluate(o.toString());
             }
+            return o;
         };
 
         TextParser parser = stack.getActionContext().getContainer().getInstance(TextParser.class);
@@ -202,11 +200,8 @@ public class TextParseUtil {
             char[] openChars, String expression, final ValueStack stack, boolean excludeEmptyElements,
             final ParsedValueEvaluator evaluator, int maxLoopCount) {
 
-        ParsedValueEvaluator ognlEval = new ParsedValueEvaluator() {
-            public Object evaluate(String parsedValue) {
-                return stack.findValue(parsedValue); // no asType !!!
-            }
-        };
+        // no asType !!!
+        ParsedValueEvaluator ognlEval = stack::findValue;
 
         ActionContext actionContext = stack.getActionContext();
         TextParser parser = actionContext.getContainer().getInstance(TextParser.class);

@@ -18,13 +18,11 @@
  */
 package org.apache.struts2.dispatcher.listener;
 
-import org.apache.struts2.StrutsStatics;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  * Servlet listener for Struts.  The preferred way to use Struts is as a filter via the
@@ -35,6 +33,7 @@ import javax.servlet.ServletContextListener;
 public class StrutsListener implements ServletContextListener {
     private PrepareOperations prepare;
 
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
         InitOperations init = new InitOperations();
         Dispatcher dispatcher = null;
@@ -52,6 +51,7 @@ public class StrutsListener implements ServletContextListener {
         }
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent sce) {
         prepare.cleanupDispatcher();
     }

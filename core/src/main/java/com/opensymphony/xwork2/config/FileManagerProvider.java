@@ -28,24 +28,28 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
  */
 public class FileManagerProvider implements ContainerProvider {
 
-    private Class<? extends FileManager> fileManagerClass;
-    private String name;
+    private final Class<? extends FileManager> fileManagerClass;
+    private final String name;
 
     public FileManagerProvider(Class<? extends FileManager> fileManagerClass, String name) {
         this.fileManagerClass = fileManagerClass;
         this.name = name;
     }
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
+    @Override
     public boolean needsReload() {
         return false;
     }
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
         builder.factory(FileManager.class, name, fileManagerClass, Scope.SINGLETON);
     }

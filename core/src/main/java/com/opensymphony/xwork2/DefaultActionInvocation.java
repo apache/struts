@@ -103,6 +103,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     @Inject(required = false)
+    @Override
     public void setActionEventListener(ActionEventListener listener) {
         this.actionEventListener = listener;
     }
@@ -117,18 +118,22 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.asyncManager = asyncManager;
     }
 
+    @Override
     public Object getAction() {
         return action;
     }
 
+    @Override
     public boolean isExecuted() {
         return executed;
     }
 
+    @Override
     public ActionContext getInvocationContext() {
         return invocationContext;
     }
 
+    @Override
     public ActionProxy getProxy() {
         return proxy;
     }
@@ -142,6 +147,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @return a Result instance
      * @throws Exception in case of any error
      */
+    @Override
     public Result getResult() throws Exception {
         Result returnResult = result;
 
@@ -165,10 +171,12 @@ public class DefaultActionInvocation implements ActionInvocation {
         return returnResult;
     }
 
+    @Override
     public String getResultCode() {
         return resultCode;
     }
 
+    @Override
     public void setResultCode(String resultCode) {
         if (isExecuted()) {
             throw new IllegalStateException("Result has already been executed.");
@@ -176,7 +184,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.resultCode = resultCode;
     }
 
-
+    @Override
     public ValueStack getStack() {
         return stack;
     }
@@ -188,6 +196,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      *
      * @param listener to register
      */
+    @Override
     public void addPreResultListener(PreResultListener listener) {
         if (preResultListeners == null) {
             preResultListeners = new ArrayList<>(1);
@@ -237,6 +246,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     /**
      * @throws ConfigurationException If no result can be found with the returned code
      */
+    @Override
     public String invoke() throws Exception {
         if (executed) {
             throw new IllegalStateException("Action has already executed");
@@ -303,6 +313,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
     }
 
+    @Override
     public String invokeActionOnly() throws Exception {
         return invokeAction(getAction(), proxy.getConfig());
     }
@@ -348,15 +359,14 @@ public class DefaultActionInvocation implements ActionInvocation {
                 throw new IllegalStateException("There was a null Stack set into the extra params.");
             }
 
-            actionContext = stack.getActionContext();
         } else {
             // create the value stack
             // this also adds the ValueStack to its context
             stack = valueStackFactory.createValueStack();
 
             // create the action context
-            actionContext = stack.getActionContext();
         }
+        actionContext = stack.getActionContext();
 
         return actionContext
             .withExtraContext(extraContext)
@@ -385,6 +395,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
     }
 
+    @Override
     public void init(ActionProxy proxy) {
         this.proxy = proxy;
         Map<String, Object> contextMap = createContextMap();
@@ -457,7 +468,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
             return saveResult(actionConfig, methodResult);
         } catch (NoSuchPropertyException e) {
-            throw new IllegalArgumentException("The " + methodName + "() is not defined in action " + getAction().getClass() + "");
+            throw new IllegalArgumentException("The " + methodName + "() is not defined in action " + getAction().getClass());
         } catch (MethodFailedException e) {
             // We try to return the source exception.
             Throwable t = e.getCause();

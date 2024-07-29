@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class OgnlReflectionContextFactory implements ReflectionContextFactory {
 
+    @Override
     public Map createDefaultContext(Object root) {
         return Ognl.createDefaultContext(root);
     }

@@ -63,6 +63,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType.BASIC;
+import static com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType.LRU;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -179,9 +181,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testLRUCacheEnabledMaxSize() throws OgnlException {
         // Force usage of LRU cache factories for the OgnlUtil instance
-        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories();
-        ognlUtil.setEnableExpressionCache("true");
-        ognlUtil.setExpressionCacheMaxSize("1");
+        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories(1, 25);
         Object expr0 = ognlUtil.compile("test");
         Object expr2 = ognlUtil.compile("test");
         assertSame(expr0, expr2);
@@ -408,8 +408,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testBeanInfoLRUCacheLimits() throws IntrospectionException {
         // Force usage of LRU cache factories for the OgnlUtil instance
-        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories();
-        ognlUtil.setBeanInfoCacheMaxSize("1");
+        this.ognlUtil = generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 1);
         final TestBean1 testBean1 = new TestBean1();
         final TestBean2 testBean2 = new TestBean2();
         // Test that the BeanInfo cache is functioning as expected.
@@ -432,7 +431,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         // LRU cache should not contain TestBean1 beaninfo anymore.  A new entry should exist in the cache.
         Object beanInfo1_4 = ognlUtil.getBeanInfo(testBean1);
         assertNotSame("BeanInfo dropped from LRU cache is the same as newly added ?", beanInfo1_1, beanInfo1_4);
-        ognlUtil.setBeanInfoCacheMaxSize(String.valueOf(Integer.MAX_VALUE));
     }
 
     public void testClearRuntimeCache() {
@@ -1343,13 +1341,13 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testDefaultOgnlUtilAlternateConstructorArguments() {
         // Code coverage test for the OgnlUtil alternate constructor method, and verify expected behaviour.
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), null, null);
+            new OgnlUtil(createDefaultOgnlExpressionCacheFactory(), null, null);
             fail("null beanInfoCacheFactory should result in exception");
         } catch (NullPointerException iaex) {
             // expected result
         }
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<>(), null);
+            new OgnlUtil(null, createDefaultOgnlBeanInfoCacheFactory(), null);
             fail("null expressionCacheFactory should result in exception");
         } catch (NullPointerException iaex) {
             // expected result
@@ -1614,23 +1612,24 @@ public class OgnlUtilTest extends XWorkTestCase {
      */
     public void testOgnlDefaultCacheFactoryCoverage() {
         OgnlCache<String, Object> ognlCache;
-        DefaultOgnlCacheFactory defaultOgnlCacheFactory = new DefaultOgnlCacheFactory<String, Object>();
+
         // Normal cache
-        defaultOgnlCacheFactory.setCacheMaxSize("12");
-        defaultOgnlCacheFactory.setUseLRUCache("false");
+        DefaultOgnlCacheFactory<String, Object> defaultOgnlCacheFactory = new DefaultOgnlCacheFactory<>(12, BASIC);
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 12, ognlCache.getEvictionLimit());
-        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(6, 6, 0.75f, false);
+
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(6, 6, 0.75f, BASIC);
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 6, ognlCache.getEvictionLimit());
+
         // LRU cache
-        defaultOgnlCacheFactory.setCacheMaxSize("30");
-        defaultOgnlCacheFactory.setUseLRUCache("true");
+        defaultOgnlCacheFactory = new DefaultOgnlCacheFactory<>(30, LRU);
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 30, ognlCache.getEvictionLimit());
-        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, true);
+
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, LRU);
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit());
     }
@@ -1645,20 +1644,20 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertThrows(OgnlException.class, () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null));
     }
 
+    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
+        return generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 25);
+    }
+
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.
      *
      * @return OgnlUtil instance with LRU enabled Expression and BeanInfo factories
      */
-    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
+    private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories(int expressionCacheMaxSize, int beanInfoCacheMaxSize) {
         final OgnlUtil result;
-        final DefaultOgnlExpressionCacheFactory<String, Object> expressionFactory = new DefaultOgnlExpressionCacheFactory<>();
-        final DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo> beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<>();
-        expressionFactory.setUseLRUCache("true");
-        expressionFactory.setCacheMaxSize("25");
-        beanInfoFactory.setUseLRUCache("true");
-        beanInfoFactory.setCacheMaxSize("25");
+        final DefaultOgnlExpressionCacheFactory<String, Object> expressionFactory = new DefaultOgnlExpressionCacheFactory<>(String.valueOf(expressionCacheMaxSize), LRU.toString());
+        final DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo> beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(beanInfoCacheMaxSize), LRU.toString());
         result = new OgnlUtil(expressionFactory, beanInfoFactory, new StrutsOgnlGuard());
         return result;
     }
@@ -1806,4 +1805,19 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
+    public static OgnlUtil createOgnlUtil() {
+        return new OgnlUtil(
+                createDefaultOgnlExpressionCacheFactory(),
+                createDefaultOgnlBeanInfoCacheFactory(),
+                new StrutsOgnlGuard()
+        );
+    }
+
+    public static <K, V> DefaultOgnlExpressionCacheFactory<K, V> createDefaultOgnlExpressionCacheFactory() {
+        return new DefaultOgnlExpressionCacheFactory<>(String.valueOf(10_000), BASIC.toString());
+    }
+
+    public static <K, V> DefaultOgnlBeanInfoCacheFactory<K, V> createDefaultOgnlBeanInfoCacheFactory() {
+        return new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(10_000), BASIC.toString());
+    }
 }

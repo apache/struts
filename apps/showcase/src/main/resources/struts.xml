@@ -42,7 +42,6 @@
     "/>
     <constant name="struts.allowlist.classes" value="
             org.apache.struts2.showcase.hangman.Hangman,
-            org.apache.struts2.showcase.hangman.HangmanConstants,
             org.apache.struts2.showcase.hangman.Vocab
     "/>
 

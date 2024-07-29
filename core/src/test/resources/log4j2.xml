@@ -29,5 +29,6 @@
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
         </Root>
+        <Logger name="org.apache.struts2.dispatcher.multipart" level="debug"/>
     </Loggers>
 </Configuration>

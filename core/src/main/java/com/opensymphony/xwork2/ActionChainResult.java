@@ -24,7 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -259,7 +258,7 @@ public class ActionChainResult implements Result {
     private boolean isInChainHistory(String namespace, String actionName, String methodName) {
         LinkedList<? extends String> chainHistory = ActionChainResult.getChainHistory();
         Set<String> skipActionsList = new HashSet<>();
-        if (skipActions != null && skipActions.length() > 0) {
+        if (skipActions != null && !skipActions.isEmpty()) {
             String finalSkipActions = translateVariables(skipActions);
             skipActionsList.addAll(TextParseUtil.commaDelimitedStringToSet(finalSkipActions));
         }

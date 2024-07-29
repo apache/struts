@@ -24,8 +24,8 @@ import org.apache.tiles.request.reflect.ClassUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.util.Iterator;

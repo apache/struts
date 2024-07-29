@@ -47,11 +47,8 @@ public interface WithLazyParams {
         private final TextParseUtil.ParsedValueEvaluator valueEvaluator;
 
         public LazyParamInjector(final ValueStack valueStack) {
-            valueEvaluator = new TextParseUtil.ParsedValueEvaluator() {
-                public Object evaluate(String parsedValue) {
-                    return valueStack.findValue(parsedValue); // no asType !!!
-                }
-            };
+            // no asType !!!
+            valueEvaluator = valueStack::findValue;
         }
 
         @Inject

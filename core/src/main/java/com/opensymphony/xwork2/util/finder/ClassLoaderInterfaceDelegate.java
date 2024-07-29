@@ -27,28 +27,33 @@ import java.util.Enumeration;
  * Default implementation of ClassLoaderInterface, which delegates to an actual ClassLoader
  */
 public class ClassLoaderInterfaceDelegate implements ClassLoaderInterface {
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
     public ClassLoaderInterfaceDelegate(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return classLoader.loadClass(name);
     }
 
+    @Override
     public URL getResource(String className) {
         return classLoader.getResource(className);
     }
 
+    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         return classLoader.getResources(name);
     }
 
+    @Override
     public InputStream getResourceAsStream(String name) {
         return classLoader.getResourceAsStream(name);
     }
 
+    @Override
     public ClassLoaderInterface getParent() {
         return classLoader.getParent() != null ? new ClassLoaderInterfaceDelegate(classLoader.getParent()) : null;
     }

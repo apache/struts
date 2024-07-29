@@ -41,7 +41,7 @@ import java.util.Map;
 public class XWorkList extends ArrayList {
     private static final Logger LOG = LogManager.getLogger(XWorkConverter.class);
 
-    private Class clazz;
+    private final Class clazz;
 
     public XWorkList(Class clazz) {
         this.clazz = clazz;
@@ -152,11 +152,7 @@ public class XWorkList extends ArrayList {
             throw new NullPointerException("Collection to add is null");
         }
 
-        boolean trim = false;
-
-        if (index >= this.size()) {
-            trim = true;
-        }
+        boolean trim = index >= this.size();
 
         for (Iterator it = collection.iterator(); it.hasNext(); index++) {
             add(index, it.next());

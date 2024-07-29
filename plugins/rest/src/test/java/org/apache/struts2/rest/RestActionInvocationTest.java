@@ -28,22 +28,26 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import jakarta.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.result.HttpHeaderResult;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType.BASIC;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 
 public class RestActionInvocationTest extends TestCase {
 
@@ -248,7 +252,11 @@ public class RestActionInvocationTest extends TestCase {
 
 		request.setMethod("GET");
 
-        restActionInvocation.setOgnlUtil(new OgnlUtil());
+        restActionInvocation.setOgnlUtil(new OgnlUtil(
+				new DefaultOgnlExpressionCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
+				new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
+				new StrutsOgnlGuard()
+		));
         restActionInvocation.invoke();
 
         assertEquals(123, response.getStatus());

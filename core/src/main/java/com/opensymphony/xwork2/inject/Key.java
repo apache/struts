@@ -60,13 +60,12 @@ class Key<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Key)) {
+        if (!(o instanceof Key other)) {
             return false;
         }
         if (o == this) {
             return true;
         }
-        Key other = (Key) o;
         return name.equals(other.name) && type.equals(other.type);
     }
 
@@ -76,6 +75,6 @@ class Key<T> {
     }
 
     static <T> Key<T> newInstance(Class<T> type, String name) {
-        return new Key<T>(type, name);
+        return new Key<>(type, name);
     }
 }

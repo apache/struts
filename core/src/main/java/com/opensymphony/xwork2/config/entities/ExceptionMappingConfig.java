@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Configuration for exception mapping.
@@ -76,28 +77,23 @@ public class ExceptionMappingConfig extends Located implements Serializable {
             return true;
         }
 
-        if (!(o instanceof ExceptionMappingConfig)) {
+        if (!(o instanceof ExceptionMappingConfig exceptionMappingConfig)) {
             return false;
         }
 
-        final ExceptionMappingConfig exceptionMappingConfig = (ExceptionMappingConfig) o;
-
-        if ((name != null) ? (!name.equals(exceptionMappingConfig.name)) : (exceptionMappingConfig.name != null)) {
+        if (!Objects.equals(name, exceptionMappingConfig.name)) {
             return false;
         }
 
-        if ((exceptionClassName != null) ? (!exceptionClassName.equals(exceptionMappingConfig.exceptionClassName)) : (exceptionMappingConfig.exceptionClassName != null))
-        {
+        if (!Objects.equals(exceptionClassName, exceptionMappingConfig.exceptionClassName)) {
             return false;
         }
 
-        if ((result != null) ? (!result.equals(exceptionMappingConfig.result)) : (exceptionMappingConfig.result != null))
-        {
+        if (!Objects.equals(result, exceptionMappingConfig.result)) {
             return false;
         }
 
-        if ((params != null) ? (!params.equals(exceptionMappingConfig.params)) : (exceptionMappingConfig.params != null))
-        {
+        if (!Objects.equals(params, exceptionMappingConfig.params)) {
             return false;
         }
 

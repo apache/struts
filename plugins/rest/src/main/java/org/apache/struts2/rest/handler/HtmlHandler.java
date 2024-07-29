@@ -27,19 +27,23 @@ import java.io.Writer;
 /**
  * Handles HTML content, usually just a simple passthrough to the framework
  */
-public class HtmlHandler extends AbstractContentTypeHandler {
+public class HtmlHandler implements ContentTypeHandler {
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         return resultCode;
     }
 
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) {
     }
 
+    @Override
     public String getExtension() {
         return "xhtml";
     }
 
+    @Override
     public String getContentType() {
         return "application/xhtml+xml";
     }

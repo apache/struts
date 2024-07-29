@@ -18,20 +18,7 @@
  */
 package org.apache.struts2.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.opensymphony.xwork2.config.BeanSelectionProvider;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.config.entities.BeanConfig;
-import org.apache.struts2.config.entities.BeanSelectionConfig;
-import org.apache.struts2.config.entities.ConstantConfig;
-
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -43,6 +30,16 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.config.entities.BeanConfig;
+import org.apache.struts2.config.entities.ConstantConfig;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
     private static final Logger LOG = LogManager.getLogger(StrutsJavaConfigurationProvider.class);
@@ -100,9 +97,9 @@ public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
                 LOG.debug("Registering bean selection provider {} of type {}",
                     beanSelectionConfig.getName(), beanSelectionConfig.getClazz().getName());
 
-                BeanSelectionProvider provider = beanSelectionConfig.getClazz().newInstance();
+                BeanSelectionProvider provider = beanSelectionConfig.getClazz().getDeclaredConstructor().newInstance();
                 provider.register(builder, props);
-            } catch (IllegalAccessException | InstantiationException e) {
+            } catch (ReflectiveOperationException e) {
                 throw new ConfigurationException("Unable to load : name:" + beanSelectionConfig.getName()
                     + " class:" + beanSelectionConfig.getClazz().getName());
             }

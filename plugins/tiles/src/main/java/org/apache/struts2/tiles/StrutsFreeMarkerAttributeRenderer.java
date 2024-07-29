@@ -38,8 +38,8 @@ import org.apache.tiles.request.render.Renderer;
 import org.apache.tiles.core.impl.InvalidTemplateException;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class StrutsFreeMarkerAttributeRenderer implements Renderer {

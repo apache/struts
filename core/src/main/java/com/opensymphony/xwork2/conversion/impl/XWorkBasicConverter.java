@@ -18,11 +18,11 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.conversion.TypeConversionException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.conversion.TypeConversionException;
 
 import java.lang.reflect.Member;
 import java.time.LocalDateTime;
@@ -117,8 +117,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         }
 
         if (result == null) {
-            if (value instanceof Object[]) {
-                Object[] array = (Object[]) value;
+            if (value instanceof Object[] array) {
 
                 if (array.length >= 1) {
                     value = array[0];
@@ -152,16 +151,14 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object doConvertToCharacter(Object value) {
-        if (value instanceof String) {
-            String cStr = (String) value;
-            return (cStr.length() > 0) ? cStr.charAt(0) : null;
+        if (value instanceof String cStr) {
+            return !cStr.isEmpty() ? cStr.charAt(0) : null;
         }
         return null;
     }
 
     private Object doConvertToBoolean(Object value) {
-        if (value instanceof String) {
-            String bStr = (String) value;
+        if (value instanceof String bStr) {
             return Boolean.valueOf(bStr);
         }
         return null;
@@ -169,9 +166,9 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
 
     private Class doConvertToClass(Object value) {
         Class clazz = null;
-        if (value != null && value instanceof String && ((String) value).length() > 0) {
+        if (value instanceof String st && !st.isEmpty()) {
             try {
-                clazz = Class.forName((String) value);
+                clazz = Class.forName(st);
             } catch (ClassNotFoundException e) {
                 throw new TypeConversionException(e.getLocalizedMessage(), e);
             }

@@ -30,10 +30,10 @@ public abstract class AbstractRequiredListTag extends AbstractListTag {
         listUIBean.setThrowExceptionOnNullValueAttribute(true);
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }

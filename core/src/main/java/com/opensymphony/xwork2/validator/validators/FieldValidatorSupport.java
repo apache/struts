@@ -32,10 +32,12 @@ public abstract class FieldValidatorSupport extends ValidatorSupport implements 
     protected String type;
     protected Object currentValue;
 
+    @Override
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
+    @Override
     public String getFieldName() {
         return fieldName;
     }

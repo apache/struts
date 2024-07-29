@@ -289,8 +289,7 @@ public class IteratorComponent extends ContextBean {
                     if (end == null)
                         end = step > 0 ? values.length - 1 : 0;
                     iterator = new CounterIterator(begin, end, step, Arrays.asList(values));
-                } else if (iteratorTarget instanceof List) {
-                    List values = (List) iteratorTarget;
+                } else if (iteratorTarget instanceof List values) {
                     if (end == null)
                         end = step > 0 ? values.size() - 1 : 0;
                     iterator = new CounterIterator(begin, end, step, values);
@@ -363,9 +362,9 @@ public class IteratorComponent extends ContextBean {
 
     static class CounterIterator implements Iterator<Object> {
         private int step;
-        private int end;
+        private final int end;
         private int currentIndex;
-        private List<Object> values;
+        private final List<Object> values;
 
         CounterIterator(Integer begin, Integer end, Integer step, List<Object> values) {
             this.end = end;
@@ -375,11 +374,13 @@ public class IteratorComponent extends ContextBean {
             this.values = values;
         }
 
+        @Override
         public boolean hasNext() {
             int next = peekNextIndex();
             return step > 0 ? next <= end : next >= end;
         }
 
+        @Override
         public Object next() {
             if (hasNext()) {
                 int nextIndex = peekNextIndex();
@@ -394,6 +395,7 @@ public class IteratorComponent extends ContextBean {
            return currentIndex + step;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Values cannot be removed from this iterator");
         }

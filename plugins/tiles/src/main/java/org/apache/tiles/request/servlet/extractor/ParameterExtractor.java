@@ -20,7 +20,7 @@ package org.apache.tiles.request.servlet.extractor;
 
 import org.apache.tiles.request.attribute.HasKeys;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 /**

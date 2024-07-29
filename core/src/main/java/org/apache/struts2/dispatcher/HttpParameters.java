@@ -55,27 +55,13 @@ public class HttpParameters implements Map<String, Parameter> {
     }
 
     public HttpParameters remove(final String paramToRemove) {
-        return remove(new HashSet<String>() {{
+        return remove(new HashSet<>() {{
             add(paramToRemove);
         }});
     }
 
     public boolean contains(String name) {
         return parameters.containsKey(name);
-    }
-
-    /**
-     * Access to this method can be potentially dangerous as it allows access to raw parameter values.
-     *
-     * @deprecated since 6.4.0, it will be removed with a new major release
-     */
-    @Deprecated
-    private Map<String, String[]> toMap() {
-        final Map<String, String[]> result = new HashMap<>(parameters.size());
-        for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
-            result.put(entry.getKey(), entry.getValue().getMultipleValues());
-        }
-        return result;
     }
 
     /**
@@ -187,44 +173,9 @@ public class HttpParameters implements Map<String, Parameter> {
         }
 
         public HttpParameters build() {
-            Map<String, Parameter> parameters = (parent == null)
-                ? new HashMap<>()
-                : new HashMap<>(parent.parameters);
-
-            for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
-                String name = entry.getKey();
-                Object value = entry.getValue();
-                if (value instanceof Parameter) {
-                    parameters.put(name, (Parameter) value);
-                } else {
-                    parameters.put(name, new Parameter.Request(name, value));
-                }
-            }
-
-            return new HttpParameters(parameters);
-        }
-
-        /**
-        * Alternate Builder method which avoids wrapping any parameters that are already
-        * a {@link Parameter} element within another {@link Parameter} wrapper.
-        *
-        * @deprecated since 6.4.0, use {@link #build()} instead
-         */
-        @Deprecated
-        public HttpParameters buildNoNestedWrapping() {
-            Map<String, Parameter> parameters = (parent == null)
-                    ? new HashMap<>()
-                    : new HashMap<>(parent.parameters);
-
-            for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
-                String name = entry.getKey();
-                Object value = entry.getValue();
-                Parameter parameterValue = (value instanceof Parameter)
-                        ? (Parameter) value
-                        : new Parameter.Request(name, value);
-                parameters.put(name, parameterValue);
-            }
-
+            Map<String, Parameter> parameters = parent == null ? new HashMap<>() : new HashMap<>(parent.parameters);
+            requestParameterMap.forEach((name, value) ->
+                    parameters.put(name,value instanceof Parameter ? (Parameter) value : new Parameter.Request(name, value)));
             return new HttpParameters(parameters);
         }
     }

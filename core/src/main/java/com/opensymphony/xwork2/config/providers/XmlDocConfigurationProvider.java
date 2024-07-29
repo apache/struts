@@ -218,12 +218,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
             if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
-                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
+                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.getDeclaredConstructor().newInstance();
                 provider.register(containerBuilder, props);
             } else {
                 throw new ConfigurationException(format("The bean-provider: name:%s class:%s does not implement %s", name, impl, BeanSelectionProvider.class.getName()), child);
             }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+        } catch (ReflectiveOperationException e) {
             throw new ConfigurationException(format("Unable to load bean-provider: name:%s class:%s", name, impl), e, child);
         }
     }
@@ -462,7 +462,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         Location location = DomHelper.getLocationObject(actionElement);
 
         if (!className.isEmpty()) {
-            verifyAction(className, name, location);
+            verifyAction(className, location);
         }
 
         Map<String, ResultConfig> results;
@@ -493,7 +493,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         String methodName = trimToNull(actionElement.getAttribute("method"));
 
         List<InterceptorMapping> interceptorList = buildInterceptorList(actionElement, packageContext);
-        List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement, packageContext);
+        List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement);
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
 
         return new ActionConfig.Builder(packageContext.getName(), actionName, className)
@@ -506,15 +506,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
-    }
-
-    /**
-     * @deprecated since 6.2.0, use {@link #verifyAction(String, Location)}
-     */
-    @Deprecated
-    protected boolean verifyAction(String className, String name, Location loc) {
-        verifyAction(className, loc);
-        return true;
     }
 
     protected void verifyAction(String className, Location loc) {
@@ -534,8 +525,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             if (objectFactory.isNoArgConstructorRequired()) {
                 throw new ConfigurationException("Action class [" + className + "] not found", e, loc);
             }
-            LOG.warn("Action class [" + className + "] not found");
-            LOG.debug("Action class [" + className + "] not found", e);
+            LOG.warn("Action class [{}] not found", className);
+            LOG.debug("Action class [{}] not found", className, e);
         } catch (NoSuchMethodException e) {
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
@@ -741,7 +732,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                     }
                 });
                 String val = paramValue.toString().trim();
-                if (val.length() > 0) {
+                if (!val.isEmpty()) {
                     resultParams.put(paramName, val);
                 }
             } else {
@@ -780,14 +771,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             sb.append(c);
         }
         return sb.toString();
-    }
-
-    /**
-     * @deprecated since 6.2.0, use {@link #buildExceptionMappings(Element)}
-     */
-    @Deprecated
-    protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
-        return buildExceptionMappings(element);
     }
 
     /**
@@ -893,12 +876,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             if (allowedMethodsChildNode != null && allowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
                 String childNodeValue = allowedMethodsChildNode.getNodeValue();
                 childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
-                if (childNodeValue.length() > 0) {
+                if (!childNodeValue.isEmpty()) {
                     allowedMethodsSB.append(childNodeValue);
                 }
             }
         });
-        if (allowedMethodsSB.length() > 0) {
+        if (!allowedMethodsSB.isEmpty()) {
             allowedMethodsSet.addAll(commaDelimitedStringToSet(allowedMethodsSB.toString()));
         }
     }
@@ -927,7 +910,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
         if (globalExceptionMappingList.getLength() > 0) {
             Element globalExceptionMappingElement = (Element) globalExceptionMappingList.item(0);
-            List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(globalExceptionMappingElement, packageContext);
+            List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(globalExceptionMappingElement);
             packageContext.addGlobalExceptionMappingConfigs(exceptionMappings);
         }
     }
@@ -966,8 +949,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOG.warn("Interceptor class [" + className + "] at location " + loc + " not found");
-            LOG.debug("Interceptor class [" + className + "] not found", e);
+            LOG.warn("Interceptor class [{}] at location {} not found", className, loc);
+            LOG.debug("Interceptor class [{}] not found", className, e);
         }
     }
 

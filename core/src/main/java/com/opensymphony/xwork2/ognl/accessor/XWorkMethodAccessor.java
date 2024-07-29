@@ -19,7 +19,11 @@
 package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import ognl.*;
+import ognl.MethodFailedException;
+import ognl.ObjectMethodAccessor;
+import ognl.OgnlContext;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,13 +82,12 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         //HACK - we pass indexed method access i.e. setXXX(A,B) pattern
         if ((objects.length == 2 && string.startsWith("set")) || (objects.length == 1 && string.startsWith("get"))) {
             Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
-            boolean e = ((exec == null) ? false : exec.booleanValue());
+            boolean e = exec != null && exec;
             if (!e) {
                 return callMethodWithDebugInfo(context, object, string, objects);
             }
         }
-        Boolean exec = ReflectionContextState.isDenyMethodExecution(context);
-        boolean e = (exec != null && exec);
+        boolean e = ReflectionContextState.isDenyMethodExecution(context);
 
         if (!e) {
             return callMethodWithDebugInfo(context, object, string, objects);
@@ -101,7 +104,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 			if (LOG.isDebugEnabled()) {
 				if (!(e.getReason() instanceof NoSuchMethodException)) {
 					// the method exists on the target object, but something went wrong
-                    LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}]", e.getReason(), object.toString(), methodName, Arrays.toString(objects));
+                    LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}] - {}", object.toString(), methodName, Arrays.toString(objects), e.getReason());
                 }
             }
 			throw e;
@@ -110,8 +113,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
     @Override
     public Object callStaticMethod(Map context, Class aClass, String string, Object[] objects) throws MethodFailedException {
-        Boolean exec = ReflectionContextState.isDenyMethodExecution(context);
-        boolean e = ((exec == null) ? false : exec.booleanValue());
+        boolean e = ReflectionContextState.isDenyMethodExecution(context);
 
         if (!e) {
             return callStaticMethodWithDebugInfo(context, aClass, string, objects);
@@ -129,7 +131,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 			if (LOG.isDebugEnabled()) {
 				if (!(e.getReason() instanceof NoSuchMethodException)) {
 					// the method exists on the target class, but something went wrong
-					LOG.debug("Error calling method through OGNL, class: [{}] method: [{}] args: [{}]", e.getReason(), aClass.getName(), methodName, Arrays.toString(objects));
+					LOG.debug("Error calling method through OGNL, class: [{}] method: [{}] args: [{}] - {}", aClass.getName(), methodName, Arrays.toString(objects), e.getReason());
 				}
 			}
 			throw e;

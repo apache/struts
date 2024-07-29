@@ -27,7 +27,7 @@ import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.sitemesh.webapp.decorator.NoDecorator;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Returns a {@link OldDecorator2NewStrutsVelocityDecorator} decorator

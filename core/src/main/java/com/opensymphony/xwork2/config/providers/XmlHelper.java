@@ -80,7 +80,7 @@ public class XmlHelper {
                 String paramName = paramElement.getAttribute("name");
 
                 String val = getContent(paramElement);
-                if (val.length() > 0) {
+                if (!val.isEmpty()) {
                     params.put(paramName, val);
                 }
             }

@@ -30,13 +30,6 @@ import org.apache.struts2.StrutsConstants;
 public class DefaultOgnlExpressionCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
         implements ExpressionCacheFactory<Key, Value> {
 
-    /**
-     * @deprecated since 6.4.0, use {@link #DefaultOgnlExpressionCacheFactory(String, String)}
-     */
-    @Deprecated
-    public DefaultOgnlExpressionCacheFactory() {
-    }
-
     @Inject
     public DefaultOgnlExpressionCacheFactory(@Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE) String cacheMaxSize,
                                              @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE) String defaultCacheType) {

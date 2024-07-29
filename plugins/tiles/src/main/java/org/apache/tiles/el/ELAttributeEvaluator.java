@@ -22,9 +22,9 @@ import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
+import jakarta.el.ELResolver;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
 
 /**
  * Evaluates string expression with typical EL syntax.<br>

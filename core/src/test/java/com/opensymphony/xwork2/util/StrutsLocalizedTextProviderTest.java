@@ -305,11 +305,6 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after retrievals ?",
             6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
-        // Expect the call to be ineffective due to deprecation and change to a "no-op" (but shouldn't throw an Exception or cause failure).
-        testStrutsLocalizedTextProvider.callClearBundleNoLocale("com/opensymphony/xwork2/test");
-        assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after non-locale clear call ?",
-            6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
-
         // Expect the call to function with bundle name + locale.  Remove all four of the non-default
         //   bundles and confirm the bundle map size changes.
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/test", Locale.ENGLISH);
@@ -586,7 +581,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      *
      * @since 6.0.0
      */
-    class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
+    static class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
 
         /**
          * Some test correctness depends on this {@link #RELOADED} value matching that of the private ancestor
@@ -594,10 +589,6 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
          * field's value is updated to match it exactly.
          */
         private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
-
-        public void callClearBundleNoLocale(String bundleName) {
-            super.clearBundle(bundleName);
-        }
 
         public void callClearBundleWithLocale(String bundleName, Locale locale) {
             super.clearBundle(bundleName, locale);
@@ -633,9 +624,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
          * @return true if resource bundles reloaded indicator is true, false otherwise (including if value was never set).
          */
         public boolean getBundlesReloadedIndicatorValue() {
-            final ActionContext actionContext = ActionContext.getContext();
-            final Object reloadedObject = actionContext.get(RELOADED);
-            return ((reloadedObject instanceof Boolean) ? ((Boolean) reloadedObject).booleanValue() : false);
+            final Object reloadedObject = ActionContext.getContext().get(RELOADED);
+            return reloadedObject instanceof Boolean && (Boolean) reloadedObject;
         }
     }
 }

@@ -124,7 +124,7 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
      */
     public boolean match(Map<String, String> map, String data, CompiledPattern expr) {
 
-        if (data != null && data.length() > 0) {
+        if (data != null && !data.isEmpty()) {
             Matcher matcher = expr.getPattern().matcher(data);
             if (matcher.matches()) {
                 for (int x = 0; x < expr.getVariableNames().size(); x++) {

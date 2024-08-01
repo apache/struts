@@ -184,6 +184,42 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         assertEquals("1, 2, , 4, ", out.getBuffer().toString());
     }
 
+    public void testIteratorWithNullsOnly() {
+        // given
+        stack.push(new FooAction() {
+            private final List<String> items = Arrays.asList(null, null, null);
+
+            public List<String> getItems() {
+                return items;
+            }
+        });
+
+        StringWriter out = new StringWriter();
+
+        ic.setValue("items");
+        ic.setVar("val");
+        Property prop = new Property(stack);
+
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(prop);
+
+        String body = ", ";
+
+        // when
+        assertTrue(ic.start(out));
+
+        for (int i = 0; i < 3; i++) {
+            prop.start(out);
+            prop.end(out, body);
+            ic.end(out, null);
+        }
+
+        // then
+        assertEquals(", , , ", out.getBuffer().toString());
+    }
+
     public void testIteratorWithDifferentLocale() {
         // given
         ActionContext.getContext().withLocale(new Locale("fa_IR"));

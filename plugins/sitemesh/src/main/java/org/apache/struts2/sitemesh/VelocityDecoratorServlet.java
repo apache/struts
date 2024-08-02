@@ -27,23 +27,22 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 import com.opensymphony.xwork2.ActionContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.listener.StrutsListener;
+import org.apache.struts2.views.velocity.StrutsVelocityManager;
 import org.apache.struts2.views.velocity.VelocityManager;
-import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.tools.view.VelocityView;
 import org.apache.velocity.tools.view.VelocityViewServlet;
-
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -61,7 +60,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
 
     private static final long serialVersionUID = -6731485159371716918L;
 
-    protected VelocityManagerInterface velocityManager;
+    protected VelocityManager velocityManager;
     protected String defaultContentType;
 
     /**
@@ -82,7 +81,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         if (dispatcher == null) {
             throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
         }
-        velocityManager = dispatcher.getContainer().getInstance(VelocityManagerInterface.class);
+        velocityManager = dispatcher.getContainer().getInstance(VelocityManager.class);
         velocityManager.init(config.getServletContext());
 
         // do whatever we have to do to init Velocity
@@ -164,7 +163,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      * @param response servlet reponse to client
      */
     protected Context createContext(HttpServletRequest request, HttpServletResponse response) {
-        Context context = (Context) request.getAttribute(VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT);
+        Context context = (Context) request.getAttribute(StrutsVelocityManager.KEY_VELOCITY_STRUTS_CONTEXT);
         if (context == null) {
             ActionContext ctx = ServletActionContext.getActionContext(request);
             context = velocityManager.createContext(ctx.getValueStack(), request, response);

@@ -34,7 +34,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.views.JspSupportServlet;
-import org.apache.struts2.views.velocity.VelocityManagerInterface;
+import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -87,7 +87,7 @@ public class VelocityResult extends StrutsResultSupport {
     private static final Logger LOG = LogManager.getLogger(VelocityResult.class);
 
     private String defaultEncoding;
-    private transient VelocityManagerInterface velocityManager;
+    private transient VelocityManager velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
 
     public VelocityResult() {
@@ -104,7 +104,7 @@ public class VelocityResult extends StrutsResultSupport {
     }
 
     @Inject
-    public void setVelocityManager(VelocityManagerInterface mgr) {
+    public void setVelocityManager(VelocityManager mgr) {
         this.velocityManager = mgr;
     }
 
@@ -232,7 +232,7 @@ public class VelocityResult extends StrutsResultSupport {
      * @param location        the name of the template that is being used
      * @return the a minted Velocity context.
      */
-    protected Context createContext(VelocityManagerInterface velocityManager,
+    protected Context createContext(VelocityManager velocityManager,
                                     ValueStack stack,
                                     HttpServletRequest request,
                                     HttpServletResponse response,

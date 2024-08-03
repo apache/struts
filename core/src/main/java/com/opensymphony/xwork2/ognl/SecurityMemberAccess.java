@@ -46,6 +46,7 @@ import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewClassesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPackageNamesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
+import static com.opensymphony.xwork2.util.DebugUtils.logWarningForFirstOccurrence;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
@@ -87,7 +88,6 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
 
-    private static volatile boolean isDevModeLogged = false;
     private volatile boolean isDevModeInit;
     private boolean isDevMode;
     private Set<String> devModeExcludedClasses = Set.of(Object.class.getName());
@@ -459,6 +459,13 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
+        if (!this.enforceAllowlistEnabled) {
+            String msg = "OGNL allowlist is disabled!" +
+                    " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                    " Set the configuration `{}=true` to enable it." +
+                    " Please refer to the Struts 7.0 migration guide and security documentation for further information.";
+            logWarningForFirstOccurrence("allowlist", LOG, msg, StrutsConstants.STRUTS_ALLOWLIST_ENABLE);
+        }
     }
 
     @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
@@ -515,11 +522,9 @@ public class SecurityMemberAccess implements MemberAccess {
         if (!isDevMode || isDevModeInit) {
             return;
         }
+        logWarningForFirstOccurrence("devMode", LOG,
+                "DevMode enabled, using DevMode excluded classes and packages for OGNL security enforcement!");
         isDevModeInit = true;
-        if (!isDevModeLogged) {
-            LOG.warn("Working in devMode, using devMode excluded classes and packages!");
-            isDevModeLogged = true;
-        }
         excludedClasses = devModeExcludedClasses;
         excludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
         excludedPackageNames = devModeExcludedPackageNames;

@@ -22,10 +22,15 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @since 6.5.0
  */
 public final class DebugUtils {
+
+    private static final Set<String> IS_LOGGED = ConcurrentHashMap.newKeySet();
 
     public static void notifyDeveloperOfError(Logger log, Object action, String message) {
         if (action instanceof TextProvider tp) {
@@ -37,4 +42,12 @@ public final class DebugUtils {
         }
     }
 
+    /**
+     * @since 7.0
+     */
+    public static void logWarningForFirstOccurrence(String key, Logger log, String msg, Object... args) {
+        if (IS_LOGGED.add(key)) {
+            log.warn(msg, args);
+        }
+    }
 }

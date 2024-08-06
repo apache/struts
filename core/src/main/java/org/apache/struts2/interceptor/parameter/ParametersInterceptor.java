@@ -64,6 +64,7 @@ import java.util.regex.Pattern;
 
 import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
 import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
+import static com.opensymphony.xwork2.util.DebugUtils.logWarningForFirstOccurrence;
 import static com.opensymphony.xwork2.util.DebugUtils.notifyDeveloperOfError;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
@@ -115,6 +116,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
     public void setRequireAnnotations(String requireAnnotations) {
         this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
+        if (!this.requireAnnotations) {
+            String msg = "@StrutsParameter annotation requirement is disabled!" +
+                    " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                    " Set the configuration `{}=true` to enable it." +
+                    " Please refer to the Struts 7.0 migration guide and security documentation for further information.";
+            logWarningForFirstOccurrence("strutsParameter", LOG, msg, StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS);
+        }
     }
 
     /**

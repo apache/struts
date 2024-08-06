@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import java.util.Properties;
 
-import static org.apache.struts2.views.velocity.VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT;
+import static org.apache.struts2.views.velocity.StrutsVelocityManager.KEY_VELOCITY_STRUTS_CONTEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,13 +42,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-public class VelocityManagerTest extends StrutsJUnit4TestCase {
+public class StrutsVelocityManagerTest extends StrutsJUnit4TestCase {
 
-    VelocityManager velocityManager = new VelocityManager();
+    StrutsVelocityManager strutsVelocityManager = new StrutsVelocityManager();
 
     @Before
     public void inject() {
-        container.inject(velocityManager);
+        container.inject(strutsVelocityManager);
         ServletActionContext.setServletContext(servletContext);
     }
 
@@ -61,80 +61,80 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
     public void overridingPropertiesLoaded() {
         var props = new Properties();
         props.setProperty("test", "value");
-        velocityManager.setVelocityProperties(props);
+        strutsVelocityManager.setVelocityProperties(props);
 
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertEquals("value", velocityManager.getVelocityEngine().getProperty("test"));
-        assertEquals(props, velocityManager.getVelocityProperties());
+        assertEquals("value", strutsVelocityManager.getVelocityEngine().getProperty("test"));
+        assertEquals(props, strutsVelocityManager.getVelocityProperties());
     }
 
     @Test
     public void initSuccessful() {
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertNotNull(velocityManager.getVelocityEngine());
+        assertNotNull(strutsVelocityManager.getVelocityEngine());
     }
 
     @Test
     public void exceptionThrownOnNoServletContext() {
-        assertThrows(IllegalArgumentException.class, () -> velocityManager.init(null));
+        assertThrows(IllegalArgumentException.class, () -> strutsVelocityManager.init(null));
     }
 
     @Test
     public void initMethodIdempotent() {
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        var engine = velocityManager.getVelocityEngine();
+        var engine = strutsVelocityManager.getVelocityEngine();
 
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertEquals(engine, velocityManager.getVelocityEngine());
+        assertEquals(engine, strutsVelocityManager.getVelocityEngine());
     }
 
     @Test
     public void loadsConfigFromWebInfPath() {
-        velocityManager.setCustomConfigFile("webinf-velocity.properties");
+        strutsVelocityManager.setCustomConfigFile("webinf-velocity.properties");
 
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertEquals("webinf", velocityManager.getVelocityEngine().getProperty("test"));
+        assertEquals("webinf", strutsVelocityManager.getVelocityEngine().getProperty("test"));
     }
 
     @Test
     public void loadsConfigFromClassPath() {
         var servletContext = mock(ServletContext.class);
         doReturn(null).when(servletContext).getRealPath(anyString());
-        velocityManager.setCustomConfigFile("test-velocity.properties");
+        strutsVelocityManager.setCustomConfigFile("test-velocity.properties");
 
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertEquals("value", velocityManager.getVelocityEngine().getProperty("test"));
+        assertEquals("value", strutsVelocityManager.getVelocityEngine().getProperty("test"));
     }
 
     @Test
     public void initWithToolboxLocation() {
-        velocityManager.setToolBoxLocation("tools.xml");
+        strutsVelocityManager.setToolBoxLocation("tools.xml");
 
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        assertNotNull(velocityManager.getVelocityEngine());
-        assertNotNull(velocityManager.getVelocityTools());
+        assertNotNull(strutsVelocityManager.getVelocityEngine());
+        assertNotNull(strutsVelocityManager.getVelocityTools());
     }
 
     @Test
     public void initFailsWithInvalidToolBoxLocation() {
-        velocityManager.setToolBoxLocation("invalid.xml");
+        strutsVelocityManager.setToolBoxLocation("invalid.xml");
 
-        Exception e = assertThrows(Exception.class, () -> velocityManager.init(servletContext));
+        Exception e = assertThrows(Exception.class, () -> strutsVelocityManager.init(servletContext));
         assertThat(e).hasMessageContaining("Could not find any configuration at invalid.xml");
     }
 
     @Test
     public void createContext() {
-        velocityManager.init(servletContext);
+        strutsVelocityManager.init(servletContext);
 
-        Context context = velocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
+        Context context = strutsVelocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
 
         assertNotNull(context);
         assertThat(context.get("struts")).isInstanceOf(VelocityStrutsUtil.class);
@@ -146,10 +146,10 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
 
     @Test
     public void createToolboxContext() {
-        velocityManager.setToolBoxLocation("tools.xml");
-        velocityManager.init(servletContext);
+        strutsVelocityManager.setToolBoxLocation("tools.xml");
+        strutsVelocityManager.init(servletContext);
 
-        Context context = velocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
+        Context context = strutsVelocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
 
         assertNotNull(context);
         assertThat(context).isInstanceOf(ToolContext.class);

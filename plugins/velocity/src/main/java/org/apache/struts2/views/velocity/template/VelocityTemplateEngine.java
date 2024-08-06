@@ -28,7 +28,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.template.BaseTemplateEngine;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.views.velocity.VelocityManagerInterface;
+import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
@@ -42,10 +42,10 @@ import java.util.Map;
 public class VelocityTemplateEngine extends BaseTemplateEngine {
     private static final Logger LOG = LogManager.getLogger(VelocityTemplateEngine.class);
 
-    private VelocityManagerInterface velocityManager;
+    private VelocityManager velocityManager;
 
     @Inject
-    public void setVelocityManager(VelocityManagerInterface mgr) {
+    public void setVelocityManager(VelocityManager mgr) {
         this.velocityManager = mgr;
     }
 

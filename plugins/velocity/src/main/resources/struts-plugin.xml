@@ -25,11 +25,8 @@
 
 <struts>
 
-    <bean name="struts" type="org.apache.struts2.views.velocity.VelocityManagerInterface"
-          class="org.apache.struts2.views.velocity.VelocityManager"/>
-
-    <!-- Deprecated since 6.4.0 -->
-    <bean name="struts" class="org.apache.struts2.views.velocity.VelocityManager"/>
+    <bean name="struts" type="org.apache.struts2.views.velocity.VelocityManager"
+          class="org.apache.struts2.views.velocity.StrutsVelocityManager"/>
 
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm"
           class="org.apache.struts2.views.velocity.template.VelocityTemplateEngine"/>

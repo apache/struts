@@ -1645,6 +1645,21 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertThrows(OgnlException.class, () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null));
     }
 
+    public void testCompilationErrorsCached() throws Exception {
+        OgnlException e = assertThrows(OgnlException.class, () -> ognlUtil.compile(".literal.$something"));
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        assertThat(stackTrace).isEmpty();
+        StackTraceElement[] causeStackTrace = e.getCause().getStackTrace();
+
+        OgnlException e2 = assertThrows(OgnlException.class, () -> ognlUtil.compile(".literal.$something"));
+        StackTraceElement[] stackTrace2 = e.getStackTrace();
+        assertThat(stackTrace2).isEmpty();
+        StackTraceElement[] causeStackTrace2 = e.getCause().getStackTrace();
+
+        assertSame(e, e2); // Exception is cached
+        assertThat(causeStackTrace).isNotEqualTo(causeStackTrace2); // Stack trace refreshed
+    }
+
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.

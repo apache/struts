@@ -601,12 +601,27 @@ public class OgnlUtil {
         if (enableExpressionCache) {
             tree = expressionCache.get(expr);
         }
+        if (tree instanceof OgnlException) {
+            // OgnlException was cached, rethrow it with updated stack trace
+            OgnlException e = (OgnlException) tree;
+            e.getCause().fillInStackTrace();
+            throw e;
+        }
         if (tree == null) {
-            tree = ognlGuard.parseExpression(expr);
+            try {
+                tree = ognlGuard.parseExpression(expr);
+            } catch (OgnlException e) {
+                tree = e;
+            }
             if (enableExpressionCache) {
                 expressionCache.put(expr, tree);
             }
+            if (tree instanceof OgnlException) {
+                // Rethrow OgnlException after caching
+                throw (OgnlException) tree;
+            }
         }
+
         if (EXPR_BLOCKED.equals(tree)) {
             throw new OgnlException("Expression blocked by OgnlGuard: " + expr);
         }

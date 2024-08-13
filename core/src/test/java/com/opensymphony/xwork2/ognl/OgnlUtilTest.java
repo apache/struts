@@ -1650,14 +1650,15 @@ public class OgnlUtilTest extends XWorkTestCase {
         StackTraceElement[] stackTrace = e.getStackTrace();
         assertThat(stackTrace).isEmpty();
         StackTraceElement[] causeStackTrace = e.getCause().getStackTrace();
+        assertThat(causeStackTrace).isNotEmpty();
 
         OgnlException e2 = assertThrows(OgnlException.class, () -> ognlUtil.compile(".literal.$something"));
-        StackTraceElement[] stackTrace2 = e.getStackTrace();
+        StackTraceElement[] stackTrace2 = e2.getStackTrace();
         assertThat(stackTrace2).isEmpty();
-        StackTraceElement[] causeStackTrace2 = e.getCause().getStackTrace();
+        StackTraceElement[] causeStackTrace2 = e2.getCause().getStackTrace();
 
+        assertThat(causeStackTrace2).isEmpty(); // Stack trace cleared before rethrow
         assertSame(e, e2); // Exception is cached
-        assertThat(causeStackTrace).isNotEqualTo(causeStackTrace2); // Stack trace refreshed
     }
 
     /**

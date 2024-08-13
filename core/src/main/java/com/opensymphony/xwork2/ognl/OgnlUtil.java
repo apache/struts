@@ -602,10 +602,8 @@ public class OgnlUtil {
             tree = expressionCache.get(expr);
         }
         if (tree instanceof OgnlException) {
-            // OgnlException was cached, rethrow it with updated stack trace
-            OgnlException e = (OgnlException) tree;
-            e.getCause().fillInStackTrace();
-            throw e;
+            // OgnlException was cached, rethrow it with empty stack trace (refilling the stack trace is expensive)
+            clearStackTraceAndRethrow(tree);
         }
         if (tree == null) {
             try {
@@ -621,11 +619,19 @@ public class OgnlUtil {
                 throw (OgnlException) tree;
             }
         }
-
         if (EXPR_BLOCKED.equals(tree)) {
             throw new OgnlException("Expression blocked by OgnlGuard: " + expr);
         }
         return tree;
+    }
+
+    private void clearStackTraceAndRethrow(Object ognlException) throws OgnlException {
+        OgnlException e = (OgnlException) ognlException;
+        e.setStackTrace(new StackTraceElement[0]);
+        if (e.getCause() != null) {
+            e.getCause().setStackTrace(new StackTraceElement[0]);
+        }
+        throw e;
     }
 
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {

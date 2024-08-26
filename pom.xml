@@ -818,7 +818,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-api</artifactId>
-                <version>8.5.53</version>
+                <version>10.1.28</version>
                 <scope>provided</scope>
             </dependency>
 

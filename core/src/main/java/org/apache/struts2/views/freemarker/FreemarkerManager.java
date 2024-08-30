@@ -43,6 +43,7 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import freemarker.template.utility.StringUtil;
 import jakarta.servlet.GenericServlet;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -550,7 +551,7 @@ public class FreemarkerManager {
         model.putAll(standard);
 
         // support for JSP exception pages, exposing the servlet or JSP exception
-        Throwable exception = (Throwable) request.getAttribute("jakarta.servlet.error.exception");
+        Throwable exception = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
         if (exception == null) {
             exception = (Throwable) request.getAttribute("jakarta.servlet.error.JspException");

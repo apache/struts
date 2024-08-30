@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -89,7 +90,7 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH);
         if (uri != null) {
             return uri;
         }

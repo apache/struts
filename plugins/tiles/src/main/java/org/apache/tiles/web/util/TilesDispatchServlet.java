@@ -18,6 +18,7 @@
  */
 package org.apache.tiles.web.util;
 
+import jakarta.servlet.RequestDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.api.AttributeContext;
@@ -113,7 +114,7 @@ public class TilesDispatchServlet extends HttpServlet {
      * @return The definition name to render.
      */
     protected String getDefinitionName(HttpServletRequest request) {
-        String path = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
+        String path = (String) request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH);
         if (path == null) {
             path = request.getServletPath();
         }

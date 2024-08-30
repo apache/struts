@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import freemarker.template.Template;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -87,7 +88,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
                 LOG.error("Exception occurred during processing request: {}", e.getMessage(), e);
                 // send a http error response to use the servlet defined error handler
                 // make the exception available to the web.xml defined error page
-                request.setAttribute("jakarta.servlet.error.exception", e);
+                request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, e);
 
                 // for compatibility
                 request.setAttribute("jakarta.servlet.jsp.jspException", e);

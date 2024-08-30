@@ -156,7 +156,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             }
 
             //if we are inside an action tag, we always need to do an include
-            Boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
+            boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
 
             // If we're included, then include the view
             // Otherwise do forward

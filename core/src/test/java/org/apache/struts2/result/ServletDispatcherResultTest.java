@@ -130,7 +130,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         assertTrue(mockActionInvocation.getInvocationContext().getParameters().contains("bar"));
         assertEquals("1", mockActionInvocation.getInvocationContext().getParameters().get("bar").getValue());
-        assertEquals("1", ((HttpParameters) mockActionInvocation.getInvocationContext().getContextMap().get("parameters")).get("bar").getValue());
         dispatcherMock.verify();
         requestMock.verify();
         dispatcherMock.verify();

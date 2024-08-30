@@ -101,7 +101,7 @@ public class Include extends Component {
 
     private static final Logger LOG = LogManager.getLogger(Include.class);
 
-    private static final String systemEncoding = Charset.defaultCharset().displayName();
+    private static final String SYSTEM_ENCODING = Charset.defaultCharset().displayName();
 
     protected String value;
     private final HttpServletRequest req;
@@ -279,7 +279,7 @@ public class Include extends Component {
             pageResponse.getContent().writeTo(writer, encoding);
         } else {
             // Use the platform specific encoding
-            pageResponse.getContent().writeTo(writer, systemEncoding);
+            pageResponse.getContent().writeTo(writer, SYSTEM_ENCODING);
         }
     }
 

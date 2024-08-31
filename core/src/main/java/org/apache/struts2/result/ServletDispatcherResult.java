@@ -166,6 +166,9 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 
+                LOG.debug("Sets request attribute: {} to value: {}", RequestDispatcher.FORWARD_REQUEST_URI, finalLocation);
+                request.setAttribute(RequestDispatcher.FORWARD_REQUEST_URI, finalLocation);
+
                 dispatcher.forward(request, response);
             } else {
                 LOG.debug("Including location: {}", finalLocation);

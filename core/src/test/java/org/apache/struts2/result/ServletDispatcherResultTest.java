@@ -75,6 +75,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("foo.jsp")), dispatcherMock.proxy());
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
+        requestMock.expect("setAttribute", C.args(C.eq(RequestDispatcher.FORWARD_REQUEST_URI), C.eq("foo.jsp")));
         requestMock.matchAndReturn("getRequestURI", "foo.jsp");
 
         Mock responseMock = new Mock(HttpServletResponse.class);
@@ -108,6 +109,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("foo.jsp?bar=1")), dispatcherMock.proxy());
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
+        requestMock.expect("setAttribute", C.args(C.eq(RequestDispatcher.FORWARD_REQUEST_URI), C.eq("foo.jsp?bar=1")));
         requestMock.matchAndReturn("getRequestURI", "foo.jsp");
 
         Mock responseMock = new Mock(HttpServletResponse.class);

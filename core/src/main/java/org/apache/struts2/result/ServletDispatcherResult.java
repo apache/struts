@@ -55,7 +55,7 @@ import java.io.Serial;
  * {@link PageContext#include(String) include} method is called.</li>
  *
  * <li>If there is no PageContext and we're not in any sort of include (there is no
- * "jakarta.servlet.include.servlet_path" in the request attributes), then a call to
+ * {@link RequestDispatcher#INCLUDE_SERVLET_PATH} in the request attributes), then a call to
  * {@link RequestDispatcher#forward(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse) forward}
  * is made.</li>
  *
@@ -125,7 +125,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
      *                   HTTP request.
      */
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        LOG.debug("Forwarding to location: {}", finalLocation);
+        LOG.debug("Processing location: {}", finalLocation);
 
         PageContext pageContext = ServletActionContext.getPageContext();
 
@@ -145,8 +145,6 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 if (!queryParams.isEmpty()) {
                     parameters = HttpParameters.create(queryParams.getQueryParams()).withParent(parameters).build();
                     invocation.getInvocationContext().withParameters(parameters);
-                    // put to extraContext, see Dispatcher#createContextMap
-                    invocation.getInvocationContext().getContextMap().put("parameters", parameters);
                 }
             }
 
@@ -158,17 +156,19 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             }
 
             //if we are inside an action tag, we always need to do an include
-            Boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
+            boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
 
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type
-            if (!insideActionTag && !response.isCommitted() && (request.getAttribute("jakarta.servlet.include.servlet_path") == null)) {
+            if (!insideActionTag && !response.isCommitted() && (request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH) == null)) {
+                LOG.debug("Forwarding to location: {}", finalLocation);
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 
                 dispatcher.forward(request, response);
             } else {
+                LOG.debug("Including location: {}", finalLocation);
                 dispatcher.include(request, response);
             }
         }

@@ -42,6 +42,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +101,7 @@ public class Include extends Component {
 
     private static final Logger LOG = LogManager.getLogger(Include.class);
 
-    private static final String systemEncoding = System.getProperty("file.encoding");
+    private static final String SYSTEM_ENCODING = Charset.defaultCharset().displayName();
 
     protected String value;
     private final HttpServletRequest req;
@@ -149,8 +150,7 @@ public class Include extends Component {
             String concat = "";
 
             // Set parameters
-            for (Object next : parameters.entrySet()) {
-                Map.Entry entry = (Map.Entry) next;
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
                 Object name = entry.getKey();
                 List values = (List) entry.getValue();
 
@@ -191,7 +191,7 @@ public class Include extends Component {
         } else if (!(request instanceof HttpServletRequest hrequest)) {
             returnValue = relativePath;
         } else {
-            String uri = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
+            String uri = (String) request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH);
 
             if (uri == null) {
                 uri = RequestUtils.getServletPath(hrequest);
@@ -203,7 +203,7 @@ public class Include extends Component {
         // .. is illegal in an absolute path according to the Servlet Spec and will cause
         // known problems on Orion application servers.
         if (returnValue.contains("..")) {
-            Stack stack = new Stack();
+            Stack<String> stack = new Stack<>();
             StringTokenizer pathParts = new StringTokenizer(returnValue.replace('\\', '/'), "/");
 
             while (pathParts.hasMoreTokens()) {
@@ -279,7 +279,7 @@ public class Include extends Component {
             pageResponse.getContent().writeTo(writer, encoding);
         } else {
             // Use the platform specific encoding
-            pageResponse.getContent().writeTo(writer, systemEncoding);
+            pageResponse.getContent().writeTo(writer, SYSTEM_ENCODING);
         }
     }
 

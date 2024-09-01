@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsInternalTestCase;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 /**

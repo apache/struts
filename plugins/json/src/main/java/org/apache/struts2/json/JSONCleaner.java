@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.WildcardUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * <p>Isolate the process of cleaning JSON data from the Interceptor class
  * itself.</p>
- * 
+ *
  * <p>The allowed and blocked wildcard patterns, combined with
  * defaultBlock, let you filter out values that should not be injected, in
  * the same way that ParameterFilterInterceptor does.  Note that you can

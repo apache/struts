@@ -20,8 +20,8 @@ package org.apache.struts2.views.jsp;
 
 import jakarta.servlet.jsp.JspException;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
 
 import java.util.ArrayList;

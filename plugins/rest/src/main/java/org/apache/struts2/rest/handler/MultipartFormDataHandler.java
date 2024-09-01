@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 
 import java.io.IOException;
 import java.io.Reader;

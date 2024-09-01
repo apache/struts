@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.util.PatternMatcher;
+import org.apache.struts2.util.PatternMatcher;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

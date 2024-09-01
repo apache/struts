@@ -18,8 +18,8 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.location.Location;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.util.location.Location;
 
 public class StrutsExceptionTest extends XWorkTestCase {
 

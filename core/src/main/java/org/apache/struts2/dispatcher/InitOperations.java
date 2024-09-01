@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 
 import java.util.HashMap;
 import java.util.Iterator;

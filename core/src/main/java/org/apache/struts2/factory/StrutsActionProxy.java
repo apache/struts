@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.factory;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.DefaultActionProxy;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.Serial;

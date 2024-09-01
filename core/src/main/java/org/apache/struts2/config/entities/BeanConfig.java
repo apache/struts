@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.config.entities;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Scope;
 
 public class BeanConfig {
     private final Class<?> clazz;

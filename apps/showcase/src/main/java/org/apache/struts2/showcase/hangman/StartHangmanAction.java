@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.hangman;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 import java.util.Map;
 

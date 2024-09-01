@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.XWorkTestCase;
 
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.ServletActionContext;
@@ -187,8 +187,8 @@ public class ActionMappingParametersInterceptorTest extends XWorkTestCase {
 
     /**
      * Create and configure an ActionMappingParametersInterceptor instance
-     * 
-     * @return 
+     *
+     * @return
      */
     private ActionMappingParametersInterceptor createActionMappingParametersInterceptor() {
         ActionMappingParametersInterceptor ampi = new ActionMappingParametersInterceptor();

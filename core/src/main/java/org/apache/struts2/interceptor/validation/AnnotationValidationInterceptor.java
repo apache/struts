@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.interceptor.validation;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.validator.ValidationInterceptor;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

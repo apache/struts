@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

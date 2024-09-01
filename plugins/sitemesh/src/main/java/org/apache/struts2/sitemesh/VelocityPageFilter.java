@@ -23,7 +23,7 @@ import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.sitemesh.DecoratorSelector;
 import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.FilterConfig;
 import org.apache.struts2.views.velocity.VelocityManager;
 

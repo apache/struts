@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.WildcardUtil;
-import com.opensymphony.xwork2.util.finder.ResourceFinder;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.util.WildcardUtil;
+import org.apache.struts2.util.finder.ResourceFinder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.request.ApplicationResource;

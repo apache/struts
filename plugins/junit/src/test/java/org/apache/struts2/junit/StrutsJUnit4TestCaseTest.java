@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.ActionProxy;
+import org.apache.struts2.ActionProxy;
 import org.junit.Assert;
 import org.junit.Test;
 

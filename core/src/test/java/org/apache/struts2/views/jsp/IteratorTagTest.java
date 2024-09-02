@@ -727,6 +727,41 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new String[]{"a", "b", "c"});
     }
 
+    public void testNullElements() throws JspException {
+        Foo foo = new Foo();
+        foo.setArray(new String[3]);
+
+        stack.push(foo);
+        tag.setValue("array");
+        tag.setVar("anId");
+
+        // one
+        int result = tag.doStartTag();
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
+        assertNull(stack.peek());
+        assertNull(stack.getContext().get("anId"));
+
+        tag.doInitBody();
+
+        // two
+        result = tag.doAfterBody();
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
+        assertNull(stack.peek());
+        assertNull(stack.getContext().get("anId"));
+
+        // three
+        result = tag.doAfterBody();
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
+        assertNull(stack.peek());
+        assertNull(stack.getContext().get("anId"));
+
+        result = tag.doAfterBody();
+        assertEquals(TagSupport.SKIP_BODY, result);
+
+        result = tag.doEndTag();
+        assertEquals(TagSupport.EVAL_PAGE, result);
+    }
+
     public void testCounterWithArray() throws JspException {
         Foo foo = new Foo();
         foo.setArray(new String[]{"a", "b", "c", "d"});

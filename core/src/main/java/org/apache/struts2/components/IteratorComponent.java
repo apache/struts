@@ -305,7 +305,10 @@ public class IteratorComponent extends ContextBean {
         if ((iterator != null) && iterator.hasNext()) {
             Object currentValue = iterator.next();
             stack.push(currentValue);
-            threadAllowlist.allowClass(currentValue.getClass());
+
+            if (currentValue != null) {
+                threadAllowlist.allowClass(currentValue.getClass());
+            }
 
             String var = getVar();
 

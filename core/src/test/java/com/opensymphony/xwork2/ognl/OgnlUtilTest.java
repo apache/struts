@@ -1648,6 +1648,22 @@ public class OgnlUtilTest extends XWorkTestCase {
         return generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 25);
     }
 
+    public void testCompilationErrorsCached() throws Exception {
+        OgnlException e = assertThrows(OgnlException.class, () -> ognlUtil.compile(".literal.$something"));
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        assertThat(stackTrace).isEmpty();
+        StackTraceElement[] causeStackTrace = e.getCause().getStackTrace();
+        assertThat(causeStackTrace).isNotEmpty();
+
+        OgnlException e2 = assertThrows(OgnlException.class, () -> ognlUtil.compile(".literal.$something"));
+        StackTraceElement[] stackTrace2 = e2.getStackTrace();
+        assertThat(stackTrace2).isEmpty();
+        StackTraceElement[] causeStackTrace2 = e2.getCause().getStackTrace();
+
+        assertThat(causeStackTrace2).isEmpty(); // Stack trace cleared before rethrow
+        assertSame(e, e2); // Exception is cached
+    }
+
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.

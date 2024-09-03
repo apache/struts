@@ -41,4 +41,13 @@ public interface UploadedFile extends Serializable {
 
     String getContentType();
 
+    /**
+     * Represents a name of the input file, eg.:
+     * "myFile" in case of <input type="file" name="myFile">
+     *
+     * @return name of the input file field
+     * @since 6.7.0
+     */
+    String getInputName();
+
 }

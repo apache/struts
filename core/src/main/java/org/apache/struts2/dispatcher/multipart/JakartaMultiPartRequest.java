@@ -246,6 +246,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(storeLocation)
                 .withContentType(fileItem.getContentType())
                 .withOriginalName(fileItem.getName())
+                .withInputName(fileItem.getFieldName())
                 .build();
             fileList.add(uploadedFile);
         }

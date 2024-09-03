@@ -25,10 +25,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class FileUploadTest {
 
@@ -45,9 +49,31 @@ public class FileUploadTest {
             uploadInput.setValueAttribute(tempFile.getAbsolutePath());
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage resultPage = button.click();
+
             DomElement errorMessage = resultPage.getFirstByXPath("//span[@class='errorMessage']");
-            Assert.assertNotNull(errorMessage);
-            Assert.assertEquals("File cannot be empty", errorMessage.getVisibleText());
+            assertNotNull(errorMessage);
+            assertEquals("File cannot be empty", errorMessage.getVisibleText());
+        }
+    }
+
+    @Test
+    public void testFileUpload() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
+            final HtmlForm form = page.getFormByName("doUpload");
+            HtmlInput captionInput = form.getInputByName("caption");
+            HtmlFileInput uploadInput = form.getInputByName("upload");
+            captionInput.type("some caption");
+            File tempFile = File.createTempFile("testEmptyFile", ".tmp");
+            Files.write(Paths.get(tempFile.toURI()), "some content".getBytes());
+            tempFile.deleteOnExit();
+            uploadInput.setValueAttribute(tempFile.getAbsolutePath());
+            final HtmlSubmitInput button = form.getInputByValue("Submit");
+            final HtmlPage resultPage = button.click();
+
+            DomElement inputName = resultPage.getElementById("input-name");
+            assertNotNull(inputName);
+            assertEquals("Input name: upload", inputName.getTextContent().trim());
         }
     }
 

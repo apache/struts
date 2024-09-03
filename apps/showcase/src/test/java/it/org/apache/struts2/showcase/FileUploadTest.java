@@ -59,7 +59,8 @@ public class FileUploadTest {
                     "ContentType: text/plain",
                     "Original FileName: " + tempFile.getName(),
                     "Caption: some caption",
-                    "Size: 12"
+                    "Size: 12",
+                    "Input name: upload"
             );
         }
     }

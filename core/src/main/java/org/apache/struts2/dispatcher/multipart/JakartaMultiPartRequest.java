@@ -118,6 +118,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     .create(item.getPath().toFile())
                     .withOriginalName(item.getName())
                     .withContentType(item.getContentType())
+                    .withInputName(item.getFieldName())
                     .build();
             values.add(uploadedFile);
         }

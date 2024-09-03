@@ -91,6 +91,11 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         public String getContentType() {
             return null;
         }
+
+        @Override
+        public String getInputName() {
+            return null;
+        }
     };
 
     private MockHttpServletRequest request;

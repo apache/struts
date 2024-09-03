@@ -37,6 +37,7 @@ public class FileUploadAction extends ActionSupport implements UploadedFilesAwar
     private String fileName;
     private String caption;
     private String originalName;
+    private String inputName;
 
     public String input() throws Exception {
         return SUCCESS;
@@ -56,6 +57,10 @@ public class FileUploadAction extends ActionSupport implements UploadedFilesAwar
 
     public String getOriginalName() {
         return originalName;
+    }
+
+    public String getInputName() {
+        return inputName;
     }
 
     public Object getUploadedFile() {
@@ -85,5 +90,6 @@ public class FileUploadAction extends ActionSupport implements UploadedFilesAwar
         this.fileName = uploadedFile.getName();
         this.contentType = uploadedFile.getContentType();
         this.originalName = uploadedFile.getOriginalName();
+        this.inputName = uploadedFile.getInputName();
     }
 }

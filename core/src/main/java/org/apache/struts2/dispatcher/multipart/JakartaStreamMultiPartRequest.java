@@ -251,6 +251,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                 .create(file)
                 .withOriginalName(fileName)
                 .withContentType(fileItemInput.getContentType())
+                .withInputName(fileItemInput.getFieldName())
                 .build();
 
         if (uploadedFiles.containsKey(fieldName)) {

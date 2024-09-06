@@ -71,6 +71,7 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         return new UploadedFile[]{StrutsUploadedFile.Builder.create(multi.getFile(fieldName))
             .withContentType(multi.getContentType(fieldName))
             .withOriginalName(multi.getFileSystemName(fieldName))
+            .withInputName(fieldName)
             .build()
         };
     }

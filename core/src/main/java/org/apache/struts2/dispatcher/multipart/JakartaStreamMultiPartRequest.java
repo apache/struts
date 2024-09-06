@@ -113,6 +113,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             StrutsUploadedFile.Builder.create(fileInfo.getFile())
                 .withContentType(fileInfo.contentType)
                 .withOriginalName(fileInfo.originalName)
+                .withInputName(fileInfo.getInputName())
                 .build()
         ).toArray(UploadedFile[]::new);
     }
@@ -423,7 +424,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         String fileName = itemStream.getName();
         String fieldName = itemStream.getFieldName();
         // create internal structure
-        FileInfo fileInfo = new FileInfo(file, itemStream.getContentType(), fileName);
+        FileInfo fileInfo = new FileInfo(file, itemStream.getContentType(), fileName, itemStream.getFieldName());
         // append or create new entry.
         if (!fileInfos.containsKey(fieldName)) {
             List<FileInfo> infos = new ArrayList<>();
@@ -447,6 +448,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         private final File file;
         private final String contentType;
         private final String originalName;
+        private final String inputName;
 
         /**
          * Default constructor.
@@ -455,10 +457,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
          * @param contentType  content type
          * @param originalName original file name
          */
-        public FileInfo(File file, String contentType, String originalName) {
+        public FileInfo(File file, String contentType, String originalName, String inputName) {
             this.file = file;
             this.contentType = contentType;
             this.originalName = originalName;
+            this.inputName = inputName;
         }
 
         /**
@@ -480,6 +483,14 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
          */
         public String getOriginalName() {
             return originalName;
+        }
+
+        /**
+         * @return file input name
+         * @since 6.7.0
+         */
+        public String getInputName() {
+            return inputName;
         }
     }
 

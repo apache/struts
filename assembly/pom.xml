@@ -83,7 +83,7 @@
                         <configuration>
                             <target>
                                 <mkdir dir="${project.build.directory}/docs/" />
-                                <exec executable="wget">
+                                <exec executable="C:/ProgramData/chocolatey/lib/Wget/tools/wget.exe">
                                     <arg value="-erobots=off" />
                                     <arg value="-nH" />
                                     <arg value="-x" />

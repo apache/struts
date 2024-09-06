@@ -125,10 +125,10 @@
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
-        <sonar.organization>apache</sonar.organization>
-        <sonar.projectKey>apache_struts</sonar.projectKey>
+        <sonar.projectKey>struts</sonar.projectKey>
+        <sonar.token>sqp_cc383b81a6f7883f06bb53bd2efd30a82c0ac94f</sonar.token>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
 
         <argLine>-Duser.language=en -Duser.country=US -Duser.region=US</argLine>
     </properties>
@@ -149,6 +149,34 @@
             <id>dependency-check</id>
             <build>
                 <plugins>
+
+                    <!-- JaCoCo Plugin for Code Coverage -->
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.7</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                     <!-- SonarQube Plugin -->
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>3.7.0.1746</version>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>

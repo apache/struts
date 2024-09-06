@@ -25,11 +25,13 @@ public class StrutsUploadedFile implements UploadedFile {
     private final File file;
     private final String contentType;
     private final String originalName;
+    private final String inputName;
 
-    private StrutsUploadedFile(File file, String contentType, String originalName) {
+    private StrutsUploadedFile(File file, String contentType, String originalName, String inputName) {
         this.file = file;
         this.contentType = contentType;
         this.originalName = originalName;
+        this.inputName = inputName;
     }
 
     @Override
@@ -73,17 +75,24 @@ public class StrutsUploadedFile implements UploadedFile {
     }
 
     @Override
+    public String getInputName() {
+        return inputName;
+    }
+
+    @Override
     public String toString() {
         return "StrutsUploadedFile{" +
-                "contentType='" + contentType + '\'' +
-                ", originalName='" + originalName + '\'' +
-                '}';
+            "contentType='" + contentType + '\'' +
+            ", originalName='" + originalName + '\'' +
+            ", inputName='" + inputName + '\'' +
+            '}';
     }
 
     public static class Builder {
         private final File file;
         private String contentType;
         private String originalName;
+        private String inputName;
 
         private Builder(File file) {
             this.file = file;
@@ -103,8 +112,13 @@ public class StrutsUploadedFile implements UploadedFile {
             return this;
         }
 
+        public Builder withInputName(String inputName) {
+            this.inputName = inputName;
+            return this;
+        }
+
         public UploadedFile build() {
-            return new StrutsUploadedFile(this.file, this.contentType, this.originalName);
+            return new StrutsUploadedFile(this.file, this.contentType, this.originalName, this.inputName);
         }
     }
 }

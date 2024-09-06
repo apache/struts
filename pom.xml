@@ -130,6 +130,8 @@
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
 
+        <sonar.scm.provider>git</sonar.scm.provider>
+
         <argLine>-Duser.language=en -Duser.country=US -Duser.region=US</argLine>
     </properties>
 

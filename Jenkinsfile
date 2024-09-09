@@ -9,9 +9,6 @@ pipeline {
     skipStagesAfterUnstable()
     quietPeriod(30)
   }
-  triggers {
-    pollSCM 'H/15 * * * *'
-  }
   stages {
     stage('Prepare') {
       agent {

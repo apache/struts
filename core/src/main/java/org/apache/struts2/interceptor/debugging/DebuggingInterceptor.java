@@ -203,7 +203,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                          ServletActionContext.getResponse().getWriter()) {
                     writer.print(stack.findValue(cmd));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LOG.warn("Interceptor in: {} mode has failed!", COMMAND_MODE, ex);
                 }
                 cont = false;
             } else if (BROWSER_MODE.equals(type)) {
@@ -286,7 +286,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             printContext(writer);
             writer.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LOG.warn("Call to PrettyPrintWriter failed!", ex);
         }
     }
 

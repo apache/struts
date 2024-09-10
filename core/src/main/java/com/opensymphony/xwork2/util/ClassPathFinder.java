@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 
 import java.io.File;
@@ -40,6 +42,8 @@ import java.util.zip.ZipInputStream;
  * uses {@link com.opensymphony.xwork2.util.WildcardHelper}
  */
 public class ClassPathFinder {
+
+    private static final Logger LOG = LogManager.getLogger(ClassPathFinder.class);
 
     /**
      * The String pattern to test against.
@@ -106,7 +110,7 @@ public class ClassPathFinder {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Error reading zip file: {}", entry, e);
                 }
             } else {
                 Vector<String> results = checkEntries(entry.list(), entry, "");

@@ -18,6 +18,9 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
@@ -40,6 +43,9 @@ import java.util.List;
  * </p>
  */
 public class PropertiesReader extends LineNumberReader {
+
+    private static final Logger LOG = LogManager.getLogger(PropertiesReader.class);
+
     /**
      * Stores the comment lines for the currently processed property.
      */
@@ -451,7 +457,7 @@ public class PropertiesReader extends LineNumberReader {
             return writer.toString();
         } catch (IOException ioe) {
             // this should never ever happen while writing to a StringWriter
-            ioe.printStackTrace();
+            LOG.warn("Call to unescape java string failed!", ioe);
             return null;
         }
     }

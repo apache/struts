@@ -21,6 +21,8 @@ package com.opensymphony.xwork2.mock;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -30,6 +32,8 @@ import java.util.Map;
  * @author Gabe
  */
 public class MockObjectTypeDeterminer implements ObjectTypeDeterminer {
+
+    private static final Logger LOG = LogManager.getLogger(MockObjectTypeDeterminer.class);
 
     private Class keyClass;
     private Class elementClass;
@@ -69,10 +73,9 @@ public class MockObjectTypeDeterminer implements ObjectTypeDeterminer {
     public boolean shouldCreateIfNew(Class parentClass, String property,
                                      Object target, String keyProperty, boolean isIndexAccessed) {
         try {
-            System.out.println("ognl:"+OgnlRuntime.getPropertyAccessor(Map.class)+" this:"+this);
+            LOG.info("Ognl: {} this: {}", OgnlRuntime.getPropertyAccessor(Map.class), this);
         } catch (OgnlException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Call to shouldCreateIfNew has failed!", e);
         }
         return isShouldCreateIfNew();
     }

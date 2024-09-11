@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.validator.ValidationInterceptor;
+import org.apache.struts2.validator.validators.RequiredFieldValidator;
+import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.TestAction;
@@ -101,7 +101,7 @@ public class FormTest extends AbstractUITagTest {
         EasyMock.expect(invocation.invoke()).andReturn(Action.SUCCESS).anyTimes();
         EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
         EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
-        
+
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
@@ -109,7 +109,7 @@ public class FormTest extends AbstractUITagTest {
         defaultNamespace.put("actionName", config);
 
         ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
-        
+
         ActionContext.getContext().withActionInvocation(invocation);
     }
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +52,7 @@ import java.util.List;
  * tag will be used as default message. If no value is found, the key of the
  * message will not be written out.
  * </p>
- * 
+ *
  * <p>
  * Note: If the <b>var</b> attribute is used with this tag, the tag's value will
  * <em>not</em> be written out.  Instead the result will be saved into the
@@ -146,7 +146,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     public void setEscapeHtml(boolean escape) {
         this.escapeHtml = escape;
     }
-    
+
     @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;

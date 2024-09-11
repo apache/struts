@@ -18,10 +18,10 @@
  */
 package org.apache.struts.beanvalidation;
 
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts.beanvalidation.actions.FieldAction;
 import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;

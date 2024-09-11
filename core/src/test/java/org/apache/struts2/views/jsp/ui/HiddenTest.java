@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 

@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

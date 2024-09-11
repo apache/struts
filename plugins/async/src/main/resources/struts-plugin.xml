@@ -24,6 +24,6 @@
         "https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts>
-    <bean type="com.opensymphony.xwork2.AsyncManager" name="default"
+    <bean type="org.apache.struts2.AsyncManager" name="default"
           class="org.apache.struts2.async.DefaultAsyncManager" scope="prototype" />
 </struts>

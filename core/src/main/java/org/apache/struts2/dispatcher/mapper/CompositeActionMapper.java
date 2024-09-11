@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

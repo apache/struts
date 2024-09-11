@@ -31,13 +31,13 @@ import org.apache.struts2.config.entities.ConstantConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.impl.MockConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.TestBean;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.impl.MockConfiguration;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Scope;
+import org.apache.struts2.util.location.LocatableProperties;
 
 public class StrutsJavaConfigurationProviderTest {
     @Test

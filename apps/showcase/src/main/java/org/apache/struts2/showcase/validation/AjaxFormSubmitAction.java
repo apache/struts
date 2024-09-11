@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.showcase.validation;
 
-import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.EmailValidator;
-import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.UrlValidator;
+import org.apache.struts2.validator.annotations.DateRangeFieldValidator;
+import org.apache.struts2.validator.annotations.EmailValidator;
+import org.apache.struts2.validator.annotations.FieldExpressionValidator;
+import org.apache.struts2.validator.annotations.IntRangeFieldValidator;
+import org.apache.struts2.validator.annotations.RegexFieldValidator;
+import org.apache.struts2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.validator.annotations.RequiredStringValidator;
+import org.apache.struts2.validator.annotations.StringLengthFieldValidator;
+import org.apache.struts2.validator.annotations.UrlValidator;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.sql.Date;

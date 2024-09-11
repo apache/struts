@@ -30,8 +30,8 @@ import org.apache.struts2.components.Component;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ognl.OgnlValueStack;
 
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.AdapterTemplateModel;
@@ -183,7 +183,7 @@ public class TagModelTest extends StrutsInternalTestCase {
     public void testGetWriter() throws Exception {
 
         OgnlValueStack stack = (OgnlValueStack)ActionContext.getContext().getValueStack();
-        
+
         final InternalBean bean = new InternalBean(stack);
 
         MockHttpServletRequest request = new MockHttpServletRequest();

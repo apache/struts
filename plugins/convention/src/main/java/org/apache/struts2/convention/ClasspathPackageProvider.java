@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.PackageProvider;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 
 /**
  * <p>

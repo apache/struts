@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -58,7 +58,7 @@ import java.util.Map;
  * <p>
  * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution,
- * if the {@link com.opensymphony.xwork2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
+ * if the {@link org.apache.struts2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
  * </p>
  *

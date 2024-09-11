@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.testng;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import org.apache.struts2.config.ConfigurationManager;
 import junit.framework.TestCase;
 import org.apache.struts2.testng.TestNGXWorkTestCase;
 import org.testng.TestListenerAdapter;

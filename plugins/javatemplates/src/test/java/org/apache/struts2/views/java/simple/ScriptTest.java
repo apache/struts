@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Script;
 import org.apache.struts2.components.UIBean;
 

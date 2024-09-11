@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.Action;
 
 /**
  * Used by ExecuteAndWaitInterceptorTest.

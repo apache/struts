@@ -241,7 +241,6 @@
                         <port>8090</port>
                     </httpConnector>
                     <scan>10</scan>
-                    <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webApp>
                       <extraClasspath>
                         ${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar,

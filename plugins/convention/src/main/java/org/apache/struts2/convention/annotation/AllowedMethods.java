@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.convention.annotation;
 
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.ActionConfig;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

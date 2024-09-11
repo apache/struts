@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.components.Link;
 import org.apache.struts2.components.UIBean;
 

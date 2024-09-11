@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.struts2.TestAction;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.Action;
 
 public class LocaleTestAction extends TestAction implements Action {
 

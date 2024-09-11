@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.spring;
 
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.inject.Container;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -39,7 +39,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
         // to cover situations where there will be logged an error
         Container container = EasyMock.createNiceMock(Container.class);
         EasyMock.replay(container);
-        
+
         StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory(null, null, null, null, new MockServletContext(), null, container);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, fac.getAutowireStrategy());
@@ -53,7 +53,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
         ServletContext msc = new MockServletContext();
         msc.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ac);
         ac.setServletContext(msc);
-        ac.setConfigLocations(new String[] {"org/apache/struts2/spring/StrutsSpringObjectFactoryTest-applicationContext.xml"});
+        ac.setConfigLocations("org/apache/struts2/spring/emptyContext-spring.xml");
         ac.refresh();
         StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory("constructor", null, null, null, msc, null, container);
 

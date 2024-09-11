@@ -21,7 +21,7 @@ package org.apache.struts2.sitemesh;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import freemarker.template.Configuration;

@@ -25,8 +25,8 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.Component;
 import org.springframework.mock.web.MockJspWriter;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 
 import jakarta.servlet.jsp.JspException;
 
@@ -64,9 +64,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
        assertEquals("TEST", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -95,7 +95,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -110,9 +110,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("TEST", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -142,7 +142,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPageContext(pageContext);
         tag.setValue("title");
@@ -154,9 +154,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -185,7 +185,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -200,7 +200,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         }
 
         assertEquals("", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -231,7 +231,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPageContext(pageContext);
         tag.setValue("title");
@@ -243,9 +243,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -275,7 +275,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -289,9 +289,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -322,7 +322,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPageContext(pageContext);
 
@@ -333,9 +333,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("Foo is: test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -366,7 +366,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -379,9 +379,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("Foo is: test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -410,7 +410,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {
@@ -429,9 +429,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         }
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testWithAltSyntax1_clearTagStateSet() throws Exception {
@@ -445,7 +445,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {
@@ -467,9 +467,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         }
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testEscapeJavaScript() throws Exception {
@@ -483,12 +483,12 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
         tag.setEscapeHtml(false);
-        tag.setEscapeJavaScript(true);    
+        tag.setEscapeJavaScript(true);
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
         tag.doStartTag();
@@ -502,9 +502,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: \\t\\b\\n\\f\\r\\\"\\'\\/\\\\", sw.toString());
-        
+
     }
 
     public void testEscapeJavaScript_clearTagStateSet() throws Exception {
@@ -518,7 +518,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -540,9 +540,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: \\t\\b\\n\\f\\r\\\"\\'\\/\\\\", sw.toString());
-        
+
     }
 
     public void testEscapeXml() throws Exception {
@@ -556,7 +556,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -575,9 +575,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: &lt;&gt;&apos;&quot;&amp;", sw.toString());
-        
+
     }
 
      public void testEscapeXml_clearTagStateSet() throws Exception {
@@ -591,7 +591,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -613,9 +613,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: &lt;&gt;&apos;&quot;&amp;", sw.toString());
-        
+
     }
 
     public void testEscapeCsv() throws Exception {
@@ -626,10 +626,10 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StringWriter sw = new StringWriter();
         MockJspWriter jspWriter = new MockJspWriter(sw);
-        
+
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -648,9 +648,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("\"Foo is: \"\"something,\"\",\"\"\"", sw.toString());
-        
+
     }
 
     public void testEscapeCsv_clearTagStateSet() throws Exception {
@@ -664,7 +664,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -686,9 +686,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("\"Foo is: \"\"something,\"\",\"\"\"", sw.toString());
-        
+
     }
 
     public void testWithAltSyntax2() throws Exception {
@@ -702,7 +702,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -719,9 +719,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testWithAltSyntax2_clearTagStateSet() throws Exception {
@@ -735,7 +735,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -755,9 +755,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testWithoutAltSyntax1() throws Exception {
@@ -771,7 +771,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -788,9 +788,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
    public void testWithoutAltSyntax1_clearTagStateSet() throws Exception {
@@ -804,7 +804,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -824,9 +824,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-                
+
     }
 
     public void testWithoutAltSyntax2() throws Exception {
@@ -840,7 +840,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -857,9 +857,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testWithoutAltSyntax2_clearTagStateSet() throws Exception {
@@ -873,7 +873,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         // test
         {PropertyTag tag = new PropertyTag();
@@ -893,9 +893,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
                 objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
-        
+
         assertEquals("Foo is: tm_jee", sw.toString());
-        
+
     }
 
     public void testSimple_release() {
@@ -911,7 +911,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPageContext(pageContext);
         tag.setValue("title");
@@ -923,9 +923,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -961,7 +961,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
         StrutsMockPageContext pageContext = new StrutsMockPageContext(null, request, null);
         pageContext.setJspWriter(jspWriter);
-        
+
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -975,9 +975,9 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             fail();
         }
 
-        
+
         assertEquals("test", sw.toString());
-        
+
 
         try {
             tag.doEndTag();
@@ -1009,14 +1009,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
     }
 
     /**
-     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a
      * {@link ComponentTagSupport} tag's {@link Component} to match expectations for the test.
-     * 
+     *
      * The component reference is not available to the tag until after the doStartTag() method is called.
      * We need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
      * what we set for the Tag when a non-default (true) value is used, so this method accesses the component instance,
      * sets the value specified and forces the tag's parameters to be repopulated again.
-     * 
+     *
      * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
      * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
      */

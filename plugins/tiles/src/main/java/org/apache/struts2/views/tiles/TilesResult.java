@@ -33,7 +33,7 @@ import org.apache.tiles.api.Definition;
 import org.apache.tiles.api.TilesContainer;
 import org.apache.tiles.api.TilesException;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.tiles.api.access.TilesAccess;
 import org.apache.tiles.api.mgmt.MutableTilesContainer;
 import org.apache.tiles.request.ApplicationContext;

@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.fs.DefaultFileManagerFactory;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;

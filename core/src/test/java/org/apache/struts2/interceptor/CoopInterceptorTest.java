@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;

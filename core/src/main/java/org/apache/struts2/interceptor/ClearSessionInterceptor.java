@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,7 +76,7 @@ public class ClearSessionInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(ClearSessionInterceptor.class);
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.Interceptor#intercept(org.apache.struts2.ActionInvocation)
      */
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {

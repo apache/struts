@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.Result;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

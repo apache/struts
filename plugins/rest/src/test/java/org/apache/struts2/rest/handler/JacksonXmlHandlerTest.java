@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.mock.MockActionInvocation;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -43,7 +43,7 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
         parents = "<parents>" +
                     "<parents>Adam</parents>" +
                     "<parents>Ewa</parents>" +
-                    "</parents>";  
+                    "</parents>";
         prefix = "<SimpleBean>";
         suffix = "</SimpleBean>";
         xml = prefix + name + age + parents + suffix;

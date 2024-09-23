@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -82,9 +83,9 @@ public class ResultTypeConfig extends Located implements Serializable {
 
         final ResultTypeConfig that = (ResultTypeConfig) o;
 
-        if (className != null ? !className.equals(that.className) : that.className != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (params != null ? !params.equals(that.params) : that.params != null) return false;
+        if (!Objects.equals(className, that.className)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(params, that.params)) return false;
 
         return true;
     }
@@ -110,7 +111,7 @@ public class ResultTypeConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        protected ResultTypeConfig target;
+        private ResultTypeConfig target;
 
         public Builder(String name, String className) {
             target = new ResultTypeConfig(name, className);

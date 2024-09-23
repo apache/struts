@@ -20,8 +20,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.List;
@@ -273,12 +273,11 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
         // Check for specific exception mappings.
         if (exceptionMappings != null) {
             int deepest = Integer.MAX_VALUE;
-            for (Object exceptionMapping : exceptionMappings) {
-                ExceptionMappingConfig exceptionMappingConfig = (ExceptionMappingConfig) exceptionMapping;
-                int depth = getDepth(exceptionMappingConfig.getExceptionClassName(), t);
+            for (ExceptionMappingConfig exceptionMapping : exceptionMappings) {
+                int depth = getDepth(exceptionMapping.getExceptionClassName(), t);
                 if (depth >= 0 && depth < deepest) {
                     deepest = depth;
-                    config = exceptionMappingConfig;
+                    config = exceptionMapping;
                 }
             }
         }

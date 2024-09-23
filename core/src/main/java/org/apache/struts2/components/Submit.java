@@ -20,12 +20,9 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 

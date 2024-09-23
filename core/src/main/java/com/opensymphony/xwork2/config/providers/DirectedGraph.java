@@ -31,7 +31,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
 
     /**
      * Adds a new node to the graph. If the node already exists, this function is a no-op.
-     * 
+     *
      * @param node
      *            The node to add.
      * @return Whether or not the node was added.
@@ -49,7 +49,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
     /**
      * Given a start node, and a destination, adds an arc from the start node to the destination. If an arc already exists, this operation is a no-op.
      * If either endpoint does not exist in the graph, throws a NoSuchElementException.
-     * 
+     *
      * @param start
      *            The start node.
      * @param dest
@@ -72,7 +72,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
     /**
      * Removes the edge from start to dest from the graph. If the edge does not exist, this operation is a no-op. If either endpoint does not exist,
      * this throws a NoSuchElementException.
-     * 
+     *
      * @param start
      *            The start node.
      * @param dest
@@ -94,7 +94,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
     /**
      * Given two nodes in the graph, returns whether there is an edge from the first node to the second node. If either node does not exist in the
      * graph, throws a NoSuchElementException.
-     * 
+     *
      * @param start
      *            The start node.
      * @param end
@@ -116,7 +116,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
 
     /**
      * Given a node in the graph, returns an immutable view of the edges leaving that node as a set of endpoints.
-     * 
+     *
      * @param node
      *            The node whose edges should be queried.
      * @return An immutable view of the edges leaving that node.
@@ -134,16 +134,17 @@ public final class DirectedGraph<T> implements Iterable<T> {
 
     /**
      * Returns an iterator that can traverse the nodes in the graph.
-     * 
+     *
      * @return An iterator that traverses the nodes in the graph.
      */
+    @Override
     public Iterator<T> iterator() {
         return mGraph.keySet().iterator();
     }
 
     /**
      * Returns the number of nodes in the graph.
-     * 
+     *
      * @return The number of nodes in the graph.
      */
     public int size() {
@@ -152,7 +153,7 @@ public final class DirectedGraph<T> implements Iterable<T> {
 
     /**
      * Returns whether the graph is empty.
-     * 
+     *
      * @return Whether the graph is empty.
      */
     public boolean isEmpty() {

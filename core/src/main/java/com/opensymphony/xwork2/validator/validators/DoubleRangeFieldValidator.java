@@ -146,7 +146,7 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
                 addFieldError(getFieldName(), value);
             }
         } catch (NumberFormatException e) {
-            LOG.debug("Cannot validate value {} - not a Double", e);
+            LOG.debug("Cannot validate value {} - not a Double", obj, e);
         } finally {
             setCurrentValue(null);
         }

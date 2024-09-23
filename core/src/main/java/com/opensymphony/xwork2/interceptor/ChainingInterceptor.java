@@ -23,16 +23,21 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ProxyUtil;
 import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.ProxyUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -180,7 +185,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Collection<String> localExcludes = excludes;
         if (!copyErrors || !copyMessages ||!copyFieldErrors) {
             if (localExcludes == null) {
-                localExcludes = new HashSet<String>();
+                localExcludes = new HashSet<>();
                 if (!copyErrors) {
                     localExcludes.add(ACTION_ERRORS);
                 }

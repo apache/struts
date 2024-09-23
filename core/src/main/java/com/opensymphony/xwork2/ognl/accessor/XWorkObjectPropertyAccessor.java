@@ -30,8 +30,7 @@ import java.util.Map;
  */
 public class XWorkObjectPropertyAccessor extends ObjectPropertyAccessor {
     @Override
-    public Object getProperty(Map context, Object target, Object oname)
-            throws OgnlException {
+    public Object getProperty(Map context, Object target, Object oname) throws OgnlException {
         //set the last set objects in the context
         //so if the next objects accessed are
         //Maps or Collections they can use the information

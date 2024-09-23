@@ -25,7 +25,7 @@ import org.apache.struts2.StrutsException;
 public class AnotherActionComponentTest extends AbstractTagTest  {
 
     public void testRethrowException() throws Exception {
-        request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/"
+        request.setServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/"
                 + "foo.action" );
         ActionComponent ac = new ActionComponent(stack, request, response) ;
         container.inject(ac);
@@ -44,7 +44,7 @@ public class AnotherActionComponentTest extends AbstractTagTest  {
     }
 
     public void testDoesNotThrowException() throws Exception {
-        request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/"
+        request.setServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/"
                 + "foo.action" );
         ActionComponent ac = new ActionComponent(stack, request, response) ;
         container.inject(ac);

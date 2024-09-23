@@ -58,8 +58,8 @@ public class SecurityMemberAccessTest {
     private Map context;
     private FooBar target;
     protected SecurityMemberAccess sma;
-    private ProviderAllowlist mockedProviderAllowlist;
-    private ThreadAllowlist mockedThreadAllowlist;
+    protected ProviderAllowlist mockedProviderAllowlist;
+    protected ThreadAllowlist mockedThreadAllowlist;
 
     @Before
     public void setUp() throws Exception {
@@ -73,8 +73,12 @@ public class SecurityMemberAccessTest {
     protected void assignNewSma(boolean allowStaticFieldAccess) {
         when(mockedProviderAllowlist.getProviderAllowlist()).thenReturn(new HashSet<>());
         when(mockedThreadAllowlist.getAllowlist()).thenReturn(new HashSet<>());
-        sma = new SecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
+        assignNewSmaHelper();
         sma.useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
+    }
+
+    protected void assignNewSmaHelper() {
+        sma = new SecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
     }
 
     private <T> T reflectField(String fieldName) throws IllegalAccessException {

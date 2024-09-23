@@ -22,8 +22,8 @@ import org.apache.tiles.core.util.CombinedBeanInfo;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 

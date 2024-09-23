@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,14 +50,6 @@ public class ProviderAllowlist {
         this.allowlistClasses.addAll(allowlist);
     }
 
-    /**
-     * @deprecated since 6.6.0, use {@link #registerAllowlist(Object, Set)}
-     */
-    @Deprecated
-    public synchronized void registerAllowlist(ConfigurationProvider configurationProvider, Set<Class<?>> allowlist) {
-        registerAllowlist((Object) configurationProvider, allowlist);
-    }
-
     public synchronized void clearAllowlist(Object key) {
         Set<Class<?>> allowlist = allowlistMap.get(key);
         if (allowlist == null) {
@@ -67,14 +57,6 @@ public class ProviderAllowlist {
         }
         this.allowlistMap.remove(key);
         reconstructAllowlist();
-    }
-
-    /**
-     * @deprecated since 6.6.0, use {@link #clearAllowlist(Object)}
-     */
-    @Deprecated
-    public synchronized void clearAllowlist(ConfigurationProvider configurationProvider) {
-        clearAllowlist((Object) configurationProvider);
     }
 
     public Set<Class<?>> getProviderAllowlist() {

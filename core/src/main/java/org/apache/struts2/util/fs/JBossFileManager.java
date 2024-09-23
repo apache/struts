@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.FileRevision;
 import com.opensymphony.xwork2.util.fs.JarEntryRevision;
 import com.opensymphony.xwork2.util.fs.Revision;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,7 +158,7 @@ public class JBossFileManager extends DefaultFileManager {
     }
 
     private List<URL> getAllJBossPhysicalUrls(URL url) throws IOException {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         Object content = url.openConnection().getContent();
         String classContent = content.getClass().toString();
         if (classContent.startsWith("class org.jboss.vfs.VirtualFile")) {

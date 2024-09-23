@@ -64,8 +64,8 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
     public static final String CREATE_IF_NULL_PREFIX = "CreateIfNull_";
     public static final String DEPRECATED_ELEMENT_PREFIX = "Collection_";
 
-    private ReflectionProvider reflectionProvider;
-    private XWorkConverter xworkConverter;
+    private final ReflectionProvider reflectionProvider;
+    private final XWorkConverter xworkConverter;
 
     @Inject
     public DefaultObjectTypeDeterminer(@Inject XWorkConverter converter, @Inject ReflectionProvider provider) {
@@ -261,7 +261,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 genericType = field.getGenericType();
             }
             // Try to get ParameterType from setter method
-            if (genericType == null || !(genericType instanceof ParameterizedType)) {
+            if (!(genericType instanceof ParameterizedType)) {
                 try {
                     Method setter = reflectionProvider.getSetMethod(parentClass, property);
                     genericType = setter != null ? setter.getGenericParameterTypes()[0] : null;
@@ -271,7 +271,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
             }
 
             // Try to get ReturnType from getter method
-            if (genericType == null || !(genericType instanceof ParameterizedType)) {
+            if (!(genericType instanceof ParameterizedType)) {
                 try {
                     Method getter = reflectionProvider.getGetMethod(parentClass, property);
                     genericType = getter.getGenericReturnType();
@@ -280,8 +280,7 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
                 }
             }
 
-            if (genericType instanceof ParameterizedType) {
-                ParameterizedType type = (ParameterizedType) genericType;
+            if (genericType instanceof ParameterizedType type) {
                 int index = (element && type.getRawType().toString().contains(Map.class.getName())) ? 1 : 0;
                 Type resultType = type.getActualTypeArguments()[index];
                 if (resultType instanceof ParameterizedType) {

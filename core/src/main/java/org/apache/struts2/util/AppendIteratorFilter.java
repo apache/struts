@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.Action;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * A bean that takes several iterators and outputs them in sequence
@@ -44,10 +44,10 @@ public class AppendIteratorFilter extends IteratorFilterSupport implements Itera
     }
 
     // Action implementation -----------------------------------------
+    @Override
     public String execute() {
         // Make source transformations
-        for (int i = 0; i < sources.size(); i++) {
-            Object source = sources.get(i);
+        for (Object source : sources) {
             iterators.add(getIterator(source));
         }
 
@@ -55,19 +55,21 @@ public class AppendIteratorFilter extends IteratorFilterSupport implements Itera
     }
 
     // Iterator implementation ---------------------------------------
+    @Override
     public boolean hasNext() {
-        if (iterators.size() > 0) {
+        if (!iterators.isEmpty()) {
             return (((Iterator) iterators.get(0)).hasNext());
         } else {
             return false;
         }
     }
 
+    @Override
     public Object next() {
         try {
             return ((Iterator) iterators.get(0)).next();
         } finally {
-            if (iterators.size() > 0) {
+            if (!iterators.isEmpty()) {
                 if (!((Iterator) iterators.get(0)).hasNext()) {
                     iterators.remove(0);
                 }
@@ -75,6 +77,7 @@ public class AppendIteratorFilter extends IteratorFilterSupport implements Itera
         }
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

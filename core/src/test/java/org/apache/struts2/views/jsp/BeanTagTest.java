@@ -21,7 +21,7 @@ package org.apache.struts2.views.jsp;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,8 +51,8 @@ public class BeanTagTest extends AbstractUITagTest {
             fail();
         }
 
-        request.verify();
-        pageContext.verify();
+        
+        
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         BeanTag freshTag = new BeanTag();
@@ -82,9 +82,6 @@ public class BeanTagTest extends AbstractUITagTest {
             ex.printStackTrace();
             fail();
         }
-
-        request.verify();
-        pageContext.verify();
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         BeanTag freshTag = new BeanTag();

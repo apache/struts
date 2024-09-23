@@ -21,7 +21,7 @@
 package com.opensymphony.xwork2.inject;
 
 import java.lang.reflect.Member;
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * An immutable snapshot of the current context which is safe to
@@ -41,34 +41,34 @@ class ExternalContext<T> implements Context {
         this.container = container;
     }
 
+    @Override
     public Class<T> getType() {
         return key.getType();
     }
 
+    @Override
     public Scope.Strategy getScopeStrategy() {
         return (Scope.Strategy) container.localScopeStrategy.get();
     }
 
+    @Override
     public Container getContainer() {
         return container;
     }
 
+    @Override
     public Member getMember() {
         return member;
     }
 
+    @Override
     public String getName() {
         return key.getName();
     }
 
     @Override
     public String toString() {
-        return "Context" + new LinkedHashMap<String, Object>() {{
-            put("member", member);
-            put("type", getType());
-            put("name", getName());
-            put("container", container);
-        }}.toString();
+        return "Context" + Map.of("member", member,"type", getType(),"name", getName(),"container", container);
     }
 
     static <T> ExternalContext<T> newInstance(Member member, Key<T> key, ContainerImpl container) {

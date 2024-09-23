@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
+import jakarta.servlet.jsp.JspException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.util.IteratorGenerator;
@@ -26,7 +27,7 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import javax.servlet.jsp.JspException;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -125,6 +126,7 @@ import javax.servlet.jsp.JspException;
         description="Generate an iterator for a iterable source.")
 public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
+    @Serial
     private static final long serialVersionUID = 2968037295463973936L;
 
     public static final String DEFAULT_SEPARATOR = ",";
@@ -176,7 +178,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
-    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false", required = false)
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false")
     @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
@@ -190,14 +192,14 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
         // separator
         String separator = DEFAULT_SEPARATOR;
-        if (separatorAttr != null && separatorAttr.length() > 0) {
+        if (separatorAttr != null && !separatorAttr.isEmpty()) {
             separator = findString(separatorAttr);
         }
 
         // TODO: maybe this could be put into an Util class, or there is already one?
         // count
         int count = 0;
-        if (countAttr != null && countAttr.length() > 0) {
+        if (countAttr != null && !countAttr.isEmpty()) {
             Object countObj = findValue(countAttr);
             if (countObj instanceof Number) {
                 count = ((Number)countObj).intValue();
@@ -214,7 +216,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
         // converter
         Converter converter = null;
-        if (converterAttr != null && converterAttr.length() > 0) {
+        if (converterAttr != null && !converterAttr.isEmpty()) {
             converter = (Converter) findValue(converterAttr);
         }
 
@@ -230,7 +232,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         // Push resulting iterator on stack and put into
         // stack context if we have a "var" specified.
         getStack().push(iteratorGenerator);
-        if (var != null && var.length() > 0) {
+        if (var != null && !var.isEmpty()) {
             getStack().getContext().put(var, iteratorGenerator);
         }
 
@@ -249,7 +251,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

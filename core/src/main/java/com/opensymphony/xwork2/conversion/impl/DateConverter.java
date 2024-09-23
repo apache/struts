@@ -18,6 +18,13 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.conversion.TypeConversionException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.text.DateFormat;
@@ -33,14 +40,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.conversion.TypeConversionException;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.ValueStack;
-
 public class DateConverter extends DefaultTypeConverter {
 
     private final static Logger LOG = LogManager.getLogger(DateConverter.class);
@@ -50,15 +49,14 @@ public class DateConverter extends DefaultTypeConverter {
             Object value, Class toType) {
         Date result = null;
 
-        if (value instanceof String && ((String) value).length() > 0) {
-            String sa = (String) value;
+        if (value instanceof String sa && !sa.isEmpty()) {
             Locale locale = getLocale(context);
 
             DateFormat df = null;
             if (java.sql.Time.class == toType) {
                 df = DateFormat.getTimeInstance(DateFormat.MEDIUM, locale);
             } else if (java.sql.Timestamp.class == toType) {
-                Date check = null;
+                Date check;
                 SimpleDateFormat dtfmt = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT,
                         DateFormat.MEDIUM, locale);
                 SimpleDateFormat fullfmt = new SimpleDateFormat(dtfmt.toPattern() + MILLISECOND_FORMAT, locale);
@@ -100,9 +98,7 @@ public class DateConverter extends DefaultTypeConverter {
                     try {
                         check = df1.parseBest(sa, LocalDateTime::from, LocalDate::from, LocalTime::from);
                         dtf = df1;
-                        if (check != null) {
-                            break;
-                        }
+                        break;
                     } catch (DateTimeParseException ignore) {
                     }
                 }
@@ -131,8 +127,8 @@ public class DateConverter extends DefaultTypeConverter {
                 result = df.parse(sa);
                 if (!(Date.class == toType)) {
                     try {
-                        Constructor<?> constructor = toType.getConstructor(new Class[] { long.class });
-                        return constructor.newInstance(new Object[] { Long.valueOf(result.getTime()) });
+                        Constructor<?> constructor = toType.getConstructor(long.class);
+                        return constructor.newInstance(result.getTime());
                     } catch (Exception e) {
                         throw new TypeConversionException(
                                 "Couldn't create class " + toType + " using default (long) constructor", e);
@@ -153,7 +149,7 @@ public class DateConverter extends DefaultTypeConverter {
      * {@link org.apache.struts2.components.Date#DATETAG_PROPERTY}
      *
      * @param context current ActionContext
-     * 
+     *
      * @return defined global date string format
      */
     protected String getGlobalDateString(ActionContext context) {
@@ -179,7 +175,7 @@ public class DateConverter extends DefaultTypeConverter {
 
     /**
      * Retrieves the list of date formats to be used when converting dates
-     * 
+     *
      * @param context the current ActionContext
      * @param locale  the current locale of the action
      * @return a list of DateFormat to be used for date conversion
@@ -215,10 +211,10 @@ public class DateConverter extends DefaultTypeConverter {
 
     /**
      * Retrieves the list of date time formats to be used when converting dates
-     * 
+     *
      * @param context the current ActionContext
      * @param locale  the current locale of the action
-     * 
+     *
      * @return a list of DateTimeFormatter to be used for date conversion
      */
     protected DateTimeFormatter[] getDateTimeFormats(ActionContext context, Locale locale) {

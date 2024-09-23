@@ -44,7 +44,7 @@ import java.util.Map;
  *     		&lt;param name="fieldName"&gt;myField&lt;/param&gt;
  *          &lt;message&gt;Conversion Error Occurred&lt;/message&gt;
  *     &lt;/validator&gt;
- *      
+ *
  *     &lt;!-- Field Validator Syntax --&gt;
  *     &lt;field name="myField"&gt;
  *        &lt;field-validator type="conversion"&gt;
@@ -64,7 +64,6 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
      * be called with a non-null ValidatorContext before validate is called.
      *
      * @param object the object to be validated
-     * @throws ValidationException in case of validation problems
      */
     @Override
     public void doValidate(Object object) throws ValidationException {
@@ -72,14 +71,14 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
         String fullFieldName = getValidatorContext().getFullFieldName(fieldName);
         ActionContext context = ActionContext.getContext();
         Map<String, ConversionData> conversionErrors = context.getConversionErrors();
-        
+
         if (conversionErrors.containsKey(fullFieldName)) {
             if (StringUtils.isBlank(defaultMessage)) {
                 defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, conversionErrors.get(fullFieldName).getToClass(), context.getValueStack());
             }
-            
+
             addFieldError(fieldName, object);
         }
     }
-    
+
 }

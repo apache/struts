@@ -22,21 +22,32 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @since 6.5.0
  */
 public final class DebugUtils {
 
+    private static final Set<String> IS_LOGGED = ConcurrentHashMap.newKeySet();
+
     public static void notifyDeveloperOfError(Logger log, Object action, String message) {
-        if (action instanceof TextProvider) {
-            TextProvider tp = (TextProvider) action;
+        if (action instanceof TextProvider tp) {
             message = tp.getText("devmode.notification", "Developer Notification:\n{0}", new String[]{message});
         }
         log.error(message);
-        if (action instanceof ValidationAware) {
-            ValidationAware validationAware = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAware) {
             validationAware.addActionError(message);
         }
     }
 
+    /**
+     * @since 7.0
+     */
+    public static void logWarningForFirstOccurrence(String key, Logger log, String msg, Object... args) {
+        if (IS_LOGGED.add(key)) {
+            log.warn(msg, args);
+        }
+    }
 }

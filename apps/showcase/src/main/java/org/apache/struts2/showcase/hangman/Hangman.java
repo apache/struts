@@ -20,40 +20,34 @@
  */
 package org.apache.struts2.showcase.hangman;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Hangman implements Serializable {
 
+	private static final Logger log = LogManager.getLogger(Hangman.class);
+
+	@Serial
 	private static final long serialVersionUID = 8566954355839652509L;
 
-	private Vocab vocab;
+	private final Vocab vocab;
 
 	private Boolean win = false;
 
 	private int guessLeft = 5;
-	public List<Character> charactersAvailable;
+	public final List<Character> charactersAvailable;
 	public List<Character> charactersGuessed;
 
 	public Hangman(Vocab vocab) {
-		// Arrays.asList(...) returns List that doesn't support remove(), hence
-		// we wrap it with an ArrayList to avoid UnsupportedOperationException
-		// when doing a remove()
-		charactersAvailable = new ArrayList<Character>(Arrays.asList(
-				new Character[]{
-						Character.valueOf('A'), Character.valueOf('B'), Character.valueOf('C'),
-						Character.valueOf('D'), Character.valueOf('E'), Character.valueOf('F'),
-						Character.valueOf('G'), Character.valueOf('H'), Character.valueOf('I'),
-						Character.valueOf('J'), Character.valueOf('K'), Character.valueOf('L'),
-						Character.valueOf('M'), Character.valueOf('N'), Character.valueOf('O'),
-						Character.valueOf('P'), Character.valueOf('Q'), Character.valueOf('R'),
-						Character.valueOf('S'), Character.valueOf('T'), Character.valueOf('U'),
-						Character.valueOf('V'), Character.valueOf('W'), Character.valueOf('X'),
-						Character.valueOf('Y'), Character.valueOf('Z')
-				}));
-		charactersGuessed = new ArrayList<Character>();
+		charactersAvailable = new ArrayList<>(List.of(
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+				'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+		charactersGuessed = new ArrayList<>();
 		this.vocab = vocab;
 	}
 
@@ -75,8 +69,8 @@ public class Hangman implements Serializable {
 			}
 			if (vocab.containsAllCharacter(charactersGuessed)) {
 				win = true;
+				log.info("Game won");
 			}
-			System.out.println(" *********************************** " + win);
 		}
 	}
 
@@ -98,7 +92,7 @@ public class Hangman implements Serializable {
 
 	public List<Character> getCharactersAvailable() {
 		synchronized (charactersAvailable) {
-			return new ArrayList<Character>(charactersAvailable);
+			return new ArrayList<>(charactersAvailable);
 			//return charactersAvailable;
 		}
 	}

@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 
 import java.io.File;
@@ -41,6 +43,8 @@ import java.util.zip.ZipInputStream;
  */
 public class ClassPathFinder {
 
+    private static final Logger LOG = LogManager.getLogger(ClassPathFinder.class);
+
     /**
      * The String pattern to test against.
      */
@@ -53,7 +57,7 @@ public class ClassPathFinder {
      */
     private PatternMatcher<int[]> patternMatcher = new WildcardHelper();
 
-    private Vector<String> compared = new Vector<>();
+    private final Vector<String> compared = new Vector<>();
 
     /**
      * @return the pattern in use
@@ -93,20 +97,20 @@ public class ClassPathFinder {
 
             // debug docker build for JDK 9+
             if (entryURI.getRawQuery() != null) {
-                throw new StrutsException("Currently URI with query component isn't supported: " + entryURI.toString());
+                throw new StrutsException("Currently URI with query component isn't supported: " + entryURI);
             }
 
             File entry = new File(entryURI);
             if (entry.isFile() && entry.toString().endsWith(".jar")) {
                 try(ZipInputStream zip = new ZipInputStream(new FileInputStream(entry))) {
                     for (ZipEntry zipEntry = zip.getNextEntry(); zipEntry != null; zipEntry = zip.getNextEntry()) {
-                        boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), zipEntry.getName(), compiledPattern);
+                        boolean doesMatch = patternMatcher.match(new HashMap<>(), zipEntry.getName(), compiledPattern);
                         if (doesMatch) {
                             matches.add(zipEntry.getName());
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Error reading zip file: {}", entry, e);
                 }
             } else {
                 Vector<String> results = checkEntries(entry.list(), entry, "");
@@ -154,7 +158,7 @@ public class ClassPathFinder {
                     compared.add(entryToCheck);
                 }
 
-                boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), entryToCheck, compiledPattern);
+                boolean doesMatch = patternMatcher.match(new HashMap<>(), entryToCheck, compiledPattern);
                 if (doesMatch) {
                     matches.add(entryToCheck);
                 }

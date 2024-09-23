@@ -32,28 +32,32 @@ import java.io.Writer;
 /**
  * Handles JSON content using jackson-lib
  */
-public class JacksonJsonHandler extends AbstractContentTypeHandler {
+public class JacksonJsonHandler implements ContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";
     private ObjectMapper mapper = new ObjectMapper();
 
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         ObjectReader or = mapper.readerForUpdating(target);
         or.readValue(in);
     }
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         mapper.writeValue(stream, obj);
         return null;
     }
 
+    @Override
     public String getContentType() {
         return DEFAULT_CONTENT_TYPE + ";charset=" + this.defaultEncoding;
     }
 
+    @Override
     public String getExtension() {
         return "json";
     }

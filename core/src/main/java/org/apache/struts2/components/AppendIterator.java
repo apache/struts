@@ -29,7 +29,6 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -124,6 +123,7 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
         super(stack);
     }
 
+    @Override
     public boolean start(Writer writer) {
         _parameters = new ArrayList();
         appendIteratorFilter = new AppendIteratorFilter();
@@ -131,12 +131,12 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
         return super.start(writer);
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
 
-        for (Iterator paramEntries = _parameters.iterator(); paramEntries.hasNext(); ) {
+        for (Object iteratorEntryObj : _parameters) {
 
-            Object iteratorEntryObj = paramEntries.next();
-            if (! MakeIterator.isIterable(iteratorEntryObj)) {
+            if (!MakeIterator.isIterable(iteratorEntryObj)) {
                 LOG.warn("param with value resolved as {} cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator", iteratorEntryObj);
                 continue;
             }
@@ -153,11 +153,13 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
     }
 
     // UnnamedParametric implementation --------------------------------------
+    @Override
     public void addParameter(Object value) {
         _parameters.add(value);
     }
 
     @StrutsTagAttribute(description="The name of which if supplied will have the resultant appended iterator stored under in the stack's context")
+    @Override
     public void setVar(String var) {
         super.setVar(var);
     }

@@ -91,7 +91,7 @@ public class DomHelper {
             try {
                 ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
                 Class<?> clazz = objectFactory.getClassInstance(parserProp);
-                factory = (SAXParserFactory) clazz.newInstance();
+                factory = (SAXParserFactory) clazz.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': {}", parserProp, e);
             }
@@ -169,7 +169,7 @@ public class DomHelper {
                 try {
                     ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
                     Class<?> clazz = objectFactory.getClassInstance(parserProp);
-                    FACTORY = (SAXTransformerFactory) clazz.newInstance();
+                    FACTORY = (SAXTransformerFactory) clazz.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': {}", parserProp, e);
                 }

@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 public class CycleDetector<T> {
-    private DirectedGraph<T> graph;
-    private Map<T, Status> marks;
-    private List<T> verticesInCycles;
-    
+    private final DirectedGraph<T> graph;
+    private final Map<T, Status> marks;
+    private final List<T> verticesInCycles;
+
     private enum Status { MARKED, COMPLETE };
 
     public CycleDetector(DirectedGraph<T> graph) {

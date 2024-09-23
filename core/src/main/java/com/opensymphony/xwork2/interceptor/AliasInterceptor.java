@@ -20,21 +20,21 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.Evaluated;
-import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.StrutsConstants;
 
 import java.util.Map;
 
@@ -108,7 +108,7 @@ public class AliasInterceptor extends AbstractInterceptor {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = Boolean.parseBoolean(mode);
-    }   
+    }
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -160,7 +160,7 @@ public class AliasInterceptor extends AbstractInterceptor {
             ValueStack stack = ac.getValueStack();
             Object obj = stack.findValue(aliasExpression);
 
-            if (obj instanceof Map) {
+            if (obj instanceof Map aliases) {
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
@@ -178,7 +178,6 @@ public class AliasInterceptor extends AbstractInterceptor {
                 }
 
                 // override
-                Map aliases = (Map) obj;
                 for (Object o : aliases.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
@@ -206,7 +205,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {
                             if (devMode) {
-                                String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                                String developerNotification = localizedTextProvider.findText(AliasInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                         "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                                 });
                                 LOG.error(developerNotification);
@@ -225,7 +224,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                 LOG.debug("invalid alias expression: {}", aliasesKey);
             }
         }
-        
+
         return invocation.invoke();
     }
 

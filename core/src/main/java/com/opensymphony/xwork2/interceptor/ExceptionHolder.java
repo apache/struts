@@ -20,8 +20,9 @@ package com.opensymphony.xwork2.interceptor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.Serial;
 import java.io.Serializable;
+import java.io.StringWriter;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -35,8 +36,9 @@ import java.io.Serializable;
  */
 public class ExceptionHolder implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
-    private Exception exception;
+    private final Exception exception;
 
     /**
      * Holds the given exception
@@ -76,5 +78,5 @@ public class ExceptionHolder implements Serializable {
 
         return exceptionStack;
     }
-    
+
 }

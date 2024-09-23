@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher;
 
+import jakarta.servlet.jsp.PageContext;
 import org.apache.struts2.StrutsStatics;
 
-import javax.servlet.jsp.PageContext;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
@@ -168,9 +168,8 @@ public class AttributeMap extends AbstractMap<String, Object> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AttributeMap)) return false;
+        if (!(o instanceof AttributeMap that)) return false;
         if (!super.equals(o)) return false;
-        AttributeMap that = (AttributeMap) o;
         return Objects.equals(context, that.context);
     }
 

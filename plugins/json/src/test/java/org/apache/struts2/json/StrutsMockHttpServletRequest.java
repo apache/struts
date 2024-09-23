@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.json;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import junit.framework.AssertionFailedError;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;

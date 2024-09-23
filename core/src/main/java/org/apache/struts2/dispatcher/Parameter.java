@@ -170,8 +170,7 @@ public interface Parameter {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Empty)) return false;
-            Empty empty = (Empty) o;
+            if (!(o instanceof Empty empty)) return false;
             return Objects.equals(name, empty.name);
         }
 

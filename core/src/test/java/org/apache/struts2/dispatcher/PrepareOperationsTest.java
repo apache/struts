@@ -24,8 +24,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.IntStream;
 
 public class PrepareOperationsTest extends StrutsInternalTestCase {

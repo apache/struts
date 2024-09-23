@@ -22,7 +22,7 @@ package org.apache.tiles.velocity.template;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.tiles.api.Attribute;
 import org.apache.tiles.api.AttributeContext;

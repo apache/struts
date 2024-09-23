@@ -40,6 +40,7 @@ import org.apache.struts2.views.util.ContextUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -863,10 +864,13 @@ public abstract class UIBean extends Component {
         }
 
         // to be used with the CSP interceptor - adds the nonce value as a parameter to be accessed from ftl files
-        Map<String, Object> session = stack.getActionContext().getSession();
-        Object nonceValue = session != null ? session.get("nonce") : null;
+        HttpSession session = stack.getActionContext().getServletRequest().getSession(false);
+        Object nonceValue = session != null ? session.getAttribute("nonce") : null;
+
         if (nonceValue != null) {
             addParameter("nonce", nonceValue.toString());
+        } else {
+            LOG.debug("Session is not active, cannot obtain nonce value");
         }
 
         evaluateExtraParams();

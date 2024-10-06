@@ -20,6 +20,6 @@
 -->
 <tr>
     <td colspan="2"><div class="formButton"><#t/>
-<#include "/${parameters.templateDir}/simple/reset.ftl" />
+<#include "/${attributes.templateDir}/simple/reset.ftl" />
 </div><#t/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

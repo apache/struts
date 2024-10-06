@@ -45,7 +45,7 @@ public class LinkTest extends AbstractTest{
         tag.setTitle("test");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 
@@ -77,7 +77,7 @@ public class LinkTest extends AbstractTest{
         tag.setTitle("test");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 

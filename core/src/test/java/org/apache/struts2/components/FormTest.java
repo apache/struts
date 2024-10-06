@@ -60,7 +60,7 @@ public class FormTest extends AbstractUITagTest {
     		int expectedFooValidators, int expectedStatusValidators, int expectedResultValidators) {
 		Form form = new Form(stack, request, response);
         container.inject(form);
-        form.getParameters().put("actionClass", TestAction.class);
+        form.getAttributes().put("actionClass", TestAction.class);
 
         form.setAction("actionName" + (methodName != null ? "!" + methodName : ""));
         validationInterceptor.setValidateAnnotatedMethodOnly(validateAnnotatedMethodOnly);
@@ -101,7 +101,7 @@ public class FormTest extends AbstractUITagTest {
         EasyMock.expect(invocation.invoke()).andReturn(Action.SUCCESS).anyTimes();
         EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
         EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
-        
+
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
@@ -109,7 +109,7 @@ public class FormTest extends AbstractUITagTest {
         defaultNamespace.put("actionName", config);
 
         ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
-        
+
         ActionContext.getContext().withActionInvocation(invocation);
     }
 }

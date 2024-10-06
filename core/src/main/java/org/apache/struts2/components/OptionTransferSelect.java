@@ -287,8 +287,8 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 
             // key -> select tag id, value -> headerKey (if exists)
-            Map formOptiontransferselectIds = (Map) formAncestor.getParameters().get("optiontransferselectIds");
-            Map formOptiontransferselectDoubleIds = (Map) formAncestor.getParameters().get("optiontransferselectDoubleIds");
+            Map formOptiontransferselectIds = (Map) formAncestor.getAttributes().get("optiontransferselectIds");
+            Map formOptiontransferselectDoubleIds = (Map) formAncestor.getAttributes().get("optiontransferselectDoubleIds");
 
             // init lists
             if (formOptiontransferselectIds == null) {
@@ -300,21 +300,21 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 
             // id
-            String tmpId = (String) getParameters().get("id");
-            String tmpHeaderKey = (String) getParameters().get("headerKey");
+            String tmpId = (String) getAttributes().get("id");
+            String tmpHeaderKey = (String) getAttributes().get("headerKey");
             if (tmpId != null && (! formOptiontransferselectIds.containsKey(tmpId))) {
                 formOptiontransferselectIds.put(tmpId, tmpHeaderKey);
             }
 
             // doubleId
-            String tmpDoubleId = (String) getParameters().get("doubleId");
-            String tmpDoubleHeaderKey = (String) getParameters().get("doubleHeaderKey");
+            String tmpDoubleId = (String) getAttributes().get("doubleId");
+            String tmpDoubleHeaderKey = (String) getAttributes().get("doubleHeaderKey");
             if (tmpDoubleId != null && (! formOptiontransferselectDoubleIds.containsKey(tmpDoubleId))) {
                 formOptiontransferselectDoubleIds.put(tmpDoubleId, tmpDoubleHeaderKey);
             }
 
-            formAncestor.getParameters().put("optiontransferselectIds", formOptiontransferselectIds);
-            formAncestor.getParameters().put("optiontransferselectDoubleIds", formOptiontransferselectDoubleIds);
+            formAncestor.getAttributes().put("optiontransferselectIds", formOptiontransferselectIds);
+            formAncestor.getAttributes().put("optiontransferselectDoubleIds", formOptiontransferselectDoubleIds);
 
         }
         else {

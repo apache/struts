@@ -18,5 +18,5 @@
  * under the License.
  */
 -->
-<input type="hidden" name="${parameters.tokenNameField!""}" value="${parameters.name!""}" />
-<input type="hidden" name="${parameters.name!""}" value="${parameters.token!""}" />
+<input type="hidden" name="${attributes.tokenNameField!""}" value="${attributes.name!""}" />
+<input type="hidden" name="${attributes.name!""}" value="${attributes.token!""}" />

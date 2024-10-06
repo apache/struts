@@ -18,22 +18,22 @@
  * under the License.
  */
 -->
-<#if parameters.tooltip??><#t/>
+<#if attributes.tooltip??><#t/>
       <img
-      <#if parameters.tooltipIconPath??><#t/>
-      	src='<@s.url value="${parameters.tooltipIconPath}" includeParams="none" encode="false" />'
+      <#if attributes.tooltipIconPath??><#t/>
+      	src='<@s.url value="${attributes.tooltipIconPath}" includeParams="none" encode="false" />'
       <#else><#t/>
-      	src='<@s.url value="${parameters.staticContentPath}/tooltip.gif" includeParams="none" encode="false" />'
+      	src='<@s.url value="${attributes.staticContentPath}/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
-      <#if (parameters.jsTooltipEnabled!'false') == 'true'>
-          onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${parameters.tooltip}</#outputformat>'<#t/>
-          <#if parameters.tooltipDelay??><#t/>
-          	<#t/>,'delay', '${parameters.tooltipDelay}'<#t/>
+      <#if (attributes.jsTooltipEnabled!'false') == 'true'>
+          onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${attributes.tooltip}</#outputformat>'<#t/>
+          <#if attributes.tooltipDelay??><#t/>
+          	<#t/>,'delay', '${attributes.tooltipDelay}'<#t/>
           </#if><#t/>
-          <#t/>,'styleClass', '${parameters.tooltipCssClass!"StrutsTTClassic"}'<#t/>
+          <#t/>,'styleClass', '${attributes.tooltipCssClass!"StrutsTTClassic"}'<#t/>
           <#t/>)" />
       <#else>
-      	title="${parameters.tooltip}"
-      	alt="${parameters.tooltip}" />
+      	title="${attributes.tooltip}"
+      	alt="${attributes.tooltip}" />
      </#if>
 </#if><#t/>

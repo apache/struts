@@ -35,7 +35,7 @@ public class TokenTest extends AbstractTest {
         tag.setValue("val1");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 

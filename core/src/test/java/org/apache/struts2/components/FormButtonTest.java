@@ -38,14 +38,14 @@ public class FormButtonTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         Submit submit = new Submit(stack, req, res);
         submit.setId("submitId");
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("submitId", submit.getParameters().get("id"));
+        assertEquals("submitId", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId2() {
@@ -54,14 +54,14 @@ public class FormButtonTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         Submit submit = new Submit(stack, req, res);
         submit.setName("submitName");
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("formId_submitName", submit.getParameters().get("id"));
+        assertEquals("formId_submitName", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId3() {
@@ -70,7 +70,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         Submit submit = new Submit(stack, req, res);
         submit.setAction("submitAction");
@@ -78,7 +78,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("formId_submitAction_submitMethod", submit.getParameters().get("id"));
+        assertEquals("formId_submitAction_submitMethod", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId4() {
@@ -91,7 +91,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitId", submit.getParameters().get("id"));
+        assertEquals("submitId", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId5() {
@@ -104,7 +104,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitName", submit.getParameters().get("id"));
+        assertEquals("submitName", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId6() {
@@ -118,7 +118,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitAction_submitMethod", submit.getParameters().get("id"));
+        assertEquals("submitAction_submitMethod", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId7() {
@@ -134,7 +134,7 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("secondAction", submit.getParameters().get("id"));
+        assertEquals("secondAction", submit.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId8() {
@@ -152,6 +152,6 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("boo_foo", submit.getParameters().get("id"));
+        assertEquals("boo_foo", submit.getAttributes().get("id"));
     }
 }

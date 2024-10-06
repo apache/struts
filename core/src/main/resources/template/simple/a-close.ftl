@@ -19,28 +19,28 @@
  */
 -->
 <a<#rt/>
-<#if parameters.id??>
- id="${parameters.id}"<#rt/>
+<#if attributes.id??>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#if parameters.href??>
- href="${parameters.href?no_esc}"<#rt/>
+<#if attributes.href??>
+ href="${attributes.href?no_esc}"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.tabindex??>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex??>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if parameters.cssClass??>
- class="${parameters.cssClass}"<#rt/>
+<#if attributes.cssClass??>
+ class="${attributes.cssClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle??>
- style="${parameters.cssStyle}"<#rt/>
+<#if attributes.cssStyle??>
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
-<#if parameters.title??>
- title="${parameters.title}"<#rt/>
+<#if attributes.title??>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
->${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}</a>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}</a>

@@ -531,8 +531,8 @@ public class ComponentTest extends AbstractTagTest {
             // Simulate component attribute with a hyphen in its name.
             propertyMap.put("hyphen-keyname-for-coverage", "hyphen-keyname-for-coverage-value");
             propertyMap.put("someKeyName", "someKeyValue");
-            actionComponent.copyParams(propertyMap);
-            actionComponent.addAllParameters(propertyMap);
+            actionComponent.copyAttributes(propertyMap);
+            actionComponent.addAllAttributes(propertyMap);
             try {
                 actionComponent.findString(null, "fieldName", "errorMessage");
                 fail("null expr parameter should cause a StrutsException");

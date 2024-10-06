@@ -18,11 +18,11 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/simple/submit-close.ftl" />
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#include "/${attributes.templateDir}/simple/submit-close.ftl" />
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelPos = attributes.labelPosition/>
 </#if>
 <#if (labelPos!"top") == 'top'>
 </div> <#t/>

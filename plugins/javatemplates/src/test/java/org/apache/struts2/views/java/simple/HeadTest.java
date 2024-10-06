@@ -28,7 +28,7 @@ public class HeadTest extends AbstractTest {
 
     public void testRenderTextField() {
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<script type='text/javascript' base='/some/path' src='/some/path/static/utils.js'></script>");

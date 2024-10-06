@@ -71,7 +71,7 @@ public class Component {
     protected boolean devMode = false;
     protected boolean escapeHtmlBody = false;
     protected ValueStack stack;
-    protected Map<String, Object> parameters;
+    protected Map<String, Object> attributes;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
     protected boolean performClearTagStateForTagPoolingServers = false;
@@ -86,7 +86,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new LinkedHashMap<>();
+        this.attributes = new LinkedHashMap<>();
         getComponentStack().push(this);
     }
 
@@ -279,7 +279,7 @@ public class Component {
      */
     protected StrutsException fieldError(String field, String errorMsg, Exception e) {
         String msg = "tag '" + getComponentName() + "', field '" + field +
-            (parameters != null && parameters.containsKey("name") ? "', name '" + parameters.get("name") : "") +
+            (attributes != null && attributes.containsKey("name") ? "', name '" + attributes.get("name") : "") +
             "': " + errorMsg;
         throw new StrutsException(msg, e);
     }
@@ -454,20 +454,20 @@ public class Component {
      * pushed before the component itself, any key-value pair that can't be assigned to component
      * will be set in the parameters Map.
      *
-     * @param params the parameters to copy.
+     * @param attributesToCopy the attributes to copy.
      */
-    public void copyParams(Map<String, Object> params) {
-        stack.push(parameters);
+    public void copyAttributes(Map<String, Object> attributesToCopy) {
+        stack.push(attributes);
         stack.push(this);
         try {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
+            for (Map.Entry<String, Object> entry : attributesToCopy.entrySet()) {
                 String key = entry.getKey();
 
                 if (key.indexOf('-') >= 0) {
                     // UI component attributes may contain hypens (e.g. data-ajax), but ognl
                     // can't handle that, and there can't be a component property with a hypen
-                    // so into the parameters map it goes. See WW-4493
-                    parameters.put(key, entry.getValue());
+                    // so into the attributes map it goes. See WW-4493
+                    attributes.put(key, entry.getValue());
                 } else {
                     stack.setValue(key, entry.getValue());
                 }
@@ -493,21 +493,21 @@ public class Component {
     }
 
     /**
-     * Gets the parameters.
+     * Gets the attributes.
      *
-     * @return the parameters. Is never <tt>null</tt>.
+     * @return the attributes. It's never <tt>null</tt>.
      */
-    public Map<String, Object> getParameters() {
-        return parameters;
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     /**
-     * Adds all the given parameters to this component's own parameters.
+     * Adds all the given attributes to this component's own attributes.
      *
-     * @param params the parameters to add.
+     * @param additionalAttributes the attributes to add.
      */
-    public void addAllParameters(Map<String, Object> params) {
-        parameters.putAll(params);
+    public void addAllAttributes(Map<String, Object> additionalAttributes) {
+        attributes.putAll(additionalAttributes);
     }
 
     /**
@@ -522,7 +522,7 @@ public class Component {
      */
     public void addParameter(String key, Object value) {
         if (key != null) {
-            Map<String, Object> params = getParameters();
+            Map<String, Object> params = getAttributes();
 
             if (value == null) {
                 params.remove(key);

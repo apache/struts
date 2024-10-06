@@ -30,7 +30,7 @@ public abstract class AbstractCommonAttributesTest extends AbstractTest {
         applyScriptingAttrs(tag);
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 
@@ -44,7 +44,7 @@ public abstract class AbstractCommonAttributesTest extends AbstractTest {
         applyCommonAttrs(tag);
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 
@@ -57,7 +57,7 @@ public abstract class AbstractCommonAttributesTest extends AbstractTest {
         applyDynamicAttrs(tag);
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 

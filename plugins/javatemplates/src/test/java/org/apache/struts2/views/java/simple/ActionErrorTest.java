@@ -36,7 +36,7 @@ public class ActionErrorTest extends AbstractTest {
         tag.setCssStyle("style");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul style='style' class='class'><li><span>this clas is bad</span></li><li><span>baaaaad</span></li></ul>");
@@ -47,7 +47,7 @@ public class ActionErrorTest extends AbstractTest {
         tag.setCssStyle("style");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul style='style' class='errorMessage'><li><span>this clas is bad</span></li><li><span>baaaaad</span></li></ul>");
@@ -57,7 +57,7 @@ public class ActionErrorTest extends AbstractTest {
     public void testRenderActionErrorNoErrors() {
         this.errors.clear();
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         assertEquals("", output);

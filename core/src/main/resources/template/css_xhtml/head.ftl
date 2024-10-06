@@ -18,5 +18,5 @@
  * under the License.
  */
 -->
-<@s.link rel="stylesheet" href="${base}${parameters.staticContentPath}/css_xhtml/styles.css" type="text/css" />
-<#include "/${parameters.templateDir}/simple/head.ftl" />
+<@s.link rel="stylesheet" href="${base}${attributes.staticContentPath}/css_xhtml/styles.css" type="text/css" />
+<#include "/${attributes.templateDir}/simple/head.ftl" />

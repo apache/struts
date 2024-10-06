@@ -18,9 +18,9 @@
  * under the License.
  */
 -->
-<#if parameters.type?? && parameters.type=="button">
-<#if parameters.body?length gt 0>${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}<#elseif parameters.label??><@s.property value="parameters.label"/><#rt/></#if>
+<#if attributes.type?? && attributes.type=="button">
+<#if attributes.body?length gt 0>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#elseif attributes.label??><@s.property value="attributes.label"/><#rt/></#if>
 </button>
 <#else>
-${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}<#rt/>
+${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#rt/>
 </#if>

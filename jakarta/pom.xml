@@ -37,9 +37,11 @@
     </properties>
 
     <modules>
+<!--
         <module>sitemesh2-jakarta</module>
         <module>velocity-tools-view-jakarta</module>
         <module>velocity-tools-jsp-jakarta</module>
+-->
     </modules>
 
 </project>

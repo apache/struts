@@ -18,11 +18,11 @@
  * under the License.
  */
 -->
-<#if parameters.validate!false == true>
-<@s.script src="${base}${parameters.staticContentPath}/css_xhtml/validation.js"/>
-    <#if parameters.onsubmit??>
-        ${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
+<#if attributes.validate!false == true>
+<@s.script src="${base}${attributes.staticContentPath}/css_xhtml/validation.js"/>
+    <#if attributes.onsubmit??>
+        ${tag.addParameter('onsubmit', "${attributes.onsubmit}; return validateForm_${attributes.escapedId}();")}
     <#else>
-        ${tag.addParameter('onsubmit', "return validateForm_${parameters.escapedId}();")}
+        ${tag.addParameter('onsubmit', "return validateForm_${attributes.escapedId}();")}
     </#if>
 </#if>

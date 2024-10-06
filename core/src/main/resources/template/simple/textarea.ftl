@@ -19,43 +19,43 @@
  */
 -->
 <textarea<#rt/>
- name="${(parameters.name!"")}"<#rt/>
-<#if parameters.cols?has_content>
- cols="${(parameters.cols!"")}"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
+<#if attributes.cols?has_content>
+ cols="${(attributes.cols!"")}"<#rt/>
 </#if>
-<#if parameters.rows?has_content>
- rows="${(parameters.rows!"")}"<#rt/>
+<#if attributes.rows?has_content>
+ rows="${(attributes.rows!"")}"<#rt/>
 </#if>
-<#if parameters.wrap?has_content>
- wrap="${parameters.wrap}"<#rt/>
+<#if attributes.wrap?has_content>
+ wrap="${attributes.wrap}"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly!false>
+<#if attributes.readonly!false>
  readonly="readonly"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#if parameters.maxlength?has_content>
- maxlength="${parameters.maxlength}"<#rt/>
+<#if attributes.maxlength?has_content>
+ maxlength="${attributes.maxlength}"<#rt/>
 </#if>
-<#if parameters.minlength?has_content>
- minlength="${parameters.minlength}"<#rt/>
+<#if attributes.minlength?has_content>
+ minlength="${attributes.minlength}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 ><#rt/>
-<#if parameters.nameValue??>
-<@s.property value="parameters.nameValue"/><#t/>
+<#if attributes.nameValue??>
+<@s.property value="attributes.nameValue"/><#t/>
 </#if>
 </textarea>

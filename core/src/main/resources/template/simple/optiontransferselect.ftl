@@ -19,281 +19,281 @@
  */
 -->
 <#if !stack.findValue("#optiontransferselect_js_included")??><#t/>
-	<@s.script src="${base}${parameters.staticContentPath}/optiontransferselect.js" />
+	<@s.script src="${base}${attributes.staticContentPath}/optiontransferselect.js" />
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>
 <tr>
 <td>
-<#if parameters.leftTitle??><#t/>
-	<label for="leftTitle">${parameters.leftTitle}</label><br />
+<#if attributes.leftTitle??><#t/>
+	<label for="leftTitle">${attributes.leftTitle}</label><br />
 </#if><#t/>
 <#global dynamic_attributes_ignore = "right-"/>
-<#include "/${parameters.templateDir}/simple/select.ftl" />
-<#if parameters.allowUpDownOnLeft!true>
+<#include "/${attributes.templateDir}/simple/select.ftl" />
+<#if attributes.allowUpDownOnLeft!true>
 <input type="button"
-	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', <#if parameters.headerKey??>'${parameters.headerKey}'<#else>''</#if>);<#if parameters.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.upDownOnLeftOnclick}</#outputformat>;</#if>"
-<#if parameters.leftDownLabel??>
-	value="${parameters.leftDownLabel}"
+	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', <#if attributes.headerKey??>'${attributes.headerKey}'<#else>''</#if>);<#if attributes.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnLeftOnclick}</#outputformat>;</#if>"
+<#if attributes.leftDownLabel??>
+	value="${attributes.leftDownLabel}"
 </#if>
 />
 <input type="button"
-	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', <#if parameters.headerKey??>'${parameters.headerKey}'<#else>''</#if>);<#if parameters.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.upDownOnLeftOnclick}</#outputformat>;</#if>"
-<#if parameters.leftUpLabel??>
-	value="${parameters.leftUpLabel}"
+	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', <#if attributes.headerKey??>'${attributes.headerKey}'<#else>''</#if>);<#if attributes.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnLeftOnclick}</#outputformat>;</#if>"
+<#if attributes.leftUpLabel??>
+	value="${attributes.leftUpLabel}"
 </#if>
 />
 </#if>
 
 </td>
 <td class="tdTransferSelect">
-	<#if parameters.allowAddToLeft!true><#t/>
-		<#assign addToLeftLabel = parameters.addToLeftLabel!"<-"/><#t/>
-		<#if parameters.doubleHeaderKey??><#t/>
+	<#if attributes.allowAddToLeft!true><#t/>
+		<#assign addToLeftLabel = attributes.addToLeftLabel!"<-"/><#t/>
+		<#if attributes.doubleHeaderKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId}'), document.getElementById('${parameters.id}'), false, '${parameters.doubleHeaderKey}', '');<#if parameters.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '${attributes.doubleHeaderKey}', '');<#if attributes.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId}'), document.getElementById('${parameters.id}'), false, '');<#if parameters.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '');<#if attributes.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddToRight!true><#t/>
-		<#assign addToRightLabel=parameters.addToRightLabel!"->" /><#t/>
-		<#if parameters.headerKey??><#t/>
+	<#if attributes.allowAddToRight!true><#t/>
+		<#assign addToRightLabel=attributes.addToRightLabel!"->" /><#t/>
+		<#if attributes.headerKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id}'), document.getElementById('${parameters.doubleId}'), false, '${parameters.headerKey}', '');<#if parameters.addToRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '${attributes.headerKey}', '');<#if attributes.addToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id}'), document.getElementById('${parameters.doubleId}'), false, '');<#if parameters.addToRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '');<#if attributes.addToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddAllToLeft!true><#t/>
-		<#assign addAllToLeftLabel=parameters.addAllToLeftLabel!"<<--" /><#t/>
-		<#if parameters.doubleHeaderKey??><#t/>
+	<#if attributes.allowAddAllToLeft!true><#t/>
+		<#assign addAllToLeftLabel=attributes.addAllToLeftLabel!"<<--" /><#t/>
+		<#if attributes.doubleHeaderKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId}'), document.getElementById('${parameters.id}'), false, '${parameters.doubleHeaderKey}', '');<#if parameters.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '${attributes.doubleHeaderKey}', '');<#if attributes.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId}'), document.getElementById('${parameters.id}'), false, '');<#if parameters.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${parameters.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '');<#if attributes.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowAddAllToRight!true><#t/>
-		<#assign addAllToRightLabel=parameters.addAllToRightLabel!"-->>" /><#t/>
-		<#if parameters.headerKey??><#t/>
+	<#if attributes.allowAddAllToRight!true><#t/>
+		<#assign addAllToRightLabel=attributes.addAllToRightLabel!"-->>" /><#t/>
+		<#if attributes.headerKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id}'), document.getElementById('${parameters.doubleId}'), false, '${parameters.headerKey}', '');<#if parameters.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '${attributes.headerKey}', '');<#if attributes.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id}'), document.getElementById('${parameters.doubleId}'), false, '');<#if parameters.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '');<#if attributes.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
-	<#if parameters.allowSelectAll!true><#t/>
-		<#assign selectAllLabel=parameters.selectAllLabel!"<*>" /><#t/>
-		<#if parameters.headerKey?? && parameters.doubleHeaderKey??><#t/>
+	<#if attributes.allowSelectAll!true><#t/>
+		<#assign selectAllLabel=attributes.selectAllLabel!"<*>" /><#t/>
+		<#if attributes.headerKey?? && attributes.doubleHeaderKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');<#if parameters.selectAllOnclick?has_content><#outputformat 'JavaScript'>${parameters.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#elseif parameters.headerKey??><#t/>
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');selectAllOptionsExceptSome(document.getElementById('${attributes.doubleId}'), 'key', '${attributes.doubleHeaderKey}');<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
+		<#elseif attributes.headerKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');selectAllOptions(document.getElementById('${parameters.doubleId}'));<#if parameters.selectAllOnclick?has_content><#outputformat 'JavaScript'>${parameters.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#elseif parameters.doubleHeaderKey??><#t/>
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');selectAllOptions(document.getElementById('${attributes.doubleId}'));<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
+		<#elseif attributes.doubleHeaderKey??><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id}'));selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');<#if parameters.selectAllOnclick?has_content><#outputformat 'JavaScript'>${parameters.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${attributes.id}'));selectAllOptionsExceptSome(document.getElementById('${attributes.doubleId}'), 'key', '${attributes.doubleHeaderKey}');<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
-			<#if parameters.buttonCssClass??><#t/>
-			 class="${parameters.buttonCssClass}"
+			<#if attributes.buttonCssClass??><#t/>
+			 class="${attributes.buttonCssClass}"
 			</#if><#t/>
-			<#if parameters.buttonCssStyle??><#t/>
-			 style="${parameters.buttonCssStyle}"
+			<#if attributes.buttonCssStyle??><#t/>
+			 style="${attributes.buttonCssStyle}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id}'));selectAllOptions(document.getElementById('${parameters.doubleId}'));<#if parameters.selectAllOnclick?has_content><#outputformat 'JavaScript'>${parameters.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${attributes.id}'));selectAllOptions(document.getElementById('${attributes.doubleId}'));<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 </td>
 <td>
-<#if parameters.rightTitle??><#t/>
-	<label for="rightTitle">${parameters.rightTitle}</label><br />
+<#if attributes.rightTitle??><#t/>
+	<label for="rightTitle">${attributes.rightTitle}</label><br />
 </#if><#t/>
 <select
-	name="${parameters.doubleName!""}"
-	<#if parameters.get("doubleSize")??><#t/>
-	size="${parameters.get("doubleSize")}"
+	name="${attributes.doubleName!""}"
+	<#if attributes.get("doubleSize")??><#t/>
+	size="${attributes.get("doubleSize")}"
 	</#if><#t/>
-	<#if parameters.doubleDisabled!false><#t/>
+	<#if attributes.doubleDisabled!false><#t/>
 	disabled="disabled"
 	</#if><#t/>
-	<#if parameters.doubleMultiple!false><#t/>
+	<#if attributes.doubleMultiple!false><#t/>
 	multiple="multiple"
 	</#if><#t/>
-	<#if parameters.doubleTabindex??><#t/>
-	tabindex="${parameters.tabindex}"
+	<#if attributes.doubleTabindex??><#t/>
+	tabindex="${attributes.tabindex}"
 	</#if><#t/>
-	<#if parameters.doubleId??><#t/>
-	id="${parameters.doubleId}"
+	<#if attributes.doubleId??><#t/>
+	id="${attributes.doubleId}"
 	</#if><#t/>
-	<#if parameters.doubleCss??><#t/>
-	class="${parameters.doubleCss}"
+	<#if attributes.doubleCss??><#t/>
+	class="${attributes.doubleCss}"
 	</#if><#t/>
-	<#if parameters.doubleStyle??><#t/>
-	style="${parameters.doubleStyle}"
+	<#if attributes.doubleStyle??><#t/>
+	style="${attributes.doubleStyle}"
 	</#if><#t/>
-    <#if parameters.doubleOnclick??><#t/>
-    onclick="<#outputformat 'JavaScript'>${parameters.doubleOnclick}</#outputformat>"
+    <#if attributes.doubleOnclick??><#t/>
+    onclick="<#outputformat 'JavaScript'>${attributes.doubleOnclick}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOndblclick??><#t/>
-    ondblclick="<#outputformat 'JavaScript'>${parameters.doubleOndblclick}</#outputformat>"
+    <#if attributes.doubleOndblclick??><#t/>
+    ondblclick="<#outputformat 'JavaScript'>${attributes.doubleOndblclick}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnmousedown??><#t/>
-    onmousedown="<#outputformat 'JavaScript'>${parameters.doubleOnmousedown}</#outputformat>"
+    <#if attributes.doubleOnmousedown??><#t/>
+    onmousedown="<#outputformat 'JavaScript'>${attributes.doubleOnmousedown}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnmouseup??><#t/>
-    onmouseup="<#outputformat 'JavaScript'>${parameters.doubleOnmouseup}</#outputformat>"
+    <#if attributes.doubleOnmouseup??><#t/>
+    onmouseup="<#outputformat 'JavaScript'>${attributes.doubleOnmouseup}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnmousemove??><#t/>
-    onmousemove="<#outputformat 'JavaScript'>${parameters.doubleOnmousemove}</#outputformat>"
+    <#if attributes.doubleOnmousemove??><#t/>
+    onmousemove="<#outputformat 'JavaScript'>${attributes.doubleOnmousemove}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnmouseover??><#t/>
-    onmouseover="<#outputformat 'JavaScript'>${parameters.doubleOnmouseover}</#outputformat>"
+    <#if attributes.doubleOnmouseover??><#t/>
+    onmouseover="<#outputformat 'JavaScript'>${attributes.doubleOnmouseover}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnmouseout??><#t/>
-    onmouseout="<#outputformat 'JavaScript'>${parameters.doubleOnmouseout}</#outputformat>"
+    <#if attributes.doubleOnmouseout??><#t/>
+    onmouseout="<#outputformat 'JavaScript'>${attributes.doubleOnmouseout}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnfocus??><#t/>
-    onfocus="<#outputformat 'JavaScript'>${parameters.doubleOnfocus}</#outputformat>"
+    <#if attributes.doubleOnfocus??><#t/>
+    onfocus="<#outputformat 'JavaScript'>${attributes.doubleOnfocus}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnblur??><#t/>
-    onblur="<#outputformat 'JavaScript'>${parameters.doubleOnblur}</#outputformat>"
+    <#if attributes.doubleOnblur??><#t/>
+    onblur="<#outputformat 'JavaScript'>${attributes.doubleOnblur}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnkeypress??><#t/>
-    onkeypress="<#outputformat 'JavaScript'>${parameters.doubleOnkeypress}</#outputformat>"
+    <#if attributes.doubleOnkeypress??><#t/>
+    onkeypress="<#outputformat 'JavaScript'>${attributes.doubleOnkeypress}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnKeydown??><#t/>
-    onkeydown="<#outputformat 'JavaScript'>${parameters.doubleOnkeydown}</#outputformat>"
+    <#if attributes.doubleOnKeydown??><#t/>
+    onkeydown="<#outputformat 'JavaScript'>${attributes.doubleOnkeydown}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnkeyup??><#t/>
-    onkeyup="<#outputformat 'JavaScript'>${parameters.doubleOnkeyup}</#outputformat>"
+    <#if attributes.doubleOnkeyup??><#t/>
+    onkeyup="<#outputformat 'JavaScript'>${attributes.doubleOnkeyup}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnselect??><#t/>
-    onselect="<#outputformat 'JavaScript'>${parameters.doubleOnselect}</#outputformat>"
+    <#if attributes.doubleOnselect??><#t/>
+    onselect="<#outputformat 'JavaScript'>${attributes.doubleOnselect}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleOnchange??><#t/>
-    onchange="<#outputformat 'JavaScript'>${parameters.doubleOnchange}</#outputformat>"
+    <#if attributes.doubleOnchange??><#t/>
+    onchange="<#outputformat 'JavaScript'>${attributes.doubleOnchange}</#outputformat>"
     </#if><#t/>
-    <#if parameters.doubleAccesskey??><#t/>
-    accesskey="<#outputformat 'JavaScript'>${parameters.doubleAccesskey}</#outputformat>"
+    <#if attributes.doubleAccesskey??><#t/>
+    accesskey="<#outputformat 'JavaScript'>${attributes.doubleAccesskey}</#outputformat>"
     </#if>
-	<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+	<#include "/${attributes.templateDir}/${attributes.expandTheme}/prefixed-dynamic-attributes.ftl" />
 	<@prefixedDynamicAttributes prefix="right-"/>
 >
-	<#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??><#t/>
-    <option value="${parameters.doubleHeaderKey}">${parameters.doubleHeaderValue}</option>
+	<#if attributes.doubleHeaderKey?? && attributes.doubleHeaderValue??><#t/>
+    <option value="${attributes.doubleHeaderKey}">${attributes.doubleHeaderValue}</option>
 	</#if><#t/>
-	<#if parameters.doubleEmptyOption!false><#t/>
+	<#if attributes.doubleEmptyOption!false><#t/>
     <option value=""></option>
 	</#if><#t/>
-	<@s.iterator value="parameters.doubleList"><#t/>
-        <#if parameters.doubleListKey??><#t/>
-            <#assign doubleItemKey = stack.findValue(parameters.doubleListKey) /><#t/>
+	<@s.iterator value="attributes.doubleList"><#t/>
+        <#if attributes.doubleListKey??><#t/>
+            <#assign doubleItemKey = stack.findValue(attributes.doubleListKey) /><#t/>
         <#else><#t/>
             <#assign doubleItemKey = stack.findValue('top') /><#t/>
         </#if><#t/>
         <#assign doubleItemKeyStr = doubleItemKey.toString() /><#t/>
-        <#if parameters.doubleListValue??><#t/>
-            <#assign doubleItemValue = stack.findString(parameters.doubleListValue)!"" /><#t/>
+        <#if attributes.doubleListValue??><#t/>
+            <#assign doubleItemValue = stack.findString(attributes.doubleListValue)!"" /><#t/>
         <#else><#t/>
             <#assign doubleItemValue = stack.findString('top') /><#t/>
         </#if><#t/>
     	<option value="${doubleItemKeyStr}"<#rt/>
-        <#if tag.contains(parameters.doubleNameValue, doubleItemKey)><#t/>
+        <#if tag.contains(attributes.doubleNameValue, doubleItemKey)><#t/>
  		selected="selected"<#rt/>
         </#if><#t/>
     	>${doubleItemValue}</option><#lt/>
 	</@s.iterator><#t/>
 </select>
-<#if parameters.doubleMultiple!false>
-<input type="hidden" id="__multiselect_${parameters.doubleId}" name="__multiselect_${parameters.doubleName!""}" value=""<#rt/>
-<#if parameters.doubleDisabled!false>
+<#if attributes.doubleMultiple!false>
+<input type="hidden" id="__multiselect_${attributes.doubleId}" name="__multiselect_${attributes.doubleName!""}" value=""<#rt/>
+<#if attributes.doubleDisabled!false>
  disabled="disabled"<#rt/>
 </#if>
  />
 </#if>
-<#if parameters.allowUpDownOnRight!true>
+<#if attributes.allowUpDownOnRight!true>
 <input type="button"
-	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', <#if parameters.doubleHeaderKey??>'${parameters.doubleHeaderKey}'<#else>''</#if>);<#if parameters.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.upDownOnRightOnclick}</#outputformat>;</#if>"
-<#if parameters.rightDownLabel??>
-	value="${parameters.rightDownLabel}"
+	onclick="moveOptionDown(document.getElementById('${attributes.doubleId}'), 'key', <#if attributes.doubleHeaderKey??>'${attributes.doubleHeaderKey}'<#else>''</#if>);<#if attributes.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnRightOnclick}</#outputformat>;</#if>"
+<#if attributes.rightDownLabel??>
+	value="${attributes.rightDownLabel}"
 </#if>
 />
 <input type="button"
-	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', <#if parameters.doubleHeaderKey??>'${parameters.doubleHeaderKey}'<#else>''</#if>);<#if parameters.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${parameters.upDownOnRightOnclick}</#outputformat>;</#if>"
-<#if parameters.rightUpLabel??>
-	value="${parameters.rightUpLabel}"
+	onclick="moveOptionUp(document.getElementById('${attributes.doubleId}'), 'key', <#if attributes.doubleHeaderKey??>'${attributes.doubleHeaderKey}'<#else>''</#if>);<#if attributes.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnRightOnclick}</#outputformat>;</#if>"
+<#if attributes.rightUpLabel??>
+	value="${attributes.rightUpLabel}"
 </#if>
 />
 </#if>

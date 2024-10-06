@@ -57,7 +57,7 @@ public class DoubleSelect extends DoubleListUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
         StringBuilder onchangeParam = new StringBuilder();
-        onchangeParam.append(getParameters().get("id")).append("Redirect(this.selectedIndex)");
+        onchangeParam.append(getAttributes().get("id")).append("Redirect(this.selectedIndex)");
         if(StringUtils.isNotEmpty(this.onchange)) {
         	onchangeParam.append(";").append(this.onchange);
         }

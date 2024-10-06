@@ -18,10 +18,10 @@
  * under the License.
  */
 -->
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelPos = attributes.labelPosition/>
 </#if>
 <#if (labelPos!"top") == 'top'>
 <div <#rt/>
@@ -29,8 +29,8 @@
 <span <#rt/>
 </#if>
     class="formButton"<#t/>
-<#if parameters.id??>
-    id="wwctrl_${parameters.id}"<#rt/>
+<#if attributes.id??>
+    id="wwctrl_${attributes.id}"<#rt/>
 </#if>
 ><#t/>
-<#include "/${parameters.templateDir}/simple/submit.ftl" />
+<#include "/${attributes.templateDir}/simple/submit.ftl" />

@@ -142,7 +142,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             }
 
             long size = item.getSize();
-            if (size > maxStringLength) {
+            if (maxStringLength != null && size > maxStringLength) {
                 LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
                 String errorKey = "struts.messages.upload.error.parameter.too.long";
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,

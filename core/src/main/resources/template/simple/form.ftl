@@ -18,8 +18,8 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-common.ftl" />
-<#if parameters.onreset?has_content>
- onreset="${parameters.onreset}"<#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/form-common.ftl" />
+<#if attributes.onreset?has_content>
+ onreset="${attributes.onreset}"<#rt/>
 </#if>
 >

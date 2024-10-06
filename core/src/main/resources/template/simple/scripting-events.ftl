@@ -18,45 +18,45 @@
  * under the License.
  */
 -->
-<#if parameters.onclick??>
- onclick="<#outputformat 'JavaScript'>${parameters.onclick}</#outputformat>"<#rt/>
+<#if attributes.onclick??>
+ onclick="<#outputformat 'JavaScript'>${attributes.onclick}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.ondblclick??>
- ondblclick="<#outputformat 'JavaScript'>${parameters.ondblclick}</#outputformat>"<#rt/>
+<#if attributes.ondblclick??>
+ ondblclick="<#outputformat 'JavaScript'>${attributes.ondblclick}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onmousedown??>
- onmousedown="<#outputformat 'JavaScript'>${parameters.onmousedown}</#outputformat>"<#rt/>
+<#if attributes.onmousedown??>
+ onmousedown="<#outputformat 'JavaScript'>${attributes.onmousedown}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onmouseup??>
- onmouseup="<#outputformat 'JavaScript'>${parameters.onmouseup}</#outputformat>"<#rt/>
+<#if attributes.onmouseup??>
+ onmouseup="<#outputformat 'JavaScript'>${attributes.onmouseup}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onmouseover??>
- onmouseover="<#outputformat 'JavaScript'>${parameters.onmouseover}</#outputformat>"<#rt/>
+<#if attributes.onmouseover??>
+ onmouseover="<#outputformat 'JavaScript'>${attributes.onmouseover}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onmousemove??>
- onmousemove="<#outputformat 'JavaScript'>${parameters.onmousemove}</#outputformat>"<#rt/>
+<#if attributes.onmousemove??>
+ onmousemove="<#outputformat 'JavaScript'>${attributes.onmousemove}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onmouseout??>
- onmouseout="<#outputformat 'JavaScript'>${parameters.onmouseout}</#outputformat>"<#rt/>
+<#if attributes.onmouseout??>
+ onmouseout="<#outputformat 'JavaScript'>${attributes.onmouseout}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onfocus??>
- onfocus="<#outputformat 'JavaScript'>${parameters.onfocus}</#outputformat>"<#rt/>
+<#if attributes.onfocus??>
+ onfocus="<#outputformat 'JavaScript'>${attributes.onfocus}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onblur??>
- onblur="<#outputformat 'JavaScript'>${parameters.onblur}</#outputformat>"<#rt/>
+<#if attributes.onblur??>
+ onblur="<#outputformat 'JavaScript'>${attributes.onblur}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onkeypress??>
- onkeypress="<#outputformat 'JavaScript'>${parameters.onkeypress}</#outputformat>"<#rt/>
+<#if attributes.onkeypress??>
+ onkeypress="<#outputformat 'JavaScript'>${attributes.onkeypress}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onkeydown??>
- onkeydown="<#outputformat 'JavaScript'>${parameters.onkeydown}</#outputformat>"<#rt/>
+<#if attributes.onkeydown??>
+ onkeydown="<#outputformat 'JavaScript'>${attributes.onkeydown}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onkeyup??>
- onkeyup="<#outputformat 'JavaScript'>${parameters.onkeyup}</#outputformat>"<#rt/>
+<#if attributes.onkeyup??>
+ onkeyup="<#outputformat 'JavaScript'>${attributes.onkeyup}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onselect??>
- onselect="<#outputformat 'JavaScript'>${parameters.onselect}</#outputformat>"<#rt/>
+<#if attributes.onselect??>
+ onselect="<#outputformat 'JavaScript'>${attributes.onselect}</#outputformat>"<#rt/>
 </#if>
-<#if parameters.onchange??>
- onchange="<#outputformat 'JavaScript'>${parameters.onchange}</#outputformat>"<#rt/>
+<#if attributes.onchange??>
+ onchange="<#outputformat 'JavaScript'>${attributes.onchange}</#outputformat>"<#rt/>
 </#if>

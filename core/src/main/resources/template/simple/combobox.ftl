@@ -19,69 +19,69 @@
  */
 -->
 <@s.script>
-	function autoPopulate_${parameters.escapedId}(targetElement) {
-	<#if parameters.headerKey?? && parameters.headerValue??>
-		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?js_string}') {
+	function autoPopulate_${attributes.escapedId}(targetElement) {
+	<#if attributes.headerKey?? && attributes.headerValue??>
+		if (targetElement.options[targetElement.selectedIndex].value == '${attributes.headerKey?js_string}') {
 			return;
 		}
 	</#if>
-	<#if parameters.emptyOption!false>
+	<#if attributes.emptyOption!false>
 		if (targetElement.options[targetElement.selectedIndex].value == '') {
 			return;
 		}
 	</#if>
-		targetElement.form.elements['${parameters.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
+		targetElement.form.elements['${attributes.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
 	}
 </@s.script>
-<#include "/${parameters.templateDir}/simple/text.ftl" />
+<#include "/${attributes.templateDir}/simple/text.ftl" />
 <br />
-<#if parameters.list??>
-<select onChange="autoPopulate_${parameters.escapedId}(this);"<#rt/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-    <#if parameters.disabled!false>
+<#if attributes.list??>
+<select onChange="autoPopulate_${attributes.escapedId}(this);"<#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+    <#if attributes.disabled!false>
  disabled="disabled"<#rt/>
     </#if>
 >
-	<#if (parameters.headerKey?? && parameters.headerValue??)>
-		<option value="${parameters.headerKey}">${parameters.headerValue}</option>
+	<#if (attributes.headerKey?? && attributes.headerValue??)>
+		<option value="${attributes.headerKey}">${attributes.headerValue}</option>
 	</#if>
-	<#if parameters.emptyOption!false>
+	<#if attributes.emptyOption!false>
 	    <option value=""></option>
 	</#if>
-    <@s.iterator value="parameters.list">
-    <#if parameters.listKey??>
-    	<#assign tmpListKey = stack.findString(parameters.listKey) />
+    <@s.iterator value="attributes.list">
+    <#if attributes.listKey??>
+    	<#assign tmpListKey = stack.findString(attributes.listKey) />
     <#else>
     	<#assign tmpListKey = stack.findString('top') />
     </#if>
-    <#if parameters.listValue??>
-    	<#assign tmpListValue = stack.findString(parameters.listValue) />
+    <#if attributes.listValue??>
+    	<#assign tmpListValue = stack.findString(attributes.listValue) />
     <#else>
     	<#assign tmpListValue = stack.findString('top') />
     </#if>
-    <#if parameters.listCssClass??>
-        <#if stack.findString(parameters.listCssClass)??>
-          <#assign itemCssClass= stack.findString(parameters.listCssClass)/>
+    <#if attributes.listCssClass??>
+        <#if stack.findString(attributes.listCssClass)??>
+          <#assign itemCssClass= stack.findString(attributes.listCssClass)/>
         <#else>
           <#assign itemCssClass = ''/>
         </#if>
     </#if>
-    <#if parameters.listCssStyle??>
-        <#if stack.findString(parameters.listCssStyle)??>
-          <#assign itemCssStyle= stack.findString(parameters.listCssStyle)/>
+    <#if attributes.listCssStyle??>
+        <#if stack.findString(attributes.listCssStyle)??>
+          <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/>
         <#else>
           <#assign itemCssStyle = ''/>
         </#if>
     </#if>
-    <#if parameters.listTitle??>
-        <#if stack.findString(parameters.listTitle)??>
-          <#assign itemTitle= stack.findString(parameters.listTitle)/>
+    <#if attributes.listTitle??>
+        <#if stack.findString(attributes.listTitle)??>
+          <#assign itemTitle= stack.findString(attributes.listTitle)/>
         <#else>
           <#assign itemTitle = ''/>
         </#if>
     </#if>
     <option value="${tmpListKey}"<#rt/>
-        <#if (parameters.nameValue == tmpListKey)>
+        <#if (attributes.nameValue == tmpListKey)>
  selected="selected"<#rt/>
         </#if>
         <#if itemCssClass??>

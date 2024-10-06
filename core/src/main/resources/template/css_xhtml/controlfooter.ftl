@@ -18,26 +18,26 @@
  * under the License.
  */
 -->
-${parameters.after!}<#t/>
+${attributes.after!}<#t/>
     <#lt/>
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelPos = attributes.labelPosition/>
 </#if>
 <#if (labelPos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>
 </#if>
-<#if (parameters.errorposition!"top") == 'bottom'>
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
+<#if (attributes.errorposition!"top") == 'bottom'>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
 <#if hasFieldErrors>
-<div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors.get(parameters.name) as error>
+<div <#rt/><#if attributes.id??>id="wwerr_${attributes.id}"<#rt/></#if> class="wwerr">
+<#list fieldErrors.get(attributes.name) as error>
     <div<#rt/>
-    <#if parameters.id??>
-     errorFor="${parameters.id}"<#rt/>
+    <#if attributes.id??>
+     errorFor="${attributes.id}"<#rt/>
     </#if>
     class="errorMessage">
              ${error}

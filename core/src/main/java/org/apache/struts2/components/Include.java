@@ -144,13 +144,13 @@ public class Include extends Component {
         urlBuf.append(page);
 
         // Add request parameters
-        if (!parameters.isEmpty()) {
+        if (!attributes.isEmpty()) {
             urlBuf.append('?');
 
             String concat = "";
 
             // Set parameters
-            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            for (Map.Entry<String, Object> entry : attributes.entrySet()) {
                 Object name = entry.getKey();
                 List values = (List) entry.getValue();
 
@@ -235,11 +235,11 @@ public class Include extends Component {
         // instead, include tag requires that each parameter be a list of objects,
         // just like the HTTP servlet interfaces are (String[])
         if (value != null) {
-            List currentValues = (List) parameters.get(key);
+            List currentValues = (List) attributes.get(key);
 
             if (currentValues == null) {
                 currentValues = new ArrayList();
-                parameters.put(key, currentValues);
+                attributes.put(key, currentValues);
             }
 
             currentValues.add(value);

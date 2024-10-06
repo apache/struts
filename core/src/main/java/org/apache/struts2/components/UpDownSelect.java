@@ -136,13 +136,13 @@ public class UpDownSelect extends Select {
             // inform form ancestor that we are using a custom onSubmit
             enableAncestorFormCustomOnsubmit();
 
-            Map m = (Map) ancestorForm.getParameters().get("updownselectIds");
+            Map m = (Map) ancestorForm.getAttributes().get("updownselectIds");
             if (m == null) {
                 // map with key -> id ,  value -> headerKey
                 m = new LinkedHashMap();
             }
-            m.put(getParameters().get("id"), getParameters().get("headerKey"));
-            ancestorForm.getParameters().put("updownselectIds", m);
+            m.put(getAttributes().get("id"), getAttributes().get("headerKey"));
+            ancestorForm.getAttributes().put("updownselectIds", m);
         }
         else {
             if (LOG.isWarnEnabled()) {

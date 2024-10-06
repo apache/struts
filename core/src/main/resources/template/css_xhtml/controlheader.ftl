@@ -18,15 +18,15 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl">
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader-core.ftl">
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelPos = attributes.labelPosition/>
 </#if>
 <#if (labelPos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
 </#if>
-<#if parameters.id??>id="wwctrl_${parameters.id}"<#rt/></#if> class="wwctrl">
+<#if attributes.id??>id="wwctrl_${attributes.id}"<#rt/></#if> class="wwctrl">

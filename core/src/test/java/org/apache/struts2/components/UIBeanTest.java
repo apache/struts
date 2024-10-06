@@ -43,14 +43,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setId("txtFldId");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("txtFldId", txtFld.getParameters().get("id"));
+        assertEquals("txtFldId", txtFld.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlIdWithOgnl() {
@@ -59,14 +59,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("txtFldName%{'1'}");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("formId_txtFldName1", txtFld.getParameters().get("id"));
+        assertEquals("formId_txtFldName1", txtFld.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlId2() {
@@ -75,14 +75,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("txtFldName");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
+        assertEquals("formId_txtFldName", txtFld.getAttributes().get("id"));
     }
 
     public void testPopulateComponentHtmlWithoutNameAndId() {
@@ -91,13 +91,13 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         TextField txtFld = new TextField(stack, req, res);
 
         txtFld.populateComponentHtmlId(form);
 
-        assertNull(txtFld.getParameters().get("id"));
+        assertNull(txtFld.getAttributes().get("id"));
     }
 
     public void testEscape() {
@@ -123,12 +123,12 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getAttributes().put("id", "formId");
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("foo/bar");
         txtFld.populateComponentHtmlId(form);
-        assertEquals("formId_foo_bar", txtFld.getParameters().get("id"));
+        assertEquals("formId_foo_bar", txtFld.getAttributes().get("id"));
     }
 
     public void testGetThemeFromForm() {
@@ -230,7 +230,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setAccesskey(accesskeyValue);
         txtFld.evaluateParams();
 
-        assertEquals(accesskeyValue, txtFld.getParameters().get("accesskey"));
+        assertEquals(accesskeyValue, txtFld.getAttributes().get("accesskey"));
     }
 
     public void testValueParameterEvaluation() {
@@ -243,7 +243,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.addParameter("value", value);
         txtFld.evaluateParams();
 
-        assertEquals(value, txtFld.getParameters().get("nameValue"));
+        assertEquals(value, txtFld.getAttributes().get("nameValue"));
     }
 
     public void testValueParameterRecursion() {
@@ -265,8 +265,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setName("%{myValue}");
         txtFld.evaluateParams();
 
-        assertEquals("%{myBad}", txtFld.getParameters().get("nameValue"));
-        assertEquals("%{myBad}", txtFld.getParameters().get("name"));
+        assertEquals("%{myBad}", txtFld.getAttributes().get("nameValue"));
+        assertEquals("%{myBad}", txtFld.getAttributes().get("name"));
     }
 
     public void testValueNameParameterNotAccepted() {
@@ -287,13 +287,13 @@ public class UIBeanTest extends StrutsInternalTestCase {
         container.inject(txtFld);
         txtFld.setName("%{myValueName}");
         txtFld.evaluateParams();
-        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
-        assertEquals("getMyValue()", txtFld.getParameters().get("nameValue"));
+        assertEquals("getMyValue()", txtFld.getAttributes().get("name"));
+        assertEquals("getMyValue()", txtFld.getAttributes().get("nameValue"));
 
         txtFld.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         txtFld.evaluateParams();
-        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
-        assertEquals("value", txtFld.getParameters().get("nameValue"));
+        assertEquals("getMyValue()", txtFld.getAttributes().get("name"));
+        assertEquals("value", txtFld.getAttributes().get("nameValue"));
     }
 
     public void testValueNameParameterGetterAccepted() {
@@ -311,8 +311,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         container.inject(txtFld);
         txtFld.setName("getMyValue()");
         txtFld.evaluateParams();
-        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
-        assertEquals("value", txtFld.getParameters().get("nameValue"));
+        assertEquals("getMyValue()", txtFld.getAttributes().get("name"));
+        assertEquals("value", txtFld.getAttributes().get("nameValue"));
     }
 
     public void testSetClass() {
@@ -325,7 +325,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setCssClass(cssClass);
         txtFld.evaluateParams();
 
-        assertEquals(cssClass, txtFld.getParameters().get("cssClass"));
+        assertEquals(cssClass, txtFld.getAttributes().get("cssClass"));
     }
 
     public void testSetStyle() {
@@ -338,7 +338,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setStyle(cssStyle);
         txtFld.evaluateParams();
 
-        assertEquals(cssStyle, txtFld.getParameters().get("cssStyle"));
+        assertEquals(cssStyle, txtFld.getAttributes().get("cssStyle"));
     }
 
     public void testNonce() {
@@ -354,7 +354,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
         dblSelect.evaluateParams();
 
-        assertEquals(nonceVal, dblSelect.getParameters().get("nonce"));
+        assertEquals(nonceVal, dblSelect.getAttributes().get("nonce"));
     }
 
     public void testSetNullUiStaticContentPath() {

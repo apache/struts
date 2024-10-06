@@ -19,11 +19,11 @@
  */
 -->
 <#macro prefixedDynamicAttributes prefix>
-<#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
-<#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
+<#if (attributes.dynamicAttributes?? && attributes.dynamicAttributes?size > 0)><#rt/>
+<#assign aKeys = attributes.dynamicAttributes.keySet()><#rt/>
 <#list aKeys as aKey><#rt/>
 <#if aKey?starts_with(prefix)>
-<#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
+<#assign keyValue = attributes.dynamicAttributes.get(aKey)/>
 <#if keyValue?is_string>
     <#assign value = struts.translateVariables(keyValue)!keyValue/>
 <#else>

@@ -21,22 +21,22 @@
 <#--
 	Always include elements to show errors. They may be filled later via AJAX.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
-<#if (parameters.errorposition!"top") == 'top'>
-<tr errorFor="${parameters.id}">
-    <td class="tdErrorMessage" colspan="2" data-error-for-fieldname="${parameters.name}"><#rt/>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
+<#if (attributes.errorposition!"top") == 'top'>
+<tr errorFor="${attributes.id}">
+    <td class="tdErrorMessage" colspan="2" data-error-for-fieldname="${attributes.name}"><#rt/>
         <#if hasFieldErrors>
-            <#list fieldErrors.get(parameters.name) as error>
+            <#list fieldErrors.get(attributes.name) as error>
                 <div class="errorMessage">${error}</div><#t/>
             </#list>
         </#if>
     </td><#lt/>
 </tr>
 </#if>
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelpos = parameters.labelPosition/>
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelpos = attributes.labelPosition/>
 </#if>
 <#--
 	if the label position is top,
@@ -48,10 +48,10 @@
 <#else>
     <td class="tdLabel"><#rt/>
 </#if>
-<#if parameters.label??>
+<#if attributes.label??>
     <label <#t/>
-<#if parameters.id??>
-        for="${parameters.id}" <#t/>
+<#if attributes.id??>
+        for="${attributes.id}" <#t/>
 </#if>
 <#if hasFieldErrors>
         class="errorLabel"<#t/>
@@ -59,15 +59,15 @@
         class="label"<#t/>
 </#if>
     ><#t/>
-<#if parameters.required!false && parameters.requiredPosition!"right" != 'right'>
+<#if attributes.required!false && attributes.requiredPosition!"right" != 'right'>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label}<#t/>
-<#if parameters.required!false && parameters.requiredPosition!"right" == 'right'>
+${attributes.label}<#t/>
+<#if attributes.required!false && attributes.requiredPosition!"right" == 'right'>
  <span class="required">*</span><#t/>
 </#if>
-${parameters.labelseparator!":"}<#t/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
+${attributes.labelseparator!":"}<#t/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/tooltip.ftl" />
 </label><#t/>
 </#if>
     </td><#lt/>

@@ -18,16 +18,16 @@
  * under the License.
  */
 -->
-${parameters.after!}<#t/>
+${attributes.after!}<#t/>
     </td><#lt/>
 </tr>
-<#if (parameters.errorposition!"top") == 'bottom'>
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
+<#if (attributes.errorposition!"top") == 'bottom'>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
 <#if hasFieldErrors>
-<tr errorFor="${parameters.id}">
+<tr errorFor="${attributes.id}">
     <td class="tdErrorMessage" colspan="2"><#rt/>
         <#if hasFieldErrors>
-            <#list fieldErrors.get(parameters.name) as error>
+            <#list fieldErrors.get(attributes.name) as error>
                 <div class="errorMessage">${error}</div><#t/>
             </#list>
         </#if>

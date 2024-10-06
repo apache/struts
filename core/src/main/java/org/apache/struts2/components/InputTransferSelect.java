@@ -174,7 +174,7 @@ public class InputTransferSelect extends ListUIBean {
 
 
             // key -> select tag id, value -> headerKey (if exists)
-            Map formInputtransferselectIds = (Map) formAncestor.getParameters().get("inputtransferselectIds");
+            Map formInputtransferselectIds = (Map) formAncestor.getAttributes().get("inputtransferselectIds");
 
             // init lists
             if (formInputtransferselectIds == null) {
@@ -182,13 +182,13 @@ public class InputTransferSelect extends ListUIBean {
             }
 
             // id
-            String tmpId = (String) getParameters().get("id");
-            String tmpHeaderKey = (String) getParameters().get("headerKey");
+            String tmpId = (String) getAttributes().get("id");
+            String tmpHeaderKey = (String) getAttributes().get("headerKey");
             if (tmpId != null && (! formInputtransferselectIds.containsKey(tmpId))) {
                 formInputtransferselectIds.put(tmpId, tmpHeaderKey);
             }
 
-            formAncestor.getParameters().put("inputtransferselectIds", formInputtransferselectIds);
+            formAncestor.getAttributes().put("inputtransferselectIds", formInputtransferselectIds);
 
         }
         else {

@@ -590,7 +590,7 @@ public abstract class UIBean extends Component {
 
         LOG.debug("Rendering template {}", template);
 
-        final TemplateRenderingContext context = new TemplateRenderingContext(template, writer, getStack(), getParameters(), this);
+        final TemplateRenderingContext context = new TemplateRenderingContext(template, writer, getStack(), getAttributes(), this);
         engine.renderTemplate(context);
     }
 
@@ -796,11 +796,11 @@ public abstract class UIBean extends Component {
         populateComponentHtmlId(form);
 
         if (form != null ) {
-            addParameter("form", form.getParameters());
+            addParameter("form", form.getAttributes());
 
             if ( translatedName != null ) {
                 // list should have been created by the form component
-                List<String> tags = (List<String>) form.getParameters().get("tagNames");
+                List<String> tags = (List<String>) form.getAttributes().get("tagNames");
                 tags.add(translatedName);
             }
         }
@@ -832,19 +832,19 @@ public abstract class UIBean extends Component {
             }
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String  jsTooltipEnabled = (String) getParameters().get("jsTooltipEnabled");
+            String  jsTooltipEnabled = (String) getAttributes().get("jsTooltipEnabled");
             if (jsTooltipEnabled != null)
                 this.javascriptTooltip = jsTooltipEnabled;
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String tooltipIcon = (String) getParameters().get("tooltipIcon");
+            String tooltipIcon = (String) getAttributes().get("tooltipIcon");
             if (tooltipIcon != null)
                 this.addParameter("tooltipIconPath", tooltipIcon);
             if (this.tooltipIconPath != null)
                 this.addParameter("tooltipIconPath", findString(this.tooltipIconPath));
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String tooltipDelayParam = (String) getParameters().get("tooltipDelay");
+            String tooltipDelayParam = (String) getAttributes().get("tooltipDelay");
             if (tooltipDelayParam != null)
                 this.addParameter("tooltipDelay", tooltipDelayParam);
             if (this.tooltipDelay != null)
@@ -878,8 +878,8 @@ public abstract class UIBean extends Component {
      */
     protected void applyValueParameter(String translatedName) {
         // see if the value has been specified as a parameter already
-        if (parameters.containsKey(ATTR_VALUE)) {
-            parameters.put(ATTR_NAME_VALUE, parameters.get(ATTR_VALUE));
+        if (attributes.containsKey(ATTR_VALUE)) {
+            attributes.put(ATTR_NAME_VALUE, attributes.get(ATTR_VALUE));
         } else {
             if (evaluateNameValue()) {
                 final Class<?> valueClazz = getValueClassType();
@@ -965,7 +965,7 @@ public abstract class UIBean extends Component {
     }
 
     protected Map<String, String> getTooltipConfig(UIBean component) {
-        Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
+        Object tooltipConfigObj = component.getAttributes().get("tooltipConfig");
         Map<String, String> result = new LinkedHashMap<>();
 
         if (tooltipConfigObj instanceof Map) {
@@ -1025,7 +1025,7 @@ public abstract class UIBean extends Component {
             LOG.debug("Cannot determine id attribute for [{}], consider defining id, name or key attribute!", this);
             tryId = null;
         } else if (form != null) {
-            tryId = form.getParameters().get("id") + "_" + generatedId;
+            tryId = form.getAttributes().get("id") + "_" + generatedId;
         } else {
             tryId = generatedId;
         }
@@ -1283,9 +1283,9 @@ public abstract class UIBean extends Component {
      * @see <a href="https://issues.apache.org/jira/browse/WW-4166">WW-4166</a>
      */
     @Override
-    public void copyParams(Map<String, Object> params) {
-        super.copyParams(params);
-        for (Map.Entry<String, Object>entry : params.entrySet()) {
+    public void copyAttributes(Map<String, Object> attributesToCopy) {
+        super.copyAttributes(attributesToCopy);
+        for (Map.Entry<String, Object>entry : attributesToCopy.entrySet()) {
             String entryKey = entry.getKey();
             if (!isValidTagAttribute(entryKey) && !entryKey.equals("dynamicAttributes")) {
                 dynamicAttributes.put(entryKey, entry.getValue());

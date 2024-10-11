@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.commons.lang3.ClassUtils;
@@ -80,7 +81,7 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    private Set<Class<?>> getParentClasses(Class<?> ...clazzes) {
+    private Set<Class<?>> getParentClasses(Class<?>... clazzes) {
         Set<Class<?>> set = new HashSet<>();
         for (Class<?> clazz : clazzes) {
             set.add(clazz);
@@ -258,8 +259,14 @@ public class StrutsParameterAnnotationTest {
         testParameter(new MethodAction(), "publicStrNotAnnotated", true);
     }
 
+    @Test
+    public void publicModelPojo() {
+        parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        testParameter(new ModelAction(), "name", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Object.class, Pojo.class));
+    }
 
-    class FieldAction {
+    static class FieldAction {
         @StrutsParameter
         private String privateStr;
 
@@ -275,7 +282,7 @@ public class StrutsParameterAnnotationTest {
         public Pojo publicPojoDepthZero;
 
         @StrutsParameter(depth = 1)
-        public Pojo publicPojoDepthOne ;
+        public Pojo publicPojoDepthOne;
 
         @StrutsParameter(depth = 2)
         public Pojo publicPojoDepthTwo;
@@ -290,7 +297,7 @@ public class StrutsParameterAnnotationTest {
         public Map<String, Pojo> publicPojoMapDepthTwo;
     }
 
-    class MethodAction {
+    static class MethodAction {
 
         @StrutsParameter
         private void setPrivateStr(String str) {
@@ -343,6 +350,23 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    class Pojo {
+    static class ModelAction implements ModelDriven<Pojo> {
+
+        @StrutsParameter
+        public Pojo getModel() {
+            return new Pojo();
+        }
+    }
+
+    static class Pojo {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

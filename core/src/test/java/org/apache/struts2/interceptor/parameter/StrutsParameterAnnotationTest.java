@@ -18,7 +18,9 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.commons.lang3.ClassUtils;
@@ -64,6 +66,7 @@ public class StrutsParameterAnnotationTest {
     @After
     public void tearDown() throws Exception {
         threadAllowlist.clearAllowlist();
+        ActionContext.clear();
     }
 
     private void testParameter(Object action, String paramName, boolean shouldContain) {
@@ -261,8 +264,15 @@ public class StrutsParameterAnnotationTest {
 
     @Test
     public void publicModelPojo() {
-        parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
-        testParameter(new ModelAction(), "name", true);
+        var action = new ModelAction();
+
+        // Emulate ModelDrivenInterceptor running previously
+        var valueStack = new StubValueStack();
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        testParameter(action, "name", true);
+        testParameter(action, "name.nested", true);
         assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Object.class, Pojo.class));
     }
 
@@ -352,21 +362,12 @@ public class StrutsParameterAnnotationTest {
 
     static class ModelAction implements ModelDriven<Pojo> {
 
-        @StrutsParameter
+        @Override
         public Pojo getModel() {
             return new Pojo();
         }
     }
 
     static class Pojo {
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }

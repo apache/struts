@@ -50,97 +50,97 @@ import static jakarta.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 
 public class RestActionInvocationTest extends TestCase {
 
-	RestActionInvocation restActionInvocation;
-	MockHttpServletRequest request;
-	MockHttpServletResponse response;
+    RestActionInvocation restActionInvocation;
+    MockHttpServletRequest request;
+    MockHttpServletResponse response;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-		restActionInvocation = new RestActionInvocationTester();
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
-		ServletActionContext.setRequest(request);
-		ServletActionContext.setResponse(response);
+        restActionInvocation = new RestActionInvocationTester();
+        request = new MockHttpServletRequest();
+        response = new MockHttpServletResponse();
+        ServletActionContext.setRequest(request);
+        ServletActionContext.setResponse(response);
 
-	}
+    }
 
-	/**
-	 * Test the correct action results: null, String, HttpHeaders, Result
-	 * @throws Exception
-	 */
-	public void testSaveResult() throws Exception {
+    /**
+     * Test the correct action results: null, String, HttpHeaders, Result
+     * @throws Exception
+     */
+    public void testSaveResult() throws Exception {
 
-		Object methodResult = "index";
-		ActionConfig actionConfig = restActionInvocation.getProxy().getConfig();
-		assertEquals("index", restActionInvocation.saveResult(actionConfig, methodResult));
+        Object methodResult = "index";
+        ActionConfig actionConfig = restActionInvocation.getProxy().getConfig();
+        assertEquals("index", restActionInvocation.saveResult(actionConfig, methodResult));
 
-		setUp();
-    	methodResult = new DefaultHttpHeaders("show");
-    	assertEquals("show", restActionInvocation.saveResult(actionConfig, methodResult));
-    	assertEquals(methodResult, restActionInvocation.httpHeaders);
+        setUp();
+        methodResult = new DefaultHttpHeaders("show");
+        assertEquals("show", restActionInvocation.saveResult(actionConfig, methodResult));
+        assertEquals(methodResult, restActionInvocation.httpHeaders);
 
-		setUp();
-    	methodResult = new HttpHeaderResult(HttpServletResponse.SC_ACCEPTED);
-    	assertEquals(null, restActionInvocation.saveResult(actionConfig, methodResult));
-    	assertEquals(methodResult, restActionInvocation.createResult());
+        setUp();
+        methodResult = new HttpHeaderResult(HttpServletResponse.SC_ACCEPTED);
+        assertEquals(null, restActionInvocation.saveResult(actionConfig, methodResult));
+        assertEquals(methodResult, restActionInvocation.createResult());
 
-		setUp();
-    	try {
-    		methodResult = new Object();
-    		restActionInvocation.saveResult(actionConfig, methodResult);
+        setUp();
+        try {
+            methodResult = new Object();
+            restActionInvocation.saveResult(actionConfig, methodResult);
 
-    		// ko
-    		assertFalse(true);
+            // ko
+            assertFalse(true);
 
-    	} catch (ConfigurationException c) {
-    		// ok, object not allowed
-    	}
-	}
+        } catch (ConfigurationException c) {
+            // ok, object not allowed
+        }
+    }
 
-	/**
-	 * Test the target selection: exception, error messages, model and null
-	 * @throws Exception
-	 */
-	public void testSelectTarget() throws Exception {
+    /**
+     * Test the target selection: exception, error messages, model and null
+     * @throws Exception
+     */
+    public void testSelectTarget() throws Exception {
 
-		// Exception
-		Exception e = new Exception();
-		restActionInvocation.getStack().set("exception", e);
-		restActionInvocation.selectTarget();
-		assertEquals(e, restActionInvocation.target);
+        // Exception
+        Exception e = new Exception();
+        restActionInvocation.getStack().set("exception", e);
+        restActionInvocation.selectTarget();
+        assertEquals(e, restActionInvocation.target);
 
-		// Error messages
-		setUp();
-		String actionMessage = "Error!";
-		RestActionSupport action = (RestActionSupport)restActionInvocation.getAction();
-		action.addActionError(actionMessage);
-		Map<String, Object> errors = new HashMap<String, Object>();
-		List<String> list = new ArrayList<String>();
-		list.add(actionMessage);
-    	errors.put("actionErrors", list);
-    	restActionInvocation.selectTarget();
-		assertEquals(errors, restActionInvocation.target);
+        // Error messages
+        setUp();
+        String actionMessage = "Error!";
+        RestActionSupport action = (RestActionSupport)restActionInvocation.getAction();
+        action.addActionError(actionMessage);
+        Map<String, Object> errors = new HashMap<String, Object>();
+        List<String> list = new ArrayList<String>();
+        list.add(actionMessage);
+        errors.put("actionErrors", list);
+        restActionInvocation.selectTarget();
+        assertEquals(errors, restActionInvocation.target);
 
-    	// Model with get and no content in post, put, delete
-    	setUp();
-		RestAction restAction = (RestAction)restActionInvocation.getAction();
-		List<String> model = new ArrayList<String>();
-		model.add("Item");
-		restAction.model = model;
-		request.setMethod("GET");
-		restActionInvocation.selectTarget();
-		assertEquals(model, restActionInvocation.target);
-		request.setMethod("POST");
-		restActionInvocation.selectTarget();
-		assertEquals(null, restActionInvocation.target);
-		request.setMethod("PUT");
-		restActionInvocation.selectTarget();
-		assertEquals(null, restActionInvocation.target);
-		request.setMethod("DELETE");
-		restActionInvocation.selectTarget();
-		assertEquals(null, restActionInvocation.target);
+        // Model with get and no content in post, put, delete
+        setUp();
+        RestAction restAction = (RestAction)restActionInvocation.getAction();
+        List<String> model = new ArrayList<String>();
+        model.add("Item");
+        restAction.model = model;
+        request.setMethod("GET");
+        restActionInvocation.selectTarget();
+        assertEquals(model, restActionInvocation.target);
+        request.setMethod("POST");
+        restActionInvocation.selectTarget();
+        assertEquals(null, restActionInvocation.target);
+        request.setMethod("PUT");
+        restActionInvocation.selectTarget();
+        assertEquals(null, restActionInvocation.target);
+        request.setMethod("DELETE");
+        restActionInvocation.selectTarget();
+        assertEquals(null, restActionInvocation.target);
 
         // disable content restriction to GET only
         model = new ArrayList<String>();
@@ -154,108 +154,108 @@ public class RestActionInvocationTest extends TestCase {
         assertEquals(model.get(0), "Item1");
     }
 
-	/**
-	 * Test the not modified status code.
-	 * @throws Exception
-	 */
-	public void testResultNotModified() throws Exception {
+    /**
+     * Test the not modified status code.
+     * @throws Exception
+     */
+    public void testResultNotModified() throws Exception {
 
-		request.addHeader("If-None-Match", "123");
-		request.setMethod("GET");
+        request.addHeader("If-None-Match", "123");
+        request.setMethod("GET");
 
-		RestAction restAction = (RestAction)restActionInvocation.getAction();
-		List<String> model = new ArrayList<String>() {
-			@Override
-			public int hashCode() {
-				return 123;
-			}
-		};
-		model.add("Item");
-		restAction.model = model;
+        RestAction restAction = (RestAction)restActionInvocation.getAction();
+        List<String> model = new ArrayList<String>() {
+            @Override
+            public int hashCode() {
+                return 123;
+            }
+        };
+        model.add("Item");
+        restAction.model = model;
 
-		restActionInvocation.processResult();
-		assertEquals(SC_NOT_MODIFIED, response.getStatus());
+        restActionInvocation.processResult();
+        assertEquals(SC_NOT_MODIFIED, response.getStatus());
 
     }
 
-	/**
-	 * Test the default error result.
-	 * @throws Exception
-	 */
-	public void testDefaultErrorResult() throws Exception {
+    /**
+     * Test the default error result.
+     * @throws Exception
+     */
+    public void testDefaultErrorResult() throws Exception {
 
-		// Exception
-		Exception e = new Exception();
-		restActionInvocation.getStack().set("exception", e);
-		request.setMethod("GET");
+        // Exception
+        Exception e = new Exception();
+        restActionInvocation.getStack().set("exception", e);
+        request.setMethod("GET");
 
-		RestAction restAction = (RestAction)restActionInvocation.getAction();
-		List<String> model = new ArrayList<String>();
-		model.add("Item");
-		restAction.model = model;
+        RestAction restAction = (RestAction)restActionInvocation.getAction();
+        List<String> model = new ArrayList<String>();
+        model.add("Item");
+        restAction.model = model;
 
-		restActionInvocation.setDefaultErrorResultName("default-error");
-		ResultConfig resultConfig = new ResultConfig.Builder("default-error",
-			"org.apache.struts2.result.HttpHeaderResult")
-	    	.addParam("status", "123").build();
-	    ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
-				"RestAction", "org.apache.rest.RestAction")
-	    	.addResultConfig(resultConfig)
-	    	.build();
-	    ((MockActionProxy)restActionInvocation.getProxy()).setConfig(actionConfig);
+        restActionInvocation.setDefaultErrorResultName("default-error");
+        ResultConfig resultConfig = new ResultConfig.Builder("default-error",
+                "org.apache.struts2.result.HttpHeaderResult")
+                .addParam("status", "123").build();
+        ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
+                "RestAction", "org.apache.rest.RestAction")
+                .addResultConfig(resultConfig)
+                .build();
+        ((MockActionProxy)restActionInvocation.getProxy()).setConfig(actionConfig);
 
-		restActionInvocation.processResult();
-		assertEquals(123, response.getStatus());
+        restActionInvocation.processResult();
+        assertEquals(123, response.getStatus());
 
-	}
+    }
 
-	public void testNoResult() throws Exception {
+    public void testNoResult() throws Exception {
 
-		RestAction restAction = (RestAction)restActionInvocation.getAction();
-		List<String> model = new ArrayList<String>();
-		model.add("Item");
-		restAction.model = model;
-		request.setMethod("GET");
-		restActionInvocation.setResultCode("index");
+        RestAction restAction = (RestAction)restActionInvocation.getAction();
+        List<String> model = new ArrayList<String>();
+        model.add("Item");
+        restAction.model = model;
+        request.setMethod("GET");
+        restActionInvocation.setResultCode("index");
 
-		try {
-			restActionInvocation.processResult();
+        try {
+            restActionInvocation.processResult();
 
-    		// ko
-    		assertFalse(true);
+            // ko
+            assertFalse(true);
 
-    	} catch (ConfigurationException c) {
-    		// ok, no result
-    	}
+        } catch (ConfigurationException c) {
+            // ok, no result
+        }
 
-	}
+    }
 
-	/**
-	 * Test the global execution
-	 * @throws Exception
-	 */
-	public void testInvoke() throws Exception {
+    /**
+     * Test the global execution
+     * @throws Exception
+     */
+    public void testInvoke() throws Exception {
 
-	    // Default index method return 'success'
-	    ((MockActionProxy)restActionInvocation.getProxy()).setMethod("index");
+        // Default index method return 'success'
+        ((MockActionProxy)restActionInvocation.getProxy()).setMethod("index");
 
-	    // Define result 'success'
-		ResultConfig resultConfig = new ResultConfig.Builder("success",
-			"org.apache.struts2.result.HttpHeaderResult")
-	    	.addParam("status", "123").build();
-	    ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
-				"RestAction", "org.apache.rest.RestAction")
-	    	.addResultConfig(resultConfig)
-	    	.build();
-	    ((MockActionProxy)restActionInvocation.getProxy()).setConfig(actionConfig);
+        // Define result 'success'
+        ResultConfig resultConfig = new ResultConfig.Builder("success",
+                "org.apache.struts2.result.HttpHeaderResult")
+                .addParam("status", "123").build();
+        ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
+                "RestAction", "org.apache.rest.RestAction")
+                .addResultConfig(resultConfig)
+                .build();
+        ((MockActionProxy)restActionInvocation.getProxy()).setConfig(actionConfig);
 
-		request.setMethod("GET");
+        request.setMethod("GET");
 
         restActionInvocation.setOgnlUtil(new OgnlUtil(
-				new DefaultOgnlExpressionCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
-				new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
-				new StrutsOgnlGuard()
-		));
+                new DefaultOgnlExpressionCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
+                new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(10_000), BASIC.toString()),
+                new StrutsOgnlGuard()
+        ));
         restActionInvocation.invoke();
 
         assertEquals(123, response.getStatus());
@@ -263,7 +263,7 @@ public class RestActionInvocationTest extends TestCase {
 
 
     class RestActionInvocationTester extends RestActionInvocation {
-    	RestActionInvocationTester() {
+        RestActionInvocationTester() {
             super(new HashMap<String, Object>(), true);
             List<InterceptorMapping> interceptorMappings = new ArrayList<InterceptorMapping>();
             MockInterceptor mockInterceptor = new MockInterceptor();
@@ -273,21 +273,21 @@ public class RestActionInvocationTest extends TestCase {
             interceptors = interceptorMappings.iterator();
             MockActionProxy actionProxy = new MockActionProxy();
             ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
-    				"RestAction", "org.apache.rest.RestAction").build();
+                    "RestAction", "org.apache.rest.RestAction").build();
             actionProxy.setConfig(actionConfig);
             proxy = actionProxy;
             action = new RestAction();
             setMimeTypeHandlerSelector(new DefaultContentTypeHandlerManager());
             unknownHandlerManager = new DefaultUnknownHandlerManager();
-			try {
-				XWorkTestCaseHelper.setUp();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			invocationContext = ActionContext.getContext();
-			container = ActionContext.getContext().getContainer();
-			stack = ActionContext.getContext().getValueStack();
-			objectFactory = container.getInstance(ObjectFactory.class);
+            try {
+                XWorkTestCaseHelper.setUp();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            invocationContext = ActionContext.getContext();
+            container = ActionContext.getContext().getContainer();
+            stack = ActionContext.getContext().getValueStack();
+            objectFactory = container.getInstance(ObjectFactory.class);
 
         }
 
@@ -295,12 +295,12 @@ public class RestActionInvocationTest extends TestCase {
 
     static class RestAction extends RestActionSupport implements ModelDriven<List<String>> {
 
-    	List<String> model;
+        List<String> model;
 
-		@Override
-    	public List<String> getModel() {
-			return model;
-		}
+        @Override
+        public List<String> getModel() {
+            return model;
+        }
 
     }
 }

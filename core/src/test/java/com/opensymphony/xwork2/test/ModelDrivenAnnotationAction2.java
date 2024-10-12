@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.ModelDrivenAnnotationAction;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 
 /**
@@ -36,9 +35,8 @@ public class ModelDrivenAnnotationAction2 extends ModelDrivenAnnotationAction {
     /**
      * @return the model to be pushed onto the ValueStack after the Action itself
      */
-    @StrutsParameter(depth = 3)
     @Override
-    public Object getModel() {
+    public AnnotationTestBean2 getModel() {
         return model;
     }
 }

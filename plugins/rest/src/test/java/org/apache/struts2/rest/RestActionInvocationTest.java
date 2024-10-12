@@ -35,7 +35,6 @@ import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.result.HttpHeaderResult;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -298,7 +297,6 @@ public class RestActionInvocationTest extends TestCase {
 
     	List<String> model;
 
-		@StrutsParameter(depth = 1)
 		@Override
     	public List<String> getModel() {
 			return model;

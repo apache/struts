@@ -53,7 +53,10 @@ import java.io.StringWriter;
  * <p>It overrides the SiteMesh servlet to rely on the
  * Velocity Manager in Struts instead of creating it's
  * own manager</p>
+ *
+ * @deprecated Sitemesh 2 based plugin is not supported anymore
  */
+@Deprecated
 public class VelocityDecoratorServlet extends VelocityViewServlet {
 
     private static final Logger LOG = LogManager.getLogger(VelocityDecoratorServlet.class);
@@ -76,6 +79,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      * @param config servlet configuration
      */
     public void init(ServletConfig config) throws ServletException {
+        LOG.warn("This plugin is deprecated. Please migrate to a plugin which bases on Sitemesh 3!");
         super.init(config);
         Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
         if (dispatcher == null) {

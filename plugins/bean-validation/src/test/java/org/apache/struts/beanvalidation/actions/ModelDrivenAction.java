@@ -20,17 +20,14 @@ package org.apache.struts.beanvalidation.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import org.apache.struts.beanvalidation.models.Person;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
-
 import jakarta.validation.Valid;
+import org.apache.struts.beanvalidation.models.Person;
 
 public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person>, ModelDrivenActionInterface {
 
     @Valid
     private final Person model = new Person();
 
-    @StrutsParameter(depth = 2)
     @Override
     public Person getModel() {
         return model;

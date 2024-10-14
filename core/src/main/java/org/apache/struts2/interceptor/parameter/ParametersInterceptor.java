@@ -20,6 +20,7 @@ package org.apache.struts2.interceptor.parameter;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
@@ -258,19 +259,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected ValueStack toNewStack(ValueStack stack) {
         ValueStack newStack = valueStackFactory.createValueStack(stack);
-        if (newStack instanceof ClearableValueStack) {
-            ((ClearableValueStack) newStack).clearContextValues();
+        if (newStack instanceof ClearableValueStack clearable) {
+            clearable.clearContextValues();
             newStack.getActionContext().withLocale(stack.getActionContext().getLocale()).withValueStack(stack);
         }
         return newStack;
     }
 
     protected void applyMemberAccessProperties(ValueStack stack) {
-        if (!(stack instanceof MemberAccessValueStack)) {
+        if (!(stack instanceof MemberAccessValueStack accessValueStack)) {
             return;
         }
-        ((MemberAccessValueStack) stack).useAcceptProperties(acceptedPatterns.getAcceptedPatterns());
-        ((MemberAccessValueStack) stack).useExcludeProperties(excludedPatterns.getExcludedPatterns());
+        accessValueStack.useAcceptProperties(acceptedPatterns.getAcceptedPatterns());
+        accessValueStack.useExcludeProperties(excludedPatterns.getExcludedPatterns());
     }
 
     protected Map<String, Parameter> toAcceptableParameters(HttpParameters parameters, Object action) {
@@ -332,7 +333,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
-        return !(action instanceof ParameterNameAware) || ((ParameterNameAware) action).acceptableParameterName(name);
+        return !(action instanceof ParameterNameAware nameAware) || nameAware.acceptableParameterName(name);
     }
 
     /**
@@ -348,7 +349,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
 
         long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+
+        if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
+            LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement and OGNL allowlisting model type");
+            // (Exempted by annotation on com.opensymphony.xwork2.ModelDriven#getModel)
+            return hasValidAnnotatedMember("model", action, paramDepth + 1);
+        }
+
         if (requireAnnotationsTransitionMode && paramDepth == 0) {
+            LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement", name);
             return true;
         }
 
@@ -365,6 +374,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * save computation by checking this last.
      */
     protected boolean hasValidAnnotatedMember(String rootProperty, Object action, long paramDepth) {
+        LOG.debug("Checking Action [{}] for a matching, correctly annotated member for property [{}]",
+                action.getClass().getSimpleName(), rootProperty);
         BeanInfo beanInfo = getBeanInfo(action);
         if (beanInfo == null) {
             return hasValidAnnotatedField(action, rootProperty, paramDepth);
@@ -390,7 +401,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
         if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
             String logMessage = format(
-                    "Parameter injection for method [%s] on action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    "Parameter injection for method [%s] on Action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
                     relevantMethod.getName(),
                     relevantMethod.getDeclaringClass().getName());
             if (devMode) {
@@ -400,8 +411,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
             return false;
         }
+        LOG.debug("Success: Matching annotated method [{}] found for property [{}] of depth [{}] on Action [{}]",
+                relevantMethod.getName(), propDesc.getName(), paramDepth, action.getClass().getSimpleName());
         if (paramDepth >= 1) {
-            allowlistClass(relevantMethod.getReturnType());
+            allowlistClass(propDesc.getPropertyType());
         }
         if (paramDepth >= 2) {
             allowlistReturnTypeIfParameterized(relevantMethod);
@@ -438,19 +451,23 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
+        LOG.debug("No matching annotated method found for property [{}] of depth [{}] on Action [{}], now also checking for public field",
+                fieldName, paramDepth, action.getClass().getSimpleName());
         Field field;
         try {
             field = action.getClass().getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
+            LOG.debug("Matching field for property [{}] not found on Action [{}]", fieldName, action.getClass().getSimpleName());
             return false;
         }
         if (!Modifier.isPublic(field.getModifiers())) {
+            LOG.debug("Matching field [{}] is not public on Action [{}]", field.getName(), action.getClass().getSimpleName());
             return false;
         }
         if (getPermittedInjectionDepth(field) < paramDepth) {
             String logMessage = format(
-                    "Parameter injection for field [%s] on action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
-                    fieldName,
+                    "Parameter injection for field [%s] on Action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    field.getName(),
                     action.getClass().getName());
             if (devMode) {
                 notifyDeveloperOfError(LOG, action, logMessage);
@@ -459,6 +476,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
             return false;
         }
+        LOG.debug("Success: Matching annotated public field [{}] found for property of depth [{}] on Action [{}]",
+                field.getName(), paramDepth, action.getClass().getSimpleName());
         if (paramDepth >= 1) {
             allowlistClass(field.getType());
         }
@@ -512,7 +531,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean isAcceptableParameterValueAware(Parameter param, Object action) {
-        return !(action instanceof ParameterValueAware) || ((ParameterValueAware) action).acceptableParameterValue(param.getValue());
+        return !(action instanceof ParameterValueAware valueAware) || valueAware.acceptableParameterValue(param.getValue());
     }
 
     /**
@@ -606,7 +625,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (!result.isAccepted()) {
             if (devMode) {
                 LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                                "https://struts.apache.org/security/#accepted--excluded-patterns",
+                         "https://struts.apache.org/security/#accepted--excluded-patterns",
                         paramName, result.getAcceptedPattern());
             } else {
                 LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
@@ -621,8 +640,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (result.isExcluded()) {
             if (devMode) {
                 LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                        "https://struts.apache.org/security/#accepted--excluded-patterns",
-                    paramName, result.getExcludedPattern());
+                         "https://struts.apache.org/security/#accepted--excluded-patterns",
+                        paramName, result.getExcludedPattern());
             } else {
                 LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
             }
@@ -640,8 +659,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             if (excludedValuePattern.matcher(value).matches()) {
                 if (devMode) {
                     LOG.warn("Parameter value [{}] matches excluded pattern [{}]! See Accepting/Excluding parameter values at\n" +
-                            "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
-                        value, excludedValuePatterns);
+                             "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
+                            value, excludedValuePatterns);
                 } else {
                     LOG.debug("Parameter value [{}] matches excluded pattern [{}]", value, excludedValuePattern);
                 }
@@ -663,8 +682,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
         if (devMode) {
             LOG.warn("Parameter value [{}] didn't match accepted pattern [{}]! See Accepting/Excluding parameter values at\n" +
-                    "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
-                value, acceptedValuePatterns);
+                     "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
+                    value, acceptedValuePatterns);
         } else {
             LOG.debug("Parameter value [{}] was not accepted!", value);
         }
@@ -734,7 +753,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             LOG.debug("Sets accepted value patterns to [{}], note this may impact the safety of your application!", patterns);
         } else {
             LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this may impact safety of your application!",
-                acceptedValuePatterns, patterns);
+                    acceptedValuePatterns, patterns);
         }
         acceptedValuePatterns = new HashSet<>(patterns.size());
         try {
@@ -759,7 +778,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             LOG.debug("Setting excluded value patterns to [{}]", patterns);
         } else {
             LOG.warn("Replacing excluded value patterns [{}] with [{}], be aware that this may impact safety of your application!",
-                excludedValuePatterns, patterns);
+                    excludedValuePatterns, patterns);
         }
         excludedValuePatterns = new HashSet<>(patterns.size());
         try {

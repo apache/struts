@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpSession;
 import junit.framework.TestCase;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
@@ -51,6 +52,8 @@ public abstract class AbstractTest extends TestCase {
     private final Map<String, String> commonAttrs = new HashMap<>();
     private final Map<String, String> dynamicAttrs = new HashMap<>();
 
+    protected static final String NONCE_VAL = "r4andom";
+
     protected SimpleTheme theme;
 
     protected StringWriter writer;
@@ -62,6 +65,7 @@ public abstract class AbstractTest extends TestCase {
     protected TemplateRenderingContext context;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
+    protected HttpSession session;
 
     protected abstract UIBean getUIBean() throws Exception;
 
@@ -107,6 +111,12 @@ public abstract class AbstractTest extends TestCase {
         expect(request.getContextPath()).andReturn("/some/path").anyTimes();
         response = createNiceMock(HttpServletResponse.class);
 
+        session = createNiceMock(HttpSession.class);
+        expect(session.getAttribute("nonce")).andReturn(NONCE_VAL).anyTimes();
+        expect(request.getSession(false)).andReturn(session).anyTimes();
+
+        actionContext.withServletRequest(request);
+
         expect(stack.getActionContext()).andReturn(actionContext).anyTimes();
         expect(stack.getContext()).andReturn(stackContext).anyTimes();
 
@@ -116,6 +126,7 @@ public abstract class AbstractTest extends TestCase {
         TextParser parser = new OgnlTextParser();
         expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
 
+        replay(session);
         replay(request);
         replay(stack);
         replay(container);

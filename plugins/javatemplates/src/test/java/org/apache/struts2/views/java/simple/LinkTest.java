@@ -18,18 +18,12 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.components.Link;
 import org.apache.struts2.components.UIBean;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class LinkTest extends AbstractTest{
+public class LinkTest extends AbstractTest {
 
     private Link tag;
-
-    private static final String NONCE_VAL = "r4andom";
 
     public void testRenderLinkTag() {
         tag.setHref("testhref");
@@ -60,7 +54,7 @@ public class LinkTest extends AbstractTest{
         assertTrue("Incorrect as attribute for link tag", output.contains(s("as='test'")));
         assertFalse("Non-existent disabled attribute for link tag", output.contains(s("disabled='disabled'")));
         assertTrue("Incorrect title attribute for link tag", output.contains(s("title='test'")));
-        assertTrue("Incorrect nonce attribute for link tag", output.contains(s("nonce='" + NONCE_VAL+"'")));
+        assertTrue("Incorrect nonce attribute for link tag", output.contains(s("nonce='" + NONCE_VAL + "'")));
     }
 
     public void testRenderLinkTagAsStylesheet() {
@@ -92,7 +86,7 @@ public class LinkTest extends AbstractTest{
         assertTrue("Incorrect as attribute for link tag", output.contains(s("as='test'")));
         assertTrue("Incorrect disabled attribute for link tag", output.contains(s("disabled='disabled'")));
         assertTrue("Incorrect title attribute for link tag", output.contains(s("title='test'")));
-        assertTrue("Incorrect nonce attribute for link tag", output.contains(s("nonce='" + NONCE_VAL+"'")));
+        assertTrue("Incorrect nonce attribute for link tag", output.contains(s("nonce='" + NONCE_VAL + "'")));
     }
 
     @Override
@@ -108,12 +102,6 @@ public class LinkTest extends AbstractTest{
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
-        ActionContext actionContext = stack.getActionContext();
-        Map<String, Object> session = new HashMap<>();
-        session.put("nonce", NONCE_VAL);
-        actionContext.withSession(session);
-
         this.tag = new Link(stack, request, response);
     }
 }

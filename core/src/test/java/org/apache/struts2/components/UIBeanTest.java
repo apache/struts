@@ -25,12 +25,13 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
@@ -160,7 +161,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         try {
             txtFld.mergeTemplate(null, new Template(null, null, null));
             fail("Exception not thrown");
-        } catch(final Exception e){
+        } catch (final Exception e) {
             assertTrue(e instanceof ConfigurationException);
         }
     }
@@ -225,6 +226,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setAccesskey(accesskeyValue);
@@ -238,6 +240,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.addParameter("value", value);
@@ -250,11 +253,13 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         stack.push(new Object() {
             public String getMyValue() {
                 return "%{myBad}";
             }
+
             public String getMyBad() {
                 throw new IllegalStateException("Recursion detected!");
             }
@@ -273,11 +278,13 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         stack.push(new Object() {
             public String getMyValueName() {
                 return "getMyValue()";
             }
+
             public String getMyValue() {
                 return "value";
             }
@@ -300,6 +307,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         stack.push(new Object() {
             public String getMyValue() {
@@ -320,6 +328,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setCssClass(cssClass);
@@ -333,6 +342,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setStyle(cssStyle);
@@ -347,14 +357,37 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ActionContext actionContext = stack.getActionContext();
-        Map<String, Object> session = new HashMap<>();
-        session.put("nonce", nonceVal);
-        actionContext.withSession(session);
+        actionContext.withServletRequest(req);
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("nonce", nonceVal);
+        req.setSession(session);
+
+        actionContext.withSession(new SessionMap(req));
 
         DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
         dblSelect.evaluateParams();
 
         assertEquals(nonceVal, dblSelect.getParameters().get("nonce"));
+    }
+
+    public void testNonceOfInvalidSession() {
+        String nonceVal = "r4nd0m";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext actionContext = stack.getActionContext();
+        actionContext.withServletRequest(req);
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("nonce", nonceVal);
+        req.setSession(session);
+        actionContext.withSession(new SessionMap(req));
+
+        session.invalidate();
+
+        DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
+        dblSelect.evaluateParams();
+
+        assertNull(dblSelect.getParameters().get("nonce"));
     }
 
     public void testSetNullUiStaticContentPath() {

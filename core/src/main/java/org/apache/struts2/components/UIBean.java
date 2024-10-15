@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -863,10 +864,13 @@ public abstract class UIBean extends Component {
         }
 
         // to be used with the CSP interceptor - adds the nonce value as a parameter to be accessed from ftl files
-        Map<String, Object> session = stack.getActionContext().getSession();
-        Object nonceValue = session != null ? session.get("nonce") : null;
+        HttpSession session = stack.getActionContext().getServletRequest().getSession(false);
+        Object nonceValue = session != null ? session.getAttribute("nonce") : null;
+
         if (nonceValue != null) {
             addParameter("nonce", nonceValue.toString());
+        } else {
+            LOG.debug("Session is not active, cannot obtain nonce value");
         }
 
         evaluateExtraParams();

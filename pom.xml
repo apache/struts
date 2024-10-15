@@ -114,8 +114,8 @@
         <byte-buddy.version>1.14.11</byte-buddy.version>
         <freemarker.version>2.3.33</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <jackson.version>2.17.2</jackson.version>
-        <log4j2.version>2.23.1</log4j2.version>
+        <jackson.version>2.18.0</jackson.version>
+        <log4j2.version>2.24.1</log4j2.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>
@@ -240,7 +240,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.6.2</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -332,7 +332,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>10.0.3</version>
+                    <version>10.0.4</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -405,7 +405,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>3.20.0</version>
                 <configuration>
                     <relativizeDecorationLinks>false</relativizeDecorationLinks>
                 </configuration>
@@ -797,7 +797,7 @@
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.3.3</version>
+                <version>1.3.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>

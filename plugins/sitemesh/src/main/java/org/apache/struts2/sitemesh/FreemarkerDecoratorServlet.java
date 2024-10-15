@@ -53,7 +53,10 @@ import java.util.Locale;
  * <p>It overrides the SiteMesh servlet to rely on the
  * Freemarker Manager in Struts instead of creating it's
  * own manager</p>
+ *
+ * @deprecated Sitemesh 2 based plugin is not supported anymore
  */
+@Deprecated
 public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.FreemarkerServlet {
 
     private static final Logger LOG = LogManager.getLogger(FreemarkerDecoratorServlet.class);
@@ -69,6 +72,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
     private boolean noCharsetInContentType;
 
     public void init() throws ServletException {
+        LOG.warn("This plugin is deprecated. Please migrate to a plugin which bases on Sitemesh 3!");
         try {
             Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
             if (dispatcher == null) {

@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
+import jakarta.servlet.jsp.JspException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.util.SubsetIteratorFilter;
@@ -26,7 +27,7 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
-import javax.servlet.jsp.JspException;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -148,6 +149,7 @@ import javax.servlet.jsp.JspException;
         description="Takes an iterator and outputs a subset of it.")
 public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
+    @Serial
     private static final long serialVersionUID = -6252696081713080102L;
 
     private static final Logger LOG = LogManager.getLogger(SubsetIteratorTag.class);
@@ -193,7 +195,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
-    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false", required = false)
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false")
     @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
@@ -203,8 +205,8 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
     public int doStartTag() throws JspException {
 
         // source
-        Object source = null;
-        if (sourceAttr == null || sourceAttr.length() == 0) {
+        Object source;
+        if (sourceAttr == null || sourceAttr.isEmpty()) {
             source = findValue("top");
         } else {
             source = findValue(sourceAttr);
@@ -212,7 +214,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
         // count
         int count = -1;
-        if (countAttr != null && countAttr.length() > 0) {
+        if (countAttr != null && !countAttr.isEmpty()) {
             Object countObj = findValue(countAttr);
             if (countObj instanceof Number) {
                 count = ((Number)countObj).intValue();
@@ -229,10 +231,10 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
         // start
         int start = 0;
-        if (startAttr != null && startAttr.length() > 0) {
+        if (startAttr != null && !startAttr.isEmpty()) {
             Object startObj = findValue(startAttr);
             if (startObj instanceof Integer) {
-                start = ((Integer)startObj).intValue();
+                start = (Integer) startObj;
             }
             else if (startObj instanceof Float) {
                 start = ((Float)startObj).intValue();
@@ -255,7 +257,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
         // decider
         Decider decider = null;
-        if (deciderAttr != null && deciderAttr.length() > 0) {
+        if (deciderAttr != null && !deciderAttr.isEmpty()) {
             Object deciderObj = findValue(deciderAttr);
             if (! (deciderObj instanceof Decider)) {
                 throw new JspException("decider found from stack ["+deciderObj+"] does not implement "+Decider.class);
@@ -272,7 +274,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         subsetIteratorFilter.execute();
 
         getStack().push(subsetIteratorFilter);
-        if (var != null && var.length() > 0) {
+        if (var != null && !var.isEmpty()) {
             pageContext.setAttribute(var, subsetIteratorFilter);
         }
 
@@ -291,7 +293,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

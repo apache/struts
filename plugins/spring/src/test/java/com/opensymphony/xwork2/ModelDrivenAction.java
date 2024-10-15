@@ -44,9 +44,8 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven {
     /**
      * @return the model to be pushed onto the ValueStack after the Action itself
      */
-    @StrutsParameter(depth = 2)
     @Override
-    public Object getModel() {
+    public TestBean getModel() {
         return model;
     }
 }

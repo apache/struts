@@ -28,16 +28,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyDescriptor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>
- * Provided that the key {@link ReflectionContextState#CREATE_NULL_OBJECTS} is in the action context with a value of true (this key is set
- * only during the execution of the {@link com.opensymphony.xwork2.interceptor.ParametersInterceptor}), OGNL expressions
- * that have caused a NullPointerException will be temporarily stopped for evaluation while the system automatically
- * tries to solve the null references by automatically creating the object.
+ * Provided that the key {@link ReflectionContextState#CREATE_NULL_OBJECTS} is in the action context with a value of
+ * true (this key is set only during the execution of the {@link
+ * org.apache.struts2.interceptor.parameter.ParametersInterceptor}), OGNL expressions that have caused a
+ * NullPointerException will be temporarily stopped for evaluation while the system automatically tries to solve the
+ * null references by automatically creating the object.
  * </p>
  *
  * <p>The following rules are used when handling null references:</p>

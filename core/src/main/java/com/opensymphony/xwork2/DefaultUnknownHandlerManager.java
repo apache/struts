@@ -68,7 +68,7 @@ public class DefaultUnknownHandlerManager implements UnknownHandlerManager {
             if (unkownHandlerStack != null && !unkownHandlerStack.isEmpty()) {
                 //get UnknownHandlers in the specified order
                 for (UnknownHandlerConfig unknownHandlerConfig : unkownHandlerStack) {
-                    UnknownHandler uh = factory.buildUnknownHandler(unknownHandlerConfig.getName(), new HashMap<String, Object>());
+                    UnknownHandler uh = factory.buildUnknownHandler(unknownHandlerConfig.getName(), new HashMap<>());
                     unknownHandlers.add(uh);
                 }
             } else {

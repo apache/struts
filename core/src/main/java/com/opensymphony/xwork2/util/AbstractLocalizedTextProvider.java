@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Field;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -77,11 +77,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         //make sure this doesn't get added more than once
         final ClassLoader ccl = getCurrentThreadContextClassLoader();
         synchronized (XWORK_MESSAGES_BUNDLE) {
-            List<String> bundles = classLoaderMap.get(ccl.hashCode());
-            if (bundles == null) {
-                bundles = new CopyOnWriteArrayList<>();
-                classLoaderMap.put(ccl.hashCode(), bundles);
-            }
+            List<String> bundles = classLoaderMap.computeIfAbsent(ccl.hashCode(), k -> new CopyOnWriteArrayList<>());
             bundles.remove(resourceBundleName);
             bundles.add(0, resourceBundleName);
         }
@@ -101,17 +97,17 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
     public void setCustomI18NResources(String bundles) {
-        if (bundles != null && bundles.length() > 0) {
-            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
-
-            while (customBundles.hasMoreTokens()) {
-                String name = customBundles.nextToken();
-                try {
-                    LOG.trace("Loading global messages from [{}]", name);
-                    addDefaultResourceBundle(name);
-                } catch (Exception e) {
-                    LOG.error(new ParameterizedMessage("Could not find messages file {}.properties. Skipping", name), e);
-                }
+        if (bundles == null || bundles.isEmpty()) {
+            return;
+        }
+        StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
+        while (customBundles.hasMoreTokens()) {
+            String name = customBundles.nextToken();
+            try {
+                LOG.trace("Loading global messages from [{}]", name);
+                addDefaultResourceBundle(name);
+            } catch (Exception e) {
+                LOG.error("Could not find messages file {}.properties. Skipping", name, e);
             }
         }
     }
@@ -227,21 +223,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Clear a specific bundle from the <code>bundlesMap</code>.
-     *
-     * Warning: This method is <b>now a "no-op"</b>.  It <b>was ineffective</b> due
-     *   to the way the <code>bundlesMap</code> is used in combination with locale.
-     *   Descendants should use the method {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
-     *
-     * @param bundleName The bundle to remove from the bundle map
-     *
-     * @deprecated A "no-op" since 6.0.0.  Use {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
-     */
-    public void clearBundle(final String bundleName) {
-        LOG.debug("No-op.  Did NOT clear resource bundle [{}], result: false.", bundleName);
-    }
-
-    /**
      * Clear a specific bundle + locale combination from the <code>bundlesMap</code>.
      *   Intended for descendants to use clear a bundle + locale combination.
      *
@@ -253,7 +234,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     protected void clearBundle(final String bundleName, Locale locale) {
         final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
         final ResourceBundle removedBundle = bundlesMap.remove(key);
-        LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, Boolean.valueOf(removedBundle != null));
+        LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, removedBundle != null);
     }
 
     /**
@@ -492,16 +473,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Clears all the internal lists.
-     *
-     * @deprecated used only in tests
-     */
-    @Deprecated
-    public void reset() {
-        // no-op
-    }
-
-    /**
      * Determines if we found the text in the bundles.
      *
      * @param result the result so far
@@ -513,12 +484,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // did we find it in the bundle, then no problem?
-        if (result.foundInBundle) {
-            return false;
-        }
-
-        // not found in bundle
-        return true;
+        return !result.foundInBundle;
     }
 
     /**
@@ -706,8 +672,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
             MessageFormatKey that = (MessageFormatKey) o;
 
-            if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) return false;
-            return locale != null ? locale.equals(that.locale) : that.locale == null;
+            if (!Objects.equals(pattern, that.pattern)) return false;
+            return Objects.equals(locale, that.locale);
         }
 
         @Override

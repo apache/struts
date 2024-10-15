@@ -140,13 +140,11 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
 
         String visitorContext = (context == null) ? ActionContext.getContext().getActionName() : context;
 
-        if (value instanceof Collection) {
-            Collection coll = (Collection) value;
+        if (value instanceof Collection coll) {
             Object[] array = coll.toArray();
 
             validateArrayElements(array, fieldName, visitorContext);
-        } else if (value instanceof Object[]) {
-            Object[] array = (Object[]) value;
+        } else if (value instanceof Object[] array) {
 
             validateArrayElements(array, fieldName, visitorContext);
         } else {
@@ -175,11 +173,10 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
 
         ValidatorContext validatorContext;
 
+        ValidatorContext parent = getValidatorContext();
         if (appendPrefix) {
-            ValidatorContext parent = getValidatorContext();
             validatorContext = new AppendingValidatorContext(parent, createTextProvider(o, parent), fieldName, getMessage(o));
         } else {
-            ValidatorContext parent = getValidatorContext();
             CompositeTextProvider textProvider = createTextProvider(o, parent);
             validatorContext = new DelegatingValidatorContext(parent, textProvider, parent);
         }
@@ -201,9 +198,9 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
     }
 
     public static class AppendingValidatorContext extends DelegatingValidatorContext {
-        private String field;
-        private String message;
-        private ValidatorContext parent;
+        private final String field;
+        private final String message;
+        private final ValidatorContext parent;
 
         public AppendingValidatorContext(ValidatorContext parent, TextProvider textProvider, String field, String message) {
             super(parent, textProvider, parent);

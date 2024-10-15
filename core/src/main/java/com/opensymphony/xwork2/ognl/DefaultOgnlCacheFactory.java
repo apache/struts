@@ -15,8 +15,6 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import org.apache.commons.lang3.BooleanUtils;
-
 /**
  * <p>Default OGNL Cache factory implementation.</p>
  *
@@ -30,17 +28,9 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
     private static final int DEFAULT_INIT_CAPACITY = 16;
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
-    private CacheType defaultCacheType;
-    private int cacheMaxSize;
+    private final CacheType defaultCacheType;
+    private final int cacheMaxSize;
     private final int initialCapacity;
-
-    /**
-     * @deprecated since 6.4.0, use {@link #DefaultOgnlCacheFactory(int, CacheType)}
-     */
-    @Deprecated
-    public DefaultOgnlCacheFactory() {
-        this(10000, CacheType.BASIC);
-    }
 
     public DefaultOgnlCacheFactory(int cacheMaxSize, CacheType defaultCacheType) {
         this(cacheMaxSize, defaultCacheType, DEFAULT_INIT_CAPACITY);
@@ -62,16 +52,11 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
                                                 int initialCapacity,
                                                 float loadFactor,
                                                 CacheType cacheType) {
-        switch (cacheType) {
-            case BASIC:
-                return new OgnlDefaultCache<>(evictionLimit, initialCapacity, loadFactor);
-            case LRU:
-                return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
-            case WTLFU:
-                return new OgnlCaffeineCache<>(evictionLimit, initialCapacity);
-            default:
-                throw new IllegalArgumentException("Unknown cache type: " + cacheType);
-        }
+        return switch (cacheType) {
+            case BASIC -> new OgnlDefaultCache<>(evictionLimit, initialCapacity, loadFactor);
+            case LRU -> new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
+            case WTLFU -> new OgnlCaffeineCache<>(evictionLimit, initialCapacity);
+        };
     }
 
     @Override
@@ -79,28 +64,8 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
         return cacheMaxSize;
     }
 
-    /**
-     * @deprecated since 6.4.0
-     */
-    @Deprecated
-    protected void setCacheMaxSize(String maxSize) {
-        cacheMaxSize = Integer.parseInt(maxSize);
-    }
-
     @Override
     public CacheType getDefaultCacheType() {
         return defaultCacheType;
-    }
-
-    /**
-     * No effect when {@code useLRUMode} is {@code false}
-     *
-     * @deprecated since 6.4.0
-     */
-    @Deprecated
-    protected void setUseLRUCache(String useLRUMode) {
-        if (BooleanUtils.toBoolean(useLRUMode)) {
-            defaultCacheType = CacheType.LRU;
-        }
     }
 }

@@ -21,8 +21,8 @@ package org.apache.struts2.dispatcher;
 import java.util.Map.Entry;
 
 abstract class StringObjectEntry implements Entry<String, Object> {
-    private String key;
-    private Object value;
+    private final String key;
+    private final Object value;
 
     StringObjectEntry(final String key, final Object value) {
         this.key = key;
@@ -41,10 +41,9 @@ abstract class StringObjectEntry implements Entry<String, Object> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Entry)) {
+        if (!(obj instanceof Entry<?, ?> entry)) {
             return false;
         }
-        Entry<?, ?> entry = (Entry<?, ?>) obj;
 
         return keyEquals(entry) && valueEquals(entry);
     }

@@ -21,7 +21,7 @@ package org.apache.struts2.dispatcher;
 import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

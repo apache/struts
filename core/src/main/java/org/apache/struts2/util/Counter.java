@@ -18,7 +18,9 @@
  */
 package org.apache.struts2.util;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * A bean that can be used to keep track of a counter.
@@ -26,8 +28,9 @@ import java.io.Serializable;
  * Since it is an Iterator it can be used by the iterator tag
  * </p>
  */
-public class Counter implements java.util.Iterator, Serializable {
+public class Counter implements Iterator, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2796965884308060179L;
 
     boolean wrap = false;
@@ -106,14 +109,17 @@ public class Counter implements java.util.Iterator, Serializable {
         return wrap;
     }
 
+    @Override
     public boolean hasNext() {
-        return ((last == -1) || wrap) ? true : (current <= last);
+        return (last == -1) || wrap || (current <= last);
     }
 
+    @Override
     public Object next() {
-        return Long.valueOf(getNext());
+        return getNext();
     }
 
+    @Override
     public void remove() {
         // Do nothing
     }

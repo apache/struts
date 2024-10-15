@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.cdi;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * FooConsumer.

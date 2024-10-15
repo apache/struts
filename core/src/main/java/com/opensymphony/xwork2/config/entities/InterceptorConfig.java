@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Configuration for Interceptors.
@@ -72,21 +73,19 @@ public class InterceptorConfig extends Located implements Serializable {
             return true;
         }
 
-        if (!(o instanceof InterceptorConfig)) {
+        if (!(o instanceof InterceptorConfig interceptorConfig)) {
             return false;
         }
 
-        final InterceptorConfig interceptorConfig = (InterceptorConfig) o;
-
-        if ((className != null) ? (!className.equals(interceptorConfig.className)) : (interceptorConfig.className != null)) {
+        if (!Objects.equals(className, interceptorConfig.className)) {
             return false;
         }
 
-        if ((name != null) ? (!name.equals(interceptorConfig.name)) : (interceptorConfig.name != null)) {
+        if (!Objects.equals(name, interceptorConfig.name)) {
             return false;
         }
 
-        if ((params != null) ? (!params.equals(interceptorConfig.params)) : (interceptorConfig.params != null)) {
+        if (!Objects.equals(params, interceptorConfig.params)) {
             return false;
         }
 
@@ -114,7 +113,7 @@ public class InterceptorConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        protected InterceptorConfig target;
+        private InterceptorConfig target;
 
         public Builder(String name, String className) {
             target = new InterceptorConfig(name, className);
@@ -156,7 +155,7 @@ public class InterceptorConfig extends Located implements Serializable {
             return result;
         }
 
-        protected void embalmTarget() {
+        private void embalmTarget() {
             target.params = Collections.unmodifiableMap(target.params);
         }
     }

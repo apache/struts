@@ -21,9 +21,9 @@ package org.apache.tiles.web.startup;
 import org.apache.tiles.core.startup.TilesInitializer;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 /**
  * Listener for the initialization of the Tiles container.

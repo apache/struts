@@ -34,7 +34,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,7 +53,7 @@ import java.util.zip.ZipInputStream;
 public class DefaultValidatorFactory implements ValidatorFactory, Initializable {
 
     protected Map<String, String> validators = new HashMap<>();
-    private static Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
     protected ObjectFactory objectFactory;
     protected ValidatorFileParser validatorFileParser;
 
@@ -63,6 +68,7 @@ public class DefaultValidatorFactory implements ValidatorFactory, Initializable 
         parseValidators();
     }
 
+    @Override
     public Validator getValidator(ValidatorConfig cfg) {
 
         String className = lookupRegisteredValidatorType(cfg.getType());
@@ -89,11 +95,13 @@ public class DefaultValidatorFactory implements ValidatorFactory, Initializable 
         return validator;
     }
 
+    @Override
     public void registerValidator(String name, String className) {
         LOG.debug("Registering validator of class {} with name {}", className, name);
         validators.put(name, className);
     }
 
+    @Override
     public String lookupRegisteredValidatorType(String name) {
         // lookup the validator class mapped to the type name
         String className = validators.get(name);
@@ -118,11 +126,7 @@ public class DefaultValidatorFactory implements ValidatorFactory, Initializable 
                     URI uri = new URI(u.toExternalForm().replaceAll(" ", "%20"));
                     if (!uri.isOpaque() && "file".equalsIgnoreCase(uri.getScheme())) {
                         File f = new File(uri);
-                        FilenameFilter filter = new FilenameFilter() {
-                            public boolean accept(File file, String fileName) {
-                                return fileName.contains("-validators.xml");
-                            }
-                        };
+                        FilenameFilter filter = (file, fileName) -> fileName.contains("-validators.xml");
                         // First check if this is a directory
                         // If yes, then just do a "list" to get all files in this directory
                         // and match the filenames with *-validators.xml. If the filename

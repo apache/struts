@@ -37,7 +37,6 @@ import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPattern
 
 /**
  * Unit test for {@link StreamResult}.
- *
  */
 public class StreamResultTest extends StrutsInternalTestCase {
 
@@ -126,12 +125,12 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         result.doExecute("helloworld", mai);
 
-        //check that that headers are not set by default        
+        //check that that headers are not set by default
         assertNull(response.getHeader("Pragma"));
         assertNull(response.getHeader("Cache-Control"));
     }
 
-     public void testAllowCacheFalse() throws Exception {
+    public void testAllowCacheFalse() throws Exception {
         result.setInputName("streamForImage");
         result.setAllowCaching(false);
         result.doExecute("helloworld", mai);
@@ -264,7 +263,6 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         ActionContext.getContext().put(ServletActionContext.HTTP_RESPONSE, response);
     }
-
 
 
     protected void tearDown() throws Exception {

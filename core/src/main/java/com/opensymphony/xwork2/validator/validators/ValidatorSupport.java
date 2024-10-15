@@ -22,7 +22,11 @@ import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.*;
+import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
+import com.opensymphony.xwork2.validator.ShortCircuitableValidator;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.Validator;
+import com.opensymphony.xwork2.validator.ValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,7 +88,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
         stack.push(this);
 
         if (messageKey != null) {
-            if ((defaultMessage == null) || ("".equals(defaultMessage.trim()))) {
+            if (defaultMessage == null || defaultMessage.trim().isEmpty()) {
                 defaultMessage = messageKey;
             }
             if (validatorContext == null) {

@@ -26,22 +26,6 @@ public interface OgnlCacheFactory<Key, Value> {
     OgnlCache<Key, Value> buildOgnlCache();
 
     /**
-     * Note that if {@code lruCache} is {@code false}, the cache type could still be LRU if the default cache type is
-     * configured as such.
-     * @deprecated since 6.4.0, use {@link #buildOgnlCache(int, int, float, CacheType)}
-     */
-    @Deprecated
-    default OgnlCache<Key, Value> buildOgnlCache(int evictionLimit,
-                                                 int initialCapacity,
-                                                 float loadFactor,
-                                                 boolean lruCache) {
-        return buildOgnlCache(evictionLimit,
-                initialCapacity,
-                loadFactor,
-                lruCache ? CacheType.LRU : getDefaultCacheType());
-    }
-
-    /**
      * @param evictionLimit   maximum capacity of the cache where applicable for cache type chosen
      * @param initialCapacity initial capacity of the cache where applicable for cache type chosen
      * @param loadFactor      load factor of the cache where applicable for cache type chosen
@@ -51,14 +35,6 @@ public interface OgnlCacheFactory<Key, Value> {
     OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, CacheType cacheType);
 
     int getCacheMaxSize();
-
-    /**
-     * @deprecated since 6.4.0
-     */
-    @Deprecated
-    default boolean getUseLRUCache() {
-        return CacheType.LRU.equals(getDefaultCacheType());
-    }
 
     CacheType getDefaultCacheType();
 

@@ -32,6 +32,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.SessionMap;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -143,6 +144,7 @@ import java.util.Map;
  */
 public class ScopeInterceptor extends AbstractInterceptor implements PreResultListener {
 
+    @Serial
     private static final long serialVersionUID = 9120762699600054395L;
 
     private static final Logger LOG = LogManager.getLogger(ScopeInterceptor.class);
@@ -232,7 +234,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return o;
     }
 
-    private static Map<Object, Object> locks = new IdentityHashMap<>();
+    private static final Map<Object, Object> locks = new IdentityHashMap<>();
 
     static void lock(Object o, ActionInvocation invocation) throws Exception {
         synchronized (o) {

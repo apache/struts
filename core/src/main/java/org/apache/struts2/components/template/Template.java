@@ -20,6 +20,7 @@ package org.apache.struts2.components.template;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -58,7 +59,7 @@ public class Template implements Cloneable {
     }
 
     public List<Template> getPossibleTemplates(TemplateEngine engine) {
-        List<Template> list = new ArrayList<Template>(3);
+        List<Template> list = new ArrayList<>(3);
         Template template = this;
         String parentTheme;
         list.add(template);
@@ -80,7 +81,7 @@ public class Template implements Cloneable {
      * @return a string in the format <code>/dir/theme/name</code>.
      */
     public String toString() {
-        return new StringBuilder().append("/").append(dir).append("/").append(theme).append("/").append(name).toString();
+        return "/" + dir + "/" + theme + "/" + name;
     }
 
     protected Object clone() throws CloneNotSupportedException {
@@ -94,9 +95,9 @@ public class Template implements Cloneable {
 
         Template template = (Template) o;
 
-        if (dir != null ? !dir.equals(template.dir) : template.dir != null) return false;
-        if (name != null ? !name.equals(template.name) : template.name != null) return false;
-        if (theme != null ? !theme.equals(template.theme) : template.theme != null) return false;
+        if (!Objects.equals(dir, template.dir)) return false;
+        if (!Objects.equals(name, template.name)) return false;
+        if (!Objects.equals(theme, template.theme)) return false;
 
         return true;
     }

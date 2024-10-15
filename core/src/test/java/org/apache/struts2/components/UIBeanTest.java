@@ -359,7 +359,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext actionContext = stack.getActionContext();
         actionContext.withServletRequest(req);
         MockHttpSession session = new MockHttpSession();
-        session.putValue("nonce", nonceVal);
+        session.setAttribute("nonce", nonceVal);
         req.setSession(session);
 
         actionContext.withSession(new SessionMap(req));
@@ -378,7 +378,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext actionContext = stack.getActionContext();
         actionContext.withServletRequest(req);
         MockHttpSession session = new MockHttpSession();
-        session.putValue("nonce", nonceVal);
+        session.setAttribute("nonce", nonceVal);
         req.setSession(session);
         actionContext.withSession(new SessionMap(req));
 

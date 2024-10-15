@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Set;
 
 /**

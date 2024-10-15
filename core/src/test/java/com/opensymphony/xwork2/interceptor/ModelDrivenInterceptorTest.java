@@ -178,7 +178,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
     }
 
 
-    public class ModelDrivenAction extends ActionSupport implements ModelDriven {
+    public class ModelDrivenAction extends ActionSupport implements ModelDriven<Object> {
 
         @Override
         public Object getModel() {

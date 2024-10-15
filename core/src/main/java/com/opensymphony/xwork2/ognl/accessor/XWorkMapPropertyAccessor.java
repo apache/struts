@@ -41,21 +41,21 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     private static final Logger LOG = LogManager.getLogger(XWorkMapPropertyAccessor.class);
 
     private static final String[] INDEX_ACCESS_PROPS = new String[]{"size", "isEmpty", "keys", "values"};
-    
+
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
-    
+
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
         this.xworkConverter = conv;
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
-    
+
     @Inject
     public void setObjectTypeDeterminer(ObjectTypeDeterminer ot) {
         this.objectTypeDeterminer = ot;
@@ -77,7 +77,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
         try{
             result = super.getProperty(context, target, name);
-        } catch (ClassCastException ex) {
+        } catch (ClassCastException ignored) {
         }
 
         if (result == null) {
@@ -100,7 +100,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
                 try {
                     result = objectFactory.buildBean(valueClass, context);
                     map.put(key, result);
-                } catch (Exception exc) {
+                } catch (Exception ignored) {
                 }
             }
         }

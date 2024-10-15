@@ -18,6 +18,14 @@
  */
 package org.apache.struts2.dispatcher.filter;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ExecuteOperations;
@@ -25,14 +33,6 @@ import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -45,6 +45,7 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
 
     protected FilterConfig filterConfig;
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
     }
@@ -90,6 +91,7 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         return new ExecuteOperations(dispatcher);
     }
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
@@ -118,6 +120,7 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
         return Boolean.TRUE.equals(request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING));
     }
 
+    @Override
     public void destroy() {
         prepare = null;
         execute = null;

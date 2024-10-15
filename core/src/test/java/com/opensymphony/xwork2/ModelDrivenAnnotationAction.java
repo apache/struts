@@ -44,9 +44,8 @@ public class ModelDrivenAnnotationAction extends ActionSupport implements ModelD
     /**
      * @return the model to be pushed onto the ValueStack after the Action itself
      */
-    @StrutsParameter(depth = 2)
     @Override
-    public Object getModel() {
+    public AnnotatedTestBean getModel() {
         return model;
     }
 }

@@ -18,8 +18,10 @@
  */
 package org.apache.struts2.dispatcher;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -34,6 +36,7 @@ import java.util.Set;
  */
 public class SessionMap extends AbstractMap<String, Object> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 4678843241638046854L;
 
     protected HttpSession session;
@@ -127,7 +130,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     /**
      * Returns the session attribute associated with the given key or <tt>null</tt> if it doesn't exist.
-     * 
+     *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#get(java.lang.Object)} to ensure the
      *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
      *
@@ -172,7 +175,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#remove(java.lang.Object)} to ensure the
      *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
-     * 
+     *
      * @param key the name of the attribute to remove.
      * @return the value that was removed or <tt>null</tt> if the value was not found (and hence, not removed).
      */
@@ -199,7 +202,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#containsKey(java.lang.Object)} to ensure the
      *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
-     * 
+     *
      * @param key the name of the session attribute.
      * @return <tt>true</tt> if the session attribute exits or <tt>false</tt> if it doesn't exist.
      */

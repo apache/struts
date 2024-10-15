@@ -32,7 +32,7 @@ public class LocatableConstantFactory<T> extends Located implements Factory {
         this.constant = constant;
         setLocation(LocationUtils.getLocation(location));
     }
-    
+
     public T create(Context ignored) {
         return constant;
     }
@@ -44,11 +44,7 @@ public class LocatableConstantFactory<T> extends Located implements Factory {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(" defined at ");
-        sb.append(getLocation().toString());
-        return sb.toString();
+        return super.toString() + " defined at " + getLocation().toString();
     }
 
 }

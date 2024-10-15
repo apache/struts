@@ -18,10 +18,10 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * Validates a string field using a regular expression.
  * <!-- END SNIPPET: javadoc -->
  *
- * 
+ *
  * <!-- START SNIPPET: parameters -->
  * <ul>
  * 	  <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
@@ -128,7 +128,7 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     protected void validateFieldValue(Object object, String value, String regexToUse) {
         // string must not be empty
         String str = value.trim();
-        if (str.length() == 0) {
+        if (str.isEmpty()) {
             LOG.debug("Value is empty, please use a required validator");
             return;
         }

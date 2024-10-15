@@ -36,7 +36,7 @@ import java.util.Collection;
  *      <li>trimExpression - (Optional) String. Specifies the trim param as an OGNL expression.</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
- * 
+ *
  * <!-- START SNIPPET: parameters-warning -->
  * Do not use ${trimExpression} as an expression as this will turn into infinitive loop!
  * <!-- END SNIPPET: parameters-warning -->
@@ -50,7 +50,7 @@ import java.util.Collection;
  *             &lt;param name="trim"&gt;true&lt;/param&gt;
  *             &lt;message&gt;username is required&lt;/message&gt;
  *         &lt;/validator&gt;
- *         
+ *
  *         &lt;!-- Field-Validator Syntax --&gt;
  *         &lt;field name="username"&gt;
  *         	  &lt;field-validator type="requiredstring"&gt;
@@ -69,7 +69,7 @@ import java.util.Collection;
  *     &lt;/validators&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
- * 
+ *
  * @author rainerh
  */
 public class RequiredStringValidator extends FieldValidatorSupport {
@@ -119,14 +119,13 @@ public class RequiredStringValidator extends FieldValidatorSupport {
                 return;
             }
 
-            if (fieldValue instanceof String) {
-                String stingValue = (String) fieldValue;
+            if (fieldValue instanceof String stringValue) {
 
                 if (trim) {
-                    stingValue = stingValue.trim();
+                    stringValue = stringValue.trim();
                 }
 
-                if (stingValue.length() == 0) {
+                if (stringValue.isEmpty()) {
                     addFieldError(getFieldName(), object);
                 }
             } else {

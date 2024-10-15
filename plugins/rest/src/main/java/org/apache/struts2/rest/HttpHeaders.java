@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.rest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Type-safe rest-related information to apply to a response

@@ -23,8 +23,8 @@ package org.apache.tiles.web.jsp.taglib;
 
 import java.io.IOException;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
 

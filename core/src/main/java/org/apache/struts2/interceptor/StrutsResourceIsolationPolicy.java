@@ -20,7 +20,7 @@ package org.apache.struts2.interceptor;
 
 import org.apache.logging.log4j.util.Strings;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *

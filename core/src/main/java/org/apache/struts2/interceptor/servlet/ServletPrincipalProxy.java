@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.interceptor.servlet;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.struts2.interceptor.PrincipalProxy;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
  * PrincipalProxy implementation for using HttpServletRequest Principal related methods.
  */
 public class ServletPrincipalProxy implements PrincipalProxy {
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     /**
      * Constructs a proxy
@@ -44,6 +44,7 @@ public class ServletPrincipalProxy implements PrincipalProxy {
      * @param role The role
      * @return True if the user is in that role
      */
+    @Override
     public boolean isUserInRole(String role) {
         return request.isUserInRole(role);
     }
@@ -53,6 +54,7 @@ public class ServletPrincipalProxy implements PrincipalProxy {
      *
      * @return The principal
      */
+    @Override
     public Principal getUserPrincipal() {
         return request.getUserPrincipal();
     }
@@ -62,6 +64,7 @@ public class ServletPrincipalProxy implements PrincipalProxy {
      *
      * @return The user id
      */
+    @Override
     public String getRemoteUser() {
         return request.getRemoteUser();
     }
@@ -71,6 +74,7 @@ public class ServletPrincipalProxy implements PrincipalProxy {
      *
      * @return True if using https
      */
+    @Override
     public boolean isRequestSecure() {
         return request.isSecure();
     }

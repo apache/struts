@@ -19,7 +19,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ModelDriven;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import com.opensymphony.xwork2.TestBean;
 
 
 /**
@@ -33,9 +33,8 @@ public class VisitorValidatorModelAction extends VisitorValidatorTestAction impl
     /**
      * @return the model to be pushed onto the ValueStack instead of the Action itself
      */
-    @StrutsParameter(depth = 2)
     @Override
-    public Object getModel() {
+    public TestBean getModel() {
         return getBean();
     }
 }

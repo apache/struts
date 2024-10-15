@@ -21,10 +21,10 @@ package org.apache.tiles.el;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.el.ELResolver;
-import javax.el.FunctionMapper;
-import javax.el.ValueExpression;
-import javax.el.VariableMapper;
+import jakarta.el.ELResolver;
+import jakarta.el.FunctionMapper;
+import jakarta.el.ValueExpression;
+import jakarta.el.VariableMapper;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;

@@ -20,11 +20,11 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -169,7 +169,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
 
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {
                     Object val = entry.getValue();
-                    if (parse && val instanceof String) {
+                    if (parse && val != null) {
                         val = TextParseUtil.translateVariables(val.toString(), stack);
                     }
                     try {
@@ -177,7 +177,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                     } catch (RuntimeException e) {
                         if (devMode) {
 
-                            String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                            String developerNotification = localizedTextProvider.findText(StaticParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                     "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                             });
                             LOG.error(developerNotification);

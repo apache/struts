@@ -22,7 +22,15 @@ import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Configuration for Package.
@@ -369,30 +377,29 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         if (isFinal != that.isFinal) return false;
         if (needsRefresh != that.needsRefresh) return false;
         if (strictMethodInvocation != that.strictMethodInvocation) return false;
-        if (actionConfigs != null ? !actionConfigs.equals(that.actionConfigs) : that.actionConfigs != null)
+        if (!Objects.equals(actionConfigs, that.actionConfigs))
             return false;
-        if (globalResultConfigs != null ? !globalResultConfigs.equals(that.globalResultConfigs) : that.globalResultConfigs != null)
+        if (!Objects.equals(globalResultConfigs, that.globalResultConfigs))
             return false;
-        if (globalAllowedMethods != null ? !globalAllowedMethods.equals(that.globalAllowedMethods) : that.globalAllowedMethods != null)
+        if (!Objects.equals(globalAllowedMethods, that.globalAllowedMethods))
             return false;
-        if (interceptorConfigs != null ? !interceptorConfigs.equals(that.interceptorConfigs) : that.interceptorConfigs != null)
+        if (!Objects.equals(interceptorConfigs, that.interceptorConfigs))
             return false;
-        if (resultTypeConfigs != null ? !resultTypeConfigs.equals(that.resultTypeConfigs) : that.resultTypeConfigs != null)
+        if (!Objects.equals(resultTypeConfigs, that.resultTypeConfigs))
             return false;
-        if (globalExceptionMappingConfigs != null ? !globalExceptionMappingConfigs.equals(that.globalExceptionMappingConfigs) : that.globalExceptionMappingConfigs != null)
+        if (!Objects.equals(globalExceptionMappingConfigs, that.globalExceptionMappingConfigs))
             return false;
-        if (parents != null ? !parents.equals(that.parents) : that.parents != null) return false;
-        if (defaultInterceptorRef != null ? !defaultInterceptorRef.equals(that.defaultInterceptorRef) : that.defaultInterceptorRef != null)
+        if (!Objects.equals(parents, that.parents)) return false;
+        if (!Objects.equals(defaultInterceptorRef, that.defaultInterceptorRef))
             return false;
-        if (defaultActionRef != null ? !defaultActionRef.equals(that.defaultActionRef) : that.defaultActionRef != null)
+        if (!Objects.equals(defaultActionRef, that.defaultActionRef))
             return false;
-        if (defaultResultType != null ? !defaultResultType.equals(that.defaultResultType) : that.defaultResultType != null)
+        if (!Objects.equals(defaultResultType, that.defaultResultType))
             return false;
-        if (defaultClassRef != null ? !defaultClassRef.equals(that.defaultClassRef) : that.defaultClassRef != null)
+        if (!Objects.equals(defaultClassRef, that.defaultClassRef))
             return false;
         if (!name.equals(that.name)) return false;
-        return !(namespace != null ? !namespace.equals(that.namespace) : that.namespace != null);
-
+        return Objects.equals(namespace, that.namespace);
     }
 
     @Override
@@ -422,6 +429,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         return "PackageConfig: [" + name + "] for namespace [" + namespace + "] with parents [" + parents + "]";
     }
 
+    @Override
     public int compareTo(PackageConfig other) {
         String full = namespace + "!" + name;
         String otherFull = other.namespace + "!" + other.name;
@@ -430,6 +438,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         return full.compareTo(otherFull);
     }
 
+    @Override
     public Object getInterceptorConfig(String name) {
         return getAllInterceptorConfigs().get(name);
     }
@@ -494,11 +503,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         }
 
         public Builder namespace(String namespace) {
-            if (namespace == null) {
-                target.namespace = "";
-            } else {
-                target.namespace = namespace;
-            }
+            target.namespace = Objects.requireNonNullElse(namespace, "");
             return this;
         }
 
@@ -608,6 +613,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
             return target.getAllResultTypeConfigs().get(type);
         }
 
+        @Override
         public Object getInterceptorConfig(String name) {
             return target.getAllInterceptorConfigs().get(name);
         }

@@ -43,11 +43,11 @@ import java.util.Set;
  */
 public class MockConfiguration implements Configuration {
 
-    private Map<String, PackageConfig> packages = new HashMap<>();
-    private Set<String> loadedFiles = new HashSet<>();
+    private final Map<String, PackageConfig> packages = new HashMap<>();
+    private final Set<String> loadedFiles = new HashSet<>();
     private Container container;
     protected List<UnknownHandlerConfig> unknownHandlerStack;
-    private ContainerBuilder builder;
+    private final ContainerBuilder builder;
 
     public MockConfiguration() {
         builder = new ContainerBuilder();
@@ -64,60 +64,67 @@ public class MockConfiguration implements Configuration {
         container = builder.create(true);
     }
 
+    @Override
     public PackageConfig getPackageConfig(String name) {
         return packages.get(name);
     }
 
+    @Override
     public Set<String> getPackageConfigNames() {
         return packages.keySet();
     }
 
+    @Override
     public Map<String, PackageConfig> getPackageConfigs() {
         return packages;
     }
 
+    @Override
     public RuntimeConfiguration getRuntimeConfiguration() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addPackageConfig(String name, PackageConfig packageContext) {
         packages.put(name, packageContext);
     }
 
-    public void buildRuntimeConfiguration() {
-        throw new UnsupportedOperationException();
-    }
-
+    @Override
     public void destroy() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void rebuildRuntimeConfiguration() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public PackageConfig removePackageConfig(String name) {
         return packages.remove(name);
     }
 
+    @Override
     public Container getContainer() {
         return container;
     }
 
+    @Override
     public Set<String> getLoadedFileNames() {
         return loadedFiles;
     }
 
-    public List<PackageProvider> reloadContainer(
-            List<ContainerProvider> containerProviders)
-            throws ConfigurationException {
+    @Override
+    public List<PackageProvider> reloadContainer(List<ContainerProvider> containerProviders) throws ConfigurationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public List<UnknownHandlerConfig> getUnknownHandlerStack() {
         return unknownHandlerStack;
     }
 
+    @Override
     public void setUnknownHandlerStack(List<UnknownHandlerConfig> unknownHandlerStack) {
         this.unknownHandlerStack = unknownHandlerStack;
     }

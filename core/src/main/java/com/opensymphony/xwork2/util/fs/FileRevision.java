@@ -27,8 +27,8 @@ import java.net.URL;
  */
 public class FileRevision extends Revision {
 
-    private File file;
-    private long lastModified;
+    private final File file;
+    private final long lastModified;
 
     public static Revision build(URL fileUrl) {
         File file;
@@ -63,6 +63,7 @@ public class FileRevision extends Revision {
         return file;
     }
 
+    @Override
     public boolean needsReloading() {
         return this.lastModified < this.file.lastModified();
     }

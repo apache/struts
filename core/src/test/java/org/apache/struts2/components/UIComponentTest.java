@@ -246,7 +246,7 @@ public class UIComponentTest extends AbstractUITagTest {
         configurationManager.clearContainerProviders();
         configurationManager.addContainerProvider(new TestConfigurationProvider());
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         ActionErrorTag t = new ActionErrorTag();
         t.setPageContext(pageContext);

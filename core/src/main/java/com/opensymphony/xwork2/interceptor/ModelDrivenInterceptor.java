@@ -29,7 +29,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Watches for {@link ModelDriven} actions and adds the action's model on to the value stack.
  *
  * <p> <b>Note:</b>  The ModelDrivenInterceptor must come before the both {@link StaticParametersInterceptor} and
- * {@link ParametersInterceptor} if you want the parameters to be applied to the model.
+ * {@link org.apache.struts2.interceptor.parameter.ParametersInterceptor} if you want the parameters to be applied to
+ * the model.
  * </p>
  * <p> <b>Note:</b>  The ModelDrivenInterceptor will only push the model into the stack when the
  * model is not null, else it will be ignored.
@@ -71,7 +72,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
+ *
  * @author tm_jee
  * @version $Date$ $Id$
  */
@@ -87,8 +88,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ModelDriven) {
-            ModelDriven modelDriven = (ModelDriven) action;
+        if (action instanceof ModelDriven modelDriven) {
             ValueStack stack = invocation.getStack();
             Object model = modelDriven.getModel();
             if (model !=  null) {
@@ -105,7 +105,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
      * Refreshes the model instance on the value stack, if it has changed
      */
     protected static class RefreshModelBeforeResult implements PreResultListener {
-        private Object originalModel;
+        private final Object originalModel;
         protected ModelDriven action;
 
 

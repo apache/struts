@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -73,21 +74,19 @@ public class ResultConfig extends Located implements Serializable {
             return true;
         }
 
-        if (!(o instanceof ResultConfig)) {
+        if (!(o instanceof ResultConfig resultConfig)) {
             return false;
         }
 
-        final ResultConfig resultConfig = (ResultConfig) o;
-
-        if ((className != null) ? (!className.equals(resultConfig.className)) : (resultConfig.className != null)) {
+        if (!Objects.equals(className, resultConfig.className)) {
             return false;
         }
 
-        if ((name != null) ? (!name.equals(resultConfig.name)) : (resultConfig.name != null)) {
+        if (!Objects.equals(name, resultConfig.name)) {
             return false;
         }
 
-        if ((params != null) ? (!params.equals(resultConfig.params)) : (resultConfig.params != null)) {
+        if (!Objects.equals(params, resultConfig.params)) {
             return false;
         }
 
@@ -115,7 +114,7 @@ public class ResultConfig extends Located implements Serializable {
      * After setting any values you need, call the {@link #build()} method to create the object.
      */
     public static final class Builder {
-        protected ResultConfig target;
+        private ResultConfig target;
 
         public Builder(String name, String className) {
             target = new ResultConfig(name, className);
@@ -157,7 +156,7 @@ public class ResultConfig extends Located implements Serializable {
             return result;
         }
 
-        protected void embalmTarget() {
+        private void embalmTarget() {
             target.params = Collections.unmodifiableMap(target.params);
         }
     }

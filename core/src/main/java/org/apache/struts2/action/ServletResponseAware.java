@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.action;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * All Actions that want to have access to the servlet response object must implement this interface.

@@ -58,7 +58,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
 
     public FileManager getFileManager() {
         if (fileManagerHolder != null) {
-            return fileManagerHolder.getFileManager();
+            return fileManagerHolder.fileManager();
         }
 
         FileManager fileManager = lookupFileManager();
@@ -103,17 +103,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         return null;
     }
 
-    private static class FileManagerHolder {
-
-        private final FileManager fileManager;
-
-        public FileManagerHolder(FileManager fileManager) {
-            this.fileManager = fileManager;
-        }
-
-        public FileManager getFileManager() {
-            return fileManager;
-        }
+    private record FileManagerHolder(FileManager fileManager) {
     }
 
 }

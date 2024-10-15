@@ -43,7 +43,7 @@ public enum Scope {
     SINGLETON {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name, final InternalFactory<? extends T> factory) {
-            return new InternalFactory<T>() {
+            return new InternalFactory<>() {
                 volatile T instance;
 
                 public T create(InternalContext context) {
@@ -84,7 +84,7 @@ public enum Scope {
     THREAD {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name, final InternalFactory<? extends T> factory) {
-            return new InternalFactory<T>() {
+            return new InternalFactory<>() {
                 final ThreadLocal<T> threadLocal = new ThreadLocal<>();
 
                 public T create(final InternalContext context) {
@@ -115,7 +115,7 @@ public enum Scope {
     REQUEST {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(final Class<T> type, final String name, final InternalFactory<? extends T> factory) {
-            return new InternalFactory<T>() {
+            return new InternalFactory<>() {
                 public T create(InternalContext context) {
                     Strategy strategy = context.getScopeStrategy();
                     try {
@@ -145,7 +145,7 @@ public enum Scope {
     SESSION {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(final Class<T> type, final String name, final InternalFactory<? extends T> factory) {
-            return new InternalFactory<T>() {
+            return new InternalFactory<>() {
                 public T create(InternalContext context) {
                     Strategy strategy = context.getScopeStrategy();
                     try {
@@ -175,7 +175,7 @@ public enum Scope {
     WIZARD {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(final Class<T> type, final String name, final InternalFactory<? extends T> factory) {
-            return new InternalFactory<T>() {
+            return new InternalFactory<>() {
                 public T create(InternalContext context) {
                     Strategy strategy = context.getScopeStrategy();
                     try {
@@ -205,21 +205,14 @@ public enum Scope {
     }
 
     public static Scope fromString(String scopeStr) {
-        switch (scopeStr) {
-            case "prototype":
-                return Scope.PROTOTYPE;
-            case "request":
-                return Scope.REQUEST;
-            case "session":
-                return Scope.SESSION;
-            case "thread":
-                return Scope.THREAD;
-            case "wizard":
-                return Scope.WIZARD;
-            case "singleton":
-            default:
-                return Scope.SINGLETON;
-        }
+        return switch (scopeStr) {
+            case "prototype" -> Scope.PROTOTYPE;
+            case "request" -> Scope.REQUEST;
+            case "session" -> Scope.SESSION;
+            case "thread" -> Scope.THREAD;
+            case "wizard" -> Scope.WIZARD;
+            default -> Scope.SINGLETON;
+        };
     }
 
     /**

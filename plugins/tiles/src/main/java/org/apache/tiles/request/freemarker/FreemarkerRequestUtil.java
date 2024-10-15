@@ -19,9 +19,9 @@
 package org.apache.tiles.request.freemarker;
 
 import freemarker.core.Environment;
-import freemarker.ext.servlet.FreemarkerServlet;
-import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.ServletContextHashModel;
+import freemarker.ext.jakarta.servlet.FreemarkerServlet;
+import freemarker.ext.jakarta.servlet.HttpRequestHashModel;
+import freemarker.ext.jakarta.servlet.ServletContextHashModel;
 import freemarker.template.TemplateModelException;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.servlet.ServletUtil;

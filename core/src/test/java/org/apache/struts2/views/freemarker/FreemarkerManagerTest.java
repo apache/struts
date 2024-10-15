@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;

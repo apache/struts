@@ -140,21 +140,28 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
     /** The maximum size of a multipart request (file upload) */
-    public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
+    public static final String STRUTS_MULTIPART_MAX_SIZE = "struts.multipart.maxSize";
+
+    /** The maximum size of all uploaded files.
+       Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
+    public static final String STRUTS_MULTIPART_MAX_SIZE_OF_FILES = "struts.multipart.maxSizeOfFiles";
 
     /** The maximum number of files allowed in a multipart request */
-    public static final String STRUTS_MULTIPART_MAXFILES = "struts.multipart.maxFiles";
+    public static final String STRUTS_MULTIPART_MAX_FILES = "struts.multipart.maxFiles";
 
     /** The maximum length of a string parameter in a multipart request. */
     public static final String STRUTS_MULTIPART_MAX_STRING_LENGTH = "struts.multipart.maxStringLength";
 
     /** The maximum size per file in a multipart request */
-    public static final String STRUTS_MULTIPART_MAXFILESIZE = "struts.multipart.maxFileSize";
-    /** The directory to use for storing uploaded files */
-    public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
+    public static final String STRUTS_MULTIPART_MAX_FILE_SIZE = "struts.multipart.maxFileSize";
 
-    /** Declares the buffer size to be used during streaming multipart content to disk. Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
-    public static final String STRUTS_MULTIPART_BUFFERSIZE = "struts.multipart.bufferSize";
+    /** The directory to use for storing uploaded files */
+    public static final String STRUTS_MULTIPART_SAVE_DIR = "struts.multipart.saveDir";
+
+    /** Declares the buffer size to be used during streaming multipart content to disk.
+     * Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest}
+     */
+    public static final String STRUTS_MULTIPART_BUFFER_SIZE = "struts.multipart.bufferSize";
 
     /**
      * The org.apache.struts2.dispatcher.multipart.MultiPartRequest parser implementation
@@ -304,13 +311,6 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE = "struts.ognl.beanInfoCacheMaxSize";
 
     /**
-     * @since 6.0.0
-     * @deprecated since 6.4.0, use {@link StrutsConstants#STRUTS_OGNL_BEANINFO_CACHE_TYPE} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE = "struts.ognl.beanInfoCacheLRUMode";
-
-    /**
      * Logs properties that are not found (very verbose)
      * @since 6.0.0
      */
@@ -325,23 +325,10 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT = "struts.ognl.valueStackFallbackToContext";
 
     /**
-     * Logs properties that are not found (very verbose)
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
-
-    /**
      * Enables caching of parsed OGNL expressions
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
-
-    /**
-     * Enables caching of parsed OGNL expressions
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
-     */
-    public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = STRUTS_OGNL_ENABLE_EXPRESSION_CACHE;
 
     /**
      * Specifies the type of cache to use for parsed OGNL expressions. Valid values defined in
@@ -366,23 +353,10 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
 
     /**
-     * @since 6.0.0
-     * @deprecated since 6.4.0, use {@link StrutsConstants#STRUTS_OGNL_EXPRESSION_CACHE_TYPE} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE = "struts.ognl.expressionCacheLRUMode";
-
-    /**
      * Enables evaluation of OGNL expressions
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EVAL_EXPRESSION = "struts.ognl.enableEvalExpression";
-
-    /**
-     * Enables evaluation of OGNL expressions
-     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EVAL_EXPRESSION} instead.
-     */
-    public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = STRUTS_OGNL_ENABLE_EVAL_EXPRESSION;
 
     /** The maximum length of an expression (OGNL) */
     public static final String STRUTS_OGNL_EXPRESSION_MAX_LENGTH = "struts.ognl.expressionMaxLength";

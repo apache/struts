@@ -39,7 +39,7 @@ import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -117,7 +117,7 @@ public class ComponentTest extends AbstractTagTest {
 
     // Action Component
     public void testActionComponentDisposeItselfFromComponentStack() {
-        request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
+        request.setServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
         try {
             TextFieldTag t = new TextFieldTag();
             t.setName("textFieldName");

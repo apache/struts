@@ -18,7 +18,6 @@
 * under the License.
 */
 -->
-<%@page import="org.apache.struts2.showcase.hangman.HangmanConstants" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
@@ -635,19 +634,6 @@
 				</s:else>
 		</div>
 	</div>
-</div>
-<br>
-<br>
-    <p>
-        A secondary test for this JSP visually verifies expression access to a public constant.
-        A direct access to the same public constant via scriptlet provides secondary verification.
-    </p>
-<br>
-<div>
-    Test public static (constant) access (expression).  Value: <s:property default="unavailable" value="@org.apache.struts2.showcase.hangman.HangmanConstants@HANGMAN_SESSION_KEY" />
-</div>
-<div>
-    Test public static (constant) access (scriptlet).  Value: <%=org.apache.struts2.showcase.hangman.HangmanConstants.HANGMAN_SESSION_KEY%>
 </div>
 </body>
 </html>

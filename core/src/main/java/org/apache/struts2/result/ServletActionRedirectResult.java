@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import java.util.Arrays;
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -122,6 +122,7 @@ import java.util.List;
  */
 public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler, Redirectable {
 
+    @Serial
     private static final long serialVersionUID = -9042425229314584066L;
 
     /* The default parameter */
@@ -210,7 +211,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     protected List<String> getProhibitedResultParams() {
-        return Arrays.asList(
+        return List.of(
                 DEFAULT_PARAM,
                 "namespace",
                 "method",

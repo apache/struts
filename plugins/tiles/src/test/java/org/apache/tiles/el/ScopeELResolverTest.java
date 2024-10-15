@@ -23,7 +23,7 @@ import org.apache.tiles.request.Request;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.el.ELContext;
+import jakarta.el.ELContext;
 import java.beans.FeatureDescriptor;
 import java.util.Arrays;
 import java.util.HashMap;

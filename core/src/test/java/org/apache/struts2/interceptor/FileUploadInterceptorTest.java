@@ -329,6 +329,178 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertNotNull("deleteme.txt", fileRealFilenames[0]);
     }
 
+    public void testSuccessUploadOfATextFileMultipartRequestNoMaxParamsSet() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileupAction action = new MyFileupAction();
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet(req));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasErrors());
+
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertEquals(3, parameters.keySet().size());
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
+        String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
+        String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
+
+        assertNotNull(files);
+        assertNotNull(fileContentTypes);
+        assertNotNull(fileRealFilenames);
+        assertEquals(1, files.length);
+        assertEquals(1, fileContentTypes.length);
+        assertEquals(1, fileRealFilenames.length);
+        assertEquals("text/html", fileContentTypes[0]);
+        assertNotNull("deleteme.txt", fileRealFilenames[0]);
+    }
+
+    public void testSuccessUploadOfATextFileMultipartRequestWithNormalFieldsMaxParamsSet() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField1\"\r\n" +
+                "\r\n" +
+                "normal field 1" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField2\"\r\n" +
+                "\r\n" +
+                "normal field 2" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileupAction action = new MyFileupAction();
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().withServletRequest(createMultipartRequest(req, 2000, 2000, 5, 100));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasErrors());
+
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertEquals(3, parameters.keySet().size());
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
+        String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
+        String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
+
+        assertNotNull(files);
+        assertNotNull(fileContentTypes);
+        assertNotNull(fileRealFilenames);
+        assertEquals(1, files.length);
+        assertEquals(1, fileContentTypes.length);
+        assertEquals(1, fileRealFilenames.length);
+        assertEquals("text/html", fileContentTypes[0]);
+        assertNotNull("deleteme.txt", fileRealFilenames[0]);
+
+        // Confirm normalFormField1, normalFormField2 were processed by the MultiPartRequestWrapper.
+        HttpServletRequest invocationServletRequest = mai.getInvocationContext().getServletRequest();
+        assertTrue("invocation servelt request is not a MultiPartRequestWrapper ?", invocationServletRequest instanceof MultiPartRequestWrapper);
+        MultiPartRequestWrapper multipartRequestWrapper = (MultiPartRequestWrapper) invocationServletRequest;
+        assertNotNull("normalFormField1 missing from MultiPartRequestWrapper parameters ?", multipartRequestWrapper.getParameter("normalFormField1"));
+        assertNotNull("normalFormField2 missing from MultiPartRequestWrapper parameters ?", multipartRequestWrapper.getParameter("normalFormField2"));
+    }
+
+    public void testSuccessUploadOfATextFileMultipartRequestWithNormalFieldsNoMaxParamsSet() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField1\"\r\n" +
+                "\r\n" +
+                "normal field 1 with no max parameters set" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField2\"\r\n" +
+                "\r\n" +
+                "normal field 2 with no max parameters set" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileupAction action = new MyFileupAction();
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet(req));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasErrors());
+
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertEquals(3, parameters.keySet().size());
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
+        String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
+        String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
+
+        assertNotNull(files);
+        assertNotNull(fileContentTypes);
+        assertNotNull(fileRealFilenames);
+        assertEquals(1, files.length);
+        assertEquals(1, fileContentTypes.length);
+        assertEquals(1, fileRealFilenames.length);
+        assertEquals("text/html", fileContentTypes[0]);
+        assertNotNull("deleteme.txt", fileRealFilenames[0]);
+
+        // Confirm normalFormField1, normalFormField2 were processed by the MultiPartRequestWrapper.
+        HttpServletRequest invocationServletRequest = mai.getInvocationContext().getServletRequest();
+        assertTrue("invocation servelt request is not a MultiPartRequestWrapper ?", invocationServletRequest instanceof MultiPartRequestWrapper);
+        MultiPartRequestWrapper multipartRequestWrapper = (MultiPartRequestWrapper) invocationServletRequest;
+        assertNotNull("normalFormField1 missing from MultiPartRequestWrapper parameters ?", multipartRequestWrapper.getParameter("normalFormField1"));
+        assertNotNull("normalFormField2 missing from MultiPartRequestWrapper parameters ?", multipartRequestWrapper.getParameter("normalFormField2"));
+    }
+
     /**
      * tests whether with multiple files sent with the same name, the ones with forbiddenTypes (see
      * FileUploadInterceptor.setAllowedTypes(...) ) are sorted out.
@@ -598,6 +770,12 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
+    private MultiPartRequestWrapper createMultipartRequestNoMaxParamsSet(HttpServletRequest req) {
+
+        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -621,7 +799,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         private static final long serialVersionUID = 6255238895447968889L;
 
         // no methods
+        // Note: We do not currently need fields/getters/setters for normalFormField1, normalFormField2 since
+        //       the upload interceptor only prepares the normal field parameters.
     }
-
 
 }

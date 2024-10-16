@@ -19,11 +19,11 @@
 package org.apache.struts2;
 
 /**
- * Preparable Actions will have their <code>prepare()</code> method called if the {@link com.opensymphony.xwork2.interceptor.PrepareInterceptor}
- * is applied to the ActionConfig.
+ * Preparable Actions will have their <code>prepare()</code> method called if the
+ * {@link org.apache.struts2.interceptor.PrepareInterceptor} is applied to the ActionConfig.
  *
  * @author Jason Carreira
- * @see com.opensymphony.xwork2.interceptor.PrepareInterceptor
+ * @see org.apache.struts2.interceptor.PrepareInterceptor
  */
 public interface Preparable {
 

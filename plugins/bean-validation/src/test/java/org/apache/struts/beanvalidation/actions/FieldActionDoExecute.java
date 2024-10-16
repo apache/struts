@@ -20,8 +20,8 @@ package org.apache.struts.beanvalidation.actions;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ValidationAwareSupport;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ValidationAwareSupport;
 
 public class FieldActionDoExecute extends ValidationAwareSupport {
     @NotBlank(message = "canNotBeBlank")

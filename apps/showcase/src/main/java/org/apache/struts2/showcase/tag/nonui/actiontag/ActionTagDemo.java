@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.tag.nonui.actiontag;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 /**
  */

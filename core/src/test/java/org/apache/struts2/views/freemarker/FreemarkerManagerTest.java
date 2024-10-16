@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;

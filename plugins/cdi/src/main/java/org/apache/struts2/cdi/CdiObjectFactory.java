@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.cdi;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -18,12 +18,13 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.interceptor.annotations.After;
-import com.opensymphony.xwork2.interceptor.annotations.Before;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.interceptor.annotations.After;
+import org.apache.struts2.interceptor.annotations.Before;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +35,6 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;

@@ -18,7 +18,6 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionChainResult;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.util.ValueStack;
 

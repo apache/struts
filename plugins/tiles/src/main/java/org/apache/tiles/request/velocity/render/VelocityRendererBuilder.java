@@ -34,7 +34,7 @@ public final class VelocityRendererBuilder {
     /**
      * The initialization parameters for VelocityView.
      */
-    private Map<String, String> params = new HashMap<String, String>();
+    private final Map<String, String> params = new HashMap<>();
 
     /**
      * The application context.

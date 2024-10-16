@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 
 /**

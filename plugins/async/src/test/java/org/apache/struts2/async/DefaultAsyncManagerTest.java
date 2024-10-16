@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.async;
 
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.mock.web.MockAsyncContext;
 import org.springframework.mock.web.MockHttpServletRequest;

@@ -25,7 +25,7 @@
 
 <struts>
 
-    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
+    <bean type="org.apache.struts2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
 	<bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="rest" class="org.apache.struts2.rest.RestActionMapper" />
 
 	<bean type="org.apache.struts2.rest.ContentTypeHandlerManager" class="org.apache.struts2.rest.DefaultContentTypeHandlerManager" />

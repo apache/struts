@@ -18,18 +18,18 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.config.BeanSelectionProvider;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
-import com.opensymphony.xwork2.config.impl.LocatableFactory;
-import com.opensymphony.xwork2.config.providers.ValueSubstitutor;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationUtils;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationProvider;
+import org.apache.struts2.config.entities.UnknownHandlerConfig;
+import org.apache.struts2.config.impl.LocatableFactory;
+import org.apache.struts2.config.providers.ValueSubstitutor;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.location.LocatableProperties;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.config.entities.BeanConfig;

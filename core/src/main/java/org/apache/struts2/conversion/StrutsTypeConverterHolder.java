@@ -18,9 +18,6 @@
  */
 package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.TypeConverterHolder;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

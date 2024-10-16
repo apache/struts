@@ -19,7 +19,7 @@
 
 package org.apache.tiles.api;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.tiles.request.Request;
 
 import java.util.Iterator;

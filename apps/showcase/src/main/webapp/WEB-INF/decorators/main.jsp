@@ -31,11 +31,11 @@
 
     // Calculate the view sources url
     String sourceUrl = request.getContextPath() + "/viewSource.action";
-    com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
+    org.apache.struts2.ActionInvocation inv = org.apache.struts2.ActionContext.getContext().getActionInvocation();
     org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
     if (inv != null) {
         try {
-            com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
+            org.apache.struts2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
             sourceUrl += "?config=" + (loc != null ? loc.getURI() + ":" + loc.getLineNumber() : "");
         } catch (Exception e) {
             sourceUrl += "?config=";
@@ -86,7 +86,7 @@
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <s:script src="http://html5shim.googlecode.com/svn/trunk/html5.js"/>
+    <s:script src="https://html5shim.googlecode.com/svn/trunk/html5.js"/>
     <![endif]-->
 
     <s:script>

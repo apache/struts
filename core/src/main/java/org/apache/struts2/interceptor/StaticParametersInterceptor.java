@@ -18,23 +18,22 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.Parameterizable;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.LocalizedTextProvider;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.Parameterizable;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ClearableValueStack;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
+import org.apache.struts2.util.reflection.ReflectionContextState;
 
 import java.util.Collections;
 import java.util.Map;
@@ -153,7 +152,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                 ReflectionContextState.setReportingConversionErrors(contextMap, true);
                 final ValueStack stack = ac.getValueStack();
 
-                ValueStack newStack = valueStackFactory.createValueStack(com.opensymphony.xwork2.util.ValueStack.adapt(stack));
+                ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
                 if (clearableStack) {
                     //if the stack's context can be cleared, do that to prevent OGNL
@@ -170,15 +169,15 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
 
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {
                     Object val = entry.getValue();
-                    if (parse && val instanceof String) {
-                        val = TextParseUtil.translateVariables(val.toString(), com.opensymphony.xwork2.util.ValueStack.adapt(stack));
+                    if (parse && val != null) {
+                        val = TextParseUtil.translateVariables(val.toString(), stack);
                     }
                     try {
                         newStack.setValue(entry.getKey(), val);
                     } catch (RuntimeException e) {
                         if (devMode) {
 
-                            String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                            String developerNotification = localizedTextProvider.findText(StaticParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                     "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                             });
                             LOG.error(developerNotification);

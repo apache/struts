@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationImpl;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.location.LocatableProperties;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;

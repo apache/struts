@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.StubValueStack;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.StubValueStack;
+import org.apache.struts2.security.AcceptedPatternsChecker;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;

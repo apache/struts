@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.views.freemarker.tags;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.util.ValueStack;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleSequence;

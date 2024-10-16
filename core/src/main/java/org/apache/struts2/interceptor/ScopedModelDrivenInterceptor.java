@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Inject;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -114,8 +114,7 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ScopedModelDriven) {
-            ScopedModelDriven modelDriven = (ScopedModelDriven) action;
+        if (action instanceof ScopedModelDriven modelDriven) {
             if (modelDriven.getModel() == null) {
                 ActionContext ctx = ActionContext.getContext();
                 ActionConfig config = invocation.getProxy().getConfig();
@@ -127,7 +126,7 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
                         Class cls = method.getReturnType();
                         cName = cls.getName();
                     } catch (NoSuchMethodException e) {
-                        throw new StrutsException("The " + GET_MODEL + "() is not defined in action " + action.getClass() + "", config);
+                        throw new StrutsException("The " + GET_MODEL + "() is not defined in action " + action.getClass(), config);
                     }
                 }
                 String modelName = name;

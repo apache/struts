@@ -23,5 +23,5 @@
         "-//Apache Struts//XWork Validator Config 1.0//EN"
         "https://struts.apache.org/dtds/xwork-validator-config-1.0.dtd">
 <validators>
-    <validator name="requiredAdditional" class="com.opensymphony.xwork2.validator.validators.RequiredFieldValidator"/>
+    <validator name="requiredAdditional" class="org.apache.struts2.validator.validators.RequiredFieldValidator"/>
 </validators>

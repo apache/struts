@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.util.CompoundRoot;
 import org.apache.struts2.ActionContext;
 
 import java.util.Map;
@@ -31,9 +30,9 @@ import java.util.Map;
  */
 public interface ValueStack {
 
-    String VALUE_STACK = "com.opensymphony.xwork2.util.ValueStack.ValueStack";
+    String VALUE_STACK = "org.apache.struts2.util.ValueStack.ValueStack";
 
-    String REPORT_ERRORS_ON_NO_PROP = "com.opensymphony.xwork2.util.ValueStack.ReportErrorsOnNoProp";
+    String REPORT_ERRORS_ON_NO_PROP = "org.apache.struts2.util.ValueStack.ReportErrorsOnNoProp";
 
     /**
      * Gets the context for this value stack. The context holds all the information in the value stack and it's surroundings.

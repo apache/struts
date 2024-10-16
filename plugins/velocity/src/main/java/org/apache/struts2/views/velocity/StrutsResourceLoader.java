@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.velocity;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 

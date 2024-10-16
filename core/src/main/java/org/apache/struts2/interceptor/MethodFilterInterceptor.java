@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.TextParseUtil;
 
 import java.util.Collections;
 import java.util.Set;
@@ -67,8 +67,8 @@ import java.util.Set;
  *
  * @see TokenInterceptor
  * @see TokenSessionStoreInterceptor
- * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
- * @see com.opensymphony.xwork2.validator.ValidationInterceptor
+ * @see DefaultWorkflowInterceptor
+ * @see org.apache.struts2.validator.ValidationInterceptor
  */
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
 

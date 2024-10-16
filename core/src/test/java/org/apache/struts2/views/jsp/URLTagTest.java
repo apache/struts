@@ -38,11 +38,11 @@ import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.springframework.mock.web.MockBodyContent;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.DefaultActionInvocation;
+import org.apache.struts2.DefaultActionProxyFactory;
+import org.apache.struts2.inject.Container;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.jsp.JspWriter;

@@ -24,11 +24,11 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.url.StrutsUrlDecoder;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.impl.DefaultConfiguration;
+import org.apache.struts2.inject.Container;
 
 public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 

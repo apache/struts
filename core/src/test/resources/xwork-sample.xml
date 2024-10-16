@@ -34,7 +34,7 @@
 
         <global-allowed-methods>execute,input,back,cancel,browse</global-allowed-methods>
 
-        <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="Foo" class="org.apache.struts2.SimpleAction">
             <param name="foo">17</param>
             <param name="bar">23</param>
             <result name="success" type="chain">
@@ -44,18 +44,18 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="ExceptionFoo" class="com.opensymphony.xwork2.SimpleAction" method="exceptionMethod">
+        <action name="ExceptionFoo" class="org.apache.struts2.SimpleAction" method="exceptionMethod">
             <result name="exceptionHandled" type="void" />
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="NullFoo" class="com.opensymphony.xwork2.SimpleAction" method="nullMethod">
+        <action name="NullFoo" class="org.apache.struts2.SimpleAction" method="nullMethod">
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="LazyFoo" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="LazyFoo" class="org.apache.struts2.SimpleAction">
           <result name="error" type="void" />
           <interceptor-ref name="params"/>
           <interceptor-ref name="lazy">
@@ -63,7 +63,7 @@
           </interceptor-ref>
         </action>
 
-        <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="WildCard" class="org.apache.struts2.SimpleAction">
             <param name="foo">17</param>
             <param name="bar">23</param>
             <result name="success" type="void" />
@@ -71,7 +71,7 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="WildCardInput" class="com.opensymphony.xwork2.SimpleAction" method="input">
+        <action name="WildCardInput" class="org.apache.struts2.SimpleAction" method="input">
             <param name="foo">17</param>
             <param name="bar">23</param>
             <result name="success" type="void" />
@@ -79,13 +79,13 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="WildCardError" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="WildCardError" class="org.apache.struts2.SimpleAction">
             <result name="success" type="void" />
             <result name="*" type="mock" />
             <interceptor-ref name="defaultStack"/>
         </action>
 
-		<action name="WildCard/*/*" class="com.opensymphony.xwork2.{1}Action"
+		<action name="WildCard/*/*" class="org.apache.struts2.{1}Action"
 			method="{2}">
             <param name="foo">{1}</param>
             <param name="bar">{2}</param>
@@ -93,14 +93,14 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
-        <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="aliasTest" class="org.apache.struts2.SimpleAction">
            	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz", "notExisting":"blah" }</param>
 			<interceptor-ref name="params"/>
          	<interceptor-ref name="alias"/>
          	<result name="success" type="mock" />
         </action>
 
-        <action name="dynamicAliasTest" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="dynamicAliasTest" class="org.apache.struts2.SimpleAction">
             <param name="aliases">#{ #parameters['name'] : #parameters['value'] }</param>
             <interceptor-ref name="params"/>
             <interceptor-ref name="alias"/>
@@ -110,26 +110,26 @@
         <action name="packagelessAction" class="PackagelessAction">
         </action>
 
-        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="Bar" class="org.apache.struts2.SimpleAction">
         	<param name="foo">17</param>
             <param name="bar">23</param>
             <result name="error" type="mock" />
         </action>
 
-        <action name="MyBean" class="com.opensymphony.xwork2.util.MyBeanAction">
+        <action name="MyBean" class="org.apache.struts2.util.MyBeanAction">
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
             <result name="success" type="mock" />
         </action>
 
-        <action name="TestInterceptorParam" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="TestInterceptorParam" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="expectedFoo">expectedFoo</param>
             </interceptor-ref>
             <result name="error" type="mock" />
         </action>
 
-        <action name="TestInterceptorParamOverride" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="TestInterceptorParamOverride" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="foo">foo123</param>
                 <param name="expectedFoo">foo123</param>
@@ -137,17 +137,17 @@
             <result name="error" type="mock" />
         </action>
 
-        <action name="TestModelDrivenValidation" class="com.opensymphony.xwork2.ModelDrivenAction">
+        <action name="TestModelDrivenValidation" class="org.apache.struts2.ModelDrivenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="validation"/>
             <result name="success" type="mock" />
         </action>
 
         <!-- chain resursion detection -->
-        <action name="InfiniteRecursionChain" class="com.opensymphony.xwork2.ActionSupport">
+        <action name="InfiniteRecursionChain" class="org.apache.struts2.ActionSupport">
                 <result name="success" type="chain">InfiniteRecursionChain</result>
         </action>
-        <action name="chain_with_namespace" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="chain_with_namespace" class="org.apache.struts2.SimpleAction">
             <result name="error" type="chain">
                 <param name="actionName">chain_without_namespace</param>
                 <param name="namespace">%{blah}</param>
@@ -155,7 +155,7 @@
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
         </action>
-        <action name="chain_without_namespace" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="chain_without_namespace" class="org.apache.struts2.SimpleAction">
             <result name="error" type="chain">
                 <param name="actionName">Foo</param>
             </result>
@@ -177,19 +177,19 @@
             <exception-mapping name="foo" exception="com.opensymphony.TestException" result="foo"/>
         </global-exception-mappings>
 
-        <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="Bar" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="barDefaultStack"/>
             <result name="error" type="mock" />
         </action>
 
-        <action name="TestInterceptorParamInheritance" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="TestInterceptorParamInheritance" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="expectedFoo">expectedFoo</param>
             </interceptor-ref>
             <result name="error" type="mock" />
         </action>
 
-        <action name="TestInterceptorParamInehritanceOverride" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="TestInterceptorParamInehritanceOverride" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="foo">foo123</param>
                 <param name="expectedFoo">foo123</param>
@@ -199,13 +199,13 @@
     </package>
 
     <package name="abstractPackage" namespace="/abstract" abstract="true">
-        <action name="test" class="com.opensymphony.xwork2.SimpleAction"/>
+        <action name="test" class="org.apache.struts2.SimpleAction"/>
     </package>
 
     <package name="nonAbstractPackage" extends="abstractPackage" namespace="/nonAbstract"/>
 
     <package name="baz" extends="default" namespace="baz">
-        <action name="commandTest" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="commandTest" class="org.apache.struts2.SimpleAction">
             <param name="foo">123</param>
             <result name="error" type="chain">
                 <param name="actionName">bar</param>
@@ -213,21 +213,21 @@
             <result name="success" type="mock" />
             <interceptor-ref name="staticParams"/>
         </action>
-        <action name="myCommand" class="com.opensymphony.xwork2.SimpleAction" method="commandMethod">
+        <action name="myCommand" class="org.apache.struts2.SimpleAction" method="commandMethod">
             <param name="bar">456</param>
             <result name="success" type="chain">
                 <param name="actionName">foo</param>
             </result>
-            <result name="com.opensymphony.xwork2.SimpleAction.CommandInvoked" type="mock"/>
+            <result name="org.apache.struts2.SimpleAction.CommandInvoked" type="mock"/>
             <interceptor-ref name="logger"/>
         </action>
-        <action name="doMethodTest" class="com.opensymphony.xwork2.SimpleAction" method="input">
+        <action name="doMethodTest" class="org.apache.struts2.SimpleAction" method="input">
             <result name="input" type="mock" />
         </action>
-        <action name="unknownMethodTest" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="unknownMethodTest" class="org.apache.struts2.SimpleAction">
             <result name="found" type="mock" />
         </action>
-        <action name="resultAction" class="com.opensymphony.xwork2.SimpleAction" method="resultAction">
+        <action name="resultAction" class="org.apache.struts2.SimpleAction" method="resultAction">
             <param name="bar">456</param>
             <result name="success" type="chain">
                 <param name="actionName">foo</param>
@@ -237,14 +237,14 @@
     </package>
 
     <package name="wildcardNamespaces" extends="default" namespace="/animals/*">
-        <action name="commandTest" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="commandTest" class="org.apache.struts2.SimpleAction">
             <result name="success" type="mock" />
             <interceptor-ref name="staticParams"/>
         </action>
     </package>
 
     <package name="multipleInheritance" extends="default,abstractPackage,bar" namespace="multipleInheritance">
-        <action name="testMultipleInheritance" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="testMultipleInheritance" class="org.apache.struts2.SimpleAction">
             <result name="success" type="chain">
                 <param name="actionName">foo</param>
             </result>
@@ -255,7 +255,7 @@
 
 	<package name="Abstract-crud" extends="default">
   	<!--  edit is often used as the create/view -->
-  			   <default-class-ref class="com.opensymphony.xwork2.SimpleAction"/>
+  			   <default-class-ref class="org.apache.struts2.SimpleAction"/>
                 <action name="edit" >
                         <result name="input" type="mock">edit.vm</result>
                         <result name="success" type="mock">edit.vm</result>
@@ -277,18 +277,18 @@
         </package>
 
         <package name="Example" extends="Abstract-crud" namespace="/example">
-                 <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+                 <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
         </package>
 
         <package name="Example2" extends="Abstract-crud" namespace="/example2">
-                <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+                <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
                 <action name="override">
                         <result name="success" type="mock">somethingelse.vm</result>
                 </action>
         </package>
 
         <package name="SubItem" extends="Abstract-crud" namespace="/example2/subItem">
-                <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
+                <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
         </package>
 
         <package name="Example3" extends="Abstract-crud" namespace="/example3">

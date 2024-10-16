@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.velocity;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.velocity.VelocityContext;
 import org.junit.Before;
 import org.junit.Rule;

@@ -30,6 +30,5 @@
             <AppenderRef ref="STDOUT"/>
         </Root>
         <Logger name="org.apache.struts2" level="info"/>
-        <Logger name="com.opensymphony.xwork2" level="info"/>
     </Loggers>
 </Configuration>

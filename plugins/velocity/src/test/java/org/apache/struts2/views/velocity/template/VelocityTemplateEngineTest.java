@@ -20,8 +20,8 @@ package org.apache.struts2.views.velocity.template;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.components.template.FreemarkerTemplateEngine;
 import org.apache.struts2.components.template.JspTemplateEngine;
 import org.apache.struts2.components.template.Template;

@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationUtils;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationUtils;
 import freemarker.template.Template;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;

@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -156,7 +156,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     /**
-     * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.Result#execute(org.apache.struts2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception {
         if (invocation == null) {

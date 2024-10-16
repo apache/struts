@@ -40,8 +40,8 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.util.ValueStack;
 
 public abstract class AbstractDirective extends Directive {
     public String getName() {

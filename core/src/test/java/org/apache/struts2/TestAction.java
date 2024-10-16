@@ -18,13 +18,13 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validations;
-import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.validator.annotations.RequiredStringValidator;
+import org.apache.struts2.validator.annotations.Validations;
+import org.apache.struts2.validator.annotations.ValidatorType;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.views.jsp.ui.User;
 

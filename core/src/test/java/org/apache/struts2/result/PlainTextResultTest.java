@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
@@ -70,7 +70,7 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
     public void testPlainTextWithoutSlash() throws Exception {
         PlainTextResult result = new PlainTextResult();
         result.setLocation("someJspFile.jsp");
-        
+
         try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream("org/apache/struts2/dispatcher/someJspFile.jsp", PlainTextResultTest.class)) {
             servletContext.setResourceAsStream(jspResourceInputStream);

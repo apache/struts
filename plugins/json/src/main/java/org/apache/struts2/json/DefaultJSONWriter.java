@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ProxyUtil;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ProxyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.JSON;
@@ -339,7 +339,7 @@ public class DefaultJSONWriter implements JSONWriter {
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
-            
+
         //in hibernate4.3.7,because javassist3.18.1's class name generate rule is '_$$_jvst'+...
         } else if(clazz.getName().contains("$$_jvst")){
             try {
@@ -667,7 +667,7 @@ public class DefaultJSONWriter implements JSONWriter {
             this.formatter = new SimpleDateFormat(defaultDateFormat);
         }
     }
-    
+
     @Override
     public void setCacheBeanInfo(boolean cacheBeanInfo) {
     	this.cacheBeanInfo = cacheBeanInfo;

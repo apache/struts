@@ -18,13 +18,9 @@
  */
 package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.TypeConverterCreator;
-import com.opensymphony.xwork2.conversion.TypeConverterHolder;
-import com.opensymphony.xwork2.inject.EarlyInitializable;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.inject.EarlyInitializable;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;

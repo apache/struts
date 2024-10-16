@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -128,7 +128,7 @@ public class Script extends ClosingUIBean {
     public boolean usesBody() {
         return true;
     }
-    
+
     @Override
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();

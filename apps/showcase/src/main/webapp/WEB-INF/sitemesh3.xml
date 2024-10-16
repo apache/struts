@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,24 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.sitemesh;
-
-import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
-import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.Page;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-/**
- * Won't decorate the output if it finds a "decorator" flag in the request
- */
-public class NoneDecoratorMapper extends AbstractDecoratorMapper {
-    
-    public Decorator getDecorator(HttpServletRequest req, Page page) {
-        if ("none".equals(req.getAttribute("decorator"))) {
-            return null;
-        }
-
-        return super.getDecorator(req, page);
-    }
-}
+-->
+<sitemesh>
+    <mapping path="/*" decorator="main.jsp"/>
+    <mapping path="/debug.jsp" exclude="true"/>
+    <mapping path="/styles/*" exclude="true"/>
+    <mapping path="/scripts/*" exclude="true"/>
+    <mapping path="/images/*" exclude="true"/>
+    <mapping path="/static/*" exclude="true"/>
+    <mapping path="/nodecorate/*" exclude="true"/>
+</sitemesh>

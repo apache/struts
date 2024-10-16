@@ -65,13 +65,6 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../plugins/sitemesh/src/main/resources</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>SITEMESH-LICENSE.txt</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>target/apps</directory>
             <outputDirectory>apps</outputDirectory>
             <includes>
@@ -145,10 +138,6 @@
         <fileSet>
             <directory>../plugins/rest/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/sitemesh/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../plugins/spring/target/apidocs</directory>

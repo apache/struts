@@ -91,10 +91,6 @@
             <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/sitemesh/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/spring/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-spring-plugin/apidocs</outputDirectory>
         </fileSet>

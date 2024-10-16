@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.*;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,7 +74,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
     /**
      * If set to true (by default) blocks returning content from any other methods than GET,
      * if set to false, the content can be returned for any kind of method
-     * 
+     *
      * @param restrictToGet true or false
      */
     @Inject(value = RestConstants.REST_CONTENT_RESTRICT_TO_GET, required = false)

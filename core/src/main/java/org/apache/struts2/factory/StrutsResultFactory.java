@@ -18,20 +18,19 @@
  */
 package org.apache.struts2.factory;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.factory.ResultFactory;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.result.ParamNameAwareResult;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.Result;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.ParamNameAwareResult;
+import org.apache.struts2.util.reflection.ReflectionException;
+import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 
 import java.util.Map;
 
 /**
- * Default implementation which uses {@link com.opensymphony.xwork2.result.ParamNameAwareResult} to accept or throw away parameters
+ * Default implementation which uses {@link ParamNameAwareResult} to accept or throw away parameters
  */
 public class StrutsResultFactory implements ResultFactory {
 

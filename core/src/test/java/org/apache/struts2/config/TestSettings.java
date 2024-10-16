@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.util.location.Location;
+import org.apache.struts2.util.location.Location;
 
 import java.util.ArrayList;
 import java.util.Iterator;

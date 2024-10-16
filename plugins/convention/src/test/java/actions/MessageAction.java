@@ -18,7 +18,7 @@
  */
 package actions;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 /**
  * Example action, called by {@link org.apache.struts2.convention.ConventionJUnit4Test}.

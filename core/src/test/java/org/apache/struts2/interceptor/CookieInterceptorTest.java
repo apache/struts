@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.security.DefaultAcceptedPatternsChecker;
+import org.apache.struts2.security.DefaultExcludedPatternsChecker;
 import jakarta.servlet.http.Cookie;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;

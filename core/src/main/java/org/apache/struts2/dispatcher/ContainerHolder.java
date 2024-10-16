@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.inject.Container;
 
 /**
  * Simple class to hold Container instance per thread to minimise number of attempts

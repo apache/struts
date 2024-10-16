@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.Inject;
 import ognl.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +28,7 @@ import org.apache.struts2.StrutsConstants;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
+import static org.apache.struts2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 

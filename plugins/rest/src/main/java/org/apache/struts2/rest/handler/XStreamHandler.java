@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ModelDriven;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.security.ArrayTypePermission;

@@ -18,14 +18,19 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.BeanSelectionProvider;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.*;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.*;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Context;
+import org.apache.struts2.inject.Factory;
+import org.apache.struts2.inject.Scope;
 
 import java.util.Properties;
 

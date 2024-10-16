@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;

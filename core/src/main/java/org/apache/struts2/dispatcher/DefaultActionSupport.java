@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
@@ -44,7 +44,7 @@ public class DefaultActionSupport extends ActionSupport {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.ActionSupport#execute()
+     * @see org.apache.struts2.ActionSupport#execute()
      */
     @Override
     public String execute() throws Exception {

@@ -26,7 +26,7 @@ import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

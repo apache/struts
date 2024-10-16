@@ -24,9 +24,9 @@ import java.util.Map;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.util.StrutsTypeConverter;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.util.ValueStack;
 
 /**
  *

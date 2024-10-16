@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.DefaultLocaleProvider;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.DefaultLocaleProvider;
+import org.apache.struts2.ValidationAwareSupport;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.apache.struts2.StrutsInternalTestCase;

@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;

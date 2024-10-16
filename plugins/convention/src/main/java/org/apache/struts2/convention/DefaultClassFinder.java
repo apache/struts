@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.util.finder.ClassFinder;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.Test;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.FileManager;
+import org.apache.struts2.FileManagerFactory;
+import org.apache.struts2.util.finder.ClassFinder;
+import org.apache.struts2.util.finder.ClassLoaderInterface;
+import org.apache.struts2.util.finder.Test;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.interceptor.ValidationAware;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +99,7 @@ import java.util.List;
  *  package com.example;
  *
  *  import java.io.File;
- *  import com.opensymphony.xwork2.ActionSupport;
+ *  import org.apache.struts2.ActionSupport;
  *  import org.apache.struts2.action.UploadedFilesAware;
  *
  *  public UploadAction extends ActionSupport implements UploadedFilesAware {
@@ -129,9 +129,6 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
     protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 
-    /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
-     */
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();

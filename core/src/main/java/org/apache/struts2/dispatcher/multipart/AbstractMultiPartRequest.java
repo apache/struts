@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;

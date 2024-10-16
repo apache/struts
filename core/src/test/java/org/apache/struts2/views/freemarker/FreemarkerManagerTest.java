@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -57,7 +57,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 
         String tmpPath = "file://" + FileUtils.getTempDirectoryPath();
-        
+
         // when
         manager.load(servletContext, tmpPath);
 
@@ -91,7 +91,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
         // when
         Writer out = new StringWriter();
-        Map<String, String> model = new HashMap<>();                         
+        Map<String, String> model = new HashMap<>();
         model.put("error", "It's an error message");
 
         tpl.process(model, out);
@@ -119,5 +119,5 @@ class DummyFreemarkerManager extends FreemarkerManager {
     public void load(StrutsMockServletContext servletContext, String path) {
         createTemplateLoader(servletContext, path);
     }
-    
+
 }

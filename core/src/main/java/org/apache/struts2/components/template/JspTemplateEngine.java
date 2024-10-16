@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.PageContext;
 import org.apache.logging.log4j.LogManager;

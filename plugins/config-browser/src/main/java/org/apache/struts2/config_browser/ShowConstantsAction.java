@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 
 import java.util.HashMap;
 import java.util.Map;

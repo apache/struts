@@ -18,14 +18,14 @@
  */
 package org.apache.struts.beanvalidation.validation.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
-import com.opensymphony.xwork2.validator.ValidatorContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.validator.DelegatingValidatorContext;
+import org.apache.struts2.validator.ValidatorContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;

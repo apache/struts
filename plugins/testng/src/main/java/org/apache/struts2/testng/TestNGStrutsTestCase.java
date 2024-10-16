@@ -48,7 +48,7 @@ public class TestNGStrutsTestCase extends TestNGXWorkTestCase {
 
     /**
      * A helper method which allows instantiate an action if this action extends
-     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
+     * {@link org.apache.struts2.ActionSupport} or any other action class
      * that requires framework's dependencies injection.
      */
     protected <T> T createAction(Class<T> clazz) {

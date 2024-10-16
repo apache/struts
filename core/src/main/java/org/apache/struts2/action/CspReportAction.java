@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.action;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

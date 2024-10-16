@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.spring;
 
-import com.opensymphony.xwork2.util.classloader.FileResourceStore;
-import com.opensymphony.xwork2.util.classloader.JarResourceStore;
-import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.util.classloader.FileResourceStore;
+import org.apache.struts2.util.classloader.JarResourceStore;
+import org.apache.struts2.util.classloader.ReloadingClassLoader;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;

@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.reflection.ReflectionException;
+import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;

@@ -25,7 +25,7 @@ import jakarta.servlet.jsp.JspException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
+import static org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 
 /**
@@ -51,8 +51,8 @@ public class BeanTagTest extends AbstractUITagTest {
             fail();
         }
 
-        
-        
+
+
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         BeanTag freshTag = new BeanTag();

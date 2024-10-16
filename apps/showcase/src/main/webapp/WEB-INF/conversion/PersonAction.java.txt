@@ -19,24 +19,24 @@ package org.apache.struts2.showcase.conversion;
 
 import java.util.List;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 /**
- * 
+ *
  */
 public class PersonAction extends ActionSupport {
-	
+
 	private List persons;
-	
+
 	public List getPersons() { return persons; }
 	public void setPersons(List persons) { this.persons = persons; }
-	
-	
-	
+
+
+
 	public String input() throws Exception {
 		return SUCCESS;
 	}
-	
+
 	public String submit() throws Exception {
 		return SUCCESS;
 	}

@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.config.entities;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.TestBean;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.junit.Assert;

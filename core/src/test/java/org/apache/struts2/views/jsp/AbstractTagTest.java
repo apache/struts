@@ -19,14 +19,14 @@
 package org.apache.struts2.views.jsp;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -106,7 +106,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
         pageContext = new StrutsMockPageContext(servletContext, request, response);
         pageContext.setJspWriter(jspWriter);
-        
+
         mockContainer = new Mock(Container.class);
         Dispatcher du = new Dispatcher(pageContext.getServletContext(), emptyMap());
         du.init();

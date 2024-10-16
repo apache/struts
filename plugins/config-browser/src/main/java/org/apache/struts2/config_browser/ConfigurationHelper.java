@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ResolverUtil;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ResolverUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,14 +36,14 @@ import java.util.Set;
  * ConfigurationHelper
  */
 public class ConfigurationHelper {
-    
+
     private Configuration configuration;
 
     @Inject
     public void setConfiguration(Configuration config) {
         this.configuration = config;
     }
-    
+
     public Set<String> getNamespaces() {
         Set<String> namespaces = Collections.emptySet();
         Map<String, Map<String, ActionConfig>>  allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
@@ -76,7 +76,7 @@ public class ConfigurationHelper {
         }
         return config;
     }
-    
+
     public List<Properties> getJarProperties() throws IOException {
         ResolverUtil resolver = new ResolverUtil();
         List<Properties> poms = new ArrayList<Properties>();

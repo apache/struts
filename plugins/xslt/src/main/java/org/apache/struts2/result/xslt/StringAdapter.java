@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.result.xslt;
 
-import com.opensymphony.xwork2.util.DomHelper;
+import org.apache.struts2.util.DomHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;

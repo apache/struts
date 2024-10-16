@@ -25,7 +25,7 @@
 
 <struts>
 
-    <bean type="com.opensymphony.xwork2.ObjectFactory" name="cdi" class="org.apache.struts2.cdi.CdiObjectFactory" />
+    <bean type="org.apache.struts2.ObjectFactory" name="cdi" class="org.apache.struts2.cdi.CdiObjectFactory" />
 
     <!--  Make the CDI object factory the automatic default -->
     <constant name="struts.objectFactory" value="cdi" />

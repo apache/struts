@@ -28,9 +28,9 @@ import org.apache.struts2.url.StrutsQueryStringBuilder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Scope.Strategy;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -20,7 +20,7 @@ package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import freemarker.core.InvalidReferenceException;
 import freemarker.ext.jakarta.servlet.FreemarkerServlet;
 import freemarker.template.Configuration;

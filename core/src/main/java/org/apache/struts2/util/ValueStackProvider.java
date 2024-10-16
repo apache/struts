@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * @since 6.4.0

@@ -18,8 +18,8 @@
  */
 package org.apache.struts.beanvalidation.validation.interceptor;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

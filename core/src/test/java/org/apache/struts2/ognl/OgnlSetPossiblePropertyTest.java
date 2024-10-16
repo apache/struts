@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.ognl.OgnlValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import ognl.OgnlRuntime;
 import org.apache.struts2.StrutsConstants;
 

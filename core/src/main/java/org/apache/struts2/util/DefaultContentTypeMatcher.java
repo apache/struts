@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.util.PatternMatcher;
-import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.util.PatternMatcher;
+import org.apache.struts2.util.WildcardHelper;
 
 import java.util.Map;
 

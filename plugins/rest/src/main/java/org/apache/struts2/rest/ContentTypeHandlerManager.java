@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.rest.handler.ContentTypeHandler;

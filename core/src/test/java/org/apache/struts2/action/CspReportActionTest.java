@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.action;
 
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.interceptor.csp.CspSettings;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;

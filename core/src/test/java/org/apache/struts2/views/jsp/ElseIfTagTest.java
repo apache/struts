@@ -25,8 +25,8 @@ import org.apache.struts2.components.If;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockJspWriter;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.tagext.TagSupport;
@@ -232,14 +232,14 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
     }
 
     /**
-     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a
      * {@link ComponentTagSupport} tag's {@link Component} to match expectations for the test.
-     * 
+     *
      * The component reference is not available to the tag until after the doStartTag() method is called.
      * We need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
      * what we set for the Tag when a non-default (true) value is used, so this method accesses the component instance,
      * sets the value specified and forces the tag's parameters to be repopulated again.
-     * 
+     *
      * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
      * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
      */

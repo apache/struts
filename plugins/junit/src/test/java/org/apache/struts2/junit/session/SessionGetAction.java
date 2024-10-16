@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.junit.session;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 /**
  * An action which reads a value from the session.

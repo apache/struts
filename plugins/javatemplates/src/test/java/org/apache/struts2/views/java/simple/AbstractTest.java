@@ -21,12 +21,12 @@
 
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.OgnlTextParser;
-import com.opensymphony.xwork2.util.TextParser;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.util.OgnlTextParser;
+import org.apache.struts2.util.TextParser;
+import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpSession;
 import junit.framework.TestCase;
 import org.apache.struts2.components.Component;

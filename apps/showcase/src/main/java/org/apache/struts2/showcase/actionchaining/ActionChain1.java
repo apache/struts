@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.showcase.actionchaining;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class ActionChain1 extends ActionSupport {

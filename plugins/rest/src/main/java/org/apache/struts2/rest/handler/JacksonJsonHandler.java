@@ -21,8 +21,8 @@ package org.apache.struts2.rest.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 
 import java.io.IOException;

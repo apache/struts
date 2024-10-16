@@ -18,20 +18,20 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.mock.MockInterceptor;
-import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
-import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.DefaultUnknownHandlerManager;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.mock.MockInterceptor;
+import org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
+import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.util.XWorkTestCaseHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType.BASIC;
+import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.BASIC;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 
 public class RestActionInvocationTest extends TestCase {

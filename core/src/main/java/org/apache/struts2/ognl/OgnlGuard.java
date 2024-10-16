@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.OgnlUtil;
 import ognl.Ognl;
 import ognl.OgnlException;
 

@@ -20,9 +20,9 @@ package org.apache.struts2.convention;
 
 import java.util.Map;
 
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.entities.ResultTypeConfig;
 
 /**
  * <p>

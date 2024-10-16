@@ -33,21 +33,21 @@
             </interceptor-stack>
         </interceptors>
 
-        <action name="fetchMetadataExempted" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="fetchMetadataExempted" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="defaultInterceptorStack">
                <param name="fetchMetadata.setExemptedPaths">/fetchMetadataExempted</param>
             </interceptor-ref>
             <result name="success">hello.jsp</result>
         </action>
 
-        <action name="fetchMetadataNotExempted" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="fetchMetadataNotExempted" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="defaultInterceptorStack">
                 <param name="fetchMetadata.setExemptedPaths">/nonMatchingActionPath</param>
             </interceptor-ref>
             <result name="success">hello.jsp</result>
         </action>
 
-        <action name="fetchMetadataExemptedGlobal" class="com.opensymphony.xwork2.SimpleAction">
+        <action name="fetchMetadataExemptedGlobal" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="defaultInterceptorStack" />
             <result name="success">hello.jsp</result>
         </action>

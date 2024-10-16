@@ -24,7 +24,7 @@
         "https://struts.apache.org/dtds/struts-6.0.dtd">
 <struts>
 
-    <constant name="struts.excludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,com.opensymphony.xwork2.ognl.SecurityMemberAccess" />
+    <constant name="struts.excludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,org.apache.struts2.ognl.SecurityMemberAccess" />
 
     <constant name="struts.ognl.allowStaticFieldAccess" value="false"/>
 </struts>

@@ -42,7 +42,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         tag.setTitle("title");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<select name='name_' size='10' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></select>");
@@ -55,7 +55,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         tag.setHeaderValue("%{'val'}");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<select name=''><option value='key0'>val</option></select>");
@@ -68,7 +68,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         tag.setListValue("stringField");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<select name=''><option value='1'>val</option></select>");
@@ -79,7 +79,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         tag.setList("%{#{'key0' : 'val'}}");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<select name=''><option value='key0'>val</option></select>");
@@ -93,7 +93,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         tag.setValue("%{'1'}");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<select name='' value='1'><option value='1' selected='selected'>val</option></select>");

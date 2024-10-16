@@ -33,7 +33,7 @@ public class DateTextFieldTest extends AbstractCommonAttributesTest {
         tag.setFormat("yyyy-MM-dd");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<div id='id'>" +
@@ -42,10 +42,10 @@ public class DateTextFieldTest extends AbstractCommonAttributesTest {
         		"-<input type='text' class='date_day' size='2' maxlength='2' id='__day_id' name='__day_name'></input></div>");
         assertEquals(expected, output);
     }
-    
+
     @Override
     public void testRenderTextFieldScriptingAttrs() throws Exception { }
-    
+
     @Override
     public void testRenderTextFieldCommonAttrs() throws Exception { }
 

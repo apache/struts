@@ -35,7 +35,7 @@ public class FieldErrorTest extends AbstractTest {
         tag.setCssStyle("style");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul style='style' class='class'><li><span>not good</span></li><li><span>bad</span></li><li><span>bad to the bone</span></li></ul>");
@@ -46,7 +46,7 @@ public class FieldErrorTest extends AbstractTest {
         tag.setCssStyle("style");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul style='style' class='errorMessage'><li><span>not good</span></li><li><span>bad</span></li><li><span>bad to the bone</span></li></ul>");
@@ -57,7 +57,7 @@ public class FieldErrorTest extends AbstractTest {
         this.fieldNames.clear();
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul class='errorMessage'><li><span>not good</span></li><li><span>bad</span></li><li><span>bad to the bone</span></li></ul>");
@@ -67,7 +67,7 @@ public class FieldErrorTest extends AbstractTest {
     public void testRenderFieldErrorWithoutOneFieldName() {
         tag.setFieldName("field1");
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<ul class='errorMessage'><li><span>not good</span></li><li><span>bad</span></li></ul>");
@@ -79,7 +79,7 @@ public class FieldErrorTest extends AbstractTest {
         this.fieldNames.clear();
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         assertEquals("", output);

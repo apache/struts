@@ -30,20 +30,15 @@ import java.util.List;
  * @see org.apache.struts2.components.AppendIterator
  * @see org.apache.struts2.views.jsp.iterator.AppendIteratorTag
  */
-public class AppendIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
+public class AppendIteratorFilter extends IteratorFilterSupport implements Iterator<Object>, Action {
 
-    List iterators = new ArrayList();
+    private final List<Object> iterators = new ArrayList<>();
+    private final List<Object> sources = new ArrayList<>();
 
-    // Attributes ----------------------------------------------------
-    List sources = new ArrayList();
-
-
-    // Public --------------------------------------------------------
     public void setSource(Object anIterator) {
         sources.add(anIterator);
     }
 
-    // Action implementation -----------------------------------------
     @Override
     public String execute() {
         // Make source transformations
@@ -54,11 +49,10 @@ public class AppendIteratorFilter extends IteratorFilterSupport implements Itera
         return SUCCESS;
     }
 
-    // Iterator implementation ---------------------------------------
     @Override
     public boolean hasNext() {
         if (!iterators.isEmpty()) {
-            return (((Iterator) iterators.get(0)).hasNext());
+            return (((Iterator<?>) iterators.get(0)).hasNext());
         } else {
             return false;
         }
@@ -67,10 +61,10 @@ public class AppendIteratorFilter extends IteratorFilterSupport implements Itera
     @Override
     public Object next() {
         try {
-            return ((Iterator) iterators.get(0)).next();
+            return ((Iterator<?>) iterators.get(0)).next();
         } finally {
             if (!iterators.isEmpty()) {
-                if (!((Iterator) iterators.get(0)).hasNext()) {
+                if (!((Iterator<?>) iterators.get(0)).hasNext()) {
                     iterators.remove(0);
                 }
             }

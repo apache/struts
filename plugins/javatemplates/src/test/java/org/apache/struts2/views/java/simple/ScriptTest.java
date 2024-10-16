@@ -40,7 +40,7 @@ public class ScriptTest extends AbstractTest {
         tag.setCrossorigin("test");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 

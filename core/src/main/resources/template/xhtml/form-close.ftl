@@ -18,13 +18,13 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/control-close.ftl" />
+<#include "/${attributes.templateDir}/simple/form-close.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/form-close-validate.ftl" />
+<#if attributes.focusElement??>
 <@s.script>
     StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement?js_string}");
+        var element = document.getElementById("${attributes.focusElement?js_string}");
         if(element) {
             element.focus();
         }

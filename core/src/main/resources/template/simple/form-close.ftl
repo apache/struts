@@ -20,21 +20,21 @@
 -->
 </form>
 
-<#if (parameters.customOnsubmitEnabled??)>
+<#if (attributes.customOnsubmitEnabled??)>
 <@s.script>
 <#--
   Enable auto-select of optiontransferselect tag's entries upon containing form's
   submission.
 -->
-<#if (parameters.optiontransferselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
-	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />
+<#if (attributes.optiontransferselectIds!?size > 0)>
+	var containingForm = document.getElementById("${attributes.id?js_string}");
+	<#assign selectObjIds = attributes.optiontransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId?js_string}");
-				<#if parameters.optiontransferselectIds.get(selectObjectId)??>
-					<#assign selectTagHeaderKey = parameters.optiontransferselectIds.get(selectObjectId)/>
+				<#if attributes.optiontransferselectIds.get(selectObjectId)??>
+					<#assign selectTagHeaderKey = attributes.optiontransferselectIds.get(selectObjectId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
@@ -42,15 +42,15 @@
 			}, true);
 	</#list>
 </#if>
-<#if (parameters.inputtransferselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
-	<#assign selectObjIds = parameters.inputtransferselectIds.keySet() />
+<#if (attributes.inputtransferselectIds!?size > 0)>
+	var containingForm = document.getElementById("${attributes.id?js_string}");
+	<#assign selectObjIds = attributes.inputtransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId?js_string}");
-				<#if parameters.inputtransferselectIds.get(selectObjectId)??>
-					<#assign selectTagHeaderKey = parameters.inputtransferselectIds.get(selectObjectId)/>
+				<#if attributes.inputtransferselectIds.get(selectObjectId)??>
+					<#assign selectTagHeaderKey = attributes.inputtransferselectIds.get(selectObjectId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
@@ -58,15 +58,15 @@
 			}, true);
 	</#list>
 </#if>
-<#if (parameters.optiontransferselectDoubleIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
-	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />
+<#if (attributes.optiontransferselectDoubleIds!?size > 0)>
+	var containingForm = document.getElementById("${attributes.id?js_string}");
+	<#assign selectDoubleObjIds = attributes.optiontransferselectDoubleIds.keySet() />
 	<#list selectDoubleObjIds as selectObjId>
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId?js_string}");
-				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)??>
-					<#assign selectTagHeaderKey = parameters.optiontransferselectDoubleIds.get(selectObjId)/>
+				<#if attributes.optiontransferselectDoubleIds.get(selectObjId)??>
+					<#assign selectTagHeaderKey = attributes.optiontransferselectDoubleIds.get(selectObjId)/>
 					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
@@ -80,15 +80,15 @@
 	Enable auto-select of all elements of updownselect tag upon its containing form
 	submission
 -->
-<#if (parameters.updownselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
-	<#assign tmpIds = parameters.updownselectIds.keySet() />
+<#if (attributes.updownselectIds!?size > 0)>
+	var containingForm = document.getElementById("${attributes.id?js_string}");
+	<#assign tmpIds = attributes.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var updownselectObj = document.getElementById("${tmpId?js_string}");
-				<#if parameters.updownselectIds.get(tmpId)??>
-					<#assign tmpHeaderKey = parameters.updownselectIds.get(tmpId) />
+				<#if attributes.updownselectIds.get(tmpId)??>
+					<#assign tmpHeaderKey = attributes.updownselectIds.get(tmpId) />
 					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey?js_string}");
 				<#else>
 					selectAllOptionsExceptSome(updownselectObj, "key", "");
@@ -99,4 +99,4 @@
 </@s.script>
 </#if>
 
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-tooltips.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/form-close-tooltips.ftl" />

@@ -26,6 +26,8 @@ import freemarker.template.TemplateModelException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serial;
 import java.util.HashMap;
@@ -48,8 +50,12 @@ import java.util.Map;
  */
 public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
+    private static final Logger LOG = LogManager.getLogger(ScopesHashModel.class);
+
     @Serial
     private static final long serialVersionUID = 5551686380141886764L;
+
+    private static final String TAG_ATTRIBUTES = "attributes";
 
     private final HttpServletRequest request;
     private final ServletContext servletContext;
@@ -96,6 +102,9 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
             if (obj != null) {
                 return wrap(obj);
+            } else if (TAG_ATTRIBUTES.equals(key)) {
+                LOG.warn("[{}] cannot be resolved against stack, short-circuiting!", key);
+                return null;
             }
 
             // ok, then try the context
@@ -145,7 +154,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     }
 
     private Object findValueOnStack(final String key) {
-        if ("parameters".equals(key)) {
+        if (TAG_ATTRIBUTES.equals(key)) {
             if (parametersCache != null) {
                 return parametersCache;
             }

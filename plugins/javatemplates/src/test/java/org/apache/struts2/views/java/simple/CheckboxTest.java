@@ -38,7 +38,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         tag.setFieldValue("xyz");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input type='checkbox' name='name_' value='xyz' tabindex='1' id='id_' class='class' style='style' title='title'></input>");
@@ -57,7 +57,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         tag.setSubmitUnchecked("true");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz' disabled='disabled'></input>");
@@ -69,7 +69,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         tag.setValue("%{someValue}");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input type='checkbox' name='name_' value='true' checked='checked' id='name_'></input>");

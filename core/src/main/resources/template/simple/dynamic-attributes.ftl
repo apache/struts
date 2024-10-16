@@ -25,10 +25,10 @@
     <#return true>
   </#if>
 </#function>
-<#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
-<#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
+<#if (attributes.dynamicAttributes?? && attributes.dynamicAttributes?size > 0)><#rt/>
+<#assign aKeys = attributes.dynamicAttributes.keySet()><#rt/>
 <#list aKeys?filter(acceptKey) as aKey><#rt/>
-<#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
+<#assign keyValue = attributes.dynamicAttributes.get(aKey)/>
 <#if keyValue?is_string>
   <#if evaluate_dynamic_attributes!false == true>
     <#assign value = struts.translateVariables(keyValue)!keyValue/><#rt/>

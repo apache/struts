@@ -45,7 +45,7 @@ public class FormTest extends AbstractCommonAttributesTest {
         tag.setMethod("post");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -55,7 +55,7 @@ public class FormTest extends AbstractCommonAttributesTest {
 
     public void testDefaultMethod() {
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();

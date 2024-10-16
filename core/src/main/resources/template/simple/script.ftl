@@ -19,33 +19,33 @@
  */
 -->
 <script<#rt/>
-<#if parameters.async?has_content && parameters.async == "true">
+<#if attributes.async?has_content && attributes.async == "true">
  async<#rt/>
 </#if>
-<#if parameters.charset?has_content>
- charset="${parameters.charset}"<#rt/>
+<#if attributes.charset?has_content>
+ charset="${attributes.charset}"<#rt/>
 </#if>
-<#if parameters.defer?has_content && parameters.defer=="true">
+<#if attributes.defer?has_content && attributes.defer=="true">
  defer<#rt/>
 </#if>
-<#if parameters.type?has_content>
- type="${parameters.type}"<#rt/>
+<#if attributes.type?has_content>
+ type="${attributes.type}"<#rt/>
 </#if>
-<#if parameters.src?has_content>
- src="${parameters.src}"<#rt/>
+<#if attributes.src?has_content>
+ src="${attributes.src}"<#rt/>
 </#if>
-<#if parameters.referrerpolicy?has_content>
- referrerpolicy="${parameters.referrerpolicy}"<#rt/>
+<#if attributes.referrerpolicy?has_content>
+ referrerpolicy="${attributes.referrerpolicy}"<#rt/>
 </#if>
-<#if parameters.nomodule?has_content && parameters.nomodule=="true">
+<#if attributes.nomodule?has_content && attributes.nomodule=="true">
  nomodule<#rt/>
 </#if>
-<#if parameters.integrity?has_content>
- integrity="${parameters.integrity}"<#rt/>
+<#if attributes.integrity?has_content>
+ integrity="${attributes.integrity}"<#rt/>
 </#if>
-<#if parameters.crossorigin?has_content>
- crossorigin="${parameters.crossorigin}"<#rt/>
+<#if attributes.crossorigin?has_content>
+ crossorigin="${attributes.crossorigin}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" />>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />>

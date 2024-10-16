@@ -18,30 +18,30 @@
  * under the License.
  */
 -->
-<input type="checkbox" name="${parameters.name}" value="${parameters.fieldValue}"<#rt/>
-<#if parameters.nameValue?? && parameters.nameValue>
+<input type="checkbox" name="${attributes.name}" value="${attributes.fieldValue}"<#rt/>
+<#if attributes.nameValue?? && attributes.nameValue>
  checked="checked"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
-<#if parameters.submitUnchecked!false>
-<input type="hidden" id="__checkbox_${parameters.id}" name="__checkbox_${parameters.name}" value="${parameters.fieldValue}"<#rt/>
-<#if parameters.disabled!false>
+<#if attributes.submitUnchecked!false>
+<input type="hidden" id="__checkbox_${attributes.id}" name="__checkbox_${attributes.name}" value="${attributes.fieldValue}"<#rt/>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
  /><#rt/>

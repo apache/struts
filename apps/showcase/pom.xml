@@ -50,11 +50,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-sitemesh-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
         </dependency>
 
@@ -126,9 +121,9 @@
         </dependency>
 
         <dependency>
-           <groupId>org.apache.struts</groupId>
-           <artifactId>struts2-sitemesh2-jakarta</artifactId>
-           <version>${project.version}</version>
+           <groupId>org.sitemesh</groupId>
+           <artifactId>sitemesh</artifactId>
+           <version>3.2.1</version>
         </dependency>
 
        <dependency>
@@ -156,6 +151,17 @@
             <version>${hibernate-validator.version}</version>
         </dependency>
 
+        <!--
+         Nashorn (the built-in JDK javascript engine) was deprecated in JDK 11 and removed in JDK 15
+         As a result attempting to use @ScriptAssert on JDK 17 leads to the exception
+         See more details
+         https://stackoverflow.com/questions/78008950/resolve-org-hibernate-validator-spi-scripting-scriptevaluatornotfoundexception
+         -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>3.0.22</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -174,11 +180,6 @@
                   <configuration>
                     <outputDirectory>${project.build.directory}/extraclasspath</outputDirectory>
                     <artifactItems>
-                      <artifactItem>
-                        <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-sitemesh2-jakarta</artifactId>
-                        <destFileName>struts2-sitemesh2-jakarta.jar</destFileName>
-                      </artifactItem>
                       <artifactItem>
                         <groupId>org.apache.struts</groupId>
                         <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
@@ -244,7 +245,6 @@
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webApp>
                       <extraClasspath>
-                        ${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-velocity-tools-view-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-velocity-tools-jsp-jakarta
                       </extraClasspath>

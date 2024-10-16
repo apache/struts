@@ -133,11 +133,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-sitemesh-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-spring-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>

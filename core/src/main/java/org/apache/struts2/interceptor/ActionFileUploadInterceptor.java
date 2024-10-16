@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.UploadedFilesAware;
@@ -135,7 +136,11 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {
+        MultiPartRequestWrapper multiWrapper = request instanceof HttpServletRequestWrapper wrapper
+                ? findMultipartRequestWrapper(wrapper)
+                : null;
+
+        if (multiWrapper == null) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
                 LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
@@ -145,8 +150,8 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         if (!(invocation.getAction() instanceof UploadedFilesAware action)) {
             LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
-                invocation.getProxy().getActionName(),
-                UploadedFilesAware.class.getSimpleName());
+                    invocation.getProxy().getActionName(),
+                    UploadedFilesAware.class.getSimpleName());
             return invocation.invoke();
         }
 
@@ -183,6 +188,27 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         // invoke action
         return invocation.invoke();
+    }
+
+    /**
+     * Tries to find {@link MultiPartRequestWrapper} as the request can be already wrapped
+     * with another {@link HttpServletRequestWrapper}.
+     * If the {@link MultiPartRequestWrapper} cannot be found, null is returned instead.
+     *
+     * @param request current {@link HttpServletRequestWrapper}
+     * @return {@link MultiPartRequestWrapper} or null
+     * @since 7.0.0
+     */
+    protected MultiPartRequestWrapper findMultipartRequestWrapper(HttpServletRequestWrapper request) {
+        if (request instanceof MultiPartRequestWrapper multiPartRequestWrapper) {
+            LOG.debug("Found multipart request: {}", multiPartRequestWrapper.getClass().getSimpleName());
+            return multiPartRequestWrapper;
+        } else if (request.getRequest() instanceof HttpServletRequestWrapper wrappedRequest) {
+            LOG.debug("Could not find multipart request wrapper, checking ancestor: {}",
+                    wrappedRequest.getClass().getSimpleName());
+            return findMultipartRequestWrapper(wrappedRequest);
+        }
+        return null;
     }
 
 }

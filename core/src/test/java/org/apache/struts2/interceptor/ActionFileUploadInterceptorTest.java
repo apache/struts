@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -512,6 +513,67 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         String msg = errors.iterator().next();
         // the error message should contain at least this test
         assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
+    }
+
+    public void testSingleHttpRequestWrapper() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234--\r
+                """);
+        request.setContent(content.getBytes(StandardCharsets.UTF_8));
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+                .withServletRequest(new HttpServletRequestWrapper(createMultipartRequestMaxSize(1000)));
+
+        String result = interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertEquals("success", result);
+    }
+
+    public void testMultipleHttpRequestWrappers() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234--\r
+                """);
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+                .withServletRequest(new HttpServletRequestWrapper(new HttpServletRequestWrapper(createMultipartRequestMaxSize(1000))));
+
+        String result = interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertEquals("success", result);
     }
 
     private String encodeTextFile(String filename, String contentType, String content) {

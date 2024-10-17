@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.interceptor.ExceptionHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.List;
@@ -72,7 +73,7 @@ import java.util.Map;
  * <!-- START SNIPPET: extending -->
  * <p>
  * If you want to add custom handling for publishing the Exception, you may override
- * {@link #publishException(com.opensymphony.xwork2.ActionInvocation, ExceptionHolder)}. The default implementation
+ * {@link #publishException(ActionInvocation, ExceptionHolder)}. The default implementation
  * pushes the given ExceptionHolder on value stack. A custom implementation could add additional logging etc.
  * </p>
  * <!-- END SNIPPET: extending -->
@@ -153,10 +154,7 @@ import java.util.Map;
  *
  * @author Matthew E. Porter (matthew dot porter at metissian dot com)
  * @author Claus Ibsen
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ExceptionMappingInterceptor} instead.
  */
-@Deprecated
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);

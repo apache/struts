@@ -16,25 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.Collections;
 import java.util.Map;
@@ -85,10 +85,7 @@ import java.util.Map;
  * </pre>
  *
  * @author Patrick Lightbody
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.StaticParametersInterceptor} instead.
  */
-@Deprecated
 public class StaticParametersInterceptor extends AbstractInterceptor {
 
     private boolean parse;
@@ -156,7 +153,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                 ReflectionContextState.setReportingConversionErrors(contextMap, true);
                 final ValueStack stack = ac.getValueStack();
 
-                ValueStack newStack = valueStackFactory.createValueStack(stack);
+                ValueStack newStack = valueStackFactory.createValueStack(com.opensymphony.xwork2.util.ValueStack.adapt(stack));
                 boolean clearableStack = newStack instanceof ClearableValueStack;
                 if (clearableStack) {
                     //if the stack's context can be cleared, do that to prevent OGNL
@@ -174,7 +171,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {
                     Object val = entry.getValue();
                     if (parse && val instanceof String) {
-                        val = TextParseUtil.translateVariables(val.toString(), stack);
+                        val = TextParseUtil.translateVariables(val.toString(), com.opensymphony.xwork2.util.ValueStack.adapt(stack));
                     }
                     try {
                         newStack.setValue(entry.getKey(), val);

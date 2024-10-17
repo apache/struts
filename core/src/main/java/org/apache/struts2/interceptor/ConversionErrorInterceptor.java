@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,10 +84,7 @@ import java.util.Map;
  * </pre>
  *
  * @author Jason Carreira
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ConversionErrorInterceptor} instead.
  */
-@Deprecated
 public class ConversionErrorInterceptor extends MethodFilterInterceptor {
 
     public static final String ORIGINAL_PROPERTY_OVERRIDE = "original.property.override";
@@ -115,7 +111,7 @@ public class ConversionErrorInterceptor extends MethodFilterInterceptor {
             ConversionData conversionData = entry.getValue();
 
             if (shouldAddError(propertyName, conversionData.getValue())) {
-                String message = XWorkConverter.getConversionErrorMessage(propertyName, conversionData.getToClass(), stack);
+                String message = XWorkConverter.getConversionErrorMessage(propertyName, conversionData.getToClass(), com.opensymphony.xwork2.util.ValueStack.adapt(stack));
 
                 Object action = invocation.getAction();
                 if (action instanceof ValidationAware) {

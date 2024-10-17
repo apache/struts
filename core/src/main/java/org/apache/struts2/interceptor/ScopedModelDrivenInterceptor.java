@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.interceptor.ScopedModelDriven;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -69,10 +68,10 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  *
  * &lt;-- Basic usage --&gt;
- * &lt;interceptor name="scopedModelDriven" class="com.opensymphony.interceptor.ScopedModelDrivenInterceptor" /&gt;
+ * &lt;interceptor name="scopedModelDriven" class="org.apache.struts2.interceptor.ScopedModelDrivenInterceptor" /&gt;
  *
  * &lt;-- Using all available parameters --&gt;
- * &lt;interceptor name="gangsterForm" class="com.opensymphony.interceptor.ScopedModelDrivenInterceptor"&gt;
+ * &lt;interceptor name="gangsterForm" class="org.apache.struts2.interceptor.ScopedModelDrivenInterceptor"&gt;
  *      &lt;param name="scope"&gt;session&lt;/param&gt;
  *      &lt;param name="name"&gt;gangsterForm&lt;/param&gt;
  *      &lt;param name="className"&gt;com.opensymphony.example.GangsterForm&lt;/param&gt;
@@ -80,10 +79,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ScopedModelDrivenInterceptor} instead.
  */
-@Deprecated
 public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];

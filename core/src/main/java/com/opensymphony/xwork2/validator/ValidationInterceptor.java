@@ -20,13 +20,13 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Validateable;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -71,9 +71,9 @@ import org.apache.logging.log4j.Logger;
  * <li>programmatic - Defaults to true. If true and the action is Validateable call validate(),
  * and any method that starts with "validate".
  * </li>
- * 
+ *
  * <li>declarative - Defaults to true. Perform validation based on xml or annotations.</li>
- * 
+ *
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
@@ -90,14 +90,14 @@ import org.apache.logging.log4j.Logger;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
  *     &lt;interceptor-ref name=&quot;params&quot;/&gt;
  *     &lt;interceptor-ref name=&quot;validation&quot;/&gt;
  *     &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
  *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * 
+ *
  * &lt;-- in the following case myMethod of the action class will not
  *        get validated --&gt;
  * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
@@ -108,7 +108,7 @@ import org.apache.logging.log4j.Logger;
  *     &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
  *     &lt;result name=&quot;success&quot;&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * 
+ *
  * &lt;-- in the following case only annotated methods of the action class will
  *        be validated --&gt;
  * &lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&gt;
@@ -138,9 +138,9 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     private final static String ALT_VALIDATE_PREFIX = "validateDo";
 
     private boolean validateAnnotatedMethodOnly;
-    
+
     private ActionValidatorManager actionValidatorManager;
-    
+
     private boolean alwaysInvokeValidate = true;
     private boolean programmatic = true;
     private boolean declarative = true;
@@ -149,11 +149,11 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     public void setActionValidatorManager(ActionValidatorManager mgr) {
         this.actionValidatorManager = mgr;
     }
-    
+
     /**
      * Determines if {@link Validateable}'s <code>validate()</code> should be called,
      * as well as methods whose name that start with "validate". Defaults to "true".
-     * 
+     *
      * @param programmatic <tt>true</tt> then <code>validate()</code> is invoked.
      */
     public void setProgrammatic(boolean programmatic) {
@@ -161,9 +161,9 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Determines if validation based on annotations or xml should be performed. Defaults 
+     * Determines if validation based on annotations or xml should be performed. Defaults
      * to "true".
-     * 
+     *
      * @param declarative <tt>true</tt> then perform validation based on annotations or xml.
      */
     public void setDeclarative(boolean declarative) {
@@ -171,9 +171,9 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Determines if {@link Validateable}'s <code>validate()</code> should always 
+     * Determines if {@link Validateable}'s <code>validate()</code> should always
      * be invoked. Default to "true".
-     * 
+     *
      * @param alwaysInvokeValidate <tt>true</tt> then <code>validate()</code> is always invoked.
      */
     public void setAlwaysInvokeValidate(String alwaysInvokeValidate) {
@@ -218,7 +218,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating {}/{} with method {}.", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), method);
         }
-        
+
 
         if (declarative) {
            if (validateAnnotatedMethodOnly) {
@@ -226,12 +226,12 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
            } else {
                actionValidatorManager.validate(action, context);
            }
-       }    
-        
+       }
+
         if (action instanceof Validateable && programmatic) {
             // keep exception that might occured in validateXXX or validateDoXXX
-            Exception exception = null; 
-            
+            Exception exception = null;
+
             Validateable validateable = (Validateable) action;
             LOG.debug("Invoking validate() on action {}", validateable);
 
@@ -239,19 +239,19 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
                 PrefixMethodInvocationUtil.invokePrefixMethod(invocation, new String[]{VALIDATE_PREFIX, ALT_VALIDATE_PREFIX});
             }
             catch(Exception e) {
-                // If any exception occurred while doing reflection, we want 
+                // If any exception occurred while doing reflection, we want
                 // validate() to be executed
                 LOG.warn("an exception occured while executing the prefix method", e);
                 exception = e;
             }
-            
-            
+
+
             if (alwaysInvokeValidate) {
                 validateable.validate();
             }
-            
-            if (exception != null) { 
-                // rethrow if something is wrong while doing validateXXX / validateDoXXX 
+
+            if (exception != null) {
+                // rethrow if something is wrong while doing validateXXX / validateDoXXX
                 throw exception;
             }
         }
@@ -262,7 +262,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         doBeforeInvocation(invocation);
         return invocation.invoke();
     }
-    
+
     /**
      * <p>
      * Returns the context that will be used by the

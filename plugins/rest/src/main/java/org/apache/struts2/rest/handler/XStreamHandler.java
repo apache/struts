@@ -19,7 +19,6 @@
 package org.apache.struts2.rest.handler;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
@@ -29,6 +28,7 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import com.thoughtworks.xstream.security.TypePermission;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.rest.handler.xstream.XStreamAllowedClassNames;
 import org.apache.struts2.rest.handler.xstream.XStreamAllowedClasses;
 import org.apache.struts2.rest.handler.xstream.XStreamPermissionProvider;

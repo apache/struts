@@ -19,8 +19,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 /**
  * <p>
  * A utility class for invoking prefixed methods in action class.
- * 
+ *
  * Interceptors that made use of this class are:
  * </p>
  * <ul>
@@ -37,7 +37,7 @@ import java.lang.reflect.Method;
  * </ul>
  *  *
  * <!-- START SNIPPET: javadocDefaultWorkflowInterceptor -->
- * 
+ *
  * <b>In DefaultWorkflowInterceptor</b>
  * <p>applies only when action implements {@link com.opensymphony.xwork2.Validateable}</p>
  * <ol>
@@ -45,12 +45,12 @@ import java.lang.reflect.Method;
  *    <li>else if the action class have validateDo{MethodName}(), it will be invoked</li>
  *    <li>no matter if 1] or 2] is performed, if alwaysInvokeValidate property of the interceptor is "true" (which is by default "true"), validate() will be invoked.</li>
  * </ol>
- * 
+ *
  * <!-- END SNIPPET: javadocDefaultWorkflowInterceptor -->
- * 
- * 
+ *
+ *
  * <!-- START SNIPPET: javadocPrepareInterceptor -->
- * 
+ *
  * <b>In PrepareInterceptor</b>
  * <p>Applies only when action implements Preparable</p>
  * <ol>
@@ -58,14 +58,14 @@ import java.lang.reflect.Method;
  *    <li>else if the action class have prepareDo(MethodName()}(), it will be invoked</li>
  *    <li>no matter if 1] or 2] is performed, if alwaysinvokePrepare property of the interceptor is "true" (which is by default "true"), prepare() will be invoked.</li>
  * </ol>
- * 
+ *
  * <!-- END SNIPPET: javadocPrepareInterceptor -->
- * 
+ *
  * @author Philip Luppens
  * @author tm_jee
  */
 public class PrefixMethodInvocationUtil {
-	
+
 	private static final Logger LOG = LogManager.getLogger(PrefixMethodInvocationUtil.class);
 
     private static final String DEFAULT_INVOCATION_METHODNAME = "execute";
@@ -76,7 +76,7 @@ public class PrefixMethodInvocationUtil {
 	 * <p>
 	 * This method will prefix <code>actionInvocation</code>'s <code>ActionProxy</code>'s
 	 * <code>method</code> with <code>prefixes</code> before invoking the prefixed method.
-	 * Order of the <code>prefixes</code> is important, as this method will return once 
+	 * Order of the <code>prefixes</code> is important, as this method will return once
 	 * a prefixed method is found in the action class.
 	 * </p>
 	 *
@@ -89,7 +89,7 @@ public class PrefixMethodInvocationUtil {
 	 * </pre>
 	 *
 	 * <p>
-	 * Assuming <code>actionInvocation.getProxy(),getMethod()</code> returns "submit", 
+	 * Assuming <code>actionInvocation.getProxy(),getMethod()</code> returns "submit",
 	 * the order of invocation would be as follows:-
 	 * </p>
 	 *
@@ -99,12 +99,12 @@ public class PrefixMethodInvocationUtil {
 	 * </ol>
 	 *
 	 * <p>
-	 * If <code>prepareSubmit()</code> exists, it will be invoked and this method 
-	 * will return, <code>prepareDoSubmit()</code> will NOT be invoked. 
+	 * If <code>prepareSubmit()</code> exists, it will be invoked and this method
+	 * will return, <code>prepareDoSubmit()</code> will NOT be invoked.
 	 * </p>
 	 *
 	 * <p>
-	 * On the other hand, if <code>prepareDoSubmit()</code> does not exists, and 
+	 * On the other hand, if <code>prepareDoSubmit()</code> does not exists, and
 	 * <code>prepareDoSubmit()</code> exists, it will be invoked.
 	 * </p>
 	 *
@@ -119,29 +119,32 @@ public class PrefixMethodInvocationUtil {
 	 */
 	public static void invokePrefixMethod(ActionInvocation actionInvocation, String[] prefixes) throws InvocationTargetException, IllegalAccessException {
 		Object action = actionInvocation.getAction();
-		
+
 		String methodName = actionInvocation.getProxy().getMethod();
-		
+
 		if (methodName == null) {
-			// if null returns (possible according to the docs), use the default execute 
+			// if null returns (possible according to the docs), use the default execute
 	        methodName = DEFAULT_INVOCATION_METHODNAME;
 		}
-		
+
 		Method method = getPrefixedMethod(prefixes, methodName, action);
 		if (method != null) {
 			method.invoke(action, new Object[0]);
 		}
 	}
-	
-	
+
+	public static void invokePrefixMethod(org.apache.struts2.ActionInvocation actionInvocation, String[] prefixes) throws InvocationTargetException, IllegalAccessException {
+		invokePrefixMethod(ActionInvocation.adapt(actionInvocation), prefixes);
+	}
+
 	/**
-	 * This method returns a {@link Method} in <code>action</code>. The method 
+	 * This method returns a {@link Method} in <code>action</code>. The method
 	 * returned is found by searching for method in <code>action</code> whose method name
 	 * is equals to the result of appending each <code>prefixes</code>
 	 * to <code>methodName</code>. Only the first method found will be returned, hence
 	 * the order of <code>prefixes</code> is important. If none is found this method
 	 * will return null.
-	 * 
+	 *
 	 * @param prefixes the prefixes to prefix the <code>methodName</code>
 	 * @param methodName the method name to be prefixed with <code>prefixes</code>
 	 * @param action the action class of which the prefixed method is to be search for.
@@ -162,7 +165,7 @@ public class PrefixMethodInvocationUtil {
         }
 		return null;
 	}
-	
+
 	/**
      * <p>
 	 * This method capitalized the first character of <code>methodName</code>.

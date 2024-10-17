@@ -16,18 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.interceptor.ValidationAware;
-import org.apache.struts2.interceptor.ValidationErrorAware;
-import org.apache.struts2.interceptor.ValidationWorkflowAware;
+import org.apache.struts2.ActionInvocation;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -50,7 +47,7 @@ import org.apache.struts2.interceptor.ValidationWorkflowAware;
  * for the interceptor element, naming either a list of excluded method names and/or a list of included method
  * names, whereby includeMethods overrides excludedMethods. A single * sign is interpreted as wildcard matching
  * all methods for both parameters.
- * See {@link MethodFilterInterceptor} for more info.
+ * See {@link com.opensymphony.xwork2.interceptor.MethodFilterInterceptor} for more info.
  * </p>
  *
  * <p>
@@ -132,10 +129,7 @@ import org.apache.struts2.interceptor.ValidationWorkflowAware;
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @author Philip Luppens
  * @author tm_jee
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.DefaultWorkflowInterceptor} instead.
  */
-@Deprecated
 public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = 7563014655616490865L;
@@ -186,7 +180,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Process {@link ValidationWorkflowAware} interface
+     * Process {@link com.opensymphony.xwork2.interceptor.ValidationWorkflowAware} interface
      *
      * @param action action object
      * @param currentResultName current result name
@@ -230,13 +224,13 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Notify action if it implements {@link ValidationErrorAware} interface
+     * Notify action if it implements {@link com.opensymphony.xwork2.interceptor.ValidationErrorAware} interface
      *
      * @param action action object
      * @param currentResultName current result name
      *
      * @return result name
-     * @see ValidationErrorAware
+     * @see com.opensymphony.xwork2.interceptor.ValidationErrorAware
      */
     protected String processValidationErrorAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;

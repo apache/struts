@@ -29,7 +29,7 @@ public interface ValueStackFactory {
      * @return  a new {@link com.opensymphony.xwork2.util.ValueStack}.
      */
     ValueStack createValueStack();
-    
+
     /**
      * Get a new instance of {@link com.opensymphony.xwork2.util.ValueStack}
      *
@@ -37,5 +37,8 @@ public interface ValueStackFactory {
      * @return  a new {@link com.opensymphony.xwork2.util.ValueStack}.
      */
     ValueStack createValueStack(ValueStack stack);
-    
+
+    default ValueStack createValueStack(org.apache.struts2.util.ValueStack stack) {
+        return createValueStack(ValueStack.adapt(stack));
+    }
 }

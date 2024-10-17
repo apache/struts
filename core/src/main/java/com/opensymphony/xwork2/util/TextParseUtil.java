@@ -51,6 +51,9 @@ public class TextParseUtil {
         return translateVariables(new char[]{'$', '%'}, expression, stack, String.class, null).toString();
     }
 
+    public static String translateVariables(String expression, org.apache.struts2.util.ValueStack stack) {
+        return translateVariables(expression, ValueStack.adapt(stack));
+    }
 
     /**
      * Function similarly as {@link #translateVariables(char, String, ValueStack)}

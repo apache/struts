@@ -16,16 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.validator;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
+import com.opensymphony.xwork2.validator.ValidatorConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.Validateable;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
 import org.apache.struts2.interceptor.ValidationAware;
 
 /**
@@ -129,9 +131,7 @@ import org.apache.struts2.interceptor.ValidationAware;
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @see ActionValidatorManager
  * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
- * @deprecated since 6.7.0, use {@link org.apache.struts2.validator.ValidationInterceptor} instead.
  */
-@Deprecated
 public class ValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ValidationInterceptor.class);

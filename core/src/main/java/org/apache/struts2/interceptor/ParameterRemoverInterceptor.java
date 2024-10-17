@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
@@ -66,10 +66,7 @@ import java.util.Set;
  * 	...
  * &lt;/action&gt;
  * </pre>
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ParameterRemoverInterceptor} instead.
  */
-@Deprecated
 public class ParameterRemoverInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ParameterRemoverInterceptor.class);
@@ -81,7 +78,7 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
      * Decide if the parameter should be removed from the parameter map based on
      * <code>paramNames</code> and <code>paramValues</code>.
      *
-     * @see com.opensymphony.xwork2.interceptor.AbstractInterceptor
+     * @see AbstractInterceptor
      */
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {

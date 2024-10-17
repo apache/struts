@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,7 @@ import java.util.Map;
  *
  * <p>
  * This interceptor adds any error found in the {@link ActionContext}'s conversionErrors map as a field error (provided
- * that the action implements {@link ValidationAware}). In addition, any field that contains a validation error has its
+ * that the action implements {@link com.opensymphony.xwork2.interceptor.ValidationAware}). In addition, any field that contains a validation error has its
  * original value saved such that any subsequent requests for that value return the original value rather than the value
  * in the action. This is important because if the value "abc" is submitted and can't be converted to an int, we want to
  * display the original string ("abc") again rather than the int value (likely 0, which would make very little sense to
@@ -44,7 +43,7 @@ import java.util.Map;
  * </p>
  *
  * <p>
- * <b>Note:</b> Since 2.5.2, this interceptor extends {@link MethodFilterInterceptor}, therefore being
+ * <b>Note:</b> Since 2.5.2, this interceptor extends {@link com.opensymphony.xwork2.interceptor.MethodFilterInterceptor}, therefore being
  * able to deal with excludeMethods / includeMethods parameters. See [Workflow Interceptor]
  * (class {@link DefaultWorkflowInterceptor}) for documentation and examples on how to use this feature.
  * </p>
@@ -85,10 +84,7 @@ import java.util.Map;
  * </pre>
  *
  * @author Jason Carreira
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ConversionErrorInterceptor} instead.
  */
-@Deprecated
 public class ConversionErrorInterceptor extends MethodFilterInterceptor {
 
     public static final String ORIGINAL_PROPERTY_OVERRIDE = "original.property.override";

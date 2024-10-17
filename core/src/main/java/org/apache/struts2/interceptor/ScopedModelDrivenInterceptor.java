@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.interceptor.ScopedModelDriven;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -34,7 +33,7 @@ import java.util.Map;
  *
  * An interceptor that enables scoped model-driven actions.
  *
- * <p>This interceptor only activates on actions that implement the {@link ScopedModelDriven} interface.  If
+ * <p>This interceptor only activates on actions that implement the {@link com.opensymphony.xwork2.interceptor.ScopedModelDriven} interface.  If
  * detected, it will retrieve the model class from the configured scope, then provide it to the Action.</p>
  *
  * <!-- END SNIPPET: description -->
@@ -80,10 +79,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ScopedModelDrivenInterceptor} instead.
  */
-@Deprecated
 public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];

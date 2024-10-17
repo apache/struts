@@ -23,144 +23,124 @@ import com.opensymphony.xwork2.ActionContext;
 import java.util.Map;
 
 /**
- * ValueStack allows multiple beans to be pushed in and dynamic EL expressions to be evaluated against it. When
- * evaluating an expression, the stack will be searched down the stack, from the latest objects pushed in to the
- * earliest, looking for a bean with a getter or setter for the given property or a method of the given name (depending
- * on the expression being evaluated).
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.util.ValueStack} instead.
  */
-public interface ValueStack {
+@Deprecated
+public interface ValueStack extends org.apache.struts2.util.ValueStack {
 
-    String VALUE_STACK = "com.opensymphony.xwork2.util.ValueStack.ValueStack";
-
-    String REPORT_ERRORS_ON_NO_PROP = "com.opensymphony.xwork2.util.ValueStack.ReportErrorsOnNoProp";
-
-    /**
-     * Gets the context for this value stack. The context holds all the information in the value stack and it's surroundings.
-     *
-     * @return  the context.
-     */
-    Map<String, Object> getContext();
-
+    @Override
     ActionContext getActionContext();
 
-    /**
-     * Sets the default type to convert to if no type is provided when getting a value.
-     *
-     * @param defaultType the new default type
-     */
-    void setDefaultType(Class defaultType);
+    static ValueStack adapt(org.apache.struts2.util.ValueStack actualStack) {
+        return actualStack != null ? new LegacyAdapter(actualStack) : null;
+    }
 
-    /**
-     * Set a override map containing <code> key -&gt; values </code> that takes precedent when doing find operations on the ValueStack.
-     * <p>
-     * See the unit test for ValueStackTest for examples.
-     * </p>
-     *
-     * @param overrides  overrides map.
-     */
-    void setExprOverrides(Map<Object, Object> overrides);
+    class LegacyAdapter implements ValueStack {
 
-    /**
-     * Gets the override map if anyone exists.
-     *
-     * @return the override map, <tt>null</tt> if not set.
-     */
-    Map<Object, Object> getExprOverrides();
+        private final org.apache.struts2.util.ValueStack adaptee;
 
-    /**
-     * Get the CompoundRoot which holds the objects pushed onto the stack
-     *
-     * @return the root
-     */
-    CompoundRoot getRoot();
+        private LegacyAdapter(org.apache.struts2.util.ValueStack adaptee) {
+            this.adaptee = adaptee;
+        }
 
-    /**
-     * Attempts to set a property on a bean in the stack with the given expression using the default search order.
-     *
-     * @param expr  the expression defining the path to the property to be set.
-     * @param value the value to be set into the named property
-     */
-    void setValue(String expr, Object value);
+        @Override
+        public Map<String, Object> getContext() {
+            return adaptee.getContext();
+        }
 
-    /**
-     * Attempts to set a property on a bean in the stack with the given expression using the default search order.
-     * N.B.: unlike #setValue(String,Object) it doesn't allow eval expression.
-     * @param expr  the expression defining the path to the property to be set.
-     * @param value the value to be set into the named property
-     */
-    void setParameter(String expr, Object value);
+        @Override
+        public ActionContext getActionContext() {
+            return ActionContext.adapt(adaptee.getActionContext());
+        }
 
-    /**
-     * Attempts to set a property on a bean in the stack with the given expression using the default search order.
-     *
-     * @param expr                    the expression defining the path to the property to be set.
-     * @param value                   the value to be set into the named property
-     * @param throwExceptionOnFailure a flag to tell whether an exception should be thrown if there is no property with
-     *                                the given name.
-     */
-    void setValue(String expr, Object value, boolean throwExceptionOnFailure);
+        @Override
+        public void setDefaultType(Class defaultType) {
+            adaptee.setDefaultType(defaultType);
+        }
 
-    String findString(String expr);
-    String findString(String expr, boolean throwExceptionOnFailure);
+        @Override
+        public void setExprOverrides(Map<Object, Object> overrides) {
+            adaptee.setExprOverrides(overrides);
+        }
 
-    /**
-     * Find a value by evaluating the given expression against the stack in the default search order.
-     *
-     * @param expr the expression giving the path of properties to navigate to find the property value to return
-     * @return the result of evaluating the expression
-     */
-    Object findValue(String expr);
+        @Override
+        public Map<Object, Object> getExprOverrides() {
+            return adaptee.getExprOverrides();
+        }
 
-    Object findValue(String expr, boolean throwExceptionOnFailure);
+        @Override
+        public CompoundRoot getRoot() {
+            return adaptee.getRoot();
+        }
 
-    /**
-     * Find a value by evaluating the given expression against the stack in the default search order.
-     *
-     * @param expr   the expression giving the path of properties to navigate to find the property value to return
-     * @param asType the type to convert the return value to
-     * @return the result of evaluating the expression
-     */
-    Object findValue(String expr, Class asType);
-    Object findValue(String expr, Class asType, boolean throwExceptionOnFailure);
+        @Override
+        public void setValue(String expr, Object value) {
+            adaptee.setValue(expr, value);
+        }
 
-    /**
-     * Get the object on the top of the stack <b>without</b> changing the stack.
-     *
-     * @return the object on the top.
-     * @see CompoundRoot#peek()
-     */
-    Object peek();
+        @Override
+        public void setParameter(String expr, Object value) {
+            adaptee.setParameter(expr, value);
+        }
 
-    /**
-     * Get the object on the top of the stack and <b>remove</b> it from the stack.
-     *
-     * @return the object on the top of the stack
-     * @see CompoundRoot#pop()
-     */
-    Object pop();
+        @Override
+        public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
+            adaptee.setValue(expr, value, throwExceptionOnFailure);
+        }
 
-    /**
-     * Put this object onto the top of the stack
-     *
-     * @param o the object to be pushed onto the stack
-     * @see CompoundRoot#push(Object)
-     */
-    void push(Object o);
+        @Override
+        public String findString(String expr) {
+            return adaptee.findString(expr);
+        }
 
-    /**
-     * Sets an object on the stack with the given key
-     * so it is retrievable by {@link #findValue(String)}, {@link #findValue(String, Class)}
-     *
-     * @param key  the key
-     * @param o    the object
-     */
-    void set(String key, Object o);
+        @Override
+        public String findString(String expr, boolean throwExceptionOnFailure) {
+            return adaptee.findString(expr, throwExceptionOnFailure);
+        }
 
-    /**
-     * Get the number of objects in the stack
-     *
-     * @return the number of objects in the stack
-     */
-    int size();
+        @Override
+        public Object findValue(String expr) {
+            return adaptee.findValue(expr);
+        }
 
+        @Override
+        public Object findValue(String expr, boolean throwExceptionOnFailure) {
+            return adaptee.findValue(expr, throwExceptionOnFailure);
+        }
+
+        @Override
+        public Object findValue(String expr, Class asType) {
+            return adaptee.findValue(expr, asType);
+        }
+
+        @Override
+        public Object findValue(String expr, Class asType, boolean throwExceptionOnFailure) {
+            return adaptee.findValue(expr, asType, throwExceptionOnFailure);
+        }
+
+        @Override
+        public Object peek() {
+            return adaptee.peek();
+        }
+
+        @Override
+        public Object pop() {
+            return adaptee.pop();
+        }
+
+        @Override
+        public void push(Object o) {
+            adaptee.push(o);
+        }
+
+        @Override
+        public void set(String key, Object o) {
+            adaptee.set(key, o);
+        }
+
+        @Override
+        public int size() {
+            return adaptee.size();
+        }
+    }
 }

@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 /**
  * {@inheritDoc}
  *
@@ -25,4 +27,11 @@ package com.opensymphony.xwork2.interceptor;
  */
 @Deprecated
 public interface Interceptor extends org.apache.struts2.interceptor.Interceptor {
+
+    @Override
+    default String intercept(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return intercept(ActionInvocation.adapt(invocation));
+    }
+
+    String intercept(ActionInvocation invocation) throws Exception;
 }

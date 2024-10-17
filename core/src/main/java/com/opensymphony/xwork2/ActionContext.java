@@ -43,7 +43,7 @@ public class ActionContext extends org.apache.struts2.ActionContext {
         super(actualContext.getContextMap());
     }
 
-    private static ActionContext adapt(org.apache.struts2.ActionContext actualContext) {
+    static ActionContext adapt(org.apache.struts2.ActionContext actualContext) {
         return actualContext != null ? new ActionContext(actualContext) : null;
     }
 

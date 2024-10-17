@@ -19,9 +19,8 @@
 package com.opensymphony.xwork2;
 
 /**
- * Simple marker interface to indicate an object should <b>not</b> have its properties copied during chaining.
- *
- * @see com.opensymphony.xwork2.interceptor.ChainingInterceptor
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.Unchainable} instead.
  */
-public interface Unchainable {
+@Deprecated
+public interface Unchainable extends org.apache.struts2.Unchainable {
 }

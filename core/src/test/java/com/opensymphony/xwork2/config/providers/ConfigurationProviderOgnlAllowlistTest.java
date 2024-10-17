@@ -61,7 +61,10 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Result"),
-                Class.forName("com.opensymphony.xwork2.SimpleAction")
+                Class.forName("com.opensymphony.xwork2.SimpleAction"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action")
         );
     }
 
@@ -85,7 +88,10 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Result"),
-                Class.forName("com.opensymphony.xwork2.SimpleAction")
+                Class.forName("com.opensymphony.xwork2.SimpleAction"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action")
         );
     }
 
@@ -108,7 +114,10 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.Validateable"),
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
-                Class.forName("com.opensymphony.xwork2.Result")
+                Class.forName("com.opensymphony.xwork2.Result"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action")
         );
     }
 }

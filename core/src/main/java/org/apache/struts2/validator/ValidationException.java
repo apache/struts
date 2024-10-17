@@ -16,17 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.validator;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.validator.ValidationException} instead.
+ * ValidationException.
+ *
+ * @author Jason Carreira
  */
-@Deprecated
-public class ValidationException extends org.apache.struts2.validator.ValidationException {
+public class ValidationException extends RuntimeException {
 
+    /**
+     * Constructs an <code>Exception</code> with no specified detail message.
+     */
     public ValidationException() {
     }
 
+    /**
+     * Constructs an <code>Exception</code> with the specified detail message.
+     *
+     * @param s the detail message.
+     */
     public ValidationException(String s) {
         super(s);
     }

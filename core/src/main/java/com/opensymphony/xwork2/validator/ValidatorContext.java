@@ -18,23 +18,175 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
+import com.opensymphony.xwork2.util.ValueStack;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
- * The context for validation. This interface extends others to provide methods for reporting
- * errors and messages as well as looking up error messages in a resource bundle using a specific locale.
- *
- * @author Jason Carreira
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.validator.ValidatorContext} instead.
  */
-public interface ValidatorContext extends ValidationAware, TextProvider, LocaleProvider {
+@Deprecated
+public interface ValidatorContext extends org.apache.struts2.validator.ValidatorContext, ValidationAware {
 
-    /**
-     * Translates a simple field name into a full field name in OGNL syntax.
-     *
-     * @param fieldName the field name to lookup.
-     * @return the full field name in OGNL syntax.
-     */
-    String getFullFieldName(String fieldName);
+    static ValidatorContext adapt(org.apache.struts2.validator.ValidatorContext actualContext) {
+        if (actualContext instanceof ActionContext) {
+            return (ValidatorContext) actualContext;
+        }
+        return actualContext != null ? new LegacyAdapter(actualContext) : null;
+    }
+
+    class LegacyAdapter implements ValidatorContext {
+
+        private final org.apache.struts2.validator.ValidatorContext adaptee;
+
+        public LegacyAdapter(org.apache.struts2.validator.ValidatorContext adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public String getFullFieldName(String fieldName) {
+            return adaptee.getFullFieldName(fieldName);
+        }
+
+        @Override
+        public Locale getLocale() {
+            return adaptee.getLocale();
+        }
+
+        @Override
+        public boolean isValidLocaleString(String localeStr) {
+            return adaptee.isValidLocaleString(localeStr);
+        }
+
+        @Override
+        public boolean isValidLocale(Locale locale) {
+            return adaptee.isValidLocale(locale);
+        }
+
+        @Override
+        public boolean hasKey(String key) {
+            return adaptee.hasKey(key);
+        }
+
+        @Override
+        public String getText(String key) {
+            return adaptee.getText(key);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue) {
+            return adaptee.getText(key, defaultValue);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue, String obj) {
+            return adaptee.getText(key, defaultValue, obj);
+        }
+
+        @Override
+        public String getText(String key, List<?> args) {
+            return adaptee.getText(key, args);
+        }
+
+        @Override
+        public String getText(String key, String[] args) {
+            return adaptee.getText(key, args);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue, List<?> args) {
+            return adaptee.getText(key, defaultValue, args);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue, String[] args) {
+            return adaptee.getText(key, defaultValue, args);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
+            return adaptee.getText(key, defaultValue, args, stack);
+        }
+
+        @Override
+        public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
+            return adaptee.getText(key, defaultValue, args, stack);
+        }
+
+        @Override
+        public ResourceBundle getTexts(String bundleName) {
+            return adaptee.getTexts(bundleName);
+        }
+
+        @Override
+        public ResourceBundle getTexts() {
+            return adaptee.getTexts();
+        }
+
+        @Override
+        public void setActionErrors(Collection<String> errorMessages) {
+            adaptee.setActionErrors(errorMessages);
+        }
+
+        @Override
+        public Collection<String> getActionErrors() {
+            return adaptee.getActionErrors();
+        }
+
+        @Override
+        public void setActionMessages(Collection<String> messages) {
+            adaptee.setActionMessages(messages);
+        }
+
+        @Override
+        public Collection<String> getActionMessages() {
+            return adaptee.getActionMessages();
+        }
+
+        @Override
+        public void setFieldErrors(Map<String, List<String>> errorMap) {
+            adaptee.setFieldErrors(errorMap);
+        }
+
+        @Override
+        public Map<String, List<String>> getFieldErrors() {
+            return adaptee.getFieldErrors();
+        }
+
+        @Override
+        public void addActionError(String anErrorMessage) {
+            adaptee.addActionError(anErrorMessage);
+        }
+
+        @Override
+        public void addActionMessage(String aMessage) {
+            adaptee.addActionMessage(aMessage);
+        }
+
+        @Override
+        public void addFieldError(String fieldName, String errorMessage) {
+            adaptee.addFieldError(fieldName, errorMessage);
+        }
+
+        @Override
+        public boolean hasActionErrors() {
+            return adaptee.hasActionErrors();
+        }
+
+        @Override
+        public boolean hasActionMessages() {
+            return adaptee.hasActionMessages();
+        }
+
+        @Override
+        public boolean hasFieldErrors() {
+            return adaptee.hasFieldErrors();
+        }
+    }
 }

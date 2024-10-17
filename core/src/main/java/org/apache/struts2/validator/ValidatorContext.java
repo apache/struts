@@ -16,22 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.validator;
+
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProvider;
+import org.apache.struts2.interceptor.ValidationAware;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.validator.ValidationException} instead.
+ * The context for validation. This interface extends others to provide methods for reporting
+ * errors and messages as well as looking up error messages in a resource bundle using a specific locale.
+ *
+ * @author Jason Carreira
  */
-@Deprecated
-public class ValidationException extends org.apache.struts2.validator.ValidationException {
+public interface ValidatorContext extends ValidationAware, TextProvider, LocaleProvider {
 
-    public ValidationException() {
-    }
-
-    public ValidationException(String s) {
-        super(s);
-    }
-
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Translates a simple field name into a full field name in OGNL syntax.
+     *
+     * @param fieldName the field name to lookup.
+     * @return the full field name in OGNL syntax.
+     */
+    String getFullFieldName(String fieldName);
 }

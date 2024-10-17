@@ -16,22 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.validator;
+package org.apache.struts2.validator;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.validator.ValidationException} instead.
+ * The FieldValidator interface defines the methods to be implemented by FieldValidators.
+ * Which are used by the XWork validation framework to validate Action properties before
+ * executing the Action.
  */
-@Deprecated
-public class ValidationException extends org.apache.struts2.validator.ValidationException {
+public interface FieldValidator extends Validator {
 
-    public ValidationException() {
-    }
+    /**
+     * Sets the field name to validate with this FieldValidator
+     *
+     * @param fieldName the field name
+     */
+    void setFieldName(String fieldName);
 
-    public ValidationException(String s) {
-        super(s);
-    }
+    /**
+     * Gets the field name to be validated
+     *
+     * @return the field name
+     */
+    String getFieldName();
 
-    public ValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

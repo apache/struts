@@ -28,6 +28,8 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.validator.FieldValidator;
+import org.apache.struts2.validator.ShortCircuitableValidator;
 
 import java.io.IOException;
 import java.io.InputStream;

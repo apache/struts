@@ -19,12 +19,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 /**
- * ValidationWorkflowAware classes can programmatically change result name when errors occurred
- *
- * This interface can be only applied to action which already implements {@link ValidationAware} interface!
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationWorkflowAware} instead.
  */
-public interface ValidationWorkflowAware {
-
-    String getInputResultName();
-
+@Deprecated
+public interface ValidationWorkflowAware extends org.apache.struts2.interceptor.ValidationWorkflowAware {
 }

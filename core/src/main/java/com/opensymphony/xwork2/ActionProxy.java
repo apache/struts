@@ -20,88 +20,72 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 
-/**
- * ActionProxy is an extra layer between XWork and the action so that different proxies are possible.
- *
- * <p>
- * An example of this would be a remote proxy, where the layer between XWork and the action might be RMI or SOAP.
- * </p>
- * 
- * @author Jason Carreira
- */
-public interface ActionProxy {
+@Deprecated
+public interface ActionProxy extends org.apache.struts2.ActionProxy {
 
-    /**
-     * Gets the Action instance for this Proxy.
-     *
-     * @return the Action instance
-     */
-    Object getAction();
-
-    /**
-     * Gets the alias name this ActionProxy is mapped to.
-     *
-     * @return the alias name
-     */
-    String getActionName();
-
-    /**
-     * Gets the ActionConfig this ActionProxy is built from.
-     *
-     * @return the ActionConfig
-     */
-    ActionConfig getConfig();
-
-    /**
-     * Sets whether this ActionProxy should also execute the Result after executing the Action.
-     *
-     * @param executeResult <tt>true</tt> to also execute the Result.
-     */
-    void setExecuteResult(boolean executeResult);
-
-    /**
-     * Gets the status of whether the ActionProxy is set to execute the Result after the Action is executed.
-     *
-     * @return the status
-     */
-    boolean getExecuteResult();
-
-    /**
-     * Gets the ActionInvocation associated with this ActionProxy.
-     *
-     * @return the ActionInvocation
-     */
+    @Override
     ActionInvocation getInvocation();
 
-    /**
-     * Gets the namespace the ActionConfig for this ActionProxy is mapped to.
-     *
-     * @return the namespace
-     */
-    String getNamespace();
+    static ActionProxy adapt(org.apache.struts2.ActionProxy actualProxy) {
+        return actualProxy != null ? new LegacyAdapter(actualProxy) : null;
+    }
 
-    /**
-     * Execute this ActionProxy. This will set the ActionContext from the ActionInvocation into the ActionContext
-     * ThreadLocal before invoking the ActionInvocation, then set the old ActionContext back into the ThreadLocal.
-     *
-     * @return the result code returned from executing the ActionInvocation
-     * @throws Exception can be thrown.
-     * @see ActionInvocation
-     */
-    String execute() throws Exception;
+    class LegacyAdapter implements ActionProxy {
 
-    /**
-     * Gets the method name to execute, or <tt>null</tt> if no method has been specified (meaning <code>execute</code> will be invoked).
-     *
-     * @return the method to execute
-     */
-    String getMethod();
+        private final org.apache.struts2.ActionProxy adaptee;
 
-    /**
-     * Gets status of the method value's initialization.
-     *
-     * @return true if the method returned by getMethod() is not a default initializer value.
-     */
-    boolean isMethodSpecified();
-    
+        private LegacyAdapter(org.apache.struts2.ActionProxy adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public Object getAction() {
+            return adaptee.getAction();
+        }
+
+        @Override
+        public String getActionName() {
+            return adaptee.getActionName();
+        }
+
+        @Override
+        public ActionConfig getConfig() {
+            return adaptee.getConfig();
+        }
+
+        @Override
+        public void setExecuteResult(boolean executeResult) {
+            adaptee.setExecuteResult(executeResult);
+        }
+
+        @Override
+        public boolean getExecuteResult() {
+            return adaptee.getExecuteResult();
+        }
+
+        @Override
+        public ActionInvocation getInvocation() {
+            return ActionInvocation.adapt(adaptee.getInvocation());
+        }
+
+        @Override
+        public String getNamespace() {
+            return adaptee.getNamespace();
+        }
+
+        @Override
+        public String execute() throws Exception {
+            return adaptee.execute();
+        }
+
+        @Override
+        public String getMethod() {
+            return adaptee.getMethod();
+        }
+
+        @Override
+        public boolean isMethodSpecified() {
+            return adaptee.isMethodSpecified();
+        }
+    }
 }

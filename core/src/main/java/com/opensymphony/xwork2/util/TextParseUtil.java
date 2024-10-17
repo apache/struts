@@ -104,6 +104,10 @@ public class TextParseUtil {
     	return translateVariables(open, expression, stack, asType, null);
     }
 
+    public static Object translateVariables(char open, String expression, org.apache.struts2.util.ValueStack stack, Class asType) {
+        return translateVariables(open, expression, ValueStack.adapt(stack), asType);
+    }
+
     /**
      * Converted object from variable translation.
      *

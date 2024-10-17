@@ -77,15 +77,19 @@ public class ActionContext extends org.apache.struts2.ActionContext {
         return this;
     }
 
-    @Override
     public ActionContext withActionInvocation(ActionInvocation actionInvocation) {
+        return withActionInvocation((org.apache.struts2.ActionInvocation) actionInvocation);
+    }
+
+    @Override
+    public ActionContext withActionInvocation(org.apache.struts2.ActionInvocation actionInvocation) {
         super.withActionInvocation(actionInvocation);
         return this;
     }
 
     @Override
     public ActionInvocation getActionInvocation() {
-        return super.getActionInvocation();
+        return ActionInvocation.adapt(super.getActionInvocation());
     }
 
     @Override

@@ -35,6 +35,13 @@ public interface ActionInvocation extends org.apache.struts2.ActionInvocation {
     @Override
     Result getResult() throws Exception;
 
+    @Override
+    default void addPreResultListener(org.apache.struts2.interceptor.PreResultListener listener) {
+        addPreResultListener(PreResultListener.adapt(listener));
+    }
+
+    void addPreResultListener(PreResultListener listener);
+
     static ActionInvocation adapt(org.apache.struts2.ActionInvocation actualInvocation) {
         return actualInvocation != null ? new LegacyAdapter(actualInvocation) : null;
     }

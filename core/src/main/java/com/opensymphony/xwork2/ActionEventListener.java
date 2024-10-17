@@ -43,6 +43,9 @@ public interface ActionEventListener extends org.apache.struts2.ActionEventListe
     String handleException(Throwable t, ValueStack stack);
 
     static ActionEventListener adapt(org.apache.struts2.ActionEventListener actualListener) {
+        if (actualListener instanceof ActionEventListener) {
+            return (ActionEventListener) actualListener;
+        }
         return actualListener != null ? new LegacyAdapter(actualListener) : null;
     }
 

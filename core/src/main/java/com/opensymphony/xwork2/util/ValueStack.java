@@ -32,6 +32,9 @@ public interface ValueStack extends org.apache.struts2.util.ValueStack {
     ActionContext getActionContext();
 
     static ValueStack adapt(org.apache.struts2.util.ValueStack actualStack) {
+        if (actualStack instanceof ValueStack) {
+            return (ValueStack) actualStack;
+        }
         return actualStack != null ? new LegacyAdapter(actualStack) : null;
     }
 

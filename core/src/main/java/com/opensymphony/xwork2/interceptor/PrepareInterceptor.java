@@ -19,9 +19,7 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Preparable;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.Preparable;
 
 import java.lang.reflect.InvocationTargetException;
 

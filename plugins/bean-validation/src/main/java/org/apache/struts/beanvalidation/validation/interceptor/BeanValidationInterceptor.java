@@ -20,7 +20,6 @@ package org.apache.struts.beanvalidation.validation.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
@@ -33,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.validation.constant.ValidatorConstants;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 
 import javax.validation.ConstraintViolation;

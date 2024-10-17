@@ -20,7 +20,6 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.UploadedFilesAware;

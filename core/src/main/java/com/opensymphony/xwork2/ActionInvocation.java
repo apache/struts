@@ -36,11 +36,28 @@ public interface ActionInvocation extends org.apache.struts2.ActionInvocation {
     Result getResult() throws Exception;
 
     @Override
+    ActionProxy getProxy();
+
+    @Override
     default void addPreResultListener(org.apache.struts2.interceptor.PreResultListener listener) {
         addPreResultListener(PreResultListener.adapt(listener));
     }
 
     void addPreResultListener(PreResultListener listener);
+
+    @Override
+    default void setActionEventListener(org.apache.struts2.ActionEventListener listener) {
+        setActionEventListener(ActionEventListener.adapt(listener));
+    }
+
+    void setActionEventListener(ActionEventListener listener);
+
+    @Override
+    default void init(org.apache.struts2.ActionProxy proxy) {
+        init(ActionProxy.adapt(proxy));
+    }
+
+    void init(ActionProxy proxy);
 
     static ActionInvocation adapt(org.apache.struts2.ActionInvocation actualInvocation) {
         return actualInvocation != null ? new LegacyAdapter(actualInvocation) : null;
@@ -71,7 +88,7 @@ public interface ActionInvocation extends org.apache.struts2.ActionInvocation {
 
         @Override
         public ActionProxy getProxy() {
-            return adaptee.getProxy();
+            return ActionProxy.adapt(adaptee.getProxy());
         }
 
         @Override

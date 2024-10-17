@@ -19,8 +19,6 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.ActionEventListener;
-import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.interceptor.PreResultListener;
 
@@ -177,6 +175,6 @@ public interface ActionInvocation {
      */
     void setActionEventListener(ActionEventListener listener);
 
-    void init(ActionProxy proxy) ;
+    void init(ActionProxy proxy);
 
 }

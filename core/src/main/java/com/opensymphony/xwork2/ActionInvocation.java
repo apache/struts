@@ -42,6 +42,13 @@ public interface ActionInvocation extends org.apache.struts2.ActionInvocation {
 
     void addPreResultListener(PreResultListener listener);
 
+    @Override
+    default void setActionEventListener(org.apache.struts2.ActionEventListener listener) {
+        setActionEventListener(ActionEventListener.adapt(listener));
+    }
+
+    void setActionEventListener(ActionEventListener listener);
+
     static ActionInvocation adapt(org.apache.struts2.ActionInvocation actualInvocation) {
         return actualInvocation != null ? new LegacyAdapter(actualInvocation) : null;
     }

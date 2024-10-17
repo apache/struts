@@ -163,15 +163,19 @@ public class ActionContext extends org.apache.struts2.ActionContext {
         return super.getSession();
     }
 
-    @Override
     public ActionContext withValueStack(ValueStack valueStack) {
+        return withValueStack((org.apache.struts2.util.ValueStack) valueStack);
+    }
+
+    @Override
+    public ActionContext withValueStack(org.apache.struts2.util.ValueStack valueStack) {
         super.withValueStack(valueStack);
         return this;
     }
 
     @Override
     public ValueStack getValueStack() {
-        return super.getValueStack();
+        return ValueStack.adapt(super.getValueStack());
     }
 
     @Override

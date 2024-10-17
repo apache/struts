@@ -44,6 +44,9 @@ public class ActionContext extends org.apache.struts2.ActionContext {
     }
 
     public static ActionContext adapt(org.apache.struts2.ActionContext actualContext) {
+        if (actualContext instanceof ActionContext) {
+            return (ActionContext) actualContext;
+        }
         return actualContext != null ? new ActionContext(actualContext) : null;
     }
 

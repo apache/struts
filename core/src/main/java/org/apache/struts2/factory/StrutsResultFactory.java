@@ -20,13 +20,14 @@ package org.apache.struts2.factory;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.result.ParamNameAwareResult;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import com.opensymphony.xwork2.result.ParamNameAwareResult;
 
 import java.util.Map;
 
@@ -53,7 +54,15 @@ public class StrutsResultFactory implements ResultFactory {
         Result result = null;
 
         if (resultClassName != null) {
-            result = (Result) objectFactory.buildBean(resultClassName, extraContext);
+            Object o = objectFactory.buildBean(resultClassName, extraContext);
+            if (o instanceof Result) {
+                result = (Result) o;
+            } else if (o instanceof org.apache.struts2.Result) {
+                result = Result.adapt((org.apache.struts2.Result) o);
+            }
+            if (result == null) {
+                throw new ConfigurationException("Class [" + resultClassName + "] does not implement Result", resultConfig);
+            }
             Map<String, String> params = resultConfig.getParams();
             if (params != null) {
                 setParameters(extraContext, result, params);

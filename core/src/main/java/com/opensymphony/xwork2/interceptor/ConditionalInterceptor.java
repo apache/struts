@@ -28,9 +28,32 @@ import com.opensymphony.xwork2.ActionInvocation;
 @Deprecated
 public interface ConditionalInterceptor extends org.apache.struts2.interceptor.ConditionalInterceptor, Interceptor {
 
+    @Override
     default boolean shouldIntercept(org.apache.struts2.ActionInvocation invocation) {
         return shouldIntercept(ActionInvocation.adapt(invocation));
     }
 
     boolean shouldIntercept(ActionInvocation invocation);
+
+    static ConditionalInterceptor adapt(org.apache.struts2.interceptor.ConditionalInterceptor actualInterceptor) {
+        if (actualInterceptor instanceof ConditionalInterceptor) {
+            return (ConditionalInterceptor) actualInterceptor;
+        }
+        return actualInterceptor != null ? new LegacyAdapter(actualInterceptor) : null;
+    }
+
+    class LegacyAdapter extends Interceptor.LegacyAdapter implements ConditionalInterceptor {
+
+        private final org.apache.struts2.interceptor.ConditionalInterceptor adaptee;
+
+        private LegacyAdapter(org.apache.struts2.interceptor.ConditionalInterceptor adaptee) {
+            super(adaptee);
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public boolean shouldIntercept(ActionInvocation invocation) {
+            return adaptee.shouldIntercept(invocation);
+        }
+    }
 }

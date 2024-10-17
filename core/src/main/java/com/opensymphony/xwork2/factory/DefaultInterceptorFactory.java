@@ -70,13 +70,18 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 reflectionProvider.setProperties(params, o);
             }
 
+            Interceptor interceptor = null;
             if (o instanceof Interceptor) {
-                Interceptor interceptor = (Interceptor) o;
-                interceptor.init();
-                return interceptor;
+                interceptor = (Interceptor) o;
+            } else if (o instanceof org.apache.struts2.interceptor.Interceptor) {
+                interceptor = Interceptor.adapt((org.apache.struts2.interceptor.Interceptor) o);
             }
 
-            throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
+            if (interceptor == null) {
+                throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
+            }
+            interceptor.init();
+            return interceptor;
         } catch (InstantiationException e) {
             cause = e;
             message = "Unable to instantiate an instance of Interceptor class [" + interceptorClassName + "].";

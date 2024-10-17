@@ -21,23 +21,8 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ModelDriven;
 
 /**
- * Adds the ability to set a model, probably retrieved from a given state.
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ScopedModelDriven} instead.
  */
-public interface ScopedModelDriven<T> extends ModelDriven<T> {
-
-    /**
-     * @param model sets the model
-     */
-    void setModel(T model);
-    
-    /**
-     * Sets the key under which the model is stored
-     * @param key The model key
-     */
-    void setScopeKey(String key);
-    
-    /**
-     * @return the key under which the model is stored
-     */
-    String getScopeKey();
+@Deprecated
+public interface ScopedModelDriven<T> extends org.apache.struts2.interceptor.ScopedModelDriven<T>, ModelDriven<T> {
 }

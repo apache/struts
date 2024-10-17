@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
+ * Simple marker interface to indicate an object should <b>not</b> have its properties copied during chaining.
+ *
+ * @see com.opensymphony.xwork2.interceptor.ChainingInterceptor
  */
-@Deprecated
-public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
+public interface Unchainable {
 }

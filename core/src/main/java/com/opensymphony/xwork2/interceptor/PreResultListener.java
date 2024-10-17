@@ -21,21 +21,35 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 
 /**
- * PreResultListeners may be registered with an {@link ActionInvocation} to get a callback after the
- * {@link com.opensymphony.xwork2.Action} has been executed but before the {@link com.opensymphony.xwork2.Result}
- * is executed.
+ * {@inheritDoc}
  *
- * @author Jason Carreira
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.PreResultListener} instead.
  */
-public interface PreResultListener {
+@Deprecated
+public interface PreResultListener extends org.apache.struts2.interceptor.PreResultListener {
 
-    /**
-     * This callback method will be called after the {@link com.opensymphony.xwork2.Action} execution and
-     * before the {@link com.opensymphony.xwork2.Result} execution.
-     *
-     * @param invocation  the action invocation
-     * @param resultCode  the result code returned by the action (eg. <code>success</code>).
-     */
+    @Override
+    default void beforeResult(org.apache.struts2.ActionInvocation invocation, String resultCode) {
+        beforeResult(ActionInvocation.adapt(invocation), resultCode);
+    }
+
     void beforeResult(ActionInvocation invocation, String resultCode);
 
+    static PreResultListener adapt(org.apache.struts2.interceptor.PreResultListener actualListener) {
+        return actualListener != null ? new LegacyAdapter(actualListener) : null;
+    }
+
+    class LegacyAdapter implements PreResultListener {
+
+        private final org.apache.struts2.interceptor.PreResultListener adaptee;
+
+        private LegacyAdapter(org.apache.struts2.interceptor.PreResultListener adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public void beforeResult(ActionInvocation invocation, String resultCode) {
+            adaptee.beforeResult(invocation, resultCode);
+        }
+    }
 }

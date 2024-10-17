@@ -403,6 +403,7 @@ public class ActionTagTest extends AbstractTagTest {
 
     public void testExecuteButResetReturnSameInvocation() throws Exception {
         Mock mockActionInv = new Mock(ActionInvocation.class);
+        mockActionInv.matchAndReturn("invoke", "TEST");
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
         tag.setNamespace("");
@@ -419,7 +420,7 @@ public class ActionTagTest extends AbstractTagTest {
         ActionComponent component = (ActionComponent) tag.getComponent();
 
         tag.doEndTag();
-        assertSame(oldInvocation, ActionContext.getContext().getActionInvocation());
+        assertEquals(oldInvocation.invoke(), ActionContext.getContext().getActionInvocation().invoke());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionTag freshTag = new ActionTag();
@@ -432,6 +433,7 @@ public class ActionTagTest extends AbstractTagTest {
 
     public void testExecuteButResetReturnSameInvocation_clearTagStateSet() throws Exception {
         Mock mockActionInv = new Mock(ActionInvocation.class);
+        mockActionInv.matchAndReturn("invoke", "TEST");
         ActionTag tag = new ActionTag();
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
@@ -450,7 +452,7 @@ public class ActionTagTest extends AbstractTagTest {
         ActionComponent component = (ActionComponent) tag.getComponent();
 
         tag.doEndTag();
-        assertTrue(oldInvocation == ActionContext.getContext().getActionInvocation());
+        assertEquals(oldInvocation.invoke(), ActionContext.getContext().getActionInvocation().invoke());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionTag freshTag = new ActionTag();

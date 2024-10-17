@@ -18,9 +18,6 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-
 import java.io.Serializable;
 
 /**

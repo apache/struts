@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 /**
  * {@inheritDoc}
  *
@@ -25,4 +27,10 @@ package com.opensymphony.xwork2.interceptor;
  */
 @Deprecated
 public interface ConditionalInterceptor extends org.apache.struts2.interceptor.ConditionalInterceptor, Interceptor {
+
+    default boolean shouldIntercept(org.apache.struts2.ActionInvocation invocation) {
+        return shouldIntercept(ActionInvocation.adapt(invocation));
+    }
+
+    boolean shouldIntercept(ActionInvocation invocation);
 }

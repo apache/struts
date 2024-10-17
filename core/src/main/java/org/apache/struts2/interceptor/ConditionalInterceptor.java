@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 
 /**
  * A marking interface, when implemented allows to conditionally execute a given interceptor

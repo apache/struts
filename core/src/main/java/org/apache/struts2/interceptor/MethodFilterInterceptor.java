@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 
 import java.util.Collections;
 import java.util.Set;
@@ -65,14 +65,11 @@ import java.util.Set;
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @author Rainer Hermanns
  *
- * @see org.apache.struts2.interceptor.TokenInterceptor
- * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
+ * @see TokenInterceptor
+ * @see TokenSessionStoreInterceptor
  * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
  * @see com.opensymphony.xwork2.validator.ValidationInterceptor
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.MethodFilterInterceptor} instead.
  */
-@Deprecated
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(MethodFilterInterceptor.class);

@@ -23,7 +23,11 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.factory.*;
+import com.opensymphony.xwork2.factory.ConverterFactory;
+import com.opensymphony.xwork2.factory.InterceptorFactory;
+import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
@@ -32,16 +36,17 @@ import com.opensymphony.xwork2.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.factory.ActionFactory;
 
 import java.io.Serializable;
 import java.util.Map;
 
 /**
- * ObjectFactory is responsible for building the core framework objects. Users may register their 
+ * ObjectFactory is responsible for building the core framework objects. Users may register their
  * own implementation of the ObjectFactory to control instantiation of these Objects.
  *
  * <p>
- * This default implementation uses the {@link #buildBean(Class,java.util.Map) buildBean} 
+ * This default implementation uses the {@link #buildBean(Class,java.util.Map) buildBean}
  * method to create all classes (interceptors, actions, results, etc).
  * </p>
  *
@@ -178,7 +183,7 @@ public class ObjectFactory implements Serializable {
     public Object buildBean(String className, Map<String, Object> extraContext) throws Exception {
         return buildBean(className, extraContext, true);
     }
-    
+
     /**
      * Build a generic Java object of the given type.
      *
@@ -260,5 +265,5 @@ public class ObjectFactory implements Serializable {
     public UnknownHandler buildUnknownHandler(String unknownHandlerName, Map<String, Object> extraContext) throws Exception {
         return unknownHandlerFactory.buildUnknownHandler(unknownHandlerName, extraContext);
     }
-    
+
 }

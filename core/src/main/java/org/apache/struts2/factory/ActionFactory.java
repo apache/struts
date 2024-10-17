@@ -16,14 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.factory;
+package org.apache.struts2.factory;
+
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+
+import java.util.Map;
 
 /**
- * {@inheritDoc}
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.factory.ActionFactory} instead.
+ * Used by {@link com.opensymphony.xwork2.ObjectFactory} to build actions
  */
-@Deprecated
-public interface ActionFactory extends org.apache.struts2.factory.ActionFactory {
+public interface ActionFactory {
+
+    /**
+     * Builds action instance
+     *
+     * @param actionName name of the action
+     * @param namespace namespace for the action
+     * @param config action config
+     * @param extraContext extra context map
+     *
+     * @return action object
+     *
+     * @throws Exception in case of any errors
+     */
+    Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception;
+
 }
 

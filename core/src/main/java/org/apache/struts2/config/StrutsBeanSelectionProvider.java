@@ -39,7 +39,6 @@ import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.factory.ActionFactory;
 import com.opensymphony.xwork2.factory.ConverterFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
@@ -69,6 +68,7 @@ import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.factory.ActionFactory;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.ognl.OgnlGuard;
 import org.apache.struts2.url.QueryStringBuilder;
@@ -381,6 +381,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(ActionFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_ACTIONFACTORY, builder, props);
+        alias(com.opensymphony.xwork2.factory.ActionFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_ACTIONFACTORY, builder, props);
         alias(ResultFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_RESULTFACTORY, builder, props);
         alias(ConverterFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_CONVERTERFACTORY, builder, props);
         alias(InterceptorFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_INTERCEPTORFACTORY, builder, props);

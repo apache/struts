@@ -22,7 +22,11 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +71,10 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
             } else {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(foundName, this.getClass());
+                    if (!type.isAssignableFrom(cls)) {
+                        LOG.debug("Skipping aliasing as bean ({}) does not implement the interface ({})", foundName, type.getName());
+                        return;
+                    }
                     LOG.trace("Choosing bean ({}) for ({})", cls.getName(), type.getName());
                     builder.factory(type, cls, scope);
                 } catch (ClassNotFoundException ex) {

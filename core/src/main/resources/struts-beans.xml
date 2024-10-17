@@ -39,6 +39,8 @@
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts"
           class="org.apache.struts2.factory.StrutsResultFactory"/>
+    <bean type="org.apache.struts2.factory.ActionFactory" name="struts"
+          class="com.opensymphony.xwork2.factory.DefaultActionFactory"/>
     <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts"
           class="com.opensymphony.xwork2.factory.DefaultActionFactory"/>
     <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts"

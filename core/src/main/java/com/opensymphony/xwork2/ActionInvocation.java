@@ -63,6 +63,9 @@ public interface ActionInvocation extends org.apache.struts2.ActionInvocation {
     void init(ActionProxy proxy);
 
     static ActionInvocation adapt(org.apache.struts2.ActionInvocation actualInvocation) {
+        if (actualInvocation instanceof ActionInvocation) {
+            return (ActionInvocation) actualInvocation;
+        }
         return actualInvocation != null ? new LegacyAdapter(actualInvocation) : null;
     }
 

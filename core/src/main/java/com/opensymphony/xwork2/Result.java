@@ -34,6 +34,9 @@ public interface Result extends org.apache.struts2.Result {
     void execute(ActionInvocation invocation) throws Exception;
 
     static Result adapt(org.apache.struts2.Result actualResult) {
+        if (actualResult instanceof Result) {
+            return (Result) actualResult;
+        }
         return actualResult != null ? new LegacyAdapter(actualResult) : null;
     }
 

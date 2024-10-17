@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.HashMap;
 import java.util.Map;

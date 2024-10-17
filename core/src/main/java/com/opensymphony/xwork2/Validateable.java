@@ -19,17 +19,8 @@
 package com.opensymphony.xwork2;
 
 /**
- * Provides an interface in which a call for a validation check can be done.
- *
- * @author Jason Carreira
- * @see ActionSupport
- * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.Validateable} instead.
  */
-public interface Validateable {
-
-    /**
-     * Performs validation.
-     */
-    void validate();
-
+@Deprecated
+public interface Validateable extends org.apache.struts2.Validateable {
 }

@@ -36,6 +36,9 @@ public interface PreResultListener extends org.apache.struts2.interceptor.PreRes
     void beforeResult(ActionInvocation invocation, String resultCode);
 
     static PreResultListener adapt(org.apache.struts2.interceptor.PreResultListener actualListener) {
+        if (actualListener instanceof PreResultListener) {
+            return (PreResultListener) actualListener;
+        }
         return actualListener != null ? new LegacyAdapter(actualListener) : null;
     }
 

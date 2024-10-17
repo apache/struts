@@ -21,9 +21,7 @@ package org.apache.struts2.oval.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
@@ -48,6 +46,7 @@ import ognl.OgnlException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Validateable;
 import org.apache.struts2.oval.annotation.Profiles;
 
 import java.lang.reflect.Field;

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * Provides hooks for handling key action events

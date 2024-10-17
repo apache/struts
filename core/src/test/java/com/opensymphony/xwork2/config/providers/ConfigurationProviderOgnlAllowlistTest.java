@@ -65,7 +65,9 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.interceptor.Interceptor"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
                 Class.forName("org.apache.struts2.Result"),
-                Class.forName("org.apache.struts2.Action")
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 
@@ -93,7 +95,9 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.interceptor.Interceptor"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
                 Class.forName("org.apache.struts2.Result"),
-                Class.forName("org.apache.struts2.Action")
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 
@@ -120,7 +124,9 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.interceptor.Interceptor"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
                 Class.forName("org.apache.struts2.Result"),
-                Class.forName("org.apache.struts2.Action")
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 }

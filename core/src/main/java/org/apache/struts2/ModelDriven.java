@@ -16,11 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
+ * ModelDriven Actions provide a model object to be pushed onto the ValueStack
+ * in addition to the Action itself, allowing a FormBean type approach like Struts.
+ *
+ * @author Jason Carreira
  */
-@Deprecated
-public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
+public interface ModelDriven<T> {
+
+    /**
+     * Gets the model to be pushed onto the ValueStack instead of the Action itself.
+     *
+     * @return the model
+     */
+    T getModel();
+
 }

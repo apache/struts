@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -32,6 +31,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.directwebremoting.WebContextFactory;
 
 import javax.servlet.ServletContext;

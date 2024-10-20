@@ -43,7 +43,6 @@
         <module>json</module>
         <module>junit</module>
         <module>rest</module>
-        <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>

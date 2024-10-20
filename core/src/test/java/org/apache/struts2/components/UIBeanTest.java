@@ -387,7 +387,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
         dblSelect.evaluateParams();
 
-        assertNull(dblSelect.getParameters().get("nonce"));
+        assertNull(dblSelect.getAttributes().get("nonce"));
     }
 
     public void testSetNullUiStaticContentPath() {

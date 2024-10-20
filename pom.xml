@@ -884,7 +884,7 @@
             <dependency>
                 <groupId>org.htmlunit</groupId>
                 <artifactId>htmlunit</artifactId>
-                <version>3.6.0</version>
+                <version>4.2.0</version>
                 <scope>test</scope>
             </dependency>
 

@@ -25,9 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.JspException;
 import org.apache.struts2.components.Component;
 
-/**
- */
 public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
+
     protected Component component;
 
     public abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
@@ -57,9 +56,9 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     }
 
     /**
-     * Define method to populate component state based on the Tag parameters.
-     *
-     * Descendants should override this method for custom behaviour, but should <em>always</em> call the ancestor method when doing so.
+     * Define method to populate component state based on the Tag attributes.
+     * Descendants should override this method for custom behaviour,
+     * but should <em>always</em> call the ancestor method when doing so.
      */
     protected void populateParams() {
         populatePerformClearTagStateForTagPoolingServersParam();
@@ -67,7 +66,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     /**
      * Specialized method to populate the performClearTagStateForTagPoolingServers state of the Component to match the value set in the Tag.
-     *
+     * <p>
      * Generally only unit tests would call this method directly, to avoid calling the whole populateParams() chain again after doStartTag()
      * has been called.  Doing that can break tag / component state behaviour, but unit tests still need a way to set the
      * performClearTagStateForTagPoolingServers state for the component (which only comes into being after doStartTag() is called).
@@ -84,7 +83,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (!getPerformClearTagStateForTagPoolingServers()) {
+        if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

@@ -71,7 +71,7 @@ public class Anchor extends ClosingUIBean {
     protected boolean processingTagBody = false;
 
     //these params are passed by the Param tag
-    protected Map urlParameters = new LinkedHashMap();
+    protected Map<String, Object> urlParameters = new LinkedHashMap<>();
 
     public Anchor(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -172,16 +172,16 @@ public class Anchor extends ClosingUIBean {
     }
 
     @Override
-    public void addAllParameters(Map params) {
+    public void addAllAttributes(Map<String, Object> additionalAttributes) {
         /*
-          the parameters added by this method are used in the template. this method is also
-          called by Param to add params into ancestestor. This tag needs to keep both set of parameters
+          The attributes added by this method are used in the template. This method is also
+          called by Param to add attributes into an ancestor. This tag needs to keep both set of parameters
           separated (You gotta keep 'em separated!)
          */
         if (processingTagBody) {
-            this.urlParameters.putAll(params);
+            this.urlParameters.putAll(additionalAttributes);
         } else {
-            super.addAllParameters(params);
+            super.addAllAttributes(additionalAttributes);
         }
     }
 

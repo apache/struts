@@ -20,4 +20,4 @@
 -->
 <tr>
     <td colspan="2"><div class="formButton"><#t/>
-<#include "/${parameters.templateDir}/simple/submit.ftl" />
+<#include "/${attributes.templateDir}/simple/submit.ftl" />

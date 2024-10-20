@@ -18,74 +18,74 @@
  * under the License.
  */
 -->
-<#if parameters.type?? && parameters.type=="button">
+<#if attributes.type?? && attributes.type=="button">
 <button type="submit"<#rt/>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
 </#if>
-<#if parameters.nameValue??>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+<#if attributes.nameValue??>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >
 <#else>
-<#if parameters.type?? && parameters.type=="image">
+<#if attributes.type?? && attributes.type=="image">
 <input type="image"<#rt/>
-<#if parameters.label?has_content>
- alt="${parameters.label}"<#rt/>
+<#if attributes.label?has_content>
+ alt="${attributes.label}"<#rt/>
 </#if>
-<#if parameters.src?has_content>
- src="${parameters.src}"<#rt/>
+<#if attributes.src?has_content>
+ src="${attributes.src}"<#rt/>
 </#if>
 <#else>
 <input type="submit"<#rt/>
-<#if parameters.nameValue?has_content>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+<#if attributes.nameValue?has_content>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
 </#if>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 />
 </#if>

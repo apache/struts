@@ -31,9 +31,9 @@ Only the following validators are supported:
 * double validator
 END SNIPPET: supported-validators
 -->
-<#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
+<#if ((attributes.validate!false == true) && (attributes.performValidation!false == true))>
 <@s.script>
-    function validateForm_${parameters.escapedId}() {
+    function validateForm_${attributes.escapedId}() {
         <#--
             In case of multiselect fields return only the first value.
         -->
@@ -54,13 +54,13 @@ END SNIPPET: supported-validators
             }
             return field.value;
         }
-        form = document.getElementById("${parameters.id?js_string}");
+        form = document.getElementById("${attributes.id?js_string}");
         clearErrorMessages(form);
         clearErrorLabels(form);
 
         var errors = false;
         var continueValidation = true;
-    <#list parameters.tagNames as tagName>
+    <#list attributes.tagNames as tagName>
         <#list tag.getValidators("${tagName}") as aValidator>
         // field name: ${aValidator.fieldName?js_string}
         // validator name: ${aValidator.validatorType}

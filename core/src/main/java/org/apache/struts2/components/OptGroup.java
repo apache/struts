@@ -104,7 +104,7 @@ public class OptGroup extends Component {
         internalUiBean.start(writer);
         internalUiBean.end(writer, body);
 
-        List listUiBeans = (List) select.getParameters().get(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY);
+        List listUiBeans = (List) select.getAttributes().get(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY);
         if (listUiBeans == null) {
             listUiBeans = new ArrayList();
         }

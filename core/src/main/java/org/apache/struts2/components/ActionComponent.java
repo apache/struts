@@ -194,10 +194,10 @@ public class ActionComponent extends ContextBean {
     }
 
     /**
-     * Creates parameters map using parameters from the value stack and component parameters.  Any non-String array
-     * values will be converted into a single-value String array.
+     * Creates {@link HttpParameters} using parameters from the value stack and component attributes.
+     * Any non-String array values will be converted into a single-value String array.
      *
-     * @return A map of String[] parameters
+     * @return Instance of {@link HttpParameters}
      */
     protected HttpParameters createParametersForContext() {
         HttpParameters parentParams = null;
@@ -208,8 +208,8 @@ public class ActionComponent extends ContextBean {
 
         HttpParameters.Builder builder = HttpParameters.create().withParent(parentParams);
 
-        if (parameters != null) {
-            builder = builder.withExtraParams(parameters);
+        if (attributes != null) {
+            builder = builder.withExtraParams(attributes);
         }
         return builder.build();
     }

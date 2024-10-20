@@ -19,34 +19,34 @@
  */
 -->
 <input<#rt/>
- type="${(parameters.type!"text")}"<#rt/>
- name="${(parameters.name!"")}"<#rt/>
-<#if parameters.get("size")?has_content>
- size="${parameters.get("size")}"<#rt/>
+ type="${(attributes.type!"text")}"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
+<#if attributes.get("size")?has_content>
+ size="${attributes.get("size")}"<#rt/>
 </#if>
-<#if parameters.maxlength?has_content>
- maxlength="${parameters.maxlength}"<#rt/>
+<#if attributes.maxlength?has_content>
+ maxlength="${attributes.maxlength}"<#rt/>
 </#if>
-<#if parameters.nameValue??>
- value="${parameters.nameValue}"<#rt/>
+<#if attributes.nameValue??>
+ value="${attributes.nameValue}"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly!false>
+<#if attributes.readonly!false>
  readonly="readonly"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 />

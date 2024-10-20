@@ -32,22 +32,22 @@
                     <#assign eValue = fieldErrors.get(fieldErrorFieldName)><#t/>
                     <#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
                     <ul<#rt/>
-                        <#if parameters.id?has_content>
-                                id="${parameters.id}"<#rt/>
+                        <#if attributes.id?has_content>
+                                id="${attributes.id}"<#rt/>
                         </#if>
-                        <#if parameters.cssClass?has_content>
-                                class="${parameters.cssClass}"<#rt/>
+                        <#if attributes.cssClass?has_content>
+                                class="${attributes.cssClass}"<#rt/>
                             <#else>
                                 class="errorMessage"<#rt/>
                         </#if>
-                        <#if parameters.cssStyle?has_content>
-                                style="${parameters.cssStyle}"<#rt/>
+                        <#if attributes.cssStyle?has_content>
+                                style="${attributes.cssStyle}"<#rt/>
                         </#if>
                             >
                         <#assign doneStartUlTag=true><#t/>
                     </#if><#t/>
                     <#list eValue as eEachValue><#t/>
-                        <li><span><#if parameters.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
+                        <li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
                     </#list><#t/>
                 </#if><#t/>
             </#list><#t/>
@@ -59,19 +59,19 @@
         <#else><#t/>
         <#if (eKeysSize > 0)><#t/>
         <ul<#rt/>
-            <#if parameters.cssClass?has_content>
-                    class="${parameters.cssClass}"<#rt/>
+            <#if attributes.cssClass?has_content>
+                    class="${attributes.cssClass}"<#rt/>
                 <#else>
                     class="errorMessage"<#rt/>
             </#if>
-            <#if parameters.cssStyle?has_content>
-                    style="${parameters.cssStyle}"<#rt/>
+            <#if attributes.cssStyle?has_content>
+                    style="${attributes.cssStyle}"<#rt/>
             </#if>
                 >
             <#list eKeys as eKey><#t/>
                 <#assign eValue = fieldErrors.get(eKey)><#t/>
                 <#list eValue as eEachValue><#t/>
-                    <li><span><#if parameters.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
+                    <li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
                 </#list><#t/>
             </#list><#t/>
         </ul>

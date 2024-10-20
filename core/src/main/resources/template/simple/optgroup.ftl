@@ -18,37 +18,37 @@
  * under the License.
  */
 -->
-<#if parameters.optGroupInternalListUiBeanList??>
-<#assign optGroupInternalListUiBeans=parameters.optGroupInternalListUiBeanList />
+<#if attributes.optGroupInternalListUiBeanList??>
+<#assign optGroupInternalListUiBeans=attributes.optGroupInternalListUiBeanList />
 <#list optGroupInternalListUiBeans as optGroupInternalListUiBean>
 <optgroup<#rt>
-	<#if optGroupInternalListUiBean.parameters.label?has_content>
- label="${optGroupInternalListUiBean.parameters.label}"<#rt>
+	<#if optGroupInternalListUiBean.attributes.label?has_content>
+ label="${optGroupInternalListUiBean.attributes.label}"<#rt>
 	</#if>
-	<#if optGroupInternalListUiBean.parameters.disabled!false>
+	<#if optGroupInternalListUiBean.attributes.disabled!false>
  disabled="disabled"<#rt>
 	</#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >
-<#list optGroupInternalListUiBean.parameters.list as optGroupBean>
+<#list optGroupInternalListUiBean.attributes.list as optGroupBean>
 <#assign trash=stack.push(optGroupBean) />
-	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.parameters.listKey) />
-	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
+	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.attributes.listKey) />
+	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.attributes.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
 	<#assign optGroupItemCssClass = ''/>
-	<#if optGroupInternalListUiBean.parameters.listCssClass??>
-		<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)!''/>
+	<#if optGroupInternalListUiBean.attributes.listCssClass??>
+		<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.attributes.listCssClass)!''/>
 	</#if>
 	<#assign optGroupItemCssStyle = ''/>
-	<#if optGroupInternalListUiBean.parameters.listCssStyle??>
-		<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)!''/>
+	<#if optGroupInternalListUiBean.attributes.listCssStyle??>
+		<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.attributes.listCssStyle)!''/>
 	</#if>
 	<#assign optGroupItemTitle = ''/>
-	<#if optGroupInternalListUiBean.parameters.listTitle??>
-		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)!''/>
+	<#if optGroupInternalListUiBean.attributes.listTitle??>
+		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.attributes.listTitle)!''/>
 	</#if>
 	<option value="${tmpKeyStr}"<#rt>
-	<#if tag.contains(parameters.nameValue, tmpKey) == true>
+	<#if tag.contains(attributes.nameValue, tmpKey) == true>
 	selected="selected"<#rt>
 	</#if>
 	<#if optGroupItemCssClass?has_content>

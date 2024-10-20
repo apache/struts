@@ -23,6 +23,6 @@
 <div style="background-color:yellow;">
 <p>
 JSP  Custom Template -
-parameter 'paramName' - <s:property value="%{parameters.paramName}" />
+parameter 'paramName' - <s:property value="%{attributes.paramName}" />
 </p>
 </div>

@@ -67,7 +67,7 @@ public abstract class ListUIBean extends UIBean {
         Object value;
 
         if (list == null) {
-            list = parameters.get("list");
+            list = attributes.get("list");
         }
 
         if (list instanceof String) {

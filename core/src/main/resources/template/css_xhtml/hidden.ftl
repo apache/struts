@@ -18,4 +18,4 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/simple/hidden.ftl" />
+<#include "/${attributes.templateDir}/simple/hidden.ftl" />

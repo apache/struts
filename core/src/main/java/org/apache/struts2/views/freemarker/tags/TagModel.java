@@ -59,7 +59,7 @@ public abstract class TagModel implements TemplateTransformModel {
         container.inject(bean);
 
         Map unwrappedParameters = unwrapParameters(params);
-        bean.copyParams(unwrappedParameters);
+        bean.copyAttributes(unwrappedParameters);
 
         return new CallbackWriter(bean, writer);
     }

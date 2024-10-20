@@ -73,7 +73,7 @@ public class Token extends UIBean {
         super.evaluateExtraParams();
 
         String tokenName;
-        Map parameters = getParameters();
+        Map parameters = getAttributes();
 
         if (parameters.containsKey("name")) {
             tokenName = (String) parameters.get("name");

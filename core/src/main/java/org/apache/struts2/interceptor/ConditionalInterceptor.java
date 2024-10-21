@@ -16,13 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
+
+import com.opensymphony.xwork2.ActionInvocation;
 
 /**
- * {@inheritDoc}
+ * A marking interface, when implemented allows to conditionally execute a given interceptor
+ * within the current action invocation.
  *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.Interceptor} instead.
+ * @since Struts 6.1.1
  */
-@Deprecated
-public interface ConditionalInterceptor extends org.apache.struts2.interceptor.ConditionalInterceptor, Interceptor {
+public interface ConditionalInterceptor extends Interceptor {
+
+    /**
+     * Determines if a given interceptor should be executed in the current processing of action invocation.
+     *
+     * @param invocation current {@link ActionInvocation} to determine if the interceptor should be executed
+     * @return true if the given interceptor should be included in the current action invocation
+     * @since 6.1.1
+     */
+    boolean shouldIntercept(ActionInvocation invocation);
 }

@@ -18,21 +18,18 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -46,7 +43,7 @@ import java.util.ResourceBundle;
  * Provides a default implementation for the most common actions.
  * See the documentation for all the interfaces this class implements for more detailed information.
  */
-public class ActionSupport implements com.opensymphony.xwork2.Action, Validateable, ValidationAware, TextProvider, LocaleProvider, Serializable {
+public class ActionSupport implements Action, Validateable, ValidationAware, TextProvider, LocaleProvider, Serializable {
 
     private static final Logger LOG = LogManager.getLogger(ActionSupport.class);
 
@@ -165,12 +162,12 @@ public class ActionSupport implements com.opensymphony.xwork2.Action, Validateab
      * @return formatted expr with format specified by key
      */
     public String getFormatted(String key, String expr) {
-        Map<String, ConversionData> conversionErrors = com.opensymphony.xwork2.ActionContext.getContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.getContext().getConversionErrors();
         if (conversionErrors.containsKey(expr)) {
             String[] vals = (String[]) conversionErrors.get(expr).getValue();
             return vals[0];
         } else {
-            final ValueStack valueStack = com.opensymphony.xwork2.ActionContext.getContext().getValueStack();
+            final ValueStack valueStack = ValueStack.adapt(ActionContext.getContext().getValueStack());
             final Object val = valueStack.findValue(expr);
             return getText(key, Arrays.asList(val));
         }

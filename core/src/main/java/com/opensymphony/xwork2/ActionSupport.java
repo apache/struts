@@ -18,9 +18,11 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+
 /**
  * @deprecated since 6.7.0, use {@link org.apache.struts2.ActionSupport} instead.
  */
 @Deprecated
-public class ActionSupport extends org.apache.struts2.ActionSupport {
+public class ActionSupport extends org.apache.struts2.ActionSupport implements Action, Validateable, ValidationAware {
 }

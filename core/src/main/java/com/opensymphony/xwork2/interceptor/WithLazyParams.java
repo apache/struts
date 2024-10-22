@@ -70,11 +70,14 @@ public interface WithLazyParams {
         }
 
         public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
+            return (Interceptor) injectParams((org.apache.struts2.interceptor.Interceptor) interceptor, params, invocationContext);
+        }
+
+        public org.apache.struts2.interceptor.Interceptor injectParams(org.apache.struts2.interceptor.Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 Object paramValue = textParser.evaluate(new char[]{ '$' }, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
                 ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
             }
-
             return interceptor;
         }
     }

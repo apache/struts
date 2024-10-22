@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.factory;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
@@ -51,18 +52,28 @@ public class DefaultResultFactory implements ResultFactory {
         Result result = null;
 
         if (resultClassName != null) {
-            result = (Result) objectFactory.buildBean(resultClassName, extraContext);
+            Object o = objectFactory.buildBean(resultClassName, extraContext);
+
             Map<String, String> params = resultConfig.getParams();
             if (params != null) {
                 for (Map.Entry<String, String> paramEntry : params.entrySet()) {
                     try {
-                        reflectionProvider.setProperty(paramEntry.getKey(), paramEntry.getValue(), result, extraContext, true);
+                        reflectionProvider.setProperty(paramEntry.getKey(), paramEntry.getValue(), o, extraContext, true);
                     } catch (ReflectionException ex) {
-                        if (result instanceof ReflectionExceptionHandler) {
-                            ((ReflectionExceptionHandler) result).handle(ex);
+                        if (o instanceof ReflectionExceptionHandler) {
+                            ((ReflectionExceptionHandler) o).handle(ex);
                         }
                     }
                 }
+            }
+
+            if (o instanceof Result) {
+                result = (Result) o;
+            } else if (o instanceof org.apache.struts2.Result) {
+                result = Result.adapt((org.apache.struts2.Result) o);
+            }
+            if (result == null) {
+                throw new ConfigurationException("Class [" + resultClassName + "] does not implement Result", resultConfig);
             }
         }
 

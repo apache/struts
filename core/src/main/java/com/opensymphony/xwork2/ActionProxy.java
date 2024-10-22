@@ -27,6 +27,9 @@ public interface ActionProxy extends org.apache.struts2.ActionProxy {
     ActionInvocation getInvocation();
 
     static ActionProxy adapt(org.apache.struts2.ActionProxy actualProxy) {
+        if (actualProxy instanceof ActionProxy) {
+            return (ActionProxy) actualProxy;
+        }
         return actualProxy != null ? new LegacyAdapter(actualProxy) : null;
     }
 

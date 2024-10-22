@@ -20,11 +20,11 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ModelDriven;
 
 import java.beans.PropertyDescriptor;
 import java.util.Locale;
@@ -135,7 +135,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles 
+     * <li>If still not found, look for the message in the default resource bundles
      * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>
@@ -190,7 +190,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles 
+     * <li>If still not found, look for the message in the default resource bundles
      * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>

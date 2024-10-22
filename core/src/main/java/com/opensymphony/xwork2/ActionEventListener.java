@@ -28,7 +28,24 @@ import com.opensymphony.xwork2.util.ValueStack;
 @Deprecated
 public interface ActionEventListener extends org.apache.struts2.ActionEventListener {
 
+    @Override
+    default Object prepare(Object action, org.apache.struts2.util.ValueStack stack) {
+        return prepare(action, ValueStack.adapt(stack));
+    }
+
+    @Override
+    default String handleException(Throwable t, org.apache.struts2.util.ValueStack stack) {
+        return handleException(t, ValueStack.adapt(stack));
+    }
+
+    Object prepare(Object action, ValueStack stack);
+
+    String handleException(Throwable t, ValueStack stack);
+
     static ActionEventListener adapt(org.apache.struts2.ActionEventListener actualListener) {
+        if (actualListener instanceof ActionEventListener) {
+            return (ActionEventListener) actualListener;
+        }
         return actualListener != null ? new LegacyAdapter(actualListener) : null;
     }
 

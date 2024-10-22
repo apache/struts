@@ -18,13 +18,23 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.CompositeTextProvider;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.LocaleProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * A default implementation of the {@link ValidatorContext} interface.
@@ -233,8 +243,8 @@ public class DelegatingValidatorContext implements ValidatorContext {
     }
 
     protected static ValidationAware makeValidationAware(Object object) {
-        if (object instanceof ValidationAware) {
-            return (ValidationAware) object;
+        if (object instanceof org.apache.struts2.interceptor.ValidationAware) {
+            return ValidationAware.adapt((org.apache.struts2.interceptor.ValidationAware) object);
         } else {
             return new LoggingValidationAware(object);
         }

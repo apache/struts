@@ -21,24 +21,33 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * Provides hooks for handling key action events
+ * {@inheritDoc}
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.ActionEventListener} instead.
  */
-public interface ActionEventListener {
-    /**
-     * Called after an action has been created. 
-     * 
-     * @param action The action
-     * @param stack The current value stack
-     * @return The action to use
-     */
-    public Object prepare(Object action, ValueStack stack);
-    
-    /**
-     * Called when an exception is thrown by the action
-     * 
-     * @param t The exception/error that was thrown
-     * @param stack The current value stack
-     * @return A result code to execute, can be null
-     */
-    public String handleException(Throwable t, ValueStack stack);
+@Deprecated
+public interface ActionEventListener extends org.apache.struts2.ActionEventListener {
+
+    static ActionEventListener adapt(org.apache.struts2.ActionEventListener actualListener) {
+        return actualListener != null ? new LegacyAdapter(actualListener) : null;
+    }
+
+    class LegacyAdapter implements ActionEventListener {
+
+        private final org.apache.struts2.ActionEventListener adaptee;
+
+        private LegacyAdapter(org.apache.struts2.ActionEventListener adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public Object prepare(Object action, ValueStack stack) {
+            return adaptee.prepare(action, stack);
+        }
+
+        @Override
+        public String handleException(Throwable t, ValueStack stack) {
+            return adaptee.handleException(t, stack);
+        }
+    }
 }

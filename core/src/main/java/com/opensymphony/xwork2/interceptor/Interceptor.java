@@ -53,6 +53,10 @@ public interface Interceptor extends org.apache.struts2.interceptor.Interceptor 
             this.adaptee = adaptee;
         }
 
+        public org.apache.struts2.interceptor.Interceptor getAdaptee() {
+            return adaptee;
+        }
+
         @Override
         public String intercept(ActionInvocation invocation) throws Exception {
             return adaptee.intercept(invocation);

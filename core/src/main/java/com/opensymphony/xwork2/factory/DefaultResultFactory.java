@@ -53,6 +53,20 @@ public class DefaultResultFactory implements ResultFactory {
 
         if (resultClassName != null) {
             Object o = objectFactory.buildBean(resultClassName, extraContext);
+
+            Map<String, String> params = resultConfig.getParams();
+            if (params != null) {
+                for (Map.Entry<String, String> paramEntry : params.entrySet()) {
+                    try {
+                        reflectionProvider.setProperty(paramEntry.getKey(), paramEntry.getValue(), o, extraContext, true);
+                    } catch (ReflectionException ex) {
+                        if (o instanceof ReflectionExceptionHandler) {
+                            ((ReflectionExceptionHandler) o).handle(ex);
+                        }
+                    }
+                }
+            }
+
             if (o instanceof Result) {
                 result = (Result) o;
             } else if (o instanceof org.apache.struts2.Result) {
@@ -60,19 +74,6 @@ public class DefaultResultFactory implements ResultFactory {
             }
             if (result == null) {
                 throw new ConfigurationException("Class [" + resultClassName + "] does not implement Result", resultConfig);
-            }
-
-            Map<String, String> params = resultConfig.getParams();
-            if (params != null) {
-                for (Map.Entry<String, String> paramEntry : params.entrySet()) {
-                    try {
-                        reflectionProvider.setProperty(paramEntry.getKey(), paramEntry.getValue(), result, extraContext, true);
-                    } catch (ReflectionException ex) {
-                        if (result instanceof ReflectionExceptionHandler) {
-                            ((ReflectionExceptionHandler) result).handle(ex);
-                        }
-                    }
-                }
             }
         }
 

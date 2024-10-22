@@ -25,4 +25,29 @@ package com.opensymphony.xwork2;
  */
 @Deprecated
 public interface Result extends org.apache.struts2.Result {
+
+    @Override
+    default void execute(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        execute(ActionInvocation.adapt(invocation));
+    }
+
+    void execute(ActionInvocation invocation) throws Exception;
+
+    static Result adapt(org.apache.struts2.Result actualResult) {
+        return actualResult != null ? new LegacyAdapter(actualResult) : null;
+    }
+
+    class LegacyAdapter implements Result {
+
+        private final org.apache.struts2.Result adaptee;
+
+        private LegacyAdapter(org.apache.struts2.Result adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public void execute(ActionInvocation invocation) throws Exception {
+            adaptee.execute(ActionInvocation.adapt(invocation));
+        }
+    }
 }

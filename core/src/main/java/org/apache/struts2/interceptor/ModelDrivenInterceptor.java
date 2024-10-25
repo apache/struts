@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -74,10 +75,7 @@ import org.apache.struts2.ModelDriven;
  *
  * @author tm_jee
  * @version $Date$ $Id$
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ModelDrivenInterceptor} instead.
  */
-@Deprecated
 public class ModelDrivenInterceptor extends AbstractInterceptor {
 
     protected boolean refreshModelBeforeResult = false;

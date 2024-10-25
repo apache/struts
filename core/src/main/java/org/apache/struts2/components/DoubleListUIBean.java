@@ -164,7 +164,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
             // ok, let's look it up
             Component form = findAncestor(Form.class);
             if (form != null) {
-                addParameter("formName", form.getParameters().get("name"));
+                addParameter("formName", form.getAttributes().get("name"));
             }
         }
 
@@ -188,7 +188,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         if (doubleId != null) {
             addParameter("doubleId", findString(doubleId));
         } else if (form != null) {
-            addParameter("doubleId", form.getParameters().get("id") + "_" + escape(doubleName != null ? findString(doubleName) : null));
+            addParameter("doubleId", form.getAttributes().get("id") + "_" + escape(doubleName != null ? findString(doubleName) : null));
         } else {
             addParameter("doubleId", escape(doubleName != null ? findString(doubleName) : null));
         }

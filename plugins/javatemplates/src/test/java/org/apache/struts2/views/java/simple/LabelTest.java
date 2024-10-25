@@ -37,7 +37,7 @@ public class LabelTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<label name='name' for='for_' id='id1' class='class1' style='style1' title='title'>val1</label>");

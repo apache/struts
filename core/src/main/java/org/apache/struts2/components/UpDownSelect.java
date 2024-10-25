@@ -70,7 +70,7 @@ import java.util.Map;
  * {@literal @}s.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"
  */
-@StrutsTag(name="updownselect", tldTagClass="org.apache.struts2.views.jsp.ui.UpDownSelectTag", 
+@StrutsTag(name="updownselect", tldTagClass="org.apache.struts2.views.jsp.ui.UpDownSelectTag",
         description="Create a Select component with buttons to move the elements in the select component up and down")
 public class UpDownSelect extends Select {
 
@@ -136,13 +136,13 @@ public class UpDownSelect extends Select {
             // inform form ancestor that we are using a custom onSubmit
             enableAncestorFormCustomOnsubmit();
 
-            Map m = (Map) ancestorForm.getParameters().get("updownselectIds");
+            Map m = (Map) ancestorForm.getAttributes().get("updownselectIds");
             if (m == null) {
                 // map with key -> id ,  value -> headerKey
                 m = new LinkedHashMap();
             }
-            m.put(getParameters().get("id"), getParameters().get("headerKey"));
-            ancestorForm.getParameters().put("updownselectIds", m);
+            m.put(getAttributes().get("id"), getAttributes().get("headerKey"));
+            ancestorForm.getAttributes().put("updownselectIds", m);
         }
         else {
             if (LOG.isWarnEnabled()) {

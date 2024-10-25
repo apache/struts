@@ -39,12 +39,12 @@ public class SubmitTest extends AbstractCommonAttributesTest {
         tag.setType("button");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
 
         tag.addParameter("body", "<span>hey hey hey, here I go now</span>");
         map.clear();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
         String expected = s("<button name='name' type='submit' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1'><span>hey hey hey, here I go now</span></button>");
@@ -65,7 +65,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -87,7 +87,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -108,7 +108,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -123,7 +123,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -138,12 +138,12 @@ public class SubmitTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         map.clear();
         tag.setType("image");
         tag.addParameter("body", "<span>hey hey hey, here I go now</span>");
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
         String expected = s("<input src='http://somesource/image.gif' type='image' alt='alt text'><span>hey hey hey, here I go now</span></input>");

@@ -172,7 +172,7 @@ public class Form extends ClosingUIBean {
 
         if (name == null) {
             //make the name the same as the id
-            String id = (String) getParameters().get("id");
+            String id = (String) getAttributes().get("id");
             if (StringUtils.isNotEmpty(id)) {
                 addParameter("name", id);
             }
@@ -204,7 +204,7 @@ public class Form extends ClosingUIBean {
 
         // keep a collection of the tag names for anything special the templates might want to do (such as pure client
         // side validation)
-        if (!parameters.containsKey("tagNames")) {
+        if (!attributes.containsKey("tagNames")) {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
         }
@@ -242,7 +242,7 @@ public class Form extends ClosingUIBean {
     protected void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
 
         // Only evaluate if Client-Side js is to be enable when validate=true
-        Boolean validate = (Boolean) getParameters().get("validate");
+        Boolean validate = (Boolean) getAttributes().get("validate");
         if (validate != null && validate) {
 
             addParameter("performValidation", Boolean.FALSE);
@@ -270,7 +270,7 @@ public class Form extends ClosingUIBean {
     }
 
     public List getValidators(String name) {
-        Class actionClass = (Class) getParameters().get("actionClass");
+        Class actionClass = (Class) getAttributes().get("actionClass");
         if (actionClass == null) {
             return Collections.EMPTY_LIST;
         }
@@ -279,7 +279,7 @@ public class Form extends ClosingUIBean {
         ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
 
         if (mapping == null) {
-            mapping = actionMapper.getMappingFromActionName((String) getParameters().get("actionName"));
+            mapping = actionMapper.getMappingFromActionName((String) getAttributes().get("actionName"));
         }
 
         if (mapping == null) {

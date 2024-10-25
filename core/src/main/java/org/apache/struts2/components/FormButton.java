@@ -58,7 +58,7 @@ public abstract class FormButton extends ClosingUIBean {
         addParameter("type", submitType);
 
         if (!BUTTON_TYPE_INPUT.equals(submitType) && (label == null)) {
-            addParameter("label", getParameters().get("nameValue"));
+            addParameter("label", getAttributes().get("nameValue"));
         }
 
         if (action != null || method != null) {
@@ -101,8 +101,8 @@ public abstract class FormButton extends ClosingUIBean {
             // this check is needed for backwards compatibility with 2.1.x
             tmpId = findString(id);
         } else {
-            if (form != null && form.getParameters().get("id") != null) {
-                tmpId = tmpId + form.getParameters().get("id").toString() + "_";
+            if (form != null && form.getAttributes().get("id") != null) {
+                tmpId = tmpId + form.getAttributes().get("id").toString() + "_";
             }
             if (name != null) {
                 tmpId = tmpId + escape(findString(name));

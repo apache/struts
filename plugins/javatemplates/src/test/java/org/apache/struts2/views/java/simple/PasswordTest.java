@@ -43,7 +43,7 @@ public class PasswordTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input name='name' type='password' size='10' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");
@@ -66,7 +66,7 @@ public class PasswordTest extends AbstractCommonAttributesTest {
         tag.setShowPassword("%{'true'}");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input value='val1' name='name' type='password' size='10' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");

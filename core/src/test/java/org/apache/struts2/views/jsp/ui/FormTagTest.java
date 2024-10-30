@@ -798,7 +798,7 @@ public class FormTagTest extends AbstractUITagTest {
         t.setList("{}");
 
         tag.doStartTag();
-        tag.getComponent().getParameters().put("actionClass", IntValidationAction.class);
+        tag.getComponent().getAttributes().put("actionClass", IntValidationAction.class);
         t.doStartTag();
         t.doEndTag();
         tag.doEndTag();
@@ -847,7 +847,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.getComponent().getParameters().put("actionClass", IntValidationAction.class);
+        tag.getComponent().getAttributes().put("actionClass", IntValidationAction.class);
         t.doStartTag();
         setComponentTagClearTagState(t, true);  // Ensure component tag state clearing is set true (to match tag).
         t.doEndTag();
@@ -896,7 +896,7 @@ public class FormTagTest extends AbstractUITagTest {
         t.setList("{}");
 
         tag.doStartTag();
-        tag.getComponent().getParameters().put("actionClass", DoubleValidationAction.class);
+        tag.getComponent().getAttributes().put("actionClass", DoubleValidationAction.class);
         t.doStartTag();
         t.doEndTag();
         tag.doEndTag();
@@ -945,7 +945,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.getComponent().getParameters().put("actionClass", DoubleValidationAction.class);
+        tag.getComponent().getAttributes().put("actionClass", DoubleValidationAction.class);
         t.doStartTag();
         setComponentTagClearTagState(t, true);  // Ensure component tag state clearing is set true (to match tag).
         t.doEndTag();

@@ -23,6 +23,8 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -49,11 +51,19 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
     private static final long serialVersionUID = 5551686380141886764L;
 
+    private static final Logger LOG = LogManager.getLogger(ScopesHashModel.class);
+    private static final String TAG_ATTRIBUTES = "attributes";
+    /**
+     * @deprecated since 6.7.0, use {@link #TAG_ATTRIBUTES} instead
+     */
+    @Deprecated
+    private static final String TAG_PARAMETERS = "parameters";
+
     private HttpServletRequest request;
     private ServletContext servletContext;
     private ValueStack stack;
     private final Map<String, TemplateModel> unlistedModels = new HashMap<>();
-    private volatile Object parametersCache;
+    private volatile Object attributesCache;
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
         super(objectWrapper);
@@ -94,6 +104,9 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
             if (obj != null) {
                 return wrap(obj);
+            } else if (TAG_ATTRIBUTES.equals(key) || TAG_PARAMETERS.equals(key)) {
+                LOG.warn("[{}] cannot be resolved against stack, short-circuiting!", key);
+                return null;
             }
 
             // ok, then try the context
@@ -143,13 +156,13 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     }
 
     private Object findValueOnStack(final String key) {
-        if ("parameters".equals(key)) {
-            if (parametersCache != null) {
-                return parametersCache;
+        if (TAG_ATTRIBUTES.equals(key) || TAG_PARAMETERS.equals(key)) {
+            if (attributesCache != null) {
+                return attributesCache;
             }
-            Object parametersLocal = stack.findValue(key);
-            parametersCache = parametersLocal;
-            return parametersLocal;
+            Object attributesLocal = stack.findValue(key);
+            attributesCache = attributesLocal;
+            return attributesLocal;
         }
         return stack.findValue(key);
     }

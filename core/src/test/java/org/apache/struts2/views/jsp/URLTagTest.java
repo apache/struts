@@ -128,7 +128,7 @@ public class URLTagTest extends AbstractUITagTest {
         param3.doEndTag();
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
 
         assertNotNull(parameters);
@@ -247,7 +247,7 @@ public class URLTagTest extends AbstractUITagTest {
         param3.doEndTag();
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
 
         assertNotNull(parameters);
@@ -393,7 +393,7 @@ public class URLTagTest extends AbstractUITagTest {
         param3.doEndTag();
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
         assertEquals(parameters.size(), 5);
         assertEquals(parameters.get("id1"), "paramId1");
@@ -476,7 +476,7 @@ public class URLTagTest extends AbstractUITagTest {
         param3.doEndTag();
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
         assertEquals(parameters.size(), 5);
         assertEquals(parameters.get("id1"), "paramId1");
@@ -526,7 +526,7 @@ public class URLTagTest extends AbstractUITagTest {
         tag.doStartTag();
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
         tag.doEndTag();
 
@@ -560,7 +560,7 @@ public class URLTagTest extends AbstractUITagTest {
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
 
         URL url = (URL) tag.getComponent();
-        Map parameters = url.getParameters();
+        Map parameters = url.getAttributes();
 
         tag.doEndTag();
 

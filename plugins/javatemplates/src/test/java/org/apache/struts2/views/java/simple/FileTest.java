@@ -39,7 +39,7 @@ public class FileTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input name='name' type='file' size='10' disabled='disabled' accept='accept_' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");

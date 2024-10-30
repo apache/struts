@@ -180,7 +180,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
         if (action != null) {
             String result = portletUrlHelper.buildUrl(action, namespace, null,
-                formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
+                formComponent.getAttributes(), type, formComponent.portletMode, formComponent.windowState);
             formComponent.addParameter("action", result);
 
 

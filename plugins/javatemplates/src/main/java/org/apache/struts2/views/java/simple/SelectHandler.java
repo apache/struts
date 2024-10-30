@@ -61,7 +61,7 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
             boolean selected = ContainUtil.contains(value, params.get("headerKey"));
             writeOption(headerKey, headerValue, selected);
         }
-	
+
 	//emptyoption
         Object emptyOption = params.get("emptyOption");
         if (emptyOption != null && emptyOption.toString().equals(Boolean.toString(true))) {
@@ -81,10 +81,10 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
 
                 //key
                 Object itemKey = findValue(listKey != null ? listKey : "top");
-                String itemKeyStr = StringUtils.defaultString(itemKey == null ? null : itemKey.toString()); 
+                String itemKeyStr = StringUtils.defaultString(itemKey == null ? null : itemKey.toString());
                 //value
                 Object itemValue = findValue(listValue != null ? listValue : "top");
-                String itemValueStr = StringUtils.defaultString(itemValue == null ? null : itemValue.toString()); 
+                String itemValueStr = StringUtils.defaultString(itemValue == null ? null : itemValue.toString());
 
                 boolean selected = ContainUtil.contains(value, itemKey);
                 writeOption(itemKeyStr, itemValueStr, selected);
@@ -115,7 +115,7 @@ public class SelectHandler extends AbstractTagHandler implements TagGenerator {
     }
 
     private void writeOptionGroup(ListUIBean listUIBean, Object value) throws IOException {
-        Map params = listUIBean.getParameters();
+        Map params = listUIBean.getAttributes();
         Attributes attrs = new Attributes();
         attrs.addIfExists("label", params.get("label"))
                 .addIfTrue("disabled", params.get("disabled"));

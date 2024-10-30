@@ -39,7 +39,7 @@ public class AnchorTest extends AbstractTest {
         tag.setHref("http://sometest.com?ab=10");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -59,7 +59,7 @@ public class AnchorTest extends AbstractTest {
         tag.setHref("http://sometest.com?ab=10");
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
@@ -75,7 +75,7 @@ public class AnchorTest extends AbstractTest {
         tag.setEscapeHtmlBody(true);
         tag.evaluateParams();
 
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         context.getParameters().put("body", s("<i class='i-image'/>"));
 
         theme.renderTag(getTagName(), context);
@@ -93,7 +93,7 @@ public class AnchorTest extends AbstractTest {
         //tag.setEscapeHtmlBody(true);
         tag.evaluateParams();
 
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         context.getParameters().put("body", s("<i class='i-image'/>"));
 
         theme.renderTag(getTagName(), context);

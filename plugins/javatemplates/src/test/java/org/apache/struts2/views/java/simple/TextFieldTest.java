@@ -41,7 +41,7 @@ public class TextFieldTest extends AbstractCommonAttributesTest {
 
 
         tag.evaluateParams();
-        map.putAll(tag.getParameters());
+        map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
         String expected = s("<input type='text' name='name' size='10' maxlength='11' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");

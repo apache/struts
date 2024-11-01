@@ -154,7 +154,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
     /**
      * Gets the location it was created with, mainly for testing
      *
@@ -201,9 +201,10 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * @param invocation the execution state of the action.
      * @throws Exception if an error occurs while executing the result.
      */
+    @Override
     public void execute(ActionInvocation invocation) throws Exception {
         lastFinalLocation = parseLocation ? conditionalParse(location, invocation) : location;
-        doExecute(lastFinalLocation, invocation);
+        doExecute(lastFinalLocation, (org.apache.struts2.ActionInvocation) invocation);
     }
 
     /**
@@ -216,7 +217,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     protected String conditionalParse(String param, ActionInvocation invocation) {
         if (parse && param != null && invocation != null) {
             return TextParseUtil.translateVariables(
-                param, 
+                param,
                 invocation.getStack(),
                 new EncodingParsedValueEvaluator());
         } else {
@@ -228,7 +229,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * As {@link #conditionalParse(String, ActionInvocation)} but does not
      * convert found object into String. If found object is a collection it is
      * returned if found object is not a collection it is wrapped in one.
-     * 
+     *
      * @param param parameter
      * @param invocation action invocation
      * @param excludeEmptyElements 'true' for excluding empty elements
@@ -237,7 +238,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     protected Collection<String> conditionalParseCollection(String param, ActionInvocation invocation, boolean excludeEmptyElements) {
         if (parse && param != null && invocation != null) {
             return TextParseUtil.translateVariablesCollection(
-                param, 
+                param,
                 invocation.getStack(),
                 excludeEmptyElements,
                 new EncodingParsedValueEvaluator());
@@ -251,9 +252,10 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     /**
      * {@link com.opensymphony.xwork2.util.TextParseUtil.ParsedValueEvaluator} to do URL encoding for found values. To be
      * used for single strings or collections.
-     * 
+     *
      */
     private final class EncodingParsedValueEvaluator implements TextParseUtil.ParsedValueEvaluator {
+        @Override
         public Object evaluate(String parsedValue) {
             if (encode) {
                 if (parsedValue != null) {
@@ -270,6 +272,13 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     }
 
     /**
+     * @deprecated since 6.7.0, override {@link #doExecute(String, org.apache.struts2.ActionInvocation)} instead.
+     */
+    @Deprecated
+    protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+    }
+
+    /**
      * Executes the result given a final location (jsp page, action, etc) and the action invocation
      * (the state in which the action was executed). Subclasses must implement this class to handle
      * custom logic for result handling.
@@ -278,5 +287,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * @param invocation    the execution state of the action.
      * @throws Exception if an error occurs while executing the result.
      */
-    protected abstract void doExecute(String finalLocation, ActionInvocation invocation) throws Exception;
+    protected void doExecute(String finalLocation, org.apache.struts2.ActionInvocation invocation) throws Exception {
+        doExecute(finalLocation, ActionInvocation.adapt(invocation));
+    }
 }

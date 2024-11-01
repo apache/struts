@@ -153,7 +153,10 @@ import java.util.Map;
  *
  * @author Matthew E. Porter (matthew dot porter at metissian dot com)
  * @author Claus Ibsen
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ExceptionMappingInterceptor} instead.
  */
+@Deprecated
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);

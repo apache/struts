@@ -19,9 +19,9 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ModelDriven;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -75,7 +75,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @author tm_jee
  * @version $Date$ $Id$
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ModelDrivenInterceptor} instead.
  */
+@Deprecated
 public class ModelDrivenInterceptor extends AbstractInterceptor {
 
     protected boolean refreshModelBeforeResult = false;

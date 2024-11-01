@@ -19,7 +19,7 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Preparable;
+import org.apache.struts2.Preparable;
 
 import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
@@ -97,7 +97,10 @@ import java.lang.reflect.InvocationTargetException;
  * @author Philip Luppens
  * @author tm_jee
  * @see com.opensymphony.xwork2.Preparable
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.PrepareInterceptor} instead.
  */
+@Deprecated
 public class PrepareInterceptor extends MethodFilterInterceptor {
 
     @Serial

@@ -19,22 +19,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 /**
- * ValidationErrorAware classes can be notified about validation errors
- * before {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor} will return 'inputResultName' result
- * to allow change or not the result name
- *
- * This interface can be only applied to action which already implements {@link ValidationAware} interface!
- *
- * @since 2.3.15
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
  */
-public interface ValidationErrorAware {
-
-    /**
-     * Allows to notify action about occurred action/field errors
-     *
-     * @param currentResultName current result name, action can change it or return the same
-     * @return new result name or passed currentResultName
-     */
-    String actionErrorOccurred(final String currentResultName);
-
+@Deprecated
+public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
 }

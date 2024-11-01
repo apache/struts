@@ -19,70 +19,10 @@
 package com.opensymphony.xwork2;
 
 /**
- * All actions <b>may</b> implement this interface, which exposes the <code>execute()</code> method.
- * <p>
- * However, as of XWork 1.1, this is <b>not</b> required and is only here to assist users. You are free to create POJOs
- * that honor the same contract defined by this interface without actually implementing the interface.
- * </p>
+ * {@inheritDoc}
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.Action} instead.
  */
-public interface Action {
-
-    /**
-     * The action execution was successful. Show result
-     * view to the end user.
-     */
-    String SUCCESS = "success";
-
-    /**
-     * The action execution was successful but do not
-     * show a view. This is useful for actions that are
-     * handling the view in another fashion like redirect.
-     */
-    String NONE = "none";
-
-    /**
-     * The action execution was a failure.
-     * Show an error view, possibly asking the
-     * user to retry entering data.
-     */
-    String ERROR = "error";
-
-    /**
-     * <p>
-     * The action execution require more input
-     * in order to succeed.
-     * This result is typically used if a form
-     * handling action has been executed so as
-     * to provide defaults for a form. The
-     * form associated with the handler should be
-     * shown to the end user.
-     * </p>
-     *
-     * <p>
-     * This result is also used if the given input
-     * params are invalid, meaning the user
-     * should try providing input again.
-     * </p>
-     */
-    String INPUT = "input";
-
-    /**
-     * The action could not execute, since the
-     * user most was not logged in. The login view
-     * should be shown.
-     */
-    String LOGIN = "login";
-
-
-    /**
-     * Where the logic of the action is executed.
-     *
-     * @return a string representing the logical result of the execution.
-     *         See constants in this interface for a list of standard result values.
-     * @throws Exception thrown if a system level exception occurs.
-     *                   <b>Note:</b> Application level exceptions should be handled by returning
-     *                   an error value, such as <code>Action.ERROR</code>.
-     */
-    String execute() throws Exception;
-
+@Deprecated
+public interface Action extends org.apache.struts2.Action {
 }

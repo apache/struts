@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.Map;
 
@@ -90,7 +91,10 @@ import java.util.Map;
  * </pre>
  *
  * @author Matthew Payne
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.AliasInterceptor} instead.
  */
+@Deprecated
 public class AliasInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(AliasInterceptor.class);

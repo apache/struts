@@ -21,44 +21,23 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 
 /**
- * Provides default implementations of optional lifecycle methods
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.AbstractInterceptor} instead.
  */
-public abstract class AbstractInterceptor implements ConditionalInterceptor {
-
-    private boolean disabled;
-
-    /**
-     * Does nothing
-     */
-    @Override
-    public void init() {
-    }
-
-    /**
-     * Does nothing
-     */
-    @Override
-    public void destroy() {
-    }
+@Deprecated
+public abstract class AbstractInterceptor extends org.apache.struts2.interceptor.AbstractInterceptor implements ConditionalInterceptor {
 
     /**
      * Override to handle interception
      */
-    @Override
     public abstract String intercept(ActionInvocation invocation) throws Exception;
 
-    /**
-     * Allows to skip executing a given interceptor, just define {@code <param name="disabled">true</param>}
-     * or use other way to override interceptor's parameters, see
-     * <a href="https://struts.apache.org/core-developers/interceptors#interceptor-parameter-overriding">docs</a>.
-     * @param disable if set to true, execution of a given interceptor will be skipped.
-     */
-    public void setDisabled(String disable) {
-        this.disabled = Boolean.parseBoolean(disable);
+    @Override
+    public String intercept(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return intercept(ActionInvocation.adapt(invocation));
     }
 
     @Override
     public boolean shouldIntercept(ActionInvocation invocation) {
-        return !this.disabled;
+        return shouldIntercept((org.apache.struts2.ActionInvocation) invocation);
     }
 }

@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,10 @@ import java.util.Map;
  * </pre>
  *
  * @author Jason Carreira
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ConversionErrorInterceptor} instead.
  */
+@Deprecated
 public class ConversionErrorInterceptor extends MethodFilterInterceptor {
 
     public static final String ORIGINAL_PROPERTY_OVERRIDE = "original.property.override";

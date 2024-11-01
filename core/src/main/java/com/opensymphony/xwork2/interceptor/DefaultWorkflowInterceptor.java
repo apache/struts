@@ -25,6 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.interceptor.ValidationErrorAware;
+import org.apache.struts2.interceptor.ValidationWorkflowAware;
 
 import java.io.Serial;
 
@@ -131,7 +134,10 @@ import java.io.Serial;
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @author Philip Luppens
  * @author tm_jee
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.DefaultWorkflowInterceptor} instead.
  */
+@Deprecated
 public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
     @Serial

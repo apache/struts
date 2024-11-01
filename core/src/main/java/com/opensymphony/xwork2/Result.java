@@ -18,33 +18,39 @@
  */
 package com.opensymphony.xwork2;
 
-import java.io.Serializable;
-
 /**
- * All results (except for <code>Action.NONE</code>) of an {@link Action} are mapped to a View implementation.
+ * {@inheritDoc}
  *
- * <p>
- * Examples of Views might be:
- * </p>
- *
- * <ul>
- * <li>SwingPanelView - pops up a new Swing panel</li>
- * <li>ActionChainView - executes another action</li>
- * <li>SerlvetRedirectView - redirects the HTTP response to a URL</li>
- * <li>ServletDispatcherView - dispatches the HTTP response to a URL</li>
- * </ul>
- *
- * @author plightbo
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.Result} instead.
  */
-public interface Result extends Serializable {
+@Deprecated
+public interface Result extends org.apache.struts2.Result {
 
-    /**
-     * Represents a generic interface for all action execution results.
-     * Whether that be displaying a webpage, generating an email, sending a JMS message, etc.
-     *
-     * @param invocation  the invocation context.
-     * @throws Exception can be thrown.
-     */
+    @Override
+    default void execute(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        execute(ActionInvocation.adapt(invocation));
+    }
+
     void execute(ActionInvocation invocation) throws Exception;
 
+    static Result adapt(org.apache.struts2.Result actualResult) {
+        if (actualResult instanceof Result) {
+            return (Result) actualResult;
+        }
+        return actualResult != null ? new LegacyAdapter(actualResult) : null;
+    }
+
+    class LegacyAdapter implements Result {
+
+        private final org.apache.struts2.Result adaptee;
+
+        private LegacyAdapter(org.apache.struts2.Result adaptee) {
+            this.adaptee = adaptee;
+        }
+
+        @Override
+        public void execute(ActionInvocation invocation) throws Exception {
+            adaptee.execute(ActionInvocation.adapt(invocation));
+        }
+    }
 }

@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ProxyUtil;
@@ -31,6 +30,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.Unchainable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,7 +118,10 @@ import java.util.Map;
  * @author mrdon
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @see com.opensymphony.xwork2.ActionChainResult
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ChainingInterceptor} instead.
  */
+@Deprecated
 public class ChainingInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ChainingInterceptor.class);

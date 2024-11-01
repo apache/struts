@@ -61,7 +61,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     private final ServletContext servletContext;
     private ValueStack stack;
     private final Map<String, TemplateModel> unlistedModels = new HashMap<>();
-    private volatile Object parametersCache;
+    private volatile Object attributesCache;
 
     public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
         super(objectWrapper);
@@ -155,12 +155,12 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
     private Object findValueOnStack(final String key) {
         if (TAG_ATTRIBUTES.equals(key)) {
-            if (parametersCache != null) {
-                return parametersCache;
+            if (attributesCache != null) {
+                return attributesCache;
             }
-            Object parametersLocal = stack.findValue(key);
-            parametersCache = parametersLocal;
-            return parametersLocal;
+            Object attributesLocal = stack.findValue(key);
+            attributesCache = attributesLocal;
+            return attributesLocal;
         }
         return stack.findValue(key);
     }

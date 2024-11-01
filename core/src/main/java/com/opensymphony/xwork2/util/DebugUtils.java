@@ -19,8 +19,8 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

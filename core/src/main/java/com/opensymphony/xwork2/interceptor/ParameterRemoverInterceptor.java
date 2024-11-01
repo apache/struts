@@ -66,7 +66,10 @@ import java.util.Set;
  * 	...
  * &lt;/action&gt;
  * </pre>
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ParameterRemoverInterceptor} instead.
  */
+@Deprecated
 public class ParameterRemoverInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ParameterRemoverInterceptor.class);

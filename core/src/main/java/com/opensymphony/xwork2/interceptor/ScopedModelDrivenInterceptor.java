@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.interceptor.ScopedModelDriven;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -79,7 +80,10 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ScopedModelDrivenInterceptor} instead.
  */
+@Deprecated
 public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];

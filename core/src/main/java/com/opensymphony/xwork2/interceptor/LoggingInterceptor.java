@@ -59,7 +59,10 @@ import org.apache.logging.log4j.Logger;
  * </pre>
  *
  * @author Jason Carreira
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.LoggingInterceptor} instead.
  */
+@Deprecated
 public class LoggingInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(LoggingInterceptor.class);
     private static final String FINISH_MESSAGE = "Finishing execution stack for action ";

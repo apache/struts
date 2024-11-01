@@ -50,6 +50,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("java.io.Serializable"),
                 Class.forName("com.opensymphony.xwork2.mock.MockResult"),
                 Class.forName("com.opensymphony.xwork2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.ActionChainResult"),
                 Class.forName("com.opensymphony.xwork2.TextProvider"),
@@ -60,8 +61,15 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.mock.MockInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
+                Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Result"),
-                Class.forName("com.opensymphony.xwork2.SimpleAction")
+                Class.forName("com.opensymphony.xwork2.SimpleAction"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 
@@ -76,6 +84,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("java.io.Serializable"),
                 Class.forName("com.opensymphony.xwork2.mock.MockResult"),
                 Class.forName("com.opensymphony.xwork2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.TextProvider"),
                 Class.forName("com.opensymphony.xwork2.interceptor.Interceptor"),
@@ -84,8 +93,15 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.mock.MockInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
+                Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
                 Class.forName("com.opensymphony.xwork2.Result"),
-                Class.forName("com.opensymphony.xwork2.SimpleAction")
+                Class.forName("com.opensymphony.xwork2.SimpleAction"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 
@@ -99,6 +115,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.LocaleProvider"),
                 Class.forName("java.io.Serializable"),
                 Class.forName("com.opensymphony.xwork2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.ActionSupport"),
                 Class.forName("com.opensymphony.xwork2.ActionChainResult"),
                 Class.forName("com.opensymphony.xwork2.TextProvider"),
@@ -108,7 +125,14 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("com.opensymphony.xwork2.Validateable"),
                 Class.forName("com.opensymphony.xwork2.Action"),
                 Class.forName("com.opensymphony.xwork2.interceptor.AbstractInterceptor"),
-                Class.forName("com.opensymphony.xwork2.Result")
+                Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
+                Class.forName("com.opensymphony.xwork2.Result"),
+                Class.forName("org.apache.struts2.interceptor.Interceptor"),
+                Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
+                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.Action"),
+                Class.forName("org.apache.struts2.Validateable"),
+                Class.forName("org.apache.struts2.interceptor.ValidationAware")
         );
     }
 }

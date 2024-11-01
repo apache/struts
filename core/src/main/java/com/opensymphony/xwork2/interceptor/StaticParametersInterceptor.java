@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.Collections;
 import java.util.Map;
@@ -84,7 +85,10 @@ import java.util.Map;
  * </pre>
  *
  * @author Patrick Lightbody
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.StaticParametersInterceptor} instead.
  */
+@Deprecated
 public class StaticParametersInterceptor extends AbstractInterceptor {
 
     private boolean parse;

@@ -53,7 +53,7 @@ import java.lang.reflect.Method;
  *    <li>else if the action class have prepareDo(MethodName()}(), it will be invoked</li>
  *    <li>no matter if 1] or 2] is performed, if alwaysinvokePrepare property of the interceptor is "true" (which is by default "true"), prepare() will be invoked.</li>
  * </ol>
- * <p>
+ *<p>
  * <!-- END SNIPPET: javadocPrepareInterceptor -->
  *
  * @author Philip Luppens
@@ -129,6 +129,9 @@ public class PrefixMethodInvocationUtil {
         }
     }
 
+    public static void invokePrefixMethod(org.apache.struts2.ActionInvocation actionInvocation, String[] prefixes) throws InvocationTargetException, IllegalAccessException {
+        invokePrefixMethod(ActionInvocation.adapt(actionInvocation), prefixes);
+    }
 
     /**
      * This method returns a {@link Method} in <code>action</code>. The method

@@ -31,56 +31,59 @@ import java.util.Set;
  *
  * <p>
  * MethodFilterInterceptor is an abstract <code>Interceptor</code> used as
- * a base class for interceptors that will filter execution based on method 
+ * a base class for interceptors that will filter execution based on method
  * names according to specified included/excluded method lists.
- * 
+ *
  * </p>
- * 
+ *
  * Settable parameters are as follows:
- * 
+ *
  * <ul>
  * 		<li>excludeMethods - method names to be excluded from interceptor processing</li>
  * 		<li>includeMethods - method names to be included in interceptor processing</li>
  * </ul>
- * 
+ *
  * <p>
- * 
- * <b>NOTE:</b> If method name are available in both includeMethods and 
- * excludeMethods, it will be considered as an included method: 
+ *
+ * <b>NOTE:</b> If method name are available in both includeMethods and
+ * excludeMethods, it will be considered as an included method:
  * includeMethods takes precedence over excludeMethods.
- * 
+ *
  * </p>
- * 
+ *
  * Interceptors that extends this capability include:
- * 
+ *
  * <ul>
  *    <li>TokenInterceptor</li>
  *    <li>TokenSessionStoreInterceptor</li>
  *    <li>DefaultWorkflowInterceptor</li>
  *    <li>ValidationInterceptor</li>
  * </ul>
- * 
+ *
  * <!-- END SNIPPET: javadoc -->
- * 
+ *
  * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @author Rainer Hermanns
- * 
+ *
  * @see org.apache.struts2.interceptor.TokenInterceptor
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
  * @see com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor
  * @see com.opensymphony.xwork2.validator.ValidationInterceptor
+ *
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.MethodFilterInterceptor} instead.
  */
+@Deprecated
 public abstract class MethodFilterInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(MethodFilterInterceptor.class);
-    
+
     protected Set<String> excludeMethods = Collections.emptySet();
     protected Set<String> includeMethods = Collections.emptySet();
 
     public void setExcludeMethods(String excludeMethods) {
         this.excludeMethods = TextParseUtil.commaDelimitedStringToSet(excludeMethods);
     }
-    
+
     public Set<String> getExcludeMethodsSet() {
     	return excludeMethods;
     }
@@ -88,7 +91,7 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
     public void setIncludeMethods(String includeMethods) {
         this.includeMethods = TextParseUtil.commaDelimitedStringToSet(includeMethods);
     }
-    
+
     public Set<String> getIncludeMethodsSet() {
     	return includeMethods;
     }
@@ -97,7 +100,7 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         if (applyInterceptor(invocation)) {
             return doIntercept(invocation);
-        } 
+        }
         return invocation.invoke();
     }
 
@@ -110,14 +113,14 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
         }
         return applyMethod;
     }
-    
+
     /**
      * Subclasses must override to implement the interceptor logic.
-     * 
+     *
      * @param invocation the action invocation
      * @return the result of invocation
      * @throws Exception in case of any errors
      */
     protected abstract String doIntercept(ActionInvocation invocation) throws Exception;
-    
+
 }

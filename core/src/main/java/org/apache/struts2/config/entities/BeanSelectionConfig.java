@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.config.entities;
 
-import com.opensymphony.xwork2.config.BeanSelectionProvider;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.inject.Container;
 
 public class BeanSelectionConfig {
 

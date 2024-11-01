@@ -18,13 +18,15 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Action;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.annotations.InputConfig;
+
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -132,6 +134,7 @@ import org.apache.struts2.ActionInvocation;
  */
 public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = 7563014655616490865L;
 
     private static final Logger LOG = LogManager.getLogger(DefaultWorkflowInterceptor.class);
@@ -161,8 +164,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ValidationAware) {
-            ValidationAware validationAwareAction = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAwareAction) {
 
             if (validationAwareAction.hasErrors()) {
                 LOG.debug("Errors on action [{}], returning result name [{}]", validationAwareAction, inputResultName);
@@ -180,7 +182,7 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Process {@link com.opensymphony.xwork2.interceptor.ValidationWorkflowAware} interface
+     * Process {@link ValidationWorkflowAware} interface
      *
      * @param action action object
      * @param currentResultName current result name
@@ -189,8 +191,8 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
      */
     private String processValidationWorkflowAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;
-        if (action instanceof ValidationWorkflowAware) {
-            resultName = ((ValidationWorkflowAware) action).getInputResultName();
+        if (action instanceof ValidationWorkflowAware validationWorkflowAware) {
+            resultName = validationWorkflowAware.getInputResultName();
             LOG.debug("Changing result name from [{}] to [{}] because of processing [{}] interface applied to [{}]",
                         currentResultName, resultName, ValidationWorkflowAware.class.getSimpleName(), action);
         }
@@ -224,18 +226,18 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     /**
-     * Notify action if it implements {@link com.opensymphony.xwork2.interceptor.ValidationErrorAware} interface
+     * Notify action if it implements {@link ValidationErrorAware} interface
      *
      * @param action action object
      * @param currentResultName current result name
      *
      * @return result name
-     * @see com.opensymphony.xwork2.interceptor.ValidationErrorAware
+     * @see ValidationErrorAware
      */
     protected String processValidationErrorAware(final Object action, final String currentResultName) {
         String resultName = currentResultName;
-        if (action instanceof ValidationErrorAware) {
-            resultName = ((ValidationErrorAware) action).actionErrorOccurred(currentResultName);
+        if (action instanceof ValidationErrorAware validationErrorAware) {
+            resultName = validationErrorAware.actionErrorOccurred(currentResultName);
             LOG.debug("Changing result name from [{}] to [{}] because of processing interface [{}] on action [{}]",
                         currentResultName, resultName, ValidationErrorAware.class.getSimpleName(), action);
         }

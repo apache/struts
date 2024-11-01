@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.jasperreports;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import net.sf.jasperreports.engine.JRException;

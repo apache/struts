@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import org.apache.struts2.config.ConfigurationManager;
 
 import jakarta.servlet.ServletContext;
 import java.util.Map;

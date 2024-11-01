@@ -28,14 +28,14 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.config.impl.DefaultConfiguration;
+import org.apache.struts2.inject.Container;
 
 /**
  * DefaultActionMapper test case.
@@ -69,8 +69,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMapping() {
         req.setRequestURI("/my/namespace/actionName.action");
         req.setServletPath("/my/namespace/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -85,8 +85,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName!add.action");
         req.setServletPath("/my/namespace/actionName!add.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setAllowDynamicMethodCalls("true");
@@ -101,8 +101,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         req.setRequestURI("/my/foo/actionName.action");
         req.setServletPath("/my/foo/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setSlashesInActionNames("true");
@@ -117,8 +117,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         req.setRequestURI("/foo/actionName.action");
         req.setServletPath("/foo/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setSlashesInActionNames("true");
@@ -146,8 +146,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         req.setRequestURI("/foo/actionName.action");
         req.setServletPath("/foo/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setSlashesInActionNames("true");
@@ -163,8 +163,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         req.setRequestURI("/my-hh/abc.action");
         req.setServletPath("/my-hh/abc.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -172,8 +172,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("", mapping.getNamespace());
         assertEquals("abc", mapping.getName());
 
-        
-        
+
+
         mapper = new DefaultActionMapper();
         mapper.setSlashesInActionNames("true");
         mapping = mapper.getMapping(req, configManager);
@@ -185,8 +185,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithUnknownNamespace() {
         req.setRequestURI("/bo/foo/actionName.action");
         req.setServletPath("/bo/foo/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -199,8 +199,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithUnknownNamespaceButFullNamespaceSelect() {
         req.setRequestURI("/bo/foo/actionName.action");
         req.setServletPath("/bo/foo/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setAlwaysSelectFullNamespace("true");
@@ -262,8 +262,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName.action");
         req.setServletPath("/my/namespace/actionName.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -275,8 +275,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName.action;abc=123rty56");
         req.setServletPath("/my/namespace/actionName.action;abc=123rty56");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -288,8 +288,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName!add.action");
         req.setServletPath("/my/namespace/actionName!add.action");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -313,8 +313,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName");
         req.setServletPath("/my/namespace/actionName");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("");
@@ -330,8 +330,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName.html");
         req.setServletPath("/my/namespace/actionName.html");
-        
-        
+
+
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("");
@@ -979,5 +979,5 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         // then
         assertEquals("error", result);
     }
-    
+
 }

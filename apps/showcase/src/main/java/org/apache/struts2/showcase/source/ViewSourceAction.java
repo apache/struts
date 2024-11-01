@@ -20,8 +20,8 @@
  */
 package org.apache.struts2.showcase.source;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.action.ServletContextAware;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 

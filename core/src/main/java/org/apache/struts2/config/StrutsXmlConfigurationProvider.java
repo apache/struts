@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Context;
+import org.apache.struts2.inject.Factory;
+import org.apache.struts2.util.location.LocatableProperties;
 import jakarta.servlet.ServletContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,9 +92,6 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#register(com.opensymphony.xwork2.inject.ContainerBuilder, java.util.Properties)
-     */
     @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
         if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
@@ -114,7 +111,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#init(com.opensymphony.xwork2.config.Configuration)
+     * @see org.apache.struts2.config.providers.XmlConfigurationProvider#init(org.apache.struts2.config.Configuration)
      */
     @Override
     public void loadPackages() {
@@ -127,7 +124,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * Look for the configuration file on the classpath and in the file system
      *
      * @param fileName The file name to retrieve
-     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#getConfigurationUrls
+     * @see org.apache.struts2.config.providers.XmlConfigurationProvider#getConfigurationUrls
      */
     @Override
     protected Iterator<URL> getConfigurationUrls(String fileName) throws IOException {

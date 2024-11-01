@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor.exec;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.interceptor.ExecuteAndWaitInterceptor;
 
 /**

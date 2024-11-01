@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -92,9 +92,6 @@ public class PlainTextResult extends StrutsResultSupport {
         this.charSet = charSet;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.result.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
-     */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         // verify charset
         Charset charset = readCharset();

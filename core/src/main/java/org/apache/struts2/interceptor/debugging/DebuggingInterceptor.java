@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +99,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
-    private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "com.opensymphony.xwork2.", "xwork."};
+    private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "org.apache.struts2.", "xwork."};
     private final Set<String> ignoreKeys = Set.of(
         DispatcherConstants.APPLICATION,
         DispatcherConstants.SESSION,
@@ -145,7 +145,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     /*
      * (non-Javadoc)
      *
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#invoke(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.Interceptor#invoke(org.apache.struts2.ActionInvocation)
      */
     public String intercept(ActionInvocation inv) throws Exception {
         boolean actionOnly = false;

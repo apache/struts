@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * <b>This interceptor does not perform any validation</b>.
  *
  * <p>
- * Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support
+ * Copied from the {@link org.apache.struts2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support
  * for error handling of Restful operations.  For example, if an validation error is discovered, a map of errors
  * is created and processed to be returned, using the appropriate content handler for rendering the body.
  * </p>

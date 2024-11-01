@@ -18,14 +18,14 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.conversion.impl.ConversionData;
-import com.opensymphony.xwork2.inject.Container;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.PageContext;
+import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.util.ValueStack;
 
 import java.io.Serializable;
@@ -65,7 +65,7 @@ public class ActionContext implements Serializable {
     private static final String ACTION_NAME = "org.apache.struts2.ActionContext.name";
 
     /**
-     * Constant for the {@link ValueStack OGNL value stack}.
+     * Constant for the {@link org.apache.struts2.util.ValueStack OGNL value stack}.
      */
     private static final String VALUE_STACK = ValueStack.VALUE_STACK;
 
@@ -274,7 +274,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Gets the Locale of the current action. If no locale was ever specified the platform's
-     * {@link Locale#getDefault() default locale} is used.
+     * {@link java.util.Locale#getDefault() default locale} is used.
      *
      * @return the Locale of the current action.
      */
@@ -542,11 +542,10 @@ public class ActionContext implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ActionContext)) {
+    public final boolean equals(Object obj) {
+        if (!(obj instanceof ActionContext other)) {
             return false;
         }
-        ActionContext other = (ActionContext) obj;
         return Objects.equals(getContextMap(), other.getContextMap());
     }
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.TestAction;
 
 import java.math.RoundingMode;

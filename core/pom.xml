@@ -186,7 +186,7 @@
             <artifactId>commons-text</artifactId>
         </dependency>
 
-        <!-- Optional used in com.opensymphony.xwork2.util.ProxyUtil to detect if object is HibernateProxy -->
+        <!-- Optional used in org.apache.struts2.util.ProxyUtil to detect if object is HibernateProxy -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

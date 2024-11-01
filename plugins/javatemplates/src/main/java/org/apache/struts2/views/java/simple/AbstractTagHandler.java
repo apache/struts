@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.java.Attributes;

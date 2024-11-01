@@ -21,7 +21,7 @@ package org.apache.struts2;
 /**
  * Simple marker interface to indicate an object should <b>not</b> have its properties copied during chaining.
  *
- * @see com.opensymphony.xwork2.interceptor.ChainingInterceptor
+ * @see org.apache.struts2.interceptor.ChainingInterceptor
  */
 public interface Unchainable {
 }

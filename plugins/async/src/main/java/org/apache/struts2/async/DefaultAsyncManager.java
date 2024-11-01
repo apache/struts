@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.async;
 
-import com.opensymphony.xwork2.AsyncManager;
+import org.apache.struts2.AsyncManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

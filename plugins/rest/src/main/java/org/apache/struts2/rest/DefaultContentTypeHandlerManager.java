@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;

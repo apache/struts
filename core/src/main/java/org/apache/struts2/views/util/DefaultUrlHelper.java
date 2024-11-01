@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 import jakarta.servlet.RequestDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.DateTextField;

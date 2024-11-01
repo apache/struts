@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.LocalizedTextProvider;
+import org.apache.struts2.LocalizedTextProvider;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 

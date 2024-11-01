@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.ServletUrlRenderer;

@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.commons.text.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.ServletActionContext;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

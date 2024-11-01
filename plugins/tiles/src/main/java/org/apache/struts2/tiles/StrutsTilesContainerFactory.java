@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.util.TextParseUtil;
 import jakarta.el.ArrayELResolver;
 import jakarta.el.BeanELResolver;
 import jakarta.el.CompositeELResolver;

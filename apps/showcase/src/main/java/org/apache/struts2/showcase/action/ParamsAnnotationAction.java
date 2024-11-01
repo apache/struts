@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.showcase.action;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.model.MyDto;
 

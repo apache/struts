@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

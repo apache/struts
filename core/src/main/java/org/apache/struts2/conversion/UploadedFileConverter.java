@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
+import org.apache.struts2.conversion.impl.DefaultTypeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;

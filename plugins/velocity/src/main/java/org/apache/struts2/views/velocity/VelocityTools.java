@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.velocity;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import jakarta.servlet.ServletContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;

@@ -26,7 +26,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 
 import freemarker.cache.TemplateLoader;
 
@@ -63,10 +63,10 @@ public class FreemarkerThemeTemplateLoader implements TemplateLoader{
         }
 
         Template template = new Template(
-            name.substring(0, tokenIndex - 1), 
-            name.substring(tokenIndex + themeExpansionToken.length(), themeEndIndex), 
+            name.substring(0, tokenIndex - 1),
+            name.substring(tokenIndex + themeExpansionToken.length(), themeEndIndex),
             name.substring(themeEndIndex + 1));
-        
+
         List<Template> possibleTemplates = template.getPossibleTemplates(templateEngine);
         for (Template possibleTemplate : possibleTemplates) {
             Object templateSource = parentTemplateLoader.findTemplateSource(
@@ -83,7 +83,7 @@ public class FreemarkerThemeTemplateLoader implements TemplateLoader{
         String parentName = "/" + template.getDir() + "/" + themeExpansionToken + parentTheme + "/" + template.getName();
         return this.findTemplateSource(parentName);
     }
-    
+
     /** {@inheritDoc} */
     public long getLastModified(Object templateSource) {
         return parentTemplateLoader.getLastModified(templateSource);

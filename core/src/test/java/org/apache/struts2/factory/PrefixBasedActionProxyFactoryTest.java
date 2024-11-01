@@ -18,18 +18,18 @@
  */
 package org.apache.struts2.factory;
 
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Context;
-import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.DefaultActionProxyFactory;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationProvider;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Context;
+import org.apache.struts2.inject.Factory;
+import org.apache.struts2.inject.Scope;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.test.StubConfigurationProvider;
+import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 

@@ -18,19 +18,18 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import jakarta.servlet.http.Cookie;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.action.CookiesAware;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.security.AcceptedPatternsChecker;
+import org.apache.struts2.security.ExcludedPatternsChecker;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.Serial;
 import java.util.Collections;
@@ -359,13 +358,9 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookiesMap map of cookies
      */
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
-        if (action instanceof CookiesAware) {
+        if (action instanceof CookiesAware cookiesAware) {
             LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
-            ((CookiesAware)action).withCookies(cookiesMap);
-        }
-        if (action instanceof org.apache.struts2.action.CookiesAware) {
-            LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
-            ((org.apache.struts2.action.CookiesAware)action).withCookies(cookiesMap);
+            cookiesAware.withCookies(cookiesMap);
         }
     }
 }

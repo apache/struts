@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -27,8 +27,7 @@ import java.util.Set;
 import static java.util.Objects.requireNonNullElse;
 
 /**
- * Utility class contains common methods used by
- * {@link MethodFilterInterceptor}.
+ * Utility class contains common methods used by {@link MethodFilterInterceptor}.
  *
  * @author tm_jee
  */

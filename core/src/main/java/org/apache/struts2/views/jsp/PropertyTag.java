@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Property;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.Serial;
 
@@ -54,7 +54,7 @@ public class PropertyTag extends ComponentTagSupport {
 
         Property tag = (Property) component;
         tag.setDefault(defaultValue);
-        tag.setValue(value); 
+        tag.setValue(value);
         tag.setEscapeHtml(escapeHtml);
         tag.setEscapeJavaScript(escapeJavaScript);
         tag.setEscapeXml(escapeXml);
@@ -72,7 +72,7 @@ public class PropertyTag extends ComponentTagSupport {
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
     }

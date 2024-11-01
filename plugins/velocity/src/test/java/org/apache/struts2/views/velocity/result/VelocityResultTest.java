@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.views.velocity.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.junit.XWorkJUnit4TestCase;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.velocity.Template;

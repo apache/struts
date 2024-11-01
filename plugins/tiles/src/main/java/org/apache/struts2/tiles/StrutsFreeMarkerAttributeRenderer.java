@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.Container;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;

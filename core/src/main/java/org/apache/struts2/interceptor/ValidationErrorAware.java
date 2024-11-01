@@ -20,7 +20,7 @@ package org.apache.struts2.interceptor;
 
 /**
  * ValidationErrorAware classes can be notified about validation errors
- * before {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor} will return 'inputResultName' result
+ * before {@link DefaultWorkflowInterceptor} will return 'inputResultName' result
  * to allow change or not the result name
  *
  * This interface can be only applied to action which already implements {@link ValidationAware} interface!

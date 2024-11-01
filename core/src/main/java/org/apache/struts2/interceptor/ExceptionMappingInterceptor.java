@@ -18,11 +18,10 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.interceptor.ExceptionHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ExceptionMappingConfig;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.List;
@@ -57,7 +56,7 @@ import java.util.Map;
  * <li>logLevel (optional) - what log level should we use (<code>trace, debug, info, warn, error, fatal</code>)? - defaut is <code>debug</code></li>
  *
  * <li>logCategory (optional) - If provided we would use this category (eg. <code>com.mycompany.app</code>).
- * Default is to use <code>com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor</code>.</li>
+ * Default is to use {@link ExceptionMappingInterceptor}.</li>
  *
  * </ul>
  *
@@ -73,7 +72,7 @@ import java.util.Map;
  * <!-- START SNIPPET: extending -->
  * <p>
  * If you want to add custom handling for publishing the Exception, you may override
- * {@link #publishException(ActionInvocation, ExceptionHolder)}. The default implementation
+ * {@link #publishException(org.apache.struts2.ActionInvocation, ExceptionHolder)}. The default implementation
  * pushes the given ExceptionHolder on value stack. A custom implementation could add additional logging etc.
  * </p>
  * <!-- END SNIPPET: extending -->
@@ -274,12 +273,11 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
         // Check for specific exception mappings.
         if (exceptionMappings != null) {
             int deepest = Integer.MAX_VALUE;
-            for (Object exceptionMapping : exceptionMappings) {
-                ExceptionMappingConfig exceptionMappingConfig = (ExceptionMappingConfig) exceptionMapping;
-                int depth = getDepth(exceptionMappingConfig.getExceptionClassName(), t);
+            for (ExceptionMappingConfig exceptionMapping : exceptionMappings) {
+                int depth = getDepth(exceptionMapping.getExceptionClassName(), t);
                 if (depth >= 0 && depth < deepest) {
                     deepest = depth;
-                    config = exceptionMappingConfig;
+                    config = exceptionMapping;
                 }
             }
         }

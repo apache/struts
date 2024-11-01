@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.ognl;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.views.java;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;

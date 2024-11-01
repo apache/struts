@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.annotations.StrutsTag;
@@ -179,12 +179,12 @@ public class Param extends Component {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     @StrutsTagAttribute(description="Whether to suppress empty parameters", type="Boolean", defaultValue="false")
     public void setSuppressEmptyParameters(boolean suppressEmptyParameters) {
         this.suppressEmptyParameters = suppressEmptyParameters;
     }
-    
+
     /**
      * <p>
      * Tags can implement this to support nested param tags without the <tt>name</tt> attribute.

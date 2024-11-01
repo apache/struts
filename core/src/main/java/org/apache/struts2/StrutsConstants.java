@@ -19,6 +19,7 @@
 package org.apache.struts2;
 
 import org.apache.struts2.components.date.DateFormatter;
+import org.apache.struts2.conversion.impl.XWorkBasicConverter;
 import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
 
 /**
@@ -73,7 +74,7 @@ public final class StrutsConstants {
 
     public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
 
-    /** The com.opensymphony.xwork2.ObjectFactory implementation class */
+    /** The org.apache.struts2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
     public static final String STRUTS_OBJECTFACTORY_ACTIONFACTORY = "struts.objectFactory.actionFactory";
     public static final String STRUTS_OBJECTFACTORY_RESULTFACTORY = "struts.objectFactory.resultFactory";
@@ -82,13 +83,13 @@ public final class StrutsConstants {
     public static final String STRUTS_OBJECTFACTORY_VALIDATORFACTORY = "struts.objectFactory.validatorFactory";
     public static final String STRUTS_OBJECTFACTORY_UNKNOWNHANDLERFACTORY = "struts.objectFactory.unknownHandlerFactory";
 
-    /** The com.opensymphony.xwork2.util.FileManager implementation class */
+    /** The org.apache.struts2.util.FileManager implementation class */
     public static final String STRUTS_FILE_MANAGER_FACTORY = "struts.fileManagerFactory";
 
-    /** The com.opensymphony.xwork2.util.fs.FileManager implementation class */
+    /** The org.apache.struts2.util.fs.FileManager implementation class */
     public static final String STRUTS_FILE_MANAGER = "struts.fileManager";
 
-    /** The com.opensymphony.xwork2.util.ObjectTypeDeterminer implementation class */
+    /** The org.apache.struts2.util.ObjectTypeDeterminer implementation class */
     public static final String STRUTS_OBJECTTYPEDETERMINER = "struts.objectTypeDeterminer";
 
     /** The package containing actions that use Rife continuations */
@@ -240,7 +241,7 @@ public final class StrutsConstants {
     /** Fallback to empty namespace when request namespace didn't match any in action configuration */
     public static final String STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE = "struts.actionConfig.fallbackToEmptyNamespace";
 
-    /** The {@link com.opensymphony.xwork2.LocaleProviderFactory} implementation class */
+    /** The {@link org.apache.struts2.LocaleProviderFactory} implementation class */
     public static final String STRUTS_LOCALE_PROVIDER_FACTORY = "struts.localeProviderFactory";
 
     /** The name of the parameter to create when mapping an id (used by some action mappers) */
@@ -255,25 +256,25 @@ public final class StrutsConstants {
 
     public static final String STRUTS_OGNL_GUARD = "struts.ognlGuard";
 
-    /** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
+    /** The org.apache.struts2.validator.ActionValidatorManager implementation class */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 
-    /** The {@link com.opensymphony.xwork2.util.ValueStackFactory} implementation class */
+    /** The {@link org.apache.struts2.util.ValueStackFactory} implementation class */
     public static final String STRUTS_VALUESTACKFACTORY = "struts.valueStackFactory";
 
-    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionProvider} implementation class */
+    /** The {@link org.apache.struts2.util.reflection.ReflectionProvider} implementation class */
     public static final String STRUTS_REFLECTIONPROVIDER = "struts.reflectionProvider";
 
-    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionContextFactory} implementation class */
+    /** The {@link org.apache.struts2.util.reflection.ReflectionContextFactory} implementation class */
     public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
 
-    /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */
+    /** The {@link org.apache.struts2.util.PatternMatcher} implementation class */
     public static final String STRUTS_PATTERNMATCHER = "struts.patternMatcher";
 
     /** The {@link org.apache.struts2.dispatcher.StaticContentLoader} implementation class */
     public static final String STRUTS_STATIC_CONTENT_LOADER = "struts.staticContentLoader";
 
-    /** The {@link com.opensymphony.xwork2.UnknownHandlerManager} implementation class */
+    /** The {@link org.apache.struts2.UnknownHandlerManager} implementation class */
     public static final String STRUTS_UNKNOWN_HANDLER_MANAGER = "struts.unknownHandlerManager";
 
     /** Throw RuntimeException when a property is not found, or the evaluation of the expression fails */
@@ -332,7 +333,7 @@ public final class StrutsConstants {
 
     /**
      * Specifies the type of cache to use for parsed OGNL expressions. Valid values defined in
-     * {@link com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType}.
+     * {@link org.apache.struts2.ognl.OgnlCacheFactory.CacheType}.
      * <ul>
      *     <li>For the W-TinyLfu cache, the eviction policy is detailed
      *     <a href="https://github.com/ben-manes/caffeine/wiki/Efficiency#window-tinylfu">here.</a></li>
@@ -370,7 +371,7 @@ public final class StrutsConstants {
     /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class */
     public static final String STRUTS_URL_HELPER = "struts.view.urlHelper";
 
-    /** {@link com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter} */
+    /** {@link XWorkBasicConverter} */
     public static final String STRUTS_CONVERTER_COLLECTION = "struts.converter.collection";
     public static final String STRUTS_CONVERTER_ARRAY = "struts.converter.array";
     public static final String STRUTS_CONVERTER_DATE = "struts.converter.date";
@@ -462,7 +463,7 @@ public final class StrutsConstants {
 
     public static final String STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT = "struts.ognl.autoGrowthCollectionLimit";
 
-    /** See {@link com.opensymphony.xwork2.config.impl.AbstractMatcher#appendNamedParameters */
+    /** See {@link org.apache.struts2.config.impl.AbstractMatcher#appendNamedParameters */
     public static final String STRUTS_MATCHER_APPEND_NAMED_PARAMETERS = "struts.matcher.appendNamedParameters";
 
     public static final String STRUTS_CHAINING_COPY_ERRORS = "struts.chaining.copyErrors";

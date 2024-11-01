@@ -42,7 +42,7 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 	}
 
 	@Override
-	public Object getModel() {
+	public Gangster getModel() {
 		return new Gangster();
 	}
 }

@@ -18,8 +18,12 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
@@ -63,6 +67,7 @@ public class StrutsParameterAnnotationTest {
     @After
     public void tearDown() throws Exception {
         threadAllowlist.clearAllowlist();
+        ActionContext.clear();
     }
 
     private void testParameter(Object action, String paramName, boolean shouldContain) {
@@ -80,7 +85,7 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    private Set<Class<?>> getParentClasses(Class<?> ...clazzes) {
+    private Set<Class<?>> getParentClasses(Class<?>... clazzes) {
         Set<Class<?>> set = new HashSet<>();
         for (Class<?> clazz : clazzes) {
             set.add(clazz);
@@ -258,8 +263,21 @@ public class StrutsParameterAnnotationTest {
         testParameter(new MethodAction(), "publicStrNotAnnotated", true);
     }
 
+    @Test
+    public void publicModelPojo() {
+        ModelAction action = new ModelAction();
 
-    class FieldAction {
+        // Emulate ModelDrivenInterceptor running previously
+        ValueStack valueStack = new StubValueStack();
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        testParameter(action, "name", true);
+        testParameter(action, "name.nested", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Object.class, Pojo.class));
+    }
+
+    static class FieldAction {
         @StrutsParameter
         private String privateStr;
 
@@ -275,7 +293,7 @@ public class StrutsParameterAnnotationTest {
         public Pojo publicPojoDepthZero;
 
         @StrutsParameter(depth = 1)
-        public Pojo publicPojoDepthOne ;
+        public Pojo publicPojoDepthOne;
 
         @StrutsParameter(depth = 2)
         public Pojo publicPojoDepthTwo;
@@ -290,7 +308,7 @@ public class StrutsParameterAnnotationTest {
         public Map<String, Pojo> publicPojoMapDepthTwo;
     }
 
-    class MethodAction {
+    static class MethodAction {
 
         @StrutsParameter
         private void setPrivateStr(String str) {
@@ -343,6 +361,14 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    class Pojo {
+    static class ModelAction implements ModelDriven<Pojo> {
+
+        @Override
+        public Pojo getModel() {
+            return new Pojo();
+        }
+    }
+
+    static class Pojo {
     }
 }

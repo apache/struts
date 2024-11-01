@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.models.Person;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import javax.validation.Valid;
 
@@ -31,7 +30,6 @@ public class ValidateGroupAction extends ActionSupport implements ModelDriven<Pe
     @Valid
     private final Person model = new Person();
 
-    @StrutsParameter(depth = 2)
     @Override
     public Person getModel() {
         return model;

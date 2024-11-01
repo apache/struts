@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -34,6 +33,7 @@ import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 import org.apache.struts2.util.ValueStack;
 
 import java.util.Collections;

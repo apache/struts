@@ -269,12 +269,10 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testNoContentMultipartRequest() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data");
-        req.setContent(null); // there is no content
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data");
+        request.setContent(null); // there is no content
 
         MyFileUploadAction action = container.inject(MyFileUploadAction.class);
         MockActionInvocation mai = new MockActionInvocation();
@@ -326,10 +324,9 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSuccessUploadOfATextFileMultipartRequestNoMaxParamsSet() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -339,7 +336,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             "Unit test of ActionFileUploadInterceptor" +
             "\r\n" +
             "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = new MyFileUploadAction();
 
@@ -347,7 +344,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet(req));
+        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet());
 
         interceptor.intercept(mai);
 
@@ -362,10 +359,9 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSuccessUploadOfATextFileMultipartRequestWithNormalFieldsMaxParamsSet() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -385,7 +381,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             "normal field 2" +
             "\r\n" +
             "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = new MyFileUploadAction();
 
@@ -415,10 +411,9 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSuccessUploadOfATextFileMultipartRequestWithNormalFieldsNoMaxParamsSet() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -438,7 +433,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             "normal field 2" +
             "\r\n" +
             "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = new MyFileUploadAction();
 
@@ -446,7 +441,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet(req));
+        ActionContext.getContext().withServletRequest(createMultipartRequestNoMaxParamsSet());
 
         interceptor.intercept(mai);
 
@@ -757,10 +752,9 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
-    private MultiPartRequestWrapper createMultipartRequestNoMaxParamsSet(HttpServletRequest req) {
-
+    private MultiPartRequestWrapper createMultipartRequestNoMaxParamsSet() {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
-        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+        return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
     protected void setUp() throws Exception {

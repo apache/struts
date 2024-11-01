@@ -20,14 +20,14 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.PageContext;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ValueStack;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;

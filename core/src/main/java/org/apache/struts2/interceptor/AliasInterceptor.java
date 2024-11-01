@@ -21,7 +21,6 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
@@ -35,6 +34,7 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 import org.apache.struts2.util.ValueStack;
 
 import java.util.Map;

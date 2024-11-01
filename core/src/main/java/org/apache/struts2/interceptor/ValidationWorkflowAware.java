@@ -16,11 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
+ * ValidationWorkflowAware classes can programmatically change result name when errors occurred
+ *
+ * This interface can be only applied to action which already implements {@link ValidationAware} interface!
  */
-@Deprecated
-public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
+public interface ValidationWorkflowAware {
+
+    String getInputResultName();
+
 }

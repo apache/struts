@@ -16,11 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
+
+import org.apache.struts2.ModelDriven;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
+ * Adds the ability to set a model, probably retrieved from a given state.
  */
-@Deprecated
-public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
+public interface ScopedModelDriven<T> extends ModelDriven<T> {
+
+    /**
+     * @param model sets the model
+     */
+    void setModel(T model);
+
+    /**
+     * Sets the key under which the model is stored
+     * @param key The model key
+     */
+    void setScopeKey(String key);
+
+    /**
+     * @return the key under which the model is stored
+     */
+    String getScopeKey();
 }

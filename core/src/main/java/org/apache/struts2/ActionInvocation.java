@@ -19,10 +19,8 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.ActionEventListener;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.interceptor.PreResultListener;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * An {@link ActionInvocation} represents the execution state of an {@link Action}. It holds the Interceptors and the Action instance.
@@ -177,6 +175,6 @@ public interface ActionInvocation {
      */
     void setActionEventListener(ActionEventListener listener);
 
-    void init(ActionProxy proxy) ;
+    void init(ActionProxy proxy);
 
 }

@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.Collections;
 import java.util.Map;

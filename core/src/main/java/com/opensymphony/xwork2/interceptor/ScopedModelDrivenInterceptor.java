@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.interceptor.ScopedModelDriven;
 
 import java.lang.reflect.Method;
 import java.util.Map;

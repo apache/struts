@@ -19,7 +19,7 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Preparable;
+import org.apache.struts2.Preparable;
 
 import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;

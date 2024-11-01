@@ -16,11 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2;
+
+import org.apache.struts2.util.ValueStack;
 
 /**
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ValidationErrorAware} instead.
+ * Provides hooks for handling key action events
  */
-@Deprecated
-public interface ValidationErrorAware extends org.apache.struts2.interceptor.ValidationErrorAware {
+public interface ActionEventListener {
+    /**
+     * Called after an action has been created.
+     *
+     * @param action The action
+     * @param stack  The current value stack
+     * @return The action to use
+     */
+    Object prepare(Object action, ValueStack stack);
+
+    /**
+     * Called when an exception is thrown by the action
+     *
+     * @param t     The exception/error that was thrown
+     * @param stack The current value stack
+     * @return A result code to execute, can be null
+     */
+    String handleException(Throwable t, ValueStack stack);
 }

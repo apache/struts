@@ -254,8 +254,8 @@ public class DelegatingValidatorContext implements ValidatorContext {
     }
 
     protected static ValidationAware makeValidationAware(Object object) {
-        if (object instanceof ValidationAware) {
-            return (ValidationAware) object;
+        if (object instanceof org.apache.struts2.interceptor.ValidationAware) {
+            return ValidationAware.adapt((org.apache.struts2.interceptor.ValidationAware) object);
         } else {
             return new LoggingValidationAware(object);
         }

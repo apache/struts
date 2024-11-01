@@ -19,9 +19,9 @@
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ModelDriven;
 
 /**
  * <!-- START SNIPPET: description -->

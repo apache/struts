@@ -16,26 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.Evaluated;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.Map;
 
@@ -91,10 +91,7 @@ import java.util.Map;
  * </pre>
  *
  * @author Matthew Payne
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.AliasInterceptor} instead.
  */
-@Deprecated
 public class AliasInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(AliasInterceptor.class);
@@ -164,9 +161,9 @@ public class AliasInterceptor extends AbstractInterceptor {
             ValueStack stack = ac.getValueStack();
             Object obj = stack.findValue(aliasExpression);
 
-            if (obj instanceof Map aliases) {
+            if (obj instanceof Map) {
                 //get secure stack
-                ValueStack newStack = valueStackFactory.createValueStack(stack);
+                ValueStack newStack = valueStackFactory.createValueStack(com.opensymphony.xwork2.util.ValueStack.adapt(stack));
                 boolean clearableStack = newStack instanceof ClearableValueStack;
                 if (clearableStack) {
                     //if the stack's context can be cleared, do that to prevent OGNL
@@ -182,6 +179,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                 }
 
                 // override
+                Map aliases = (Map) obj;
                 for (Object o : aliases.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
@@ -209,7 +207,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {
                             if (devMode) {
-                                String developerNotification = localizedTextProvider.findText(AliasInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                                String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                         "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                                 });
                                 LOG.error(developerNotification);

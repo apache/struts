@@ -37,8 +37,16 @@ public class InterceptorMapping implements Serializable {
     private final Interceptor interceptor;
     private final Map<String, String> params;
 
+    public InterceptorMapping(String name, org.apache.struts2.interceptor.Interceptor interceptor) {
+        this(name, Interceptor.adapt(interceptor));
+    }
+
+    public InterceptorMapping(String name, org.apache.struts2.interceptor.Interceptor interceptor, Map<String, String> params) {
+        this(name, Interceptor.adapt(interceptor), params);
+    }
+
     public InterceptorMapping(String name, Interceptor interceptor) {
-        this(name, interceptor, new HashMap<String, String>());
+        this(name, interceptor, new HashMap<>());
     }
 
     public InterceptorMapping(String name, Interceptor interceptor, Map<String, String> params) {

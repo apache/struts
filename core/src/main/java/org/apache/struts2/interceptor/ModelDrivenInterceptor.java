@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -29,8 +30,7 @@ import org.apache.struts2.ModelDriven;
  * Watches for {@link ModelDriven} actions and adds the action's model on to the value stack.
  *
  * <p> <b>Note:</b>  The ModelDrivenInterceptor must come before the both {@link StaticParametersInterceptor} and
- * {@link org.apache.struts2.interceptor.parameter.ParametersInterceptor} if you want the parameters to be applied to
- * the model.
+ * {@link ParametersInterceptor} if you want the parameters to be applied to the model.
  * </p>
  * <p> <b>Note:</b>  The ModelDrivenInterceptor will only push the model into the stack when the
  * model is not null, else it will be ignored.
@@ -75,10 +75,7 @@ import org.apache.struts2.ModelDriven;
  *
  * @author tm_jee
  * @version $Date$ $Id$
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ModelDrivenInterceptor} instead.
  */
-@Deprecated
 public class ModelDrivenInterceptor extends AbstractInterceptor {
 
     protected boolean refreshModelBeforeResult = false;
@@ -91,7 +88,8 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ModelDriven modelDriven) {
+        if (action instanceof ModelDriven) {
+            ModelDriven modelDriven = (ModelDriven) action;
             ValueStack stack = invocation.getStack();
             Object model = modelDriven.getModel();
             if (model !=  null) {
@@ -108,7 +106,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
      * Refreshes the model instance on the value stack, if it has changed
      */
     protected static class RefreshModelBeforeResult implements PreResultListener {
-        private final Object originalModel;
+        private Object originalModel;
         protected ModelDriven action;
 
 

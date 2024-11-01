@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.interceptor.ScopedModelDriven;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -69,10 +68,10 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  *
  * &lt;-- Basic usage --&gt;
- * &lt;interceptor name="scopedModelDriven" class="com.opensymphony.interceptor.ScopedModelDrivenInterceptor" /&gt;
+ * &lt;interceptor name="scopedModelDriven" class="org.apache.struts2.interceptor.ScopedModelDrivenInterceptor" /&gt;
  *
  * &lt;-- Using all available parameters --&gt;
- * &lt;interceptor name="gangsterForm" class="com.opensymphony.interceptor.ScopedModelDrivenInterceptor"&gt;
+ * &lt;interceptor name="gangsterForm" class="org.apache.struts2.interceptor.ScopedModelDrivenInterceptor"&gt;
  *      &lt;param name="scope"&gt;session&lt;/param&gt;
  *      &lt;param name="name"&gt;gangsterForm&lt;/param&gt;
  *      &lt;param name="className"&gt;com.opensymphony.example.GangsterForm&lt;/param&gt;
@@ -80,10 +79,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.interceptor.ScopedModelDrivenInterceptor} instead.
  */
-@Deprecated
 public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
 
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
@@ -118,7 +114,8 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ScopedModelDriven modelDriven) {
+        if (action instanceof ScopedModelDriven) {
+            ScopedModelDriven modelDriven = (ScopedModelDriven) action;
             if (modelDriven.getModel() == null) {
                 ActionContext ctx = ActionContext.getContext();
                 ActionConfig config = invocation.getProxy().getConfig();
@@ -130,7 +127,7 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
                         Class cls = method.getReturnType();
                         cName = cls.getName();
                     } catch (NoSuchMethodException e) {
-                        throw new StrutsException("The " + GET_MODEL + "() is not defined in action " + action.getClass(), config);
+                        throw new StrutsException("The " + GET_MODEL + "() is not defined in action " + action.getClass() + "", config);
                     }
                 }
                 String modelName = name;

@@ -26,12 +26,16 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.factory.StrutsResultFactory;
 
 import java.util.Map;
 
 /**
  * Default implementation
+ *
+ * @deprecated since 6.7.0, use {@link StrutsResultFactory} instead.
  */
+@Deprecated
 public class DefaultResultFactory implements ResultFactory {
 
     private ObjectFactory objectFactory;

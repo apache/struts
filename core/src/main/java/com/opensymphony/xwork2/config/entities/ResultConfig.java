@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class ResultConfig extends Located implements Serializable {
 
-    protected Map<String,String> params;
+    protected Map<String, String> params;
     protected String className;
     protected String name;
 
@@ -63,7 +63,7 @@ public class ResultConfig extends Located implements Serializable {
         return name;
     }
 
-    public Map<String,String> getParams() {
+    public Map<String, String> getParams() {
         return params;
     }
 
@@ -140,7 +140,7 @@ public class ResultConfig extends Located implements Serializable {
             return this;
         }
 
-        public Builder addParams(Map<String,String> params) {
+        public Builder addParams(Map<String, String> params) {
             target.params.putAll(params);
             return this;
         }

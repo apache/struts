@@ -258,6 +258,9 @@ public class DefaultActionInvocation implements ActionInvocation {
                 Interceptor interceptor = interceptorMapping.getInterceptor();
                 if (interceptor instanceof WithLazyParams) {
                     interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                } else if (interceptor instanceof Interceptor.LegacyAdapter && ((Interceptor.LegacyAdapter) interceptor).getAdaptee() instanceof WithLazyParams) {
+                    org.apache.struts2.interceptor.Interceptor adaptee = ((Interceptor.LegacyAdapter) interceptor).getAdaptee();
+                    lazyParamInjector.injectParams(adaptee, interceptorMapping.getParams(), invocationContext);
                 }
                 if (interceptor instanceof ConditionalInterceptor) {
                     resultCode = executeConditional((ConditionalInterceptor) interceptor);

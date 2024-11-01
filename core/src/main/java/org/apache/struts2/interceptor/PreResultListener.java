@@ -16,13 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.interceptor;
+
+import org.apache.struts2.ActionInvocation;
 
 /**
- * {@inheritDoc}
+ * PreResultListeners may be registered with an {@link ActionInvocation} to get a callback after the
+ * {@link org.apache.struts2.Action} has been executed but before the {@link org.apache.struts2.Result}
+ * is executed.
  *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.Action} instead.
+ * @author Jason Carreira
  */
-@Deprecated
-public interface Action extends org.apache.struts2.Action {
+public interface PreResultListener {
+
+    /**
+     * This callback method will be called after the {@link org.apache.struts2.Action} execution and
+     * before the {@link org.apache.struts2.Result} execution.
+     *
+     * @param invocation  the action invocation
+     * @param resultCode  the result code returned by the action (eg. <code>success</code>).
+     */
+    void beforeResult(ActionInvocation invocation, String resultCode);
+
 }

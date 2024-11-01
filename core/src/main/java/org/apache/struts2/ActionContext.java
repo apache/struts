@@ -542,11 +542,16 @@ public class ActionContext implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (!(obj instanceof ActionContext)) {
             return false;
         }
         ActionContext other = (ActionContext) obj;
         return Objects.equals(getContextMap(), other.getContextMap());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(getContextMap());
     }
 }

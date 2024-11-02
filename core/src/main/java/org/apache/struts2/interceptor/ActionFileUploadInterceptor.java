@@ -99,7 +99,7 @@ import java.util.List;
  *  package com.example;
  *
  *  import java.io.File;
- *  import com.opensymphony.xwork2.ActionSupport;
+ *  import org.apache.struts2.ActionSupport;
  *  import org.apache.struts2.action.UploadedFilesAware;
  *
  *  public UploadAction extends ActionSupport implements UploadedFilesAware {

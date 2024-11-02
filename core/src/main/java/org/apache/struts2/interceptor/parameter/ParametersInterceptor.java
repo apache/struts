@@ -352,7 +352,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
             LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement and OGNL allowlisting model type");
-            // (Exempted by annotation on com.opensymphony.xwork2.ModelDriven#getModel)
+            // (Exempted by annotation on org.apache.struts2.ModelDriven#getModel)
             return hasValidAnnotatedMember("model", action, paramDepth + 1);
         }
 

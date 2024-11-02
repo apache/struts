@@ -20,6 +20,7 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ValueStack;

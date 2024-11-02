@@ -42,6 +42,7 @@ import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -101,11 +102,11 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
             HashMap<String, String> interceptorParams = new HashMap<>();
             interceptorParams.put("excludes", "blah,bar");
 
-            HashMap successParams1 = new HashMap();
+            Map<String, String> successParams1 = new HashMap<>();
             successParams1.put("propertyName", "baz");
-            successParams1.put("expectedValue", 1);
+            successParams1.put("expectedValue", "1");
 
-            HashMap successParams2 = new HashMap();
+            Map<String, String> successParams2 = new HashMap<>();
             successParams2.put("propertyName", "blah");
             successParams2.put("expectedValue", null);
 

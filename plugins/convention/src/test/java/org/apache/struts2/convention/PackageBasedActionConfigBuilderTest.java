@@ -35,7 +35,6 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
-import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
@@ -97,6 +96,7 @@ import org.apache.struts2.convention.actions.transactions.TransNameAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.dontfind.DontFindMeAction;
+import org.apache.struts2.factory.StrutsResultFactory;
 import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
@@ -918,7 +918,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                     dif.setObjectFactory((ObjectFactory) obj);
                     dif.setReflectionProvider(rp);
 
-                    DefaultResultFactory drf = new DefaultResultFactory();
+                    StrutsResultFactory drf = new StrutsResultFactory();
                     drf.setObjectFactory((ObjectFactory) obj);
                     drf.setReflectionProvider(rp);
 

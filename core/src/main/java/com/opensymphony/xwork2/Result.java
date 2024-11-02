@@ -21,10 +21,10 @@ package com.opensymphony.xwork2;
 /**
  * {@inheritDoc}
  *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.Result} instead.
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.result.Result} instead.
  */
 @Deprecated
-public interface Result extends org.apache.struts2.Result {
+public interface Result extends org.apache.struts2.result.Result {
 
     @Override
     default void execute(org.apache.struts2.ActionInvocation invocation) throws Exception {
@@ -33,7 +33,7 @@ public interface Result extends org.apache.struts2.Result {
 
     void execute(ActionInvocation invocation) throws Exception;
 
-    static Result adapt(org.apache.struts2.Result actualResult) {
+    static Result adapt(org.apache.struts2.result.Result actualResult) {
         if (actualResult instanceof Result) {
             return (Result) actualResult;
         }
@@ -42,9 +42,9 @@ public interface Result extends org.apache.struts2.Result {
 
     class LegacyAdapter implements Result {
 
-        private final org.apache.struts2.Result adaptee;
+        private final org.apache.struts2.result.Result adaptee;
 
-        private LegacyAdapter(org.apache.struts2.Result adaptee) {
+        private LegacyAdapter(org.apache.struts2.result.Result adaptee) {
             this.adaptee = adaptee;
         }
 

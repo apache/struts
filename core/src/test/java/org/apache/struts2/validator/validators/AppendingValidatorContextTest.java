@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.CompositeTextProvider;
-import org.apache.struts2.TextProvider;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.CompositeTextProvider;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.validator.DelegatingValidatorContext;
 import org.apache.struts2.validator.ValidatorContext;

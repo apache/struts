@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.LocalizedTextProvider;
-import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -224,11 +225,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Clear a specific bundle + locale combination from the <code>bundlesMap</code>.
-     *   Intended for descendants to use clear a bundle + locale combination.
+     * Intended for descendants to use clear a bundle + locale combination.
      *
      * @param bundleName The bundle (combined with locale) to remove from the bundle map
      * @param locale     Provides the locale to combine with the bundle to get the key
-     *
      * @since 6.0.0
      */
     protected void clearBundle(final String bundleName, Locale locale) {
@@ -239,13 +239,13 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Clears the <code>missingBundles</code> contents.  This allows descendants to
-     *   clear the <b>"missing bundles cache"</b> when desired (or needed).
-     *
+     * clear the <b>"missing bundles cache"</b> when desired (or needed).
+     * <p>
      * Note: This method may be used when the <code>bundlesMap</code> state has changed
-     *   in such a way that bundles that were previously "missing" may now be available
-     *   (e.g. after calling {@link #addDefaultResourceBundle(java.lang.String)} when the
-     *   {@link AbstractLocalizedTextProvider} has already been used for failed bundle
-     *   lookups of a given key, or some transitory state made a bundle lookup fail.
+     * in such a way that bundles that were previously "missing" may now be available
+     * (e.g. after calling {@link #addDefaultResourceBundle(java.lang.String)} when the
+     * {@link AbstractLocalizedTextProvider} has already been used for failed bundle
+     * lookups of a given key, or some transitory state made a bundle lookup fail.
      *
      * @since 6.0.0
      */
@@ -287,10 +287,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * A helper method for {@link ResourceBundle} bundle reload logic.
-     *
+     * <p>
      * Uses standard {@link ResourceBundle} methods to clear the bundle caches for the
      * {@link ClassLoader} instances that this class is aware of at the time of the call.
-     *
+     * <p>
      * The <code>clearCache()</code> methods have been available since Java 1.6, so
      * it is anticipated the logic will work on any subsequent JVM versions.
      *
@@ -301,27 +301,29 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         ResourceBundle.clearCache();     // Bundles loaded by the caller's classloader.
         ResourceBundle.clearCache(ccl);  // Bundles loaded by the context classloader (may be the same).
         // Clear the bundle cache for any non-null delegated classloaders.
-        delegatedClassLoaderMap.forEach( (key, value) -> { if (value != null) ResourceBundle.clearCache(value) ;} );
+        delegatedClassLoaderMap.forEach((key, value) -> {
+            if (value != null) ResourceBundle.clearCache(value);
+        });
     }
 
     /**
      * "Hacky" helper method that attempts to clear the Tomcat <code>ResourceEntry</code>
      * {@link Map} using knowledge of the Tomcat source code.
-     *
+     * <p>
      * It relies on the {@link #TOMCAT_RESOURCE_ENTRIES_FIELD} field name, base class name
      * {@link #TOMCAT_WEBAPP_CLASSLOADER_BASE}. and descendant class names {@link #TOMCAT_WEBAPP_CLASSLOADER},
      * {@link #TOMCAT_PARALLEL_WEBAPP_CLASSLOADER}, to keep the values identified in the constants.
      * It appears to be valid for Tomcat versions 7-10 so far, but could become invalid at any time in the future
      * when the resource handling logic in Tomcat changes.
-     *
+     * <p>
      * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware
-     *       its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
+     * its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
      */
     private void clearTomcatCache() {
         ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
-        Class cl = loader.getClass();
-        Class superCl = cl.getSuperclass();
+        Class<?> cl = loader.getClass();
+        Class<?> superCl = cl.getSuperclass();
 
         try {
             if ((TOMCAT_WEBAPP_CLASSLOADER.equals(cl.getName()) || TOMCAT_PARALLEL_WEBAPP_CLASSLOADER.equals(cl.getName())) &&
@@ -348,19 +350,19 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Helper method that is intended to clear a {@link Map} instance by name.
-     *
+     * <p>
      * This method relies on reflection to perform its operations, and may be blocked in Java 9 and later,
      * depending on the accessibility of the field.
      *
-     * @param cl The {@link Class} of the obj parameter.
-     * @param obj The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
+     * @param cl   The {@link Class} of the obj parameter.
+     * @param obj  The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
      * @param name The name of the field containing a {@link Map} reference.
-     * @throws NoSuchFieldException if a field accessed by this call does not exist.
-     * @throws IllegalAccessException if a field, method or or class accessed by this call cannot be accessed.
-     * @throws NoSuchMethodException if a method accessed by this call does not exist.
+     * @throws NoSuchFieldException      if a field accessed by this call does not exist.
+     * @throws IllegalAccessException    if a field, method or or class accessed by this call cannot be accessed.
+     * @throws NoSuchMethodException     if a method accessed by this call does not exist.
      * @throws InvocationTargetException if a method accessed by this call fails invocation.
      */
-    private void clearMap(Class cl, Object obj, String name)
+    private void clearMap(Class<?> cl, Object obj, String name)
             throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         Field field = cl.getDeclaredField(name);
@@ -372,7 +374,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         Object cache = field.get(obj);
 
         synchronized (cache) {
-            Class ccl = cache.getClass();
+            Class<?> ccl = cache.getClass();
             Method clearMethod = ccl.getMethod("clear");
             clearMethod.invoke(cache);
         }
@@ -416,7 +418,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * flow of the {@link LocalizedTextProvider} implementation the descendant provides).
      *
      * @param searchDefaultBundlesFirst provide {@link String} "true" or "false" to set the flag state accordingly.
-     *
      * @since 6.0.0
      */
     @Inject(value = StrutsConstants.STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST, required = false)
@@ -503,7 +504,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @return the default message.
      */
     protected GetDefaultMessageReturnArg getDefaultMessage(String key, Locale locale, ValueStack valueStack, Object[] args,
-                                                                String defaultMessage) {
+                                                           String defaultMessage) {
         GetDefaultMessageReturnArg result = null;
         boolean found = true;
 
@@ -539,18 +540,18 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * general key would be passed in the alternateKey parameter.
      * </p>
      *
-     * @param key             the initial key to search for a value within the default resource bundles.
-     * @param alternateKey    the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
-     * @param locale          the {@link Locale} to be used for the default resource bundle lookup.
-     * @param valueStack      the {@link ValueStack} associated with the operation.
-     * @param args            the argument array for parameterized messages (may be <code>null</code>).
-     * @param defaultMessage  the default message {@link String} to use if both key lookup operations fail.
+     * @param key            the initial key to search for a value within the default resource bundles.
+     * @param alternateKey   the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
+     * @param locale         the {@link Locale} to be used for the default resource bundle lookup.
+     * @param valueStack     the {@link ValueStack} associated with the operation.
+     * @param args           the argument array for parameterized messages (may be <code>null</code>).
+     * @param defaultMessage the default message {@link String} to use if both key lookup operations fail.
      * @return the {@link GetDefaultMessageReturnArg} result containing the processed message lookup (by key first, then alternateKey if key's lookup fails).
-     *         If both key lookup operations fail, defaultMessage is used for processing.
-     *         If defaultMessage is <code>null</code> then the return result may be <code>null</code>.
+     * If both key lookup operations fail, defaultMessage is used for processing.
+     * If defaultMessage is <code>null</code> then the return result may be <code>null</code>.
      */
     protected GetDefaultMessageReturnArg getDefaultMessageWithAlternateKey(String key, String alternateKey, Locale locale, ValueStack valueStack,
-            Object[] args, String defaultMessage) {
+                                                                           Object[] args, String defaultMessage) {
         GetDefaultMessageReturnArg result;
         if (alternateKey == null || alternateKey.isEmpty()) {
             result = getDefaultMessage(key, locale, valueStack, args, defaultMessage);
@@ -593,8 +594,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      *
      * @return the message
      */
-    protected String findMessage(Class clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
-                                      ValueStack valueStack) {
+    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                                 ValueStack valueStack) {
         if (checked == null) {
             checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
@@ -617,9 +618,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // look in properties of implemented interfaces
-        Class[] interfaces = clazz.getInterfaces();
+        Class<?>[] interfaces = clazz.getInterfaces();
 
-        for (Class anInterface : interfaces) {
+        for (Class<?> anInterface : interfaces) {
             msg = getMessage(anInterface.getName(), locale, key, valueStack, args);
 
             if (msg != null) {
@@ -639,7 +640,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         if (clazz.isInterface()) {
             interfaces = clazz.getInterfaces();
 
-            for (Class anInterface : interfaces) {
+            for (Class<?> anInterface : interfaces) {
                 msg = findMessage(anInterface, key, indexedKey, locale, args, checked, valueStack);
 
                 if (msg != null) {

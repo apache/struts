@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
 import org.apache.struts2.util.ValueStack;
 
@@ -32,11 +32,11 @@ public interface LocalizedTextProvider extends Serializable {
 
     ResourceBundle findResourceBundle(String aBundleName, Locale locale);
 
-    String findText(Class aClass, String aTextName, Locale locale);
+    String findText(Class<?> aClass, String aTextName, Locale locale);
 
-    String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args);
+    String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args);
 
-    String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack);
+    String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack);
 
     String findText(ResourceBundle bundle, String aTextName, Locale locale);
 

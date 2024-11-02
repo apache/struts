@@ -20,7 +20,7 @@ package org.apache.struts2.ognl;
 
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.conversion.impl.ConversionData;

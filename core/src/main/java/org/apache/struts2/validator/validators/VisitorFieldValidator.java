@@ -19,8 +19,8 @@
 package org.apache.struts2.validator.validators;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.CompositeTextProvider;
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.CompositeTextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.ActionValidatorManager;

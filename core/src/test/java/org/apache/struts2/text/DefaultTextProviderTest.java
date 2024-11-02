@@ -16,46 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.XWorkTestCase;
 
-/**
- * Unit test for {@link TextProviderSupport}.
- *
- * @author Claus Ibsen
- */
-public class TextProviderSupportTest extends XWorkTestCase {
+import java.util.*;
 
-    private TextProviderSupport tp;
-    private java.util.ResourceBundle rb;
+public class DefaultTextProviderTest extends XWorkTestCase {
 
-    public void testHasKey() throws Exception {
-    	assertTrue(tp.hasKey("hello"));
-    	assertFalse(tp.hasKey("not.in.bundle"));
-    }
+    private DefaultTextProvider tp;
 
-    public void testSimpleGetTexts() throws Exception {
+    public void testSimpleGetTexts() {
         assertEquals("Hello World", tp.getText("hello"));
-        assertEquals("not.in.bundle", tp.getText("not.in.bundle"));
+        assertNull(tp.getText("not.in.bundle"));
 
         assertEquals("Hello World", tp.getText("hello", "this is default"));
         assertEquals("this is default", tp.getText("not.in.bundle", "this is default"));
+
+        List<Object> nullList = null;
+        assertEquals("Hello World", tp.getText("hello", nullList));
+
+        String[] nullStrings = null;
+        assertEquals("Hello World", tp.getText("hello", nullStrings));
     }
 
-    public void testGetTextsWithArgs() throws Exception {
+   public void testGetTextsWithArgs() {
         assertEquals("Hello World", tp.getText("hello", "this is default", "from me")); // no args in bundle
         assertEquals("Hello World from me", tp.getText("hello.0", "this is default", "from me"));
         assertEquals("this is default", tp.getText("not.in.bundle", "this is default", "from me"));
         assertEquals("this is default from me", tp.getText("not.in.bundle", "this is default {0}", "from me"));
 
-        assertEquals("not.in.bundle", tp.getText("not.in.bundle"));
+       assertNull(tp.getText("not.in.bundle"));
     }
 
-    public void testGetTextsWithListArgs() throws Exception {
+    public void testGetTextsWithListArgs() {
         List<Object> args = new ArrayList<>();
         args.add("Santa");
         args.add("loud");
@@ -71,10 +66,13 @@ public class TextProviderSupportTest extends XWorkTestCase {
         assertEquals("Hello World Santa", tp.getText("hello.0", args)); // only 1 arg in bundle
         assertEquals("Hello World. This is Santa speaking loud", tp.getText("hello.1", args));
 
-        assertEquals("not.in.bundle", tp.getText("not.in.bundle", args));
+        assertNull(tp.getText("not.in.bundle", args));
+
+        assertEquals("Hello World", tp.getText("hello", "this is default", (List) null));
+        assertEquals("this is default", tp.getText("not.in.bundle", "this is default", (List) null));
     }
 
-    public void testGetTextsWithArrayArgs() throws Exception {
+    public void testGetTextsWithArrayArgs() {
         String[] args = { "Santa", "loud" };
         assertEquals("Hello World", tp.getText("hello", "this is default", args)); // no args in bundle
         assertEquals("Hello World Santa", tp.getText("hello.0", "this is default", args)); // only 1 arg in bundle
@@ -88,54 +86,60 @@ public class TextProviderSupportTest extends XWorkTestCase {
         assertEquals("Hello World Santa", tp.getText("hello.0", args)); // only 1 arg in bundle
         assertEquals("Hello World. This is Santa speaking loud", tp.getText("hello.1", args));
 
-        assertEquals("not.in.bundle", tp.getText("not.in.bundle", args));
+        assertNull(tp.getText("not.in.bundle", args));
+
+        assertEquals("Hello World", tp.getText("hello", "this is default", (String[]) null));
+        assertEquals("this is default", tp.getText("not.in.bundle", "this is default", (String[]) null));
     }
 
-    public void testGetBundle() throws Exception {
-        assertEquals(rb, tp.getTexts());
+    public void testGetTextsWithListAndStack() {
+        List<Object> args = new ArrayList<>();
+        args.add("Santa");
+        args.add("loud");
+        assertEquals("Hello World", tp.getText("hello", "this is default", args, null)); // no args in bundle
+        assertEquals("Hello World Santa", tp.getText("hello.0", "this is default", args, null)); // only 1 arg in bundle
+        assertEquals("Hello World. This is Santa speaking loud", tp.getText("hello.1", "this is default", args, null));
+
+        assertEquals("this is default", tp.getText("not.in.bundle", "this is default", args, null));
+        assertEquals("this is default Santa", tp.getText("not.in.bundle", "this is default {0}", args, null));
+        assertEquals("this is default Santa speaking loud", tp.getText("not.in.bundle", "this is default {0} speaking {1}", args, null));
+    }
+
+    public void testGetTextsWithArrayAndStack() {
+        String[] args = { "Santa", "loud" };
+        assertEquals("Hello World", tp.getText("hello", "this is default", args, null)); // no args in bundle
+        assertEquals("Hello World Santa", tp.getText("hello.0", "this is default", args, null)); // only 1 arg in bundle
+        assertEquals("Hello World. This is Santa speaking loud", tp.getText("hello.1", "this is default", args, null));
+
+        assertEquals("this is default", tp.getText("not.in.bundle", "this is default", args, null));
+        assertEquals("this is default Santa", tp.getText("not.in.bundle", "this is default {0}", args, null));
+        assertEquals("this is default Santa speaking loud", tp.getText("not.in.bundle", "this is default {0} speaking {1}", args, null));
+    }
+
+    public void testGetBundle() {
+        assertNull(tp.getTexts()); // always returns null
+
+        ResourceBundle rb = ResourceBundle.getBundle(TextProviderSupportTest.class.getName(), Locale.CANADA);
         assertEquals(rb, tp.getTexts(TextProviderSupportTest.class.getName()));
-    }
-
-    public void testDifficultSymbols1() {
-        String val= tp.getText("symbols1");
-        assertEquals("\"=!@#$%^&*(){qwe}<>?:|}{[]\\';/.,<>`~'", val);
-    }
-
-    public void testDifficultSymbols2() {
-        String val= tp.getText("symbols2");
-        assertEquals("\"=!@#$%^&*()<>?:|[]\\';/.,<>`~'", val);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        rb = ResourceBundle.getBundle(TextProviderSupportTest.class.getName(), Locale.ENGLISH);
 
-        LocalizedTextProvider ltu = container.getInstance(LocalizedTextProvider.class);
+        ActionContext.of().withLocale(Locale.CANADA).bind();
 
-        tp = new TextProviderSupport(rb, new LocaleProvider() {
-            public Locale getLocale() {
-                return Locale.ENGLISH;
-            }
+        container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle(DefaultTextProviderTest.class.getName());
 
-            @Override
-            public boolean isValidLocaleString(String localeStr) {
-                return true;
-            }
-
-            @Override
-            public boolean isValidLocale(Locale locale) {
-                return true;
-            }
-        }, ltu);
+        tp = container.inject(DefaultTextProvider.class);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        rb = null;
+        super.tearDown();
+        ActionContext.clear();
         tp = null;
     }
 
 
 }
-

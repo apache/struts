@@ -27,7 +27,7 @@ import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.SimpleAnnotationAction;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.test.AnnotationDataAware2;

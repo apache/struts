@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionSupport;
-import org.apache.struts2.LocalizedTextProvider;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.test.ModelDrivenAction2;
 import org.apache.struts2.test.TestBean2;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.util.Bar;
+import org.apache.struts2.util.ValueStack;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,19 +42,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
-/**
- * Unit test for {@link StrutsLocalizedTextProvider}.
- *
- * @author jcarreira
- * @author tm_jee
- * @version $Date$ $Id$
- */
 public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
     private LocalizedTextProvider localizedTextProvider;
 
-    public void testNpeWhenClassIsPrimitive() throws Exception {
+    public void testNpeWhenClassIsPrimitive() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new MyObject());
         String result = localizedTextProvider.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
@@ -66,15 +59,15 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         }
     }
 
-    public void testActionGetTextWithNullObject() throws Exception {
+    public void testActionGetTextWithNullObject() {
         MyAction action = new MyAction();
         container.inject(action);
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
         ActionContext.getContext()
-            .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
-            .getValueStack().push(action);
+                .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
+                .getValueStack().push(action);
 
         String message = action.getText("barObj.title");
         assertEquals("Title:", message);
@@ -94,11 +87,11 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         }
     }
 
-    public void testActionGetText() throws Exception {
+    public void testActionGetText() {
         ModelDrivenAction2 action = new ModelDrivenAction2();
         container.inject(action);
 
-        TestBean2 bean = (TestBean2) action.getModel();
+        TestBean2 bean = action.getModel();
         Bar bar = new Bar();
         bean.setBarObj(bar);
 
@@ -116,7 +109,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         localizedTextProvider.findText(this.getClass(), null, Locale.getDefault());
     }
 
-    public void testActionGetTextXXX() throws Exception {
+    public void testActionGetTextXXX() {
         localizedTextProvider.addDefaultResourceBundle("org/apache/struts2/util/FindMe");
 
         SimpleAction action = new SimpleAction();
@@ -125,8 +118,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
         ActionContext.getContext()
-            .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
-            .getValueStack().push(action);
+                .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
+                .getValueStack().push(action);
 
         String message = action.getText("bean.name");
         String foundBean2 = action.getText("bean2.name");
@@ -148,16 +141,16 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     public void testAddDefaultResourceBundle2() throws Exception {
         localizedTextProvider.addDefaultResourceBundle("org/apache/struts2/SimpleAction");
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", null, new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", null, new HashMap<>(), false, true);
         proxy.execute();
     }
 
-    public void testDefaultMessage() throws Exception {
+    public void testDefaultMessage() {
         String message = localizedTextProvider.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
     }
 
-    public void testDefaultMessageOverride() throws Exception {
+    public void testDefaultMessageOverride() {
         String message = localizedTextProvider.findDefaultText("xwork.error.action.execution", Locale.getDefault());
         assertEquals("Error during Action invocation", message);
 
@@ -167,8 +160,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Testing resource bundle override", message);
     }
 
-    public void testFindTextInChildProperty() throws Exception {
-        ModelDriven action = new ModelDrivenAction2();
+    public void testFindTextInChildProperty() {
+        ModelDriven<?> action = new ModelDrivenAction2();
         TestBean2 bean = (TestBean2) action.getModel();
         Bar bar = new Bar();
         bean.setBarObj(bar);
@@ -184,7 +177,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Title is invalid!", message);
     }
 
-    public void testFindTextInInterface() throws Exception {
+    public void testFindTextInInterface() {
         Action action = new ModelDrivenAction2();
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
@@ -194,8 +187,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Foo!", message);
     }
 
-    public void testFindTextInPackage() throws Exception {
-        ModelDriven action = new ModelDrivenAction2();
+    public void testFindTextInPackage() {
+        ModelDriven<?> action = new ModelDrivenAction2();
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
@@ -205,12 +198,12 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("It works!", message);
     }
 
-    public void testParameterizedDefaultMessage() throws Exception {
+    public void testParameterizedDefaultMessage() {
         String message = localizedTextProvider.findDefaultText("xwork.exception.missing-action", Locale.getDefault(), new String[]{"AddUser"});
         assertEquals("There is no Action mapped for action name AddUser.", message);
     }
 
-    public void testParameterizedDefaultMessageWithPackage() throws Exception {
+    public void testParameterizedDefaultMessageWithPackage() {
         String message = localizedTextProvider.findDefaultText("xwork.exception.missing-package-action", Locale.getDefault(), new String[]{"blah", "AddUser"});
         assertEquals("There is no Action mapped for namespace blah and action name AddUser.", message);
     }
@@ -270,20 +263,18 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      */
     public void testLocalizedTextProviderClearingMethods() {
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
-        assertTrue("testStrutsLocalizedTextProvider not instance of AbstractLocalizedTextProvider ?",
-            testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
         assertEquals("testStrutsLocalizedTextProvider starting default bundle map size not 0 before any retrievals ?",
-            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Access the two default bundles to populate their cache entries and test bundle map size.
         ResourceBundle tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
-            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Add and then access four test bundles to populate their cache entries and test bundle map size.
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("org/apache/struts2/util/LocalizedTextUtilTest");
@@ -291,34 +282,34 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("org/apache/struts2/SimpleAction");
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("org/apache/struts2/test");
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            "org/apache/struts2/util/LocalizedTextUtilTest", Locale.ENGLISH);
+                "org/apache/struts2/util/LocalizedTextUtilTest", Locale.ENGLISH);
         assertNotNull("org/apache/struts2/util/LocalizedTextUtilTest retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            "org/apache/struts2/util/FindMe", Locale.ENGLISH);
+                "org/apache/struts2/util/FindMe", Locale.ENGLISH);
         assertNotNull("org/apache/struts2/util/FindMe retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            "org/apache/struts2/SimpleAction", Locale.ENGLISH);
+                "org/apache/struts2/SimpleAction", Locale.ENGLISH);
         assertNotNull("org/apache/struts2/SimpleAction retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            "org/apache/struts2/test", Locale.ENGLISH);
+                "org/apache/struts2/test", Locale.ENGLISH);
         assertNotNull("org/apache/struts2/test retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after retrievals ?",
-            6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Expect the call to function with bundle name + locale.  Remove all four of the non-default
         //   bundles and confirm the bundle map size changes.
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("org/apache/struts2/test", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 5 after locale clear call ?",
-            5, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                5, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("org/apache/struts2/SimpleAction", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 4 after locale clear call ?",
-            4, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                4, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("org/apache/struts2/util/FindMe", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 3 after locale clear call ?",
-            3, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                3, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("org/apache/struts2/util/LocalizedTextUtilTest", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after locale clear call ?",
-            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Confirm the missing bundles cache clearing method does not produce any Exceptions or failures.
         testStrutsLocalizedTextProvider.callClearMissingBundlesCache();
@@ -332,20 +323,18 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      */
     public void testLocalizedTextProviderReloadMethods() {
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
-        assertTrue("testStrutsLocalizedTextProvider not instance of AbstractLocalizedTextProvider ?",
-            testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
         assertEquals("testStrutsLocalizedTextProvider starting default bundle map size not 0 before any retrievals ?",
-            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Access the two default bundles to populate their cache entries and test bundle map size.
         ResourceBundle tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
-            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Force a bundle reload call for code coverage and to confirm it causes the bundle map to be emptied.
         assertNotNull("ActionContext is somehow null ?", ActionContext.getContext());
@@ -355,17 +344,17 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         boolean bundlesReloadedAfterCall = testStrutsLocalizedTextProvider.getBundlesReloadedIndicatorValue();
         assertTrue("Bundles reload value false after forced reload ?", bundlesReloadedAfterCall);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 0 after reload (which should clear it) ?",
-            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Access the two default bundles again (after reload) to populate their cache entries and test bundle map size.
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+                TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
-            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
     }
 
     /**
@@ -391,7 +380,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         final String DEFAULT_MESSAGE_WITH_PARAMS = DEFAULT_MESSAGE + "  We provide a couple of parameter placeholders: -{0}- and -{1}- for fun.";
         final String param1 = "param1_String";
         final String param2 = "param2_String";
-        final String[] paramArray = { param1, param2 };
+        final String[] paramArray = {param1, param2};
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
 
         // Load some specific default bundles already provided and used by other tests within this module.
@@ -457,7 +446,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     /**
      * Test the {@link StrutsLocalizedTextProvider#findText(java.lang.Class, java.lang.String, java.util.Locale, java.lang.String, java.lang.Object[], org.apache.struts2.util.ValueStack) }
      * method for basic correctness.
-     *
+     * <p>
      * It is the version of the method that will search the class hierarchy resource bundles first, unless {@link StrutsLocalizedTextProvider#searchDefaultBundlesFirst}
      * is true (in which case it will search the default resource bundles first).  No matter the flag setting, it should search until it finds a match, or fails to find
      * a match and returns the default message parameter that was passed.
@@ -469,7 +458,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         final String DEFAULT_MESSAGE_WITH_PARAMS = DEFAULT_MESSAGE + "  We provide a couple of parameter placeholders: -{0}- and -{1}- for fun.";
         final String param1 = "param1_String";
         final String param2 = "param2_String";
-        final String[] paramArray = { param1, param2 };
+        final String[] paramArray = {param1, param2};
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
 
         // Load some specific default bundles already provided and used by other tests within this module.
@@ -585,7 +574,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         /**
          * Some test correctness depends on this {@link #RELOADED} value matching that of the private ancestor
-         * field {@link AbstractLocalizedTextProvider#RELOADED}.  If the ancestor field value changes, ensure this
+         * field {@link AbstractLocalizedTextProvider#RELOADED}. If the ancestor field value changes, ensure this
          * field's value is updated to match it exactly.
          */
         private static final String RELOADED = "org.apache.struts2.util.LocalizedTextProvider.reloaded";

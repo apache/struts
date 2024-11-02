@@ -27,7 +27,7 @@ import org.apache.struts2.interceptor.parameter.StrutsParameter;
  * @author Jason Carreira
  *         Created Apr 8, 2003 6:27:29 PM
  */
-public class ModelDrivenAction extends ActionSupport implements ModelDriven {
+public class ModelDrivenAction extends ActionSupport implements ModelDriven<TestBean> {
 
     private String foo;
     private final TestBean model = new TestBean();

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;

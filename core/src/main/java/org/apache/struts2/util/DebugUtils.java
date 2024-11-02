@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.logging.log4j.Logger;
 

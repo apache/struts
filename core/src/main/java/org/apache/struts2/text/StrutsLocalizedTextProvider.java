@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +57,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @see #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale) {
+    public String findText(Class<?> aClass, String aTextName, Locale locale) {
         return findText(aClass, aTextName, locale, aTextName, new Object[0]);
     }
 
@@ -109,7 +110,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
+    public String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
         ValueStack valueStack = ActionContext.getContext().getValueStack();
         return findText(aClass, aTextName, locale, defaultMessage, args, valueStack);
 
@@ -169,7 +170,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args,
+    public String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args,
                            ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
@@ -220,7 +221,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             if (actionInvocation != null) {
                 Object action = actionInvocation.getAction();
                 if (action instanceof ModelDriven) {
-                    Object model = ((ModelDriven) action).getModel();
+                    Object model = ((ModelDriven<?>) action).getModel();
                     if (model != null) {
                         msg = findMessage(model.getClass(), aTextName, indexedTextName, locale, args, null, valueStack);
                         if (msg != null) {
@@ -232,7 +233,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // nothing still? alright, search the package hierarchy now
-        for (Class clazz = aClass;
+        for (Class<?> clazz = aClass;
              (clazz != null) && !clazz.equals(Object.class);
              clazz = clazz.getSuperclass()) {
 
@@ -283,7 +284,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
                         PropertyDescriptor propertyDescriptor = reflectionProvider.getPropertyDescriptor(actionObj.getClass(), prop);
 
                         if (propertyDescriptor != null) {
-                            Class clazz = propertyDescriptor.getPropertyType();
+                            Class<?> clazz = propertyDescriptor.getPropertyType();
 
                             if (clazz != null) {
                                 if (obj != null) {

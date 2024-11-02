@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
 import org.apache.struts2.util.ValueStack;
 
@@ -33,9 +33,9 @@ import java.util.ResourceBundle;
  * global texts to be defined for an application base class.
  *
  * <p>
- * You can override {@link LocaleProvider#getLocale()} to change the behaviour of how
+ * You can override {@link org.apache.struts2.LocaleProvider#getLocale()} to change the behaviour of how
  * to choose locale for the bundles that are returned. Typically you would
- * use the {@link LocaleProvider} interface to get the users configured locale.
+ * use the {@link org.apache.struts2.LocaleProvider} interface to get the users configured locale.
  * </p>
  *
  * <p>
@@ -56,7 +56,7 @@ import java.util.ResourceBundle;
  * </p>
  * @author Jason Carreira
  * @author Rainer Hermanns
- * @see LocaleProvider
+ * @see org.apache.struts2.LocaleProvider
  * @see TextProviderSupport
  */
 public interface TextProvider {

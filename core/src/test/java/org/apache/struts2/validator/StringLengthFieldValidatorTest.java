@@ -20,7 +20,7 @@ package org.apache.struts2.validator;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionSupport;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.validators.StringLengthFieldValidator;

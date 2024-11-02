@@ -16,18 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
-import org.apache.struts2.ActionContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * Provides support for localization in the framework, it can be used to read only default bundles.
- *
+ * <p>
  * Note that unlike {@link StrutsLocalizedTextProvider}, this class {@link GlobalLocalizedTextProvider} will
  * <em>only</em> search the default bundles for localized text.
  */
@@ -51,7 +52,7 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @see #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale) {
+    public String findText(Class<?> aClass, String aTextName, Locale locale) {
         return findText(aClass, aTextName, locale, aTextName, new Object[0]);
     }
 
@@ -88,7 +89,7 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
+    public String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
         ValueStack valueStack = ActionContext.getContext().getValueStack();
         return findText(aClass, aTextName, locale, defaultMessage, args, valueStack);
 
@@ -132,7 +133,7 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack) {
+    public String findText(Class<?> aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
             LOG.warn("Trying to find text with null key!");

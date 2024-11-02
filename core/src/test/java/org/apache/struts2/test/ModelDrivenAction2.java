@@ -30,7 +30,6 @@ public class ModelDrivenAction2 extends ModelDrivenAction {
 
     private final TestBean2 model = new TestBean2();
 
-
     /**
      * @return the model to be pushed onto the ValueStack after the Action itself
      */

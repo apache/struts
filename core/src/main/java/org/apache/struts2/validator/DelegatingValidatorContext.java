@@ -21,11 +21,11 @@ package org.apache.struts2.validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.CompositeTextProvider;
+import org.apache.struts2.text.CompositeTextProvider;
 import org.apache.struts2.LocaleProvider;
 import org.apache.struts2.LocaleProviderFactory;
-import org.apache.struts2.TextProvider;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.util.ValueStack;
 

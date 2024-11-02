@@ -61,8 +61,8 @@ public class StrutsResultFactory implements ResultFactory {
             }
             if (o instanceof Result) {
                 result = (Result) o;
-            } else if (o instanceof org.apache.struts2.Result) {
-                result = Result.adapt((org.apache.struts2.Result) o);
+            } else if (o instanceof org.apache.struts2.result.Result) {
+                result = Result.adapt((org.apache.struts2.result.Result) o);
             }
             if (result == null) {
                 throw new ConfigurationException("Class [" + resultClassName + "] does not implement Result", resultConfig);

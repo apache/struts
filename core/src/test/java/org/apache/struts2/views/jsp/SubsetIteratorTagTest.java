@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
 import org.apache.struts2.views.jsp.iterator.SubsetIteratorTag;

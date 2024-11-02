@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionSupport;
 
 /**

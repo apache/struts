@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionSupport;
 
 /**

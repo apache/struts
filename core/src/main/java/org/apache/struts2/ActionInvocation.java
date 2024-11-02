@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;

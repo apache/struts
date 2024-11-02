@@ -22,6 +22,7 @@ import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;

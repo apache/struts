@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;

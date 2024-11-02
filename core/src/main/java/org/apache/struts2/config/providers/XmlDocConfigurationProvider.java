@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config.providers;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.Configuration;

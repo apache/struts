@@ -18,10 +18,7 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.Action;
-import org.apache.struts2.ActionProxyFactory;
-import org.apache.struts2.DefaultActionProxyFactory;
-import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;

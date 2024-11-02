@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionSupport;
 
 /**

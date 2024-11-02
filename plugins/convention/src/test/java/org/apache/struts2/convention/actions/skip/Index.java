@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.convention.actions.skip;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 
 public class Index implements Action {
     public String execute() throws Exception {

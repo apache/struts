@@ -18,6 +18,8 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.action.Action;
+
 public class ExternalReferenceAction implements Action {
 
     private Foo foo;

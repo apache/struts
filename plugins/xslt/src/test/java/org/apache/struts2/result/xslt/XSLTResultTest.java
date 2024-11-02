@@ -19,7 +19,7 @@
 package org.apache.struts2.result.xslt;
 
 import junit.framework.TestCase;
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsTestCase;

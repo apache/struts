@@ -18,8 +18,7 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.Action;
-import org.apache.struts2.ActionSupport;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.annotations.RequiredFieldValidator;
 import org.apache.struts2.validator.annotations.RequiredStringValidator;

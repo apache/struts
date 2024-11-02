@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.result;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.util.ClassLoaderUtil;

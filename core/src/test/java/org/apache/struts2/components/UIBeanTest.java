@@ -38,6 +38,22 @@ import static org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChec
 
 public class UIBeanTest extends StrutsInternalTestCase {
 
+    private UIBean bean;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        bean = new UIBean(stack, req, res) {
+            @Override
+            protected String getDefaultTemplate() {
+                return null;
+            }
+        };
+    }
+
     public void testPopulateComponentHtmlId1() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -102,15 +118,6 @@ public class UIBeanTest extends StrutsInternalTestCase {
     }
 
     public void testEscape() {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
-        UIBean bean = new UIBean(stack, req, res) {
-            protected String getDefaultTemplate() {
-                return null;
-            }
-        };
-
         assertEquals(bean.escape("hello[world"), "hello_world");
         assertEquals(bean.escape("hello.world"), "hello_world");
         assertEquals(bean.escape("hello]world"), "hello_world");
@@ -422,6 +429,29 @@ public class UIBeanTest extends StrutsInternalTestCase {
         field.setStaticContentPath("/content/");
         // then
         assertEquals("/content", field.uiStaticContentPath);
+    }
+
+    /**
+     * The {@code name} attribute of a {@link UIBean} is evaluated to determine the {@value UIBean#ATTR_NAME_VALUE}
+     * parameter value. Thus, it is imperative that the {@code name} attribute is not derived from user input as it will
+     * otherwise result in a critical SSTI vulnerability.
+     * <p>
+     * When using FreeMarker, if the {@code name} attribute is a templating variable that corresponds to a getter which
+     * returns user-controlled input, it will usually resolve to {@code null} when loading the corresponding Action,
+     * which results in a rendering error, giving developers strong feedback that the attribute is not set correctly.
+     * <p>
+     * In the case of Velocity, templating variables which resolve to {@code null} do not cause rendering errors, making
+     * this potentially critical mistake sometimes undetectable. By logging a prominent warning, Velocity developers are
+     * also given a clear indication that the {@code name} attribute is not set correctly.
+     * <p>
+     * If the name attribute should definitely correspond to a variable (it is NOT derived from user input), the warning
+     * can be suppressed by using the Struts OGNL expression syntax instead ( %{expr} ). This may be appropriate when
+     * defining Struts components within an Iterator or loop.
+     */
+    public void testPotentialDoubleEvaluationWarning() {
+        bean.setName("${someVar}");
+
+        assertNull(bean.name);
     }
 
 }

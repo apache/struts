@@ -240,11 +240,9 @@ public class RestActionInvocationTest extends TestCase {
         ((MockActionProxy)restActionInvocation.getProxy()).setMethod("index");
 
         // Define result 'success'
-        ResultConfig resultConfig = new ResultConfig.Builder("success",
-                "org.apache.struts2.result.HttpHeaderResult")
+        ResultConfig resultConfig = new ResultConfig.Builder("success", "org.apache.struts2.result.HttpHeaderResult")
                 .addParam("status", "123").build();
-        ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
-                "RestAction", "org.apache.rest.RestAction")
+        ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest", "RestAction", "org.apache.rest.RestAction")
                 .addResultConfig(resultConfig)
                 .build();
         ((MockActionProxy)restActionInvocation.getProxy()).setConfig(actionConfig);
@@ -264,16 +262,16 @@ public class RestActionInvocationTest extends TestCase {
 
     class RestActionInvocationTester extends RestActionInvocation {
         RestActionInvocationTester() {
-            super(new HashMap<String, Object>(), true);
-            List<InterceptorMapping> interceptorMappings = new ArrayList<InterceptorMapping>();
+            super(new HashMap<>(), true);
+            List<InterceptorMapping> interceptorMappings = new ArrayList<>();
             MockInterceptor mockInterceptor = new MockInterceptor();
             mockInterceptor.setFoo("interceptor");
             mockInterceptor.setExpectedFoo("interceptor");
             interceptorMappings.add(new InterceptorMapping("interceptor", mockInterceptor));
             interceptors = interceptorMappings.iterator();
             MockActionProxy actionProxy = new MockActionProxy();
-            ActionConfig actionConfig = new ActionConfig.Builder("org.apache.rest",
-                    "RestAction", "org.apache.rest.RestAction").build();
+            ActionConfig actionConfig = new ActionConfig.Builder(
+                    "org.apache.rest", "RestAction", "org.apache.rest.RestAction").build();
             actionProxy.setConfig(actionConfig);
             proxy = actionProxy;
             action = new RestAction();

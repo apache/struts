@@ -18,11 +18,22 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.action.NoParameters;
+import org.apache.struts2.action.ParameterNameAware;
+import org.apache.struts2.action.ParameterValueAware;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.DefaultAcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
@@ -32,17 +43,6 @@ import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.action.NoParameters;
-import org.apache.struts2.action.ParameterNameAware;
-import org.apache.struts2.action.ParameterValueAware;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -63,15 +63,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
-import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
-import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
+import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
+import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
+import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 
 /**
  * This interceptor sets all parameters on the value stack.

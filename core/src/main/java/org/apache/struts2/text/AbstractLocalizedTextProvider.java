@@ -67,24 +67,18 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
-    /**
-     * Adds the bundle to the internal list of default bundles.
-     * If the bundle already exists in the list it will be re-added.
-     *
-     * @param resourceBundleName the name of the bundle to add.
-     */
     @Override
-    public void addDefaultResourceBundle(String resourceBundleName) {
+    public void addDefaultResourceBundle(String bundleName) {
         //make sure this doesn't get added more than once
         final ClassLoader ccl = getCurrentThreadContextClassLoader();
         synchronized (XWORK_MESSAGES_BUNDLE) {
             List<String> bundles = classLoaderMap.computeIfAbsent(ccl.hashCode(), k -> new CopyOnWriteArrayList<>());
-            bundles.remove(resourceBundleName);
-            bundles.add(0, resourceBundleName);
+            bundles.remove(bundleName);
+            bundles.add(0, bundleName);
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", resourceBundleName, ccl.toString());
+            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", bundleName, ccl.toString());
         }
     }
 
@@ -113,16 +107,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
     }
 
-    /**
-     * Returns a localized message for the specified key, aTextName.  Neither the key nor the
-     * message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @return a localized message based on the specified key, or null if no localized message can be found for it
-     */
     @Override
-    public String findDefaultText(String aTextName, Locale locale) {
+    public String findDefaultText(String textKey, Locale locale) {
         List<String> localList = getCurrentBundleNames();
 
         for (String bundleName : localList) {
@@ -130,7 +116,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             if (bundle != null) {
                 reloadBundles();
                 try {
-                    return bundle.getString(aTextName);
+                    return bundle.getString(textKey);
                 } catch (MissingResourceException e) {
                     // will be logged when not found in any bundle
                 }
@@ -138,26 +124,17 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         if (devMode) {
-            LOG.warn("Missing key [{}] in bundles [{}]!", aTextName, localList);
+            LOG.warn("Missing key [{}] in bundles [{}]!", textKey, localList);
         } else {
-            LOG.debug("Missing key [{}] in bundles [{}]!", aTextName, localList);
+            LOG.debug("Missing key [{}] in bundles [{}]!", textKey, localList);
         }
 
         return null;
     }
 
-    /**
-     * Returns a localized message for the specified key, aTextName, substituting variables from the
-     * array of params into the message.  Neither the key nor the message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @param params    an array of objects to be substituted into the message text
-     * @return A formatted message based on the specified key, or null if no localized message can be found for it
-     */
     @Override
-    public String findDefaultText(String aTextName, Locale locale, Object[] params) {
-        String defaultText = findDefaultText(aTextName, locale);
+    public String findDefaultText(String textKey, Locale locale, Object[] params) {
+        String defaultText = findDefaultText(textKey, locale);
         if (defaultText != null) {
             MessageFormat mf = buildMessageFormat(defaultText, locale);
             return formatWithNullDetection(mf, params);
@@ -165,51 +142,27 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         return null;
     }
 
-
-    /**
-     * <p>
-     * Finds a localized text message for the given key, aTextName, in the specified resource
-     * bundle.
-     * </p>
-     *
-     * <p>
-     * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
-     * will be treated as an OGNL expression and evaluated as such.
-     * </p>
-     *
-     * <p>
-     * If a message is <b>not</b> found a WARN log will be logged.
-     * </p>
-     *
-     * @param bundle         the bundle
-     * @param aTextName      the key
-     * @param locale         the locale
-     * @param defaultMessage the default message to use if no message was found in the bundle
-     * @param args           arguments for the message formatter.
-     * @param valueStack     the OGNL value stack.
-     * @return the localized text, or null if none can be found and no defaultMessage is provided
-     */
     @Override
-    public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
+    public String findText(ResourceBundle bundle, String textKey, Locale locale, String defaultMessage, Object[] args,
                            ValueStack valueStack) {
         try {
             reloadBundles(valueStack.getContext());
 
-            String message = TextParseUtil.translateVariables(bundle.getString(aTextName), valueStack);
+            String message = TextParseUtil.translateVariables(bundle.getString(textKey), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
 
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException ex) {
             if (devMode) {
-                LOG.warn("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+                LOG.warn("Missing key [{}] in bundle [{}]!", textKey, bundle);
             } else {
-                LOG.debug("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+                LOG.debug("Missing key [{}] in bundle [{}]!", textKey, bundle);
             }
         }
 
-        GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
+        GetDefaultMessageReturnArg result = getDefaultMessage(textKey, locale, valueStack, args, defaultMessage);
         if (unableToFindTextForKey(result)) {
-            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", aTextName, locale);
+            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", textKey, locale);
         }
         return result != null ? result.message : null;
     }
@@ -425,20 +378,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         this.searchDefaultBundlesFirst = Boolean.parseBoolean(searchDefaultBundlesFirst);
     }
 
-    /**
-     * Finds the given resource bundle by it's name.
-     * <p>
-     * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
-     * </p>
-     *
-     * @param aBundleName the name of the bundle (usually it's FQN classname).
-     * @param locale      the locale.
-     * @return the bundle, <tt>null</tt> if not found.
-     */
     @Override
-    public ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
+    public ResourceBundle findResourceBundle(String bundleName, Locale locale) {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
-        String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
+        String key = createMissesKey(String.valueOf(classLoader.hashCode()), bundleName, locale);
 
         if (missingBundles.contains(key)) {
             return null;
@@ -449,7 +392,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             if (bundlesMap.containsKey(key)) {
                 bundle = bundlesMap.get(key);
             } else {
-                bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
+                bundle = ResourceBundle.getBundle(bundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
             }
         } catch (MissingResourceException ex) {
@@ -458,15 +401,15 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                     if (bundlesMap.containsKey(key)) {
                         bundle = bundlesMap.get(key);
                     } else {
-                        bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
+                        bundle = ResourceBundle.getBundle(bundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
                     }
                 } catch (MissingResourceException e) {
-                    LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
+                    LOG.debug("Missing resource bundle [{}]!", bundleName, e);
                     missingBundles.add(key);
                 }
             } else {
-                LOG.debug("Missing resource bundle [{}]!", aBundleName);
+                LOG.debug("Missing resource bundle [{}]!", bundleName);
                 missingBundles.add(key);
             }
         }
@@ -654,6 +597,36 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         return null;
+    }
+
+    protected String extractIndexedName(String textKey) {
+        String indexedTextName = null;
+        // calculate indexedTextName (collection[*]) if applicable
+        if (textKey.contains("[")) {
+            int i = -1;
+
+            indexedTextName = textKey;
+
+            while ((i = indexedTextName.indexOf('[', i + 1)) != -1) {
+                int j = indexedTextName.indexOf(']', i);
+                String a = indexedTextName.substring(0, i);
+                String b = indexedTextName.substring(j);
+                indexedTextName = a + "[*" + b;
+            }
+        }
+        return indexedTextName;
+    }
+
+    protected void logMissingText(Class<?> startClazz, String textKey, Locale locale, GetDefaultMessageReturnArg result, String indexedTextName) {
+        // could we find the text, if not log a WARN
+        if (unableToFindTextForKey(result) && LOG.isDebugEnabled()) {
+            String warn = "Unable to find text for key '" + textKey + "' ";
+            if (indexedTextName != null) {
+                warn += " or indexed key '" + indexedTextName + "' ";
+            }
+            warn += "in class '" + startClazz.getName() + "' and locale '" + locale + "'";
+            LOG.debug(warn);
+        }
     }
 
     static class MessageFormatKey {

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.text;
 
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.inject.Inject;
 
 import java.util.ResourceBundle;

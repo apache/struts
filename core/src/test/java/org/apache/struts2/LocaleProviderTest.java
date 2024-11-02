@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.locale.LocaleProvider;
 import org.junit.Test;
 
 import java.util.Locale;

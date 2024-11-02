@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.locale;
 
+import org.apache.struts2.ActionContext;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

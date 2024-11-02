@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.validator;
 
-import org.apache.struts2.LocaleProvider;
+import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.interceptor.ValidationAware;
 

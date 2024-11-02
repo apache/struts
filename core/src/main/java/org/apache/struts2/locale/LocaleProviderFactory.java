@@ -16,13 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.locale;
 
-public class DefaultLocaleProviderFactory implements LocaleProviderFactory {
+import org.apache.struts2.ActionSupport;
 
-    @Override
-    public LocaleProvider createLocaleProvider() {
-        return new DefaultLocaleProvider();
-    }
+/**
+ * Allows delegate creation of {@link LocaleProvider} to another implementation provided
+ * by a user. It also allows avoid problems with too many dependencies as {@link LocaleProvider}
+ * is implemented by the {@link ActionSupport} which can be defined as a bean in Spring.
+ */
+public interface LocaleProviderFactory {
+
+    /**
+     * Create a new instance of {@link LocaleProvider}.
+     *
+     * @return the localeProvider.
+     */
+    LocaleProvider createLocaleProvider();
 
 }

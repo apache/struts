@@ -46,7 +46,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(
                 Class.forName("org.apache.struts2.interceptor.ValidationAware"),
-                Class.forName("org.apache.struts2.LocaleProvider"),
+                Class.forName("org.apache.struts2.locale.LocaleProvider"),
                 Class.forName("java.io.Serializable"),
                 Class.forName("org.apache.struts2.mock.MockResult"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
@@ -72,7 +72,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(
                 Class.forName("org.apache.struts2.interceptor.ValidationAware"),
-                Class.forName("org.apache.struts2.LocaleProvider"),
+                Class.forName("org.apache.struts2.locale.LocaleProvider"),
                 Class.forName("java.io.Serializable"),
                 Class.forName("org.apache.struts2.mock.MockResult"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
@@ -96,7 +96,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
 
         assertThat(providerAllowlist.getProviderAllowlist()).containsExactlyInAnyOrder(
                 Class.forName("org.apache.struts2.interceptor.ValidationAware"),
-                Class.forName("org.apache.struts2.LocaleProvider"),
+                Class.forName("org.apache.struts2.locale.LocaleProvider"),
                 Class.forName("java.io.Serializable"),
                 Class.forName("org.apache.struts2.interceptor.ConditionalInterceptor"),
                 Class.forName("org.apache.struts2.ActionSupport"),

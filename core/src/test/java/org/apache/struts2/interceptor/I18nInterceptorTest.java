@@ -21,7 +21,7 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.DefaultLocaleProviderFactory;
+import org.apache.struts2.locale.DefaultLocaleProviderFactory;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import junit.framework.TestCase;

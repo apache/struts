@@ -19,10 +19,9 @@
 package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.LocaleProvider;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

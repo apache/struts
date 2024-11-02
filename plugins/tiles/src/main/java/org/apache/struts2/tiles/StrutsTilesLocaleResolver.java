@@ -19,7 +19,7 @@
 package org.apache.struts2.tiles;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

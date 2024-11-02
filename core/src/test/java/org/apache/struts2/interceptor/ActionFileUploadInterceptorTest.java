@@ -20,7 +20,7 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionSupport;
-import org.apache.struts2.DefaultLocaleProvider;
+import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;

@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.LocaleProvider;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Container;

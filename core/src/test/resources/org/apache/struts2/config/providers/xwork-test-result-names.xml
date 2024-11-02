@@ -26,7 +26,7 @@
     <include file="xwork-test-beans.xml" />
     <package name="default">
         <result-types>
-            <result-type name="chain" class="org.apache.struts2.ActionChainResult" default="true"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult" default="true"/>
         </result-types>
 
         <action name="noname">

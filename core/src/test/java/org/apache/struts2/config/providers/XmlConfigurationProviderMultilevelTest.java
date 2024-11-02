@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config.providers;
 
-import org.apache.struts2.ActionChainResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;

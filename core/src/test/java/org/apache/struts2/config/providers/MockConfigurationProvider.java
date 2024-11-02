@@ -19,7 +19,7 @@
 package org.apache.struts2.config.providers;
 
 import org.apache.struts2.action.Action;
-import org.apache.struts2.ActionChainResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.ModelDrivenAction;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.SimpleAction;

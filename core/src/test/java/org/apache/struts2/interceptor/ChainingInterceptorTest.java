@@ -20,7 +20,7 @@ package org.apache.struts2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.action.Action;
-import org.apache.struts2.ActionChainResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.SimpleAction;

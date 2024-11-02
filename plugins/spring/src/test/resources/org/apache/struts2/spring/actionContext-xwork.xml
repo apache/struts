@@ -31,7 +31,7 @@
             <result-type name="null" class="org.apache.struts2.mock.MockResult" default="true"/>
             <result-type name="springResult" class="springResult"/>
             <result-type name="chain"
-                         class="org.apache.struts2.ActionChainResult"/>
+                         class="org.apache.struts2.result.ActionChainResult"/>
         </result-types>
 
         <interceptors>

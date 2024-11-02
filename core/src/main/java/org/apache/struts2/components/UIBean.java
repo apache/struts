@@ -655,7 +655,7 @@ public abstract class UIBean extends Component {
         if (this.key != null) {
 
             if(this.name == null) {
-                this.name = key;
+                setName(key);
             }
 
             if(this.label == null) {
@@ -1137,6 +1137,13 @@ public abstract class UIBean extends Component {
 
     @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
+        if (name != null && name.startsWith("$")) {
+            LOG.error("The name attribute should not usually be a templating variable." +
+                      " This can cause a critical vulnerability if the resolved value is derived from user input." +
+                      " If you are certain that you require this behaviour, please use OGNL expression syntax ( %{expr} ) instead.",
+                    new IllegalStateException());
+            return;
+        }
         this.name = name;
     }
 

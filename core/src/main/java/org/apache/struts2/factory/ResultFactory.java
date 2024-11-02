@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.factory;
 
-import org.apache.struts2.Result;
 import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.result.Result;
 
 import java.util.Map;
 
 /**
- * Used by {@link org.apache.struts2.ObjectFactory} to build {@link org.apache.struts2.Result}
+ * Used by {@link org.apache.struts2.ObjectFactory} to build {@link Result}
  */
 public interface ResultFactory {
 

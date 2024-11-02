@@ -19,7 +19,7 @@
 package org.apache.struts2.config;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
+import org.apache.struts2.result.Result;
 
 /**
  * Null result to get around annotation defaults that can't be null

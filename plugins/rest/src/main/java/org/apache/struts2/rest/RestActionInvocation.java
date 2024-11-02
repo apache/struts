@@ -18,22 +18,26 @@
  */
 package org.apache.struts2.rest;
 
-import org.apache.struts2.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.DefaultActionInvocation;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.ValidationAware;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.result.HttpHeaderResult;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.HtmlHandler;
+import org.apache.struts2.result.HttpHeaderResult;
+import org.apache.struts2.result.Result;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 

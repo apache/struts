@@ -19,9 +19,9 @@
 package org.apache.struts2.result;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 
 import java.io.Serial;
 import java.util.List;
@@ -156,7 +156,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     }
 
     /**
-     * @see org.apache.struts2.Result#execute(org.apache.struts2.ActionInvocation)
+     * @see Result#execute(org.apache.struts2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception {
         if (invocation == null) {

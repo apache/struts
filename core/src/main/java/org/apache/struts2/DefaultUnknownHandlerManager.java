@@ -24,6 +24,7 @@ import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.UnknownHandlerConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;

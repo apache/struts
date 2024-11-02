@@ -18,8 +18,12 @@
  */
 package org.apache.struts2.spring.interceptor;
 
-import org.apache.struts2.*;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionEventListener;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.interceptor.PreResultListener;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 
 import java.lang.reflect.Method;

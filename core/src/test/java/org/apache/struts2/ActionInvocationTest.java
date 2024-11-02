@@ -18,12 +18,12 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.mock.MockResult;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.result.Result;
 
 import java.util.HashMap;
 

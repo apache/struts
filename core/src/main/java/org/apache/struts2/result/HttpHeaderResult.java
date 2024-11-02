@@ -18,13 +18,12 @@
  */
 package org.apache.struts2.result;
 
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
-import org.apache.struts2.util.TextParseUtil;
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.Serial;
 import java.util.HashMap;

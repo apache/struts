@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import org.apache.struts2.Result;
+import org.apache.struts2.result.Result;
 
 import java.util.HashMap;
 import java.util.Map;

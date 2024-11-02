@@ -18,18 +18,19 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;

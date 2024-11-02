@@ -18,12 +18,11 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.interceptor.AbstractInterceptor;
-import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.result.ServletRedirectResult;
 
 import java.io.Serial;
@@ -58,7 +57,7 @@ import java.util.Map;
  * <p>
  * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution,
- * if the {@link org.apache.struts2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
+ * if the {@link Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
  * </p>
  *

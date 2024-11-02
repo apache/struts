@@ -33,6 +33,7 @@ import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 

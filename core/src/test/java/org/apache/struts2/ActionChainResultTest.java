@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.result.Result;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

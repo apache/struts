@@ -18,24 +18,25 @@
  */
 package org.apache.struts2;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.conversion.TypeConverter;
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.Interceptor;
-import org.apache.struts2.util.ClassLoaderUtil;
-import org.apache.struts2.validator.Validator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.factory.ActionFactory;
 import org.apache.struts2.factory.ConverterFactory;
 import org.apache.struts2.factory.InterceptorFactory;
 import org.apache.struts2.factory.ResultFactory;
 import org.apache.struts2.factory.UnknownHandlerFactory;
 import org.apache.struts2.factory.ValidatorFactory;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.validator.Validator;
 
 import java.io.Serializable;
 import java.util.Map;

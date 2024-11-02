@@ -20,10 +20,10 @@ package org.apache.struts2.factory;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
-import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.result.ParamNameAwareResult;
+import org.apache.struts2.result.Result;
 
 import java.util.HashMap;
 import java.util.Map;

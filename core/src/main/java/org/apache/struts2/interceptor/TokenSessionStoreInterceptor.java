@@ -18,17 +18,17 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.Serial;
 

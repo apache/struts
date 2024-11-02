@@ -19,10 +19,10 @@
 package org.apache.struts2.config.providers;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.Result;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.UnknownHandler;
 import org.apache.struts2.config.entities.ActionConfig;
-import org.apache.struts2.StrutsException;
+import org.apache.struts2.result.Result;
 
 public class SomeUnknownHandler implements UnknownHandler{
     private ActionConfig actionConfig;

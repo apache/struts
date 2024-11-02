@@ -19,7 +19,7 @@
 package org.apache.struts2.spring;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
+import org.apache.struts2.result.Result;
 
 public class SpringResult implements Result {
 

@@ -20,6 +20,7 @@ package org.apache.struts2;
 
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.Result;
 
 import java.util.ArrayList;
 import java.util.Date;

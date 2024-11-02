@@ -18,8 +18,7 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
+import org.apache.struts2.result.Result;
 
 public class TestActionTagResult implements Result {
 

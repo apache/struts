@@ -60,7 +60,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.mock.MockInterceptor"),
                 Class.forName("org.apache.struts2.Action"),
                 Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
-                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.result.Result"),
                 Class.forName("org.apache.struts2.SimpleAction")
         );
     }
@@ -84,7 +84,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.mock.MockInterceptor"),
                 Class.forName("org.apache.struts2.Action"),
                 Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
-                Class.forName("org.apache.struts2.Result"),
+                Class.forName("org.apache.struts2.result.Result"),
                 Class.forName("org.apache.struts2.SimpleAction")
         );
     }
@@ -108,7 +108,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
                 Class.forName("org.apache.struts2.Validateable"),
                 Class.forName("org.apache.struts2.Action"),
                 Class.forName("org.apache.struts2.interceptor.AbstractInterceptor"),
-                Class.forName("org.apache.struts2.Result")
+                Class.forName("org.apache.struts2.result.Result")
         );
     }
 }

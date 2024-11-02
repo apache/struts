@@ -19,7 +19,7 @@
 package org.apache.struts.beanvalidation;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
+import org.apache.struts2.result.Result;
 
 public class VoidResult implements Result {
     public void execute(ActionInvocation invocation) throws Exception {

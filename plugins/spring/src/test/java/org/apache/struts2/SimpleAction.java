@@ -20,8 +20,14 @@ package org.apache.struts2;
 
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.Result;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 
 /**

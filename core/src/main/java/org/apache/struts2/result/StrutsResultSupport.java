@@ -21,7 +21,6 @@ package org.apache.struts2.result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.util.TextParseUtil;
 
@@ -106,11 +105,11 @@ import java.util.Collection;
  * </pre>
  *
  * <p>
- * Please see the {@link org.apache.struts2.Result} class for more info on Results in general.
+ * Please see the {@link Result} class for more info on Results in general.
  * </p>
  * <!-- END SNIPPET: example -->
  *
- * @see org.apache.struts2.Result
+ * @see Result
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {
 

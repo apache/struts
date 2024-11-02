@@ -19,6 +19,7 @@
 package org.apache.struts2;
 
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.result.Result;
 
 import java.util.List;
 

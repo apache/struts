@@ -18,29 +18,38 @@
  */
 package org.apache.struts2.convention;
 
-import org.apache.struts2.*;
-import org.apache.struts2.config.Configuration;
-import org.apache.struts2.config.ConfigurationException;
-import org.apache.struts2.config.entities.*;
-import org.apache.struts2.config.providers.InterceptorBuilder;
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ClassLoaderUtil;
-import org.apache.struts2.util.TextParseUtil;
+import jakarta.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.UnknownHandler;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.config.entities.ResultTypeConfig;
+import org.apache.struts2.config.providers.InterceptorBuilder;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.TextParseUtil;
 
-import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
-import java.util.*;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>

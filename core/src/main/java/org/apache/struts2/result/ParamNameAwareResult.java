@@ -19,7 +19,7 @@
 package org.apache.struts2.result;
 
 /**
- * Accept parameter name/value to be set on {@link org.apache.struts2.Result}
+ * Accept parameter name/value to be set on {@link Result}
  */
 public interface ParamNameAwareResult {
 

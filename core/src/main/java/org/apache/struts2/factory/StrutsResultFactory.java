@@ -19,11 +19,11 @@
 package org.apache.struts2.factory;
 
 import org.apache.struts2.ObjectFactory;
-import org.apache.struts2.Result;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.result.ParamNameAwareResult;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 import org.apache.struts2.util.reflection.ReflectionProvider;

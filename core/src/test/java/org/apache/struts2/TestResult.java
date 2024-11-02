@@ -18,13 +18,11 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.Result;
-import org.apache.struts2.util.ValueStack;
-import org.junit.Assert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ValueStack;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;

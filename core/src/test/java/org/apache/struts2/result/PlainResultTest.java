@@ -19,10 +19,9 @@
 package org.apache.struts2.result;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.Result;
-import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.result.plain.ResponseBuilder;
 import org.springframework.mock.web.MockHttpServletResponse;
 

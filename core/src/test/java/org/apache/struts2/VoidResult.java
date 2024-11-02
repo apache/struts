@@ -18,6 +18,8 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.result.Result;
+
 /**
  */
 public class VoidResult implements Result {

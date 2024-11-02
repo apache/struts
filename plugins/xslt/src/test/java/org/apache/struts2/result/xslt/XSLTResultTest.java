@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.result.xslt;
 
+import junit.framework.TestCase;
 import org.apache.struts2.Action;
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.Result;
-import org.apache.struts2.mock.MockActionInvocation;
-import org.apache.struts2.util.ClassLoaderUtil;
-import org.apache.struts2.util.ValueStack;
-import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsTestCase;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;

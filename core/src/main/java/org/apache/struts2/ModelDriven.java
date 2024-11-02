@@ -30,6 +30,9 @@ public interface ModelDriven<T> {
 
     /**
      * Gets the model to be pushed onto the ValueStack instead of the Action itself.
+     * <p>
+     * Please be aware that all setters and getters of every depth on the object returned by this method are available
+     * for user parameter injection!
      *
      * @return the model
      */

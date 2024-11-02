@@ -66,7 +66,6 @@ import org.apache.struts2.factory.ActionFactory;
 import org.apache.struts2.factory.ConverterFactory;
 import org.apache.struts2.factory.DefaultActionFactory;
 import org.apache.struts2.factory.DefaultInterceptorFactory;
-import org.apache.struts2.factory.DefaultResultFactory;
 import org.apache.struts2.factory.DefaultUnknownHandlerFactory;
 import org.apache.struts2.factory.DefaultValidatorFactory;
 import org.apache.struts2.factory.InterceptorFactory;
@@ -109,6 +108,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.factory.StrutsResultFactory;
 import org.apache.struts2.ognl.OgnlGuard;
 import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
@@ -364,7 +364,7 @@ public class DefaultConfiguration implements Configuration {
                 // TODO: SpringObjectFactoryTest fails when these are SINGLETON
                 .factory(ObjectFactory.class, Scope.PROTOTYPE)
                 .factory(ActionFactory.class, DefaultActionFactory.class, Scope.PROTOTYPE)
-                .factory(ResultFactory.class, DefaultResultFactory.class, Scope.PROTOTYPE)
+                .factory(ResultFactory.class, StrutsResultFactory.class, Scope.PROTOTYPE)
                 .factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.PROTOTYPE)
                 .factory(ValidatorFactory.class, DefaultValidatorFactory.class, Scope.PROTOTYPE)
                 .factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.PROTOTYPE)

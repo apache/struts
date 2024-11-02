@@ -31,7 +31,10 @@ import java.util.Map;
 
 /**
  * Default implementation
+ *
+ * @deprecated since 6.7.0, use {@link StrutsResultFactory} instead.
  */
+@Deprecated
 public class DefaultResultFactory implements ResultFactory {
 
     private ObjectFactory objectFactory;

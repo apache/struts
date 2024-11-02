@@ -548,4 +548,9 @@ public class ActionContext implements Serializable {
         }
         return Objects.equals(getContextMap(), other.getContextMap());
     }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(getContextMap());
+    }
 }

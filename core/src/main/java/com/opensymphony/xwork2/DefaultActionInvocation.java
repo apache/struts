@@ -36,6 +36,7 @@ import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.result.ActionChainResult;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ProxyUtil;
@@ -29,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.Unchainable;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 

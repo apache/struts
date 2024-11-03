@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 
 import java.util.ArrayList;
 import java.util.Iterator;

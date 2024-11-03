@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor.annotations;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 
 /**
  * @author Zsolt Szasz, zsolt at lorecraft dot com

@@ -23,7 +23,7 @@ import org.apache.struts2.result.Result;
 
 /**
  * PreResultListeners may be registered with an {@link ActionInvocation} to get a callback after the
- * {@link org.apache.struts2.Action} has been executed but before the {@link Result}
+ * {@link org.apache.struts2.action.Action} has been executed but before the {@link Result}
  * is executed.
  *
  * @author Jason Carreira
@@ -31,7 +31,7 @@ import org.apache.struts2.result.Result;
 public interface PreResultListener {
 
     /**
-     * This callback method will be called after the {@link org.apache.struts2.Action} execution and
+     * This callback method will be called after the {@link org.apache.struts2.action.Action} execution and
      * before the {@link Result} execution.
      *
      * @param invocation  the action invocation

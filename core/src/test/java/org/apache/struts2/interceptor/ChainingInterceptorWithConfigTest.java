@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.Action;
-import org.apache.struts2.ActionChainResult;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
 import org.apache.struts2.DefaultActionProxyFactory;

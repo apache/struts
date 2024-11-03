@@ -545,7 +545,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * Note that we can't include the test for {@link #actionSuffix} here
      * because a class is included if its name ends in {@link #actionSuffix} OR
-     * it implements {@link org.apache.struts2.Action}. Since the whole
+     * it implements {@link org.apache.struts2.action.Action}. Since the whole
      * goal is to avoid loading the class if we don't have to, the (actionSuffix
      * || implements Action) test will have to remain until later. See
      * {@link #getActionClassTest()} for the test performed on the loaded
@@ -660,7 +660,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 boolean nameMatches = matchesSuffix(classInfo.getName());
 
                 try {
-                    return inPackage && (nameMatches || (checkImplementsAction && org.apache.struts2.Action.class.isAssignableFrom(classInfo.get())));
+                    return inPackage && (nameMatches || (checkImplementsAction && org.apache.struts2.action.Action.class.isAssignableFrom(classInfo.get())));
                 } catch (ClassNotFoundException ex) {
                     LOG.error("Unable to load class [{}]", classInfo.getName(), ex);
                     return false;

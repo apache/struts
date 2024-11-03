@@ -31,7 +31,7 @@
 
     <package name="struts-default" abstract="true">
         <result-types>
-            <result-type name="chain" class="org.apache.struts2.ActionChainResult"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts2.result.ServletDispatcherResult" default="true"/>
             <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
             <result-type name="httpheader" class="org.apache.struts2.result.HttpHeaderResult"/>

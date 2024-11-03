@@ -16,13 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.result;
 
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.result.Result;
-import org.apache.struts2.util.TextParseUtil;
 
 import java.util.HashSet;
 import java.util.LinkedList;

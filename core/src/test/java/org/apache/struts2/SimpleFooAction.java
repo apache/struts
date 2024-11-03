@@ -19,6 +19,8 @@
 package org.apache.struts2;
 
 
+import org.apache.struts2.action.Action;
+
 /**
  * DOCUMENT ME!
  *

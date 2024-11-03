@@ -25,7 +25,7 @@
 <struts>
     <package name="allow2">
         <result-types>
-            <result-type name="chain" class="org.apache.struts2.ActionChainResult" default="true"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult" default="true"/>
         </result-types>
 
         <interceptors>

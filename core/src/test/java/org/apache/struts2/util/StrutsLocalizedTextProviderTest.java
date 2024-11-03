@@ -19,7 +19,7 @@
 package org.apache.struts2.util;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;

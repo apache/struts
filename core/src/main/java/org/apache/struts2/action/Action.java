@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.action;
 
 /**
  * All actions <b>may</b> implement this interface, which exposes the <code>execute()</code> method.

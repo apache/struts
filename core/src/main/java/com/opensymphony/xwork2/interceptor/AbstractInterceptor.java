@@ -38,6 +38,11 @@ public abstract class AbstractInterceptor extends org.apache.struts2.interceptor
 
     @Override
     public boolean shouldIntercept(ActionInvocation invocation) {
-        return shouldIntercept((org.apache.struts2.ActionInvocation) invocation);
+        return super.shouldIntercept(invocation);
+    }
+
+    @Override
+    public boolean shouldIntercept(org.apache.struts2.ActionInvocation invocation) {
+        return shouldIntercept(ActionInvocation.adapt(invocation));
     }
 }

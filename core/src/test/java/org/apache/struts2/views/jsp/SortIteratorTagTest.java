@@ -20,7 +20,7 @@ package org.apache.struts2.views.jsp;
 
 import jakarta.servlet.jsp.JspException;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
 

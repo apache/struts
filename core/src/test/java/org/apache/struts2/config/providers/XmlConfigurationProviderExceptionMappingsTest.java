@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config.providers;
 
-import org.apache.struts2.ActionChainResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;

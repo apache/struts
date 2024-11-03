@@ -21,9 +21,9 @@ package org.apache.struts2;
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.util.ValueStack;
 import junit.framework.TestCase;
-import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.HashMap;

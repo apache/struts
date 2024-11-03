@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.util.ValueStack;

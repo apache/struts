@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.convention;
 
+import org.apache.struts2.result.ActionChainResult;
 import jakarta.servlet.ServletContext;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ActionChainResult;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;

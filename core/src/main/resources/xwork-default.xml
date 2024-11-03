@@ -26,7 +26,7 @@
     <package name="xwork-default" abstract="true">
 
         <result-types>
-            <result-type name="chain" class="org.apache.struts2.ActionChainResult"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult"/>
         </result-types>
         <interceptors>
             <interceptor name="logger" class="org.apache.struts2.interceptor.LoggingInterceptor"/>

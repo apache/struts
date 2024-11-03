@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor.annotations;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
 import org.apache.struts2.DefaultActionProxyFactory;

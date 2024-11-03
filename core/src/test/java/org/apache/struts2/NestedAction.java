@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.util.ValueStack;
 import org.junit.Assert;
 

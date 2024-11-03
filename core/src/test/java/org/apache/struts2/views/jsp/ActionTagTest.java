@@ -21,7 +21,7 @@ package org.apache.struts2.views.jsp;
 import com.mockobjects.dynamic.Mock;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.PageContext;
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;

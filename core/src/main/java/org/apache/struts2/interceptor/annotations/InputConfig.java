@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 
 /**
  * <!-- START SNIPPET: description -->

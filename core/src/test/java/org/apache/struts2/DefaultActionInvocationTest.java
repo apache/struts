@@ -28,6 +28,7 @@ import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;

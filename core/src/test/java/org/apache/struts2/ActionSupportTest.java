@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;

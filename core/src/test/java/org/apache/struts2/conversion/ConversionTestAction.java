@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.conversion;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.conversion.annotations.Conversion;
 import org.apache.struts2.conversion.annotations.ConversionRule;
 import org.apache.struts2.conversion.annotations.ConversionType;

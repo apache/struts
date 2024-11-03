@@ -25,7 +25,7 @@
 <struts>
     <package name="xwork-test-default">
         <result-types>
-            <result-type name="chain" class="org.apache.struts2.ActionChainResult" default="true"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult" default="true"/>
             <result-type name="void" class="org.apache.struts2.VoidResult"/>
             <result-type name="mock" class="org.apache.struts2.mock.MockResult"/>
         </result-types>

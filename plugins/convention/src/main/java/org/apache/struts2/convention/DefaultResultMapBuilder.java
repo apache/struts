@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.convention;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.PackageConfig;

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.struts2.TestAction;
 
-import org.apache.struts2.Action;
+import org.apache.struts2.action.Action;
 
 public class LocaleTestAction extends TestAction implements Action {
 

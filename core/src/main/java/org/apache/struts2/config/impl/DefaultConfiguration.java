@@ -19,11 +19,11 @@
 package org.apache.struts2.config.impl;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.DefaultLocaleProviderFactory;
+import org.apache.struts2.locale.DefaultLocaleProviderFactory;
 import org.apache.struts2.text.DefaultTextProvider;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.text.StrutsTextProviderFactory;

@@ -19,7 +19,7 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;

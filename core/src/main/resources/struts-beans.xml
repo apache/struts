@@ -137,8 +137,8 @@
           scope="singleton"/>
     <bean type="org.apache.struts2.text.TextProviderFactory" name="struts"
           class="org.apache.struts2.text.StrutsTextProviderFactory" scope="singleton"/>
-    <bean type="org.apache.struts2.LocaleProviderFactory" name="struts"
-          class="org.apache.struts2.DefaultLocaleProviderFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.locale.LocaleProviderFactory" name="struts"
+          class="org.apache.struts2.locale.DefaultLocaleProviderFactory" scope="singleton"/>
 
     <bean type="org.apache.struts2.components.UrlRenderer" name="struts"
           class="org.apache.struts2.components.ServletUrlRenderer"/>

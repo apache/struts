@@ -25,6 +25,8 @@ import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.util.ValueStack;

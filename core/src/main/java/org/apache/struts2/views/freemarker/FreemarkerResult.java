@@ -20,7 +20,7 @@ package org.apache.struts2.views.freemarker;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.LocaleProvider;
+import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 import freemarker.template.Configuration;

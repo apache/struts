@@ -34,7 +34,7 @@ import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
-import org.apache.struts2.LocaleProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;

@@ -128,15 +128,15 @@
     <bean type="org.apache.struts2.conversion.impl.StringConverter" name="struts"
           class="org.apache.struts2.conversion.impl.StringConverter" scope="singleton"/>
 
-    <bean type="org.apache.struts2.LocalizedTextProvider" name="global-only"
-          class="org.apache.struts2.util.GlobalLocalizedTextProvider" scope="singleton"/>
-    <bean type="org.apache.struts2.LocalizedTextProvider" name="struts"
-          class="org.apache.struts2.util.StrutsLocalizedTextProvider" scope="singleton"/>
+    <bean type="org.apache.struts2.text.LocalizedTextProvider" name="global-only"
+          class="org.apache.struts2.text.GlobalLocalizedTextProvider" scope="singleton"/>
+    <bean type="org.apache.struts2.text.LocalizedTextProvider" name="struts"
+          class="org.apache.struts2.text.StrutsLocalizedTextProvider" scope="singleton"/>
 
-    <bean type="org.apache.struts2.TextProvider" name="system" class="org.apache.struts2.DefaultTextProvider"
+    <bean type="org.apache.struts2.text.TextProvider" name="system" class="org.apache.struts2.text.DefaultTextProvider"
           scope="singleton"/>
-    <bean type="org.apache.struts2.TextProviderFactory" name="struts"
-          class="org.apache.struts2.StrutsTextProviderFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.text.TextProviderFactory" name="struts"
+          class="org.apache.struts2.text.StrutsTextProviderFactory" scope="singleton"/>
     <bean type="org.apache.struts2.LocaleProviderFactory" name="struts"
           class="org.apache.struts2.DefaultLocaleProviderFactory" scope="singleton"/>
 

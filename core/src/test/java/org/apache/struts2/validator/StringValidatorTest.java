@@ -22,7 +22,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;

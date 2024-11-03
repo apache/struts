@@ -23,7 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.LocalizedTextProvider;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.Parameterizable;

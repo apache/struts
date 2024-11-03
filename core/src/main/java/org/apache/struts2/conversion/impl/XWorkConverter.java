@@ -21,7 +21,7 @@ package org.apache.struts2.conversion.impl;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
-import org.apache.struts2.LocalizedTextProvider;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.conversion.ConversionAnnotationProcessor;
 import org.apache.struts2.conversion.ConversionFileProcessor;
 import org.apache.struts2.conversion.TypeConverter;

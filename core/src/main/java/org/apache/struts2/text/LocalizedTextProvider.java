@@ -16,70 +16,80 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
-import org.apache.struts2.ActionContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.struts2.util.ValueStack;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/**
- * Provides support for localization in the framework, it can be used to read only default bundles.
- *
- * Note that unlike {@link StrutsLocalizedTextProvider}, this class {@link GlobalLocalizedTextProvider} will
- * <em>only</em> search the default bundles for localized text.
- */
-public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
-
-    private static final Logger LOG = LogManager.getLogger(GlobalLocalizedTextProvider.class);
-
-    public GlobalLocalizedTextProvider() {
-        addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
-        addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
-    }
+public interface LocalizedTextProvider extends Serializable {
 
     /**
-     * Calls {@link #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)}
-     * with aTextName as the default message.
+     * Returns a localized message for the specified key, aTextName.  Neither the key nor the
+     * message is evaluated.
      *
-     * @param aClass    class name
-     * @param aTextName text name
-     * @param locale    the locale
-     * @return the localized text, or null if none can be found and no defaultMessage is provided
-     * @see #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)
+     * @param textKey the message key
+     * @param locale  the locale the message should be for
+     * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
-    @Override
-    public String findText(Class aClass, String aTextName, Locale locale) {
-        return findText(aClass, aTextName, locale, aTextName, new Object[0]);
-    }
+    String findDefaultText(String textKey, Locale locale);
 
     /**
+     * Returns a localized message for the specified key, aTextName, substituting variables from the
+     * array of params into the message.  Neither the key nor the message is evaluated.
+     *
+     * @param textKey the message key
+     * @param locale  the locale the message should be for
+     * @param params  an array of objects to be substituted into the message text
+     * @return A formatted message based on the specified key, or null if no localized message can be found for it
+     */
+    String findDefaultText(String textKey, Locale locale, Object[] params);
+
+    /**
+     * Finds the given resource bundle by it's name.
      * <p>
-     * Finds a localized text message for the given key, aTextName. Both the key and the message
+     * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
+     * </p>
+     *
+     * @param bundleName the name of the bundle (usually it's FQN classname).
+     * @param locale     the locale.
+     * @return the bundle, <tt>null</tt> if not found.
+     */
+    ResourceBundle findResourceBundle(String bundleName, Locale locale);
+
+    /**
+     * Calls {@link #findText(Class startClazz, String textKey, Locale locale, String defaultMessage, Object[] args)}
+     * with textKey as the default message.
+     *
+     * @param startClazz class name
+     * @param textKey    text name
+     * @param locale     the locale
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
+     * @see #findText(Class startClazz, String textKey, Locale locale, String defaultMessage, Object[] args)
+     */
+    String findText(Class<?> startClazz, String textKey, Locale locale);
+
+    /**
+     * Finds a localized text message for the given key, textKey. Both the key and the message
      * itself is evaluated as required.  The following algorithm is used to find the requested
      * message:
-     * </p>
      *
      * <ol>
      * <li>Look for the message in the default resource bundles.</li>
      * <li>If not found, return defaultMessage</li>
      * </ol>
-     *
      * <p>
      * When looking for the message, if the key indexes a collection (e.g. user.phone[0]) and a
      * message for that specific key cannot be found, the general form will also be looked up
      * (i.e. user.phone[*]).
-     * </p>
-     *
      * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * </p>
      *
-     * @param aClass         the class whose name to use as the start point for the search
-     * @param aTextName      the key to find the text message for
+     * @param startClazz     the class whose name to use as the start point for the search
+     * @param textKey        the key to find the text message for
      * @param locale         the locale the message should be for
      * @param defaultMessage the message to be returned if no text message can be found in any
      *                       resource bundle
@@ -87,42 +97,29 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      *                       resource bundle
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
-    @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
-        ValueStack valueStack = ActionContext.getContext().getValueStack();
-        return findText(aClass, aTextName, locale, defaultMessage, args, valueStack);
-
-    }
+    String findText(Class<?> startClazz, String textKey, Locale locale, String defaultMessage, Object[] args);
 
     /**
-     * <p>
-     * Finds a localized text message for the given key, aTextName. Both the key and the message
+     * Finds a localized text message for the given key, textKey. Both the key and the message
      * itself is evaluated as required.  The following algorithm is used to find the requested
      * message:
-     * </p>
      *
      * <ol>
      * <li>Look for the message in the default resource bundles.</li>
      * <li>If not found, return defaultMessage</li>
      * </ol>
-     *
      * <p>
      * When looking for the message, if the key indexes a collection (e.g. user.phone[0]) and a
      * message for that specific key cannot be found, the general form will also be looked up
      * (i.e. user.phone[*]).
-     * </p>
-     *
      * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * </p>
-     *
      * <p>
      * If a message is <b>not</b> found a DEBUG level log warning will be logged.
-     * </p>
      *
-     * @param aClass         the class whose name to use as the start point for the search
-     * @param aTextName      the key to find the text message for
+     * @param startClazz     the class whose name to use as the start point for the search
+     * @param textKey        the key to find the text message for
      * @param locale         the locale the message should be for
      * @param defaultMessage the message to be returned if no text message can be found in any
      *                       resource bundle
@@ -131,91 +128,66 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      *                       one in the ActionContext ThreadLocal
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
-    @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack) {
-        String indexedTextName = null;
-        if (aTextName == null) {
-            LOG.warn("Trying to find text with null key!");
-            aTextName = "";
-        }
-        // calculate indexedTextName (collection[*]) if applicable
-        if (aTextName.contains("[")) {
-            int i = -1;
-
-            indexedTextName = aTextName;
-
-            while ((i = indexedTextName.indexOf('[', i + 1)) != -1) {
-                int j = indexedTextName.indexOf(']', i);
-                String a = indexedTextName.substring(0, i);
-                String b = indexedTextName.substring(j);
-                indexedTextName = a + "[*" + b;
-            }
-        }
-
-        // get default
-        GetDefaultMessageReturnArg result = getDefaultMessageWithAlternateKey(aTextName, indexedTextName, locale, valueStack, args, defaultMessage);
-
-        // could we find the text, if not log a warn
-        if (unableToFindTextForKey(result) && LOG.isDebugEnabled()) {
-            String warn = "Unable to find text for key '" + aTextName + "' ";
-            if (indexedTextName != null) {
-                warn += " or indexed key '" + indexedTextName + "' ";
-            }
-            warn += "in class '" + aClass.getName() + "' and locale '" + locale + "'";
-            LOG.debug(warn);
-        }
-
-        return result != null ? result.message : null;
-    }
+    String findText(Class<?> startClazz, String textKey, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack);
 
     /**
-     * <p>
      * Finds a localized text message for the given key, aTextName, in the specified resource bundle
      * with aTextName as the default message.
-     * </p>
-     *
      * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * </p>
      *
-     * @param bundle    a resource bundle name
-     * @param aTextName text name
-     * @param locale    the locale
+     * @param bundle  a resource bundle name
+     * @param textKey text name
+     * @param locale  the locale
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      * @see #findText(ResourceBundle, String, Locale, String, Object[])
      */
-    @Override
-    public String findText(ResourceBundle bundle, String aTextName, Locale locale) {
-        return findText(bundle, aTextName, locale, aTextName, new Object[0]);
-    }
+    String findText(ResourceBundle bundle, String textKey, Locale locale);
 
     /**
-     * <p>
      * Finds a localized text message for the given key, aTextName, in the specified resource
      * bundle.
-     * </p>
-     *
      * <p>
      * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
      * will be treated as an OGNL expression and evaluated as such.
-     * </p>
-     *
      * <p>
      * If a message is <b>not</b> found a WARN log will be logged.
-     * </p>
      *
      * @param bundle         the bundle
-     * @param aTextName      the key
+     * @param textKey        the key
      * @param locale         the locale
      * @param defaultMessage the default message to use if no message was found in the bundle
      * @param args           arguments for the message formatter.
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
-    @Override
-    public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args) {
-        ValueStack valueStack = ActionContext.getContext().getValueStack();
-        return findText(bundle, aTextName, locale, defaultMessage, args, valueStack);
-    }
+    String findText(ResourceBundle bundle, String textKey, Locale locale, String defaultMessage, Object[] args);
+
+    /**
+     * Finds a localized text message for the given key, aTextName, in the specified resource
+     * bundle.
+     * <p>
+     * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
+     * will be treated as an OGNL expression and evaluated as such.
+     * <p>
+     * If a message is <b>not</b> found a WARN log will be logged.
+     *
+     * @param bundle         the bundle
+     * @param textKey        the key
+     * @param locale         the locale
+     * @param defaultMessage the default message to use if no message was found in the bundle
+     * @param args           arguments for the message formatter.
+     * @param valueStack     the OGNL value stack.
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
+     */
+    String findText(ResourceBundle bundle, String textKey, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack);
+
+    /**
+     * Adds the bundle to the internal list of default bundles.
+     * If the bundle already exists in the list it will be re-added.
+     *
+     * @param bundleName the name of the bundle to add.
+     */
+    void addDefaultResourceBundle(String bundleName);
 
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.validator.validators;
 
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;

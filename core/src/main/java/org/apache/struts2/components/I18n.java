@@ -22,14 +22,14 @@ import java.io.Writer;
 import java.util.ResourceBundle;
 
 import org.apache.struts2.LocaleProviderFactory;
-import org.apache.struts2.LocalizedTextProvider;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 
 import org.apache.struts2.LocaleProvider;
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;

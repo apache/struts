@@ -19,7 +19,7 @@
 package org.apache.struts2.ognl;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;

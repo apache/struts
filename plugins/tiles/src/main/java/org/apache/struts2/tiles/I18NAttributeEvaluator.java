@@ -19,8 +19,8 @@
 package org.apache.struts2.tiles;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.TextProvider;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

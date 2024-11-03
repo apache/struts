@@ -19,7 +19,7 @@
 package org.apache.struts2.ognl;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.StubTextProvider;
+import org.apache.struts2.text.StubTextProvider;
 import org.apache.struts2.StubValueStack;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.ConfigurationException;

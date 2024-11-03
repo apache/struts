@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.LocalizedTextProvider;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractTagTest;

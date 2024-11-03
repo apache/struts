@@ -21,7 +21,7 @@ package org.apache.struts2.validator;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ValueStack;

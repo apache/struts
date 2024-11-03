@@ -20,6 +20,7 @@ package org.apache.struts2;
 
 import org.apache.struts2.config.providers.MockConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;

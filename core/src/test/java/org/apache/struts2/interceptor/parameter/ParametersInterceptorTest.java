@@ -25,7 +25,7 @@ import org.apache.struts2.ActionSupport;
 import org.apache.struts2.ModelDrivenAction;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.providers.MockConfigurationProvider;

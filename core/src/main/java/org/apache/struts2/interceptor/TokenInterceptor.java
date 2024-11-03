@@ -19,11 +19,9 @@
 package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.TextProvider;
-import org.apache.struts2.TextProviderFactory;
-import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.MethodFilterInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

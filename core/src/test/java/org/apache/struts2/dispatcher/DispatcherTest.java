@@ -19,7 +19,7 @@
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.LocalizedTextProvider;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.StubValueStack;
 import org.apache.struts2.config.ConfigurationException;

@@ -16,25 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
+
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.XWorkTestCase;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/**
- * <code>CompositeTextProviderTest</code>
- *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
- */
 public class CompositeTextProviderTest extends XWorkTestCase {
-
 
     private CompositeTextProvider textProvider = null;
 
-
-    public void testGetText() throws Exception {
+    public void testGetText() {
         // we should get the text from the 1st text provider
         assertEquals(textProvider.getText("name"), "1 name");
         assertEquals(textProvider.getText("age"), "1 age");
@@ -45,8 +40,7 @@ public class CompositeTextProviderTest extends XWorkTestCase {
         assertEquals(textProvider.getText("someNonExistingKey"), "someNonExistingKey");
     }
 
-
-    public void testGetTextWithDefaultValues() throws Exception {
+    public void testGetTextWithDefaultValues() {
         assertEquals(textProvider.getText("name", "some default name"), "1 name");
         assertEquals(textProvider.getText("age", "some default age"), "1 age");
         assertEquals(textProvider.getText("no_such_key", "default value"), "default value");
@@ -56,16 +50,24 @@ public class CompositeTextProviderTest extends XWorkTestCase {
         assertEquals(textProvider.getText("bike", "some default bike"), "This is a bike");
     }
 
-
-    public void testGetTextWithDefaultValuesAndArgs() throws Exception {
+    public void testGetTextWithDefaultValuesAndArgs() {
         assertEquals(textProvider.getText("goodnight", "say good night", "Adam"), "1 good night Adam");
-        assertEquals(textProvider.getText("goodnight", "say good night", new String[] { "Adam" }), "1 good night Adam");
-        assertEquals(textProvider.getText("goodnight", "say good night", new ArrayList<Object>() { {add("Adam");} }), "1 good night Adam");
-        assertEquals(textProvider.getText("goodmorning", "say good morning", new String[] { "Jack", "Jim" }), "1 good morning Jack and Jim");
-        assertEquals(textProvider.getText("goodmorning", "say good morning", new ArrayList<Object>() { { add("Jack"); add("Jim"); }}), "1 good morning Jack and Jim");
+        assertEquals(textProvider.getText("goodnight", "say good night", new String[]{"Adam"}), "1 good night Adam");
+        assertEquals(textProvider.getText("goodnight", "say good night", new ArrayList<>() {
+            {
+                add("Adam");
+            }
+        }), "1 good night Adam");
+        assertEquals(textProvider.getText("goodmorning", "say good morning", new String[]{"Jack", "Jim"}), "1 good morning Jack and Jim");
+        assertEquals(textProvider.getText("goodmorning", "say good morning", new ArrayList<>() {
+            {
+                add("Jack");
+                add("Jim");
+            }
+        }), "1 good morning Jack and Jim");
     }
 
-    public void testHasKey() throws Exception {
+    public void testHasKey() {
         assertTrue(textProvider.hasKey("name"));
         assertTrue(textProvider.hasKey("age"));
         assertTrue(textProvider.hasKey("cat"));
@@ -77,15 +79,15 @@ public class CompositeTextProviderTest extends XWorkTestCase {
         assertFalse(textProvider.hasKey("nosuchkey"));
     }
 
-    public void testGetResourceBundleByName() throws Exception {
+    public void testGetResourceBundleByName() {
         assertNotNull(textProvider.getTexts("org.apache.struts2.validator.CompositeTextProviderTestResourceBundle1"));
         assertNotNull(textProvider.getTexts("org.apache.struts2.validator.CompositeTextProviderTestResourceBundle2"));
         assertNull(textProvider.getTexts("org.apache.struts2.validator.CompositeTextProviderTestResourceBundle3"));
     }
 
-    public void testGetResourceBundle() throws Exception {
+    public void testGetResourceBundle() {
         assertNotNull(textProvider.getTexts());
-        // we should get the first resource bundle where 'car' and 'bike' has a i18n msg
+        // we should get the first resource bundle where 'car' and 'bike' has an i18n msg
         assertNotNull(textProvider.getTexts().getString("car"));
         assertNotNull(textProvider.getTexts().getString("bike"));
     }

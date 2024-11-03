@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.text;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.LocalizedTextProvider;
-import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -66,24 +67,18 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
-    /**
-     * Adds the bundle to the internal list of default bundles.
-     * If the bundle already exists in the list it will be re-added.
-     *
-     * @param resourceBundleName the name of the bundle to add.
-     */
     @Override
-    public void addDefaultResourceBundle(String resourceBundleName) {
+    public void addDefaultResourceBundle(String bundleName) {
         //make sure this doesn't get added more than once
         final ClassLoader ccl = getCurrentThreadContextClassLoader();
         synchronized (XWORK_MESSAGES_BUNDLE) {
             List<String> bundles = classLoaderMap.computeIfAbsent(ccl.hashCode(), k -> new CopyOnWriteArrayList<>());
-            bundles.remove(resourceBundleName);
-            bundles.add(0, resourceBundleName);
+            bundles.remove(bundleName);
+            bundles.add(0, bundleName);
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", resourceBundleName, ccl.toString());
+            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", bundleName, ccl.toString());
         }
     }
 
@@ -112,16 +107,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
     }
 
-    /**
-     * Returns a localized message for the specified key, aTextName.  Neither the key nor the
-     * message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @return a localized message based on the specified key, or null if no localized message can be found for it
-     */
     @Override
-    public String findDefaultText(String aTextName, Locale locale) {
+    public String findDefaultText(String textKey, Locale locale) {
         List<String> localList = getCurrentBundleNames();
 
         for (String bundleName : localList) {
@@ -129,7 +116,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             if (bundle != null) {
                 reloadBundles();
                 try {
-                    return bundle.getString(aTextName);
+                    return bundle.getString(textKey);
                 } catch (MissingResourceException e) {
                     // will be logged when not found in any bundle
                 }
@@ -137,26 +124,17 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         if (devMode) {
-            LOG.warn("Missing key [{}] in bundles [{}]!", aTextName, localList);
+            LOG.warn("Missing key [{}] in bundles [{}]!", textKey, localList);
         } else {
-            LOG.debug("Missing key [{}] in bundles [{}]!", aTextName, localList);
+            LOG.debug("Missing key [{}] in bundles [{}]!", textKey, localList);
         }
 
         return null;
     }
 
-    /**
-     * Returns a localized message for the specified key, aTextName, substituting variables from the
-     * array of params into the message.  Neither the key nor the message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @param params    an array of objects to be substituted into the message text
-     * @return A formatted message based on the specified key, or null if no localized message can be found for it
-     */
     @Override
-    public String findDefaultText(String aTextName, Locale locale, Object[] params) {
-        String defaultText = findDefaultText(aTextName, locale);
+    public String findDefaultText(String textKey, Locale locale, Object[] params) {
+        String defaultText = findDefaultText(textKey, locale);
         if (defaultText != null) {
             MessageFormat mf = buildMessageFormat(defaultText, locale);
             return formatWithNullDetection(mf, params);
@@ -164,51 +142,27 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         return null;
     }
 
-
-    /**
-     * <p>
-     * Finds a localized text message for the given key, aTextName, in the specified resource
-     * bundle.
-     * </p>
-     *
-     * <p>
-     * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
-     * will be treated as an OGNL expression and evaluated as such.
-     * </p>
-     *
-     * <p>
-     * If a message is <b>not</b> found a WARN log will be logged.
-     * </p>
-     *
-     * @param bundle         the bundle
-     * @param aTextName      the key
-     * @param locale         the locale
-     * @param defaultMessage the default message to use if no message was found in the bundle
-     * @param args           arguments for the message formatter.
-     * @param valueStack     the OGNL value stack.
-     * @return the localized text, or null if none can be found and no defaultMessage is provided
-     */
     @Override
-    public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
+    public String findText(ResourceBundle bundle, String textKey, Locale locale, String defaultMessage, Object[] args,
                            ValueStack valueStack) {
         try {
             reloadBundles(valueStack.getContext());
 
-            String message = TextParseUtil.translateVariables(bundle.getString(aTextName), valueStack);
+            String message = TextParseUtil.translateVariables(bundle.getString(textKey), valueStack);
             MessageFormat mf = buildMessageFormat(message, locale);
 
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException ex) {
             if (devMode) {
-                LOG.warn("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+                LOG.warn("Missing key [{}] in bundle [{}]!", textKey, bundle);
             } else {
-                LOG.debug("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+                LOG.debug("Missing key [{}] in bundle [{}]!", textKey, bundle);
             }
         }
 
-        GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
+        GetDefaultMessageReturnArg result = getDefaultMessage(textKey, locale, valueStack, args, defaultMessage);
         if (unableToFindTextForKey(result)) {
-            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", aTextName, locale);
+            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", textKey, locale);
         }
         return result != null ? result.message : null;
     }
@@ -224,11 +178,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Clear a specific bundle + locale combination from the <code>bundlesMap</code>.
-     *   Intended for descendants to use clear a bundle + locale combination.
+     * Intended for descendants to use clear a bundle + locale combination.
      *
      * @param bundleName The bundle (combined with locale) to remove from the bundle map
      * @param locale     Provides the locale to combine with the bundle to get the key
-     *
      * @since 6.0.0
      */
     protected void clearBundle(final String bundleName, Locale locale) {
@@ -239,13 +192,13 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Clears the <code>missingBundles</code> contents.  This allows descendants to
-     *   clear the <b>"missing bundles cache"</b> when desired (or needed).
-     *
+     * clear the <b>"missing bundles cache"</b> when desired (or needed).
+     * <p>
      * Note: This method may be used when the <code>bundlesMap</code> state has changed
-     *   in such a way that bundles that were previously "missing" may now be available
-     *   (e.g. after calling {@link #addDefaultResourceBundle(java.lang.String)} when the
-     *   {@link AbstractLocalizedTextProvider} has already been used for failed bundle
-     *   lookups of a given key, or some transitory state made a bundle lookup fail.
+     * in such a way that bundles that were previously "missing" may now be available
+     * (e.g. after calling {@link #addDefaultResourceBundle(java.lang.String)} when the
+     * {@link AbstractLocalizedTextProvider} has already been used for failed bundle
+     * lookups of a given key, or some transitory state made a bundle lookup fail.
      *
      * @since 6.0.0
      */
@@ -287,10 +240,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * A helper method for {@link ResourceBundle} bundle reload logic.
-     *
+     * <p>
      * Uses standard {@link ResourceBundle} methods to clear the bundle caches for the
      * {@link ClassLoader} instances that this class is aware of at the time of the call.
-     *
+     * <p>
      * The <code>clearCache()</code> methods have been available since Java 1.6, so
      * it is anticipated the logic will work on any subsequent JVM versions.
      *
@@ -301,27 +254,29 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         ResourceBundle.clearCache();     // Bundles loaded by the caller's classloader.
         ResourceBundle.clearCache(ccl);  // Bundles loaded by the context classloader (may be the same).
         // Clear the bundle cache for any non-null delegated classloaders.
-        delegatedClassLoaderMap.forEach( (key, value) -> { if (value != null) ResourceBundle.clearCache(value) ;} );
+        delegatedClassLoaderMap.forEach((key, value) -> {
+            if (value != null) ResourceBundle.clearCache(value);
+        });
     }
 
     /**
      * "Hacky" helper method that attempts to clear the Tomcat <code>ResourceEntry</code>
      * {@link Map} using knowledge of the Tomcat source code.
-     *
+     * <p>
      * It relies on the {@link #TOMCAT_RESOURCE_ENTRIES_FIELD} field name, base class name
      * {@link #TOMCAT_WEBAPP_CLASSLOADER_BASE}. and descendant class names {@link #TOMCAT_WEBAPP_CLASSLOADER},
      * {@link #TOMCAT_PARALLEL_WEBAPP_CLASSLOADER}, to keep the values identified in the constants.
      * It appears to be valid for Tomcat versions 7-10 so far, but could become invalid at any time in the future
      * when the resource handling logic in Tomcat changes.
-     *
+     * <p>
      * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware
-     *       its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
+     * its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
      */
     private void clearTomcatCache() {
         ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
-        Class cl = loader.getClass();
-        Class superCl = cl.getSuperclass();
+        Class<?> cl = loader.getClass();
+        Class<?> superCl = cl.getSuperclass();
 
         try {
             if ((TOMCAT_WEBAPP_CLASSLOADER.equals(cl.getName()) || TOMCAT_PARALLEL_WEBAPP_CLASSLOADER.equals(cl.getName())) &&
@@ -348,19 +303,19 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Helper method that is intended to clear a {@link Map} instance by name.
-     *
+     * <p>
      * This method relies on reflection to perform its operations, and may be blocked in Java 9 and later,
      * depending on the accessibility of the field.
      *
-     * @param cl The {@link Class} of the obj parameter.
-     * @param obj The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
+     * @param cl   The {@link Class} of the obj parameter.
+     * @param obj  The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
      * @param name The name of the field containing a {@link Map} reference.
-     * @throws NoSuchFieldException if a field accessed by this call does not exist.
-     * @throws IllegalAccessException if a field, method or or class accessed by this call cannot be accessed.
-     * @throws NoSuchMethodException if a method accessed by this call does not exist.
+     * @throws NoSuchFieldException      if a field accessed by this call does not exist.
+     * @throws IllegalAccessException    if a field, method or or class accessed by this call cannot be accessed.
+     * @throws NoSuchMethodException     if a method accessed by this call does not exist.
      * @throws InvocationTargetException if a method accessed by this call fails invocation.
      */
-    private void clearMap(Class cl, Object obj, String name)
+    private void clearMap(Class<?> cl, Object obj, String name)
             throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         Field field = cl.getDeclaredField(name);
@@ -372,7 +327,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         Object cache = field.get(obj);
 
         synchronized (cache) {
-            Class ccl = cache.getClass();
+            Class<?> ccl = cache.getClass();
             Method clearMethod = ccl.getMethod("clear");
             clearMethod.invoke(cache);
         }
@@ -416,7 +371,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * flow of the {@link LocalizedTextProvider} implementation the descendant provides).
      *
      * @param searchDefaultBundlesFirst provide {@link String} "true" or "false" to set the flag state accordingly.
-     *
      * @since 6.0.0
      */
     @Inject(value = StrutsConstants.STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST, required = false)
@@ -424,20 +378,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         this.searchDefaultBundlesFirst = Boolean.parseBoolean(searchDefaultBundlesFirst);
     }
 
-    /**
-     * Finds the given resource bundle by it's name.
-     * <p>
-     * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
-     * </p>
-     *
-     * @param aBundleName the name of the bundle (usually it's FQN classname).
-     * @param locale      the locale.
-     * @return the bundle, <tt>null</tt> if not found.
-     */
     @Override
-    public ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
+    public ResourceBundle findResourceBundle(String bundleName, Locale locale) {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
-        String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
+        String key = createMissesKey(String.valueOf(classLoader.hashCode()), bundleName, locale);
 
         if (missingBundles.contains(key)) {
             return null;
@@ -448,7 +392,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             if (bundlesMap.containsKey(key)) {
                 bundle = bundlesMap.get(key);
             } else {
-                bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
+                bundle = ResourceBundle.getBundle(bundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
             }
         } catch (MissingResourceException ex) {
@@ -457,15 +401,15 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                     if (bundlesMap.containsKey(key)) {
                         bundle = bundlesMap.get(key);
                     } else {
-                        bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
+                        bundle = ResourceBundle.getBundle(bundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
                     }
                 } catch (MissingResourceException e) {
-                    LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
+                    LOG.debug("Missing resource bundle [{}]!", bundleName, e);
                     missingBundles.add(key);
                 }
             } else {
-                LOG.debug("Missing resource bundle [{}]!", aBundleName);
+                LOG.debug("Missing resource bundle [{}]!", bundleName);
                 missingBundles.add(key);
             }
         }
@@ -503,7 +447,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @return the default message.
      */
     protected GetDefaultMessageReturnArg getDefaultMessage(String key, Locale locale, ValueStack valueStack, Object[] args,
-                                                                String defaultMessage) {
+                                                           String defaultMessage) {
         GetDefaultMessageReturnArg result = null;
         boolean found = true;
 
@@ -539,18 +483,18 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * general key would be passed in the alternateKey parameter.
      * </p>
      *
-     * @param key             the initial key to search for a value within the default resource bundles.
-     * @param alternateKey    the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
-     * @param locale          the {@link Locale} to be used for the default resource bundle lookup.
-     * @param valueStack      the {@link ValueStack} associated with the operation.
-     * @param args            the argument array for parameterized messages (may be <code>null</code>).
-     * @param defaultMessage  the default message {@link String} to use if both key lookup operations fail.
+     * @param key            the initial key to search for a value within the default resource bundles.
+     * @param alternateKey   the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
+     * @param locale         the {@link Locale} to be used for the default resource bundle lookup.
+     * @param valueStack     the {@link ValueStack} associated with the operation.
+     * @param args           the argument array for parameterized messages (may be <code>null</code>).
+     * @param defaultMessage the default message {@link String} to use if both key lookup operations fail.
      * @return the {@link GetDefaultMessageReturnArg} result containing the processed message lookup (by key first, then alternateKey if key's lookup fails).
-     *         If both key lookup operations fail, defaultMessage is used for processing.
-     *         If defaultMessage is <code>null</code> then the return result may be <code>null</code>.
+     * If both key lookup operations fail, defaultMessage is used for processing.
+     * If defaultMessage is <code>null</code> then the return result may be <code>null</code>.
      */
     protected GetDefaultMessageReturnArg getDefaultMessageWithAlternateKey(String key, String alternateKey, Locale locale, ValueStack valueStack,
-            Object[] args, String defaultMessage) {
+                                                                           Object[] args, String defaultMessage) {
         GetDefaultMessageReturnArg result;
         if (alternateKey == null || alternateKey.isEmpty()) {
             result = getDefaultMessage(key, locale, valueStack, args, defaultMessage);
@@ -593,8 +537,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      *
      * @return the message
      */
-    protected String findMessage(Class clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
-                                      ValueStack valueStack) {
+    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                                 ValueStack valueStack) {
         if (checked == null) {
             checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
@@ -617,9 +561,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // look in properties of implemented interfaces
-        Class[] interfaces = clazz.getInterfaces();
+        Class<?>[] interfaces = clazz.getInterfaces();
 
-        for (Class anInterface : interfaces) {
+        for (Class<?> anInterface : interfaces) {
             msg = getMessage(anInterface.getName(), locale, key, valueStack, args);
 
             if (msg != null) {
@@ -639,7 +583,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         if (clazz.isInterface()) {
             interfaces = clazz.getInterfaces();
 
-            for (Class anInterface : interfaces) {
+            for (Class<?> anInterface : interfaces) {
                 msg = findMessage(anInterface, key, indexedKey, locale, args, checked, valueStack);
 
                 if (msg != null) {
@@ -653,6 +597,36 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         return null;
+    }
+
+    protected String extractIndexedName(String textKey) {
+        String indexedTextName = null;
+        // calculate indexedTextName (collection[*]) if applicable
+        if (textKey.contains("[")) {
+            int i = -1;
+
+            indexedTextName = textKey;
+
+            while ((i = indexedTextName.indexOf('[', i + 1)) != -1) {
+                int j = indexedTextName.indexOf(']', i);
+                String a = indexedTextName.substring(0, i);
+                String b = indexedTextName.substring(j);
+                indexedTextName = a + "[*" + b;
+            }
+        }
+        return indexedTextName;
+    }
+
+    protected void logMissingText(Class<?> startClazz, String textKey, Locale locale, GetDefaultMessageReturnArg result, String indexedTextName) {
+        // could we find the text, if not log a WARN
+        if (unableToFindTextForKey(result) && LOG.isDebugEnabled()) {
+            String warn = "Unable to find text for key '" + textKey + "' ";
+            if (indexedTextName != null) {
+                warn += " or indexed key '" + indexedTextName + "' ";
+            }
+            warn += "in class '" + startClazz.getName() + "' and locale '" + locale + "'";
+            LOG.debug(warn);
+        }
     }
 
     static class MessageFormatKey {

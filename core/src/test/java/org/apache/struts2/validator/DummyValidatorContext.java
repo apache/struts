@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.validator;
 
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 
 import java.util.*;
 

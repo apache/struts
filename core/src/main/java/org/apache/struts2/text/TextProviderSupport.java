@@ -16,12 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
+import org.apache.struts2.LocaleProvider;
+import org.apache.struts2.LocaleProviderFactory;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Default TextProvider implementation.
@@ -31,7 +38,7 @@ import java.util.*;
  */
 public class TextProviderSupport implements ResourceBundleTextProvider {
 
-    protected Class clazz;
+    protected Class<?> clazz;
     protected LocaleProvider localeProvider;
     protected ResourceBundle bundle;
     protected LocalizedTextProvider localizedTextProvider;
@@ -42,7 +49,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param clazz    a clazz to use for reading the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(Class clazz, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
+    public TextProviderSupport(Class<?> clazz, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
         this.clazz = clazz;
         this.localeProvider = provider;
         this.localizedTextProvider = localizedTextProvider;
@@ -72,7 +79,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param clazz a clazz to use for reading the resource bundle.
      */
     @Override
-    public void setClazz(Class clazz) {
+    public void setClazz(Class<?> clazz) {
         this.clazz = clazz;
     }
 
@@ -103,13 +110,13 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * class.
      */
     public boolean hasKey(String key) {
-    	String message;
-    	if (clazz != null) {
-            message = localizedTextProvider.findText(clazz, key, getLocale(), null, new Object[0] );
+        String message;
+        if (clazz != null) {
+            message = localizedTextProvider.findText(clazz, key, getLocale(), null, new Object[0]);
         } else {
             message = localizedTextProvider.findText(bundle, key, getLocale(), null, new Object[0]);
         }
-    	return message != null;
+        return message != null;
     }
 
     /**
@@ -135,7 +142,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * a cascading style that allow global texts to be defined for an application base
      * class. If no text is found for this text name, the default value is returned.
      *
-     * @param key    name of text to be found
+     * @param key          name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
      * @return value of named text or the provided defaultValue if no value is found
      */
@@ -151,7 +158,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * a cascading style that allow global texts to be defined for an application base
      * class. If no text is found for this text name, the default value is returned.
      *
-     * @param key    name of text to be found
+     * @param key          name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
      * @return value of named text or the provided defaultValue if no value is found
      */
@@ -169,8 +176,8 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * a cascading style that allow global texts to be defined for an application base
      * class. If no text is found for this text name, the default value is returned.
      *
-     * @param key name of text to be found
-     * @param args      a List of args to be used in a MessageFormat message
+     * @param key  name of text to be found
+     * @param args a List of args to be used in a MessageFormat message
      * @return value of named text or the provided key if no value is found
      */
     public String getText(String key, List<?> args) {
@@ -185,8 +192,8 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * a cascading style that allow global texts to be defined for an application base
      * class. If no text is found for this text name, the default value is returned.
      *
-     * @param key name of text to be found
-     * @param args      an array of args to be used in a MessageFormat message
+     * @param key  name of text to be found
+     * @param args an array of args to be used in a MessageFormat message
      * @return value of named text or the provided key if no value is found
      */
     public String getText(String key, String[] args) {
@@ -201,7 +208,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * a cascading style that allow global texts to be defined for an application base
      * class. If no text is found for this text name, the default value is returned.
      *
-     * @param key    name of text to be found
+     * @param key          name of text to be found
      * @param defaultValue the default value which will be returned if no text is found
      * @param args         a List of args to be used in a MessageFormat message
      * @return value of named text or the provided defaultValue if no value is found
@@ -242,7 +249,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * default value is returned. Instead of using the value stack in the ActionContext
      * this version of the getText() method uses the provided value stack.
      *
-     * @param key    the resource bundle key that is to be searched for
+     * @param key          the resource bundle key that is to be searched for
      * @param defaultValue the default value which will be returned if no message is found
      * @param args         a list args to be used in a {@link java.text.MessageFormat} message
      * @param stack        the value stack to use for finding the text
@@ -251,10 +258,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         Object[] argsArray = ((args != null) ? args.toArray() : null);
         Locale locale;
-        if (stack == null){
-        	locale = getLocale();
-        }else{
-        	locale = stack.getActionContext().getLocale();
+        if (stack == null) {
+            locale = getLocale();
+        } else {
+            locale = stack.getActionContext().getLocale();
         }
         if (locale == null) {
             locale = getLocale();
@@ -265,7 +272,6 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
             return localizedTextProvider.findText(bundle, key, locale, defaultValue, argsArray, stack);
         }
     }
-
 
     /**
      * Gets a message based on a key using the supplied args, as defined in
@@ -280,21 +286,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @return the message as found in the resource bundle, or defaultValue if none is found
      */
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
-        Locale locale;
-        if (stack == null){
-        	locale = getLocale();
-        }else{
-        	locale = stack.getActionContext().getLocale();
-        }
-        if (locale == null) {
-            locale = getLocale();
-        }
-        if (clazz != null) {
-            return localizedTextProvider.findText(clazz, key, locale, defaultValue, args, stack);
-        } else {
-            return localizedTextProvider.findText(bundle, key, locale, defaultValue, args, stack);
-        }
-
+        return getText(key, defaultValue, args != null ? Arrays.stream(args).toList() : List.of(), stack);
     }
 
     /**

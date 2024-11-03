@@ -21,8 +21,7 @@ package org.apache.struts2.config;
 import java.util.Locale;
 
 import org.apache.struts2.XWorkTestCase;
-import org.apache.struts2.LocalizedTextProvider;
-import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.StrutsConstants;
 

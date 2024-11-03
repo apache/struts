@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
+import org.apache.struts2.LocaleProviderFactory;
 import org.apache.struts2.inject.Inject;
 
 import java.util.ResourceBundle;
@@ -49,7 +50,7 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
     }
 
     @Override
-    public TextProvider createInstance(Class clazz) {
+    public TextProvider createInstance(Class<?> clazz) {
         TextProvider instance = getTextProvider(clazz);
         if (instance instanceof ResourceBundleTextProvider) {
             ((ResourceBundleTextProvider) instance).setClazz(clazz);

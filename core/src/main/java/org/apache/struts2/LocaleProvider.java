@@ -23,15 +23,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 
-
 /**
  * Indicates that the implementing class can provide its own {@link Locale}.
  *
  * <p>
  * This is useful for when an action may wish override the default locale. All that is
  * needed is to implement this interface and return your own custom locale.
- * The {@link TextProvider} interface uses this interface heavily for retrieving
- * internationalized messages from resource bundles.
+ * The {@link org.apache.struts2.text.TextProvider} interface uses this interface
+ * heavily for retrieving internationalized messages from resource bundles.
  * </p>
  *
  * @author Jason Carreira

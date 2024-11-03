@@ -20,12 +20,10 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.LocaleProvider;
 import org.apache.struts2.LocaleProviderFactory;
-import org.apache.struts2.TextProvider;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.AbstractInterceptor;
-import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

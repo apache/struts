@@ -16,8 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.text;
 
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.Unchainable;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 

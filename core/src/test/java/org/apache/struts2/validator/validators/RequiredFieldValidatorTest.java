@@ -19,7 +19,7 @@
 package org.apache.struts2.validator.validators;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.validator.DummyValidatorContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.junit.Test;

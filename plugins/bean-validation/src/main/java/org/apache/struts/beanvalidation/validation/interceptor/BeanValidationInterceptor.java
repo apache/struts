@@ -21,7 +21,7 @@ package org.apache.struts.beanvalidation.validation.interceptor;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ModelDriven;
-import org.apache.struts2.TextProviderFactory;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptor;
 import org.apache.struts2.validator.DelegatingValidatorContext;

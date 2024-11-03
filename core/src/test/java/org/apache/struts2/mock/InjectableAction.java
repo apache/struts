@@ -18,7 +18,7 @@
  */
  package org.apache.struts2.mock;
 
-import org.apache.struts2.TextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.inject.Inject;
 
 public class InjectableAction {

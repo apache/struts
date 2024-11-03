@@ -21,8 +21,8 @@ package com.opensymphony.xwork2;
 /**
  * {@inheritDoc}
  *
- * @deprecated since 6.7.0, use {@link org.apache.struts2.Action} instead.
+ * @deprecated since 6.7.0, use {@link org.apache.struts2.action.Action} instead.
  */
 @Deprecated
-public interface Action extends org.apache.struts2.Action {
+public interface Action extends org.apache.struts2.action.Action {
 }

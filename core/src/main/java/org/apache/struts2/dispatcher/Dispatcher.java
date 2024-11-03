@@ -734,7 +734,7 @@ public class Dispatcher {
             // if the ActionMapping says to go straight to a result, do it!
             if (mapping.getResult() != null) {
                 Result result = mapping.getResult();
-                result.execute(proxy.getInvocation());
+                result.execute((org.apache.struts2.ActionInvocation) proxy.getInvocation());
             } else {
                 proxy.execute();
             }

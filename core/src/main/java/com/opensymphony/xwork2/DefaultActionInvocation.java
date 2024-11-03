@@ -257,7 +257,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                     resultCode = executeConditional((ConditionalInterceptor) interceptor);
                 } else {
                     LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
-                    resultCode = interceptor.intercept(this);
+                    resultCode = interceptor.intercept((org.apache.struts2.ActionInvocation) this);
                 }
             } else {
                 resultCode = invokeActionOnly();
@@ -298,9 +298,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {
-        if (conditionalInterceptor.shouldIntercept(this)) {
+        if (conditionalInterceptor.shouldIntercept((org.apache.struts2.ActionInvocation) this)) {
             LOG.debug("Executing conditional interceptor: {}", conditionalInterceptor.getClass().getSimpleName());
-            return conditionalInterceptor.intercept(this);
+            return conditionalInterceptor.intercept((org.apache.struts2.ActionInvocation) this);
         } else {
             LOG.debug("Interceptor: {} is disabled, skipping to next", conditionalInterceptor.getClass().getSimpleName());
             return this.invoke();
@@ -378,7 +378,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         result = createResult();
 
         if (result != null) {
-            result.execute(this);
+            result.execute((org.apache.struts2.ActionInvocation) this);
         } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
             throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
                 + " and result " + getResultCode(), proxy.getConfig());

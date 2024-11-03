@@ -207,7 +207,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
         if (this.result instanceof HttpHeaderResult) {
 
             // execute the result to apply headers and status in every representations
-            this.result.execute(this);
+            this.result.execute((org.apache.struts2.ActionInvocation) this);
             updateStatusFromResult();
         }
 
@@ -219,7 +219,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
             // Normal struts execution (html o other struts result)
             findResult();
             if (result != null) {
-                this.result.execute(this);
+                this.result.execute((org.apache.struts2.ActionInvocation) this);
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());

@@ -116,15 +116,15 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
      * Handles processing of invalid tokens.  If a previously stored invocation is
      * available, the method will attempt to return and render its result.  Otherwise
      * it will return INVALID_TOKEN_CODE.
-     * 
+     *
      * Note: Because a stored (previously completed) invocation's PageContext will be closed,
      *   this method must replace the stored PageContext with the current invocation's one (or a null).
      *   See {@link org.apache.struts2.util.InvocationSessionStore#loadInvocation(String key, String token)} for details.
-     * 
+     *
      * @param invocation
-     * 
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
@@ -154,7 +154,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
                 Result result = savedInvocation.getResult();
 
                 if ((result != null) && (savedInvocation.getProxy().getExecuteResult())) {
-                    result.execute(savedInvocation);
+                    result.execute((org.apache.struts2.ActionInvocation) savedInvocation);
                 }
 
                 // turn off execution of this invocations result
@@ -171,11 +171,11 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
      * Handles processing of valid tokens.  Stores the current invocation for
      * later use by {@see #handleValidToken(ActionInvocation)}.
      * See {@link org.apache.struts2.util.InvocationSessionStore#storeInvocation(String key, String token, ActionInvocation invocation)} for details.
-     * 
+     *
      * @param invocation
-     * 
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected String handleValidToken(ActionInvocation invocation) throws Exception {

@@ -378,7 +378,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         result = createResult();
 
         if (result != null) {
-            result.execute(this);
+            result.execute((org.apache.struts2.ActionInvocation) this);
         } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
             throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
                 + " and result " + getResultCode(), proxy.getConfig());

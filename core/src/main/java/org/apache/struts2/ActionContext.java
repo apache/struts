@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.PageContext;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.conversion.impl.ConversionData;
+import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.inject.Container;
@@ -316,6 +317,7 @@ public class ActionContext implements Serializable {
      */
     public ActionContext withParameters(HttpParameters parameters) {
         put(PARAMETERS, parameters);
+        put(DispatcherConstants.PARAMETERS, parameters);
         return this;
     }
 

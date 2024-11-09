@@ -851,7 +851,6 @@ public class Dispatcher {
             .with(DispatcherConstants.REQUEST, requestMap)
             .with(DispatcherConstants.SESSION, sessionMap)
             .with(DispatcherConstants.APPLICATION, applicationMap)
-            .with(DispatcherConstants.PARAMETERS, parameters)
             .getContextMap();
 
         AttributeMap attrMap = new AttributeMap(extraContext);

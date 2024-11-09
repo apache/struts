@@ -20,16 +20,19 @@ package org.apache.struts2.result;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.mock.MockActionInvocation;
-import org.apache.struts2.util.ValueStackFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.StrutsStatics;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.DispatcherConstants;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.util.ValueStackFactory;
+
+import java.util.Map;
 
 public class ServletDispatcherResultTest extends StrutsInternalTestCase implements StrutsStatics {
 
@@ -53,8 +56,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         try {
             view.execute(null);
         } catch (Exception e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         dispatcherMock.verify();
@@ -86,8 +88,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         try {
             view.execute(null);
         } catch (Exception e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         dispatcherMock.verify();
@@ -123,12 +124,17 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         try {
             view.execute(mockActionInvocation);
         } catch (Exception e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertTrue(mockActionInvocation.getInvocationContext().getParameters().contains("bar"));
         assertEquals("1", mockActionInvocation.getInvocationContext().getParameters().get("bar").getValue());
+
+        // See https://issues.apache.org/jira/browse/WW-5486
+        Map<String, Parameter> contextMap = (Map<String, Parameter>) mockActionInvocation.getInvocationContext().getContextMap().get(DispatcherConstants.PARAMETERS);
+        assertTrue(contextMap.containsKey("bar"));
+        assertEquals("1", contextMap.get("bar").getValue());
+
         dispatcherMock.verify();
         requestMock.verify();
         dispatcherMock.verify();

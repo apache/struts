@@ -34,7 +34,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
     private MockActionInvocation invocation;
     private ValueStack stack;
 
-    public void testForward() {
+    public void testForward() throws Exception {
         ServletDispatcherResult view = new ServletDispatcherResult();
         view.setLocation("foo.jsp");
 
@@ -44,16 +44,12 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         response.setCommitted(Boolean.FALSE);
 
-        try {
-            view.execute(invocation);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        view.execute(invocation);
 
         assertEquals("foo.jsp", response.getForwardedUrl());
     }
 
-    public void testInclude() {
+    public void testInclude() throws Exception {
         ServletDispatcherResult view = new ServletDispatcherResult();
         view.setLocation("foo.jsp");
 
@@ -61,24 +57,16 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         response.setCommitted(Boolean.TRUE);
         request.setRequestURI("foo.jsp");
 
-        try {
-            view.execute(invocation);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        view.execute(invocation);
 
         assertEquals("foo.jsp", response.getIncludedUrl());
     }
 
-    public void testWithParameter() {
+    public void testWithParameter() throws Exception {
         ServletDispatcherResult view = container.inject(ServletDispatcherResult.class);
         view.setLocation("foo.jsp?bar=1");
 
-        try {
-            view.execute(invocation);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        view.execute(invocation);
 
         assertTrue(invocation.getInvocationContext().getParameters().contains("bar"));
         assertEquals("1", invocation.getInvocationContext().getParameters().get("bar").getValue());

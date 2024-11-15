@@ -158,6 +158,13 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             //if we are inside an action tag, we always need to do an include
             boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
 
+            // this should allow integration with third-party view related frameworks
+            if (finalLocation.contains("?")) {
+                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation.substring(0, finalLocation.indexOf('?')));
+            } else {
+                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation);
+            }
+
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type

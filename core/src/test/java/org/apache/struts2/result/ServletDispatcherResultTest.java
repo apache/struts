@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.result;
 
+import jakarta.servlet.RequestDispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
@@ -47,6 +48,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getForwardedUrl());
+        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     public void testInclude() throws Exception {
@@ -60,6 +62,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getIncludedUrl());
+        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     public void testWithParameter() throws Exception {
@@ -73,6 +76,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         // See https://issues.apache.org/jira/browse/WW-5486
         assertEquals("1", stack.findString("#parameters.bar"));
+        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     @Override

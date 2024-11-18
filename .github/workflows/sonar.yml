@@ -31,7 +31,7 @@ jobs:
   sonarcloud:
     name: Scan
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.base.repo.fork || !github.event.pull_request.head.repo.fork }}
+    if: ${{ !github.event.pull_request.base.repo.fork || !github.event.pull_request.head.repo.fork || github.actor != 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v4
         with:

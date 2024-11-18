@@ -31,7 +31,7 @@ jobs:
   sonarcloud:
     name: Scan
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.head.repo.fork }}
+    if: ${{ !github.event.pull_request.base.repo.fork || !github.event.pull_request.head.repo.fork }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,9 +39,10 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
           cache: 'maven'
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
-        run: mvn -B -V -Pcoverage -DskipAssembly verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --no-transfer-progress
+        if: ${{ github.ref == 'master' || github.base_ref == 'master' }}
+        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=master -Pcoverage -DskipAssembly

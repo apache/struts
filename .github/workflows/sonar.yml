@@ -44,4 +44,5 @@ jobs:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
-        run: ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=master -Pcoverage -DskipAssembly --no-transfer-progress
+        if: ${{ github.ref == 'master' || github.base_ref == 'master' }}
+        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=master -Pcoverage -DskipAssembly

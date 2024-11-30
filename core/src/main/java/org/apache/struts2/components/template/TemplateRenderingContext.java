@@ -18,33 +18,33 @@
  */
 package org.apache.struts2.components.template;
 
+import org.apache.struts2.components.UIBean;
+import org.apache.struts2.util.ValueStack;
+
 import java.io.Writer;
 import java.util.Map;
-
-import org.apache.struts2.components.UIBean;
-
-import org.apache.struts2.util.ValueStack;
 
 /**
  * Context used when rendering templates.
  */
 public class TemplateRenderingContext {
-    Template template;
-    ValueStack stack;
-    Map parameters;
-    UIBean tag;
-    Writer writer;
+
+    private final Template template;
+    private final ValueStack stack;
+    private final Map<String, Object> parameters;
+    private final UIBean tag;
+    private final Writer writer;
 
     /**
      * Constructor
      *
-     * @param template  the template.
-     * @param writer    the writer.
-     * @param stack     OGNL value stack.
-     * @param params    parameters to this template.
-     * @param tag       the tag UI component.
+     * @param template the template.
+     * @param writer   the writer.
+     * @param stack    OGNL value stack.
+     * @param params   parameters to this template.
+     * @param tag      the tag UI component.
      */
-    public TemplateRenderingContext(Template template, Writer writer, ValueStack stack, Map params, UIBean tag) {
+    public TemplateRenderingContext(Template template, Writer writer, ValueStack stack, Map<String, Object> params, UIBean tag) {
         this.template = template;
         this.writer = writer;
         this.stack = stack;
@@ -60,7 +60,7 @@ public class TemplateRenderingContext {
         return stack;
     }
 
-    public Map getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 

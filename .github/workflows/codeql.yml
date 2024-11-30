@@ -18,8 +18,8 @@ name: "CodeQL"
 on:
   push:
     branches:
-      - master
-      - release/struts-7-0-x
+      - 'main'
+      - 'release/*'
   pull_request:
 
 permissions:

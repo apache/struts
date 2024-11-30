@@ -19,8 +19,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
-      - release/struts-7-0-x
+      - 'main'
 
 permissions: read-all
 
@@ -45,5 +44,6 @@ jobs:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
-        if: ${{ github.ref == 'master' || github.base_ref == 'master' }}
-        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=master -Pcoverage -DskipAssembly
+          MAIN_BRANCH: ${{ github.ref || github.base_ref || github.ref || github.base_ref }}
+        if: ${{ github.ref == 'main' || github.base_ref == 'main' }}
+        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${{ envs.MAIN_BRANCH }} -Pcoverage -DskipAssembly

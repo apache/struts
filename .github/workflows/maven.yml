@@ -19,8 +19,8 @@ on:
   pull_request:
   push:
     branches:
-      - master
-      - release/struts-7-0-x
+      - 'main'
+      - 'release/*'
 
 permissions: read-all
 

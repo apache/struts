@@ -22,7 +22,7 @@ package org.apache.struts2.views.jasperreports7;
 /**
  * <code>JasperReportConstants</code>
  */
-public interface JasperReportConstants {
+public interface JasperReport7Constants {
 
     /**
      * PDF format constant

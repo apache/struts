@@ -27,7 +27,7 @@
     <package name="jasperreports-default" extends="struts-default">
 
     	<result-types>
-    		<result-type name="jasperReport7" class="org.apache.struts2.views.jasperreports7.JasperReports7Result"/>
+    		<result-type name="jasperReport7" class="org.apache.struts2.views.jasperreports7.JasperReport7Result"/>
     	</result-types>
     </package>
 

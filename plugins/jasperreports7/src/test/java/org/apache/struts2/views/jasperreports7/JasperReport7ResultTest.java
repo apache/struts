@@ -42,11 +42,11 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class JasperReports7ResultTest extends StrutsTestCase {
+public class JasperReport7ResultTest extends StrutsTestCase {
 
     private MockActionInvocation invocation;
     private ValueStack stack;
-    private JasperReports7Result result;
+    private JasperReport7Result result;
 
     public void testConnClose() throws Exception {
         // given
@@ -200,7 +200,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_XML);
+        result.setFormat(JasperReport7Constants.FORMAT_XML);
 
         // when
         result.execute(this.invocation);
@@ -214,7 +214,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_CSV);
+        result.setFormat(JasperReport7Constants.FORMAT_CSV);
 
         // when
         result.execute(this.invocation);
@@ -228,7 +228,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_RTF);
+        result.setFormat(JasperReport7Constants.FORMAT_RTF);
 
         // when
         result.execute(this.invocation);
@@ -242,7 +242,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_PDF);
+        result.setFormat(JasperReport7Constants.FORMAT_PDF);
 
         // when
         result.execute(this.invocation);
@@ -256,7 +256,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_HTML);
+        result.setFormat(JasperReport7Constants.FORMAT_HTML);
 
         // when
         result.execute(this.invocation);
@@ -270,7 +270,7 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
         result.setReportParameters("#{'title':'Qux'}");
-        result.setFormat(JasperReportConstants.FORMAT_XLSX);
+        result.setFormat(JasperReport7Constants.FORMAT_XLSX);
 
         // when
         result.execute(this.invocation);
@@ -294,12 +294,12 @@ public class JasperReports7ResultTest extends StrutsTestCase {
         this.invocation.setInvocationContext(context);
         this.invocation.setStack(this.stack);
 
-        result = new JasperReports7Result();
+        result = new JasperReport7Result();
         container.inject(result);
         URL url = ClassLoaderUtil.getResource("org/apache/struts2/views/jasperreports7/simple.jrxml", this.getClass());
         JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
         result.setLocation("org/apache/struts2/views/jasperreports7/simple.jrxml.jasper");
-        result.setFormat(JasperReportConstants.FORMAT_XML);
+        result.setFormat(JasperReport7Constants.FORMAT_XML);
     }
 
     private static final List<Map<String, String>> JR_MAP_ARRAY_DATA_SOURCE = Stream.<Map<String, String>>of(

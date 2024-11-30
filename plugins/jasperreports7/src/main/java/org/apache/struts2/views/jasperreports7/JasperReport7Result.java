@@ -83,7 +83,7 @@ import java.util.TimeZone;
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for EL expressions.</li>
  * <li><b>format</b> - the format in which the report should be generated. Valid
- * values can be found in {@link JasperReportConstants}. If no format is
+ * values can be found in {@link JasperReport7Constants}. If no format is
  * specified, PDF will be used.</li>
  * <li><b>contentDisposition</b> - disposition (defaults to "inline", values are
  * typically <i>filename="document.pdf"</i>).</li>
@@ -135,13 +135,13 @@ import java.util.TimeZone;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  */
-public class JasperReports7Result extends StrutsResultSupport implements JasperReportConstants {
+public class JasperReport7Result extends StrutsResultSupport implements JasperReport7Constants {
 
-    private static final Logger LOG = LogManager.getLogger(JasperReports7Result.class);
+    private static final Logger LOG = LogManager.getLogger(JasperReport7Result.class);
 
-    protected String dataSource;
     private String parsedDataSource;
 
+    protected String dataSource;
     protected String format;
     protected String documentName;
     protected String contentDisposition;
@@ -167,7 +167,7 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
      */
     private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
 
-    public JasperReports7Result() {
+    public JasperReport7Result() {
         super();
     }
 
@@ -185,19 +185,6 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
-        // Handle IE special case: it sends a "contype" request first.
-        // TODO Set content type to config settings?
-        if ("contype".equals(request.getHeader("User-Agent"))) {
-            try (OutputStream outputStream = response.getOutputStream()) {
-                response.setContentType("application/pdf");
-                response.setContentLength(0);
-            } catch (IOException e) {
-                LOG.error("Error writing report output", e);
-                throw new ServletException(e.getMessage(), e);
-            }
-            return;
-        }
-
         // Construct the data source for the report.
         ValueStack stack = invocation.getStack();
         ValueStackDataSource stackDataSource = null;
@@ -214,12 +201,9 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
             }
         }
 
-        if ("https".equalsIgnoreCase(request.getScheme())) {
-            // set the HTTP Header to work around IE SSL weirdness
-            response.setHeader("CACHE-CONTROL", "PRIVATE");
-            response.setHeader("Cache-Control", "maxage=3600");
-            response.setHeader("Pragma", "public");
-            response.setHeader("Accept-Ranges", "none");
+        if (invocation.getAction() instanceof JasperReport7Aware action) {
+            LOG.debug("Passing control to action: {} before generating report", invocation.getInvocationContext().getActionName());
+            action.beforeReportGeneration(request, response);
         }
 
         ServletContext servletContext = invocation.getInvocationContext().getServletContext();
@@ -258,41 +242,20 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
             } else {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
             }
+
+            if (invocation.getAction() instanceof JasperReport7Aware action) {
+                LOG.debug("Passing control to action: {} after generating report: {}",
+                        invocation.getInvocationContext().getActionName(), jasperReport.getName());
+                action.afterReportGeneration(request, response, jasperReport);
+            }
         } catch (JRException e) {
             LOG.error("Error building report for uri {}", systemId, e);
             throw new ServletException(e.getMessage(), e);
         }
 
-        LOG.debug("Export the print object to the desired output format: {}", format);
         try {
-            if (contentDisposition != null || documentName != null) {
-                final StringBuilder tmp = new StringBuilder();
-                tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
-
-                if (documentName != null) {
-                    tmp.append("; filename=");
-                    tmp.append(documentName);
-                    tmp.append(".");
-                    tmp.append(format.toLowerCase());
-                }
-
-                response.setHeader("Content-disposition", tmp.toString());
-            }
-
-            Exporter<?, ?, ?, ?> exporter = switch (format) {
-                case FORMAT_PDF -> createPdfExporter(response, jasperPrint);
-                case FORMAT_CSV -> createCsvExporter(response, jasperPrint);
-                case FORMAT_HTML -> createHtmlExporter(request, response, jasperPrint);
-                case FORMAT_XLSX -> createXlsExporter(response, jasperPrint);
-                case FORMAT_XML -> createXmlExporter(response, jasperPrint);
-                case FORMAT_RTF -> createRtfExporter(response, jasperPrint);
-                default -> throw new ServletException("Unknown report format: " + format);
-            };
-
-            LOG.debug("Exporting report: {} as: {} and flushing response stream", jasperPrint.getName(), format);
-            exporter.exportReport();
-
-            response.getOutputStream().flush();
+            LOG.debug("Export the print object to the desired output format: {}", format);
+            exportReport(request, response, jasperPrint);
         } catch (JRException e) {
             LOG.error("Error producing {} report for uri {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
@@ -306,6 +269,38 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
                 LOG.warn("Could not close db connection properly", e);
             }
         }
+    }
+
+    protected void exportReport(HttpServletRequest request, HttpServletResponse response, JasperPrint jasperPrint)
+            throws ServletException, JRException, IOException {
+        if (contentDisposition != null || documentName != null) {
+            final StringBuilder tmp = new StringBuilder();
+            tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
+
+            if (documentName != null) {
+                tmp.append("; filename=");
+                tmp.append(documentName);
+                tmp.append(".");
+                tmp.append(format.toLowerCase());
+            }
+
+            response.setHeader("Content-disposition", tmp.toString());
+        }
+
+        Exporter<?, ?, ?, ?> exporter = switch (format) {
+            case FORMAT_PDF -> createPdfExporter(response, jasperPrint);
+            case FORMAT_CSV -> createCsvExporter(response, jasperPrint);
+            case FORMAT_HTML -> createHtmlExporter(request, response, jasperPrint);
+            case FORMAT_XLSX -> createXlsExporter(response, jasperPrint);
+            case FORMAT_XML -> createXmlExporter(response, jasperPrint);
+            case FORMAT_RTF -> createRtfExporter(response, jasperPrint);
+            default -> throw new ServletException("Unknown report format: " + format);
+        };
+
+        LOG.debug("Exporting report: {} as: {} and flushing response stream", jasperPrint.getName(), format);
+        exporter.exportReport();
+
+        response.getOutputStream().flush();
     }
 
     protected JRPdfExporter createPdfExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
@@ -476,11 +471,6 @@ public class JasperReports7Result extends StrutsResultSupport implements JasperR
 
         return false;
     }
-
-
-    /**
-     * SETTERS
-     **/
 
     public void setImageServletUrl(final String imageServletUrl) {
         this.imageServletUrl = imageServletUrl;

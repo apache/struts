@@ -67,7 +67,7 @@ public @interface Result {
      * @return  The name of the result mapping. This is the value that is returned from the action
      *          method and is used to associate a location with a return value.
      */
-    String[] name() default com.opensymphony.xwork2.Action.SUCCESS;
+    String[] name() default org.apache.struts2.action.Action.SUCCESS;
 
     /**
      * @return  The location of the result within the web application or anywhere on disk. This location

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.components.ListUIBean;
 import org.apache.struts2.components.OptGroup;
 import org.apache.struts2.util.ContainUtil;

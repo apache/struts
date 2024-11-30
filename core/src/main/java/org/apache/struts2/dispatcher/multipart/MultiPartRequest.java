@@ -18,14 +18,13 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.dispatcher.LocalizedMessage;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
+
+import org.apache.struts2.dispatcher.LocalizedMessage;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <p>Abstract wrapper class HTTP requests to handle multi-part data. </p>
@@ -33,7 +32,7 @@ import java.util.List;
 public interface MultiPartRequest {
 
     void parse(HttpServletRequest request, String saveDir) throws IOException;
-    
+
     /**
      * Returns an enumeration of the parameter names for uploaded files
      *
@@ -96,6 +95,7 @@ public interface MultiPartRequest {
     /**
      * Returns a list of all parameter values associated with a parameter name. If there is only
      * one parameter value per name the resulting array will be of length 1.
+     * If the parameter doesn't exist, null should be returned instead of empty array.
      *
      * @param name the name of the parameter.
      * @return an array of all values associated with the parameter name.
@@ -105,7 +105,7 @@ public interface MultiPartRequest {
     /**
      * Returns a list of error messages that may have occurred while processing the request.
      * If there are no errors, an empty list is returned. If the underlying implementation
-     * (ie: pell, cos, jakarta, etc) cannot support providing these errors, an empty list is
+     * (ie: cos, jakarta, etc) cannot support providing these errors, an empty list is
      * also returned. This list of errors is reported back to the
      * {@link MultiPartRequestWrapper}'s errors field.
      *

@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 
 import static org.apache.commons.lang3.BooleanUtils.isTrue;
 
@@ -71,8 +71,8 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
             throw new NullPointerException("You must specify a key value");
         }
 
-        if (disableRequestAttributeValueStackLookup || key.startsWith("javax.servlet")) {
-            // don't bother with the standard javax.servlet attributes, we can short-circuit this
+        if (disableRequestAttributeValueStackLookup || key.startsWith("jakarta.servlet")) {
+            // don't bother with the standard jakarta.servlet attributes, we can short-circuit this
             // see WW-953 and the forums post linked in that issue for more info
             return super.getAttribute(key);
         }

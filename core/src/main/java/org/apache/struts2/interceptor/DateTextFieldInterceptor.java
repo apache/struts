@@ -18,23 +18,26 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class DateTextFieldInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
 
-    public static enum DateWord {
+    public enum DateWord {
 
 		S("millisecond", 3, "SSS"),
 		s("second", 2, "ss"),
@@ -44,9 +47,9 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
 		M("month", 2, "MM"),
 		y("year", 4, "yyyy");
 
-		private String description;
-		private Integer length;
-		private String dateType;
+		private final String description;
+		private final Integer length;
+		private final String dateType;
 
         DateWord(String n, Integer l, String t) {
             description = n;
@@ -78,7 +81,7 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation ai) throws Exception {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Map<String, String>> dates = new HashMap<>();
-        
+
         DateWord[] dateWords = DateWord.getAll();
 
         // Get all the values of date type
@@ -93,11 +96,7 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
                     Parameter param = parameters.get(name);
 
                     if (param.isDefined()) {
-                        Map<String, String> map = dates.get(key);
-                        if (map == null) {
-                            map = new HashMap<>();
-                            dates.put(key, map);
-                        }
+                        Map<String, String> map = dates.computeIfAbsent(key, k -> new HashMap<>());
                         map.put(dateWord.getDateType(), param.getValue());
 
                         parameters = parameters.remove(name);
@@ -112,19 +111,20 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
         Set<Entry<String, Map<String, String>>> dateEntries = dates.entrySet();
         for (Entry<String, Map<String, String>> dateEntry : dateEntries) {
         	Set<Entry<String, String>> dateFormatEntries = dateEntry.getValue().entrySet();
-        	String dateFormat = "";
-        	String dateValue = "";
+        	StringBuilder dateFormat = new StringBuilder();
+        	StringBuilder dateValue = new StringBuilder();
         	for (Entry<String, String> dateFormatEntry : dateFormatEntries) {
-        		dateFormat += dateFormatEntry.getKey() + "__";
-        		dateValue += dateFormatEntry.getValue() + "__";
+        		dateFormat.append(dateFormatEntry.getKey()).append("__");
+        		dateValue.append(dateFormatEntry.getValue()).append("__");
         	}
             try {
-            	SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+            	SimpleDateFormat formatter = new SimpleDateFormat(dateFormat.toString());
             	formatter.setLenient(false);
-                Date value = formatter.parse(dateValue);
+                Date value = formatter.parse(dateValue.toString());
                 newParams.put(dateEntry.getKey(), new Parameter.Request(dateEntry.getKey(), value));
             } catch (ParseException e) {
-                LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(), dateFormat, dateValue);
+                LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(),
+                        dateFormat.toString(), dateValue.toString());
             }
         }
 

@@ -24,7 +24,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.util.ListEntry;
 import org.apache.struts2.util.StrutsUtil;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 
 import freemarker.ext.beans.CollectionModel;
 import freemarker.template.ObjectWrapper;

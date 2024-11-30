@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;

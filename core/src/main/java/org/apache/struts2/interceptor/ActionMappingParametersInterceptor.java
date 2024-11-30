@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -55,7 +55,7 @@ import java.util.Map;
  * <p>
  * The best way to add behavior to this interceptor is to utilize the {@link ParameterNameAware} interface in your
  * actions. However, if you wish to apply a global rule that isn't implemented in your action, then you could extend
- * this interceptor and override the {@link #acceptableName(String)} method.
+ * this interceptor and override the {@link #isAcceptableName(String)} method.
  * </p>
  *
  * <!-- END SNIPPET: extending -->
@@ -83,9 +83,9 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
     protected HttpParameters retrieveParameters(ActionContext actionContext) {
         ActionMapping mapping = actionContext.getActionMapping();
         if (mapping != null) {
-            return HttpParameters.create(mapping.getParams()).buildNoNestedWrapping();
+            return HttpParameters.create(mapping.getParams()).build();
         } else {
-            return HttpParameters.create().buildNoNestedWrapping();
+            return HttpParameters.create().build();
         }
     }
 
@@ -101,7 +101,6 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
         HttpParameters previousParams = ac.getParameters();
         HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(newParams);
-
-        ac.withParameters(combinedParams.buildNoNestedWrapping());
+        ac.withParameters(combinedParams.build());
     }
 }

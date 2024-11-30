@@ -1,4 +1,4 @@
-# Struts 2 Direct Web Remoting (DWR) plugin
+# Jasper Reports plugin
 This plugin allows to use Jasper reports as a one of the result types.
 You will find more details in [documentation](https://struts.apache.org/plugins/jasperreports/).
 

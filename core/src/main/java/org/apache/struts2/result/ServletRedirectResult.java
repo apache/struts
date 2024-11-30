@@ -18,12 +18,14 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.reflection.ReflectionException;
+import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -31,19 +33,17 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.url.QueryStringBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_FOUND;
+import static jakarta.servlet.http.HttpServletResponse.SC_FOUND;
 
 /**
  * Calls the {@link HttpServletResponse#sendRedirect(String) sendRedirect}
@@ -83,6 +83,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  */
 public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler, Redirectable {
 
+    @Serial
     private static final long serialVersionUID = 6316947346435301270L;
 
     private static final Logger LOG = LogManager.getLogger(ServletRedirectResult.class);
@@ -174,7 +175,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                     namespace = mapping.getNamespace();
                 }
 
-                if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {
+                if (namespace != null && !namespace.isEmpty() && !"/".equals(namespace)) {
                     finalLocation = namespace + "/" + finalLocation;
                 } else {
                     finalLocation = "/" + finalLocation;
@@ -182,7 +183,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
             }
 
             // if the URL's are relative to the servlet context, append the servlet context path
-            if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
+            if (prependServletContext && request.getContextPath() != null && !request.getContextPath().isEmpty()) {
                 finalLocation = request.getContextPath() + finalLocation;
             }
         }
@@ -217,7 +218,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     protected List<String> getProhibitedResultParams() {
-        return Arrays.asList(
+        return List.of(
             DEFAULT_PARAM,
             "namespace",
             "method",

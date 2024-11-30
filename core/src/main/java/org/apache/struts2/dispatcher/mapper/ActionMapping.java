@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.Result;
+import org.apache.struts2.result.Result;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +108,7 @@ public class ActionMapping {
     public Result getResult() {
         return result;
     }
-    
+
     /**
      * @return The extension used during this request
      */
@@ -150,7 +150,7 @@ public class ActionMapping {
     public void setParams(Map<String, Object> params) {
         this.params = params;
     }
-    
+
     /**
      * @param extension The extension used in the request
      */

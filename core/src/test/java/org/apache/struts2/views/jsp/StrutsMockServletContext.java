@@ -28,16 +28,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 
 /**
@@ -301,5 +302,40 @@ public class StrutsMockServletContext implements ServletContext {
     @Override
     public String getVirtualServerName() {
         return null;
+    }
+
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
+        return null;
+    }
+
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
+
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
+        // no-op
+    }
+
+    @Override
+    public String getRequestCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
+        // no-op
+    }
+
+    @Override
+    public String getResponseCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+        // no-op
     }
 }

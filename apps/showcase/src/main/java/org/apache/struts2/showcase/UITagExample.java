@@ -20,9 +20,9 @@
  */
 package org.apache.struts2.showcase;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Validateable;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.Validateable;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 

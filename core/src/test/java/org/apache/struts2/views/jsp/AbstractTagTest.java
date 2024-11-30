@@ -19,14 +19,14 @@
 package org.apache.struts2.views.jsp;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -37,8 +37,8 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspWriter;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.Map;
@@ -95,7 +95,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         response = new StrutsMockHttpServletResponse();
         request.setSession(new StrutsMockHttpSession());
-        request.setupGetServletPath("/");
+        request.setServletPath("/");
 
         writer = new StringWriter();
 
@@ -104,11 +104,8 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
-        pageContext = new StrutsMockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setResponse(response);
+        pageContext = new StrutsMockPageContext(servletContext, request, response);
         pageContext.setJspWriter(jspWriter);
-        pageContext.setServletContext(servletContext);
 
         mockContainer = new Mock(Container.class);
         Dispatcher du = new Dispatcher(pageContext.getServletContext(), emptyMap());
@@ -160,8 +157,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        pageContext.verify();
-        request.verify();
         action = null;
         context = null;
         session = null;

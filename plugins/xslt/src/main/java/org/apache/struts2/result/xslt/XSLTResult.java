@@ -18,18 +18,18 @@
  */
 package org.apache.struts2.result.xslt;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.XMLConstants;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.OutputKeys;

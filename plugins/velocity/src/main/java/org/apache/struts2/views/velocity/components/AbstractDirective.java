@@ -18,8 +18,14 @@
  */
 package org.apache.struts2.views.velocity.components;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.util.ValueStackProvider;
@@ -34,12 +40,8 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.util.ValueStack;
 
 public abstract class AbstractDirective extends Directive {
     public String getName() {
@@ -71,7 +73,7 @@ public abstract class AbstractDirective extends Directive {
         container.inject(bean);
         // get the parameters
         Map params = createPropertyMap(ctx, node);
-        bean.copyParams(params);
+        bean.copyAttributes(params);
         //bean.addAllParameters(params);
         bean.start(writer);
 

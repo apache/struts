@@ -31,7 +31,7 @@ public class TabbedPane {
 
     // Attributes ----------------------------------------------------
     protected Vector content = null;
-    protected int selectedIndex = 0;
+    protected int selectedIndex;
 
 
     // Public --------------------------------------------------------

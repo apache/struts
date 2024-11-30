@@ -18,19 +18,19 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.ProxyUtil;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.Unchainable;
-import org.apache.struts2.result.ActionChainResult;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.result.Result;
+import org.apache.struts2.util.CompoundRoot;
+import org.apache.struts2.util.ProxyUtil;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +47,7 @@ import java.util.Map;
  * except for any object that implements {@link Unchainable}. A collection of optional <i>includes</i> and
  * <i>excludes</i> may be provided to control how and which parameters are copied. Only includes or excludes may be
  * specified. Specifying both results in undefined behavior. See the javadocs for {@link ReflectionProvider#copy(Object, Object,
- * Map, Collection, Collection)} for more information.
+ * java.util.Map, java.util.Collection, java.util.Collection)} for more information.
  * </p>
  *
  * <p>
@@ -185,7 +185,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Collection<String> localExcludes = excludes;
         if (!copyErrors || !copyMessages ||!copyFieldErrors) {
             if (localExcludes == null) {
-                localExcludes = new HashSet<String>();
+                localExcludes = new HashSet<>();
                 if (!copyErrors) {
                     localExcludes.add(ACTION_ERRORS);
                 }
@@ -261,7 +261,6 @@ public class ChainingInterceptor extends AbstractInterceptor {
     public void setIncludes(String includes) {
         this.includes = TextParseUtil.commaDelimitedStringToSet(includes);
     }
-
 
     /**
      * Sets the list of parameter names to include when copying (all others will be excluded).

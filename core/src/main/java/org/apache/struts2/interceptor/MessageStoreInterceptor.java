@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.result.ServletRedirectResult;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -56,7 +57,7 @@ import java.util.Map;
  * <p>
  * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors
  * and field errors and put them back into the {@link ValidationAware} action, and after Action execution,
- * if the {@link com.opensymphony.xwork2.Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
+ * if the {@link Result} is an instance of {@link ServletRedirectResult}, the action's message / errors
  * and field errors into automatically be stored in the HTTP session..
  * </p>
  *
@@ -150,6 +151,7 @@ import java.util.Map;
  */
 public class MessageStoreInterceptor extends AbstractInterceptor {
 
+    @Serial
     private static final long serialVersionUID = 9161650888603380164L;
 
     private static final Logger LOG = LogManager.getLogger(MessageStoreInterceptor.class);
@@ -191,6 +193,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
         return this.operationMode;
     }
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         LOG.trace("entering MessageStoreInterceptor ...");
 
@@ -228,7 +231,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                 AUTOMATIC_MODE.equalsIgnoreCase(operationMode)) {
 
             Object action = invocation.getAction();
-            if (action instanceof ValidationAware) {
+            if (action instanceof ValidationAware validationAwareAction) {
                 // retrieve error / message from session
                 Map<String, Object> session = invocation.getInvocationContext().getSession();
 
@@ -237,25 +240,23 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
                     return;
                 }
 
-                ValidationAware validationAwareAction = (ValidationAware) action;
-
                 LOG.debug("Retrieve error / message from session to populate into action [{}]", action);
 
                 Collection actionErrors = (Collection) session.get(actionErrorsSessionKey);
                 Collection actionMessages = (Collection) session.get(actionMessagesSessionKey);
                 Map fieldErrors = (Map) session.get(fieldErrorsSessionKey);
 
-                if (actionErrors != null && actionErrors.size() > 0) {
+                if (actionErrors != null && !actionErrors.isEmpty()) {
                     Collection mergedActionErrors = mergeCollection(validationAwareAction.getActionErrors(), actionErrors);
                     validationAwareAction.setActionErrors(mergedActionErrors);
                 }
 
-                if (actionMessages != null && actionMessages.size() > 0) {
+                if (actionMessages != null && !actionMessages.isEmpty()) {
                     Collection mergedActionMessages = mergeCollection(validationAwareAction.getActionMessages(), actionMessages);
                     validationAwareAction.setActionMessages(mergedActionMessages);
                 }
 
-                if (fieldErrors != null && fieldErrors.size() > 0) {
+                if (fieldErrors != null && !fieldErrors.isEmpty()) {
                     Map mergedFieldErrors = mergeMap(validationAwareAction.getFieldErrors(), fieldErrors);
                     validationAwareAction.setFieldErrors(mergedFieldErrors);
                 }

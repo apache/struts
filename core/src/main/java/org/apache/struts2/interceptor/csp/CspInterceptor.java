@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.interceptor.csp;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.util.ClassLoaderUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.CspSettingsAware;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Optional;
 
@@ -115,7 +115,7 @@ public final class CspInterceptor extends AbstractInterceptor {
 
     public void setReportUri(String reportUri) {
         Optional<URI> uri = buildUri(reportUri);
-        if (!uri.isPresent()) {
+        if (uri.isEmpty()) {
             throw new IllegalArgumentException("Could not parse configured report URI for CSP interceptor: " + reportUri);
         }
 

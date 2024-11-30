@@ -18,19 +18,20 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.OptionTransferSelect;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * OptionTransferSelect jsp tag.
  */
 public class OptionTransferSelectTag extends AbstractDoubleListTag {
 
+    @Serial
     private static final long serialVersionUID = 250474334495763536L;
 
     protected String allowAddToLeft;
@@ -345,17 +346,17 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
         return this.selectAllOnclick;
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

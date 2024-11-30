@@ -20,14 +20,13 @@ package org.apache.struts2.config;
 
 import java.util.Locale;
 
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.util.location.LocatableProperties;
 
 public class StrutsBeanSelectionProviderTest extends XWorkTestCase {
 
@@ -35,7 +34,7 @@ public class StrutsBeanSelectionProviderTest extends XWorkTestCase {
         LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
         assertEquals("The form has already been processed or no token was supplied, please try again.", localizedTextProvider.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
-        
+
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {

@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +35,8 @@ import org.apache.struts2.json.rpc.RPCError;
 import org.apache.struts2.json.rpc.RPCErrorCode;
 import org.apache.struts2.json.rpc.RPCResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -304,7 +304,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Look for a method in clazz carrying the SMDMethod annotation with
      * matching name and parametersCount
-     * 
+     *
      * @return true if matches name and parameterCount
      */
     private boolean checkSMDMethodSignature(Method method, String name, int parameterCount) {
@@ -351,7 +351,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Wrap generated JSON with comments. Only used if SMD is enabled.
-     * 
+     *
      * @param wrapWithComments Wrap generated JSON with comments.
      */
     public void setWrapWithComments(boolean wrapWithComments) {
@@ -372,7 +372,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Sets the root object to be deserialized, defaults to the Action
-     * 
+     *
      * @param root
      *            OGNL expression of root object to be serialized
      */
@@ -382,7 +382,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Sets the JSONPopulator to be used
-     * 
+     *
      * @param populator
      *            JSONPopulator
      */
@@ -392,7 +392,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Sets the JSONCleaner to be used
-     * 
+     *
      * @param dataCleaner
      *            JSONCleaner
      */
@@ -410,7 +410,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Turns debugging on or off
-     * 
+     *
      * @param debug
      *            true or false
      */
@@ -426,7 +426,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Sets a comma-delimited list of regular expressions to match properties
      * that should be excluded from the JSON output.
-     * 
+     *
      * @param commaDelim
      *            A comma-delimited list of regular expressions
      */
@@ -443,7 +443,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Sets a comma-delimited list of wildcard expressions to match
      * properties that should be excluded from the JSON output.
-     * 
+     *
      * @param commaDelim
      *            A comma-delimited list of wildcard expressions
      */
@@ -460,7 +460,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     /**
      * Sets a comma-delimited list of regular expressions to match properties
      * that should be included from the JSON output.
-     * 
+     *
      * @param commaDelim
      *            A comma-delimited list of regular expressions
      */
@@ -474,7 +474,7 @@ public class JSONInterceptor extends AbstractInterceptor {
      * standard boilerplate (id, error, debug) are automatically included,
      * as appropriate, so you only need to provide patterns for the
      * contents of "result".
-     * 
+     *
      * @param commaDelim
      *            A comma-delimited list of wildcard expressions
      */
@@ -510,7 +510,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Setting this property to "true" will compress the output.
-     * 
+     *
      * @param enableGZIP
      *            Enable compressed output
      */
@@ -524,7 +524,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     /**
      * Add headers to response to prevent the browser from caching the response
-     * 
+     *
      * @param noCache no cache
      */
     public void setNoCache(boolean noCache) {

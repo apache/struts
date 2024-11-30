@@ -18,13 +18,16 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.PageContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -33,14 +36,10 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
@@ -146,12 +145,6 @@ public class ActionComponent extends ContextBean {
         this.valueStackFactory = valueStackFactory;
     }
 
-    @Inject
-    @Override
-    public void setActionMapper(ActionMapper mapper) {
-        this.actionMapper = mapper;
-    }
-
     @Override
     public boolean end(Writer writer, String body) {
         boolean end = super.end(writer, "", false);
@@ -201,10 +194,10 @@ public class ActionComponent extends ContextBean {
     }
 
     /**
-     * Creates parameters map using parameters from the value stack and component parameters.  Any non-String array
-     * values will be converted into a single-value String array.
+     * Creates {@link HttpParameters} using parameters from the value stack and component attributes.
+     * Any non-String array values will be converted into a single-value String array.
      *
-     * @return A map of String[] parameters
+     * @return Instance of {@link HttpParameters}
      */
     protected HttpParameters createParametersForContext() {
         HttpParameters parentParams = null;

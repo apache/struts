@@ -18,16 +18,18 @@
  */
 package org.apache.struts2;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.mockobjects.servlet.MockHttpServletResponse;
-import com.mockobjects.servlet.MockServletContext;
-import com.opensymphony.xwork2.ActionContext;
-import junit.framework.TestCase;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+
+import org.apache.struts2.ActionContext;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import junit.framework.TestCase;
 
 
 /**

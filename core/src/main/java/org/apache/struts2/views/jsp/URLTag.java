@@ -18,19 +18,20 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.URL;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * @see URL
  */
 public class URLTag extends ContextBeanTag {
 
+    @Serial
     private static final long serialVersionUID = 1722460444125206226L;
 
     protected String includeParams;
@@ -70,16 +71,16 @@ public class URLTag extends ContextBeanTag {
         url.setAnchor(anchor);
 
         if (encode != null) {
-            url.setEncode(Boolean.valueOf(encode).booleanValue());
+            url.setEncode(Boolean.parseBoolean(encode));
         }
         if (includeContext != null) {
-            url.setIncludeContext(Boolean.valueOf(includeContext).booleanValue());
+            url.setIncludeContext(Boolean.parseBoolean(includeContext));
         }
         if (escapeAmp != null) {
-            url.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
+            url.setEscapeAmp(Boolean.parseBoolean(escapeAmp));
         }
 	    if (forceAddSchemeHostAndPort != null) {
-            url.setForceAddSchemeHostAndPort(Boolean.valueOf(forceAddSchemeHostAndPort).booleanValue());
+            url.setForceAddSchemeHostAndPort(Boolean.parseBoolean(forceAddSchemeHostAndPort));
         }
     }
 
@@ -90,7 +91,7 @@ public class URLTag extends ContextBeanTag {
     public void setIncludeContext(String includeContext) {
         this.includeContext = includeContext;
     }
-    
+
     public void setEscapeAmp(String escapeAmp) {
         this.escapeAmp = escapeAmp;
     }
@@ -139,17 +140,17 @@ public class URLTag extends ContextBeanTag {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

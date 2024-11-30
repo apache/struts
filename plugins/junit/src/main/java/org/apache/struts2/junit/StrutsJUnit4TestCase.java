@@ -18,19 +18,23 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.interceptor.annotations.After;
-import com.opensymphony.xwork2.interceptor.annotations.Before;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.interceptor.annotations.After;
+import org.apache.struts2.interceptor.annotations.Before;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -39,10 +43,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -130,7 +130,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
 
-        ServletActionContext.getContext().put(ServletActionContext.ACTION_MAPPING, mapping);
+        ServletActionContext.getActionContext().put(ServletActionContext.ACTION_MAPPING, mapping);
 
         return proxy;
     }

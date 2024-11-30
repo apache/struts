@@ -18,20 +18,22 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.PrintWriter;
+import java.io.Serial;
 
 /**
  * Contains common functionalities for Struts JSP Tags.
  */
 public class StrutsBodyTagSupport extends BodyTagSupport {
 
+    @Serial
     private static final long serialVersionUID = -1201668454354226175L;
 
     private boolean performClearTagStateForTagPoolingServers = false;
@@ -97,7 +99,7 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
         // The performClearTagStateForTagPoolingServers flag state is preserved for consistency, in case
         // release() is called by framework code.
         final boolean originalPerformClearTagState = getPerformClearTagStateForTagPoolingServers();
-        if (originalPerformClearTagState == true) {
+        if (originalPerformClearTagState) {
             clearTagStateForTagPoolingServers();
         } else {
             setPerformClearTagStateForTagPoolingServers(true);
@@ -153,7 +155,7 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
      */
     protected void clearTagStateForTagPoolingServers() {
         // Default implementation.
-        if (getPerformClearTagStateForTagPoolingServers() == false) {
+        if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         this.setBodyContent(null);  // Always clear the tag body (if any) after tag completion.

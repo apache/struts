@@ -18,19 +18,21 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.Serial;
 
 /**
  * @see Anchor
  */
 public class AnchorTag extends AbstractClosingTag {
 
+    @Serial
     private static final long serialVersionUID = -1034616578492431113L;
 
     protected String href;
@@ -124,11 +126,6 @@ public class AnchorTag extends AbstractClosingTag {
         this.scheme = scheme;
     }
 
-    @Override
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }
@@ -170,7 +167,7 @@ public class AnchorTag extends AbstractClosingTag {
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-        if (getPerformClearTagStateForTagPoolingServers() == false) {
+        if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

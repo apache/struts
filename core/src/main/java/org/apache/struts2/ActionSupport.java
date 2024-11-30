@@ -18,22 +18,20 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.conversion.impl.ConversionData;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.Action;
+import org.apache.struts2.conversion.impl.ConversionData;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -168,9 +166,9 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
             String[] vals = (String[]) conversionErrors.get(expr).getValue();
             return vals[0];
         } else {
-            final ValueStack valueStack = ValueStack.adapt(ActionContext.getContext().getValueStack());
+            final ValueStack valueStack = ActionContext.getContext().getValueStack();
             final Object val = valueStack.findValue(expr);
-            return getText(key, Arrays.asList(val));
+            return getText(key, List.of(val));
         }
     }
 

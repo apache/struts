@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +34,6 @@ import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.PrefixTrie;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -133,10 +133,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     private boolean allowActionPrefix = false;
 
-    protected List<String> extensions = new ArrayList<String>() {{
-        add("action");
-        add("");
-    }};
+    protected List<String> extensions = List.of("action", "");
 
     protected Container container;
 
@@ -260,6 +257,7 @@ public class DefaultActionMapper implements ActionMapper {
         }
     }
 
+    @Override
     public ActionMapping getMappingFromActionName(String actionName) {
         ActionMapping mapping = new ActionMapping();
         mapping.setName(actionName);
@@ -273,8 +271,9 @@ public class DefaultActionMapper implements ActionMapper {
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(jakarta.servlet.http.HttpServletRequest)
      */
+    @Override
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = RequestUtils.getUri(request);
@@ -329,13 +328,11 @@ public class DefaultActionMapper implements ActionMapper {
             }
 
             // Ensure a parameter doesn't get processed twice
-            if (!uniqueParameters.contains(key)) {
-                ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
-                if (parameterAction != null) {
-                    parameterAction.execute(key, mapping);
-                    uniqueParameters.add(key);
-                    break;
-                }
+            ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
+            if (parameterAction != null) {
+                parameterAction.execute(key, mapping);
+                uniqueParameters.add(key);
+                break;
             }
         }
     }
@@ -385,7 +382,7 @@ public class DefaultActionMapper implements ActionMapper {
             actionName = uri.substring(actionNamespace.length() + 1);
 
             // Still none found, use root namespace if found
-            if (rootAvailable && "".equals(actionNamespace)) {
+            if (rootAvailable && actionNamespace.isEmpty()) {
                 actionNamespace = "/";
             }
         }
@@ -576,8 +573,8 @@ public class DefaultActionMapper implements ActionMapper {
         String extension = lookupExtension(mapping.getExtension());
 
         if (extension != null) {
-            if (extension.length() == 0 || uri.indexOf('.' + extension) == -1) {
-                if (extension.length() > 0) {
+            if (extension.isEmpty() || uri.indexOf('.' + extension) == -1) {
+                if (!extension.isEmpty()) {
                     uri.append(".").append(extension);
                 }
             }
@@ -607,7 +604,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (name.indexOf('?') != -1) {
             params = name.substring(name.indexOf('?'));
         }
-        if (params.length() > 0) {
+        if (!params.isEmpty()) {
             uri.append(params);
         }
     }

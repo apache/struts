@@ -18,19 +18,20 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Text;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * @see Text
  */
 public class TextTag extends ContextBeanTag {
 
+    @Serial
     private static final long serialVersionUID = -3075088084198264581L;
 
     protected String name;
@@ -67,7 +68,7 @@ public class TextTag extends ContextBeanTag {
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
-    
+
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }
@@ -76,17 +77,17 @@ public class TextTag extends ContextBeanTag {
         this.escapeCsv = escapeCsv;
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

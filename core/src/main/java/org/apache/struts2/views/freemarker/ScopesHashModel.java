@@ -18,17 +18,18 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,18 +50,15 @@ import java.util.Map;
  */
 public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
+    private static final Logger LOG = LogManager.getLogger(ScopesHashModel.class);
+
+    @Serial
     private static final long serialVersionUID = 5551686380141886764L;
 
-    private static final Logger LOG = LogManager.getLogger(ScopesHashModel.class);
     private static final String TAG_ATTRIBUTES = "attributes";
-    /**
-     * @deprecated since 6.7.0, use {@link #TAG_ATTRIBUTES} instead
-     */
-    @Deprecated
-    private static final String TAG_PARAMETERS = "parameters";
 
-    private HttpServletRequest request;
-    private ServletContext servletContext;
+    private final HttpServletRequest request;
+    private final ServletContext servletContext;
     private ValueStack stack;
     private final Map<String, TemplateModel> unlistedModels = new HashMap<>();
     private volatile Object attributesCache;
@@ -104,7 +102,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
 
             if (obj != null) {
                 return wrap(obj);
-            } else if (TAG_ATTRIBUTES.equals(key) || TAG_PARAMETERS.equals(key)) {
+            } else if (TAG_ATTRIBUTES.equals(key)) {
                 LOG.warn("[{}] cannot be resolved against stack, short-circuiting!", key);
                 return null;
             }
@@ -156,7 +154,7 @@ public class ScopesHashModel extends SimpleHash implements TemplateModel {
     }
 
     private Object findValueOnStack(final String key) {
-        if (TAG_ATTRIBUTES.equals(key) || TAG_PARAMETERS.equals(key)) {
+        if (TAG_ATTRIBUTES.equals(key)) {
             if (attributesCache != null) {
                 return attributesCache;
             }

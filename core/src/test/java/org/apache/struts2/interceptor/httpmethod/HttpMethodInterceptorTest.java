@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.interceptor.httpmethod;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.HttpMethodsTestAction;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;

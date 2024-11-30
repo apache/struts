@@ -18,8 +18,11 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
@@ -27,13 +30,10 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * Contains preparation operations for a request before execution
@@ -187,11 +187,7 @@ public class PrepareOperations {
         if (mappingAttr == null || forceLookup) {
             try {
                 mapping = dispatcher.getActionMapper().getMapping(request, dispatcher.getConfigurationManager());
-                if (mapping != null) {
-                    request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
-                } else {
-                    request.setAttribute(STRUTS_ACTION_MAPPING_KEY, NO_ACTION_MAPPING);
-                }
+                request.setAttribute(STRUTS_ACTION_MAPPING_KEY, requireNonNullElse(mapping, NO_ACTION_MAPPING));
             } catch (Exception ex) {
                 if (dispatcher.isHandleException() || dispatcher.isDevMode()) {
                     dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
@@ -231,18 +227,6 @@ public class PrepareOperations {
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #isUrlExcluded(HttpServletRequest)} instead.
-     */
-    @Deprecated
-    public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
-        if (excludedPatterns == null) {
-            return false;
-        }
-        String uri = RequestUtils.getUri(request);
-        return excludedPatterns.stream().anyMatch(pattern -> pattern.matcher(uri).matches());
-    }
-
-    /**
      * Set an override of the static devMode value.  Do not set this via a
      * request parameter or any other unprotected method.  Using a signed
      * cookie is one safe way to turn it on per request.
@@ -264,7 +248,7 @@ public class PrepareOperations {
     /**
      * Clear any override of the static devMode value being applied to the current thread.
      * This can be useful for any situation where {@link #overrideDevMode(boolean)} might be called
-     * in a flow where {@link #cleanupRequest(javax.servlet.http.HttpServletRequest)} does not get called.
+     * in a flow where {@link #cleanupRequest(jakarta.servlet.http.HttpServletRequest)} does not get called.
      * May be very situational (such as some unit tests), but may have other utility as well.
      */
     public static void clearDevModeOverride() {

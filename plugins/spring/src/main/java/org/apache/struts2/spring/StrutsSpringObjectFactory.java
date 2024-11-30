@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.spring;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.spring.SpringObjectFactory;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.spring.SpringObjectFactory;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * <p>
@@ -68,7 +68,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject ServletContext servletContext,
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
             @Inject Container container) {
-          
+
         boolean useClassCache = BooleanUtils.toBoolean(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 
@@ -93,7 +93,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             LOG.fatal(message);
             return;
         }
-        
+
         String watchList = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_WATCH_LIST);
         String acceptClasses = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_ACCEPT_CLASSES);
         String reloadConfig = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_RELOAD_CONFIG);

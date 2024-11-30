@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -172,7 +172,7 @@ public class Number extends ContextBean {
             try {
                 format.setCurrency(Currency.getInstance(currency));
             } catch (IllegalArgumentException iae) {
-                LOG.error("Could not recognise a currency of [" + currency + "]");
+                LOG.error("Could not recognise a currency of [{}]", currency);
             }
         }
     }
@@ -208,7 +208,7 @@ public class Number extends ContextBean {
                 number = (java.lang.Number) numberObject;
             }
         } catch (Exception e) {
-            LOG.error("Could not convert object with key [" + name + "] to a java.lang.Number instance");
+            LOG.error("Could not convert object with key [{}] to a java.lang.Number instance", name);
         }
         return number;
     }
@@ -233,7 +233,7 @@ public class Number extends ContextBean {
             } else if ("up".equals(roundingMode)) {
                 format.setRoundingMode(RoundingMode.UP);
             } else {
-                LOG.error("Could not recognise a roundingMode of [" + roundingMode + "]");
+                LOG.error("Could not recognise a roundingMode of [{}]", roundingMode);
             }
         }
     }

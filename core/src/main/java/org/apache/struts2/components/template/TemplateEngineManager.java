@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 
@@ -43,12 +43,12 @@ public class TemplateEngineManager {
     Map<String, EngineFactory> templateEngines = new HashMap<>();
     Container container;
     String defaultTemplateType;
-    
+
     @Inject(StrutsConstants.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)
     public void setDefaultTemplateType(String type) {
         this.defaultTemplateType = type;
     }
-    
+
     @Inject
     public void setContainer(Container container) {
         this.container = container;
@@ -59,7 +59,7 @@ public class TemplateEngineManager {
         }
         this.templateEngines = Collections.unmodifiableMap(map);
     }
-    
+
     /**
      * <p>
      * Registers the given template engine.
@@ -73,11 +73,7 @@ public class TemplateEngineManager {
      * @param templateEngine     the engine.
      */
     public void registerTemplateEngine(String templateExtension, final TemplateEngine templateEngine) {
-        templateEngines.put(templateExtension, new EngineFactory() {
-            public TemplateEngine create() {
-                return templateEngine;
-            }
-        });
+        templateEngines.put(templateExtension, () -> templateEngine);
     }
 
     /**
@@ -87,7 +83,7 @@ public class TemplateEngineManager {
      * look for a Configuration setting "struts.ui.templateSuffix" for the extension, and if that is not set, it
      * will fall back to "ftl" as the default.
      * </p>
-     * 
+     *
      * @param template               Template used to determine which TemplateEngine to return
      * @param templateTypeOverride Overrides the default template type
      * @return the engine.
@@ -111,23 +107,25 @@ public class TemplateEngineManager {
     /** Abstracts loading of the template engine */
     interface EngineFactory {
         TemplateEngine create();
-    }    
+    }
 
-    /** 
+    /**
      * Allows the template engine to be loaded at request time, so that engines that are missing
      * dependencies aren't accessed if never used.
      */
     class LazyEngineFactory implements EngineFactory {
-        private String name;
+        private final String name;
         public LazyEngineFactory(String name) {
             this.name = name;
-        }    
+        }
+
+        @Override
         public TemplateEngine create() {
             TemplateEngine engine = container.getInstance(TemplateEngine.class, name);
             if (engine == null) {
                 throw new ConfigurationException("Unable to locate template engine: "+name);
             }
             return engine;
-        }    
-    }    
+        }
+    }
 }

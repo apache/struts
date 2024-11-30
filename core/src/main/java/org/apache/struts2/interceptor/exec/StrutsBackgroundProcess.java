@@ -18,11 +18,12 @@
  */
 package org.apache.struts2.interceptor.exec;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -30,6 +31,7 @@ import java.io.Serializable;
  */
 public class StrutsBackgroundProcess implements BackgroundProcess, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3884464776311686443L;
 
     private static final Logger LOG = LogManager.getLogger(StrutsBackgroundProcess.class);

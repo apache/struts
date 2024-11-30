@@ -18,15 +18,16 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -98,7 +99,7 @@ import java.util.List;
  *  package com.example;
  *
  *  import java.io.File;
- *  import com.opensymphony.xwork2.ActionSupport;
+ *  import org.apache.struts2.ActionSupport;
  *  import org.apache.struts2.action.UploadedFilesAware;
  *
  *  public UploadAction extends ActionSupport implements UploadedFilesAware {
@@ -128,12 +129,14 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
     protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 
-    /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
-     */
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        if (!(request instanceof MultiPartRequestWrapper)) {
+        MultiPartRequestWrapper multiWrapper = request instanceof HttpServletRequestWrapper wrapper
+                ? findMultipartRequestWrapper(wrapper)
+                : null;
+
+        if (multiWrapper == null) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
                 LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
@@ -141,15 +144,12 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
             return invocation.invoke();
         }
 
-        MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
-
-        if (!(invocation.getAction() instanceof UploadedFilesAware)) {
+        if (!(invocation.getAction() instanceof UploadedFilesAware action)) {
             LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
-                invocation.getProxy().getActionName(),
-                UploadedFilesAware.class.getSimpleName());
+                    invocation.getProxy().getActionName(),
+                    UploadedFilesAware.class.getSimpleName());
             return invocation.invoke();
         }
-        UploadedFilesAware action = (UploadedFilesAware) invocation.getAction();
 
         applyValidation(action, multiWrapper);
 
@@ -184,6 +184,27 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         // invoke action
         return invocation.invoke();
+    }
+
+    /**
+     * Tries to find {@link MultiPartRequestWrapper} as the request can be already wrapped
+     * with another {@link HttpServletRequestWrapper}.
+     * If the {@link MultiPartRequestWrapper} cannot be found, null is returned instead.
+     *
+     * @param request current {@link HttpServletRequestWrapper}
+     * @return {@link MultiPartRequestWrapper} or null
+     * @since 7.0.0
+     */
+    protected MultiPartRequestWrapper findMultipartRequestWrapper(HttpServletRequestWrapper request) {
+        if (request instanceof MultiPartRequestWrapper multiPartRequestWrapper) {
+            LOG.debug("Found multipart request: {}", multiPartRequestWrapper.getClass().getSimpleName());
+            return multiPartRequestWrapper;
+        } else if (request.getRequest() instanceof HttpServletRequestWrapper wrappedRequest) {
+            LOG.debug("Could not find multipart request wrapper, checking ancestor: {}",
+                    wrappedRequest.getClass().getSimpleName());
+            return findMultipartRequestWrapper(wrappedRequest);
+        }
+        return null;
     }
 
 }

@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -36,21 +36,20 @@ import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import javax.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -95,17 +94,18 @@ import java.util.Map;
  */
 public class DebuggingInterceptor extends AbstractInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -3097324155953078783L;
 
     private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
-    private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "com.opensymphony.xwork2.", "xwork."};
-    private final HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(
+    private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "org.apache.struts2.", "xwork."};
+    private final Set<String> ignoreKeys = Set.of(
         DispatcherConstants.APPLICATION,
         DispatcherConstants.SESSION,
         DispatcherConstants.PARAMETERS,
         DispatcherConstants.REQUEST
-    ));
+    );
 
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";
@@ -145,7 +145,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     /*
      * (non-Javadoc)
      *
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#invoke(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.Interceptor#invoke(org.apache.struts2.ActionInvocation)
      */
     public String intercept(ActionInvocation inv) throws Exception {
         boolean actionOnly = false;
@@ -158,16 +158,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             ctx.getParameters().remove(DEBUG_PARAM);
             if (XML_MODE.equals(type)) {
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String result) {
-                            printContext();
-                        }
-                    });
+                        (inv1, result) -> printContext());
             } else if (CONSOLE_MODE.equals(type)) {
                 consoleEnabled = true;
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
+                        (inv12, actionResult) -> {
                             String xml = "";
                             if (enableXmlWithConsole) {
                                 StringWriter writer = new StringWriter();
@@ -185,13 +180,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                             result.setLocation("/org/apache/struts2/interceptor/debugging/console.ftl");
                             result.setParse(false);
                             try {
-                                result.execute(inv);
+                                result.execute(inv12);
                             } catch (Exception ex) {
                                 LOG.error("Unable to create debugging console", ex);
                             }
 
-                        }
-                    });
+                        });
             } else if (COMMAND_MODE.equals(type)) {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 if (stack == null) {
@@ -209,14 +203,13 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                          ServletActionContext.getResponse().getWriter()) {
                     writer.print(stack.findValue(cmd));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LOG.warn("Interceptor in: {} mode has failed!", COMMAND_MODE, ex);
                 }
                 cont = false;
             } else if (BROWSER_MODE.equals(type)) {
                 actionOnly = true;
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
+                        (inv13, actionResult) -> {
                             String rootObjectExpression = getParameter(OBJECT_PARAM);
                             if (rootObjectExpression == null) {
                                 rootObjectExpression = "action";
@@ -242,13 +235,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                                 result.setFreemarkerManager(freemarkerManager);
                                 result.setContentType("text/html");
                                 result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
-                                result.execute(inv);
+                                result.execute(inv13);
                             } catch (Exception ex) {
                                 LOG.error("Unable to create debugging console", ex);
                             }
 
-                        }
-                    });
+                        });
             }
         }
         if (cont) {
@@ -294,7 +286,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             printContext(writer);
             writer.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LOG.warn("Call to PrettyPrintWriter failed!", ex);
         }
     }
 
@@ -365,8 +357,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.startNode(name);
 
         // It depends on the object and it's value what todo next:
-        if (bean instanceof Collection) {
-            Collection col = (Collection) bean;
+        if (bean instanceof Collection col) {
 
             // Iterate through components, and call ourselves to process
             // elements

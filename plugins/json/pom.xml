@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-json-plugin</artifactId>
@@ -57,18 +57,6 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
             <scope>test</scope>
         </dependency>
 

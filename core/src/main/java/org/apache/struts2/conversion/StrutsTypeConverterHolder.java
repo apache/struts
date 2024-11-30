@@ -18,9 +18,6 @@
  */
 package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.TypeConverterHolder;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,7 +34,7 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      * - TypeConverter - instance of TypeConverter
      * </pre>
      */
-    private HashMap<String, TypeConverter> defaultMappings = new HashMap<>();  // non-action (eg. returned value)
+    private final HashMap<String, TypeConverter> defaultMappings = new HashMap<>();  // non-action (eg. returned value)
 
     /**
      * Target class conversion Mappings.
@@ -58,12 +55,12 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      *                    Element_property=foo.bar.MyObject
      * </pre>
      */
-    private HashMap<Class, Map<String, Object>> mappings = new HashMap<>(); // action
+    private final HashMap<Class, Map<String, Object>> mappings = new HashMap<>(); // action
 
     /**
      * Unavailable target class conversion mappings, serves as a simple cache.
      */
-    private HashSet<Class> noMapping = new HashSet<>(); // action
+    private final HashSet<Class> noMapping = new HashSet<>(); // action
 
     /**
      * Record classes that doesn't have conversion mapping defined.
@@ -73,41 +70,48 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      */
     protected HashSet<String> unknownMappings = new HashSet<>();     // non-action (eg. returned value)
 
+    @Override
     public void addDefaultMapping(String className, TypeConverter typeConverter) {
         defaultMappings.put(className, typeConverter);
-        if (unknownMappings.contains(className)) {
-            unknownMappings.remove(className);
-        }
+        unknownMappings.remove(className);
     }
 
+    @Override
     public boolean containsDefaultMapping(String className) {
         return defaultMappings.containsKey(className);
     }
 
+    @Override
     public TypeConverter getDefaultMapping(String className) {
         return defaultMappings.get(className);
     }
 
+    @Override
     public Map<String, Object> getMapping(Class clazz) {
         return mappings.get(clazz);
     }
 
+    @Override
     public void addMapping(Class clazz, Map<String, Object> mapping) {
         mappings.put(clazz, mapping);
     }
 
+    @Override
     public boolean containsNoMapping(Class clazz) {
         return noMapping.contains(clazz);
     }
 
+    @Override
     public void addNoMapping(Class clazz) {
         noMapping.add(clazz);
     }
 
+    @Override
     public boolean containsUnknownMapping(String className) {
         return unknownMappings.contains(className);
     }
 
+    @Override
     public void addUnknownMapping(String className) {
         unknownMappings.add(className);
     }

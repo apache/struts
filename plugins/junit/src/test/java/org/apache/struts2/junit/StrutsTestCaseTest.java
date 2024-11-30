@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 
 public class StrutsTestCaseTest extends StrutsSpringTestCase {

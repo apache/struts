@@ -18,9 +18,9 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.util.location.Locatable;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationUtils;
+import org.apache.struts2.util.location.Locatable;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationUtils;
 
 /**
  * A generic runtime exception that optionally contains Location information
@@ -53,7 +53,7 @@ public class StrutsException extends RuntimeException implements Locatable {
      * @param target the target of the exception.
      */
     public StrutsException(String s, Object target) {
-        this(s, (Throwable) null, target);
+        this(s, null, target);
     }
 
     /**
@@ -129,7 +129,7 @@ public class StrutsException extends RuntimeException implements Locatable {
 
         if (location != null) {
             if (msg != null) {
-                return msg + " - " + location.toString();
+                return msg + " - " + location;
             } else {
                 return location.toString();
             }

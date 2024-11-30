@@ -47,12 +47,7 @@
             <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
-		<action name="quizDwr" class="org.apache.struts2.showcase.validation.QuizAction">
-			<result name="input">/WEB-INF/validation/quiz-dwr.jsp</result>
-			<result>/WEB-INF/validation/quiz-success.jsp</result>
-		</action>
-
-        <action name="quizClientCss" class="org.apache.struts2.showcase.validation.QuizAction">
+		<action name="quizClientCss" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">/WEB-INF/validation/quiz-client-css.jsp</result>
             <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>

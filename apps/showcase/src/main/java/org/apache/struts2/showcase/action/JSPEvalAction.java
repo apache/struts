@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.showcase.action;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.interceptor.annotations.After;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.interceptor.annotations.After;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 

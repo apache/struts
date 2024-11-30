@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.jmock.Mock;
 import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Test case for CreateSessionInterceptor.

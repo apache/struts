@@ -1,0 +1,67 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2;
+
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.result.Result;
+
+/**
+ * Handles cases when the result or action is unknown.
+ *
+ * <p>
+ * This allows other classes like Struts plugins to provide intelligent defaults easier.
+ * </p>
+ */
+public interface UnknownHandler {
+
+    /**
+     * Handles the case when an action configuration is unknown.  Implementations can return a new ActionConfig
+     * to be used to process the request.
+     *
+     * @param namespace The namespace
+     * @param actionName The action name
+     * @return An generated ActionConfig, can return <tt>null</tt>
+     * @throws StrutsException in case of errors
+     */
+    ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException;
+
+    /**
+     * Handles the case when a result cannot be found for an action and result code.
+     *
+     * @param actionContext The action context
+     * @param actionName The action name
+     * @param actionConfig The action config
+     * @param resultCode The returned result code
+     * @return A result to be executed, can return <tt>null</tt>
+     * @throws StrutsException in case of errors
+     */
+    Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws StrutsException;
+
+    /**
+     * Handles the case when an action method cannot be found.  This method is responsible both for finding the method and executing it.
+     *
+     * @since 2.1
+     * @param action The action object
+     * @param methodName The method name to call
+     * @return The result returned from invoking the action method, can return <tt>null</tt> if this instance cannot
+     *         handle such methodName to allow other handlers give a chance
+     */
+	Object handleUnknownActionMethod(Object action, String methodName);
+
+}

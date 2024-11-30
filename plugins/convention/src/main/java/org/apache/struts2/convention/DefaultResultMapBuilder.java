@@ -18,19 +18,19 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
-import com.opensymphony.xwork2.util.finder.ResourceFinder;
-import com.opensymphony.xwork2.util.finder.Test;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.config.entities.ResultTypeConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.finder.ClassLoaderInterface;
+import org.apache.struts2.util.finder.ClassLoaderInterfaceDelegate;
+import org.apache.struts2.util.finder.ResourceFinder;
+import org.apache.struts2.util.finder.Test;
+import jakarta.servlet.ServletContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,10 +39,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -115,8 +116,8 @@ import java.util.*;
 public class DefaultResultMapBuilder implements ResultMapBuilder {
     private static final Logger LOG = LogManager.getLogger(DefaultResultMapBuilder.class);
     private final ServletContext servletContext;
-    private Set<String> relativeResultTypes;
-    private ConventionsService conventionsService;
+    private final Set<String> relativeResultTypes;
+    private final ConventionsService conventionsService;
     private boolean flatResultLayout = true;
 
     /**
@@ -131,7 +132,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
     public DefaultResultMapBuilder(ServletContext servletContext, Container container,
             @Inject(ConventionConstants.CONVENTION_RELATIVE_RESULT_TYPES) String relativeResultTypes) {
         this.servletContext = servletContext;
-        this.relativeResultTypes = new HashSet<>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
+        this.relativeResultTypes = Set.of(relativeResultTypes.split("\\s*[,]\\s*"));
         this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
     }
 

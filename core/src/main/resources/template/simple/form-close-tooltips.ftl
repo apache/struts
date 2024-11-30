@@ -22,8 +22,8 @@
 <#--
  Code that will add javascript needed for tooltips
 --><#t/>
-<#if (parameters.hasTooltip!false)><#t/>
+<#if (attributes.hasTooltip!false)><#t/>
     <#lt/><!-- javascript that is needed for tooltips -->
-    <#lt/><@s.script src="${base}${parameters.staticContentPath}/domTT.js" />
-    <#lt/><@s.link rel="stylesheet" type="text/css" href="${base}${parameters.staticContentPath}/domTT.css" />
+    <#lt/><@s.script src="${base}${attributes.staticContentPath}/domTT.js" />
+    <#lt/><@s.link rel="stylesheet" type="text/css" href="${base}${attributes.staticContentPath}/domTT.css" />
 </#if><#t/>

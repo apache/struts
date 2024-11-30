@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.views.jasperreports;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.util.ValueStack;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -43,10 +43,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.result.StrutsResultSupport;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;

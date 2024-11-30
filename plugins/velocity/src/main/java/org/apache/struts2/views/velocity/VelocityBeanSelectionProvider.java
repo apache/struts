@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.views.velocity;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.config.AbstractBeanSelectionProvider;
 import org.apache.struts2.config.StrutsBeanSelectionProvider;
 
@@ -49,7 +49,7 @@ public class VelocityBeanSelectionProvider extends AbstractBeanSelectionProvider
 
     @Override
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-        alias(VelocityManagerInterface.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
+        alias(VelocityManager.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
     }
 
 }

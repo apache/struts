@@ -30,18 +30,21 @@ public abstract class AbstractInterceptor implements ConditionalInterceptor {
     /**
      * Does nothing
      */
+    @Override
     public void init() {
     }
 
     /**
      * Does nothing
      */
+    @Override
     public void destroy() {
     }
 
     /**
      * Override to handle interception
      */
+    @Override
     public abstract String intercept(ActionInvocation invocation) throws Exception;
 
     /**

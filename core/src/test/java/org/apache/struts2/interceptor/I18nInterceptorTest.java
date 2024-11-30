@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.locale.DefaultLocaleProviderFactory;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -33,8 +33,8 @@ import org.easymock.IArgumentMatcher;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;

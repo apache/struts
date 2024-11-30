@@ -25,7 +25,7 @@
 
 <struts>
 
-    <bean type="com.opensymphony.xwork2.factory.ResultFactory"
+    <bean type="org.apache.struts2.factory.ResultFactory"
           name="myResultFactory" class="org.apache.struts2.factory.MyResultFactory" />
 
     <constant name="struts.objectFactory.resultFactory" value="myResultFactory" />

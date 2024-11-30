@@ -18,16 +18,17 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Debug;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 public class DebugTag extends AbstractUITag {
 
+    @Serial
     private static final long serialVersionUID = 3487684841317160628L;
 
     @Override
@@ -35,10 +36,10 @@ public class DebugTag extends AbstractUITag {
         return new Debug(stack, req, res);
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }

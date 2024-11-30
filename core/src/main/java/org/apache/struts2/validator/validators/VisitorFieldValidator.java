@@ -1,0 +1,241 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2.validator.validators;
+
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.text.CompositeTextProvider;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.ActionValidatorManager;
+import org.apache.struts2.validator.DelegatingValidatorContext;
+import org.apache.struts2.validator.ValidationException;
+import org.apache.struts2.validator.ValidatorContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * <!-- START SNIPPET: javadoc -->
+ *
+ * <p>
+ * The VisitorFieldValidator allows you to forward validation to object
+ * properties of your action using the object's own validation files.  This
+ * allows you to use the ModelDriven development pattern and manage your
+ * validations for your models in one place, where they belong, next to your
+ * model classes.  The VisitorFieldValidator can handle either simple Object
+ * properties, Collections of Objects, or Arrays.
+ * </p>
+ *
+ * <!-- END SNIPPET: javadoc -->
+ *
+ * <!-- START SNIPPET: parameters -->
+ * <ul>
+ * <li>fieldName - field name if plain-validator syntax is used, not needed if field-validator syntax is used</li>
+ * <li>context - the context of which validation should take place. Optional</li>
+ * <li>appendPrefix - the prefix to be added to field. Optional </li>
+ * </ul>
+ * <!-- END SNIPPET: parameters -->
+ *
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ *    &lt;validators&gt;
+ *        &lt;!-- Plain Validator Syntax --&gt;
+ *        &lt;validator type="visitor"&gt;
+ *            &lt;param name="fieldName"&gt;user&lt;/param&gt;
+ *            &lt;param name="context"&gt;myContext&lt;/param&gt;
+ *            &lt;param name="appendPrefix"&gt;true&lt;/param&gt;
+ *        &lt;/validator&gt;
+ *
+ *        &lt;!-- Field Validator Syntax --&gt;
+ *        &lt;field name="user"&gt;
+ *           &lt;field-validator type="visitor"&gt;
+ *              &lt;param name="context"&gt;myContext&lt;/param&gt;
+ *              &lt;param name="appendPrefix"&gt;true&lt;/param&gt;
+ *           &lt;/field-validator&gt;
+ *        &lt;/field&gt;
+ *    &lt;/validators&gt;
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ *
+ * <!-- START SNIPPET: explanation -->
+ * <p>In the example above, if the action's getUser() method return User object, XWork
+ * will look for User-myContext-validation.xml for the validators. Since appednPrefix is true,
+ * every field name will be prefixed with 'user' such that if the actual field name for 'name' is
+ * 'user.name' </p>
+ * <!-- END SNIPPET: explanation -->
+ *
+ * @author Jason Carreira
+ * @author Rainer Hermanns
+ */
+public class VisitorFieldValidator extends FieldValidatorSupport {
+
+    private static final Logger LOG = LogManager.getLogger(VisitorFieldValidator.class);
+
+    private String context;
+    private boolean appendPrefix = true;
+    private ActionValidatorManager actionValidatorManager;
+
+
+    @Inject
+    public void setActionValidatorManager(ActionValidatorManager mgr) {
+        this.actionValidatorManager = mgr;
+    }
+
+    /**
+     * @param appendPrefix whether the field name of this field validator should be prepended to the field name of
+     * the visited field to determine the full field name when an error occurs.  The default is
+     * true.
+     */
+    public void setAppendPrefix(boolean appendPrefix) {
+        this.appendPrefix = appendPrefix;
+    }
+
+    /**
+     * @return whether the field name of this field validator should be prepended to the field name of
+     * the visited field to determine the full field name when an error occurs.  The default is
+     * true.
+     */
+    public boolean isAppendPrefix() {
+        return appendPrefix;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void validate(Object object) throws ValidationException {
+        String fieldName = getFieldName();
+        Object value = this.getFieldValue(fieldName, object);
+        if (value == null) {
+            LOG.warn("The visited object is null, VisitorValidator will not be able to handle validation properly. Please make sure the visited object is not null for VisitorValidator to function properly");
+            return;
+        }
+        ValueStack stack = ActionContext.getContext().getValueStack();
+
+        stack.push(object);
+
+        String visitorContext = (context == null) ? ActionContext.getContext().getActionName() : context;
+
+        if (value instanceof Collection coll) {
+            Object[] array = coll.toArray();
+
+            validateArrayElements(array, fieldName, visitorContext);
+        } else if (value instanceof Object[] array) {
+
+            validateArrayElements(array, fieldName, visitorContext);
+        } else {
+            validateObject(fieldName, value, visitorContext);
+        }
+
+        stack.pop();
+    }
+
+    private void validateArrayElements(Object[] array, String fieldName, String visitorContext) throws ValidationException {
+        if (array == null) {
+            return;
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            Object o = array[i];
+            if (o != null) {
+                validateObject(fieldName + "[" + i + "]", o, visitorContext);
+            }
+        }
+    }
+
+    private void validateObject(String fieldName, Object o, String visitorContext) throws ValidationException {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(o);
+
+        ValidatorContext validatorContext;
+
+        ValidatorContext parent = getValidatorContext();
+        if (appendPrefix) {
+            validatorContext = new AppendingValidatorContext(parent, createTextProvider(o, parent), fieldName, getMessage(o));
+        } else {
+            CompositeTextProvider textProvider = createTextProvider(o, parent);
+            validatorContext = new DelegatingValidatorContext(parent, textProvider, parent);
+        }
+
+        actionValidatorManager.validate(o, visitorContext, validatorContext);
+        stack.pop();
+    }
+
+    private CompositeTextProvider createTextProvider(Object o, ValidatorContext parent) {
+        List<TextProvider> textProviders = new LinkedList<>();
+        if (o instanceof TextProvider) {
+            textProviders.add((TextProvider) o);
+        } else {
+            textProviders.add(textProviderFactory.createInstance(o.getClass()));
+        }
+        textProviders.add(parent);
+
+        return new CompositeTextProvider(textProviders);
+    }
+
+    public static class AppendingValidatorContext extends DelegatingValidatorContext {
+        private final String field;
+        private final String message;
+        private final ValidatorContext parent;
+
+        public AppendingValidatorContext(ValidatorContext parent, TextProvider textProvider, String field, String message) {
+            super(parent, textProvider, parent);
+
+            this.field = field;
+            this.message = message;
+            this.parent = parent;
+        }
+
+        /**
+         * Translates a simple field name into a full field name in Ognl syntax
+         *
+         * @param fieldName field name in OGNL syntax
+         * @return full field name in OGNL syntax
+         */
+        @Override
+        public String getFullFieldName(String fieldName) {
+            if (parent instanceof VisitorFieldValidator.AppendingValidatorContext) {
+                return parent.getFullFieldName(field + "." + fieldName);
+            }
+            return field + "." + fieldName;
+        }
+
+        public String getFieldNameWithField(String fieldName) {
+            return field + "." + fieldName;
+        }
+
+        @Override
+        public void addActionError(String anErrorMessage) {
+            super.addFieldError(getFieldNameWithField(field), message + anErrorMessage);
+        }
+
+        @Override
+        public void addFieldError(String fieldName, String errorMessage) {
+            super.addFieldError(getFieldNameWithField(fieldName), message + errorMessage);
+        }
+    }
+}

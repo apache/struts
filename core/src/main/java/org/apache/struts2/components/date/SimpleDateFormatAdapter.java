@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components.date;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

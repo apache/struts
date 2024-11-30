@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-rest-plugin</artifactId>
@@ -67,7 +67,7 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
+		<dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
             <scope>test</scope>

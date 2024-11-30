@@ -25,23 +25,23 @@
 <struts>
     <package name="xwork-test-default">
         <result-types>
-            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
-            <result-type name="void" class="com.opensymphony.xwork2.VoidResult"/>
-            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult" default="true"/>
+            <result-type name="void" class="org.apache.struts2.VoidResult"/>
+            <result-type name="mock" class="org.apache.struts2.mock.MockResult"/>
         </result-types>
 
         <interceptors>
-            <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
-            <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
-            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
-            <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
-            <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
-            <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
-			      <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
-            <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
+            <interceptor name="logger" class="org.apache.struts2.interceptor.LoggingInterceptor"/>
+            <interceptor name="chain" class="org.apache.struts2.interceptor.ChainingInterceptor"/>
+            <interceptor name="params" class="org.apache.struts2.interceptor.parameter.ParametersInterceptor"/>
+            <interceptor name="staticParams" class="org.apache.struts2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="modelDriven" class="org.apache.struts2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="validation" class="org.apache.struts2.validator.ValidationInterceptor"/>
+			      <interceptor name="alias" class="org.apache.struts2.interceptor.AliasInterceptor"/>
+            <interceptor name="test" class="org.apache.struts2.mock.MockInterceptor">
                 <param name="foo">expectedFoo</param>
             </interceptor>
-            <interceptor name="lazy" class="com.opensymphony.xwork2.mock.MockLazyInterceptor"/>
+            <interceptor name="lazy" class="org.apache.struts2.mock.MockLazyInterceptor"/>
 
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="staticParams"/>

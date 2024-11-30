@@ -29,12 +29,6 @@
     </formats>
     <fileSets>
 
-        <!-- Include the XWork Javadoc in the assembly -->
-        <fileSet>
-            <directory>../xwork-core/target/apidocs</directory>
-            <outputDirectory>docs/xwork-core/apidocs</outputDirectory>
-        </fileSet>
-
         <!-- Include the website in the assembly -->
         <fileSet>
             <directory>../target/site</directory>
@@ -53,6 +47,10 @@
 
         <!-- Plugins -->
         <fileSet>
+            <directory>../plugins/async/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-async/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../plugins/bean-validation/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-bean-validation/apidocs</outputDirectory>
         </fileSet>
@@ -67,18 +65,6 @@
         <fileSet>
             <directory>../plugins/convention/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/dwr/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/embeddedjsp/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/gxp/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../plugins/jasperreports/target/apidocs</directory>
@@ -101,36 +87,8 @@
             <outputDirectory>docs/struts2-plugins/struts2-junit-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/osgi/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/oval/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-oval-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/pell-multipart/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-pell-multipart-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/plexus/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/portlet/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/portlet-tiles/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-portlet-tiles-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/rest/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../plugins/sitemesh/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../plugins/spring/target/apidocs</directory>
@@ -143,6 +101,14 @@
         <fileSet>
             <directory>../plugins/tiles/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../plugins/velocity/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-velocity-plugin/apidocs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../plugins/xslt/target/apidocs</directory>
+            <outputDirectory>docs/struts2-plugins/struts2-xslt-plugin/apidocs</outputDirectory>
         </fileSet>
 
     </fileSets>

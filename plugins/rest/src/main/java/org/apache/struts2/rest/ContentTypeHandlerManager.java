@@ -18,13 +18,10 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 import java.io.IOException;
 
@@ -52,24 +49,17 @@ public interface ContentTypeHandlerManager {
     /**
      * Handles the result using handlers to generate content type-specific content
      *
-     * @param actionConfig The action config for the current request
-     * @param methodResult The object returned from the action method
-     * @param target The object to return, usually the action object
+     * @param actionInvocation The action invocation for the current request
+     * @param methodResult     The object returned from the action method
+     * @param target           The object to return, usually the action object
      * @return The new result code to process
      * @throws IOException If unable to write to the response
-     *
-     * @deprecated use version which requires {@link ActionInvocation}
      */
-    @Deprecated
-    String handleResult(ActionConfig actionConfig, Object methodResult, Object target)
-            throws IOException;
-    
-    String handleResult(ActionInvocation actionInvocation, Object methodResult, Object target)
-            throws IOException;
+    String handleResult(ActionInvocation actionInvocation, Object methodResult, Object target) throws IOException;
 
     /**
      * Finds the extension in the url
-     * 
+     *
      * @param url The url
      * @return The extension
      */

@@ -18,10 +18,13 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -38,9 +41,6 @@ import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -978,11 +978,10 @@ public abstract class UIBean extends Component {
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
             result = new LinkedHashMap<String, String>((Map) tooltipConfigObj);
-        } else if (tooltipConfigObj instanceof String) {
+        } else if (tooltipConfigObj instanceof String tooltipConfigStr) {
 
             // we get this if its configured using
             // <param name="tooltipConfig"> ... </param> tag's body
-            String tooltipConfigStr = (String) tooltipConfigObj;
             String[] tooltipConfigArray = tooltipConfigStr.split("\\|");
 
             for (String aTooltipConfigArray : tooltipConfigArray) {
@@ -1295,9 +1294,9 @@ public abstract class UIBean extends Component {
      * @see <a href="https://issues.apache.org/jira/browse/WW-4166">WW-4166</a>
      */
     @Override
-    public void copyParams(Map<String, Object> params) {
-        super.copyParams(params);
-        for (Map.Entry<String, Object>entry : params.entrySet()) {
+    public void copyAttributes(Map<String, Object> attributesToCopy) {
+        super.copyAttributes(attributesToCopy);
+        for (Map.Entry<String, Object>entry : attributesToCopy.entrySet()) {
             String entryKey = entry.getKey();
             if (!isValidTagAttribute(entryKey) && !entryKey.equals("dynamicAttributes")) {
                 dynamicAttributes.put(entryKey, entry.getValue());

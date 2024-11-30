@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.*;
 import java.util.Map;
 import java.util.Properties;

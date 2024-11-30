@@ -18,23 +18,12 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.MemberAccessValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.action.NoParameters;
@@ -42,7 +31,18 @@ import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
 import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.security.AcceptedPatternsChecker;
+import org.apache.struts2.security.DefaultAcceptedPatternsChecker;
+import org.apache.struts2.security.ExcludedPatternsChecker;
+import org.apache.struts2.util.ClearableValueStack;
+import org.apache.struts2.util.MemberAccessValueStack;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
+import org.apache.struts2.util.reflection.ReflectionContextState;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -63,14 +63,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
-import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
-import static com.opensymphony.xwork2.util.DebugUtils.notifyDeveloperOfError;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
+import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
+import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
+import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 
 /**
  * This interceptor sets all parameters on the value stack.
@@ -116,6 +117,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
     public void setRequireAnnotations(String requireAnnotations) {
         this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
+        if (!this.requireAnnotations) {
+            String msg = "@StrutsParameter annotation requirement is disabled!" +
+                    " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                    " Set the configuration `{}=true` to enable it." +
+                    " Please refer to the Struts 7.0 migration guide and security documentation for further information.";
+            logWarningForFirstOccurrence("strutsParameter", LOG, msg, StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS);
+        }
     }
 
     /**
@@ -196,7 +204,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Map<String, Object> contextMap = actionContext.getContextMap();
         batchApplyReflectionContextState(contextMap, true);
         try {
-            setParameters(action, actionContext.getValueStack(), parameters);
+            applyParameters(action, actionContext.getValueStack(), parameters);
         } finally {
             batchApplyReflectionContextState(contextMap, false);
         }
@@ -227,14 +235,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
     }
 
-    /**
-     * @deprecated since 6.4.0, use {@link #applyParameters}
-     */
-    @Deprecated
-    protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
-        applyParameters(action, stack, parameters);
-    }
-
     protected void applyParameters(final Object action, ValueStack stack, HttpParameters parameters) {
         Map<String, Parameter> acceptableParameters = toAcceptableParameters(parameters, action);
 
@@ -259,19 +259,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected ValueStack toNewStack(ValueStack stack) {
         ValueStack newStack = valueStackFactory.createValueStack(stack);
-        if (newStack instanceof ClearableValueStack) {
-            ((ClearableValueStack) newStack).clearContextValues();
+        if (newStack instanceof ClearableValueStack clearable) {
+            clearable.clearContextValues();
             newStack.getActionContext().withLocale(stack.getActionContext().getLocale()).withValueStack(stack);
         }
         return newStack;
     }
 
     protected void applyMemberAccessProperties(ValueStack stack) {
-        if (!(stack instanceof MemberAccessValueStack)) {
+        if (!(stack instanceof MemberAccessValueStack accessValueStack)) {
             return;
         }
-        ((MemberAccessValueStack) stack).useAcceptProperties(acceptedPatterns.getAcceptedPatterns());
-        ((MemberAccessValueStack) stack).useExcludeProperties(excludedPatterns.getExcludedPatterns());
+        accessValueStack.useAcceptProperties(acceptedPatterns.getAcceptedPatterns());
+        accessValueStack.useExcludeProperties(excludedPatterns.getExcludedPatterns());
     }
 
     protected Map<String, Parameter> toAcceptableParameters(HttpParameters parameters, Object action) {
@@ -329,11 +329,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameter(String name, Object action) {
-        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
+        return isAcceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
-        return !(action instanceof ParameterNameAware) || ((ParameterNameAware) action).acceptableParameterName(name);
+        return !(action instanceof ParameterNameAware nameAware) || nameAware.acceptableParameterName(name);
     }
 
     /**
@@ -352,7 +352,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
             LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement and OGNL allowlisting model type");
-            // (Exempted by annotation on com.opensymphony.xwork2.ModelDriven#getModel)
+            // (Exempted by annotation on org.apache.struts2.ModelDriven#getModel)
             return hasValidAnnotatedMember("model", action, paramDepth + 1);
         }
 
@@ -383,7 +383,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
                 .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
-        if (!propDescOpt.isPresent()) {
+        if (propDescOpt.isEmpty()) {
             return hasValidAnnotatedField(action, rootProperty, paramDepth);
         }
 
@@ -392,15 +392,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
 
         return hasValidAnnotatedField(action, rootProperty, paramDepth);
-    }
-
-    /**
-     * @deprecated since 6.5.0, use {@link #hasValidAnnotatedPropertyDescriptor(Object, PropertyDescriptor, long)}
-     * instead.
-     */
-    @Deprecated
-    protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
-        return hasValidAnnotatedPropertyDescriptor(null, propDesc, paramDepth);
     }
 
     protected boolean hasValidAnnotatedPropertyDescriptor(Object action, PropertyDescriptor propDesc, long paramDepth) {
@@ -536,11 +527,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameterValue(Parameter param, Object action) {
-        return isAcceptableParameterValueAware(param, action) && acceptableValue(param.getName(), param.getValue());
+        return isAcceptableParameterValueAware(param, action) && isAcceptableValue(param.getName(), param.getValue());
     }
 
     protected boolean isAcceptableParameterValueAware(Parameter param, Object action) {
-        return !(action instanceof ParameterValueAware) || ((ParameterValueAware) action).acceptableParameterValue(param.getValue());
+        return !(action instanceof ParameterValueAware valueAware) || valueAware.acceptableParameterValue(param.getValue());
     }
 
     /**
@@ -561,13 +552,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return parameters.entrySet().stream()
                 .map(entry -> format("%s => %s ", entry.getKey(), entry.getValue().getValue()))
                 .collect(joining());
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #isAcceptableName}
-     */
-    protected boolean acceptableName(String name) {
-        return isAcceptableName(name);
     }
 
     /**
@@ -596,13 +580,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         return DMI_IGNORED_PATTERN.matcher(name).matches();
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #isAcceptableValue}
-     */
-    protected boolean acceptableValue(String name, String value) {
-        return isAcceptableValue(name, value);
     }
 
     /**

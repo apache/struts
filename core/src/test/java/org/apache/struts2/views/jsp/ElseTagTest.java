@@ -18,17 +18,21 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import java.io.StringWriter;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.components.If;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockJspWriter;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 
 /**
@@ -36,7 +40,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class ElseTagTest extends StrutsInternalTestCase {
 
     ElseTag elseTag;
-    MockPageContext pageContext;
+    StrutsMockPageContext pageContext;
     ValueStack stack;
 
 
@@ -193,14 +197,14 @@ public class ElseTagTest extends StrutsInternalTestCase {
     }
 
     /**
-     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a
      * {@link ComponentTagSupport} tag's {@link Component} to match expecations for a test.
-     * 
+     *
      * Since the component is not available to the tag until after the doStartTag() method is called,
      * but we need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
      * what we set for the Tag when a non-default (true) value is used, this method retrieves the component instance,
      * sets the value specified and forces the parameters to be repopulated again.
-     * 
+     *
      * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
      * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
      */
@@ -228,10 +232,9 @@ public class ElseTagTest extends StrutsInternalTestCase {
         servletContext.setServletInfo("not-weblogic");
 
         // create the mock page context
-        pageContext = new StrutsMockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setServletContext(servletContext);
-        pageContext.setJspWriter(new MockJspWriter());
+        HttpServletResponse resp = new MockHttpServletResponse();
+        pageContext = new StrutsMockPageContext(servletContext, request, resp);
+        pageContext.setJspWriter(new MockJspWriter(new StringWriter()));
     }
 
 

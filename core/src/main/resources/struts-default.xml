@@ -31,7 +31,7 @@
 
     <package name="struts-default" abstract="true">
         <result-types>
-            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts2.result.ServletDispatcherResult" default="true"/>
             <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
             <result-type name="httpheader" class="org.apache.struts2.result.HttpHeaderResult"/>
@@ -43,8 +43,8 @@
         </result-types>
 
         <interceptors>
-            <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
-            <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="alias" class="org.apache.struts2.interceptor.AliasInterceptor"/>
+            <interceptor name="chain" class="org.apache.struts2.interceptor.ChainingInterceptor"/>
             <interceptor name="coep" class="org.apache.struts2.interceptor.CoepInterceptor"/>
             <interceptor name="conversionError"
                          class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
@@ -56,35 +56,32 @@
             <interceptor name="csp" class="org.apache.struts2.interceptor.csp.CspInterceptor"/>
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor"/>
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
-            <interceptor name="exception" class="com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor"/>
-            <interceptor name="fileUpload" class="org.apache.struts2.interceptor.FileUploadInterceptor"/>
+            <interceptor name="exception" class="org.apache.struts2.interceptor.ExceptionMappingInterceptor"/>
             <interceptor name="actionFileUpload" class="org.apache.struts2.interceptor.ActionFileUploadInterceptor"/>
             <interceptor name="i18n" class="org.apache.struts2.interceptor.I18nInterceptor"/>
-            <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
-            <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="logger" class="org.apache.struts2.interceptor.LoggingInterceptor"/>
+            <interceptor name="modelDriven" class="org.apache.struts2.interceptor.ModelDrivenInterceptor"/>
             <interceptor name="scopedModelDriven"
-                         class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor"/>
-            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
-            <interceptor name="paramRemover" class="com.opensymphony.xwork2.interceptor.ParameterRemoverInterceptor"/>
+                         class="org.apache.struts2.interceptor.ScopedModelDrivenInterceptor"/>
+            <interceptor name="params" class="org.apache.struts2.interceptor.parameter.ParametersInterceptor"/>
+            <interceptor name="paramRemover" class="org.apache.struts2.interceptor.ParameterRemoverInterceptor"/>
             <interceptor name="actionMappingParams"
                          class="org.apache.struts2.interceptor.ActionMappingParametersInterceptor"/>
-            <interceptor name="prepare" class="com.opensymphony.xwork2.interceptor.PrepareInterceptor"/>
-            <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="prepare" class="org.apache.struts2.interceptor.PrepareInterceptor"/>
+            <interceptor name="staticParams" class="org.apache.struts2.interceptor.StaticParametersInterceptor"/>
             <interceptor name="scope" class="org.apache.struts2.interceptor.ScopeInterceptor"/>
             <interceptor name="servletConfig" class="org.apache.struts2.interceptor.ServletConfigInterceptor"/>
             <interceptor name="token" class="org.apache.struts2.interceptor.TokenInterceptor"/>
             <interceptor name="tokenSession" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation"
                          class="org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor"/>
-            <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
+            <interceptor name="workflow" class="org.apache.struts2.interceptor.DefaultWorkflowInterceptor"/>
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor"/>
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor"/>
             <interceptor name="datetime" class="org.apache.struts2.interceptor.DateTextFieldInterceptor"/>
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor"/>
             <interceptor name="annotationWorkflow"
-                         class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor"/>
-            <interceptor name="annotationParameterFilter"
-                         class="com.opensymphony.xwork2.interceptor.annotations.AnnotationParameterFilterInterceptor"/>
+                         class="org.apache.struts2.interceptor.annotations.AnnotationWorkflowInterceptor"/>
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor"/>
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="fetchMetadata" class="org.apache.struts2.interceptor.FetchMetadataInterceptor"/>
@@ -114,12 +111,6 @@
                 <interceptor-ref name="basicStack"/>
                 <interceptor-ref name="validation"/>
                 <interceptor-ref name="workflow"/>
-            </interceptor-stack>
-
-            <!-- Sample file upload stack -->
-            <interceptor-stack name="fileUploadStack">
-                <interceptor-ref name="fileUpload"/>
-                <interceptor-ref name="basicStack"/>
             </interceptor-stack>
 
             <!-- Action based file upload stack -->
@@ -171,7 +162,6 @@
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="modelDriven"/>
-                <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="actionFileUpload"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="actionMappingParams"/>
@@ -210,7 +200,6 @@
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
-                <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="actionFileUpload"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="datetime"/>
@@ -264,7 +253,7 @@
 
         <default-interceptor-ref name="defaultStack"/>
 
-        <default-class-ref class="com.opensymphony.xwork2.ActionSupport"/>
+        <default-class-ref class="org.apache.struts2.ActionSupport"/>
 
         <global-allowed-methods>execute,input,back,cancel,browse,save,delete,list,index</global-allowed-methods>
 

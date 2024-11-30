@@ -18,66 +18,67 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
-import com.opensymphony.xwork2.config.FileManagerProvider;
-import com.opensymphony.xwork2.config.ServletContextAwareConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationUtils;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.FileManager;
+import org.apache.struts2.FileManagerFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
+import org.apache.struts2.config.FileManagerFactoryProvider;
+import org.apache.struts2.config.FileManagerProvider;
 import org.apache.struts2.config.PropertiesConfigurationProvider;
+import org.apache.struts2.config.ServletContextAwareConfigurationProvider;
 import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import org.apache.struts2.config.StrutsJavaConfiguration;
 import org.apache.struts2.config.StrutsJavaConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.config.entities.InterceptorStackConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.util.fs.JBossFileManager;
+import org.apache.struts2.util.location.LocatableProperties;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationUtils;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -90,8 +91,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -153,7 +152,7 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
-     * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     * Store state of {@link StrutsConstants#STRUTS_MULTIPART_SAVE_DIR} setting.
      */
     private String multipartSaveDir;
 
@@ -326,17 +325,9 @@ public class Dispatcher {
      *
      * @param val New setting
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
+    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVE_DIR)
     public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public void setMultipartHandler(String val) {
-        // no-op
     }
 
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_ENABLED, required = false)
@@ -371,9 +362,8 @@ public class Dispatcher {
             actionExcludedPatterns = emptyList();
             return;
         }
-        actionExcludedPatterns = unmodifiableList(
-                Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
-                        .map(String::trim).map(Pattern::compile).collect(toList()));
+        actionExcludedPatterns = Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
+                .map(String::trim).map(Pattern::compile).toList();
     }
 
     @Inject
@@ -551,14 +541,6 @@ public class Dispatcher {
         return new StrutsXmlConfigurationProvider(filename, ctx);
     }
 
-    /**
-     * @deprecated since 6.2.0, use {@link #createStrutsXmlConfigurationProvider(String, ServletContext)}
-     */
-    @Deprecated
-    protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
-        return createStrutsXmlConfigurationProvider(filename, ctx);
-    }
-
     private void init_JavaConfigurations() {
         String configClasses = initParams.get("javaConfigClasses");
         if (configClasses != null) {
@@ -566,9 +548,9 @@ public class Dispatcher {
             for (String cname : classes) {
                 try {
                     Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
-                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.newInstance();
+                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.getDeclaredConstructor().newInstance();
                     configurationManager.addContainerProvider(createJavaConfigurationProvider(config));
-                } catch (InstantiationException e) {
+                } catch (InvocationTargetException | NoSuchMethodException | InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate java configuration: " + cname, e);
                 } catch (IllegalAccessException e) {
                     throw new ConfigurationException("Unable to access java configuration: " + cname, e);
@@ -590,12 +572,12 @@ public class Dispatcher {
             for (String cname : classes) {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
-                    ConfigurationProvider prov = (ConfigurationProvider) cls.newInstance();
+                    ConfigurationProvider prov = (ConfigurationProvider) cls.getDeclaredConstructor().newInstance();
                     if (prov instanceof ServletContextAwareConfigurationProvider) {
                         ((ServletContextAwareConfigurationProvider) prov).initWithContext(servletContext);
                     }
                     configurationManager.addContainerProvider(prov);
-                } catch (InstantiationException e) {
+                } catch (InvocationTargetException | NoSuchMethodException | InstantiationException e) {
                     throw new ConfigurationException("Unable to instantiate provider: " + cname, e);
                 } catch (IllegalAccessException e) {
                     throw new ConfigurationException("Unable to access provider: " + cname, e);
@@ -734,7 +716,7 @@ public class Dispatcher {
             // if the ActionMapping says to go straight to a result, do it!
             if (mapping.getResult() != null) {
                 Result result = mapping.getResult();
-                result.execute((org.apache.struts2.ActionInvocation) proxy.getInvocation());
+                result.execute(proxy.getInvocation());
             } else {
                 proxy.execute();
             }
@@ -869,7 +851,6 @@ public class Dispatcher {
             .with(DispatcherConstants.REQUEST, requestMap)
             .with(DispatcherConstants.SESSION, sessionMap)
             .with(DispatcherConstants.APPLICATION, applicationMap)
-            .with(DispatcherConstants.PARAMETERS, parameters)
             .getContextMap();
 
         AttributeMap attrMap = new AttributeMap(extraContext);
@@ -911,11 +892,12 @@ public class Dispatcher {
      * @return the path to save uploaded files to
      */
     protected String getSaveDir() {
-        String saveDir = multipartSaveDir.trim();
+        String saveDir = Objects.toString(multipartSaveDir, "").trim();
 
-        if (saveDir.equals("")) {
-            File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+        if (saveDir.isEmpty()) {
+            File tempdir = (File) servletContext.getAttribute(ServletContext.TEMPDIR);
+            LOG.info("Unable to find: {} property setting. Defaulting to: {}",
+                    StrutsConstants.STRUTS_MULTIPART_SAVE_DIR, ServletContext.TEMPDIR);
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -928,9 +910,9 @@ public class Dispatcher {
                 if (!multipartSaveDir.mkdirs()) {
                     String logMessage;
                     try {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
                     } catch (IOException e) {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.toString() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir + "'.";
                     }
                     if (devMode) {
                         LOG.error(logMessage);
@@ -1093,10 +1075,9 @@ public class Dispatcher {
     public void cleanUpRequest(HttpServletRequest request) {
         ContainerHolder.clear();
         threadAllowlist.clearAllowlist();
-        if (!(request instanceof MultiPartRequestWrapper)) {
+        if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {
             return;
         }
-        MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
         multiWrapper.cleanUp();
     }
 
@@ -1105,7 +1086,7 @@ public class Dispatcher {
      *
      * @param request  the HttpServletRequest object.
      * @param response the HttpServletResponse object.
-     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
+     * @param code     the HttpServletResponse error code (see {@link jakarta.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      * @since 2.3.17
      */

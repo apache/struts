@@ -22,11 +22,11 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
-<#if (parameters.errorposition!"top") == 'top'>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
+<#if (attributes.errorposition!"top") == 'top'>
 <#if hasFieldErrors>
-<#list fieldErrors.get(parameters.name) as error>
-<tr errorFor="${parameters.id}">
+<#list fieldErrors.get(attributes.name) as error>
+<tr errorFor="${attributes.id}">
     <td class="tdErrorMessage" colspan="2"><#rt/>
         <span class="errorMessage">${error}</span><#t/>
     </td><#lt/>
@@ -34,10 +34,10 @@
 </#list>
 </#if>
 </#if>
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
+<#assign labelPos = attributes.form.labelPosition/>
+<#elseif attributes.labelPosition??>
+<#assign labelPos = attributes.labelPosition/>
 </#if>
 <#--
 	if the label position is top,
@@ -49,10 +49,10 @@
 <#else>
     <td class="tdLabel"><#rt/>
 </#if>
-<#if parameters.label??>
+<#if attributes.label??>
     <label <#t/>
-<#if parameters.id??>
-        for="${parameters.id}" <#t/>
+<#if attributes.id??>
+        for="${attributes.id}" <#t/>
 </#if>
 <#if hasFieldErrors>
         class="errorLabel"<#t/>
@@ -60,15 +60,15 @@
         class="label"<#t/>
 </#if>
     ><#t/>
-<#if (parameters.required!false) && ((parameters.requiredPosition!"right") != 'right')>
+<#if (attributes.required!false) && ((attributes.requiredPosition!"right") != 'right')>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label}<#t/>
-<#if (parameters.required!false) && ((parameters.requiredPosition!"right") == 'right')>
+${attributes.label}<#t/>
+<#if (attributes.required!false) && ((attributes.requiredPosition!"right") == 'right')>
  <span class="required">*</span><#t/>
 </#if>
-${parameters.labelseparator!":"}<#t/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
+${attributes.labelseparator!":"}<#t/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/tooltip.ftl" />
 </label><#t/>
 </#if>
     </td><#lt/>

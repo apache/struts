@@ -18,8 +18,12 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.PageContext;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,10 +33,7 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.url.QueryStringParser;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -54,11 +55,11 @@ import javax.servlet.jsp.PageContext;
  * {@link PageContext#include(String) include} method is called.</li>
  *
  * <li>If there is no PageContext and we're not in any sort of include (there is no
- * "javax.servlet.include.servlet_path" in the request attributes), then a call to
- * {@link RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse) forward}
+ * {@link RequestDispatcher#INCLUDE_SERVLET_PATH} in the request attributes), then a call to
+ * {@link RequestDispatcher#forward(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse) forward}
  * is made.</li>
  *
- * <li>Otherwise, {@link RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse) include}
+ * <li>Otherwise, {@link RequestDispatcher#include(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse) include}
  * is called.</li>
  *
  * </ul>
@@ -90,10 +91,11 @@ import javax.servlet.jsp.PageContext;
  * This result follows the same rules from {@link StrutsResultSupport}.
  * </p>
  *
- * @see javax.servlet.RequestDispatcher
+ * @see jakarta.servlet.RequestDispatcher
  */
 public class ServletDispatcherResult extends StrutsResultSupport {
 
+    @Serial
     private static final long serialVersionUID = -1970659272360685627L;
 
     private static final Logger LOG = LogManager.getLogger(ServletDispatcherResult.class);
@@ -123,7 +125,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
      *                   HTTP request.
      */
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        LOG.debug("Forwarding to location: {}", finalLocation);
+        LOG.debug("Processing location: {}", finalLocation);
 
         PageContext pageContext = ServletActionContext.getPageContext();
 
@@ -143,8 +145,6 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 if (!queryParams.isEmpty()) {
                     parameters = HttpParameters.create(queryParams.getQueryParams()).withParent(parameters).build();
                     invocation.getInvocationContext().withParameters(parameters);
-                    // put to extraContext, see Dispatcher#createContextMap
-                    invocation.getInvocationContext().getContextMap().put("parameters", parameters);
                 }
             }
 
@@ -156,17 +156,26 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             }
 
             //if we are inside an action tag, we always need to do an include
-            Boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
+            boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
+
+            // this should allow integration with third-party view related frameworks
+            if (finalLocation.contains("?")) {
+                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation.substring(0, finalLocation.indexOf('?')));
+            } else {
+                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation);
+            }
 
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type
-            if (!insideActionTag && !response.isCommitted() && (request.getAttribute("javax.servlet.include.servlet_path") == null)) {
+            if (!insideActionTag && !response.isCommitted() && (request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH) == null)) {
+                LOG.debug("Forwarding to location: {}", finalLocation);
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 
                 dispatcher.forward(request, response);
             } else {
+                LOG.debug("Including location: {}", finalLocation);
                 dispatcher.include(request, response);
             }
         }

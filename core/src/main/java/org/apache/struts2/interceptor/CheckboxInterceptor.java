@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,12 +53,14 @@ import java.util.Set;
 public class CheckboxInterceptor extends AbstractInterceptor {
 
     /** Auto-generated serialization id */
+    @Serial
     private static final long serialVersionUID = -586878104807229585L;
 
     private String uncheckedValue = Boolean.FALSE.toString();
 
     private static final Logger LOG = LogManager.getLogger(CheckboxInterceptor.class);
 
+    @Override
     public String intercept(ActionInvocation ai) throws Exception {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Parameter> extraParams = new HashMap<>();

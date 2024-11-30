@@ -18,6 +18,7 @@
  */
 package org.apache.tiles.web.util;
 
+import jakarta.servlet.RequestDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.api.AttributeContext;
@@ -28,10 +29,10 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.reflect.ClassUtil;
 import org.apache.tiles.request.servlet.ServletRequest;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Tiles dispatching servlet.  Used to invoke
@@ -113,7 +114,7 @@ public class TilesDispatchServlet extends HttpServlet {
      * @return The definition name to render.
      */
     protected String getDefinitionName(HttpServletRequest request) {
-        String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String path = (String) request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH);
         if (path == null) {
             path = request.getServletPath();
         }
@@ -141,7 +142,7 @@ public class TilesDispatchServlet extends HttpServlet {
         /**
          * {@inheritDoc}
          */
-        public void mutate(AttributeContext context, javax.servlet.ServletRequest request) {
+        public void mutate(AttributeContext context, jakarta.servlet.ServletRequest request) {
             // noop;
         }
     }

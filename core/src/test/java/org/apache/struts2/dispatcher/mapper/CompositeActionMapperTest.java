@@ -20,12 +20,12 @@ package org.apache.struts2.dispatcher.mapper;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.inject.Container;
 import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -34,11 +34,11 @@ import javax.servlet.http.HttpServletRequest;
 public class CompositeActionMapperTest extends TestCase {
 
     Mock mockContainer;
-    
+
     public void setUp() throws Exception {
         mockContainer = new Mock(Container.class);
     }
-    
+
     public void testGetActionMappingAndUri1() throws Exception {
         ActionMapper mapper1 = new InnerActionMapper1();
         ActionMapper mapper2 = new InnerActionMapper2();
@@ -47,16 +47,16 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper3);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper3")), mapper2);
         CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2,mapper3");
-        
+
         ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager(Container.DEFAULT_NAME));
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
         mockContainer.verify();
-        
+
         assertNotNull(actionMapping);
         assertNotNull(uri);
         assertTrue(actionMapping == InnerActionMapper3.actionMapping);
         assertTrue(uri == InnerActionMapper3.uri);
-        
+
     }
 
     public void testGetActionMappingAndUri2() throws Exception {

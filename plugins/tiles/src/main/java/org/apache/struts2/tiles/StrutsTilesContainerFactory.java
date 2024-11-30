@@ -18,7 +18,15 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.util.TextParseUtil;
+import jakarta.el.ArrayELResolver;
+import jakarta.el.BeanELResolver;
+import jakarta.el.CompositeELResolver;
+import jakarta.el.ELResolver;
+import jakarta.el.ListELResolver;
+import jakarta.el.MapELResolver;
+import jakarta.el.ResourceBundleELResolver;
+import jakarta.servlet.jsp.JspFactory;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -59,14 +67,6 @@ import org.apache.tiles.request.render.BasicRendererFactory;
 import org.apache.tiles.request.render.ChainedDelegateRenderer;
 import org.apache.tiles.request.render.Renderer;
 
-import javax.el.ArrayELResolver;
-import javax.el.BeanELResolver;
-import javax.el.CompositeELResolver;
-import javax.el.ELResolver;
-import javax.el.ListELResolver;
-import javax.el.MapELResolver;
-import javax.el.ResourceBundleELResolver;
-import javax.servlet.jsp.JspFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -104,14 +104,6 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
      * Default pattern to be used to collect Tiles definitions if user didn't configure any
      */
     public static final Set<String> TILES_DEFAULT_PATTERNS = TextParseUtil.commaDelimitedStringToSet("*tiles*.xml");
-
-    /**
-     * Default pattern to be used to collect Tiles definitions if user didn't configure any
-     *
-     * @deprecated since Struts 6.4.0, use {@link #TILES_DEFAULT_PATTERNS} instead
-     */
-    @Deprecated
-    public static final String TILES_DEFAULT_PATTERN = String.join(",", TILES_DEFAULT_PATTERNS);
 
     /**
      * Supported expression languages

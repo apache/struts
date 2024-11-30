@@ -19,8 +19,8 @@
 package org.apache.struts2.components;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.springframework.mock.web.MockHttpServletRequest;

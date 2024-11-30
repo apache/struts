@@ -18,23 +18,37 @@
  */
 package it.org.apache.struts2.rest.example;
 
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import net.sourceforge.jwebunit.junit.WebTestCase;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.htmlunit.FailingHttpStatusCodeException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 
-public class PostOrderTest extends WebTestCase {
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertLinkNotPresentWithText;
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTextFieldEquals;
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTextPresent;
+import static net.sourceforge.jwebunit.junit.JWebUnit.beginAt;
+import static net.sourceforge.jwebunit.junit.JWebUnit.getTestContext;
+import static net.sourceforge.jwebunit.junit.JWebUnit.setTextField;
+import static net.sourceforge.jwebunit.junit.JWebUnit.setWorkingForm;
+import static net.sourceforge.jwebunit.junit.JWebUnit.submit;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+public class PostOrderTest {
+
+    @Before
     public void setUp() throws Exception {
         getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
     }
 
-
+    @Test
     public void testPostOrder() {
         beginAt("/orders/new");
         setWorkingForm(0);
@@ -45,6 +59,7 @@ public class PostOrderTest extends WebTestCase {
         assertLinkNotPresentWithText("Back to Orders");
     }
 
+    @Test
     public void testPostOrderWithErrors() {
         beginAt("/orders/new");
         setWorkingForm(0);
@@ -58,6 +73,7 @@ public class PostOrderTest extends WebTestCase {
         assertTextFieldEquals("amount", "321");
     }
 
+    @Test
     public void testPostOrderInHtml() {
         beginAt("/orders/new.xhtml");
         setWorkingForm(0);
@@ -72,6 +88,7 @@ public class PostOrderTest extends WebTestCase {
         assertLinkNotPresentWithText("Back to Orders");
     }
 
+    @Test
     public void testPostOrderInXml() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(ParameterUtils.getBaseUrl() + "/orders.xml");
@@ -85,6 +102,7 @@ public class PostOrderTest extends WebTestCase {
         client.close();
     }
 
+    @Test
     public void testPostOrderInXmlWithBadData() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(ParameterUtils.getBaseUrl() + "/orders.xml");
@@ -98,6 +116,7 @@ public class PostOrderTest extends WebTestCase {
         client.close();
     }
 
+    @Test
     public void testPostOrderInJson() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(ParameterUtils.getBaseUrl() + "/orders.json");
@@ -108,6 +127,7 @@ public class PostOrderTest extends WebTestCase {
         client.close();
     }
 
+    @Test
     public void testPostOrderInJsonWithBadData() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(ParameterUtils.getBaseUrl() + "/orders.json");

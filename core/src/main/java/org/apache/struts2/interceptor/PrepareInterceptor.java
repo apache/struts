@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.Preparable;
 
+import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -100,6 +100,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PrepareInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -5216969014510719786L;
 
     private final static String PREPARE_PREFIX = "prepare";

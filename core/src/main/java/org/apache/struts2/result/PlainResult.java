@@ -18,17 +18,15 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.result.plain.HttpHeader;
 import org.apache.struts2.result.plain.ResponseBuilder;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * This result can only be used in code, as a result of action's method, eg.:

@@ -18,19 +18,20 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.CheckboxList;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * @see CheckboxList
  */
 public class CheckboxListTag extends AbstractRequiredListTag {
 
+    @Serial
     private static final long serialVersionUID = 4023034029558150010L;
 
     @Override
@@ -38,10 +39,10 @@ public class CheckboxListTag extends AbstractRequiredListTag {
         return new CheckboxList(stack, req, res);
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }

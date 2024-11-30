@@ -34,7 +34,8 @@ import org.apache.tiles.request.render.Renderer;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.jsp.JspFactory;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.jsp.JspFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

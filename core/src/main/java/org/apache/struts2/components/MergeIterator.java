@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.components.Param.UnnamedParametric;
@@ -55,56 +55,56 @@ import java.util.List;
  *      <li>Display third element of the thrid list</li>
  * </ol>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *          <li>var (String) - the name where the resultant merged iterator will be stored in the stack's context</li>
  * </ul>
  * <!-- END SNIPPET: params -->
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: javacode -->
  * public class MergeIteratorTagAction extends ActionSupport {
- *
+ * <p>
  *  private List myList1;
  *  private List myList2;
  *  private List myList3;
- *
+ * <p>
  *  public List getMyList1() {
  *      return myList1;
  *  }
- *
+ * <p>
  *  public List getMyList2() {
  *      return myList2;
  *  }
- *
+ * <p>
  *  public List getMyList3() {
  *      return myList3;
  *  }
- *
- *
+ * <p>
+ * <p>
  *  public String execute() throws Exception {
- *
+ * <p>
  *      myList1 = new ArrayList();
  *      myList1.add("1");
  *      myList1.add("2");
  *      myList1.add("3");
- *
+ * <p>
  *      myList2 = new ArrayList();
  *      myList2.add("a");
  *      myList2.add("b");
  *      myList2.add("c");
- *
+ * <p>
  *      myList3 = new ArrayList();
  *      myList3.add("A");
  *      myList3.add("B");
  *      myList3.add("C");
- *
+ * <p>
  *      return "done";
  *  }
  * }
  * <!-- END SNIPPET: javacode -->
- *
+ * <p>
  * <!-- START SNIPPET: example -->
  * &lt;s:merge var="myMergedIterator1"&gt;
  *      &lt;s:param value="%{myList1}" /&gt;
@@ -115,23 +115,22 @@ import java.util.List;
  *      &lt;s:property /&gt;
  * &lt;/s:iterator&gt;
  * <!-- END SNIPPET: example -->
- *
+ * <p>
  * <!-- START SNIPPET: description -->
  * This wil generate "1aA2bB3cC".
  * <!-- START SNIPPET: description -->
  *
  * @see org.apache.struts2.util.MergeIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.MergeIteratorTag
- *
  */
-@StrutsTag(name="merge", tldTagClass="org.apache.struts2.views.jsp.iterator.MergeIteratorTag", description="Merge the values " +
-                "of a list of iterators into one iterator")
+@StrutsTag(name = "merge", tldTagClass = "org.apache.struts2.views.jsp.iterator.MergeIteratorTag",
+        description = "Merge the values of a list of iterators into one iterator")
 public class MergeIterator extends ContextBean implements UnnamedParametric {
 
     private static final Logger LOG = LogManager.getLogger(MergeIterator.class);
 
     private MergeIteratorFilter mergeIteratorFilter = null;
-    private List _parameters;
+    private List<Object> attributesToMerge;
 
     public MergeIterator(ValueStack stack) {
         super(stack);
@@ -140,15 +139,14 @@ public class MergeIterator extends ContextBean implements UnnamedParametric {
     public boolean start(Writer writer) {
 
         mergeIteratorFilter = new MergeIteratorFilter();
-        _parameters = new ArrayList();
+        attributesToMerge = new ArrayList<>();
 
         return super.start(writer);
     }
 
     public boolean end(Writer writer, String body) {
-
-        for (Object iteratorEntryObj : _parameters) {
-            if (! MakeIterator.isIterable(iteratorEntryObj)) {
+        for (Object iteratorEntryObj : attributesToMerge) {
+            if (!MakeIterator.isIterable(iteratorEntryObj)) {
                 LOG.warn("param with value resolved as {} cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator", iteratorEntryObj);
                 continue;
             }
@@ -165,13 +163,12 @@ public class MergeIterator extends ContextBean implements UnnamedParametric {
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description="The name where the resultant merged iterator will be stored in the stack's context")
+    @StrutsTagAttribute(description = "The name where the resultant merged iterator will be stored in the stack's context")
     public void setVar(String var) {
         super.setVar(var);
     }
 
-    // == UnnamedParametric interface implementation ---------------------
     public void addParameter(Object value) {
-        _parameters.add(value);
+        attributesToMerge.add(value);
     }
 }

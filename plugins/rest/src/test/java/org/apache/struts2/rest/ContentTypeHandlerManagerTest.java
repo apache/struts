@@ -20,14 +20,13 @@ package org.apache.struts2.rest;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
 import junit.framework.TestCase;
-import org.apache.struts2.rest.handler.AbstractContentTypeHandler;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.FormUrlEncodedHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,12 +37,11 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 
 public class ContentTypeHandlerManagerTest extends TestCase {
 
@@ -76,7 +74,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
     public void testHandleResultOK() throws IOException {
 
         String obj = "mystring";
-        ContentTypeHandler handler = new AbstractContentTypeHandler() {
+        ContentTypeHandler handler = new ContentTypeHandler() {
             public void toObject(ActionInvocation invocation, Reader in, Object target) {}
             public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
                 stream.write(obj.toString());

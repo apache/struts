@@ -19,103 +19,103 @@
  */
 -->
 <#if !stack.findValue("#inputtransferselect_js_included")??><#t/>
-	<@s.script src="${base}${parameters.staticContentPath}/inputtransferselect.js"/>
+	<@s.script src="${base}${attributes.staticContentPath}/inputtransferselect.js"/>
 	<#assign temporaryVariable = stack.setValue("#inputtransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>
 <tr>
 <td>
-<#if parameters.leftTitle??><#t/>
-	<label for="leftTitle">${parameters.leftTitle}</label><br />
+<#if attributes.leftTitle??><#t/>
+	<label for="leftTitle">${attributes.leftTitle}</label><br />
 </#if><#t/>
 
 <input type="text"<#rt/>
- name="${parameters.name!""}_input"<#rt/>
-<#if parameters.disabled!false>
+ name="${attributes.name!""}_input"<#rt/>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly!false>
+<#if attributes.readonly!false>
  readonly="readonly"<#rt/>
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}_input"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}_input"<#rt/>
 </#if>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/prefixed-dynamic-attributes.ftl" />
 <@prefixedDynamicAttributes prefix="input-"/>
 />
 
 
 </td>
 <td class="tdTransferSelect">
-	<#assign addLabel=(parameters.addLabel!"->") /><#t/>
+	<#assign addLabel=(attributes.addLabel!"->") /><#t/>
 	<input type="button"
-		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass}"
+		<#if attributes.buttonCssClass?has_content><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle}"
+		<#if attributes.buttonCssStyle?has_content>
+		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id}_input'), document.getElementById('${parameters.id}'))" /><br /><br />
+		 value="${addLabel}" onclick="addOption(document.getElementById('${attributes.id}_input'), document.getElementById('${attributes.id}'))" /><br /><br />
 	<#t/>
-	<#assign removeLabel=(parameters.removeLabel!"<-") /><#t/>
+	<#assign removeLabel=(attributes.removeLabel!"<-") /><#t/>
 	<input type="button"
-  		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass}"
+  		<#if attributes.buttonCssClass?has_content><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle}"
+		<#if attributes.buttonCssStyle?has_content>
+		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id}'))" /><br /><br />
+		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${attributes.id}'))" /><br /><br />
 	<#t/>
-	<#assign removeAllLabel=(parameters.removeAllLabel!"<<--") /><#t/>
+	<#assign removeAllLabel=(attributes.removeAllLabel!"<<--") /><#t/>
 	<input type="button"
-	    		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass}"
+	    		<#if attributes.buttonCssClass?has_content><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
-		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle}"
+		<#if attributes.buttonCssStyle?has_content>
+		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id}'))" /><br /><br />
+		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${attributes.id}'))" /><br /><br />
 </td>
 <td>
-<#if parameters.rightTitle?has_content><#t/>
-	<label for="rightTitle">${parameters.rightTitle}</label><br />
+<#if attributes.rightTitle?has_content><#t/>
+	<label for="rightTitle">${attributes.rightTitle}</label><br />
 </#if><#t/>
 <#global dynamic_attributes_ignore = "input-"/>
-<#include "/${parameters.templateDir}/simple/select.ftl" />
-<#if parameters.allowUpDown!true>
+<#include "/${attributes.templateDir}/simple/select.ftl" />
+<#if attributes.allowUpDown!true>
 <input type="button"
-<#if parameters.headerKey?has_content>
-	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
+<#if attributes.headerKey?has_content>
+	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');"
 <#else>
-	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '');"
+	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '');"
 </#if>
-<#if parameters.downLabel?has_content>
-	value="${parameters.downLabel}"
+<#if attributes.downLabel?has_content>
+	value="${attributes.downLabel}"
 </#if>
 />
 <input type="button"
-<#if parameters.headerKey?has_content>
-	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
+<#if attributes.headerKey?has_content>
+	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');"
 <#else>
-	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '');"
+	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '');"
 </#if>
-<#if parameters.upLabel?has_content>
-	value="${parameters.upLabel}"
+<#if attributes.upLabel?has_content>
+	value="${attributes.upLabel}"
 </#if>
 />
 </#if>

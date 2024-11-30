@@ -20,7 +20,7 @@ package org.apache.tiles.request.jsp.extractor;
 
 import org.apache.tiles.request.attribute.AttributeExtractor;
 
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.PageContext;
 import java.util.Enumeration;
 
 /**

@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
@@ -391,7 +391,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testForm() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -423,7 +423,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testForm_clearTagStateSet() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -457,7 +457,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormId() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -484,7 +484,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormId_clearTagStateSet() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -513,7 +513,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormNoNameOrId() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -542,7 +542,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormNoNameOrId_clearTagStateSet() throws Exception {
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -1093,7 +1093,7 @@ public class FormTagTest extends AbstractUITagTest {
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
         createMocks();
-        request.setupGetServletPath("/testNamespace/testNamespaceAction");
+        request.setServletPath("/testNamespace/testNamespaceAction");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -1133,7 +1133,7 @@ public class FormTagTest extends AbstractUITagTest {
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
         createMocks();
-        request.setupGetServletPath("/testNamespace/testNamespaceAction");
+        request.setServletPath("/testNamespace/testNamespaceAction");
 
         FormTag tag = new FormTag();
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1165,7 +1165,7 @@ public class FormTagTest extends AbstractUITagTest {
      * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot;
      */
     public void testFormTagWithDifferentActionExtensionHardcoded() throws Exception {
-        request.setupGetServletPath("/testNamespace/testNamespaceAction");
+        request.setServletPath("/testNamespace/testNamespaceAction");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -1193,7 +1193,7 @@ public class FormTagTest extends AbstractUITagTest {
      * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot;
      */
     public void testFormTagWithDifferentActionExtensionHardcoded_clearTagStateSet() throws Exception {
-        request.setupGetServletPath("/testNamespace/testNamespaceAction");
+        request.setServletPath("/testNamespace/testNamespaceAction");
 
         FormTag tag = new FormTag();
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1699,8 +1699,8 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormWithStaticAction() throws Exception {
-        request.setupGetServletPath("/");
-        request.setupGetContextPath("/");
+        request.setServletPath("/");
+        request.setContextPath("/");
         request.setRequestURI("/foo.jsp");
 
         FormTag tag = new FormTag();
@@ -1720,8 +1720,8 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormWithStaticAction_clearTagStateSet() throws Exception {
-        request.setupGetServletPath("/");
-        request.setupGetContextPath("/");
+        request.setServletPath("/");
+        request.setContextPath("/");
         request.setRequestURI("/foo.jsp");
 
         FormTag tag = new FormTag();
@@ -1744,7 +1744,7 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormWithActionAndExtension() throws Exception {
-        request.setupGetServletPath("/BLA");
+        request.setServletPath("/BLA");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -1766,7 +1766,7 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     public void testFormWithActionAndExtension_clearTagStateSet() throws Exception {
-        request.setupGetServletPath("/BLA");
+        request.setServletPath("/BLA");
 
         FormTag tag = new FormTag();
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.

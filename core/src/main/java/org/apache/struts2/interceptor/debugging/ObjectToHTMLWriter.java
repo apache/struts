@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.util.reflection.ReflectionException;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +38,7 @@ class ObjectToHTMLWriter {
 
     private static final Logger LOG = LogManager.getLogger(ObjectToHTMLWriter.class);
 
-    private PrettyPrintWriter prettyWriter;
+    private final PrettyPrintWriter prettyWriter;
 
     ObjectToHTMLWriter(Writer writer) {
         this.prettyWriter = new PrettyPrintWriter(writer);
@@ -55,22 +55,19 @@ class ObjectToHTMLWriter {
             writeProperty("root", null, expr);
         } else if (root instanceof Map) {
             LOG.info("Root is a Map");
-            for (Object next : ((Map<?, ?>) root).entrySet()) {
-                Map.Entry<?, ?> property = (Map.Entry<?, ?>) next;
-                String key = property.getKey().toString();
-                Object value = property.getValue();
+            for (Map.Entry<?, ?> next : ((Map<?, ?>) root).entrySet()) {
+                String key = next.getKey().toString();
+                Object value = next.getValue();
                 writeProperty(key, value, expr);
             }
-        } else if (root instanceof List) {
+        } else if (root instanceof List<?> list) {
             LOG.info("Root is a List");
-            List<?> list = (List<?>) root;
             for (int i = 0; i < list.size(); i++) {
                 Object element = list.get(i);
                 writeProperty(String.valueOf(i), element, expr);
             }
-        } else if (root instanceof Set) {
+        } else if (root instanceof Set<?> set) {
             LOG.info("Root is a Set");
-            Set<?> set = (Set<?>) root;
             for (Object next : set) {
                 writeProperty("", next, expr);
             }

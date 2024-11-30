@@ -18,21 +18,19 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -73,7 +71,7 @@ public class OptGroup extends Component {
 
     public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";
 
-    private static Logger LOG = LogManager.getLogger(OptGroup.class);
+    private static final Logger LOG = LogManager.getLogger(OptGroup.class);
 
     protected HttpServletRequest req;
     protected HttpServletResponse res;

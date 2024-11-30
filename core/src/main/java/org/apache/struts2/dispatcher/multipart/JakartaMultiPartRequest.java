@@ -18,356 +18,112 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload.FileCountLimitExceededException;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.RequestContext;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.LocalizedMessage;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * Multipart form data request adapter for Jakarta Commons Fileupload package.
+ * Multipart form data request adapter for Jakarta Commons FileUpload package.
  */
 public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
-    static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
+    private static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
 
-    // maps parameter name -> List of FileItem objects
-    protected Map<String, List<FileItem>> files = new HashMap<>();
+    @Override
+    protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
+        Charset charset = readCharsetEncoding(request);
 
-    // maps parameter name -> List of param values
-    protected Map<String, List<String>> params = new HashMap<>();
+        JakartaServletDiskFileUpload servletFileUpload =
+                prepareServletFileUpload(charset, Path.of(saveDir));
 
-    /**
-     * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
-     * multipart classes (see class description).
-     *
-     * @param saveDir the directory to save off the file
-     * @param request the request containing the multipart
-     * @throws java.io.IOException is thrown if encoding fails.
-     */
-    public void parse(HttpServletRequest request, String saveDir) throws IOException {
-        try {
-            setLocale(request);
-            processUpload(request, saveDir);
-        } catch (FileUploadException e) {
-            LOG.debug("Request exceeded size limit!", e);
-            LocalizedMessage errorMessage;
-            if (e instanceof FileUploadBase.SizeLimitExceededException) {
-                FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermittedSize(), ex.getActualSize()});
-            } else if (e instanceof FileUploadBase.FileSizeLimitExceededException) {
-                FileUploadBase.FileSizeLimitExceededException ex = (FileUploadBase.FileSizeLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getFileName(), ex.getPermittedSize(), ex.getActualSize()});
-            } else if (e instanceof FileCountLimitExceededException) {
-                FileCountLimitExceededException ex = (FileCountLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getLimit()});
+        for (DiskFileItem item : servletFileUpload.parseRequest(request)) {
+            LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
+            if (item.isFormField()) {
+                processNormalFormField(item, charset);
             } else {
-                errorMessage = buildErrorMessage(e, new Object[]{});
-            }
-
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
-            }
-        } catch (Exception e) {
-            LOG.debug("Unable to parse request", e);
-            LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
+                LOG.debug(() -> "Processing a file: " + sanitizeNewlines(item.getFieldName()));
+                processFileField(item);
             }
         }
     }
 
-    protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
-        if (ServletFileUpload.isMultipartContent(request)) {
-            for (FileItem item : parseRequest(request, saveDir)) {
-                LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
-                if (item.isFormField()) {
-                    processNormalFormField(item, request.getCharacterEncoding());
-                } else {
-                    processFileField(item);
-                }
-            }
-        }
+    @Override
+    protected JakartaServletDiskFileUpload createJakartaFileUpload(Charset charset, Path saveDir) {
+        DiskFileItemFactory.Builder builder = DiskFileItemFactory.builder();
+
+        LOG.debug("Using file save directory: {}", saveDir);
+        builder.setPath(saveDir);
+
+        LOG.debug("Sets minimal buffer size to always write file to disk");
+        builder.setBufferSize(1);
+
+        LOG.debug("Using charset: {}", charset);
+        builder.setCharset(charset);
+
+        DiskFileItemFactory factory = builder.get();
+        return new JakartaServletDiskFileUpload(factory);
     }
 
-    protected void processFileField(FileItem item) {
-        LOG.debug("Item is a file upload");
+    protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
+        LOG.debug("Item: {} is a normal form field", item.getName());
 
-        // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(item.getFieldName()));
-            return;
-        }
-
-        List<FileItem> values;
-        if (files.get(item.getFieldName()) != null) {
-            values = files.get(item.getFieldName());
+        List<String> values;
+        String fieldName = item.getFieldName();
+        if (parameters.get(fieldName) != null) {
+            values = parameters.get(fieldName);
         } else {
             values = new ArrayList<>();
         }
 
-        values.add(item);
-        files.put(item.getFieldName(), values);
+        String fieldValue = item.getString(charset);
+        if (exceedsMaxStringLength(fieldName, fieldValue)) {
+            return;
+        }
+        if (item.getSize() == 0) {
+            values.add(StringUtils.EMPTY);
+        } else {
+            values.add(fieldValue);
+        }
+        parameters.put(fieldName, values);
     }
 
-    protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
-        try {
-            LOG.debug("Item is a normal form field");
-
-            List<String> values;
-            if (params.get(item.getFieldName()) != null) {
-                values = params.get(item.getFieldName());
-            } else {
-                values = new ArrayList<>();
-            }
-
-            long size = item.getSize();
-            if (maxStringLength != null && size > maxStringLength) {
-                LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
-                String errorKey = "struts.messages.upload.error.parameter.too.long";
-                LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
-                        new Object[]{item.getFieldName(), maxStringLength, size});
-                if (!errors.contains(localizedMessage)) {
-                    errors.add(localizedMessage);
-                }
-                return;
-            }
-            if (size == 0) {
-                values.add(StringUtils.EMPTY);
-            } else if (charset == null) {
-                values.add(item.getString()); // WW-633
-            } else {
-                values.add(item.getString(charset));
-            }
-            params.put(item.getFieldName(), values);
-        } finally {
-            item.delete();
+    protected void processFileField(DiskFileItem item) {
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (item.getName() == null || item.getName().trim().isEmpty()) {
+            LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(item.getFieldName()));
+            return;
         }
+
+        List<UploadedFile> values;
+        if (uploadedFiles.get(item.getFieldName()) != null) {
+            values = uploadedFiles.get(item.getFieldName());
+        } else {
+            values = new ArrayList<>();
+        }
+
+        if (item.isInMemory()) {
+            LOG.warn("Storing uploaded files just in memory isn't supported currently, skipping file: {}!", item.getName());
+        } else {
+            UploadedFile uploadedFile = StrutsUploadedFile.Builder
+                    .create(item.getPath().toFile())
+                    .withOriginalName(item.getName())
+                    .withContentType(item.getContentType())
+                    .withInputName(item.getFieldName())
+                    .build();
+            values.add(uploadedFile);
+        }
+
+        uploadedFiles.put(item.getFieldName(), values);
     }
 
-    protected List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
-        DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
-        ServletFileUpload upload = createServletFileUpload(fac);
-        return upload.parseRequest(createRequestContext(servletRequest));
-    }
-
-    protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
-        ServletFileUpload upload = new ServletFileUpload(fac);
-        if (maxSize != null) {
-            upload.setSizeMax(maxSize);
-        }
-        if (maxFiles != null) {
-            upload.setFileCountMax(maxFiles);
-        }
-        if (maxFileSize != null) {
-            upload.setFileSizeMax(maxFileSize);
-        }
-        return upload;
-    }
-
-    protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
-        DiskFileItemFactory fac = new DiskFileItemFactory();
-        // Make sure that the data is written to file, even if the file is empty.
-        fac.setSizeThreshold(-1);
-        if (saveDir != null) {
-            fac.setRepository(new File(saveDir));
-        }
-        return fac;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileParameterNames()
-     */
-    public Enumeration<String> getFileParameterNames() {
-        return Collections.enumeration(files.keySet());
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getContentType(java.lang.String)
-     */
-    public String[] getContentType(String fieldName) {
-        List<FileItem> items = files.get(fieldName);
-
-        if (items == null) {
-            return null;
-        }
-
-        List<String> contentTypes = new ArrayList<>(items.size());
-        for (FileItem fileItem : items) {
-            contentTypes.add(fileItem.getContentType());
-        }
-
-        return contentTypes.toArray(new String[0]);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
-     */
-    public UploadedFile[] getFile(String fieldName) {
-        List<FileItem> items = files.get(fieldName);
-
-        if (items == null) {
-            return null;
-        }
-
-        List<UploadedFile> fileList = new ArrayList<>(items.size());
-        for (FileItem fileItem : items) {
-            DiskFileItem diskFileItem = (DiskFileItem) fileItem;
-            File storeLocation = diskFileItem.getStoreLocation();
-
-            // Ensure file exists even if it is empty.
-            if (diskFileItem.getSize() == 0 && storeLocation != null && !storeLocation.exists()) {
-                try {
-                    storeLocation.createNewFile();
-                } catch (IOException e) {
-                    LOG.error("Cannot write uploaded empty file to disk: {}", storeLocation.getAbsolutePath(), e);
-                }
-            }
-            UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(storeLocation)
-                .withContentType(fileItem.getContentType())
-                .withOriginalName(fileItem.getName())
-                .withInputName(fileItem.getFieldName())
-                .build();
-            fileList.add(uploadedFile);
-        }
-
-        return fileList.toArray(new UploadedFile[0]);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileNames(java.lang.String)
-     */
-    public String[] getFileNames(String fieldName) {
-        List<FileItem> items = files.get(fieldName);
-
-        if (items == null) {
-            return null;
-        }
-
-        List<String> fileNames = new ArrayList<>(items.size());
-        for (FileItem fileItem : items) {
-            fileNames.add(getCanonicalName(fileItem.getName()));
-        }
-
-        return fileNames.toArray(new String[0]);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFilesystemName(java.lang.String)
-     */
-    public String[] getFilesystemName(String fieldName) {
-        List<FileItem> items = files.get(fieldName);
-
-        if (items == null) {
-            return null;
-        }
-
-        List<String> fileNames = new ArrayList<>(items.size());
-        for (FileItem fileItem : items) {
-            fileNames.add(((DiskFileItem) fileItem).getStoreLocation().getName());
-        }
-
-        return fileNames.toArray(new String[0]);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameter(java.lang.String)
-     */
-    public String getParameter(String name) {
-        List<String> v = params.get(name);
-        if (v != null && !v.isEmpty()) {
-            return v.get(0);
-        }
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterNames()
-     */
-    public Enumeration<String> getParameterNames() {
-        return Collections.enumeration(params.keySet());
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterValues(java.lang.String)
-     */
-    public String[] getParameterValues(String name) {
-        List<String> v = params.get(name);
-        if (v != null && !v.isEmpty()) {
-            return v.toArray(new String[0]);
-        }
-
-        return null;
-    }
-
-    /**
-     * Creates a RequestContext needed by Jakarta Commons Upload.
-     *
-     * @param req the request.
-     * @return a new request context.
-     */
-    protected RequestContext createRequestContext(final HttpServletRequest req) {
-        return new RequestContext() {
-            public String getCharacterEncoding() {
-                return req.getCharacterEncoding();
-            }
-
-            public String getContentType() {
-                return req.getContentType();
-            }
-
-            public int getContentLength() {
-                return req.getContentLength();
-            }
-
-            public InputStream getInputStream() throws IOException {
-                InputStream in = req.getInputStream();
-                if (in == null) {
-                    throw new IOException("Missing content in the request");
-                }
-                return req.getInputStream();
-            }
-        };
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
-     */
-    public void cleanUp() {
-        Set<String> names = files.keySet();
-        for (String name : names) {
-            List<FileItem> items = files.get(name);
-            for (FileItem item : items) {
-                LOG.debug("Removing file {} {}", name, item);
-                if (!item.isInMemory()) {
-                    item.delete();
-                }
-            }
-        }
-    }
-
-    private String sanitizeNewlines(String before) {
-        return before.replaceAll("[\n\r]", "_");
-    }
 }

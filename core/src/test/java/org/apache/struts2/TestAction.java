@@ -18,13 +18,13 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validations;
-import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.validator.annotations.RequiredStringValidator;
+import org.apache.struts2.validator.annotations.Validations;
+import org.apache.struts2.validator.annotations.ValidatorType;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.views.jsp.ui.User;
 
 import java.util.Arrays;
@@ -92,6 +92,7 @@ public class TestAction extends ActionSupport {
         return collection;
     }
 
+    @StrutsParameter
     public void setCollection(Collection collection) {
         this.collection = collection;
     }
@@ -100,6 +101,7 @@ public class TestAction extends ActionSupport {
         return map;
     }
 
+    @StrutsParameter
     public void setMap(Map map) {
         this.map = map;
     }
@@ -108,6 +110,7 @@ public class TestAction extends ActionSupport {
         return foo;
     }
 
+    @StrutsParameter
     public void setFoo(String foo) {
         this.foo = foo;
     }
@@ -116,6 +119,7 @@ public class TestAction extends ActionSupport {
         return result;
     }
 
+    @StrutsParameter
     public void setResult(String result) {
         this.result = result;
     }
@@ -124,6 +128,7 @@ public class TestAction extends ActionSupport {
         return user;
     }
 
+    @StrutsParameter
     public void setUser(User user) {
         this.user = user;
     }
@@ -132,6 +137,7 @@ public class TestAction extends ActionSupport {
         return array;
     }
 
+    @StrutsParameter
     public void setArray(String[] array) {
         this.array = array;
     }
@@ -140,6 +146,7 @@ public class TestAction extends ActionSupport {
         return objectArray;
     }
 
+    @StrutsParameter
     public void setObjectArray(Object[] arrayObject) {
         this.objectArray = arrayObject;
     }
@@ -148,6 +155,7 @@ public class TestAction extends ActionSupport {
         return list;
     }
 
+    @StrutsParameter
     public void setList(String[][] list) {
         this.list = list;
     }
@@ -156,10 +164,12 @@ public class TestAction extends ActionSupport {
         return list2;
     }
 
+    @StrutsParameter
     public void setList2(List list2) {
         this.list2 = list2;
     }
 
+    @StrutsParameter
     public void setList3(List list) {
         this.list3 = list;
     }
@@ -172,6 +182,7 @@ public class TestAction extends ActionSupport {
         return this.collection2;
     }
 
+    @StrutsParameter
     public void setCollection2(Collection collection) {
         this.collection2 = collection;
     }
@@ -180,6 +191,7 @@ public class TestAction extends ActionSupport {
         return fooInt;
     }
 
+    @StrutsParameter
     public void setFooInt(Integer fooInt) {
         this.fooInt = fooInt;
     }
@@ -226,6 +238,7 @@ public class TestAction extends ActionSupport {
         return status;
     }
 
+    @StrutsParameter
     public void setStatus(SomeEnum status) {
         this.status = status;
     }
@@ -238,6 +251,7 @@ public class TestAction extends ActionSupport {
         return floatNumber;
     }
 
+    @StrutsParameter
     public void setFloatNumber(Float floatNumber) {
         this.floatNumber = floatNumber;
     }
@@ -246,6 +260,7 @@ public class TestAction extends ActionSupport {
         return id;
     }
 
+    @StrutsParameter
     public void setId(Long id) {
         this.id = id;
     }
@@ -254,6 +269,7 @@ public class TestAction extends ActionSupport {
         return enumList;
     }
 
+    @StrutsParameter
     public void setEnumList(List<SomeEnum> enumList) {
         this.enumList = enumList;
     }
@@ -262,6 +278,7 @@ public class TestAction extends ActionSupport {
         return intList;
     }
 
+    @StrutsParameter
     public void setIntList(List<Integer> intList) {
         this.intList = intList;
     }
@@ -270,6 +287,7 @@ public class TestAction extends ActionSupport {
         return someBool;
     }
 
+    @StrutsParameter
     public void setSomeBool(Boolean someBool) {
         this.someBool = someBool;
     }

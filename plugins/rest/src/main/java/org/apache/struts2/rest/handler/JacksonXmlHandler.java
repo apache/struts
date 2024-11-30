@@ -20,7 +20,7 @@ package org.apache.struts2.rest.handler;
 
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,29 +31,33 @@ import java.io.Writer;
 /**
  * Handles XML content using Jackson
  */
-public class JacksonXmlHandler extends AbstractContentTypeHandler {
+public class JacksonXmlHandler implements ContentTypeHandler {
 
     private static final Logger LOG = LogManager.getLogger(JacksonXmlHandler.class);
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";
-    private XmlMapper mapper = new XmlMapper();
+    private final XmlMapper mapper = new XmlMapper();
 
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         LOG.debug("Converting input into an object of: {}", target.getClass().getName());
         ObjectReader or = mapper.readerForUpdating(target);
         or.readValue(in);
     }
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
         LOG.debug("Converting an object of {} into string", obj.getClass().getName());
         mapper.writeValue(stream, obj);
         return null;
     }
 
+    @Override
     public String getContentType() {
         return DEFAULT_CONTENT_TYPE;
     }
 
+    @Override
     public String getExtension() {
         return "xml";
     }

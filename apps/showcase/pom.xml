@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-showcase</artifactId>
@@ -50,17 +50,7 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-sitemesh-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-dwr-plugin</artifactId>
         </dependency>
 
         <dependency>
@@ -92,6 +82,14 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
@@ -99,8 +97,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -123,12 +121,9 @@
         </dependency>
 
         <dependency>
-            <groupId>opensymphony</groupId>
-            <artifactId>sitemesh</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.directwebremoting</groupId>
-            <artifactId>dwr</artifactId>
+           <groupId>org.sitemesh</groupId>
+           <artifactId>sitemesh</artifactId>
+           <version>3.2.1</version>
         </dependency>
 
        <dependency>
@@ -144,22 +139,71 @@
         </dependency>
 
        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <scope>test</scope>
-        </dependency>
+           <groupId>org.htmlunit</groupId>
+           <artifactId>htmlunit</artifactId>
+           <scope>test</scope>
+       </dependency>
 
         <!-- BeanValidation Example -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.validation</groupId>
+                    <artifactId>jakarta.validation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+        <!--
+         Nashorn (the built-in JDK javascript engine) was deprecated in JDK 11 and removed in JDK 15
+         As a result attempting to use @ScriptAssert on JDK 17 leads to the exception
+         See more details
+         https://stackoverflow.com/questions/78008950/resolve-org-hibernate-validator-spi-scripting-scriptevaluatornotfoundexception
+         -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>3.0.22</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <?m2e ignore?>
+                  <id>copy-dependencies</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.build.directory}/extraclasspath</outputDirectory>
+                    <artifactItems>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
+                        <destFileName>struts2-velocity-tools-view-jakarta.jar</destFileName>
+                      </artifactItem>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
+                        <destFileName>struts2-velocity-tools-jsp-jakarta.jar</destFileName>
+                      </artifactItem>
+                    </artifactItems>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>false</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -190,7 +234,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.46.v20220331</version>
+                <version>11.0.18</version>
                 <configuration>
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>
@@ -203,12 +247,15 @@
                     <httpConnector>
                         <port>8090</port>
                     </httpConnector>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
-                    <webAppConfig>
-                        <contextPath>/struts2-showcase</contextPath>
-                        <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
-                    </webAppConfig>
+                    <scan>10</scan>
+                    <webApp>
+                      <extraClasspath>
+                        ${project.build.directory}/extraclasspath/struts2-velocity-tools-view-jakarta.jar,
+                        ${project.build.directory}/extraclasspath/struts2-velocity-tools-jsp-jakarta
+                      </extraClasspath>
+                      <contextPath>/struts2-showcase</contextPath>
+                      <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
+                    </webApp>
                 </configuration>
                 <executions>
                     <execution>

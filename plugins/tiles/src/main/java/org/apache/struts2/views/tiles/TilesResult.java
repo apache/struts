@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.views.tiles;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ import org.apache.tiles.api.Definition;
 import org.apache.tiles.api.TilesContainer;
 import org.apache.tiles.api.TilesException;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.tiles.api.access.TilesAccess;
 import org.apache.tiles.api.mgmt.MutableTilesContainer;
 import org.apache.tiles.request.ApplicationContext;

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.convention.actions;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.action.Action;
 
 public class Skip implements Action {
     public String execute() throws Exception {

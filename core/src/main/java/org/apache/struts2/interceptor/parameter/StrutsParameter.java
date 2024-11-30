@@ -18,13 +18,15 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import org.apache.struts2.action.Action;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate public getter/setter methods or fields on {@link com.opensymphony.xwork2.Action} classes that are
+ * Used to annotate public getter/setter methods or fields on {@link Action} classes that are
  * intended for parameter injection by the {@link ParametersInterceptor}.
  *
  * @since 6.4.0

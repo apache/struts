@@ -27,8 +27,8 @@
     it is then the default bean's name and {@link org.apache.struts2.config.StrutsBeanSelectionProvider} links name "struts"
     with "default" (aliasing it)
 
-    If name won't be defined then the "default" value will be used {@link com.opensymphony.xwork2.inject.Container#DEFAULT_NAME}
-    and {@link com.opensymphony.xwork2.inject.Inject}
+    If name won't be defined then the "default" value will be used {@link org.apache.struts2.inject.Container#DEFAULT_NAME}
+    and {@link org.apache.struts2.inject.Inject}
 -->
 <!DOCTYPE struts PUBLIC
         "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
@@ -36,38 +36,38 @@
 
 <struts>
 
-    <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
-    <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts"
+    <bean class="org.apache.struts2.ObjectFactory" name="struts"/>
+    <bean type="org.apache.struts2.factory.ResultFactory" name="struts"
           class="org.apache.struts2.factory.StrutsResultFactory"/>
-    <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts"
-          class="com.opensymphony.xwork2.factory.DefaultActionFactory"/>
-    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts"
-          class="com.opensymphony.xwork2.factory.StrutsConverterFactory"/>
-    <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="struts"
-          class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory"/>
-    <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="struts"
-          class="com.opensymphony.xwork2.factory.DefaultValidatorFactory"/>
-    <bean type="com.opensymphony.xwork2.factory.UnknownHandlerFactory" name="struts"
-          class="com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory"/>
+    <bean type="org.apache.struts2.factory.ActionFactory" name="struts"
+          class="org.apache.struts2.factory.DefaultActionFactory"/>
+    <bean type="org.apache.struts2.factory.ConverterFactory" name="struts"
+          class="org.apache.struts2.factory.StrutsConverterFactory"/>
+    <bean type="org.apache.struts2.factory.InterceptorFactory" name="struts"
+          class="org.apache.struts2.factory.DefaultInterceptorFactory"/>
+    <bean type="org.apache.struts2.factory.ValidatorFactory" name="struts"
+          class="org.apache.struts2.factory.DefaultValidatorFactory"/>
+    <bean type="org.apache.struts2.factory.UnknownHandlerFactory" name="struts"
+          class="org.apache.struts2.factory.DefaultUnknownHandlerFactory"/>
 
-    <bean type="com.opensymphony.xwork2.FileManager" class="com.opensymphony.xwork2.util.fs.DefaultFileManager"
+    <bean type="org.apache.struts2.FileManager" class="org.apache.struts2.util.fs.DefaultFileManager"
           name="system" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.FileManagerFactory"
-          class="com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory" name="struts" scope="singleton"/>
+    <bean type="org.apache.struts2.FileManagerFactory"
+          class="org.apache.struts2.util.fs.DefaultFileManagerFactory" name="struts" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="struts"
+    <bean type="org.apache.struts2.ActionProxyFactory" name="struts"
           class="org.apache.struts2.factory.StrutsActionProxyFactory"/>
-    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="prefix"
+    <bean type="org.apache.struts2.ActionProxyFactory" name="prefix"
           class="org.apache.struts2.factory.PrefixBasedActionProxyFactory"/>
 
-    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
+    <bean type="org.apache.struts2.conversion.ObjectTypeDeterminer" name="struts"
+          class="org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer"/>
 
-    <bean type="com.opensymphony.xwork2.util.PatternMatcher" name="struts"
-          class="com.opensymphony.xwork2.util.WildcardHelper"/>
-    <bean type="com.opensymphony.xwork2.util.PatternMatcher" name="namedVariable"
-          class="com.opensymphony.xwork2.util.NamedVariablePatternMatcher"/>
-    <bean type="com.opensymphony.xwork2.util.PatternMatcher" name="regex"
+    <bean type="org.apache.struts2.util.PatternMatcher" name="struts"
+          class="org.apache.struts2.util.WildcardHelper"/>
+    <bean type="org.apache.struts2.util.PatternMatcher" name="namedVariable"
+          class="org.apache.struts2.util.NamedVariablePatternMatcher"/>
+    <bean type="org.apache.struts2.util.PatternMatcher" name="regex"
           class="org.apache.struts2.util.RegexPatternMatcher"/>
 
     <bean type="org.apache.struts2.util.ContentTypeMatcher" name="struts"
@@ -101,157 +101,142 @@
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="jsp"
           class="org.apache.struts2.components.template.JspTemplateEngine"/>
 
-    <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.XWorkConverter"/>
+    <bean type="org.apache.struts2.conversion.impl.XWorkConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.XWorkConverter"/>
 
-    <bean type="com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor" name="struts"
+    <bean type="org.apache.struts2.conversion.ConversionPropertiesProcessor" name="struts"
           class="org.apache.struts2.conversion.StrutsConversionPropertiesProcessor"/>
-    <bean type="com.opensymphony.xwork2.conversion.ConversionFileProcessor" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor"/>
-    <bean type="com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverterCreator" name="struts"
+    <bean type="org.apache.struts2.conversion.ConversionFileProcessor" name="struts"
+          class="org.apache.struts2.conversion.impl.DefaultConversionFileProcessor"/>
+    <bean type="org.apache.struts2.conversion.ConversionAnnotationProcessor" name="struts"
+          class="org.apache.struts2.conversion.impl.DefaultConversionAnnotationProcessor"/>
+    <bean type="org.apache.struts2.conversion.TypeConverterCreator" name="struts"
           class="org.apache.struts2.conversion.StrutsTypeConverterCreator"/>
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="struts"
+    <bean type="org.apache.struts2.conversion.TypeConverterHolder" name="struts"
           class="org.apache.struts2.conversion.StrutsTypeConverterHolder"/>
 
-    <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter"/>
+    <bean class="org.apache.struts2.conversion.impl.XWorkBasicConverter"/>
 
-    <bean type="com.opensymphony.xwork2.conversion.impl.CollectionConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.CollectionConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.impl.ArrayConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.ArrayConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.impl.DateConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.DateConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.impl.NumberConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.conversion.impl.StringConverter" name="struts"
-          class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
+    <bean type="org.apache.struts2.conversion.impl.CollectionConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.CollectionConverter" scope="singleton"/>
+    <bean type="org.apache.struts2.conversion.impl.ArrayConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.ArrayConverter" scope="singleton"/>
+    <bean type="org.apache.struts2.conversion.impl.DateConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.DateConverter" scope="singleton"/>
+    <bean type="org.apache.struts2.conversion.impl.NumberConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.NumberConverter" scope="singleton"/>
+    <bean type="org.apache.struts2.conversion.impl.StringConverter" name="struts"
+          class="org.apache.struts2.conversion.impl.StringConverter" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.LocalizedTextProvider" name="global-only"
-          class="com.opensymphony.xwork2.util.GlobalLocalizedTextProvider" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.LocalizedTextProvider" name="struts"
-          class="com.opensymphony.xwork2.util.StrutsLocalizedTextProvider" scope="singleton"/>
+    <bean type="org.apache.struts2.text.LocalizedTextProvider" name="global-only"
+          class="org.apache.struts2.text.GlobalLocalizedTextProvider" scope="singleton"/>
+    <bean type="org.apache.struts2.text.LocalizedTextProvider" name="struts"
+          class="org.apache.struts2.text.StrutsLocalizedTextProvider" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.TextProvider" name="system" class="com.opensymphony.xwork2.DefaultTextProvider"
+    <bean type="org.apache.struts2.text.TextProvider" name="system" class="org.apache.struts2.text.DefaultTextProvider"
           scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.TextProviderFactory" name="struts"
-          class="com.opensymphony.xwork2.StrutsTextProviderFactory" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.LocaleProviderFactory" name="struts"
-          class="com.opensymphony.xwork2.DefaultLocaleProviderFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.text.TextProviderFactory" name="struts"
+          class="org.apache.struts2.text.StrutsTextProviderFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.locale.LocaleProviderFactory" name="struts"
+          class="org.apache.struts2.locale.DefaultLocaleProviderFactory" scope="singleton"/>
 
     <bean type="org.apache.struts2.components.UrlRenderer" name="struts"
           class="org.apache.struts2.components.ServletUrlRenderer"/>
     <bean type="org.apache.struts2.views.util.UrlHelper" name="struts"
           class="org.apache.struts2.views.util.DefaultUrlHelper"/>
 
-    <bean type="com.opensymphony.xwork2.util.ValueStackFactory" name="struts"
-          class="com.opensymphony.xwork2.ognl.OgnlValueStackFactory"/>
-    <bean type="com.opensymphony.xwork2.util.reflection.ReflectionProvider" name="struts"
-          class="com.opensymphony.xwork2.ognl.OgnlReflectionProvider"/>
-    <bean type="com.opensymphony.xwork2.util.reflection.ReflectionContextFactory" name="struts"
-          class="com.opensymphony.xwork2.ognl.OgnlReflectionContextFactory"/>
+    <bean type="org.apache.struts2.util.ValueStackFactory" name="struts"
+          class="org.apache.struts2.ognl.OgnlValueStackFactory"/>
+    <bean type="org.apache.struts2.util.reflection.ReflectionProvider" name="struts"
+          class="org.apache.struts2.ognl.OgnlReflectionProvider"/>
+    <bean type="org.apache.struts2.util.reflection.ReflectionContextFactory" name="struts"
+          class="org.apache.struts2.ognl.OgnlReflectionContextFactory"/>
 
-    <bean type="com.opensymphony.xwork2.conversion.NullHandler" name="java.lang.Object"
-          class="com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler"/>
+    <bean type="org.apache.struts2.conversion.NullHandler" name="java.lang.Object"
+          class="org.apache.struts2.conversion.impl.InstantiatingNullHandler"/>
 
-    <bean type="com.opensymphony.xwork2.validator.ActionValidatorManager" name="struts"
-          class="com.opensymphony.xwork2.validator.AnnotationActionValidatorManager"/>
-    <bean type="com.opensymphony.xwork2.validator.ActionValidatorManager" name="no-annotations"
-          class="com.opensymphony.xwork2.validator.DefaultActionValidatorManager"/>
+    <bean type="org.apache.struts2.validator.ActionValidatorManager" name="struts"
+          class="org.apache.struts2.validator.AnnotationActionValidatorManager"/>
+    <bean type="org.apache.struts2.validator.ActionValidatorManager" name="no-annotations"
+          class="org.apache.struts2.validator.DefaultActionValidatorManager"/>
 
-    <bean type="com.opensymphony.xwork2.validator.ValidatorFactory"
-          class="com.opensymphony.xwork2.validator.DefaultValidatorFactory"/>
-    <bean type="com.opensymphony.xwork2.validator.ValidatorFileParser"
-          class="com.opensymphony.xwork2.validator.DefaultValidatorFileParser"/>
+    <bean type="org.apache.struts2.validator.ValidatorFactory"
+          class="org.apache.struts2.validator.DefaultValidatorFactory"/>
+    <bean type="org.apache.struts2.validator.ValidatorFileParser"
+          class="org.apache.struts2.validator.DefaultValidatorFileParser"/>
 
-    <bean class="com.opensymphony.xwork2.ognl.OgnlUtil"/>
-    <bean name="struts" class="com.opensymphony.xwork2.ognl.SecurityMemberAccess" scope="prototype"/>
+    <bean class="org.apache.struts2.ognl.OgnlUtil"/>
+    <bean name="struts" class="org.apache.struts2.ognl.SecurityMemberAccess" scope="prototype"/>
     <bean type="org.apache.struts2.ognl.OgnlGuard" name="struts"
           class="org.apache.struts2.ognl.StrutsOgnlGuard"/>
     <bean class="org.apache.struts2.ognl.ProviderAllowlist"/>
     <bean class="org.apache.struts2.ognl.ThreadAllowlist"/>
 
-    <bean type="com.opensymphony.xwork2.util.TextParser" name="struts"
-          class="com.opensymphony.xwork2.util.OgnlTextParser" scope="singleton"/>
+    <bean type="org.apache.struts2.util.TextParser" name="struts"
+          class="org.apache.struts2.util.OgnlTextParser" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.ognl.accessor.RootAccessor" name="struts"
-          class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor"/>
-
-    <!-- DEPRECATED since 6.4.0 - The following 3 beans are retained for backwards compatibility
-            with custom beans that may expect them to be present. Inject the DEFAULT bean of type
-            'com.opensymphony.xwork2.ognl.accessor.RootAccessor' above instead. -->
-    <bean type="ognl.ClassResolver" name="com.opensymphony.xwork2.util.CompoundRoot"
-          class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor"/>
-    <bean type="ognl.PropertyAccessor" name="com.opensymphony.xwork2.util.CompoundRoot"
-          class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor"/>
-    <bean type="ognl.MethodAccessor" name="com.opensymphony.xwork2.util.CompoundRoot"
-          class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor"/>
+    <bean type="org.apache.struts2.ognl.accessor.RootAccessor" name="struts"
+          class="org.apache.struts2.ognl.accessor.CompoundRootAccessor"/>
 
     <bean type="ognl.PropertyAccessor" name="java.lang.Object"
-          class="com.opensymphony.xwork2.ognl.accessor.ObjectAccessor"/>
+          class="org.apache.struts2.ognl.accessor.ObjectAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.Iterator"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkIteratorPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkIteratorPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.Enumeration"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkEnumerationAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkEnumerationAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.List"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkListPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.Set"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.Map"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkMapPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.Collection"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
-    <bean type="ognl.PropertyAccessor" name="com.opensymphony.xwork2.ognl.ObjectProxy"
-          class="com.opensymphony.xwork2.ognl.accessor.ObjectProxyPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
+    <bean type="ognl.PropertyAccessor" name="org.apache.struts2.ognl.ObjectProxy"
+          class="org.apache.struts2.ognl.accessor.ObjectProxyPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.HttpParameters"
-          class="com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.HttpParametersPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.Parameter"
-          class="com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.ParameterPropertyAccessor"/>
 
     <bean type="ognl.MethodAccessor" name="struts"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
-
-    <!-- DEPRECATED since 6.4.0 - Retained for backwards compatibility with custom beans
-            that may expect it to be present. Inject the DEFAULT bean of 'ognl.MethodAccessor' above instead.  -->
-    <bean type="ognl.MethodAccessor" name="java.lang.Object"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkMethodAccessor"/>
 
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
           class="org.apache.struts2.dispatcher.DefaultStaticContentLoader" name="struts"/>
-    <bean type="com.opensymphony.xwork2.UnknownHandlerManager"
-          class="com.opensymphony.xwork2.DefaultUnknownHandlerManager" name="struts"/>
+    <bean type="org.apache.struts2.UnknownHandlerManager"
+          class="org.apache.struts2.DefaultUnknownHandlerManager" name="struts"/>
 
     <bean type="org.apache.struts2.dispatcher.DispatcherErrorHandler" name="struts"
           class="org.apache.struts2.dispatcher.DefaultDispatcherErrorHandler"/>
 
     <!--  Silly workarounds for OGNL since there is currently no way to flush its internal caches -->
     <bean type="ognl.PropertyAccessor" name="java.util.ArrayList"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkListPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkCollectionPropertyAccessor"/>
     <bean type="ognl.PropertyAccessor" name="java.util.HashMap"
-          class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor"/>
+          class="org.apache.struts2.ognl.accessor.XWorkMapPropertyAccessor"/>
 
-    <bean type="com.opensymphony.xwork2.security.ExcludedPatternsChecker" name="struts"
-          class="com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker" scope="prototype"/>
-    <bean type="com.opensymphony.xwork2.security.AcceptedPatternsChecker" name="struts"
-          class="com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker" scope="prototype"/>
-    <bean type="com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker" name="struts"
-          class="com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker" scope="singleton"/>
+    <bean type="org.apache.struts2.security.ExcludedPatternsChecker" name="struts"
+          class="org.apache.struts2.security.DefaultExcludedPatternsChecker" scope="prototype"/>
+    <bean type="org.apache.struts2.security.AcceptedPatternsChecker" name="struts"
+          class="org.apache.struts2.security.DefaultAcceptedPatternsChecker" scope="prototype"/>
+    <bean type="org.apache.struts2.security.NotExcludedAcceptedPatternsChecker" name="struts"
+          class="org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.config.providers.ValueSubstitutor"
-          class="com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
+    <bean type="org.apache.struts2.config.providers.ValueSubstitutor"
+          class="org.apache.struts2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
 
     <bean type="org.apache.struts2.components.date.DateFormatter" name="simpleDateFormatter"
           class="org.apache.struts2.components.date.SimpleDateFormatAdapter" scope="singleton"/>
     <bean type="org.apache.struts2.components.date.DateFormatter" name="dateTimeFormatter"
           class="org.apache.struts2.components.date.DateTimeFormatterAdapter" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.ognl.ExpressionCacheFactory" name="struts"
-          class="com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.ognl.BeanInfoCacheFactory" name="struts"
-          class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.ognl.ExpressionCacheFactory" name="struts"
+          class="org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.ognl.BeanInfoCacheFactory" name="struts"
+          class="org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
 
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>

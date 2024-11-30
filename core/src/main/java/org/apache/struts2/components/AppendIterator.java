@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.components.Param.UnnamedParametric;
@@ -29,7 +29,6 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -53,49 +52,49 @@ import java.util.List;
  *      <li>Third Entry of the Third ITerator</li>
  * </ol>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *      <li>var (String) - the name of which if supplied will have the resultant
  *                        appended iterator stored under in the stack's context</li>
  * </ul>
  * <!-- END SNIPPET: params -->
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: code -->
  * public class AppendIteratorTagAction extends ActionSupport {
- *
+ * <p>
  *  private List myList1;
  *  private List myList2;
  *  private List myList3;
- *
- *
+ * <p>
+ * <p>
  *  public String execute() throws Exception {
- *
+ * <p>
  *      myList1 = new ArrayList();
  *      myList1.add("1");
  *      myList1.add("2");
  *      myList1.add("3");
- *
+ * <p>
  *      myList2 = new ArrayList();
  *      myList2.add("a");
  *      myList2.add("b");
  *      myList2.add("c");
- *
+ * <p>
  *      myList3 = new ArrayList();
  *      myList3.add("A");
  *      myList3.add("B");
  *      myList3.add("C");
- *
+ * <p>
  *      return "done";
  *  }
- *
+ * <p>
  *  public List getMyList1() { return myList1; }
  *  public List getMyList2() { return myList2; }
  *  public List getMyList3() { return myList3; }
- *}
+ * }
  * <!-- END SNIPPET: code -->
- *
+ * <p>
  * <!-- START SNIPPET: example -->
  * &lt;s:append var="myAppendIterator"&gt;
  *      &lt;s:param value="%{myList1}" /&gt;
@@ -107,36 +106,33 @@ import java.util.List;
  * &lt;/s:iterator&gt;
  * <!-- END SNIPPET: example -->
  *
- *
  * @see org.apache.struts2.util.AppendIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.AppendIteratorTag
- *
  */
-@StrutsTag(name="append", tldTagClass="org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description="Append the values of a list of iterators to one iterator")
+@StrutsTag(name = "append", tldTagClass = "org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description = "Append the values of a list of iterators to one iterator")
 public class AppendIterator extends ContextBean implements UnnamedParametric {
 
     private static final Logger LOG = LogManager.getLogger(AppendIterator.class);
 
-    private AppendIteratorFilter appendIteratorFilter= null;
-    private List _parameters;
+    private AppendIteratorFilter appendIteratorFilter = null;
+    private List<Object> attributesToAppend;
 
     public AppendIterator(ValueStack stack) {
         super(stack);
     }
 
+    @Override
     public boolean start(Writer writer) {
-        _parameters = new ArrayList();
+        attributesToAppend = new ArrayList<>();
         appendIteratorFilter = new AppendIteratorFilter();
 
         return super.start(writer);
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
-
-        for (Iterator paramEntries = _parameters.iterator(); paramEntries.hasNext(); ) {
-
-            Object iteratorEntryObj = paramEntries.next();
-            if (! MakeIterator.isIterable(iteratorEntryObj)) {
+        for (Object iteratorEntryObj : attributesToAppend) {
+            if (!MakeIterator.isIterable(iteratorEntryObj)) {
                 LOG.warn("param with value resolved as {} cannot be make as iterator, it will be ignored and hence will not appear in the merged iterator", iteratorEntryObj);
                 continue;
             }
@@ -153,11 +149,13 @@ public class AppendIterator extends ContextBean implements UnnamedParametric {
     }
 
     // UnnamedParametric implementation --------------------------------------
+    @Override
     public void addParameter(Object value) {
-        _parameters.add(value);
+        attributesToAppend.add(value);
     }
 
-    @StrutsTagAttribute(description="The name of which if supplied will have the resultant appended iterator stored under in the stack's context")
+    @StrutsTagAttribute(description = "The name of which if supplied will have the resultant appended iterator stored under in the stack's context")
+    @Override
     public void setVar(String var) {
         super.setVar(var);
     }

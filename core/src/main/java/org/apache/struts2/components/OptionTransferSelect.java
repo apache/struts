@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -137,7 +137,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        Object doubleValue = null;
+        Object doubleValue;
 
         // override DoubleListUIBean's
         if (doubleList != null) {
@@ -319,7 +319,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
         }
         else {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("form enclosing optiontransferselect "+this+" not found, auto select upon form submit of optiontransferselect will not work");
+                LOG.warn("form enclosing optiontransferselect {} not found, auto select upon form submit of optiontransferselect will not work", this);
             }
         }
     }

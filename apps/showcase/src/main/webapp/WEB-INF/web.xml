@@ -46,8 +46,8 @@
     </filter>
 
     <filter>
-        <filter-name>sitemesh</filter-name>
-        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+        <filter-name>sitemesh3</filter-name>
+        <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
         <async-supported>true</async-supported>
     </filter>
 
@@ -64,7 +64,7 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>sitemesh</filter-name>
+        <filter-name>sitemesh3</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>REQUEST</dispatcher>
@@ -98,16 +98,6 @@
         <listener-class>org.apache.struts2.dispatcher.listener.StrutsListener</listener-class>
     </listener>
 
-    <!-- SNIPPET START: dwr -->
-
-    <servlet>
-        <servlet-name>dwr</servlet-name>
-        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </servlet>
     <servlet>
         <servlet-name>JspSupportServlet</servlet-name>
         <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
@@ -122,6 +112,8 @@
     </servlet>
 
     <!-- Sitemesh Freemarker and Velocity Decorator Servlets. Shares configuration with Struts.-->
+<!--
+    Unsupported till https://issues.apache.org/jira/browse/WW-4356
     <servlet>
         <servlet-name>sitemesh-freemarker</servlet-name>
         <servlet-class>org.apache.struts2.sitemesh.FreemarkerDecoratorServlet</servlet-class>
@@ -141,18 +133,15 @@
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
+-->
 
     <servlet>
         <servlet-name>testServlet</servlet-name>
         <servlet-class>org.apache.struts2.showcase.servlet.TestServlet</servlet-class>
     </servlet>
 
-    <servlet-mapping>
-        <servlet-name>dwr</servlet-name>
-        <url-pattern>/dwr/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
+<!--
+   <servlet-mapping>
         <servlet-name>sitemesh-freemarker</servlet-name>
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
@@ -161,6 +150,7 @@
         <servlet-name>sitemesh-velocity</servlet-name>
         <url-pattern>*.vm</url-pattern>
     </servlet-mapping>
+-->
 
     <servlet-mapping>
         <servlet-name>strutsServlet</servlet-name>
@@ -171,8 +161,6 @@
         <servlet-name>testServlet</servlet-name>
         <url-pattern>/testServlet/*</url-pattern>
     </servlet-mapping>
-
-    <!-- END SNIPPET: dwr -->
 
     <!-- SNIPPET START: example.velocity.filter.chain
         <filter>

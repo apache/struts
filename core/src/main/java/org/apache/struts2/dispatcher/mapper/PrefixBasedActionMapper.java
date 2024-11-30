@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +66,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
     protected Map<String, ActionMapper> actionMappers = new HashMap<>();
 
     @Inject
+    @Override
     public void setContainer(Container container) {
         this.container = container;
     }
@@ -88,8 +89,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
         }
     }
 
-
-    @SuppressWarnings("unchecked")
+    @Override
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         String uri = RequestUtils.getUri(request);
         for (int lastIndex = uri.lastIndexOf('/'); lastIndex > (-1); lastIndex = uri.lastIndexOf('/', lastIndex - 1)) {
@@ -125,6 +125,7 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
         return null;
     }
 
+    @Override
     public String getUriFromActionMapping(ActionMapping mapping) {
         String namespace = mapping.getNamespace();
         for (int lastIndex = namespace.length(); lastIndex > (-1); lastIndex = namespace.lastIndexOf('/', lastIndex - 1)) {

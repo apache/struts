@@ -18,11 +18,16 @@
  */
 package org.apache.struts2.util;
 
+import jakarta.servlet.jsp.JspWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.jsp.JspWriter;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -44,10 +49,10 @@ public class FastByteArrayOutputStream extends OutputStream {
     private static final int DEFAULT_BLOCK_SIZE = 8192;
 
     private LinkedList<byte[]> buffers;
-    private byte buffer[];
+    private byte[] buffer;
     private int index;
     private int size;
-    private int blockSize;
+    private final int blockSize;
     private boolean closed;
 
     public FastByteArrayOutputStream() {
@@ -200,7 +205,7 @@ public class FastByteArrayOutputStream extends OutputStream {
     }
 
     public byte[] toByteArray() {
-        byte data[] = new byte[getSize()];
+        byte[] data = new byte[getSize()];
         int position = 0;
         if (buffers != null) {
             for (byte[] bytes : buffers) {
@@ -236,7 +241,7 @@ public class FastByteArrayOutputStream extends OutputStream {
         buffer[index++] = (byte) datum;
     }
 
-    public void write(byte data[], int offset, int length) throws IOException {
+    public void write(byte[] data, int offset, int length) throws IOException {
         if (data == null) {
             throw new NullPointerException();
         }

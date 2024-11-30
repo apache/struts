@@ -31,11 +31,11 @@
 
     // Calculate the view sources url
     String sourceUrl = request.getContextPath() + "/viewSource.action";
-    com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
+    org.apache.struts2.ActionInvocation inv = org.apache.struts2.ActionContext.getContext().getActionInvocation();
     org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
     if (inv != null) {
         try {
-            com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
+            org.apache.struts2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
             sourceUrl += "?config=" + (loc != null ? loc.getURI() + ":" + loc.getLineNumber() : "");
         } catch (Exception e) {
             sourceUrl += "?config=";
@@ -49,8 +49,6 @@
         sourceUrl += "?page=" + request.getServletPath();
     }
 %>
-<%@taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
-<%@taglib prefix="page" uri="http://www.opensymphony.com/sitemesh/page" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 
 <html lang="en">
@@ -61,7 +59,7 @@
     <meta name="description" content="Struts2 Showcase for Apache Struts Project">
     <meta name="author" content="The Apache Software Foundation">
 
-    <title><decorator:title default="Struts2 Showcase"/></title>
+    <title><sitemesh:write property="title"/></title>
 
     <s:url var="bootstrapCss" value='/styles/bootstrap.css' encode='false' includeParams='none'/>
     <s:link href="%{bootstrapCss}" rel="stylesheet" type="text/css" media="all"/>
@@ -88,13 +86,13 @@
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <s:script src="http://html5shim.googlecode.com/svn/trunk/html5.js"/>
+    <s:script src="https://html5shim.googlecode.com/svn/trunk/html5.js"/>
     <![endif]-->
 
     <s:script>
         jQuery(document).ready(function() { prettyPrint(); } );
     </s:script>
-    <decorator:head/>
+    <sitemesh:write property="head"/>
 </head>
 
 <body id="page-home">
@@ -226,7 +224,6 @@
                             <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
                             <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
                             <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
-                            <li><s:a href="%{quizDwr}">Validation (DWR)</s:a></li>
                             <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
                             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
                             <li><s:a href="%{ajaxFormSubmitUrl}">AJAX Form Submit</s:a></li>
@@ -287,8 +284,7 @@
     </div>
 </nav>
 
-<decorator:body/>
-
+<sitemesh:write property="body"/>
 
 <hr>
 

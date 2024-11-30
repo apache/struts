@@ -30,17 +30,17 @@ import org.apache.struts2.components.template.TemplateEngineManager;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.inject.Container;
 
 /**
  * TemplateEngineManagerTest
  *
  */
 public class TemplateEngineManagerTest extends TestCase {
-    
+
     TemplateEngineManager mgr;
     Mock mockContainer;
-    
+
     public void setUp() throws Exception {
         mgr = new TemplateEngineManager();
         mockContainer = new Mock(Container.class);
@@ -51,11 +51,11 @@ public class TemplateEngineManagerTest extends TestCase {
             add("vm");
             add("ftl");
         }});
-        
+
         mgr.setContainer((Container)mockContainer.proxy());
         mgr.setDefaultTemplateType("jsp");
     }
-    
+
     public void testTemplateTypeFromTemplateNameAndDefaults() {
         TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), null);
         assertTrue(engine instanceof JspTemplateEngine);

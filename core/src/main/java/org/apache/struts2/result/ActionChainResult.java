@@ -18,16 +18,15 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsException;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -202,7 +201,6 @@ public class ActionChainResult implements Result {
     /**
      * @param invocation the DefaultActionInvocation calling the action call stack
      */
-    @Override
     public void execute(ActionInvocation invocation) throws Exception {
         if (invocation == null) {
             throw new IllegalArgumentException("Invocation cannot be null!");
@@ -264,7 +262,7 @@ public class ActionChainResult implements Result {
     private boolean isInChainHistory(String namespace, String actionName, String methodName) {
         LinkedList<? extends String> chainHistory = ActionChainResult.getChainHistory();
         Set<String> skipActionsList = new HashSet<>();
-        if (skipActions != null && skipActions.length() > 0) {
+        if (skipActions != null && !skipActions.isEmpty()) {
             String finalSkipActions = translateVariables(skipActions);
             skipActionsList.addAll(TextParseUtil.commaDelimitedStringToSet(finalSkipActions));
         }

@@ -18,11 +18,10 @@
  */
 package org.apache.struts2.views.velocity;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackProvider;
 import org.apache.velocity.VelocityContext;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -42,23 +41,6 @@ public class StrutsVelocityContext extends VelocityContext implements ValueStack
     public StrutsVelocityContext(List<VelocityContext> chainedContexts, ValueStack stack) {
         this.chainedContexts = chainedContexts;
         this.stack = stack;
-    }
-
-    /**
-     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
-     * and pass {null} or empty list if no chained contexts were defined
-     */
-    @Deprecated
-    public StrutsVelocityContext(ValueStack stack) {
-        this((List<VelocityContext>) null, stack);
-    }
-
-    /**
-     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
-     */
-    @Deprecated
-    public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
-        this(new ArrayList<>(Arrays.asList(chainedContexts)), stack);
     }
 
     @Override

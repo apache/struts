@@ -18,9 +18,11 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.mock.MockActionInvocation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
@@ -31,9 +33,6 @@ import org.apache.struts2.interceptor.csp.CspSettings;
 import org.apache.struts2.interceptor.csp.DefaultCspSettings;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -312,6 +311,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
      */
     public static class CustomDefaultCspSettings extends DefaultCspSettings {
 
+        @Override
         protected String createPolicyFormat(HttpServletRequest request) {
             return "foo";
         }

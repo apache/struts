@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
+import org.apache.struts2.conversion.impl.DefaultTypeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
@@ -45,8 +45,7 @@ public class UploadedFileConverter extends DefaultTypeConverter {
                 obj = value;
             }
 
-            if (obj instanceof UploadedFile) {
-                UploadedFile file = (UploadedFile) obj;
+            if (obj instanceof UploadedFile file) {
                 if (file.getContent() instanceof File) {
                     return file.getContent();
                 }

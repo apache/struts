@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
@@ -91,7 +91,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>build-maven</id>
@@ -116,7 +115,8 @@
                                     The tags interact with the framework's validation and
                                     internationalization features;
                                     to ensure that input is correct and output is localized.
-                                    The Struts Tags can be used with JSP FreeMarker or Velocity."</arg>
+                                    The Struts Tags can be used with JSP FreeMarker or Velocity."
+                                </arg>
                                 <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
                             </compilerArgs>
                         </configuration>
@@ -132,51 +132,7 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>alljars</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <sourcepath>${basedir}/src/main/java;${basedir}/../xwork-core/src/main/java</sourcepath>
-                            <encoding>UTF-8</encoding>
-                            <groups>
-                                <group>
-                                    <title>Struts Packages</title>
-                                    <packages>org.apache.struts2*</packages>
-                                </group>
-                                <group>
-                                    <title>XWork Packages</title>
-                                    <packages>com.opensymphony.xwork2*</packages>
-                                </group>
-                            </groups>
-                            <show>private</show>
-                            <links>
-                                <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                                <link>http://java.sun.com/javaee/5/docs/api/</link>
-                                <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                                <link>http://logging.apache.org/log4j/docs/api/</link>
-                            </links>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
-
 
     <dependencies>
         <dependency>
@@ -190,14 +146,14 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -214,14 +170,13 @@
 
         <!-- File upload -->
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -231,7 +186,7 @@
             <artifactId>commons-text</artifactId>
         </dependency>
 
-        <!-- Optional used in com.opensymphony.xwork2.util.ProxyUtil to detect if object is HibernateProxy -->
+        <!-- Optional used in org.apache.struts2.util.ProxyUtil to detect if object is HibernateProxy -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -257,6 +212,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -286,26 +246,7 @@
 
         <dependency>
             <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
+            <artifactId>mockobjects-core</artifactId>
         </dependency>
 
         <dependency>
@@ -326,11 +267,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

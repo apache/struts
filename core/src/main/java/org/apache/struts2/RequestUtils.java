@@ -18,12 +18,13 @@
  */
 package org.apache.struts2;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
@@ -57,7 +58,7 @@ public class RequestUtils {
      */
     public static String getServletPath(HttpServletRequest request) {
         String servletPath = request.getServletPath();
-        
+
         String requestUri = request.getRequestURI();
         // Detecting other characters that the servlet container cut off (like anything after ';')
         if (requestUri != null && servletPath != null && !requestUri.endsWith(servletPath)) {
@@ -70,8 +71,8 @@ public class RequestUtils {
         if (StringUtils.isNotEmpty(servletPath)) {
             return servletPath;
         }
-        
-        int startIndex = request.getContextPath().equals("") ? 0 : request.getContextPath().length();
+
+        int startIndex = request.getContextPath().isEmpty() ? 0 : request.getContextPath().length();
         int endIndex = request.getPathInfo() == null ? requestUri.length() : requestUri.lastIndexOf(request.getPathInfo());
 
         if (startIndex > endIndex) { // this should not happen
@@ -89,7 +90,7 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH);
         if (uri != null) {
             return uri;
         }

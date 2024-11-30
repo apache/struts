@@ -18,12 +18,11 @@
  */
 package org.apache.struts.beanvalidation.actions;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
+import jakarta.validation.Valid;
 import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.models.Person;
-
-import javax.validation.Valid;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDriven;
 
 public class ValidateGroupAction extends ActionSupport implements ModelDriven<Person> {
 

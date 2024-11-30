@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public abstract class ListUIBean extends UIBean {
 
     @Override
     public void evaluateExtraParams() {
-        Object value = null;
+        Object value;
 
         if (list == null) {
             list = attributes.get("list");
@@ -75,13 +75,13 @@ public abstract class ListUIBean extends UIBean {
             if (value == null) {
                 if (throwExceptionOnNullValueAttribute) {
                     // will throw an exception if not found
-                    value = findValue((list == null) ? (String) list : list.toString(), "list",
+                    value = findValue(list == null ? null : list.toString(), "list",
                             "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
                                     "Example: people or people.{name}");
                 } else {
                     // ww-1010, allows value with null value to be compatible with ww
                     // 2.1.7 behaviour
-                    value = findValue((list == null) ? (String) list : list.toString());
+                    value = findValue(list == null ? null : list.toString());
                 }
             }
         } else {

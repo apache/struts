@@ -21,18 +21,17 @@ package org.apache.struts2.components;
 import java.io.Writer;
 import java.util.ResourceBundle;
 
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

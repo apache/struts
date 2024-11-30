@@ -20,6 +20,6 @@
 -->
 <tr style="display:none;">
   <td colspan="2">
-    <#include "/${parameters.templateDir}/simple/hidden.ftl" />
+    <#include "/${attributes.templateDir}/simple/hidden.ftl" />
   </td>
 </tr>

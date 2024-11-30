@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.cdi;
 
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.InjectionTargetFactory;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

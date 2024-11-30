@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 
-import java.io.Writer;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 
 /**
- * Handles the default content type for requests that originate from a browser's HTML form 
+ * Handles the default content type for requests that originate from a browser's HTML form
  * with a file upload and multipart/from-data encoding
  *
  * content-type: multipart/form-data
@@ -34,10 +34,11 @@ import java.io.Reader;
  *
  * @see <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4">http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4</a>
  */
-public class MultipartFormDataHandler extends AbstractContentTypeHandler {
+public class MultipartFormDataHandler implements ContentTypeHandler {
 
     public static final String CONTENT_TYPE = "multipart/form-data";
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         throw new IOException("Conversion from Object to '"+getContentType()+"' is not supported");
     }
@@ -48,16 +49,19 @@ public class MultipartFormDataHandler extends AbstractContentTypeHandler {
      * @param in The input stream, usually the body of the request
      * @param target The target, usually the action class
      */
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) {
     }
 
     /**
      * @return The extension is not used by this handler
      */
+    @Override
     public String getExtension() {
         return null;
     }
 
+    @Override
     public String getContentType() {
         return CONTENT_TYPE;
     }

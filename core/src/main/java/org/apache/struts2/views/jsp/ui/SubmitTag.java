@@ -18,19 +18,20 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Submit;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * @see Submit
  */
 public class SubmitTag extends AbstractClosingTag {
 
+    @Serial
     private static final long serialVersionUID = 2179281109958301343L;
 
     protected String action;
@@ -97,7 +98,7 @@ public class SubmitTag extends AbstractClosingTag {
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

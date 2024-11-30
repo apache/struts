@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.filedownload;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 

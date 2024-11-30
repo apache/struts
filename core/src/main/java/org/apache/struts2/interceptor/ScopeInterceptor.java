@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.PreResultListener;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +32,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.SessionMap;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -143,6 +144,7 @@ import java.util.Map;
  */
 public class ScopeInterceptor extends AbstractInterceptor implements PreResultListener {
 
+    @Serial
     private static final long serialVersionUID = 9120762699600054395L;
 
     private static final Logger LOG = LogManager.getLogger(ScopeInterceptor.class);
@@ -232,7 +234,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return o;
     }
 
-    private static Map<Object, Object> locks = new IdentityHashMap<>();
+    private static final Map<Object, Object> locks = new IdentityHashMap<>();
 
     static void lock(Object o, ActionInvocation invocation) throws Exception {
         synchronized (o) {
@@ -325,7 +327,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.PreResultListener#beforeResult(com.opensymphony.xwork2.ActionInvocation, java.lang.String)
+     * @see org.apache.struts2.interceptor.PreResultListener#beforeResult(org.apache.struts2.ActionInvocation, java.lang.String)
      */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         String key = getKey(invocation);
@@ -403,7 +405,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.Interceptor#intercept(org.apache.struts2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
         String result;

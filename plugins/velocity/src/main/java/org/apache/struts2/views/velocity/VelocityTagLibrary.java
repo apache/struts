@@ -102,12 +102,4 @@ public class VelocityTagLibrary implements TagLibraryDirectiveProvider {
         return Arrays.asList(directives);
     }
 
-    /**
-     * @deprecated please use {#getDirectiveClasses}
-     */
-    @Deprecated()
-    public List<Class<?>> getVelocityDirectiveClasses() {
-        return getDirectiveClasses();
-    }
-
 }

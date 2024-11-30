@@ -18,11 +18,7 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.PrepareOperations;

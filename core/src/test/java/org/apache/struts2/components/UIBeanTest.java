@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -34,7 +34,7 @@ import org.springframework.mock.web.MockHttpSession;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
+import static org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 public class UIBeanTest extends StrutsInternalTestCase {
 
@@ -366,7 +366,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext actionContext = stack.getActionContext();
         actionContext.withServletRequest(req);
         MockHttpSession session = new MockHttpSession();
-        session.putValue("nonce", nonceVal);
+        session.setAttribute("nonce", nonceVal);
         req.setSession(session);
 
         actionContext.withSession(new SessionMap(req));
@@ -385,7 +385,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext actionContext = stack.getActionContext();
         actionContext.withServletRequest(req);
         MockHttpSession session = new MockHttpSession();
-        session.putValue("nonce", nonceVal);
+        session.setAttribute("nonce", nonceVal);
         req.setSession(session);
         actionContext.withSession(new SessionMap(req));
 

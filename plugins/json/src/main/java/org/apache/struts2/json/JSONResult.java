@@ -18,22 +18,22 @@
  */
 package org.apache.struts2.json;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.json.smd.SMDGenerator;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.WildcardUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

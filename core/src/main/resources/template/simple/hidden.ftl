@@ -19,21 +19,21 @@
  */
 -->
 <input type="hidden"<#rt/>
- name="${(parameters.name!"")}"<#rt/>
-<#if parameters.nameValue??>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
+<#if attributes.nameValue??>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
 </#if>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 />

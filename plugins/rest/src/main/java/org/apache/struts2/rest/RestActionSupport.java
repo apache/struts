@@ -20,21 +20,21 @@ package org.apache.struts2.rest;
 
 import java.lang.reflect.Method;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 
 /**
  * Extends {@link ActionSupport} to provides a default implementation of the index method that can be invoked for
- * unknown actions by the {@link com.opensymphony.xwork2.UnknownHandler}.
+ * unknown actions by the {@link org.apache.struts2.UnknownHandler}.
  */
 public class RestActionSupport extends ActionSupport {
 
 	private static final long serialVersionUID = -889518620073576882L;
-	
+
 	private static final String DELETE = "DELETE";
 	private static final String PUT = "PUT";
 	private static final String POST = "POST";
@@ -50,16 +50,16 @@ public class RestActionSupport extends ActionSupport {
     public Object index() throws Exception {
         return execute();
     }
-    
+
 	/**
 	 * Inspect the implemented methods to know the allowed http methods.
-	 * 
-	 * @return Include the header "Allow" with the allowed http methods. 
+	 *
+	 * @return Include the header "Allow" with the allowed http methods.
 	 */
     public HttpHeaders options() {
-    	
+
     	String methods = OPTIONS;
-    	
+
     	Method[] meths = this.getClass().getDeclaredMethods();
     	for (Method m : meths) {
     		String methodName = m.getName();
@@ -77,22 +77,22 @@ public class RestActionSupport extends ActionSupport {
     			methods += DIVIDER + DELETE;
     		}
     	}
-    	
+
     	HttpServletRequest request = ServletActionContext.getRequest();
     	HttpServletResponse response = ServletActionContext.getResponse();
     	response.addHeader("Allow", methods);
-    	
+
     	DefaultHttpHeaders httpHeaders = new DefaultHttpHeaders();
     	httpHeaders.apply(request, response, this);
     	httpHeaders.disableCaching().withStatus(HttpServletResponse.SC_OK);
-    	
+
     	return httpHeaders;
 	}
-    
+
     /**
      * By default, return continue.
      * Is possible override the method to return expectation failed.
-     * 
+     *
      * @return continue
      */
     public HttpHeaders createContinue() {
@@ -100,11 +100,11 @@ public class RestActionSupport extends ActionSupport {
 		    .disableCaching()
 		    .withStatus(HttpServletResponse.SC_CONTINUE);
 	}
-    
+
     /**
      * By default, return continue.
      * Is possible override the method to return expectation failed.
-     * 
+     *
      * @return continue
      */
     public HttpHeaders updateContinue() {

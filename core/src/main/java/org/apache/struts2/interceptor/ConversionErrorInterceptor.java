@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.conversion.impl.ConversionData;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.conversion.impl.ConversionData;
+import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.util.ValueStack;
 
 import java.util.HashMap;
@@ -111,11 +111,10 @@ public class ConversionErrorInterceptor extends MethodFilterInterceptor {
             ConversionData conversionData = entry.getValue();
 
             if (shouldAddError(propertyName, conversionData.getValue())) {
-                String message = XWorkConverter.getConversionErrorMessage(propertyName, conversionData.getToClass(), com.opensymphony.xwork2.util.ValueStack.adapt(stack));
+                String message = XWorkConverter.getConversionErrorMessage(propertyName, conversionData.getToClass(), stack);
 
                 Object action = invocation.getAction();
-                if (action instanceof ValidationAware) {
-                    ValidationAware va = (ValidationAware) action;
+                if (action instanceof ValidationAware va) {
                     va.addFieldError(propertyName, message);
                 }
 
@@ -130,13 +129,11 @@ public class ConversionErrorInterceptor extends MethodFilterInterceptor {
         if (fakie != null) {
             // if there were some errors, put the original (fake) values in place right before the result
             stack.getContext().put(ORIGINAL_PROPERTY_OVERRIDE, fakie);
-            invocation.addPreResultListener(new PreResultListener() {
-                public void beforeResult(ActionInvocation invocation, String resultCode) {
-                    Map<Object, Object> fakie = (Map<Object, Object>) invocation.getInvocationContext().get(ORIGINAL_PROPERTY_OVERRIDE);
+            invocation.addPreResultListener((invocation1, resultCode) -> {
+                var fakie1 = (Map<Object, Object>) invocation1.getInvocationContext().get(ORIGINAL_PROPERTY_OVERRIDE);
 
-                    if (fakie != null) {
-                        invocation.getStack().setExprOverrides(fakie);
-                    }
+                if (fakie1 != null) {
+                    invocation1.getStack().setExprOverrides(fakie1);
                 }
             });
         }

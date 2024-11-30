@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -36,7 +36,7 @@ import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
-import javax.servlet.http.HttpSession;
+import java.io.Serial;
 import java.util.Map;
 
 /**
@@ -177,6 +177,7 @@ import java.util.Map;
  */
 public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -2754639196749652512L;
 
     private static final Logger LOG = LogManager.getLogger(ExecuteAndWaitInterceptor.class);
@@ -226,7 +227,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     }
 
     /* (non-Javadoc)
-     * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.MethodFilterInterceptor#doIntercept(org.apache.struts2.ActionInvocation)
      */
     @Override
     protected String doIntercept(ActionInvocation actionInvocation) throws Exception {

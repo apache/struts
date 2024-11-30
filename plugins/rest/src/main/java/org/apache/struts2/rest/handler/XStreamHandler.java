@@ -18,7 +18,8 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ModelDriven;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
@@ -28,7 +29,6 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import com.thoughtworks.xstream.security.TypePermission;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ModelDriven;
 import org.apache.struts2.rest.handler.xstream.XStreamAllowedClassNames;
 import org.apache.struts2.rest.handler.xstream.XStreamAllowedClasses;
 import org.apache.struts2.rest.handler.xstream.XStreamPermissionProvider;
@@ -44,10 +44,11 @@ import java.util.Set;
 /**
  * Handles XML content
  */
-public class XStreamHandler extends AbstractContentTypeHandler {
+public class XStreamHandler implements ContentTypeHandler {
 
     private static final Logger LOG = LogManager.getLogger(XStreamHandler.class);
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         if (obj != null) {
             XStream xstream = createXStream(invocation);
@@ -56,6 +57,7 @@ public class XStreamHandler extends AbstractContentTypeHandler {
         return null;
     }
 
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) {
         XStream xstream = createXStream(invocation);
         xstream.fromXML(in, target);
@@ -109,10 +111,12 @@ public class XStreamHandler extends AbstractContentTypeHandler {
         stream.addPermission(CollectionTypePermission.COLLECTIONS);
     }
 
+    @Override
     public String getContentType() {
         return "application/xml";
     }
 
+    @Override
     public String getExtension() {
         return "xml";
     }

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.juneau.parser.ParseException;
 import org.apache.juneau.serializer.SerializeException;
@@ -37,7 +37,7 @@ import java.lang.reflect.InvocationTargetException;
  * Handles XML content using Apache Juneau
  * http://juneau.apache.org/#marshall.html
  */
-public class JuneauXmlHandler extends AbstractContentTypeHandler {
+public class JuneauXmlHandler implements ContentTypeHandler {
 
     private static final Logger LOG = LogManager.getLogger(JuneauXmlHandler.class);
 
@@ -46,6 +46,7 @@ public class JuneauXmlHandler extends AbstractContentTypeHandler {
     private final XmlParser parser = XmlParser.DEFAULT;
     private final XmlSerializer serializer = XmlDocSerializer.DEFAULT;
 
+    @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         LOG.debug("Converting input into an object of: {}", target.getClass().getName());
         try {
@@ -56,6 +57,7 @@ public class JuneauXmlHandler extends AbstractContentTypeHandler {
         }
     }
 
+    @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
         LOG.debug("Converting an object of {} into string", obj.getClass().getName());
         try {
@@ -70,10 +72,12 @@ public class JuneauXmlHandler extends AbstractContentTypeHandler {
         }
     }
 
+    @Override
     public String getContentType() {
         return DEFAULT_CONTENT_TYPE;
     }
 
+    @Override
     public String getExtension() {
         return "xml";
     }

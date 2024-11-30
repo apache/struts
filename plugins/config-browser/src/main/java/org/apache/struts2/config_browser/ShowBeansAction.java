@@ -18,19 +18,19 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.velocity.VelocityConstants;
-import org.apache.struts2.views.velocity.VelocityManagerInterface;
+import org.apache.struts2.views.velocity.VelocityManager;
 
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +57,7 @@ public class ShowBeansAction extends ActionNamesAction {
         bindings.put(ActionMapper.class.getName(), addBindings(container, ActionMapper.class, StrutsConstants.STRUTS_MAPPER_CLASS));
         bindings.put(MultiPartRequest.class.getName(), addBindings(container, MultiPartRequest.class, StrutsConstants.STRUTS_MULTIPART_PARSER));
         bindings.put(FreemarkerManager.class.getName(), addBindings(container, FreemarkerManager.class, StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME));
-        bindings.put(VelocityManagerInterface.class.getName(), addBindings(container, VelocityManagerInterface.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME));
+        bindings.put(VelocityManager.class.getName(), addBindings(container, VelocityManager.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME));
         bindings.put(UrlRenderer.class.getName(), addBindings(container, UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER));
     }
 

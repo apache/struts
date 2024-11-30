@@ -18,13 +18,12 @@
  */
 package org.apache.struts2.url;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,11 +38,6 @@ public class StrutsQueryStringParser implements QueryStringParser {
     @Inject
     public StrutsQueryStringParser(UrlDecoder decoder) {
         this.decoder = decoder;
-    }
-
-    @Override
-    public Map<String, Object> parse(String queryString, boolean forceValueArray) {
-        return parse(queryString).getQueryParams();
     }
 
     @Override
@@ -128,7 +122,7 @@ public class StrutsQueryStringParser implements QueryStringParser {
                 } else {
                     String[] currentParamValues = (String[]) currentParam;
                     if (currentParamValues != null) {
-                        List<String> paramList = new ArrayList<>(Arrays.asList(currentParamValues));
+                        List<String> paramList = new ArrayList<>(List.of(currentParamValues));
                         paramList.add(value);
                         queryParams.put(name, paramList.toArray(new String[0]));
                     } else {

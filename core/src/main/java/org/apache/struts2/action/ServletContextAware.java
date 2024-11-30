@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.action;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * For components that have a dependence on the Servlet context.

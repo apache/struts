@@ -18,10 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.action.ApplicationAware;
 import org.apache.struts2.action.ParametersAware;
@@ -32,15 +34,13 @@ import org.apache.struts2.action.ServletResponseAware;
 import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
  * <p>
  * An interceptor which sets action properties based on the interfaces an action implements. For example, if the action
- * implements {@link ParameterAware} then the action context's parameter map will be set on it.
+ * implements {@link ParametersAware} then the action context's parameter map will be set on it.
  * </p>
  *
  * <p>This interceptor is designed to set all properties an action needs if it's aware of servlet parameters, the
@@ -103,6 +103,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  */
 public class ServletConfigInterceptor extends AbstractInterceptor implements StrutsStatics {
 
+    @Serial
     private static final long serialVersionUID = 605261777858676638L;
 
     /**
@@ -112,6 +113,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when setting action properties.
      */
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         final ActionContext context = invocation.getInvocationContext();

@@ -18,9 +18,10 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,6 +118,7 @@ public class InvocationSessionStore {
 
     private static class InvocationContext implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -286697666275777888L;
 
         //WW-4873 transient since 2.5.15

@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.result.Result;
 
 /**
  * Null result to get around annotation defaults that can't be null
@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.Result;
  */
 public class NullResult implements Result {
 
+    @Override
     public void execute(ActionInvocation invocation) throws Exception {
         throw new IllegalStateException("Shouldn't be called");
     }

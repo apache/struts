@@ -1,0 +1,127 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2.interceptor;
+
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.DefaultActionProxyFactory;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.SimpleFooAction;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationProvider;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.util.location.LocatableProperties;
+
+import java.util.HashMap;
+
+
+/**
+ * PreResultListenerTest
+ *
+ * @author Jason Carreira
+ *         Date: Nov 13, 2003 11:16:43 PM
+ */
+public class PreResultListenerTest extends XWorkTestCase {
+
+    private int count = 1;
+
+
+    public void testPreResultListenersAreCalled() throws Exception {
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
+        ActionInvocation invocation = proxy.getInvocation();
+        Mock preResultListenerMock1 = new Mock(PreResultListener.class);
+        preResultListenerMock1.expect("beforeResult", C.args(C.eq(invocation), C.eq(Action.SUCCESS)));
+        invocation.addPreResultListener((PreResultListener) preResultListenerMock1.proxy());
+        proxy.execute();
+        preResultListenerMock1.verify();
+    }
+
+    public void testPreResultListenersAreCalledInOrder() throws Exception {
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
+        ActionInvocation invocation = proxy.getInvocation();
+        CountPreResultListener listener1 = new CountPreResultListener();
+        CountPreResultListener listener2 = new CountPreResultListener();
+        invocation.addPreResultListener(listener1);
+        invocation.addPreResultListener(listener2);
+        proxy.execute();
+        assertNotNull(listener1.getMyOrder());
+        assertNotNull(listener2.getMyOrder());
+        assertEquals(listener1.getMyOrder() + 1, listener2.getMyOrder().intValue());
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        loadConfigurationProviders(new ConfigurationProvider() {
+            Configuration configuration;
+            public void destroy() {
+            }
+
+            public void init(Configuration config) {
+                this.configuration = config;
+            }
+
+            public void loadPackages() {
+                PackageConfig packageConfig = new PackageConfig.Builder("package")
+                        .addActionConfig("action", new ActionConfig.Builder("package", "action", SimpleFooAction.class.getName()).build())
+                        .build();
+                configuration.addPackageConfig("package", packageConfig);
+            }
+
+            /**
+             * Tells whether the ConfigurationProvider should reload its configuration
+             */
+            public boolean needsReload() {
+                return false;
+            }
+
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
+                builder.factory(ObjectFactory.class);
+
+            }
+        });
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+
+    private class CountPreResultListener implements PreResultListener {
+        private Integer myOrder = null;
+
+        public Integer getMyOrder() {
+            return myOrder;
+        }
+
+        public void beforeResult(ActionInvocation invocation, String resultCode) {
+            myOrder = count++;
+        }
+    }
+}

@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.util.ContainUtil;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -34,23 +34,23 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </p>
  *
  * <p><b>Freemarker:</b></p>
- * <pre>Objects provided can be retrieve from within the template via $parameters._paramname_.</pre>
+ * <pre>Objects provided can be retrieve from within the template via $attributes._attrname_.</pre>
  *
  * <p><b>JSP:</b></p>
- * <pre>Objects provided can be retrieve from within the template via &lt;s:property value="%{parameters._paramname_}" /&gt;</pre>
+ * <pre>Objects provided can be retrieve from within the template via &lt;s:property value="%{attributes._attrname_}" /&gt;</pre>
  *
  * <p>
- * In the bottom JSP and Velocity samples, two parameters are being passed in to the component. From within the
+ * In the bottom JSP and Velocity samples, two attributes are being passed in to the component. From within the
  * component, they can be accessed as:
  * </p>
  *
  * <p><b>Freemarker:</b></p>
- * <pre>$parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2</pre>
+ * <pre>$attributes.get('key1') and $attributes.get('key2') or $attributes.key1 and $attributes.key2</pre>
  *
  * <p><b>JSP:</b></p>
  * <pre>
- * &lt;s:property value="%{parameters.key1}" /&gt; and &lt;s:property value="%{'parameters.key2'}" /&gt; or
- * &lt;s:property value="%{parameters.get('key1')}" /&gt; and &lt;s:property value="%{parameters.get('key2')}" /&gt;
+ * &lt;s:property value="%{attributes.key1}" /&gt; and &lt;s:property value="%{'attributes.key2'}" /&gt; or
+ * &lt;s:property value="%{attributes.get('key1')}" /&gt; and &lt;s:property value="%{attributes.get('key2')}" /&gt;
  * </pre>
  *
  * <p>

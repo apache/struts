@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ActionError;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * ActionError Tag.
@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class ActionErrorTag extends AbstractUITag {
 
+    @Serial
     private static final long serialVersionUID = -3710234378022378639L;
 
     private boolean escape = true;
@@ -53,17 +54,17 @@ public class ActionErrorTag extends AbstractUITag {
         this.escape = escape;
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

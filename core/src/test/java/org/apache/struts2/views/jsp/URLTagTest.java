@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.dynamic.Mock;
-import com.mockobjects.servlet.MockBodyContent;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.inject.Container;
+import java.io.File;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -34,16 +35,18 @@ import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
+import org.springframework.mock.web.MockBodyContent;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.mockobjects.dynamic.Mock;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.DefaultActionInvocation;
+import org.apache.struts2.DefaultActionProxyFactory;
+import org.apache.struts2.inject.Container;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.JspWriter;
+
 
 /**
  * Unit test for {@link URLTag}.
@@ -1534,7 +1537,7 @@ public class URLTagTest extends AbstractUITagTest {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         response = new StrutsMockHttpServletResponse();
         request.setSession(new StrutsMockHttpSession());
-        request.setupGetServletPath("/");
+        request.setServletPath("/");
 
         writer = new StringWriter();
 
@@ -1542,11 +1545,7 @@ public class URLTagTest extends AbstractUITagTest {
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
-        pageContext = new StrutsMockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setResponse(response);
-        pageContext.setServletContext(servletContext);
-
+        pageContext = new StrutsMockPageContext(servletContext, request, response);
         mockContainer = new Mock(Container.class);
 
         session = new SessionMap(request);
@@ -1652,7 +1651,7 @@ public class URLTagTest extends AbstractUITagTest {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         response = new StrutsMockHttpServletResponse();
         request.setSession(new StrutsMockHttpSession());
-        request.setupGetServletPath("/");
+        request.setServletPath("/");
 
         writer = new StringWriter();
 
@@ -1660,10 +1659,7 @@ public class URLTagTest extends AbstractUITagTest {
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
-        pageContext = new StrutsMockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setResponse(response);
-        pageContext.setServletContext(servletContext);
+        pageContext = new StrutsMockPageContext(servletContext, request, response);
 
         mockContainer = new Mock(Container.class);
 
@@ -1943,12 +1939,7 @@ public class URLTagTest extends AbstractUITagTest {
         ParamTag param2 = new ParamTag();
         param2.setPageContext(pageContext);
         param2.setName("paramWithSetBody");
-        param2.setBodyContent(new MockBodyContent() {
-            @Override
-            public String getString() {
-                return "";
-            }
-        });
+        param2.setBodyContent(new MockBodyContent("", response));
         param2.setSuppressEmptyParameters(false);
         param2.doStartTag();
         param2.doEndTag();
@@ -1964,12 +1955,7 @@ public class URLTagTest extends AbstractUITagTest {
         ParamTag param4 = new ParamTag();
         param4.setPageContext(pageContext);
         param4.setName("paramWithSetBodySuppressed");
-        param4.setBodyContent(new MockBodyContent() {
-            @Override
-            public String getString() {
-                return "";
-            }
-        });
+        param4.setBodyContent(new MockBodyContent("", response));
         param4.setSuppressEmptyParameters(true);
         param4.doStartTag();
         param4.doEndTag();
@@ -2026,12 +2012,7 @@ public class URLTagTest extends AbstractUITagTest {
         param2.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         param2.setPageContext(pageContext);
         param2.setName("paramWithSetBody");
-        param2.setBodyContent(new MockBodyContent() {
-            @Override
-            public String getString() {
-                return "";
-            }
-        });
+        param2.setBodyContent(new MockBodyContent("", response));
         param2.setSuppressEmptyParameters(false);
         param2.doStartTag();
         setComponentTagClearTagState(param2, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -2051,12 +2032,7 @@ public class URLTagTest extends AbstractUITagTest {
         param4.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         param4.setPageContext(pageContext);
         param4.setName("paramWithSetBodySuppressed");
-        param4.setBodyContent(new MockBodyContent() {
-            @Override
-            public String getString() {
-                return "";
-            }
-        });
+        param4.setBodyContent(new MockBodyContent("", response));
         param4.setSuppressEmptyParameters(true);
         param4.doStartTag();
         setComponentTagClearTagState(param4, true);  // Ensure component tag state clearing is set true (to match tag).

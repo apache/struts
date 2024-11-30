@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.showcase.action;
 
-import com.opensymphony.xwork2.Preparable;
+import org.apache.struts2.Preparable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;

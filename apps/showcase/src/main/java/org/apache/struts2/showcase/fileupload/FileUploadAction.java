@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.fileupload;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;

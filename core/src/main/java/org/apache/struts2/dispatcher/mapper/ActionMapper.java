@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import org.apache.struts2.config.ConfigurationManager;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <!-- START SNIPPET: javadoc -->

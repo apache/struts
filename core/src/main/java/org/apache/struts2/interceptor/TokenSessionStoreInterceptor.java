@@ -18,18 +18,19 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.util.ValueStack;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -97,6 +98,7 @@ import javax.servlet.http.HttpSession;
  */
 public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
+    @Serial
     private static final long serialVersionUID = -9032347965469098195L;
 
     @Override
@@ -154,7 +156,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
                 Result result = savedInvocation.getResult();
 
                 if ((result != null) && (savedInvocation.getProxy().getExecuteResult())) {
-                    result.execute((org.apache.struts2.ActionInvocation) savedInvocation);
+                    result.execute(savedInvocation);
                 }
 
                 // turn off execution of this invocations result

@@ -18,10 +18,11 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.Configuration;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.Configuration;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -35,9 +36,9 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +111,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
 
     /**
      * A helper method which allows instantiate an action if this action extends
-     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
+     * {@link org.apache.struts2.ActionSupport} or any other action class
      * that requires framework's dependencies injection.
      */
     protected <T> T createAction(Class<T> clazz) {

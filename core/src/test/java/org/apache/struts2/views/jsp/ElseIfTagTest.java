@@ -18,23 +18,25 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.components.If;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockJspWriter;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 /**
  *
  */
 public class ElseIfTagTest extends StrutsInternalTestCase {
 
-    protected MockPageContext pageContext;
+    protected StrutsMockPageContext pageContext;
     protected MockJspWriter jspWriter;
     protected ValueStack stack;
 
@@ -215,31 +217,29 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
-
-        jspWriter = new MockJspWriter();
+        HttpServletResponse resp = new MockHttpServletResponse();
+        jspWriter = new MockJspWriter(resp);
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setServletInfo("not-weblogic");
 
-        pageContext = new MockPageContext();
+        pageContext = new StrutsMockPageContext(servletContext, request, resp);
         pageContext.setJspWriter(jspWriter);
-        pageContext.setRequest(request);
-        pageContext.setServletContext(servletContext);
 
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
     }
 
     /**
-     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a
      * {@link ComponentTagSupport} tag's {@link Component} to match expectations for the test.
-     * 
+     *
      * The component reference is not available to the tag until after the doStartTag() method is called.
      * We need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
      * what we set for the Tag when a non-default (true) value is used, so this method accesses the component instance,
      * sets the value specified and forces the tag's parameters to be repopulated again.
-     * 
+     *
      * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
      * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
      */

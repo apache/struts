@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationImpl;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.location.LocatableProperties;
+import org.apache.struts2.util.location.Location;
+import org.apache.struts2.util.location.LocationImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
@@ -38,7 +38,7 @@ class PropertiesSettings implements Settings {
 
     private static final Logger LOG = LogManager.getLogger(PropertiesSettings.class);
 
-    private LocatableProperties settings;
+    private final LocatableProperties settings;
 
     /**
      * Creates a new properties config given the name of a properties file. The name is expected to NOT have
@@ -48,15 +48,15 @@ class PropertiesSettings implements Settings {
      * @param name the name of the properties file, excluding the ".properties" extension.
      */
     public PropertiesSettings(String name) {
-        
+
         URL settingsUrl = ClassLoaderUtil.getResource(name + ".properties", getClass());
-        
+
         if (settingsUrl == null) {
             LOG.debug("{}.properties missing", name);
             settings = new LocatableProperties();
             return;
         }
-        
+
         settings = new LocatableProperties(new LocationImpl(null, settingsUrl.toString()));
 
         // Load settings
@@ -76,7 +76,7 @@ class PropertiesSettings implements Settings {
     public String get(String aName) throws IllegalArgumentException {
         return settings.getProperty(aName);
     }
-    
+
     /**
      * Gets the location of a property from the properties file.
      *

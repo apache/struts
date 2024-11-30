@@ -18,26 +18,26 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.DefaultActionInvocation;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.HtmlHandler;
 import org.apache.struts2.result.HttpHeaderResult;
+import org.apache.struts2.result.Result;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -207,7 +207,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
         if (this.result instanceof HttpHeaderResult) {
 
             // execute the result to apply headers and status in every representations
-            this.result.execute((org.apache.struts2.ActionInvocation) this);
+            this.result.execute(this);
             updateStatusFromResult();
         }
 
@@ -219,7 +219,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
             // Normal struts execution (html o other struts result)
             findResult();
             if (result != null) {
-                this.result.execute((org.apache.struts2.ActionInvocation) this);
+                this.result.execute(this);
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());

@@ -24,11 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.htmlunit.Page;
+import org.htmlunit.WebClient;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
 
 public class FileDownloadTest {
     @Test

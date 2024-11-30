@@ -18,7 +18,8 @@
  */
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -26,8 +27,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.url.QueryStringBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -126,7 +127,7 @@ public class DefaultUrlHelper implements UrlHelper {
 
                 // (Applicable to Servlet 2.4 containers)
                 // If the request was forwarded, the attribute below will be set with the original URL
-                String uri = (String) request.getAttribute("javax.servlet.forward.request_uri");
+                String uri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
 
                 // If the attribute wasn't found, default to the value in the request object
                 if (uri == null) {
@@ -145,7 +146,7 @@ public class DefaultUrlHelper implements UrlHelper {
             // (Applicable to Servlet 2.4 containers)
             // If the request was forwarded, the attribute below will be set with the original URL
             if (requestURI == null) {
-                requestURI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+                requestURI = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
             }
 
             // If neither request attributes were found, default to the value in the request object

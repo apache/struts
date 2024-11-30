@@ -48,14 +48,6 @@
           <include>src/</include>
         </includes>
       </fileSet>
-        <fileSet>
-          <directory>../api</directory>
-          <outputDirectory>src/api</outputDirectory>
-          <includes>
-            <include>pom.xml</include>
-            <include>src/</include>
-          </includes>
-        </fileSet>
       <fileSet>
         <directory>../apps</directory>
         <outputDirectory>src/apps</outputDirectory>
@@ -105,14 +97,6 @@
           <exclude>*.iml</exclude>
           <exclude>*.ipr</exclude>
           <exclude>*.iws</exclude>
-        </excludes>
-      </fileSet>
-      <fileSet>
-        <directory>../bundles</directory>
-        <outputDirectory>src/bundles</outputDirectory>
-        <excludes>
-          <exclude>*/target/**</exclude>
-          <exclude>target/**</exclude>
         </excludes>
       </fileSet>
 

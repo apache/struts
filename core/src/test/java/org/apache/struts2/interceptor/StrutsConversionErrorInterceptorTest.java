@@ -20,12 +20,12 @@ package org.apache.struts2.interceptor;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.conversion.impl.ConversionData;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.conversion.impl.ConversionData;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.HashMap;

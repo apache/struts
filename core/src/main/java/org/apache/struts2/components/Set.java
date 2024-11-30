@@ -18,13 +18,12 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -76,7 +75,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="set", tldBodyContent="JSP", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
+@StrutsTag(name="set", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
 public class Set extends ContextBean {
     protected String scope;
     protected String value;

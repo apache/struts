@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
@@ -26,6 +25,7 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.util.TextParseUtil;
 
 import java.util.Collections;
 import java.util.Set;

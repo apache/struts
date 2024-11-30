@@ -18,13 +18,11 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Contains initialization operations
@@ -90,18 +88,4 @@ public class InitOperations {
     public void cleanup() {
         ActionContext.clear();
     }
-
-    /**
-     * Extract a list of patterns to exclude from request filtering
-     *
-     * @param dispatcher The dispatcher to check for exclude pattern configuration
-     * @return a List of Patterns for request to exclude if apply, or <tt>null</tt>
-     * @see org.apache.struts2.StrutsConstants#STRUTS_ACTION_EXCLUDE_PATTERN
-     * @deprecated since 6.4.0, use {@link Dispatcher#getActionExcludedPatterns()} instead.
-     */
-    @Deprecated
-    public List<Pattern> buildExcludedPatternsList(Dispatcher dispatcher) {
-        return dispatcher.getActionExcludedPatterns();
-    }
-
 }

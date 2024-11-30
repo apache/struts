@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -57,7 +57,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 
         String tmpPath = "file://" + FileUtils.getTempDirectoryPath();
-        
+
         // when
         manager.load(servletContext, tmpPath);
 
@@ -70,7 +70,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         FreemarkerManager manager = new FreemarkerManager() {
             @Override
             protected Version getFreemarkerVersion(ServletContext servletContext) {
-                return Configuration.VERSION_2_3_0;
+                return Configuration.VERSION_2_3_33;
             }
         };
         container.inject(manager);
@@ -79,7 +79,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         manager.init(servletContext);
 
         // then
-        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
+        assertEquals(Configuration.VERSION_2_3_33, manager.config.getIncompatibleImprovements());
     }
 
     public void testIncompatibleImprovementsWithTemplate() throws Exception {
@@ -91,18 +91,19 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
         // when
         Writer out = new StringWriter();
-        Map<String, String> model = new HashMap<>();                         
+        Map<String, String> model = new HashMap<>();
         model.put("error", "It's an error message");
 
         tpl.process(model, out);
 
         // then
+        assertEquals(Configuration.VERSION_2_3_33, configuration.getIncompatibleImprovements());
         assertEquals("<input type=\"text\" onclick=\"this.alert('It&#39;s an error message')\"/>", out.toString());
     }
 
     public void testIncompatibleImprovementsByServletContext() throws Exception {
         // given
-        servletContext.setInitParameter("freemarker.incompatible_improvements", "2.3.0");
+        servletContext.setInitParameter("freemarker.incompatible_improvements", "2.3.32");
         FreemarkerManager manager = new FreemarkerManager();
         container.inject(manager);
 
@@ -110,7 +111,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         manager.init(servletContext);
 
         // then
-        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
+        assertEquals(Configuration.VERSION_2_3_32, manager.config.getIncompatibleImprovements());
     }
 }
 
@@ -119,5 +120,5 @@ class DummyFreemarkerManager extends FreemarkerManager {
     public void load(StrutsMockServletContext servletContext, String path) {
         createTemplateLoader(servletContext, path);
     }
-    
+
 }

@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.MergeIterator;
 import org.apache.struts2.views.jsp.ContextBeanTag;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import java.io.Serial;
 
 /**
  * Append a list of iterators. The values of the iterators will be merged
@@ -36,6 +36,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class MergeIteratorTag extends ContextBeanTag {
 
+    @Serial
     private static final long serialVersionUID = 4999729472466011218L;
 
     @Override
@@ -43,10 +44,10 @@ public class MergeIteratorTag extends ContextBeanTag {
         return new MergeIterator(stack);
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }

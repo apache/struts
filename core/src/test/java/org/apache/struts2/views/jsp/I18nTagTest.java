@@ -18,21 +18,24 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.StrutsInternalTestCase;
+import java.io.StringWriter;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
-import com.mockobjects.servlet.MockPageContext;
-import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
+import org.springframework.mock.web.MockJspWriter;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
+
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 public class I18nTagTest extends StrutsInternalTestCase {
 
     I18nTag tag;
-    MockPageContext pageContext;
+    StrutsMockPageContext pageContext;
     ValueStack stack;
 
     @Override
@@ -47,9 +50,8 @@ public class I18nTagTest extends StrutsInternalTestCase {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
         // create the mock page context
-        pageContext = new MockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setJspWriter(new MockJspWriter());
+        pageContext = new StrutsMockPageContext(null, request, null);
+        pageContext.setJspWriter(new MockJspWriter(new StringWriter()));
 
         // associate the tag with the mock page request
         tag.setPageContext(pageContext);
@@ -121,14 +123,14 @@ public class I18nTagTest extends StrutsInternalTestCase {
     }
 
     /**
-     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a
      * {@link ComponentTagSupport} tag's {@link Component} to match expecations for a test.
-     * 
+     *
      * Since the component is not available to the tag until after the doStartTag() method is called,
      * but we need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
      * what we set for the Tag when a non-default (true) value is used, this method retrieves the component instance,
      * sets the value specified and forces the parameters to be repopulated again.
-     * 
+     *
      * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
      * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
      */

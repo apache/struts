@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -38,8 +38,8 @@ import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.UrlHelper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -454,19 +454,19 @@ public class Component {
      * pushed before the component itself, any key-value pair that can't be assigned to component
      * will be set in the parameters Map.
      *
-     * @param params the parameters to copy.
+     * @param attributesToCopy the attributes to copy.
      */
-    public void copyParams(Map<String, Object> params) {
+    public void copyAttributes(Map<String, Object> attributesToCopy) {
         stack.push(attributes);
         stack.push(this);
         try {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
+            for (Map.Entry<String, Object> entry : attributesToCopy.entrySet()) {
                 String key = entry.getKey();
 
                 if (key.indexOf('-') >= 0) {
                     // UI component attributes may contain hypens (e.g. data-ajax), but ognl
                     // can't handle that, and there can't be a component property with a hypen
-                    // so into the parameters map it goes. See WW-4493
+                    // so into the attributes map it goes. See WW-4493
                     attributes.put(key, entry.getValue());
                 } else {
                     stack.setValue(key, entry.getValue());
@@ -493,32 +493,21 @@ public class Component {
     }
 
     /**
-     * Gets the parameters.
+     * Gets the attributes.
      *
-     * @return the parameters. Is never <tt>null</tt>.
-     * @deprecated since 6.7.0, use {@link #getAttributes()} instead
-     */
-    @Deprecated
-    public Map<String, Object> getParameters() {
-        return attributes;
-    }
-
-    /**
-     * Gets the parameters.
-     *
-     * @return the parameters. Is never <tt>null</tt>.
+     * @return the attributes. It's never <tt>null</tt>.
      */
     public Map<String, Object> getAttributes() {
         return attributes;
     }
 
     /**
-     * Adds all the given parameters to this component's own parameters.
+     * Adds all the given attributes to this component's own attributes.
      *
-     * @param params the parameters to add.
+     * @param additionalAttributes the attributes to add.
      */
-    public void addAllParameters(Map<String, Object> params) {
-        attributes.putAll(params);
+    public void addAllAttributes(Map<String, Object> additionalAttributes) {
+        attributes.putAll(additionalAttributes);
     }
 
     /**

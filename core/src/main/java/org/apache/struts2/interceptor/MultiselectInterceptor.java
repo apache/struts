@@ -18,11 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  * empty String.
  */
 public class MultiselectInterceptor extends AbstractInterceptor {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -42,7 +44,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
      * @param ai ActionInvocation
      * @return the result of the action
      * @throws Exception if error
-     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     * @see org.apache.struts2.interceptor.Interceptor#intercept(org.apache.struts2.ActionInvocation)
      */
     public String intercept(ActionInvocation ai) throws Exception {
         HttpParameters parameters = ai.getInvocationContext().getParameters();

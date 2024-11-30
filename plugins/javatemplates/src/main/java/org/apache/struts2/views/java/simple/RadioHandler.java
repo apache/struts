@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
 
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
@@ -91,13 +91,13 @@ public class RadioHandler extends AbstractTagHandler implements TagGenerator {
     /**
      * It's set to true if the nameValue (the value associated with the name
      * which is typically set in the action is equal to the current key value.
-     * 
+     *
      * @param params
      *            the params
-     * 
+     *
      * @param itemKeyStr
      *            the item key str
-     * 
+     *
      * @return the boolean
      */
     private Boolean isChecked(Map<String, Object> params, String itemKeyStr) {

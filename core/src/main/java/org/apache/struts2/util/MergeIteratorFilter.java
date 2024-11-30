@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.action.Action;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * A bean that takes several iterators and outputs the merge of them. Used by
@@ -46,10 +46,10 @@ public class MergeIteratorFilter extends IteratorFilterSupport implements Iterat
     }
 
     // Action implementation -----------------------------------------
+    @Override
     public String execute() {
         // Make source transformations
-        for (int i = 0; i < sources.size(); i++) {
-            Object source = sources.get(i);
+        for (Object source : sources) {
             iterators.add(getIterator(source));
         }
 
@@ -57,14 +57,15 @@ public class MergeIteratorFilter extends IteratorFilterSupport implements Iterat
     }
 
     // Iterator implementation ---------------------------------------
+    @Override
     public boolean hasNext() {
-        while (iterators.size() > 0) {
+        while (!iterators.isEmpty()) {
             if (((Iterator) iterators.get(idx)).hasNext()) {
                 return true;
             } else {
                 iterators.remove(idx);
 
-                if (iterators.size() > 0) {
+                if (!iterators.isEmpty()) {
                     idx = idx % iterators.size();
                 }
             }

@@ -201,12 +201,12 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_UI_TEMPLATEDIR, uiTemplateDir);
         map.put(StrutsConstants.STRUTS_UI_THEME, uiTheme);
         map.put(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN, uiThemeExpansionToken);
-        map.put(StrutsConstants.STRUTS_MULTIPART_MAXSIZE, Objects.toString(multipartMaxSize, null));
-        map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILES, Objects.toString(multipartMaxFiles, null));
-        map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, Objects.toString(multipartMaxFileSize, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAX_SIZE, Objects.toString(multipartMaxSize, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAX_FILES, Objects.toString(multipartMaxFiles, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAX_FILE_SIZE, Objects.toString(multipartMaxFileSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH, Objects.toString(multipartMaxStringLength, null));
-        map.put(StrutsConstants.STRUTS_MULTIPART_SAVEDIR, multipartSaveDir);
-        map.put(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, Objects.toString(multipartBufferSize, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_SAVE_DIR, multipartSaveDir);
+        map.put(StrutsConstants.STRUTS_MULTIPART_BUFFER_SIZE, Objects.toString(multipartBufferSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_PARSER, beanConfToString(multipartParser));
         map.put(StrutsConstants.STRUTS_MULTIPART_ENABLED, Objects.toString(multipartEnabled, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_VALIDATION_REGEX, Objects.toString(multipartValidationRegex, null));

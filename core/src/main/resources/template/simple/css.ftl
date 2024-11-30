@@ -18,16 +18,16 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
-<#if parameters.cssClass?has_content && !(hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssClass}"<#rt/>
-<#elseif parameters.cssClass?has_content && (hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssClass} ${parameters.cssErrorClass}"<#rt/>
-<#elseif !(parameters.cssClass?has_content) && (hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssErrorClass}"<#rt/>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
+<#if attributes.cssClass?has_content && !(hasFieldErrors && attributes.cssErrorClass??)>
+ class="${attributes.cssClass}"<#rt/>
+<#elseif attributes.cssClass?has_content && (hasFieldErrors && attributes.cssErrorClass??)>
+ class="${attributes.cssClass} ${attributes.cssErrorClass}"<#rt/>
+<#elseif !(attributes.cssClass?has_content) && (hasFieldErrors && attributes.cssErrorClass??)>
+ class="${attributes.cssErrorClass}"<#rt/>
 </#if>
-<#if parameters.cssStyle?has_content && !(hasFieldErrors && (parameters.cssErrorStyle?? || parameters.cssErrorClass??))>
- style="${parameters.cssStyle}"<#rt/>
-<#elseif hasFieldErrors && parameters.cssErrorStyle??>
- style="${parameters.cssErrorStyle}"<#rt/>
+<#if attributes.cssStyle?has_content && !(hasFieldErrors && (attributes.cssErrorStyle?? || attributes.cssErrorClass??))>
+ style="${attributes.cssStyle}"<#rt/>
+<#elseif hasFieldErrors && attributes.cssErrorStyle??>
+ style="${attributes.cssErrorStyle}"<#rt/>
 </#if>

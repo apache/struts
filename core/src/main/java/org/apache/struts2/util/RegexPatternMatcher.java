@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.util.PatternMatcher;
+import org.apache.struts2.util.PatternMatcher;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * </pre>
  */
 public class RegexPatternMatcher implements PatternMatcher<RegexPatternMatcherExpression> {
-    private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
+    private static final Pattern PATTERN = Pattern.compile("\\{(.*?)}");
 
     public RegexPatternMatcherExpression compilePattern(String data) {
         Map<Integer, String> params = new HashMap<>();
@@ -77,10 +77,10 @@ public class RegexPatternMatcher implements PatternMatcher<RegexPatternMatcherEx
 
         //generate a new pattern used to match URIs
         //replace {X:B} by (B)
-        String newPattern = data.replaceAll("(\\{[^\\}]*?:(.*?)\\})", "($2)");
+        String newPattern = data.replaceAll("(\\{[^}]*?:(.*?)})", "($2)");
 
         //replace {X} by (.*?)
-        newPattern = newPattern.replaceAll("(\\{.*?\\})", "(.*?)");
+        newPattern = newPattern.replaceAll("(\\{.*?})", "(.*?)");
         return new RegexPatternMatcherExpression(Pattern.compile(newPattern), params);
     }
 
@@ -94,12 +94,12 @@ public class RegexPatternMatcher implements PatternMatcher<RegexPatternMatcherEx
 
         if (matcher.matches()) {
             map.put("0", data);
-            
+
             //extract values and get param names from the expression
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String paramName = params.get(i);
                 String value = matcher.group(i);
-                
+
                 //by name
                 map.put(paramName, value);
                 //by index so the old {1} still works

@@ -18,11 +18,12 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import jakarta.servlet.jsp.JspException;
+
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
 
-import javax.servlet.jsp.JspException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;

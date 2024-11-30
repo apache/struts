@@ -18,17 +18,17 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -94,6 +94,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      * @param request The request
      * @return The appropriate handler
      */
+    @Override
     public ContentTypeHandler getHandlerForRequest(HttpServletRequest request) {
         ContentTypeHandler handler = null;
         String contentType = request.getContentType();
@@ -124,6 +125,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
      * from the Accept: header
      *
      */
+    @Override
     public ContentTypeHandler getHandlerForResponse(HttpServletRequest request, HttpServletResponse res) {
 
         String extension = getExtensionIfPresent(request.getRequestURI());
@@ -155,21 +157,16 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         return handler;
     }
 
-    @Override
-    public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
-        LOG.warn("This method is deprecated!");
-        return readResultCode(methodResult);
-    }
-
     /**
      * Handles the result using handlers to generate content type-specific content
-     * 
+     *
      * @param invocation The action invocation for the current request
      * @param methodResult The object returned from the action method
      * @param target The object to return, usually the action object
      * @return The new result code to process
      * @throws IOException If unable to write to the response
      */
+    @Override
     public String handleResult(ActionInvocation invocation, Object methodResult, Object target) throws IOException {
         String resultCode = readResultCode(methodResult);
         Integer statusCode = readStatusCode(methodResult);
@@ -239,10 +236,11 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
 
     /**
      * Finds the extension in the url
-     * 
+     *
      * @param url The url
      * @return The extension, or the default extension if there is none
      */
+    @Override
     public String findExtension(String url) {
         int dotPos = url.lastIndexOf('.');
         int slashPos = url.lastIndexOf('/');

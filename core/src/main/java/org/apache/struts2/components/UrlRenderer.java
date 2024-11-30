@@ -24,7 +24,7 @@ import java.io.Writer;
 
 /**
  * Implementations of this interface are responsible for rendering/creating URLs for a specific
- * environment (e.g. Servlet, Portlet). 
+ * environment (e.g. Servlet). 
  *
  */
 public interface UrlRenderer {

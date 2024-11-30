@@ -20,8 +20,6 @@ package org.apache.struts2.interceptor;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Proxy interface used together with PrincipalAware interface. It allows indirect
  * access to HttpServletRequest or PortletRequest Principal related methods.

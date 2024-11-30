@@ -21,7 +21,7 @@ package org.apache.struts2.util;
 import java.util.Map;
 
 /**
- * Matches content type of uploaded files, similar to {@link com.opensymphony.xwork2.util.PatternMatcher}
+ * Matches content type of uploaded files, similar to {@link org.apache.struts2.util.PatternMatcher}
  *
  * @since 2.3.22
  */

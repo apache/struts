@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -33,7 +33,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
+import static org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -255,7 +255,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         MyImageAction action = new MyImageAction();
         contentLength = (int) action.getContentLength();
 
-        mai = new com.opensymphony.xwork2.mock.MockActionInvocation();
+        mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setStack(stack);
         mai.setInvocationContext(ActionContext.getContext());

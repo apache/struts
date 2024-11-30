@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionInvocation;
 import junit.framework.TestCase;
 
 import java.io.IOException;

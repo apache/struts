@@ -17,7 +17,9 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+      - release/struts-7-0-x
   pull_request:
 
 permissions:
@@ -43,6 +45,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+        cache: 'maven'
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3.27.4
       with:

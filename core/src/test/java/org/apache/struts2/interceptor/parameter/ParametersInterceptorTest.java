@@ -18,29 +18,30 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.ognl.OgnlValueStack;
-import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
-import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDrivenAction;
+import org.apache.struts2.SimpleAction;
+import org.apache.struts2.TestBean;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.providers.MockConfigurationProvider;
+import org.apache.struts2.config.providers.StrutsDefaultConfigurationProvider;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.ognl.OgnlValueStack;
+import org.apache.struts2.ognl.OgnlValueStackFactory;
+import org.apache.struts2.ognl.SecurityMemberAccess;
+import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
+import org.apache.struts2.ognl.accessor.RootAccessor;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
+import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlContext;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.action.ParameterNameAware;
@@ -90,7 +91,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("test%test", "test%test");
             }
         };
-        pi.setParameters(a, stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(a, stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -113,7 +114,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
         assertEquals(3, action.getActionErrors().size());
@@ -160,7 +161,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
         assertEquals(0, action.getActionMessages().size());
@@ -200,7 +201,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
         assertEquals(3, action.getActionErrors().size());
@@ -320,7 +321,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
         assertEquals(0, action.getActionMessages().size());
@@ -435,7 +436,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("huuhaa", "");
 
         Action action = new SimpleAction();
-        parametersInterceptor.setParameters(action, stack, HttpParameters.create(parameters).build());
+        parametersInterceptor.applyParameters(action, stack, HttpParameters.create(parameters).build());
         assertEquals(1, actual.size());
     }
 
@@ -629,7 +630,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("user.name", "Superman");
 
         Action action = new SimpleAction();
-        pi.setParameters(action, stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(action, stack, HttpParameters.create(parameters).build());
 
         assertEquals("ordered should be false by default", false, pi.isOrdered());
         assertEquals(2, actual.size());
@@ -656,7 +657,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("user.name", "Superman");
 
         Action action = new SimpleAction();
-        pi.setParameters(action, stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(action, stack, HttpParameters.create(parameters).build());
 
         assertEquals(true, pi.isOrdered());
         assertEquals(3, actual.size());
@@ -696,7 +697,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey", "fooValue");
             }
         };
-        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -727,7 +728,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
 
         // when
-        interceptor.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        interceptor.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
 
         // then
         assertEquals(expected, actual);
@@ -754,7 +755,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
 
         // when
-        interceptor.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        interceptor.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
 
         // then
         assertEquals(expected, actual);
@@ -806,7 +807,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey2", "");
             }
         };
-        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -843,7 +844,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey2", "");
             }
         };
-        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -882,7 +883,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey2", "");
             }
         };
-        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -926,7 +927,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey3", "");
             }
         };
-        pi.setParameters(a, stack, HttpParameters.create(parameters).build());
+        pi.applyParameters(a, stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
 
@@ -964,7 +965,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ValueStack stack = new OgnlValueStack(
             container.getInstance(XWorkConverter.class),
             (CompoundRootAccessor) container.getInstance(RootAccessor.class),
-            container.getInstance(TextProvider.class, "system"), true) {
+            container.getInstance(TextProvider.class, "system"), new SecurityMemberAccess(null, null)) {
             @Override
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);

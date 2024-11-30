@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.result.StrutsResultSupport;
@@ -29,7 +29,7 @@ import org.jfree.chart.JFreeChart;
 
 import java.io.OutputStream;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -85,7 +85,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  *		    return SUCCESS;
  *	    }
- * 
+ *
  *      // this method will get called if we specify &lt;param name="value"&gt;chart&lt;/param&gt;
  *	    public JFreeChart getChart() {
  *		    return chart;
@@ -172,10 +172,6 @@ public class ChartResult extends StrutsResultSupport {
         this.chart = chart;
     }
 
-    // OTHER METHODS -----------------------
-
-    // Required by com.opensymphony.xwork2.Result
-
     /**
      * Executes the result. Writes the given chart as a PNG or JPG to the servlet output stream.
      *
@@ -185,7 +181,7 @@ public class ChartResult extends StrutsResultSupport {
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 
         initializeProperties(invocation);
-        
+
         if (!chartSet) // if our chart hasn't been set (by the testcase), we'll look it up in the value stack
             chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
         if (chart == null) // we need to have a chart object - if not, blow up
@@ -234,7 +230,7 @@ public class ChartResult extends StrutsResultSupport {
         if (type != null) {
             type = conditionalParse(type, invocation);
         }
-        
+
         if ( type == null) {
             type = DEFAULT_TYPE;
         }

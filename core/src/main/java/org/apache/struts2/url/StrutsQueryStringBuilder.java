@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.url;
 
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,8 +54,7 @@ public class StrutsQueryStringBuilder implements QueryStringBuilder {
                 for (Object o : (Iterable<?>) value) {
                     appendParameterSubstring(queryString, paramSeparator, name, o);
                 }
-            } else if (value instanceof Object[]) {
-                Object[] array = (Object[]) value;
+            } else if (value instanceof Object[] array) {
                 for (Object o : array) {
                     appendParameterSubstring(queryString, paramSeparator, name, o);
                 }
@@ -64,7 +63,7 @@ public class StrutsQueryStringBuilder implements QueryStringBuilder {
             }
         }
 
-        if (queryString.length() > 0) {
+        if (!queryString.isEmpty()) {
             if (!link.toString().contains("?")) {
                 link.append("?");
             } else {
@@ -75,7 +74,7 @@ public class StrutsQueryStringBuilder implements QueryStringBuilder {
     }
 
     private void appendParameterSubstring(StringBuilder queryString, String paramSeparator, String name, Object value) {
-        if (queryString.length() > 0) {
+        if (!queryString.isEmpty()) {
             queryString.append(paramSeparator);
         }
 

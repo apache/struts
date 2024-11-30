@@ -18,19 +18,21 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspException;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.IteratorComponent;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
+import java.io.Serial;
 
 /**
  * @see IteratorComponent
  */
 public class IteratorTag extends ContextBeanTag {
 
+    @Serial
     private static final long serialVersionUID = -1827978135193581901L;
 
     protected String statusAttr;
@@ -101,17 +103,17 @@ public class IteratorTag extends ContextBeanTag {
         }
     }
 
-    @Override
     /**
      * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
      */
+    @Override
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 
     @Override
     protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
+       if (!getPerformClearTagStateForTagPoolingServers()) {
             return;  // If flag is false (default setting), do not perform any state clearing.
         }
         super.clearTagStateForTagPoolingServers();

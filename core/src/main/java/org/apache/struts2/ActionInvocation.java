@@ -25,9 +25,9 @@ import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
 
 /**
- * An {@link ActionInvocation} represents the execution state of an {@link com.opensymphony.xwork2.Action}. It holds the Interceptors and the Action instance.
+ * An {@link ActionInvocation} represents the execution state of an {@link Action}. It holds the Interceptors and the Action instance.
  * By repeated re-entrant execution of the <code>invoke()</code> method, initially by the {@link ActionProxy}, then by the Interceptors, the
- * Interceptors are all executed, and then the {@link Action} and the {@link com.opensymphony.xwork2.Result}.
+ * Interceptors are all executed, and then the {@link Action} and the {@link Result}.
  *
  * @author Jason Carreira
  * @see ActionProxy

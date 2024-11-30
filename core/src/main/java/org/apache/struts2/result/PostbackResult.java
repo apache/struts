@@ -18,17 +18,19 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -73,6 +75,7 @@ import java.util.Map;
  */
 public class PostbackResult extends StrutsResultSupport {
 
+    @Serial
     private static final long serialVersionUID = -2283504349296877429L;
 
     private String actionName;
@@ -154,7 +157,7 @@ public class PostbackResult extends StrutsResultSupport {
             // Do not prepend if the URL is a FQN
             if (!location.matches("^([a-zA-Z]+:)?//.*")) {
                 // If the URL is relative to the servlet context, prepend the servlet context path
-                if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
+                if (prependServletContext && request.getContextPath() != null && !request.getContextPath().isEmpty()) {
                     location = request.getContextPath() + location;
                 }
             }
@@ -212,8 +215,8 @@ public class PostbackResult extends StrutsResultSupport {
 
     protected void writeFormElement(PrintWriter pw, String name, String[] values) throws UnsupportedEncodingException {
         for (String value : values) {
-            String encName = URLEncoder.encode(name, "UTF-8");
-            String encValue = URLEncoder.encode(value, "UTF-8");
+            String encName = URLEncoder.encode(name, StandardCharsets.UTF_8);
+            String encValue = URLEncoder.encode(value, StandardCharsets.UTF_8);
             pw.write("<input type=\"hidden\" name=\"" + encName + "\" value=\"" + encValue + "\"/>");
         }
     }

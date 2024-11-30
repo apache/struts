@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.Action;
-import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.Action;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,6 +62,7 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
     }
 
     // Action implementation -----------------------------------------
+    @Override
     public String execute() {
         if (source == null) {
             LogManager.getLogger(SubsetIteratorFilter.class.getName()).warn("Source is null returning empty set.");
@@ -125,16 +126,19 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
     }
 
     // Iterator implementation ---------------------------------------
+    @Override
     public boolean hasNext() {
-        return (iterator == null) ? false : (iterator.hasNext() && ((count < 0) || (currentCount < count)));
+        return iterator != null && (iterator.hasNext() && ((count < 0) || (currentCount < count)));
     }
 
+    @Override
     public Object next() {
         currentCount++;
 
         return iterator.next();
     }
 
+    @Override
     public void remove() {
         iterator.remove();
     }
@@ -143,7 +147,7 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
     /**
      * A decider determines if the given element should be added to the list or not.
      */
-    public static interface Decider {
+    public interface Decider {
 
         /**
          * Should the object be added to the list?
@@ -158,8 +162,7 @@ public class SubsetIteratorFilter extends IteratorFilterSupport implements Itera
     protected boolean decide(Object element) {
         if (decider != null) {
             try {
-                boolean okToAdd = decider.decide(element);
-                return okToAdd;
+                return decider.decide(element);
             }
             catch(Exception e) {
                 LOG.warn("Decider [{}] encountered an error while decide adding element [{}], element will be ignored, it will not appeared in subseted iterator",

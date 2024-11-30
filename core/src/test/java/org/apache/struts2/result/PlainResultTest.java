@@ -18,11 +18,10 @@
  */
 package org.apache.struts2.result;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.result.plain.ResponseBuilder;
 import org.springframework.mock.web.MockHttpServletResponse;
 

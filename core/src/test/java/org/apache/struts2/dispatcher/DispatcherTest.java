@@ -18,22 +18,22 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.StubValueStack;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.test.StubConfigurationProvider;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.StubValueStack;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.config.entities.InterceptorStackConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.test.StubConfigurationProvider;
+import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsJUnit4InternalTestCase;
@@ -46,8 +46,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;

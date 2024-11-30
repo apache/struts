@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.showcase.tag.nonui.debugtag;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.dispatcher.PrepareOperations;
 
 public class DebugTagAction extends ActionSupport {

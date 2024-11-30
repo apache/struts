@@ -53,25 +53,11 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/plexus/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>CLASSWORLDS-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../plugins/rest/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>
         <include>XSTREAM-LICENSE.txt</include>
         <include>XPP3-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../plugins/sitemesh/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>SITEMESH-LICENSE.txt</include>
       </includes>
     </fileSet>
   </fileSets>

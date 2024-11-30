@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.junit;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 
 @RunWith(SpringJUnit4ClassRunner.class)

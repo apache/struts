@@ -26,22 +26,22 @@
 	<include file="xwork-test-beans.xml" />
     <package name="xwork-test-default">
         <result-types>
-            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
-            <result-type name="void" class="com.opensymphony.xwork2.VoidResult"/>
-            <result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult"/>
+            <result-type name="chain" class="org.apache.struts2.result.ActionChainResult" default="true"/>
+            <result-type name="void" class="org.apache.struts2.VoidResult"/>
+            <result-type name="mock" class="org.apache.struts2.mock.MockResult"/>
         </result-types>
 
         <interceptors>
-            <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
-            <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
-            <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
-            <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
-            <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
-            <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor">
+            <interceptor name="logger" class="org.apache.struts2.interceptor.LoggingInterceptor"/>
+            <interceptor name="chain" class="org.apache.struts2.interceptor.ChainingInterceptor"/>
+            <interceptor name="params" class="org.apache.struts2.interceptor.parameter.ParametersInterceptor"/>
+            <interceptor name="staticParams" class="org.apache.struts2.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="modelDriven" class="org.apache.struts2.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="validation" class="org.apache.struts2.validator.ValidationInterceptor">
                 <param name="validateAnnotatedMethodOnly">true</param>
             </interceptor>
-			<interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
-            <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
+			<interceptor name="alias" class="org.apache.struts2.interceptor.AliasInterceptor"/>
+            <interceptor name="test" class="org.apache.struts2.mock.MockInterceptor">
                 <param name="foo">expectedFoo</param>
             </interceptor>
 
@@ -66,12 +66,12 @@
     </package>
     <package name="default" extends="xwork-test-default">
 
-        <action name="annotatedMethod" class="com.opensymphony.xwork2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="annotatedMethod">
+        <action name="annotatedMethod" class="org.apache.struts2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="annotatedMethod">
             <interceptor-ref name="validationStack"/>
             <result name="success" type="mock"/>
         </action>
 
-        <action name="notAnnotatedMethod" class="com.opensymphony.xwork2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="notAnnotatedMethod">
+        <action name="notAnnotatedMethod" class="org.apache.struts2.test.annotations.ValidateAnnotatedMethodOnlyAction" method="notAnnotatedMethod">
             <interceptor-ref name="validationStack"/>
             <result name="success" type="mock"/>
         </action>

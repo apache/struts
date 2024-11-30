@@ -18,11 +18,12 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.RequestDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -302,7 +303,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         // Parse the query string to make sure that the parameters come from the query, and not some posted data
         String query = urlComponent.getHttpServletRequest().getQueryString();
         if (query == null) {
-            query = (String) urlComponent.getHttpServletRequest().getAttribute("javax.servlet.forward.query_string");
+            query = (String) urlComponent.getHttpServletRequest().getAttribute(RequestDispatcher.FORWARD_QUERY_STRING);
         }
 
         if (query != null) {

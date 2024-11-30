@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.action.Action;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.opensymphony.xwork2.Action;
 
 /**
  * A bean that takes several iterators and outputs them in sequence
@@ -30,51 +30,48 @@ import com.opensymphony.xwork2.Action;
  * @see org.apache.struts2.components.AppendIterator
  * @see org.apache.struts2.views.jsp.iterator.AppendIteratorTag
  */
-public class AppendIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
+public class AppendIteratorFilter extends IteratorFilterSupport implements Iterator<Object>, Action {
 
-    List iterators = new ArrayList();
+    private final List<Object> iterators = new ArrayList<>();
+    private final List<Object> sources = new ArrayList<>();
 
-    // Attributes ----------------------------------------------------
-    List sources = new ArrayList();
-
-
-    // Public --------------------------------------------------------
     public void setSource(Object anIterator) {
         sources.add(anIterator);
     }
 
-    // Action implementation -----------------------------------------
+    @Override
     public String execute() {
         // Make source transformations
-        for (int i = 0; i < sources.size(); i++) {
-            Object source = sources.get(i);
+        for (Object source : sources) {
             iterators.add(getIterator(source));
         }
 
         return SUCCESS;
     }
 
-    // Iterator implementation ---------------------------------------
+    @Override
     public boolean hasNext() {
-        if (iterators.size() > 0) {
-            return (((Iterator) iterators.get(0)).hasNext());
+        if (!iterators.isEmpty()) {
+            return (((Iterator<?>) iterators.get(0)).hasNext());
         } else {
             return false;
         }
     }
 
+    @Override
     public Object next() {
         try {
-            return ((Iterator) iterators.get(0)).next();
+            return ((Iterator<?>) iterators.get(0)).next();
         } finally {
-            if (iterators.size() > 0) {
-                if (!((Iterator) iterators.get(0)).hasNext()) {
+            if (!iterators.isEmpty()) {
+                if (!((Iterator<?>) iterators.get(0)).hasNext()) {
                     iterators.remove(0);
                 }
             }
         }
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

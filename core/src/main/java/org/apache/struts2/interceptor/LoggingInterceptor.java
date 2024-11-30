@@ -78,7 +78,7 @@ public class LoggingInterceptor extends AbstractInterceptor {
             StringBuilder message = new StringBuilder(baseMessage);
             String namespace = invocation.getProxy().getNamespace();
 
-            if ((namespace != null) && (namespace.trim().length() > 0)) {
+            if (namespace != null && !namespace.trim().isEmpty()) {
                 message.append(namespace).append("/");
             }
 

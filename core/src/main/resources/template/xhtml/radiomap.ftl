@@ -18,6 +18,6 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
-<#include "/${parameters.templateDir}/simple/radiomap.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" /><#nt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/simple/radiomap.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#nt/>

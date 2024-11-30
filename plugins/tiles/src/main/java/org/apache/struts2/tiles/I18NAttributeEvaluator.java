@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.config.ConfigurationException;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -29,7 +29,7 @@ import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
 

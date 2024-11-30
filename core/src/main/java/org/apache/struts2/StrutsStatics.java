@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * <p>
@@ -31,32 +31,27 @@ public interface StrutsStatics {
     /**
      * Constant for the HTTP request object.
      */
-    String HTTP_REQUEST = "com.opensymphony.xwork2.dispatcher.HttpServletRequest";
+    String HTTP_REQUEST = "org.apache.struts2.dispatcher.HttpServletRequest";
 
     /**
      * Constant for the HTTP response object.
      */
-    String HTTP_RESPONSE = "com.opensymphony.xwork2.dispatcher.HttpServletResponse";
+    String HTTP_RESPONSE = "org.apache.struts2.dispatcher.HttpServletResponse";
 
     /**
-     * Constant for an HTTP {@link javax.servlet.RequestDispatcher request dispatcher}.
+     * Constant for an HTTP {@link jakarta.servlet.RequestDispatcher request dispatcher}.
      */
-    String SERVLET_DISPATCHER = "com.opensymphony.xwork2.dispatcher.ServletDispatcher";
+    String SERVLET_DISPATCHER = "org.apache.struts2.dispatcher.ServletDispatcher";
 
     /**
-     * Constant for the {@link javax.servlet.ServletContext servlet context} object.
+     * Constant for the {@link jakarta.servlet.ServletContext servlet context} object.
      */
-    String SERVLET_CONTEXT = "com.opensymphony.xwork2.dispatcher.ServletContext";
+    String SERVLET_CONTEXT = "org.apache.struts2.dispatcher.ServletContext";
 
     /**
-     * Constant for the JSP {@link javax.servlet.jsp.PageContext page context}.
+     * Constant for the JSP {@link jakarta.servlet.jsp.PageContext page context}.
      */
-    String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
-
-    /**
-     * Constant for the PortletContext object
-     */
-    String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
+    String PAGE_CONTEXT = "org.apache.struts2.dispatcher.PageContext";
 
     /**
      * Set as an attribute in the request to let other parts of the framework know that the invocation is happening inside an

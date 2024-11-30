@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.url.UrlDecoder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -47,7 +47,7 @@ public class RestfulActionMapper implements ActionMapper {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(jakarta.servlet.http.HttpServletRequest)
      */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         String uri = RequestUtils.getServletPath(request);
@@ -78,7 +78,7 @@ public class RestfulActionMapper implements ActionMapper {
                 } else {
                     paramValue = decoder.decode(st.nextToken(), "UTF-8", false);
 
-                    if ((paramName != null) && (paramName.length() > 0)) {
+                    if (paramName != null && !paramName.isEmpty()) {
                         parameters.put(paramName, paramValue);
                     }
 

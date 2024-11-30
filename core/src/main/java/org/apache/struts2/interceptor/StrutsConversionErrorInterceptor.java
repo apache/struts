@@ -18,9 +18,11 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.ConversionErrorInterceptor;
+import org.apache.struts2.util.ValueStack;
+
+import java.io.Serial;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -61,13 +63,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @see com.opensymphony.xwork2.ActionContext#getConversionErrors()
+ * @see org.apache.struts2.ActionContext#getConversionErrors()
  * @see ConversionErrorInterceptor
  */
 public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor {
 
+    @Serial
     private static final long serialVersionUID = 2759744840082921602L;
 
+    @Override
     protected Object getOverrideExpr(ActionInvocation invocation, Object value) {
         ValueStack stack = invocation.getStack();
 
@@ -88,6 +92,7 @@ public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor
      * @param value        the value to error check.
      * @return <tt>false</tt>  if the value is null, "", or {""}, <tt>true</tt> otherwise.
      */
+    @Override
     protected boolean shouldAddError(String propertyName, Object value) {
         if (value == null) {
             return false;
@@ -97,8 +102,7 @@ public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor
             return false;
         }
 
-        if (value instanceof String[]) {
-            String[] array = (String[]) value;
+        if (value instanceof String[] array) {
 
             if (array.length == 0) {
                 return false;
@@ -110,9 +114,7 @@ public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor
 
             String str = array[0];
 
-            if ("".equals(str)) {
-                return false;
-            }
+            return !"".equals(str);
         }
 
         return true;

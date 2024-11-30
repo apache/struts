@@ -18,8 +18,8 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.ActionProxyFactory;
+import org.apache.struts2.XWorkTestCase;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.PrepareOperations;

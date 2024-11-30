@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.LocalizedTextProvider;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractTagTest;
@@ -39,7 +39,7 @@ import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -117,7 +117,7 @@ public class ComponentTest extends AbstractTagTest {
 
     // Action Component
     public void testActionComponentDisposeItselfFromComponentStack() {
-        request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
+        request.setServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
         try {
             TextFieldTag t = new TextFieldTag();
             t.setName("textFieldName");
@@ -531,8 +531,8 @@ public class ComponentTest extends AbstractTagTest {
             // Simulate component attribute with a hyphen in its name.
             propertyMap.put("hyphen-keyname-for-coverage", "hyphen-keyname-for-coverage-value");
             propertyMap.put("someKeyName", "someKeyValue");
-            actionComponent.copyParams(propertyMap);
-            actionComponent.addAllParameters(propertyMap);
+            actionComponent.copyAttributes(propertyMap);
+            actionComponent.addAllAttributes(propertyMap);
             try {
                 actionComponent.findString(null, "fieldName", "errorMessage");
                 fail("null expr parameter should cause a StrutsException");

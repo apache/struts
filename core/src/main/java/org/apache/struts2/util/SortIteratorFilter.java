@@ -18,11 +18,14 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.Action;
+import org.apache.struts2.action.Action;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A bean that takes a source and comparator then attempt to sort the source
@@ -74,7 +77,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
                 }
 
                 // Sort it
-                Collections.sort(list, comparator);
+                list.sort(comparator);
                 iterator = list.iterator();
 
                 return SUCCESS;
@@ -87,7 +90,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
 
     // Iterator implementation ---------------------------------------
     public boolean hasNext() {
-        return (source == null) ? false : iterator.hasNext();
+        return source != null && iterator.hasNext();
     }
 
     public Object next() {

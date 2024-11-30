@@ -25,7 +25,7 @@ import org.apache.struts2.convention.annotation.Action;
  * This is a test action.
  * </p>
  */
-public class SingleActionNameAction2 implements com.opensymphony.xwork2.Action{
+public class SingleActionNameAction2 implements org.apache.struts2.action.Action {
     @Action("action345")
     public String execute() {
         return null;

@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.spring;
 
-import com.opensymphony.xwork2.util.classloader.FileResourceStore;
-import com.opensymphony.xwork2.util.classloader.JarResourceStore;
-import com.opensymphony.xwork2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.util.classloader.FileResourceStore;
+import org.apache.struts2.util.classloader.JarResourceStore;
+import org.apache.struts2.util.classloader.ReloadingClassLoader;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
@@ -33,7 +33,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.BeansException;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;

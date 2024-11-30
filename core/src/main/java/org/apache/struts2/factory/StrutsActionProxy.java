@@ -18,15 +18,17 @@
  */
 package org.apache.struts2.factory;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.DefaultActionProxy;
 import org.apache.struts2.ServletActionContext;
 
+import java.io.Serial;
 import java.util.Locale;
 
 public class StrutsActionProxy extends DefaultActionProxy {
 
+    @Serial
     private static final long serialVersionUID = -2434901249671934080L;
 
     public StrutsActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName,
@@ -34,6 +36,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
         super(inv, namespace, actionName, methodName, executeResult, cleanupContext);
     }
 
+    @Override
     public String execute() throws Exception {
         ActionContext previous = ActionContext.getContext();
         ActionContext.bind(invocation.getInvocationContext());
@@ -59,7 +62,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
 
     @Override
     protected String getErrorMessage() {
-        if ((namespace != null) && (namespace.trim().length() > 0)) {
+        if (namespace != null && !namespace.trim().isEmpty()) {
             String contextPath = ServletActionContext.getRequest().getContextPath();
             return localizedTextProvider.findDefaultText(
                     "struts.exception.missing-package-action.with-context",

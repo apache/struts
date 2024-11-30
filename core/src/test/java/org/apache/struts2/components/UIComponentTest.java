@@ -40,7 +40,7 @@ import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.TextareaTag;
 import org.apache.struts2.views.jsp.ui.TokenTag;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 
 
 /**
@@ -246,7 +246,7 @@ public class UIComponentTest extends AbstractUITagTest {
         configurationManager.clearContainerProviders();
         configurationManager.addContainerProvider(new TestConfigurationProvider());
 
-        request.setupGetServletPath("/testAction");
+        request.setServletPath("/testAction");
 
         ActionErrorTag t = new ActionErrorTag();
         t.setPageContext(pageContext);

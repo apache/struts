@@ -20,8 +20,8 @@ package org.apache.tiles.request.servlet.extractor;
 
 import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
 /**

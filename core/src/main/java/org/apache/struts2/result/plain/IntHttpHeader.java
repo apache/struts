@@ -28,10 +28,12 @@ class IntHttpHeader implements HttpHeader<Integer> {
         this.value = value;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Integer getValue() {
         return value;
     }

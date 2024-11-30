@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.impl.DefaultConfiguration;
+import org.apache.struts2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -181,7 +181,7 @@ public class RestActionMapperTest extends TestCase {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
         req.setServletPath("/animals/dog/fido");
         req.setMethod("GET");
-        
+
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/animals", mapping.getNamespace());
@@ -194,10 +194,10 @@ public class RestActionMapperTest extends TestCase {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
         req.setServletPath("/animals/dog/fido");
         req.setMethod("GET");
-        
+
         // allow DMI
         mapper.setAllowDynamicMethodCalls("true");
-        
+
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/animals", mapping.getNamespace());
@@ -205,7 +205,7 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("fido", ((String[]) mapping.getParams().get("id"))[0]);
         assertEquals("update", mapping.getMethod());
     }
-	
+
     public void testMappingWithMethodAndId() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido/test/some-id!create;jsessionid=29fefpv23do1g");
         req.setServletPath("/animals/dog/fido/test/some-id");
@@ -243,7 +243,7 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("custom/menu/Yosemite/Vernal_Fall", mapping.getName());
         assertEquals("Vernal_Fall_Image", ((String[]) mapping.getParams().get("id"))[0]);
         assertEquals("iframe", mapping.getMethod());
-    }	
+    }
 
     public void testParseNameAndNamespace() {
         tryUri("/foo/23", "", "foo/23");
@@ -316,7 +316,7 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("fido", ((String[])mapping.getParams().get("id"))[0]);
         assertEquals("update", mapping.getMethod());
     }
-    
+
     private void tryUri(String uri, String expectedNamespace, String expectedName) {
         ActionMapping mapping = new ActionMapping();
         mapper.setAllowDynamicMethodCalls(allowDynamicMethodInvocation);

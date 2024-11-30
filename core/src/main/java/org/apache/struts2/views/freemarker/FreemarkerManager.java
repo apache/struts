@@ -18,31 +18,36 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.xwork2.FileManager;
-import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.FileManager;
+import org.apache.struts2.FileManagerFactory;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
 import freemarker.core.HTMLOutputFormat;
 import freemarker.core.TemplateClassResolver;
-import freemarker.ext.jsp.TaglibFactory;
-import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.HttpRequestParametersHashModel;
-import freemarker.ext.servlet.HttpSessionHashModel;
-import freemarker.ext.servlet.ServletContextHashModel;
+import freemarker.ext.jakarta.jsp.TaglibFactory;
+import freemarker.ext.jakarta.servlet.HttpRequestHashModel;
+import freemarker.ext.jakarta.servlet.HttpRequestParametersHashModel;
+import freemarker.ext.jakarta.servlet.HttpSessionHashModel;
+import freemarker.ext.jakarta.servlet.ServletContextHashModel;
+import freemarker.ext.jakarta.servlet.WebappTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
 import freemarker.template.Version;
 import freemarker.template.utility.StringUtil;
+import jakarta.servlet.GenericServlet;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -50,11 +55,6 @@ import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.TagLibraryModelProvider;
 import org.apache.struts2.views.util.ContextUtil;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,27 +136,6 @@ public class FreemarkerManager {
     public static final String KEY_REQUEST_PARAMETERS_STRUTS = "Parameters";
 
     public static final String EXPIRATION_DATE;
-
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_INCLUDE = "include_page";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
-    /**
-     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
-     */
-    @Deprecated
-    public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
 
     /**
      * Adds individual settings.
@@ -374,7 +353,7 @@ public class FreemarkerManager {
     }
 
     protected Version getFreemarkerVersion(ServletContext servletContext) {
-        Version incompatibleImprovements = Configuration.VERSION_2_3_28;
+        Version incompatibleImprovements = Configuration.VERSION_2_3_33;
 
         String incompatibleImprovementsParam = servletContext.getInitParameter("freemarker." + Configuration.INCOMPATIBLE_IMPROVEMENTS_KEY_SNAKE_CASE);
         if (incompatibleImprovementsParam != null) {
@@ -408,7 +387,7 @@ public class FreemarkerManager {
             model.put(KEY_APPLICATION, servletContextModel);
             model.putUnlistedModel(KEY_APPLICATION_PRIVATE, servletContextModel);
         }
-        model.put(KEY_JSP_TAGLIBS, (TemplateModel) servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
+        model.put(KEY_JSP_TAGLIBS, servletContext.getAttribute(ATTR_JSP_TAGLIBS_MODEL));
 
         // Create hash model wrapper for session
         HttpSession session = request.getSession(false);
@@ -516,23 +495,18 @@ public class FreemarkerManager {
                     addSetting(name, value);
                 }
             }
-        } catch (IOException e) {
-            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         }
     }
 
     public void addSetting(String name, String value) throws TemplateException {
         // Process all other init-params:
-        if (name.equals(INITPARAM_NOCACHE)) {
-            nocache = StringUtil.getYesNo(value);
-        } else if (name.equals(INITPARAM_DEBUG)) {
-            debug = StringUtil.getYesNo(value);
-        } else if (name.equals(INITPARAM_CONTENT_TYPE)) {
-            contentType = value;
-        } else {
-            config.setSetting(name, value);
+        switch (name) {
+            case INITPARAM_NOCACHE -> nocache = StringUtil.getYesNo(value);
+            case INITPARAM_DEBUG -> debug = StringUtil.getYesNo(value);
+            case INITPARAM_CONTENT_TYPE -> contentType = value;
+            default -> config.setSetting(name, value);
         }
 
         if (contentType != null && !contentTypeEvaluated) {
@@ -577,10 +551,10 @@ public class FreemarkerManager {
         model.putAll(standard);
 
         // support for JSP exception pages, exposing the servlet or JSP exception
-        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        Throwable exception = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
         if (exception == null) {
-            exception = (Throwable) request.getAttribute("javax.servlet.error.JspException");
+            exception = (Throwable) request.getAttribute("jakarta.servlet.error.JspException");
         }
 
         if (exception != null) {

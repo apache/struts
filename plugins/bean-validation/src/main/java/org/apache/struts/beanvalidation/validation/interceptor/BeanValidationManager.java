@@ -18,7 +18,7 @@
  */
 package org.apache.struts.beanvalidation.validation.interceptor;
 
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 
 /**
  * <p>

@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.TestBean;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Scope;
+import org.apache.struts2.util.location.LocatableProperties;
 
 public class TestBeanSelectionProvider extends AbstractBeanSelectionProvider {
 

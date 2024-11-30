@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.tiles;
 
-import org.apache.tiles.core.definition.DefinitionsFactory;
 import org.apache.tiles.request.ApplicationResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;

@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.views.jasperreports;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.junit.StrutsTestCase;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.HashMap;

@@ -18,15 +18,16 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
- * Utility class contains common methods used by
- * {@link MethodFilterInterceptor}.
+ * Utility class contains common methods used by {@link MethodFilterInterceptor}.
  *
  * @author tm_jee
  */
@@ -69,23 +70,15 @@ public class MethodFilterInterceptorUtil {
 
         // this section will try to honor the original logic, while
         // still allowing for wildcards later
-        if (!needsPatternMatch && (includeMethods.contains("*") || includeMethods.size() == 0) ) {
-            if (excludeMethods != null
-                    && excludeMethods.contains(method)
-                    && !includeMethods.contains(method) ) {
+        if (!needsPatternMatch && (includeMethods.contains("*") || includeMethods.isEmpty()) ) {
+            if (excludeMethods.contains(method) && !includeMethods.contains(method)) {
                 return false;
             }
         }
 
         // test the methods using pattern matching
         WildcardHelper wildcard = new WildcardHelper();
-        String methodCopy ;
-        if (method == null ) { // no method specified
-            methodCopy = "";
-        }
-        else {
-            methodCopy = new String(method);
-        }
+        String methodCopy = requireNonNullElse(method, "");
         for (String pattern : includeMethods) {
             if (pattern.contains("*")) {
                 int[] compiledPattern = wildcard.compilePattern(pattern);
@@ -126,7 +119,7 @@ public class MethodFilterInterceptorUtil {
 
 
         // default fall-back from before changes
-        return includeMethods.size() == 0 || includeMethods.contains(method) || includeMethods.contains("*");
+        return includeMethods.isEmpty() || includeMethods.contains(method) || includeMethods.contains("*");
     }
 
     /**

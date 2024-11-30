@@ -18,12 +18,11 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
@@ -31,9 +30,9 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Collections;
 import java.util.Enumeration;

@@ -19,46 +19,46 @@
  */
 -->
 <link<#rt/>
-<#if parameters.rel?has_content>
- rel="${parameters.rel}"<#rt/>
+<#if attributes.rel?has_content>
+ rel="${attributes.rel}"<#rt/>
 </#if>
-<#if parameters.type?has_content>
- type="${parameters.type}"<#rt/>
+<#if attributes.type?has_content>
+ type="${attributes.type}"<#rt/>
 </#if>
-<#if parameters.href?has_content>
- href="${parameters.href}"<#rt/>
+<#if attributes.href?has_content>
+ href="${attributes.href}"<#rt/>
 </#if>
-<#if parameters.hreflang?has_content>
- hreflang="${parameters.hreflang}"<#rt/>
+<#if attributes.hreflang?has_content>
+ hreflang="${attributes.hreflang}"<#rt/>
 </#if>
-<#if parameters.disabled?has_content && parameters.disabled == "true">
+<#if attributes.disabled?has_content && attributes.disabled == "true">
  disabled<#rt/>
 </#if>
-<#if parameters.media?has_content>
- media="${parameters.media}"<#rt/>
+<#if attributes.media?has_content>
+ media="${attributes.media}"<#rt/>
 </#if>
-<#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
 </#if>
-<#if parameters.as?has_content>
- as="${parameters.as}"<#rt/>
+<#if attributes.as?has_content>
+ as="${attributes.as}"<#rt/>
 </#if>
-<#if parameters.referrerpolicy?has_content>
- referrerpolicy="${parameters.referrerpolicy}"<#rt/>
+<#if attributes.referrerpolicy?has_content>
+ referrerpolicy="${attributes.referrerpolicy}"<#rt/>
 </#if>
-<#if parameters.sizes?has_content>
- sizes="${parameters.sizes}"<#rt/>
+<#if attributes.sizes?has_content>
+ sizes="${attributes.sizes}"<#rt/>
 </#if>
-<#if parameters.crossorigin?has_content>
- crossorigin="${parameters.crossorigin}"<#rt/>
+<#if attributes.crossorigin?has_content>
+ crossorigin="${attributes.crossorigin}"<#rt/>
 </#if>
-<#if parameters.integrity?has_content>
- integrity="${parameters.integrity}"<#rt/>
+<#if attributes.integrity?has_content>
+ integrity="${attributes.integrity}"<#rt/>
 </#if>
-<#if parameters.importance?has_content>
- importance="${parameters.importance}"<#rt/>
+<#if attributes.importance?has_content>
+ importance="${attributes.importance}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" /><#rt/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" /><#rt/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" /><#rt/>
 />

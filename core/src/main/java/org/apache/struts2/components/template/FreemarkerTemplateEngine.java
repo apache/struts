@@ -18,26 +18,24 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
 import freemarker.core.ParseException;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Freemarker based template engine.
@@ -48,7 +46,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
     static {
         try {
-            bodyContent = ClassLoaderUtil.loadClass("javax.servlet.jsp.tagext.BodyContent",
+            bodyContent = ClassLoaderUtil.loadClass("jakarta.servlet.jsp.tagext.BodyContent",
                     FreemarkerTemplateEngine.class);
         } catch (ClassNotFoundException e) {
             // this is OK -- this just means JSP isn't even being used here, which is perfectly fine.
@@ -135,7 +133,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         Writer writer = templateContext.getWriter();
         final Writer wrapped = writer;
         writer = new Writer() {
-            public void write(char cbuf[], int off, int len) throws IOException {
+            public void write(char[] cbuf, int off, int len) throws IOException {
                 wrapped.write(cbuf, off, len);
             }
 

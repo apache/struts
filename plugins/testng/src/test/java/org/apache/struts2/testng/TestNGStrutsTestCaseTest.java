@@ -18,15 +18,12 @@
  */
 package org.apache.struts2.testng;
 
+import org.apache.struts2.config.ConfigurationManager;
 import junit.framework.TestCase;
-
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.testng.StrutsTestCase;
 import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
-
-import com.opensymphony.xwork2.config.ConfigurationManager;
 
 public class TestNGStrutsTestCaseTest extends TestCase {
 
@@ -48,7 +45,7 @@ public class TestNGStrutsTestCaseTest extends TestCase {
         }
     }
 
-    public static class RunTest extends StrutsTestCase {
+    public static class RunTest extends TestNGStrutsTestCase {
         public static boolean ran = false;
         public static ConfigurationManager mgr;
         public static Dispatcher du;

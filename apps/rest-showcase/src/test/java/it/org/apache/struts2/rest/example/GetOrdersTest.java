@@ -18,31 +18,41 @@
  */
 package it.org.apache.struts2.rest.example;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class GetOrdersTest extends WebTestCase {
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTextNotPresent;
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTextPresent;
+import static net.sourceforge.jwebunit.junit.JWebUnit.beginAt;
+import static net.sourceforge.jwebunit.junit.JWebUnit.getTestContext;
 
+public class GetOrdersTest {
+
+    @Before
     public void setUp() throws Exception {
         getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
     }
 
-
+    @Test
     public void testGetOrders() {
         beginAt("/orders/3");
         assertTextPresent("Bob");
         assertTextNotPresent("Sarah");
     }
 
+    @Test
     public void testGetOrdersInHtml() {
         beginAt("/orders/3.xhtml");
         assertTextPresent("Bob");
     }
 
+    @Test
     public void testGetOrdersInXml() {
         beginAt("/orders/3.xml");
         assertTextPresent("<clientName>Bob");
     }
 
+    @Test
     public void testGetOrdersInJson() {
         beginAt("/orders/3.json");
         assertTextPresent("\"clientName\":\"Bob\"");

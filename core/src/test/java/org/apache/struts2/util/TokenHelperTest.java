@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ActionContext;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 

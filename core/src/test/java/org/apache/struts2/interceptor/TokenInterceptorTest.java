@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestConfigurationProvider;
@@ -30,8 +30,8 @@ import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.TreeMap;
 

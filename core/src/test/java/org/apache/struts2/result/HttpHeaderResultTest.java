@@ -20,13 +20,13 @@ package org.apache.struts2.result;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,24 +76,24 @@ public class HttpHeaderResultTest extends StrutsInternalTestCase {
         result.execute(invocation);
         responseMock.verify();
     }
-    
+
     public void testErrorMessageIsParsedAndSet() throws Exception {
         ActionContext.getContext().getValueStack().set("errMsg", "abc");
         ActionContext.getContext().getValueStack().set("errCode", "404");
         result.setError("${errCode}");
         result.setErrorMessage("${errMsg}");
-        
+
         responseMock.expect("sendError", C.args(C.eq(404), C.eq("abc")));
         result.execute(invocation);
         responseMock.verify();
     }
-    
+
     public void testErrorMessageIsNotParsedAndSet() throws Exception {
         ActionContext.getContext().getValueStack().set("errMsg", "abc");
         result.setError("404");
         result.setParse(false);
         result.setErrorMessage("${errMsg}");
-        
+
         responseMock.expect("sendError", C.args(C.eq(404), C.eq("${errMsg}")));
         result.execute(invocation);
         responseMock.verify();
@@ -105,7 +105,7 @@ public class HttpHeaderResultTest extends StrutsInternalTestCase {
         result.execute(invocation);
         responseMock.verify();
     }
-    
+
     public void testErrorIsSet() throws Exception {
         responseMock.expect("sendError", C.eq(404));
         result.setError("404");

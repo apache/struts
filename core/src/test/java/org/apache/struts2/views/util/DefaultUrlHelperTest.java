@@ -18,20 +18,22 @@
  */
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.url.StrutsQueryStringBuilder;
-import org.apache.struts2.url.StrutsUrlEncoder;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
+import org.apache.struts2.url.StrutsUrlEncoder;
+
+import com.mockobjects.dynamic.Mock;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Scope.Strategy;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Test case for DefaultUrlHelper.
@@ -314,7 +316,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
     /**
      * The UrlHelper should build a URL that starts with "https" followed by the server name when the scheme of the
      * current request is "http" and the port for the "https" scheme is 443. When the request has been forwarded
-     * in a Servlet 2.4 container, the UrlHelper should use the javax.servlet.forward.request_uri request attribute
+     * in a Servlet 2.4 container, the UrlHelper should use the jakarta.servlet.forward.request_uri request attribute
      * instead of a call to HttpServletRequest#getRequestURI().
      */
     public void testForwardedRequest() {
@@ -325,7 +327,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.expectAndReturn("getScheme", "http");
         mockHttpServletRequest.expectAndReturn("getServerPort", 80);
         mockHttpServletRequest.expectAndReturn("getContextPath", "/mywebapp");
-        mockHttpServletRequest.expectAndReturn("getAttribute", "javax.servlet.forward.request_uri", "/mywebapp/product/widget/");
+        mockHttpServletRequest.expectAndReturn("getAttribute", "jakarta.servlet.forward.request_uri", "/mywebapp/product/widget/");
         mockHttpServletRequest.expectAndReturn("getRequestURI", "/mywebapp/");
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);

@@ -20,10 +20,12 @@
  */
 package org.apache.struts2.showcase.xslt;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.action.ServletRequestAware;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Properties;
 

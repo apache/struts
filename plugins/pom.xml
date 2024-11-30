@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-plugins</artifactId>
@@ -37,24 +37,12 @@
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>
-        <module>dwr</module>
-        <module>embeddedjsp</module>
-        <module>gxp</module>
         <module>jasperreports</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
         <module>json</module>
         <module>junit</module>
-        <module>osgi</module>
-        <module>oval</module>
-        <module>pell-multipart</module>
-        <module>plexus</module>
-        <module>portlet</module>
-        <module>portlet-junit</module>
-        <module>portlet-mocks</module>
-        <module>portlet-tiles</module>
         <module>rest</module>
-        <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>
@@ -94,13 +82,13 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

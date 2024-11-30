@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor.csp;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.CspSettingsAware;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Objects;
@@ -51,11 +51,6 @@ public class DefaultCspSettings implements CspSettings {
     protected String reportTo;
     // default to reporting mode
     protected String cspHeader = CSP_REPORT_HEADER;
-
-    @Override
-    public void addCspHeaders(HttpServletResponse response) {
-        throw new UnsupportedOperationException("Unsupported implementation, use #addCspHeaders(HttpServletRequest request, HttpServletResponse response)");
-    }
 
     @Override
     public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {

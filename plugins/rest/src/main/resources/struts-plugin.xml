@@ -25,7 +25,7 @@
 
 <struts>
 
-    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
+    <bean type="org.apache.struts2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
 	<bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="rest" class="org.apache.struts2.rest.RestActionMapper" />
 
 	<bean type="org.apache.struts2.rest.ContentTypeHandlerManager" class="org.apache.struts2.rest.DefaultContentTypeHandlerManager" />
@@ -86,7 +86,7 @@
                 <interceptor-ref name="modelDriven">
                     <param name="refreshModelBeforeResult">true</param>
                 </interceptor-ref>
-                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="actionFileUpload"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="params"/>

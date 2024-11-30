@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.XWorkTestCase;
 import org.easymock.EasyMock;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
 

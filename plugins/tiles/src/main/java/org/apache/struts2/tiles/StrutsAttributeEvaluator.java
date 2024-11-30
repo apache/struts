@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.ognl.OgnlUtil;
 import ognl.OgnlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ import org.apache.tiles.core.evaluator.EvaluationException;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class StrutsAttributeEvaluator extends AbstractAttributeEvaluator {
 

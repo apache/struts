@@ -37,18 +37,18 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 import java.util.Arrays;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.SMDMethod;
 
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import org.apache.struts2.util.TextParseUtil;
+import org.apache.struts2.util.WildcardUtil;
 
 /**
  * Wrapper for JSONWriter with some utility methods.
@@ -57,7 +57,7 @@ public class JSONUtil {
 
     public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final boolean CACHE_BEAN_INFO_DEFAULT = true;
-    
+
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
     private JSONWriter writer;
@@ -108,10 +108,10 @@ public class JSONUtil {
     public String serialize(Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties)
             throws JSONException {
-    	return serialize(object, excludeProperties, includeProperties, 
-    			ignoreHierarchy, excludeNullProperties, CACHE_BEAN_INFO_DEFAULT);        
+    	return serialize(object, excludeProperties, includeProperties,
+    			ignoreHierarchy, excludeNullProperties, CACHE_BEAN_INFO_DEFAULT);
     }
-    
+
     /**
      * Serializes an object into JSON, excluding any properties matching any of
      * the regular expressions in the given collection.
@@ -166,10 +166,10 @@ public class JSONUtil {
     public String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
                                    boolean excludeNullProperties, String defaultDateFormat) throws JSONException {
-    	return serialize(object, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, 
-    			excludeNullProperties, defaultDateFormat, CACHE_BEAN_INFO_DEFAULT);        
+    	return serialize(object, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean,
+    			excludeNullProperties, defaultDateFormat, CACHE_BEAN_INFO_DEFAULT);
     }
-    
+
     /**
      * Serializes an object into JSON, excluding any properties matching any of
      * the regular expressions in the given collection.
@@ -217,7 +217,7 @@ public class JSONUtil {
     public void serialize(Writer writer, Object object) throws IOException, JSONException {
         serialize(writer, object, CACHE_BEAN_INFO_DEFAULT);
     }
-    
+
     /**
      * Serializes an object into JSON to the given writer.
      *
@@ -257,7 +257,7 @@ public class JSONUtil {
             JSONException {
     	serialize(writer, object, excludeProperties, includeProperties, excludeNullProperties, CACHE_BEAN_INFO_DEFAULT);
     }
-    
+
     /**
      * Serializes an object into JSON to the given writer, excluding any
      * properties matching any of the regular expressions in the given
@@ -274,12 +274,12 @@ public class JSONUtil {
      * @param excludeNullProperties
      *            enable/disable excluding of null properties
      * @param cacheBeanInfo
-     * 			  Specifies whether to cache bean info in the JSONWriter        
+     * 			  Specifies whether to cache bean info in the JSONWriter
      * @throws IOException  in case of IO errors
      * @throws JSONException in case of error during serialize
      */
     public void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
-            Collection<Pattern> includeProperties, boolean excludeNullProperties, boolean cacheBeanInfo) 
+            Collection<Pattern> includeProperties, boolean excludeNullProperties, boolean cacheBeanInfo)
             throws IOException, JSONException {
         writer.write(serialize(object, excludeProperties, includeProperties, true, excludeNullProperties, cacheBeanInfo));
     }

@@ -24,12 +24,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>6.7.1-SNAPSHOT</version>
+        <version>7.0.0-M11-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-rest-showcase</artifactId>
     <packaging>war</packaging>
-    <version>6.7.1-SNAPSHOT</version>
+    <version>7.0.0-M11-SNAPSHOT</version>
     <name>Struts 2 Rest Showcase Webapp</name>
     <description>Struts 2 Rest Showcase Example</description>
 
@@ -76,7 +76,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
+            <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
             <scope>test</scope>
         </dependency>
@@ -107,7 +107,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.46.v20220331</version>
+                <version>11.0.18</version>
                 <configuration>
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>

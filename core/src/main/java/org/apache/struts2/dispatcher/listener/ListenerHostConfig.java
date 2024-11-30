@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher.listener;
 
 import org.apache.struts2.dispatcher.HostConfig;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.Iterator;
 import java.util.Collections;
 
@@ -28,21 +28,24 @@ import java.util.Collections;
  * Host configuration that just holds a ServletContext
  */
 public class ListenerHostConfig implements HostConfig {
-    private ServletContext servletContext;
+    private final ServletContext servletContext;
 
     public ListenerHostConfig(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    @Override
     public String getInitParameter(String key) {
         return null;
     }
 
+    @Override
     public Iterator<String> getInitParameterNames() {
-        return Collections.<String>emptyList().iterator();
+        return Collections.emptyIterator();
     }
 
+    @Override
     public ServletContext getServletContext() {
-        return servletContext;  
+        return servletContext;
     }
 }

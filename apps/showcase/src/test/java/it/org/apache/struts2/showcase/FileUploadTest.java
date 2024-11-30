@@ -18,62 +18,83 @@
  */
 package it.org.apache.struts2.showcase;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.HtmlFileInput;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlFileInput;
+import org.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlInput;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlSubmitInput;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.FileWriter;
+import java.security.SecureRandom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileUploadTest {
 
     @Test
-    public void testEmptyFile() throws Exception {
+    public void testSimpleFileUpload() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
             final HtmlForm form = page.getFormByName("doUpload");
             HtmlInput captionInput = form.getInputByName("caption");
             HtmlFileInput uploadInput = form.getInputByName("upload");
             captionInput.type("some caption");
-            File tempFile = File.createTempFile("testEmptyFile", ".tmp");
+            File tempFile = File.createTempFile("testEmptyFile", ".txt");
             tempFile.deleteOnExit();
-            uploadInput.setValueAttribute(tempFile.getAbsolutePath());
+
+            try (FileWriter writer = new FileWriter(tempFile)) {
+                writer.append("Some strings");
+                writer.flush();
+            }
+
+            uploadInput.setValue(tempFile.getAbsolutePath());
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage resultPage = button.click();
 
-            DomElement errorMessage = resultPage.getFirstByXPath("//span[@class='errorMessage']");
-            assertNotNull(errorMessage);
-            assertEquals("File cannot be empty", errorMessage.getVisibleText());
+            String content = resultPage.getVisibleText();
+            assertThat(content).contains(
+                    "ContentType: text/plain",
+                    "Original FileName: " + tempFile.getName(),
+                    "Caption: some caption",
+                    "Size: 12",
+                    "Input name: upload"
+            );
         }
     }
 
     @Test
-    public void testFileUpload() throws Exception {
+    public void testUploadOverMaxSize() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
             final HtmlForm form = page.getFormByName("doUpload");
             HtmlInput captionInput = form.getInputByName("caption");
             HtmlFileInput uploadInput = form.getInputByName("upload");
-            captionInput.type("some caption");
-            File tempFile = File.createTempFile("testEmptyFile", ".tmp");
-            Files.write(Paths.get(tempFile.toURI()), "some content".getBytes());
+
+            captionInput.type("Large file");
+
+            File tempFile = File.createTempFile("testEmptyFile", ".txt");
+            SecureRandom rng = new SecureRandom();
             tempFile.deleteOnExit();
-            uploadInput.setValueAttribute(tempFile.getAbsolutePath());
+            try (FileWriter writer = new FileWriter(tempFile)) {
+                for (int i = 0; i < 10240; ++i) {
+                    String line = String.format("%s %s%n", rng.nextInt(), rng.nextInt());
+                    writer.append(line);
+                }
+                writer.flush();
+            }
+
+            uploadInput.setValue(tempFile.getAbsolutePath());
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage resultPage = button.click();
 
-            DomElement inputName = resultPage.getElementById("input-name");
-            assertNotNull(inputName);
-            assertEquals("Input name: upload", inputName.getTextContent().trim());
+            String content = resultPage.getVisibleText();
+            System.out.println(content);
+            assertThat(content).contains(
+                    "Request exceeded allowed size limit! Max size allowed is: 10,240!"
+            );
         }
     }
 

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.httpmethod.AllowedHttpMethod;
 import org.apache.struts2.interceptor.httpmethod.HttpDelete;
 import org.apache.struts2.interceptor.httpmethod.HttpGet;

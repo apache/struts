@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.util.location.Location;
+import org.apache.struts2.util.location.Location;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -43,8 +43,8 @@ public class DefaultSettings implements Settings {
     private Settings delegate;
 
     /**
-     * Constructs an instance by loading the standard property files, 
-     * any custom property files (<code>struts.custom.properties</code>), 
+     * Constructs an instance by loading the standard property files,
+     * any custom property files (<code>struts.custom.properties</code>),
      * and any custom message resources ().
      * <p>
      * Since this constructor  combines Settings from multiple resources,

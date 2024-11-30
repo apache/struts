@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
@@ -41,7 +41,7 @@ public class JspTemplateTest extends AbstractUITagTest {
         Mock rdMock = new Mock(RequestDispatcher.class);
         rdMock.expect("include",C.args(C.isA(HttpServletRequest.class), C.isA(HttpServletResponse.class)));
         RequestDispatcher dispatcher = (RequestDispatcher) rdMock.proxy();
-        request.setupGetRequestDispatcher(dispatcher);
+        request.setRequestDispatcher(dispatcher);
         tag.setPageContext(pageContext);
         tag.setTemplate("/test/checkbox.jsp");
         tag.doStartTag();
@@ -64,7 +64,7 @@ public class JspTemplateTest extends AbstractUITagTest {
         Mock rdMock = new Mock(RequestDispatcher.class);
         rdMock.expect("include",C.args(C.isA(HttpServletRequest.class), C.isA(HttpServletResponse.class)));
         RequestDispatcher dispatcher = (RequestDispatcher) rdMock.proxy();
-        request.setupGetRequestDispatcher(dispatcher);
+        request.setRequestDispatcher(dispatcher);
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
         tag.setTemplate("/test/checkbox.jsp");

@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.LocaleProvider;
+import org.apache.struts2.locale.LocaleProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -37,7 +38,7 @@ import java.util.*;
  *
  * <p>
  * The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
- * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
+ * Jakarta implementation, and <tt>cos</tt> for the Jason Hunter
  * implementation.
  * </p>
  *
@@ -55,9 +56,9 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
     protected static final Logger LOG = LogManager.getLogger(MultiPartRequestWrapper.class);
 
-    private Collection<LocalizedMessage> errors;
-    private MultiPartRequest multi;
-    private Locale defaultLocale = Locale.ENGLISH;
+    private final Collection<LocalizedMessage> errors;
+    private final MultiPartRequest multi;
+    private Locale defaultLocale;
 
     /**
      * Process file downloads and log any errors.
@@ -84,7 +85,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         } catch (IOException e) {
             LOG.warn(e.getMessage(), e);
             addError(buildErrorMessage(e, new Object[] {e.getMessage()}));
-        } 
+        }
     }
 
     public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir, LocaleProvider provider) {
@@ -176,21 +177,21 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameter(String)
+     * @see jakarta.servlet.http.HttpServletRequest#getParameter(String)
      */
     public String getParameter(String name) {
         return ((multi == null) || (multi.getParameter(name) == null)) ? super.getParameter(name) : multi.getParameter(name);
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterMap()
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterMap()
      */
-    public Map getParameterMap() {
+    public Map<String, String[]> getParameterMap() {
         Map<String, String[]> map = new HashMap<>();
-        Enumeration enumeration = getParameterNames();
+        Enumeration<String> enumeration = getParameterNames();
 
         while (enumeration.hasMoreElements()) {
-            String name = (String) enumeration.nextElement();
+            String name = enumeration.nextElement();
             map.put(name, this.getParameterValues(name));
         }
 
@@ -198,9 +199,9 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterNames()
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterNames()
      */
-    public Enumeration getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         if (multi == null) {
             return super.getParameterNames();
         } else {
@@ -209,7 +210,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterValues(String)
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterValues(String)
      */
     public String[] getParameterValues(String name) {
         return ((multi == null) || (multi.getParameterValues(name) == null)) ? super.getParameterValues(name) : multi.getParameterValues(name);
@@ -251,8 +252,8 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param params2 the second enumeration.
      * @return a single Enumeration of all elements from both Enumerations.
      */
-    protected Enumeration mergeParams(Enumeration params1, Enumeration params2) {
-        Vector temp = new Vector();
+    protected Enumeration<String> mergeParams(Enumeration<String> params1, Enumeration<String> params2) {
+        Vector<String> temp = new Vector<>();
 
         while (params1.hasMoreElements()) {
             temp.add(params1.nextElement());

@@ -18,22 +18,21 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.RuntimeConfiguration;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.config.entities.InterceptorStackConfig;
+import org.apache.struts2.config.entities.PackageConfig;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;

@@ -20,15 +20,40 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts>
-    <package name="jasperreports-default" extends="struts-default">
+    <constant name="struts.jasperReport7.csv.delimiter" value=","/>
 
-    	<result-types>
-    		<result-type name="jasperReport7" class="org.apache.struts2.views.jasperreports7.JasperReport7Result"/>
-    	</result-types>
+    <bean name="pdf"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7PdfExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <bean name="csv"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7CsvExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <bean name="html"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7HtmlExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <bean name="xlsx"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7XlsxExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <bean name="xml"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7XmlExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <bean name="rtf"
+          class="org.apache.struts2.views.jasperreports7.export.JasperReport7RtfExporterProvider"
+          type="org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider"/>
+
+    <package name="jasperreports7-default" extends="struts-default">
+        <result-types>
+            <result-type name="jasperReport7" class="org.apache.struts2.views.jasperreports7.JasperReport7Result"/>
+        </result-types>
     </package>
 
 </struts>

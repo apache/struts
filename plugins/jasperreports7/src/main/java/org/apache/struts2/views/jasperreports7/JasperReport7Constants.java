@@ -18,39 +18,46 @@
  */
 package org.apache.struts2.views.jasperreports7;
 
-
-/**
- * <code>JasperReportConstants</code>
- */
 public interface JasperReport7Constants {
 
     /**
      * PDF format constant
      */
-    String FORMAT_PDF = "PDF";
+    String FORMAT_PDF = "pdf";
 
     /**
      * XML format constant
      */
-    String FORMAT_XML = "XML";
+    String FORMAT_XML = "xml";
 
     /**
      * HTML format constant
      */
-    String FORMAT_HTML = "HTML";
+    String FORMAT_HTML = "html";
 
     /**
-     * XLS format constant
+     * XLSX format constant
      */
-    String FORMAT_XLSX = "XLSX";
+    String FORMAT_XLSX = "xlsx";
 
     /**
      * CSV format constant
      */
-    String FORMAT_CSV = "CSV";
+    String FORMAT_CSV = "csv";
 
     /**
      * RTF format constant
      */
-    String FORMAT_RTF = "RTF";
+    String FORMAT_RTF = "rtf";
+
+    /**
+     * Allows to define a custom default delimiter when exporting report into CSV file
+     */
+    String STRUTS_JASPER_REPORT_CSV_DELIMITER = "struts.jasperReport7.csv.delimiter";
+
+    /**
+     * Allows to define a custom url to image servlet used when exporting report into HTML
+     */
+    String STRUTS_JASPER_REPORT_HTML_IMAGE_SERVLET_URL = "struts.jasperReport7.html.imageServletUrl";
+
 }

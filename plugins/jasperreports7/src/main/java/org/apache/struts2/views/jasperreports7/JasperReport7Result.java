@@ -20,45 +20,28 @@ package org.apache.struts2.views.jasperreports7;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.HtmlExporter;
-import net.sf.jasperreports.engine.export.HtmlResourceHandler;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRRtfExporter;
-import net.sf.jasperreports.engine.export.JRXmlExporter;
-import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.export.Exporter;
-import net.sf.jasperreports.export.OutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleWriterExporterOutput;
-import net.sf.jasperreports.export.SimpleXmlExporterOutput;
-import net.sf.jasperreports.export.WriterExporterOutput;
-import net.sf.jasperreports.export.XmlExporterOutput;
-import net.sf.jasperreports.pdf.JRPdfExporter;
-import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.views.jasperreports7.export.JasperReport7ExporterProvider;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.sql.Connection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -80,7 +63,7 @@ import java.util.TimeZone;
  * definition is (foo.jasper), relative from current URL.</li>
  * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
  * datasource from the value stack (usually a List).</li>
- * <li><b>parse</b> - true by default. If set to false, the location param will
+ * <li><b>parse</b> - true by default. If set to false, all the parameters will
  * not be parsed for EL expressions.</li>
  * <li><b>format</b> - the format in which the report should be generated. Valid
  * values can be found in {@link JasperReport7Constants}. If no format is
@@ -89,21 +72,17 @@ import java.util.TimeZone;
  * typically <i>filename="document.pdf"</i>).</li>
  * <li><b>documentName</b> - name of the document (will generate the http header
  * <code>Content-disposition = X; filename=X.[format]</code>).</li>
- * <li><b>delimiter</b> - the delimiter used when generating CSV reports. By
- * default, the character used is ",".</li>
- * <li><b>imageServletUrl</b> - name of the url that, when prefixed with the
- * context page, can return report images.</li>
  * <li>
- * <b>reportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
+ * <b>reportParameters</b> - an expression used to retrieve a map of
  * report parameters from the value stack. The parameters may be accessed
  * in the report via the usual JR mechanism and might include data not
  * part of the dataSource, such as the user name of the report creator, etc.
  * </li>
  * <li>
- * <b>connection</b> - (2.1.7+) JDBC Connection which can be passed to the
+ * <b>connection</b> - a JDBC Connection which can be passed to the
  * report instead of dataSource
  * </li>
- * <li><b>wrapField</b> - (2.3.18+) defines if fields should warp with ValueStackDataSource
+ * <li><b>wrapField</b> - defines if fields should warp with ValueStackDataSource
  * see <a href="https://issues.apache.org/jira/browse/WW-3698">WW-3698</a> for more details
  * </li>
  * </ul>
@@ -116,7 +95,7 @@ import java.util.TimeZone;
  * <p><b>Example:</b></p>
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;result name="success" type="jasper"&gt;
+ * &lt;result name="success" type="jasperReport7"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
  *   &lt;param name="format"&gt;CSV&lt;/param&gt;
@@ -128,7 +107,7 @@ import java.util.TimeZone;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * &lt;result name="success" type="jasper"&gt;
+ * &lt;result name="success" type="jasperReport7"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
  * &lt;/result&gt;
@@ -145,8 +124,6 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
     protected String format;
     protected String documentName;
     protected String contentDisposition;
-    protected String delimiter;
-    protected String imageServletUrl = "/images/";
     protected String timeZone;
 
     protected boolean wrapField = true;
@@ -177,14 +154,9 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
     }
 
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        // Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
         initializeProperties(invocation);
 
         LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
-
-        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-
         // Construct the data source for the report.
         ValueStack stack = invocation.getStack();
         ValueStackDataSource stackDataSource = null;
@@ -203,7 +175,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
         if (invocation.getAction() instanceof JasperReport7Aware action) {
             LOG.debug("Passing control to action: {} before generating report", invocation.getInvocationContext().getActionName());
-            action.beforeReportGeneration(request, response);
+            action.beforeReportGeneration(invocation);
         }
 
         ServletContext servletContext = invocation.getInvocationContext().getServletContext();
@@ -211,17 +183,9 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         Map<String, Object> parameters = new ValueStackShadowMap(stack);
         File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));
         parameters.put("reportDirectory", directory);
-        parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());
 
-        // put timezone in jasper report parameter
-        if (timeZone != null) {
-            timeZone = conditionalParse(timeZone, invocation);
-            final TimeZone tz = TimeZone.getTimeZone(timeZone);
-            if (tz != null) {
-                // put the report time zone
-                parameters.put(JRParameter.REPORT_TIME_ZONE, tz);
-            }
-        }
+        applyLocale(invocation, parameters);
+        applyTimeZone(invocation, parameters);
 
         // Add any report parameters from action to param map.
         boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
@@ -246,7 +210,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
             if (invocation.getAction() instanceof JasperReport7Aware action) {
                 LOG.debug("Passing control to action: {} after generating report: {}",
                         invocation.getInvocationContext().getActionName(), jasperReport.getName());
-                action.afterReportGeneration(request, response, jasperReport);
+                action.afterReportGeneration(invocation, jasperReport);
             }
         } catch (JRException e) {
             LOG.error("Error building report for uri {}", systemId, e);
@@ -255,8 +219,12 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
         try {
             LOG.debug("Export the print object to the desired output format: {}", format);
-            exportReport(request, response, jasperPrint);
-        } catch (JRException e) {
+            JasperReport7ExporterProvider<?> exporterProvider = invocation.getInvocationContext().getContainer().getInstance(JasperReport7ExporterProvider.class, format);
+            if (exporterProvider == null) {
+                throw new StrutsException("No exporter found for format: " + format);
+            }
+            exportReport(invocation, jasperPrint, exporterProvider);
+        } catch (StrutsException e) {
             LOG.error("Error producing {} report for uri {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
         } finally {
@@ -271,8 +239,46 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         }
     }
 
-    protected void exportReport(HttpServletRequest request, HttpServletResponse response, JasperPrint jasperPrint)
-            throws ServletException, JRException, IOException {
+    protected void applyLocale(ActionInvocation invocation, Map<String, Object> parameters) {
+        Locale locale = null;
+        if (invocation.getAction() instanceof JasperReport7Aware action) {
+            locale = action.getReportLocale(invocation);
+        }
+        if (locale == null) {
+            locale = invocation.getInvocationContext().getLocale();
+        }
+
+        LOG.debug("Using locale: {} to generate report", locale);
+        parameters.put(JRParameter.REPORT_LOCALE, locale);
+    }
+
+    protected void applyTimeZone(ActionInvocation invocation, Map<String, Object> parameters) {
+        if (timeZone != null) {
+            timeZone = conditionalParse(timeZone, invocation);
+            LOG.debug("Puts timezone in jasper report parameter: {}", timeZone);
+            final TimeZone tz = TimeZone.getTimeZone(timeZone);
+            if (tz != null) {
+                parameters.put(JRParameter.REPORT_TIME_ZONE, tz);
+            }
+        }
+    }
+
+    protected void exportReport(ActionInvocation invocation, JasperPrint jasperPrint, JasperReport7ExporterProvider<?> exporterProvider) throws StrutsException {
+        HttpServletResponse response = prepapreHttpServletResponse(invocation);
+        try {
+            Exporter<?, ?, ?, ?> exporter = exporterProvider.createExporter(invocation, jasperPrint);
+
+            LOG.debug("Exporting report: {} as: {} and flushing response stream", jasperPrint.getName(), format);
+            exporter.exportReport();
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            throw new StrutsException(e);
+        }
+    }
+
+    private HttpServletResponse prepapreHttpServletResponse(ActionInvocation invocation) {
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+
         if (contentDisposition != null || documentName != null) {
             final StringBuilder tmp = new StringBuilder();
             tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
@@ -281,145 +287,12 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
                 tmp.append("; filename=");
                 tmp.append(documentName);
                 tmp.append(".");
-                tmp.append(format.toLowerCase());
+                tmp.append(format);
             }
 
             response.setHeader("Content-disposition", tmp.toString());
         }
-
-        Exporter<?, ?, ?, ?> exporter = switch (format) {
-            case FORMAT_PDF -> createPdfExporter(response, jasperPrint);
-            case FORMAT_CSV -> createCsvExporter(response, jasperPrint);
-            case FORMAT_HTML -> createHtmlExporter(request, response, jasperPrint);
-            case FORMAT_XLSX -> createXlsExporter(response, jasperPrint);
-            case FORMAT_XML -> createXmlExporter(response, jasperPrint);
-            case FORMAT_RTF -> createRtfExporter(response, jasperPrint);
-            default -> throw new ServletException("Unknown report format: " + format);
-        };
-
-        LOG.debug("Exporting report: {} as: {} and flushing response stream", jasperPrint.getName(), format);
-        exporter.exportReport();
-
-        response.getOutputStream().flush();
-    }
-
-    protected JRPdfExporter createPdfExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("application/pdf");
-
-        JRPdfExporter exporter = new JRPdfExporter();
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseStream = response.getOutputStream()) {
-            OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(responseStream);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output", e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
-    }
-
-    protected JRCsvExporter createCsvExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("text/csv");
-        JRCsvExporter exporter = new JRCsvExporter();
-
-        SimpleCsvExporterConfiguration config = new SimpleCsvExporterConfiguration();
-        config.setFieldDelimiter(delimiter);
-        config.setRecordDelimiter(delimiter);
-        exporter.setConfiguration(config);
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseStream = response.getOutputStream()) {
-            WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(responseStream);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output", e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
-    }
-
-    protected HtmlExporter createHtmlExporter(HttpServletRequest request, HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("text/html");
-        HtmlExporter exporter = new HtmlExporter();
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseStream = response.getOutputStream()) {
-            SimpleHtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput(responseStream);
-            HtmlResourceHandler imageHandler = new WebHtmlResourceHandler(request.getContextPath() + imageServletUrl + "%s");
-            exporterOutput.setImageHandler(imageHandler);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output", e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
-    }
-
-    protected JRXlsxExporter createXlsExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("application/vnd.ms-excel");
-
-        JRXlsxExporter exporter = new JRXlsxExporter();
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseStream = response.getOutputStream()) {
-            OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(responseStream);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output", e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
-    }
-
-    protected JRXmlExporter createXmlExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("text/xml");
-
-        JRXmlExporter exporter = new JRXmlExporter();
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseOutput = response.getOutputStream()) {
-            XmlExporterOutput exporterOutput = new SimpleXmlExporterOutput(responseOutput);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output using: {}", JRXmlExporter.class.getName(), e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
-    }
-
-    protected JRRtfExporter createRtfExporter(HttpServletResponse response, JasperPrint jasperPrint) throws ServletException {
-        response.setContentType("application/rtf");
-
-        JRRtfExporter exporter = new JRRtfExporter();
-
-        SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
-        exporter.setExporterInput(input);
-
-        try (OutputStream responseStream = response.getOutputStream()) {
-            WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(responseStream);
-            exporter.setExporterOutput(exporterOutput);
-        } catch (IOException e) {
-            LOG.error("Error writing report output", e);
-            throw new ServletException(e.getMessage(), e);
-        }
-
-        return exporter;
+        return response;
     }
 
     /**
@@ -472,10 +345,6 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         return false;
     }
 
-    public void setImageServletUrl(final String imageServletUrl) {
-        this.imageServletUrl = imageServletUrl;
-    }
-
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
     }
@@ -490,10 +359,6 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
     public void setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
     }
 
     public void setTimeZone(final String timeZone) {

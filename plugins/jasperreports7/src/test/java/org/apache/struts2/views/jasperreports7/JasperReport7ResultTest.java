@@ -276,7 +276,7 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         result.execute(this.invocation);
 
         // then
-        assertThat(response.getContentType()).isEqualTo("application/vnd.ms-excel");
+        assertThat(response.getContentType()).isEqualTo("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         assertThat(response.getContentAsByteArray()).hasSizeGreaterThan(0);
     }
 

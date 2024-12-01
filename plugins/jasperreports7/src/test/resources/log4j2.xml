@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,4 +19,16 @@
  * under the License.
  */
 -->
-<body>Classes for views using Jasper Reports.</body>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5p] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <Logger name="org.apache.struts2.views.jasperreports7" level="info"/>
+    </Loggers>
+</Configuration>

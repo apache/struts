@@ -39,8 +39,8 @@ public class JasperReport7XlsxExporterProvider implements JasperReport7ExporterP
     @Override
     public JRXlsxExporter createExporter(ActionInvocation invocation, JasperPrint jasperPrint) throws StrutsException {
         LOG.debug("Creating: {} exporter", this.getClass().getSimpleName());
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
         JRXlsxExporter exporter = new JRXlsxExporter();

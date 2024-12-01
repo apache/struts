@@ -39,6 +39,7 @@ public class JasperReport7PdfExporterProvider implements JasperReport7ExporterPr
     @Override
     public JRPdfExporter createExporter(ActionInvocation invocation, JasperPrint jasperPrint) throws StrutsException {
         LOG.debug("Creating: {} exporter", this.getClass().getSimpleName());
+
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         response.setContentType("application/pdf");
 

@@ -62,9 +62,10 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
     @Override
     public JRCsvExporter createExporter(ActionInvocation invocation, JasperPrint jasperPrint) throws StrutsException {
         LOG.debug("Creating: {} exporter", this.getClass().getSimpleName());
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         response.setContentType("text/csv");
+
         JRCsvExporter exporter = new JRCsvExporter();
 
         String reportDelimiter = null;

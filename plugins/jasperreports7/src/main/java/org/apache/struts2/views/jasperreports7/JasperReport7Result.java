@@ -156,21 +156,13 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         initializeProperties(invocation);
 
-        LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
+        LOG.debug("Creating JasperReport for dataSource: {} and format: {}", dataSource, format);
         // Construct the data source for the report.
         ValueStack stack = invocation.getStack();
-        ValueStackDataSource stackDataSource = null;
-
-        Connection conn = (Connection) stack.findValue(connection);
-        if (conn == null) {
-            boolean evaluated = parsedDataSource != null && !parsedDataSource.equals(dataSource);
-            boolean reevaluate = !evaluated || isAcceptableExpression(parsedDataSource);
-            if (reevaluate) {
-                stackDataSource = new ValueStackDataSource(stack, parsedDataSource, wrapField);
-            } else {
-                throw new ServletException(String.format("Error building dataSource for excluded or not accepted [%s]",
-                        parsedDataSource));
-            }
+        Connection reportConnection = (Connection) stack.findValue(connection);
+        ValueStackDataSource reportDataSource = null;
+        if (reportConnection == null) {
+            reportDataSource = prepareDataSource(stack);
         }
 
         if (invocation.getAction() instanceof JasperReport7Aware action) {
@@ -186,25 +178,17 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
         applyLocale(invocation, parameters);
         applyTimeZone(invocation, parameters);
-
-        // Add any report parameters from action to param map.
-        boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
-        boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);
-        Map<String, Object> reportParams = reevaluate ? (Map<String, Object>) stack.findValue(parsedReportParameters) : null;
-        if (reportParams != null) {
-            LOG.debug("Found report parameters; adding to parameters...");
-            parameters.putAll(reportParams);
-        }
+        applyCustomParameters(stack, parameters);
 
         JasperPrint jasperPrint;
 
         // Fill the report and produce a print object
         try {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(systemId));
-            if (conn == null) {
-                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
+            if (reportConnection == null) {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, reportDataSource);
             } else {
-                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, reportConnection);
             }
 
             if (invocation.getAction() instanceof JasperReport7Aware action) {
@@ -213,7 +197,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
                 action.afterReportGeneration(invocation, jasperReport);
             }
         } catch (JRException e) {
-            LOG.error("Error building report for uri {}", systemId, e);
+            LOG.error("Error building report for uri: {}", systemId, e);
             throw new ServletException(e.getMessage(), e);
         }
 
@@ -229,13 +213,23 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
             throw new ServletException(e.getMessage(), e);
         } finally {
             try {
-                if (conn != null) {
-                    // avoid NPE if connection was not used for the report
-                    conn.close();
+                if (reportConnection != null) {
+                    reportConnection.close();
                 }
             } catch (Exception e) {
                 LOG.warn("Could not close db connection properly", e);
             }
+        }
+    }
+
+    protected ValueStackDataSource prepareDataSource(ValueStack stack) throws ServletException {
+        boolean evaluated = parsedDataSource != null && !parsedDataSource.equals(dataSource);
+        boolean reevaluate = !evaluated || isAcceptableExpression(parsedDataSource);
+        if (reevaluate) {
+            return new ValueStackDataSource(stack, parsedDataSource, wrapField);
+        } else {
+            throw new ServletException(String.format("Error building dataSource for excluded or not accepted [%s]",
+                    parsedDataSource));
         }
     }
 
@@ -260,6 +254,16 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
             if (tz != null) {
                 parameters.put(JRParameter.REPORT_TIME_ZONE, tz);
             }
+        }
+    }
+
+    protected void applyCustomParameters(ValueStack stack, Map<String, Object> parameters) {
+        boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
+        boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);
+        Map<String, Object> reportParams = reevaluate ? (Map<String, Object>) stack.findValue(parsedReportParameters) : null;
+        if (reportParams != null) {
+            LOG.debug("Found report parameters; adding to parameters...");
+            parameters.putAll(reportParams);
         }
     }
 

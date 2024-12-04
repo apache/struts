@@ -204,7 +204,7 @@ public class Form extends ClosingUIBean {
 
         // keep a collection of the tag names for anything special the templates might want to do (such as pure client
         // side validation)
-        if (!attributes.containsKey("tagNames")) {
+        if (!getAttributes().containsKey("tagNames")) {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
         }

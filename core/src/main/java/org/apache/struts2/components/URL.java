@@ -111,7 +111,7 @@ public class URL extends ContextBean {
 
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
-        urlProvider = new ComponentUrlProvider(this, this.attributes);
+        urlProvider = new ComponentUrlProvider(this, this.getAttributes());
         urlProvider.setHttpServletRequest(req);
         urlProvider.setHttpServletResponse(res);
     }

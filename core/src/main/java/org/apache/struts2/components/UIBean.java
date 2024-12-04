@@ -882,8 +882,8 @@ public abstract class UIBean extends Component {
      */
     protected void applyValueParameter(String translatedName) {
         // see if the value has been specified as a parameter already
-        if (attributes.containsKey(ATTR_VALUE)) {
-            attributes.put(ATTR_NAME_VALUE, attributes.get(ATTR_VALUE));
+        if (getAttributes().containsKey(ATTR_VALUE)) {
+            getAttributes().put(ATTR_NAME_VALUE, getAttributes().get(ATTR_VALUE));
         } else {
             if (evaluateNameValue()) {
                 final Class<?> valueClazz = getValueClassType();

@@ -71,7 +71,11 @@ public class Component {
     protected boolean devMode = false;
     protected boolean escapeHtmlBody = false;
     protected ValueStack stack;
-    protected Map<String, Object> attributes;
+    /**
+     * @deprecated use {@link #getAttributes} instead of directly depending on this field
+     */
+    @Deprecated
+    protected Map<String, Object> parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
     protected boolean performClearTagStateForTagPoolingServers = false;
@@ -86,7 +90,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.attributes = new LinkedHashMap<>();
+        this.parameters = new LinkedHashMap<>();
         getComponentStack().push(this);
     }
 
@@ -279,7 +283,7 @@ public class Component {
      */
     protected StrutsException fieldError(String field, String errorMsg, Exception e) {
         String msg = "tag '" + getComponentName() + "', field '" + field +
-            (attributes != null && attributes.containsKey("name") ? "', name '" + attributes.get("name") : "") +
+            (getAttributes() != null && getAttributes().containsKey("name") ? "', name '" + getAttributes().get("name") : "") +
             "': " + errorMsg;
         throw new StrutsException(msg, e);
     }
@@ -457,7 +461,7 @@ public class Component {
      * @param params the parameters to copy.
      */
     public void copyParams(Map<String, Object> params) {
-        stack.push(attributes);
+        stack.push(getAttributes());
         stack.push(this);
         try {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -467,7 +471,7 @@ public class Component {
                     // UI component attributes may contain hypens (e.g. data-ajax), but ognl
                     // can't handle that, and there can't be a component property with a hypen
                     // so into the parameters map it goes. See WW-4493
-                    attributes.put(key, entry.getValue());
+                    getAttributes().put(key, entry.getValue());
                 } else {
                     stack.setValue(key, entry.getValue());
                 }
@@ -500,7 +504,7 @@ public class Component {
      */
     @Deprecated
     public Map<String, Object> getParameters() {
-        return attributes;
+        return parameters;
     }
 
     /**
@@ -509,7 +513,7 @@ public class Component {
      * @return the parameters. Is never <tt>null</tt>.
      */
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return parameters;
     }
 
     /**
@@ -518,7 +522,7 @@ public class Component {
      * @param params the parameters to add.
      */
     public void addAllParameters(Map<String, Object> params) {
-        attributes.putAll(params);
+        getAttributes().putAll(params);
     }
 
     /**

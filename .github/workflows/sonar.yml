@@ -46,4 +46,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
           MAIN_BRANCH: ${{ github.ref || github.base_ref || github.ref || github.base_ref }}
         if: ${{ github.ref == 'main' || github.base_ref == 'main' }}
-        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${{ envs.MAIN_BRANCH }} -Pcoverage -DskipAssembly
+        run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${{ env.MAIN_BRANCH }} -Pcoverage -DskipAssembly

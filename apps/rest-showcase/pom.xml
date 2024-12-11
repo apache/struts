@@ -24,12 +24,12 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>7.0.0-M11-SNAPSHOT</version>
+        <version>7.0.0</version>
     </parent>
 
     <artifactId>struts2-rest-showcase</artifactId>
     <packaging>war</packaging>
-    <version>7.0.0-M11-SNAPSHOT</version>
+    <version>7.0.0</version>
     <name>Struts 2 Rest Showcase Webapp</name>
     <description>Struts 2 Rest Showcase Example</description>
 

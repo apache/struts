@@ -257,6 +257,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void applyCustomParameters(ValueStack stack, Map<String, Object> parameters) {
         boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
         boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);

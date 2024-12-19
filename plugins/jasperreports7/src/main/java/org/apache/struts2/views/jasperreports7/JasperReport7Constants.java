@@ -53,7 +53,7 @@ public interface JasperReport7Constants {
     /**
      * Allows to define a custom default delimiter when exporting report into CSV file
      */
-    String STRUTS_JASPER_REPORT_CSV_DELIMITER = "struts.jasperReport7.csv.delimiter";
+    String STRUTS_JASPER_REPORT_CSV_DELIMITER = "struts.jasperReport7.csv.defaultDelimiter";
 
     /**
      * Allows to define a custom url to image servlet used when exporting report into HTML

@@ -31,14 +31,16 @@ public interface JasperReport7Aware {
      *
      * @param invocation current {@link ActionInvocation}
      */
-    void beforeReportGeneration(ActionInvocation invocation) throws StrutsException;
+    default void beforeReportGeneration(ActionInvocation invocation) throws StrutsException {
+    }
 
     /**
      * Used to perform an action before report is going to be generated
      *
      * @param invocation current {@link ActionInvocation}
      */
-    void afterReportGeneration(ActionInvocation invocation, JasperReport jasperReport) throws StrutsException;
+    default void afterReportGeneration(ActionInvocation invocation, JasperReport jasperReport) throws StrutsException {
+    }
 
     /**
      * Allows to specify action specific CSV delimiter, if returns null,
@@ -51,7 +53,8 @@ public interface JasperReport7Aware {
     }
 
     /**
-     * Allows to specify different local than used by framework or action
+     * Allows to specify different local than used by the framework or an action
+     *
      * @param invocation current {@link ActionInvocation}
      * @return locale or null
      */

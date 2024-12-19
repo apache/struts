@@ -44,18 +44,18 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
     /**
      * A delimiter used when generating CSV report. By default, "," is used.
      */
-    private String delimiter = ",";
+    private String defaultDelimiter = ",";
 
     public JasperReport7CsvExporterProvider() {
     }
 
     public JasperReport7CsvExporterProvider(
             @Inject(value = JasperReport7Constants.STRUTS_JASPER_REPORT_CSV_DELIMITER, required = false)
-            String delimiter
+            String defaultDelimiter
     ) {
-        if (StringUtils.isNoneEmpty(delimiter)) {
-            LOG.debug("Using custom delimiter [{}]", delimiter);
-            this.delimiter = delimiter;
+        if (StringUtils.isNoneEmpty(defaultDelimiter)) {
+            LOG.debug("Using custom delimiter [{}]", defaultDelimiter);
+            this.defaultDelimiter = defaultDelimiter;
         }
     }
 
@@ -72,8 +72,8 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
         if (invocation.getAction() instanceof JasperReport7Aware action) {
             reportDelimiter = action.getCsvDelimiter(invocation);
         }
-        if (reportDelimiter == null) {
-            reportDelimiter = delimiter;
+        if (StringUtils.isEmpty(reportDelimiter)) {
+            reportDelimiter = defaultDelimiter;
         }
         LOG.debug("Using delimiter: [{}]", reportDelimiter);
 

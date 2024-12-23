@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -79,6 +80,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * Localization to be used regarding errors.
      */
     protected Locale defaultLocale = Locale.ENGLISH;
+    private NotExcludedAcceptedPatternsChecker patternsChecker;
 
     /**
      * @param bufferSize Sets the buffer size to be used.
@@ -119,6 +121,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
         defaultLocale = localeProviderFactory.createLocaleProvider().getLocale();
+    }
+
+    @Inject
+    public void setNotExcludedAllowedPatternsChecker(NotExcludedAcceptedPatternsChecker patternsChecker) {
+        this.patternsChecker = patternsChecker;
     }
 
     /**
@@ -167,6 +174,10 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             fileName = fileName.substring(backwardSlash + 1);
         }
         return fileName;
+    }
+
+    protected boolean isAccepted(String fileName) {
+        return patternsChecker.isAllowed(fileName).isAllowed();
     }
 
 }

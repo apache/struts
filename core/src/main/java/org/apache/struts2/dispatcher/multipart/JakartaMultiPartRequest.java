@@ -77,6 +77,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
         LOG.debug("Item: {} is a normal form field", item.getName());
 
+        if (!isAccepted(item.getFieldName())) {
+            LOG.warn("Form field [{}] is rejected!", sanitizeNewlines(item.getFieldName()));
+            return;
+        }
+
         List<String> values;
         String fieldName = item.getFieldName();
         if (parameters.get(fieldName) != null) {
@@ -98,6 +103,16 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processFileField(DiskFileItem item) {
+        if (!isAccepted(item.getName())) {
+            LOG.warn("File name [{}] is not accepted", sanitizeNewlines(item.getName()));
+            return;
+        }
+
+        if (!isAccepted(item.getFieldName())) {
+            LOG.warn("Field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+            return;
+        }
+
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
             LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(item.getFieldName()));

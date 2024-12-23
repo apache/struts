@@ -18,11 +18,15 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
+
 public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
     @Override
     protected AbstractMultiPartRequest createMultipartRequest() {
-        return new JakartaMultiPartRequest();
+        JakartaMultiPartRequest multiPartRequest = new JakartaMultiPartRequest();
+        multiPartRequest.setNotExcludedAllowedPatternsChecker(container.inject(DefaultNotExcludedAcceptedPatternsChecker.class));
+        return multiPartRequest;
     }
 
 }

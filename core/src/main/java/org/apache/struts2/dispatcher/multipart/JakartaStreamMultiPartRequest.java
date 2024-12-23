@@ -114,6 +114,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         String fieldName = fileItemInput.getFieldName();
         String fieldValue = readStream(fileItemInput.getInputStream());
 
+        if (!isAccepted(fieldName)) {
+            LOG.warn("Form field [{}] is rejected!", sanitizeNewlines(fieldName));
+            return;
+        }
+
         if (exceedsMaxStringLength(fieldName, fieldValue)) {
             return;
         }
@@ -191,6 +196,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
+        if (!isAccepted(fileItemInput.getName())) {
+            LOG.warn("File field [{}] rejected", sanitizeNewlines(fileItemInput.getName()));
+            return;
+        }
+
         if (exceedsMaxFiles(fileItemInput)) {
             return;
         }
@@ -230,7 +240,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         InputStream input = fileItemInput.getInputStream();
         try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
-            LOG.debug("Streaming file: {} using buffer size: {}", fileItemInput.getName(), bufferSize);
+            LOG.debug("Streaming file: {} using buffer size: {}", sanitizeNewlines(fileItemInput.getName()), bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
             }

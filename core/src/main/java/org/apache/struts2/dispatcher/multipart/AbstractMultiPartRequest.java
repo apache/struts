@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -107,6 +108,8 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      */
     protected Map<String, List<String>> parameters = new HashMap<>();
 
+    protected NotExcludedAcceptedPatternsChecker patternsChecker;
+
     /**
      * @param bufferSize Sets the buffer size to be used.
      */
@@ -178,6 +181,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
                 : request.getCharacterEncoding();
 
         return Charset.forName(charsetStr);
+    }
+
+    @Inject
+    public void setNotExcludedAllowedPatternsChecker(NotExcludedAcceptedPatternsChecker patternsChecker) {
+        this.patternsChecker = patternsChecker;
     }
 
     /**
@@ -411,6 +419,10 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             uploadedFiles = new HashMap<>();
             parameters = new HashMap<>();
         }
+    }
+
+    protected boolean isAccepted(String fileName) {
+        return patternsChecker.isAllowed(fileName).isAllowed();
     }
 
 }

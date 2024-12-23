@@ -93,7 +93,7 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
     public void testDefaultExcludePatterns() throws Exception {
         // given
-        List<String> prefixes = Arrays.asList("#[0].%s", "[0].%s", "top.%s", "%{[0].%s}", "%{#[0].%s}", "%{top.%s}", "%{#top.%s}", "%{#%s}", "%{%s}", "#%s");
+        List<String> prefixes = Arrays.asList("#[0].%s", "[0].%s", "top.%s", "%{[0].%s}", "%{#[0].%s}", "%{top.%s}", "%{#top.%s}", "%{#%s}", "%{%s}", "#%s", "top.param", "%{top.request}", "#top.param");
         List<String> inners = Arrays.asList("servletRequest", "servletResponse", "servletContext", "application", "session", "struts", "request", "response", "dojo", "parameters");
         List<String> suffixes = Arrays.asList("['test']", "[\"test\"]", ".test");
 

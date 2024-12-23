@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Multi-part form data request adapter for Jakarta Commons FileUpload package that
  * leverages the streaming API rather than the traditional non-streaming API.
@@ -71,10 +73,10 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Using Jakarta Stream API to process request");
         servletFileUpload.getItemIterator(request).forEachRemaining(item -> {
             if (item.isFormField()) {
-                LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
                 processFileItemAsFormField(item);
             } else {
-                LOG.debug(() -> "Processing a file: " + sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
                 processFileItemAsFileField(item, location);
             }
         });
@@ -115,7 +117,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         String fieldValue = readStream(fileItemInput.getInputStream());
 
         if (!isAccepted(fieldName)) {
-            LOG.warn("Form field [{}] is rejected!", sanitizeNewlines(fieldName));
+            LOG.warn(() -> "Form field [%s] is rejected!".formatted(normalizeSpace(fieldName)));
             return;
         }
 
@@ -146,7 +148,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         if (maxFiles != null && maxFiles == uploadedFiles.size()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Cannot accept another file: {} as it will exceed max files: {}",
-                        sanitizeNewlines(fileItemInput.getName()), maxFiles);
+                        normalizeSpace(fileItemInput.getName()), maxFiles);
             }
             LocalizedMessage errorMessage = buildErrorMessage(
                     FileUploadFileCountLimitException.class,
@@ -165,7 +167,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     private void exceedsMaxSizeOfFiles(FileItemInput fileItemInput, File file, Long currentFilesSize) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("File: {} of size: {} exceeds allowed max size: {}, actual size of already uploaded files: {}",
-                    sanitizeNewlines(fileItemInput.getName()), file.length(), maxSizeOfFiles, currentFilesSize
+                    normalizeSpace(fileItemInput.getName()), file.length(), maxSizeOfFiles, currentFilesSize
             );
         }
         LocalizedMessage errorMessage = buildErrorMessage(
@@ -179,7 +181,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         }
         if (!file.delete() && LOG.isWarnEnabled()) {
             LOG.warn("Cannot delete file: {} which exceeds maximum size: {} of all files!",
-                    sanitizeNewlines(fileItemInput.getName()), maxSizeOfFiles);
+                    normalizeSpace(fileItemInput.getName()), maxSizeOfFiles);
         }
     }
 
@@ -192,12 +194,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileItemAsFileField(FileItemInput fileItemInput, Path location) throws IOException {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (fileItemInput.getName() == null || fileItemInput.getName().trim().isEmpty()) {
-            LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(fileItemInput.getFieldName()));
+            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(fileItemInput.getFieldName()));
             return;
         }
 
         if (!isAccepted(fileItemInput.getName())) {
-            LOG.warn("File field [{}] rejected", sanitizeNewlines(fileItemInput.getName()));
+            LOG.warn(() -> "File field [%s] rejected".formatted(normalizeSpace(fileItemInput.getName())));
             return;
         }
 
@@ -240,7 +242,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         InputStream input = fileItemInput.getInputStream();
         try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
-            LOG.debug("Streaming file: {} using buffer size: {}", sanitizeNewlines(fileItemInput.getName()), bufferSize);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Streaming file: {} using buffer size: {}", normalizeSpace(fileItemInput.getName()), bufferSize);
+            }
             for (int length; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
             }

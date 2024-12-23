@@ -32,6 +32,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Multipart form data request adapter for Jakarta Commons FileUpload package.
  */
@@ -47,11 +49,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 prepareServletFileUpload(charset, Path.of(saveDir));
 
         for (DiskFileItem item : servletFileUpload.parseRequest(request)) {
-            LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
+            LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
                 processNormalFormField(item, charset);
             } else {
-                LOG.debug(() -> "Processing a file: " + sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
                 processFileField(item);
             }
         }
@@ -78,7 +80,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Item: {} is a normal form field", item.getName());
 
         if (!isAccepted(item.getFieldName())) {
-            LOG.warn("Form field [{}] is rejected!", sanitizeNewlines(item.getFieldName()));
+            LOG.warn(() -> "Form field [%s] is rejected!".formatted(normalizeSpace(item.getFieldName())));
             return;
         }
 
@@ -104,18 +106,18 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected void processFileField(DiskFileItem item) {
         if (!isAccepted(item.getName())) {
-            LOG.warn("File name [{}] is not accepted", sanitizeNewlines(item.getName()));
+            LOG.warn(() -> "File name [%s] is not accepted".formatted(normalizeSpace(item.getName())));
             return;
         }
 
         if (!isAccepted(item.getFieldName())) {
-            LOG.warn("Field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+            LOG.warn(() -> "Field name [%s] is not accepted".formatted(normalizeSpace(item.getFieldName())));
             return;
         }
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(item.getFieldName()));
+            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(item.getFieldName()));
             return;
         }
 
@@ -127,7 +129,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         if (item.isInMemory()) {
-            LOG.warn("Storing uploaded files just in memory isn't supported currently, skipping file: {}!", item.getName());
+            LOG.warn(() -> "Storing uploaded files just in memory isn't supported currently, skipping file: %s!".formatted(normalizeSpace(item.getName())));
         } else {
             UploadedFile uploadedFile = StrutsUploadedFile.Builder
                     .create(item.getPath().toFile())

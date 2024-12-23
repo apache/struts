@@ -304,6 +304,10 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return fileName;
     }
 
+    /**
+     * @deprecated since 7.0.1, use {@link StringUtils#normalizeSpace(String)} instead
+     */
+    @Deprecated
     protected String sanitizeNewlines(String before) {
         return before.replaceAll("\\R", "_");
     }

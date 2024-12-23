@@ -778,7 +778,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-juli</artifactId>
-                <version>10.1.15</version>
+                <version>11.0.2</version>
             </dependency>
 
             <!-- Commons -->

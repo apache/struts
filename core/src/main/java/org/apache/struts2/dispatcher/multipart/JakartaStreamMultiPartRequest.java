@@ -77,7 +77,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                 File file = fileInfo.getFile();
                 LOG.debug("Deleting file '{}'.", file.getName());
                 if (!file.delete()) {
-                    LOG.warn("There was a problem attempting to delete file '{}'.", file.getName());
+                    LOG.warn("There was a problem attempting to delete file [{}].", file.getName());
                 }
             }
         }
@@ -252,7 +252,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                         // prevent processing file field item if request size not allowed.
                         if (!requestSizePermitted) {
                             addFileSkippedError(itemStream.getName(), request);
-                            LOG.debug("Skipped stream '{}', request maximum size ({}) exceeded.", itemStream.getName(), maxSize);
+                            LOG.debug("Skipped stream [{}], request maximum size ({}) exceeded.", sanitizeNewlines(itemStream.getName()), maxSize);
                             continue;
                         }
 
@@ -296,7 +296,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param request  the servlet request
      */
     protected void addFileSkippedError(String fileName, HttpServletRequest request) {
-        String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
+        String exceptionMessage = "Skipped file " + sanitizeNewlines(fileName) + "; request size limit exceeded.";
         long allowedMaxSize = maxSize != null ? maxSize : -1;
         FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), allowedMaxSize);
         LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), allowedMaxSize});
@@ -312,6 +312,10 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
+        if (!isAccepted(fieldName)) {
+            LOG.warn("Form field [{}] rejected!", sanitizeNewlines(fieldName));
+            return;
+        }
         try {
             List<String> values;
             String fieldValue = Streams.asString(itemStream.openStream());
@@ -323,7 +327,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             }
             values.add(fieldValue);
         } catch (IOException e) {
-            LOG.warn("Failed to handle form field '{}'.", fieldName, e);
+            LOG.warn("Failed to handle form field [{}]", sanitizeNewlines(fieldName), e);
         }
     }
 
@@ -336,7 +340,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (itemStream.getName() == null || itemStream.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
+            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(itemStream.getFieldName()));
+            return;
+        }
+
+        if (!isAccepted(itemStream.getName())) {
+            LOG.warn("File field [{}] rejected", sanitizeNewlines(itemStream.getName()));
             return;
         }
 
@@ -353,7 +362,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                 try {
                     file.delete();
                 } catch (SecurityException se) {
-                    LOG.warn("Failed to delete '{}' due to security exception above.", file.getName(), se);
+                    LOG.warn("Failed to delete [{}] due to security exception above.", sanitizeNewlines(file.getName()), se);
                 }
             }
         }
@@ -385,7 +394,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         File file = File.createTempFile(prefix + "_", suffix, new File(location));
-        LOG.debug("Creating temporary file '{}' (originally '{}').", file.getName(), fileName);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating temporary file [{}] (originally [{}]).", file.getName(), sanitizeNewlines(fileName));
+        }
         return file;
     }
 

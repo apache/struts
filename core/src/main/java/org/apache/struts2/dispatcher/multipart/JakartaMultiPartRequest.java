@@ -113,6 +113,16 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileField(FileItem item) {
         LOG.debug("Item is a file upload");
 
+        if (!isAccepted(item.getName())) {
+            LOG.warn("File name [{}] is not accepted", sanitizeNewlines(item.getName()));
+            return;
+        }
+
+        if (!isAccepted(item.getFieldName())) {
+            LOG.warn("Field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+            return;
+        }
+
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
             LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(item.getFieldName()));
@@ -134,6 +144,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         try {
             LOG.debug("Item is a normal form field");
 
+            if (!isAccepted(item.getFieldName())) {
+                LOG.warn("Form field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+                return;
+            }
+
             List<String> values;
             if (params.get(item.getFieldName()) != null) {
                 values = params.get(item.getFieldName());
@@ -143,7 +158,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
             long size = item.getSize();
             if (maxStringLength != null && size > maxStringLength) {
-                LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
+                LOG.debug("Form field [{}] of size [{}] bytes exceeds limit of [{}].", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
                 String errorKey = "struts.messages.upload.error.parameter.too.long";
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
                         new Object[]{item.getFieldName(), maxStringLength, size});
@@ -359,7 +374,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         for (String name : names) {
             List<FileItem> items = files.get(name);
             for (FileItem item : items) {
-                LOG.debug("Removing file {} {}", name, item);
+                LOG.debug("Removing file [{}]", sanitizeNewlines(name));
                 if (!item.isInMemory()) {
                     item.delete();
                 }
@@ -367,7 +382,4 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
     }
 
-    private String sanitizeNewlines(String before) {
-        return before.replaceAll("[\n\r]", "_");
-    }
 }

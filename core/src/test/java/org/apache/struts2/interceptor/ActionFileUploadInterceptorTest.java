@@ -24,6 +24,9 @@ import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
@@ -663,6 +666,68 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
     }
 
+    public void testUnacceptedFieldName() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+            "Content-Disposition: form-data; name=\"top.file\"; filename=\"deleteme.txt\"\r\n" +
+            "Content-Type: text/html\r\n" +
+            "\r\n" +
+            "Unit test of ActionFileUploadInterceptor" +
+            "\r\n" +
+            "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+            .withServletRequest(createMultipartRequestMaxSize(req, 2000));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertNull(action.getUploadFiles());
+    }
+
+    public void testUnacceptedFileName() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+            "Content-Disposition: form-data; name=\"file\"; filename=\"../deleteme.txt\"\r\n" +
+            "Content-Type: text/html\r\n" +
+            "\r\n" +
+            "Unit test of ActionFileUploadInterceptor" +
+            "\r\n" +
+            "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+            .withServletRequest(createMultipartRequestMaxSize(req, 2000));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertNull(action.getUploadFiles());
+    }
+
     private String encodeTextFile(String filename, String contentType, String content) {
         return "\r\n" +
             "--" +
@@ -672,7 +737,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             "file" +
             "\"; filename=\"" +
             filename +
-            "\r\n" +
+            "\"\r\n" +
             "Content-Type: " +
             contentType +
             "\r\n" +
@@ -697,18 +762,20 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
-
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
+        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
+        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
     private MultiPartRequestWrapper createMultipartRequestNoMaxParamsSet(HttpServletRequest req) {
-
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
+        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

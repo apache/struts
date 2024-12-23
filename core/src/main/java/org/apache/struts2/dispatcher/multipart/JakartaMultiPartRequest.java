@@ -44,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
  */
@@ -100,7 +102,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
         if (ServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
-                LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
+                LOG.debug("Found file item: [{}]", normalizeSpace(item.getFieldName()));
                 if (item.isFormField()) {
                     processNormalFormField(item, request.getCharacterEncoding());
                 } else {
@@ -114,18 +116,18 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Item is a file upload");
 
         if (!isAccepted(item.getName())) {
-            LOG.warn("File name [{}] is not accepted", sanitizeNewlines(item.getName()));
+            LOG.warn("File name [{}] is not accepted", normalizeSpace(item.getName()));
             return;
         }
 
         if (!isAccepted(item.getFieldName())) {
-            LOG.warn("Field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+            LOG.warn("Field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
             return;
         }
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(item.getFieldName()));
+            LOG.debug("No file has been uploaded for the field: {}", normalizeSpace(item.getFieldName()));
             return;
         }
 
@@ -145,7 +147,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             LOG.debug("Item is a normal form field");
 
             if (!isAccepted(item.getFieldName())) {
-                LOG.warn("Form field name [{}] is not accepted", sanitizeNewlines(item.getFieldName()));
+                LOG.warn("Form field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
                 return;
             }
 
@@ -158,7 +160,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
             long size = item.getSize();
             if (maxStringLength != null && size > maxStringLength) {
-                LOG.debug("Form field [{}] of size [{}] bytes exceeds limit of [{}].", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
+                LOG.debug("Form field [{}] of size [{}] bytes exceeds limit of [{}].", normalizeSpace(item.getFieldName()), size, maxStringLength);
                 String errorKey = "struts.messages.upload.error.parameter.too.long";
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
                         new Object[]{item.getFieldName(), maxStringLength, size});
@@ -374,7 +376,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         for (String name : names) {
             List<FileItem> items = files.get(name);
             for (FileItem item : items) {
-                LOG.debug("Removing file [{}]", sanitizeNewlines(name));
+                LOG.debug("Removing file [{}]", normalizeSpace(name));
                 if (!item.isInMemory()) {
                     item.delete();
                 }

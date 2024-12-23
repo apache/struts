@@ -180,8 +180,4 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return patternsChecker.isAllowed(fileName).isAllowed();
     }
 
-    protected String sanitizeNewlines(String before) {
-        return before.replaceAll("[\n\r]", "_");
-    }
-
 }

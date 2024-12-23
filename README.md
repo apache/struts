@@ -103,7 +103,8 @@ the Struts approach.
 
 ## Commercial Support
 
-The Apache Struts community does not offer commercial support by itself.
+The Apache Struts community does not offer commercial support by itself, but we maintain [a list of companies offering
+commercial support on our website](https://struts.apache.org/commercial-support.html).
 
 Some Apache Struts maintainers are working with [Tidelift](https://tidelift.com/) to provide commercial support and
 invest paid working time in the improvement of the Apache Struts framework. For more information, visit 

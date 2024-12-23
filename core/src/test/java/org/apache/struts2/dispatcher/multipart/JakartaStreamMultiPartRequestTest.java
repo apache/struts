@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;
 
@@ -32,7 +33,9 @@ public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestT
 
     @Override
     protected AbstractMultiPartRequest createMultipartRequest() {
-        return new JakartaStreamMultiPartRequest();
+        JakartaStreamMultiPartRequest multiPartRequest = new JakartaStreamMultiPartRequest();
+        multiPartRequest.setNotExcludedAllowedPatternsChecker(container.inject(DefaultNotExcludedAcceptedPatternsChecker.class));
+        return multiPartRequest;
     }
 
     @Test

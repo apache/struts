@@ -24,6 +24,7 @@ import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
@@ -514,11 +515,71 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
     }
 
+    public void testUnacceptedFieldName() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+            "Content-Disposition: form-data; name=\"top.file\"; filename=\"deleteme.txt\"\r\n" +
+            "Content-Type: text/html\r\n" +
+            "\r\n" +
+            "Unit test of ActionFileUploadInterceptor" +
+            "\r\n" +
+            "-----1234--\r\n");
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+            .withServletRequest(createMultipartRequestMaxSize(2000));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertNull(action.getUploadFiles());
+    }
+
+    public void testUnacceptedFileName() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+            "Content-Disposition: form-data; name=\"file\"; filename=\"../deleteme.txt\"\r\n" +
+            "Content-Type: text/html\r\n" +
+            "\r\n" +
+            "Unit test of ActionFileUploadInterceptor" +
+            "\r\n" +
+            "-----1234--\r\n");
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext()
+            .withServletRequest(createMultipartRequestMaxSize(2000));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
+        assertNull(action.getUploadFiles());
+    }
+
     private String encodeTextFile(String filename, String contentType, String content) {
         return endline +
                 "--" + boundary +
                 endline +
-                "Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + filename +
+                "Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + filename + "\"" +
                 endline +
                 "Content-Type: " + contentType +
                 endline +
@@ -549,6 +610,9 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
         jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
+        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
+
         return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

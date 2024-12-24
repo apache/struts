@@ -606,37 +606,6 @@
                 <version>3.1.8</version>
             </dependency>
 
-            <!-- override version of error_prone_annotations until caffeine updates from 2.10.0 to 2.23.0 -->
-            <dependency>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_annotations</artifactId>
-                <version>2.23.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.framework</artifactId>
-                <version>6.0.3</version>
-                <scope>provided
-                </scope>  <!-- felix-main provides everything in felix-framework (and more), override here to provent both JARs from being included in the build. -->
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.main</artifactId>
-                <version>7.0.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.shell</artifactId>
-                <version>1.4.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.shell.tui</artifactId>
-                <version>1.4.1</version>
-            </dependency>
-
             <!-- Velocity -->
             <dependency>
                 <groupId>org.apache.velocity</groupId>
@@ -728,37 +697,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-                <version>3.0.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.servlet.jsp.jstl</groupId>
-                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-                <version>3.0.0</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
                 <version>5.0.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jasper</artifactId>
-                <version>10.1.15</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-api</artifactId>
-                <version>10.1.15</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -766,19 +707,6 @@
                 <artifactId>jakarta.servlet.jsp-api</artifactId>
                 <version>3.1.0</version>
                 <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>taglibs</groupId>
-                <artifactId>request</artifactId>
-                <version>1.0.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-juli</artifactId>
-                <version>10.1.15</version>
             </dependency>
 
             <!-- Commons -->
@@ -811,11 +739,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>1.12.0</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-el</groupId>
-                <artifactId>commons-el</artifactId>
-                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -922,13 +845,6 @@
             </dependency>
 
             <dependency>
-                <groupId>jmock</groupId>
-                <artifactId>jmock-cglib</artifactId>
-                <version>1.2.0</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -984,17 +900,6 @@
             </dependency>
 
             <dependency>
-                <groupId>io.github.x-stream</groupId>
-                <artifactId>mxparser</artifactId>
-                <version>1.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.persistence</groupId>
-                <artifactId>jakarta.persistence-api</artifactId>
-                <version>3.1.0</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
@@ -1039,13 +944,6 @@
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
                 <version>5.1.2.Final</version>
-            </dependency>
-
-            <dependency>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>2.12.2</version>
-                <scope>test</scope>
             </dependency>
 
         </dependencies>

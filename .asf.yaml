@@ -23,7 +23,7 @@ github:
         # it does not work because our github teams are private/secret, see INFRA-25666
         require_code_owner_reviews: false
         required_approving_review_count: 0
-    release/*:
+    release/struts-6-7-x:
       # contexts are the names of checks that must pass.
       contexts:
         - build

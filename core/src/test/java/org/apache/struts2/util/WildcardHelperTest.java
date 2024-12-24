@@ -24,34 +24,60 @@ import java.util.HashMap;
 
 public class WildcardHelperTest extends XWorkTestCase {
 
-	public void testMatch() {
+    private WildcardHelper wildcardHelper;
 
-		WildcardHelper wild = new WildcardHelper();
-		HashMap<String, String> matchedPatterns = new HashMap<>();
-		int[] pattern = wild.compilePattern("wes-rules");
-		assertEquals(wild.match(matchedPatterns,"wes-rules", pattern), true);
-		assertEquals(wild.match(matchedPatterns, "rules-wes", pattern), false);
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-		pattern = wild.compilePattern("wes-*");
-		assertEquals(wild.match(matchedPatterns,"wes-rules", pattern), true);
-		assertEquals("rules".equals(matchedPatterns.get("1")), true);
-		assertEquals(wild.match(matchedPatterns, "rules-wes", pattern), false);
+        wildcardHelper = new WildcardHelper();
+    }
 
-		pattern = wild.compilePattern("path/**/file");
-		assertEquals(wild.match(matchedPatterns, "path/to/file", pattern), true);
-		assertEquals("to".equals(matchedPatterns.get("1")), true);
-		assertEquals(wild.match(matchedPatterns, "path/to/another/location/of/file", pattern), true);
-		assertEquals("to/another/location/of".equals(matchedPatterns.get("1")), true);
+    public void testMatch() {
+        HashMap<String, String> matchedPatterns = new HashMap<>();
+        int[] pattern = wildcardHelper.compilePattern("wes-rules");
+        assertEquals(wildcardHelper.match(matchedPatterns, "wes-rules", pattern), true);
+        assertEquals(wildcardHelper.match(matchedPatterns, "rules-wes", pattern), false);
 
-		pattern = wild.compilePattern("path/*/file");
-		assertEquals(wild.match(matchedPatterns, "path/to/file", pattern), true);
-		assertEquals("to".equals(matchedPatterns.get("1")), true);
-		assertEquals(wild.match(matchedPatterns, "path/to/another/location/of/file", pattern), false);
+        pattern = wildcardHelper.compilePattern("wes-*");
+        assertEquals(wildcardHelper.match(matchedPatterns, "wes-rules", pattern), true);
+        assertEquals("rules".equals(matchedPatterns.get("1")), true);
+        assertEquals(wildcardHelper.match(matchedPatterns, "rules-wes", pattern), false);
 
-		pattern = wild.compilePattern("path/*/another/**/file");
-		assertEquals(wild.match(matchedPatterns, "path/to/another/location/of/file", pattern), true);
-		assertEquals("to".equals(matchedPatterns.get("1")), true);
-		assertEquals("location/of".equals(matchedPatterns.get("2")), true);
-	}
+        pattern = wildcardHelper.compilePattern("path/**/file");
+        assertEquals(wildcardHelper.match(matchedPatterns, "path/to/file", pattern), true);
+        assertEquals("to".equals(matchedPatterns.get("1")), true);
+        assertEquals(wildcardHelper.match(matchedPatterns, "path/to/another/location/of/file", pattern), true);
+        assertEquals("to/another/location/of".equals(matchedPatterns.get("1")), true);
+
+        pattern = wildcardHelper.compilePattern("path/*/file");
+        assertEquals(wildcardHelper.match(matchedPatterns, "path/to/file", pattern), true);
+        assertEquals("to".equals(matchedPatterns.get("1")), true);
+        assertEquals(wildcardHelper.match(matchedPatterns, "path/to/another/location/of/file", pattern), false);
+
+        pattern = wildcardHelper.compilePattern("path/*/another/**/file");
+        assertEquals(wildcardHelper.match(matchedPatterns, "path/to/another/location/of/file", pattern), true);
+        assertEquals("to".equals(matchedPatterns.get("1")), true);
+        assertEquals("location/of".equals(matchedPatterns.get("2")), true);
+    }
+
+    public void testMatchStrutsPackages() {
+        // given
+        HashMap<String, String> matchedPatterns = new HashMap<>();
+        int[] pattern = wildcardHelper.compilePattern("org.apache.struts2.*");
+
+        // when & then
+        assertTrue(wildcardHelper.match(matchedPatterns, "org.apache.struts2.XWorkTestCase", pattern));
+        assertEquals("org.apache.struts2.XWorkTestCase", matchedPatterns.get("0"));
+        assertEquals("XWorkTestCase", matchedPatterns.get("1"));
+
+        assertTrue(wildcardHelper.match(matchedPatterns, "org.apache.struts2.core.SomeClass", pattern));
+        assertEquals("org.apache.struts2.core.SomeClass", matchedPatterns.get("0"));
+        assertEquals("core.SomeClass", matchedPatterns.get("1"));
+
+        assertTrue(wildcardHelper.match(matchedPatterns, "org.apache.struts2.", pattern));
+        assertEquals("org.apache.struts2.", matchedPatterns.get("0"));
+        assertEquals("", matchedPatterns.get("1"));
+    }
 
 }

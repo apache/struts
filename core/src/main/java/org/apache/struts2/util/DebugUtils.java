@@ -38,7 +38,7 @@ public final class DebugUtils {
         }
         log.error(message);
         if (action instanceof ValidationAware validationAware) {
-            validationAware.addActionError(message);
+            validationAware.addActionMessage(message);
         }
     }
 

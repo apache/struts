@@ -109,3 +109,9 @@ commercial support on our website](https://struts.apache.org/commercial-support.
 Some Apache Struts maintainers are working with [Tidelift](https://tidelift.com/) to provide commercial support and
 invest paid working time in the improvement of the Apache Struts framework. For more information, visit 
 the [Tidelift resources regarding Apache Struts](https://tidelift.com/subscription/pkg/maven-org-apache-struts-struts2-core?utm_source=maven-org-apache-struts-struts2-core&utm_medium=referral&utm_campaign=readme)
+
+## Thank you
+
+[YourKit](https://www.yourkit.com/) is kindly supporting open source projects with its full-featured Java Profiler.
+YourKit is the creator of innovative and intelligent tools for profiling Java and .NET applications.
+As an Apache committer, you can get a free license at [YourKit's open source sponsorship program](https://www.yourkit.com/java/profiler/purchase/#os_license).

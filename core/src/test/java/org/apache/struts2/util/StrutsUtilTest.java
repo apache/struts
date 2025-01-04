@@ -19,6 +19,7 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.test.StrutsUtilBean;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
@@ -37,7 +38,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test case for StrutsUtil.
- *
  */
 public class StrutsUtilTest extends StrutsInternalTestCase {
 
@@ -53,14 +53,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
     public void testIsTrueMethod() {
-        stack.push(new Object() {
-            public String getMyString() {
-                return "myString";
-            }
-            public boolean getMyBoolean(boolean bool) {
-                return bool;
-            }
-        });
+        stack.push(new StrutsUtilBean());
         assertTrue(strutsUtil.isTrue("myString == 'myString'"));
         assertFalse(strutsUtil.isTrue("myString == 'myOtherString'"));
         assertTrue(strutsUtil.isTrue("getMyBoolean(true)"));
@@ -68,14 +61,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
     public void testFindStringMethod() {
-        stack.push(new Object() {
-            public String getMyString() {
-                return "myString";
-            }
-            public boolean getMyBoolean(boolean bool) {
-                return bool;
-            }
-        });
+        stack.push(new StrutsUtilBean());
 
         assertEquals(strutsUtil.findString("myString"), "myString");
         assertNull(strutsUtil.findString("myOtherString"));
@@ -105,14 +91,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
 
     public void testFindValueMethod() throws Exception {
-        stack.push(new Object() {
-            public String getMyString() {
-                return "myString";
-            }
-            public boolean getMyBoolean(boolean bool) {
-                return bool;
-            }
-        });
+        stack.push(new StrutsUtilBean());
         Object obj1 = strutsUtil.findValue("myString", "java.lang.String");
         Object obj2 = strutsUtil.findValue("getMyBoolean(true)", "java.lang.Boolean");
 
@@ -123,7 +102,6 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(obj1, "myString");
         assertEquals(obj2, Boolean.TRUE);
     }
-
 
 
     public void testGetTextMethod() {
@@ -233,11 +211,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
     public void testTranslateVariables() {
-        stack.push(new Object() {
-            public String getFoo() {
-                return "bar";
-            }
-        });
+        stack.push(new StrutsUtilBean());
         String obj1 = strutsUtil.translateVariables("try: %{foo}");
 
         assertNotNull(obj1);
@@ -245,15 +219,8 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
     public void testTranslateVariablesRecursion() {
-        stack.push(new Object() {
-            public String getFoo() {
-                return "%{bar}";
-            }
-            public String getBar() {
-                return "bar";
-            }
-        });
-        String obj1 = strutsUtil.translateVariables("try: %{foo}");
+        stack.push(new StrutsUtilBean());
+        String obj1 = strutsUtil.translateVariables("try: %{barExpression}");
 
         assertNotNull(obj1);
         assertEquals("try: %{bar}", obj1);
@@ -277,12 +244,10 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         super.tearDown();
     }
 
-
-
     // === internal class to assist in testing
-
     protected static class InternalMockHttpServletRequest extends MockHttpServletRequest {
         InternalMockRequestDispatcher dispatcher = null;
+
         public RequestDispatcher getRequestDispatcher(String path) {
             dispatcher = new InternalMockRequestDispatcher(path);
             return dispatcher;
@@ -296,10 +261,12 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     protected static class InternalMockRequestDispatcher extends MockRequestDispatcher {
         private final String url;
         boolean included = false;
+
         public InternalMockRequestDispatcher(String url) {
             super(url);
             this.url = url;
         }
+
         public void include(ServletRequest servletRequest, ServletResponse servletResponse) {
             if (servletResponse instanceof MockHttpServletResponse) {
                 ((MockHttpServletResponse) servletResponse).setIncludedUrl(this.url);

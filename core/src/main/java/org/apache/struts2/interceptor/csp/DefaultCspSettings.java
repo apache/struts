@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -86,16 +85,18 @@ public class DefaultCspSettings implements CspSettings {
     private void addCspHeadersWithSession(HttpServletRequest request, HttpServletResponse response) {
         if (isSessionActive(request)) {
             LOG.trace("Session is active, applying CSP settings");
-            request.getSession().setAttribute(NONCE_KEY, generateNonceValue());
-            response.setHeader(cspHeader, createPolicyFormat(request));
+            String nonceValue = generateNonceValue();
+            request.getSession().setAttribute(NONCE_KEY, nonceValue);
+            response.setHeader(cspHeader, createPolicyFormat(nonceValue));
         } else {
             LOG.debug("Session is not active, ignoring CSP settings");
         }
     }
 
     private void addCspHeadersWithRequest(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute(NONCE_KEY, generateNonceValue());
-        response.setHeader(cspHeader, createPolicyFormat(request));
+        String nonceValue = generateNonceValue();
+        request.setAttribute(NONCE_KEY, nonceValue);
+        response.setHeader(cspHeader, createPolicyFormat(nonceValue));
     }
 
     private boolean isSessionActive(HttpServletRequest request) {
@@ -106,34 +107,45 @@ public class DefaultCspSettings implements CspSettings {
         return Base64.getUrlEncoder().encodeToString(getRandomBytes());
     }
 
-    protected String createPolicyFormat(HttpServletRequest request) {
-        StringBuilder policyFormatBuilder = new StringBuilder()
+    protected String createPolicyFormat(String nonceValue) {
+        StringBuilder builder = new StringBuilder()
                 .append(OBJECT_SRC)
                 .append(format(" '%s'; ", NONE))
                 .append(SCRIPT_SRC)
-                .append(" 'nonce-%s' ") // nonce placeholder
+                .append(format(" 'nonce-%s' ", nonceValue))
                 .append(format("'%s' ", STRICT_DYNAMIC))
                 .append(format("%s %s; ", HTTP, HTTPS))
                 .append(BASE_URI)
                 .append(format(" '%s'; ", NONE));
 
         if (reportUri != null) {
-            policyFormatBuilder
+            builder
                     .append(REPORT_URI)
                     .append(format(" %s; ", reportUri));
             if (reportTo != null) {
-                policyFormatBuilder
+                builder
                         .append(REPORT_TO)
                         .append(format(" %s; ", reportTo));
             }
         }
 
-        return format(policyFormatBuilder.toString(), getNonceString(request));
+        return builder.toString();
     }
 
+    /**
+     * @deprecated since 6.8.0, for removal
+     */
+    @Deprecated
+    protected String createPolicyFormat(HttpServletRequest request) {
+        throw new UnsupportedOperationException("Unsupported implementation, use #createPolicyFormat(String) instead!");
+    }
+
+    /**
+     * @deprecated since 6.8.0, for removal
+     */
+    @Deprecated
     protected String getNonceString(HttpServletRequest request) {
-        Object nonce = request.getSession().getAttribute(NONCE_KEY);
-        return Objects.toString(nonce);
+        throw new UnsupportedOperationException("Unsupported implementation, don't use!");
     }
 
     private byte[] getRandomBytes() {

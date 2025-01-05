@@ -23,6 +23,8 @@ package org.apache.struts2.views.java.simple;
 import org.apache.struts2.components.Form;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 import org.easymock.EasyMock;
 
 public class FormTest extends AbstractCommonAttributesTest {
@@ -80,5 +82,6 @@ public class FormTest extends AbstractCommonAttributesTest {
         UrlRenderer renderer = EasyMock.createNiceMock(UrlRenderer.class);
         EasyMock.replay(renderer);
         tag.setUrlRenderer(renderer);
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
     }
 }

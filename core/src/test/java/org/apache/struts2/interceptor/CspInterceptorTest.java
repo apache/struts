@@ -312,7 +312,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
      */
     public static class CustomDefaultCspSettings extends DefaultCspSettings {
 
-        protected String createPolicyFormat(HttpServletRequest request) {
+        protected String createPolicyFormat(String nonceValue) {
             return "foo";
         }
     }

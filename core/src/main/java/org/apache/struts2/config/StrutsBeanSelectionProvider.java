@@ -55,6 +55,7 @@ import org.apache.struts2.factory.UnknownHandlerFactory;
 import org.apache.struts2.factory.ValidatorFactory;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.inject.Scope;
+import org.apache.struts2.interceptor.csp.CspNonceReader;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.ognl.BeanInfoCacheFactory;
 import org.apache.struts2.ognl.ExpressionCacheFactory;
@@ -449,6 +450,8 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(UrlDecoder.class, StrutsConstants.STRUTS_URL_DECODER, builder, props, Scope.SINGLETON);
 
         alias(ExecutorProvider.class, StrutsConstants.STRUTS_EXECUTOR_PROVIDER, builder, props, Scope.SINGLETON);
+
+        alias(CspNonceReader.class, StrutsConstants.STRUTS_CSP_NONCE_READER, builder, props, Scope.SINGLETON);
 
         switchDevMode(props);
     }

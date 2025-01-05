@@ -23,6 +23,8 @@ package org.apache.struts2.views.java.simple;
 import org.apache.struts2.components.ActionError;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,7 @@ public class ActionErrorTest extends AbstractTest {
         //errors are needed to setup stack
         super.setUp();
         this.tag = new ActionError(stack, request, response);
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
     }
 
     @Override

@@ -117,9 +117,9 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
-        assertEquals(3, action.getActionErrors().size());
+        assertEquals(3, action.getActionMessages().size());
 
-        List<String> actionErrors = new ArrayList<>(action.getActionErrors());
+        List<String> actionErrors = new ArrayList<>(action.getActionMessages());
 
         String msg1 = actionErrors.get(0);
         String msg2 = actionErrors.get(1);
@@ -204,9 +204,9 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.applyParameters(action, vs, HttpParameters.create(params).build());
 
         // then
-        assertEquals(3, action.getActionErrors().size());
+        assertEquals(3, action.getActionMessages().size());
 
-        List<String> actionErrors = new ArrayList<>(action.getActionErrors());
+        List<String> actionErrors = new ArrayList<>(action.getActionMessages());
         String msg1 = actionErrors.get(0);
         String msg2 = actionErrors.get(1);
         String msg3 = actionErrors.get(2);
@@ -586,7 +586,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         container.inject(config.getInterceptors().get(0).getInterceptor());
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
         proxy.execute();
-        final String actionError = "" + ((SimpleAction) proxy.getAction()).getActionErrors().toArray()[0];
+        final String actionError = "" + ((SimpleAction) proxy.getAction()).getActionMessages().toArray()[0];
         assertTrue(actionError.contains("Error setting expression 'not_a_property' with value 'There is no action property named like this'"));
     }
 

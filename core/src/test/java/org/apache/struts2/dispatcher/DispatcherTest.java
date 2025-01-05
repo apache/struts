@@ -344,6 +344,9 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
 
         req.setContentType("Multipart/Form-Data ; boundary=---------------------------207103069210263;charset=UTF-16LE");
         assertTrue(dispatcher.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=\"----=_Part_38_1092302434.1734807780737\"");
+        assertTrue(dispatcher.isMultipartRequest(req));
     }
 
     @Test

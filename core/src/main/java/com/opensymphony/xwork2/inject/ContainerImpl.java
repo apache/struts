@@ -419,8 +419,12 @@ class ContainerImpl implements Container {
                 // First time through...
                 constructionContext.startConstruction();
                 try {
-                    final Object[] parameters = getParameters(constructor, context, parameterInjectors);
-                    t = constructor.newInstance(parameters);
+                    if (constructor.getParameterCount() > 0 && parameterInjectors == null) {
+                        t = constructor.newInstance(new Object[constructor.getParameterCount()]);
+                    } else {
+                        final Object[] parameters = getParameters(constructor, context, parameterInjectors);
+                        t = constructor.newInstance(parameters);
+                    }
                     constructionContext.setProxyDelegates(t);
                 } finally {
                     constructionContext.finishConstruction();

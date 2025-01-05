@@ -29,6 +29,7 @@ import java.util.concurrent.Callable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
@@ -49,6 +50,7 @@ public class ContainerImplTest {
         ContainerBuilder cb = new ContainerBuilder();
         cb.constant("methodCheck.name", "Lukasz");
         cb.constant("fieldCheck.name", "Lukasz");
+        cb.constant("constructorCheck.name", "Lukasz");
         cb.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
         cb.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
         cb.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
@@ -65,15 +67,29 @@ public class ContainerImplTest {
     }
 
     @Test
-    public void fieldInjector() throws Exception {
+    public void fieldInjector() {
         FieldCheck fieldCheck = new FieldCheck();
         c.inject(fieldCheck);
-        assertEquals(fieldCheck.getName(), "Lukasz");
+        assertEquals("Lukasz", fieldCheck.getName());
     }
 
     @Test
-    public void methodInjector() throws Exception {
-        c.inject(new MethodCheck());
+    public void methodInjector() {
+        MethodCheck methodCheck = new MethodCheck();
+        c.inject(methodCheck);
+        assertEquals("Lukasz", methodCheck.getName());
+    }
+
+    @Test
+    public void constructorInjector() {
+        ConstructorCheck constructorCheck = c.inject(ConstructorCheck.class);
+        assertEquals("Lukasz", constructorCheck.getName());
+    }
+
+    @Test
+    public void optionalConstructorInjector() {
+        OptionalConstructorCheck constructorCheck = c.inject(OptionalConstructorCheck.class);
+        assertNull(constructorCheck.getName());
     }
 
     /**
@@ -92,7 +108,7 @@ public class ContainerImplTest {
      * Inject values into method under SecurityManager
      */
     @Test
-    public void testMethodInjectorWithSecurityEnabled() throws Exception {
+    public void testMethodInjectorWithSecurityEnabled() {
         assumeTrue(SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_20));
         System.setSecurityManager(new TestSecurityManager());
         assertThrows(DependencyException.class, () -> c.inject(new MethodCheck()));
@@ -101,7 +117,7 @@ public class ContainerImplTest {
     }
 
     @Test
-    public void testEarlyInitializable() throws Exception {
+    public void testEarlyInitializable() {
         assertTrue("should being initialized already", EarlyInitializableBean.initializedEarly);
 
         EarlyInitializableCheck earlyInitializableCheck = new EarlyInitializableCheck();
@@ -148,22 +164,19 @@ public class ContainerImplTest {
 
         final InitializableCheck initializableCheck3 = new InitializableCheck();
         final TestScopeStrategy testScopeStrategy = new TestScopeStrategy();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ContainerBuilder cb2 = new ContainerBuilder();
-                cb2.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
-                cb2.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
-                cb2.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
-                cb2.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
-                cb2.factory(Initializable.class, "requestInitializable", InitializableBean.class, Scope.REQUEST);
-                cb2.factory(Initializable.class, "sessionInitializable", InitializableBean.class, Scope.SESSION);
-                cb2.factory(Initializable.class, "threadInitializable", InitializableBean.class, Scope.THREAD);
-                cb2.factory(Initializable.class, "wizardInitializable", InitializableBean.class, Scope.WIZARD);
-                Container c2 = cb2.create(false);
-                c2.setScopeStrategy(testScopeStrategy);
-                c2.inject(initializableCheck3);
-            }
+        Thread thread = new Thread(() -> {
+            ContainerBuilder cb2 = new ContainerBuilder();
+            cb2.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
+            cb2.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
+            cb2.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
+            cb2.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
+            cb2.factory(Initializable.class, "requestInitializable", InitializableBean.class, Scope.REQUEST);
+            cb2.factory(Initializable.class, "sessionInitializable", InitializableBean.class, Scope.SESSION);
+            cb2.factory(Initializable.class, "threadInitializable", InitializableBean.class, Scope.THREAD);
+            cb2.factory(Initializable.class, "wizardInitializable", InitializableBean.class, Scope.WIZARD);
+            Container c2 = cb2.create(false);
+            c2.setScopeStrategy(testScopeStrategy);
+            c2.inject(initializableCheck3);
         });
         thread.run();
         thread.join();
@@ -203,6 +216,32 @@ public class ContainerImplTest {
             return name;
         }
 
+    }
+
+    public static class ConstructorCheck {
+        private String name;
+
+        @Inject("constructorCheck.name")
+        public ConstructorCheck(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public static class OptionalConstructorCheck {
+        private String name;
+
+        @Inject(value = "nonExistingConstant", required = false)
+        public OptionalConstructorCheck(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     class InitializableCheck {

@@ -115,7 +115,7 @@
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <jackson.version>2.18.2</jackson.version>
-        <log4j2.version>2.24.2</log4j2.version>
+        <log4j2.version>2.24.3</log4j2.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>

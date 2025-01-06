@@ -28,7 +28,6 @@
 
     <constant name="struts.excludedClasses"
               value="
-                org.apache.struts2.ActionContext,
                 java.lang.Class,
                 java.lang.ClassLoader,
                 java.lang.InheritableThreadLocal,
@@ -43,7 +42,8 @@
                 java.lang.System,
                 java.lang.Thread,
                 java.lang.ThreadGroup,
-                java.lang.ThreadLocal
+                java.lang.ThreadLocal,
+                org.apache.struts2.ActionContext
     "/>
 
     <constant name="struts.devMode.excludedClasses"
@@ -74,15 +74,11 @@
     <constant name="struts.excludedPackageNames"
               value="
                 antlr.build,
-                org.apache.struts2.config,
-                org.apache.struts2.inject,
-                org.apache.struts2.ognl,
-                org.apache.struts2.security,
-                org.apache.struts2.util,
                 freemarker.core,
                 freemarker.ext.jsp,
                 freemarker.ext.rhino,
                 freemarker.template,
+                jakarta,
                 java.io,
                 java.net,
                 java.nio,
@@ -93,6 +89,11 @@
                 org.apache.commons.beanutils,
                 org.apache.commons.collections,
                 org.apache.jasper,
+                org.apache.struts2.config,
+                org.apache.struts2.inject,
+                org.apache.struts2.ognl,
+                org.apache.struts2.security,
+                org.apache.struts2.util,
                 org.apache.tomcat,
                 org.apache.velocity,
                 org.objectweb.asm,
@@ -106,15 +107,11 @@
     <constant name="struts.devMode.excludedPackageNames"
               value="
                 antlr.build,
-                org.apache.struts2.config,
-                org.apache.struts2.inject,
-                org.apache.struts2.ognl,
-                org.apache.struts2.security,
-                org.apache.struts2.util,
                 freemarker.core,
                 freemarker.ext.jsp,
                 freemarker.ext.rhino,
                 freemarker.template,
+                jakarta,
                 java.io,
                 java.net,
                 java.nio,
@@ -125,7 +122,11 @@
                 org.apache.commons.beanutils,
                 org.apache.commons.collections,
                 org.apache.jasper,
+                org.apache.struts2.config,
+                org.apache.struts2.inject,
                 org.apache.struts2.ognl,
+                org.apache.struts2.security,
+                org.apache.struts2.util,
                 org.apache.tomcat,
                 org.apache.velocity,
                 org.objectweb.asm,

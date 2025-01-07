@@ -306,9 +306,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         if (!acceptedFiles.isEmpty()) {
                             Map<String, Object> params = ac.getParameters();
 
-                            putCaseInsensitive(params, inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            putCaseInsensitive(params, contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            putCaseInsensitive(params, fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+                            params.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
+                            putWithCheck(params, contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
+                            putWithCheck(params, fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
                         }
                     }
                 } else {
@@ -328,19 +328,22 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Removes existing parameters with identical name (case-insensitive) before adding the given parameter.
-     * Minimal invasiv solution to fix CVE-2023-50164 for the 2.3.x branch.
+     * Removes existing parameters that contain the given name (case-insensitive) before adding the parameter.
+     * Minimal invasiv solution to fix CVE-2023-50164 and CVE-2024-53677 for the 2.3.x branch.
+     * For example, malicious parameters "uploadFileName" (CVE-2023-50164) or "top.uploadFileName" (CVE-2024-53677)
+     * would be removed from the map before adding the legitimate parameter "UploadFileName".
      * 
      * @param params - parameters to update.
-     * @param key    - parameter name (compared case-insensitive with existing ones).
+     * @param key    - parameter name (compared with existing ones).
      * @param value  - parameter value.
      */
-    private void putCaseInsensitive(Map<String, Object> params, String key, Object value) {
-        // Remove existing map entry if its key is equal to the given key (case-insensitive)
+    private void putWithCheck(Map<String, Object> params, String key, Object value) {
+        // Remove existing map entry if it contains the given key (a check for case- 
+        // insensitive equality does not catch all OGNL expressions, cf. CVE-2024-53677).
         Iterator<Map.Entry<String, Object>> iterator = params.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Object> entry = iterator.next();
-            if (key.equalsIgnoreCase(entry.getKey())) {
+            if (entry.getKey().toLowerCase().contains(key.toLowerCase())) {
                 iterator.remove();
             }
         }

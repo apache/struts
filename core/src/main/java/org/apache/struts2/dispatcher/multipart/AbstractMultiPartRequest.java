@@ -20,7 +20,8 @@ package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -39,13 +40,15 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
 
+    private static final String EXCLUDED_FILE_PATTERN = ".*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*";
+
     /**
      * Defines the internal buffer size used during streaming operations.
      */
     public static final int BUFFER_SIZE = 10240;
 
     /**
-     * Internal list of raised errors to be passed to the the Struts2 framework.
+     * Internal list of raised errors to be passed to the Struts2 framework.
      */
     protected List<LocalizedMessage> errors = new ArrayList<>();
 
@@ -80,7 +83,13 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * Localization to be used regarding errors.
      */
     protected Locale defaultLocale = Locale.ENGLISH;
-    private NotExcludedAcceptedPatternsChecker patternsChecker;
+
+    private final ExcludedPatternsChecker patternsChecker;
+
+    public AbstractMultiPartRequest() {
+        patternsChecker = new DefaultExcludedPatternsChecker();
+        ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+    }
 
     /**
      * @param bufferSize Sets the buffer size to be used.
@@ -123,14 +132,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         defaultLocale = localeProviderFactory.createLocaleProvider().getLocale();
     }
 
-    @Inject
-    public void setNotExcludedAllowedPatternsChecker(NotExcludedAcceptedPatternsChecker patternsChecker) {
-        this.patternsChecker = patternsChecker;
-    }
-
     /**
      * @param request Inspect the servlet request and set the locale if one wasn't provided by
-     * the Struts2 framework.
+     *                the Struts2 framework.
      */
     protected void setLocale(HttpServletRequest request) {
         if (defaultLocale == null) {
@@ -141,7 +145,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /**
      * Build error message.
      *
-     * @param e the Throwable/Exception
+     * @param e    the Throwable/Exception
      * @param args arguments
      * @return error message
      */
@@ -154,7 +158,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
-    */
+     */
     public List<LocalizedMessage> getErrors() {
         return errors;
     }
@@ -176,8 +180,12 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return fileName;
     }
 
-    protected boolean isAccepted(String fileName) {
-        return patternsChecker.isAllowed(fileName).isAllowed();
+    /**
+     * @param fileName file name to check
+     * @return true if the file name is excluded
+     */
+    protected boolean isExcluded(String fileName) {
+        return patternsChecker.isExcluded(fileName).isExcluded();
     }
 
 }

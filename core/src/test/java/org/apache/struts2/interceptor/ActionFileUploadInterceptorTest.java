@@ -767,15 +767,11 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
-        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
-        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
     private MultiPartRequestWrapper createMultipartRequestNoMaxParamsSet(HttpServletRequest req) {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
-        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
-        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

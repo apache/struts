@@ -115,12 +115,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileField(FileItem item) {
         LOG.debug("Item is a file upload");
 
-        if (!isAccepted(item.getName())) {
+        if (isExcluded(item.getName())) {
             LOG.warn("File name [{}] is not accepted", normalizeSpace(item.getName()));
             return;
         }
 
-        if (!isAccepted(item.getFieldName())) {
+        if (isExcluded(item.getFieldName())) {
             LOG.warn("Field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
             return;
         }
@@ -146,7 +146,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         try {
             LOG.debug("Item is a normal form field");
 
-            if (!isAccepted(item.getFieldName())) {
+            if (isExcluded(item.getFieldName())) {
                 LOG.warn("Form field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
                 return;
             }

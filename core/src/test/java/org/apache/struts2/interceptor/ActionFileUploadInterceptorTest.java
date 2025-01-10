@@ -24,7 +24,6 @@ import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
-import org.apache.struts2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
@@ -610,8 +609,6 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
         jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        DefaultNotExcludedAcceptedPatternsChecker patternsChecker = container.inject(DefaultNotExcludedAcceptedPatternsChecker.class);
-        jak.setNotExcludedAllowedPatternsChecker(patternsChecker);
 
         return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }

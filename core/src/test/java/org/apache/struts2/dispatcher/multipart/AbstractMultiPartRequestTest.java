@@ -525,6 +525,28 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
     }
 
+    @Test
+    public void maliciousFilename() throws IOException {
+        String content = formFile("file1", "../test1.csv", "1,2,3,4") +
+                formField("param", "expression") +
+                endline + "--" + boundary + "--";
+
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors())
+                .isEmpty();
+
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable()
+                .hasSize(1);
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable()
+                .containsOnly("param");
+        assertThat(multiPart.getFileNames("file1")).isEmpty();
+    }
+
     protected String formFile(String fieldName, String filename, String content) {
         return endline +
                 "--" + boundary + endline +

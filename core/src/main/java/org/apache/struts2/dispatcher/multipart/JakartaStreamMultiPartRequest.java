@@ -116,7 +116,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         String fieldName = fileItemInput.getFieldName();
         String fieldValue = readStream(fileItemInput.getInputStream());
 
-        if (!isAccepted(fieldName)) {
+        if (isExcluded(fieldName)) {
             LOG.warn(() -> "Form field [%s] is rejected!".formatted(normalizeSpace(fieldName)));
             return;
         }
@@ -198,7 +198,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        if (!isAccepted(fileItemInput.getName())) {
+        if (isExcluded(fileItemInput.getName())) {
             LOG.warn(() -> "File field [%s] rejected".formatted(normalizeSpace(fileItemInput.getName())));
             return;
         }

@@ -79,7 +79,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
         LOG.debug("Item: {} is a normal form field", item.getName());
 
-        if (!isAccepted(item.getFieldName())) {
+        if (isExcluded(item.getFieldName())) {
             LOG.warn(() -> "Form field [%s] is rejected!".formatted(normalizeSpace(item.getFieldName())));
             return;
         }
@@ -105,12 +105,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processFileField(DiskFileItem item) {
-        if (!isAccepted(item.getName())) {
+        if (isExcluded(item.getName())) {
             LOG.warn(() -> "File name [%s] is not accepted".formatted(normalizeSpace(item.getName())));
             return;
         }
 
-        if (!isAccepted(item.getFieldName())) {
+        if (isExcluded(item.getFieldName())) {
             LOG.warn(() -> "Field name [%s] is not accepted".formatted(normalizeSpace(item.getFieldName())));
             return;
         }

@@ -19,6 +19,8 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.security.DefaultExcludedPatternsChecker;
+import org.apache.struts2.security.ExcludedPatternsChecker;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
@@ -31,7 +33,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
-import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -52,6 +53,8 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
+
+    private static final String EXCLUDED_FILE_PATTERN = ".*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*";
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -108,7 +111,13 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      */
     protected Map<String, List<String>> parameters = new HashMap<>();
 
-    protected NotExcludedAcceptedPatternsChecker patternsChecker;
+
+    private final ExcludedPatternsChecker patternsChecker;
+
+    protected AbstractMultiPartRequest() {
+        patternsChecker = new DefaultExcludedPatternsChecker();
+        ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+    }
 
     /**
      * @param bufferSize Sets the buffer size to be used.
@@ -181,11 +190,6 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
                 : request.getCharacterEncoding();
 
         return Charset.forName(charsetStr);
-    }
-
-    @Inject
-    public void setNotExcludedAllowedPatternsChecker(NotExcludedAcceptedPatternsChecker patternsChecker) {
-        this.patternsChecker = patternsChecker;
     }
 
     /**
@@ -425,8 +429,12 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         }
     }
 
-    protected boolean isAccepted(String fileName) {
-        return patternsChecker.isAllowed(fileName).isAllowed();
+    /**
+     * @param fileName file name to check
+     * @return true if the file name is excluded
+     */
+    protected boolean isExcluded(String fileName) {
+        return patternsChecker.isExcluded(fileName).isExcluded();
     }
 
 }

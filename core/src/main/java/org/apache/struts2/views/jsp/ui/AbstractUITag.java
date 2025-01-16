@@ -261,10 +261,12 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.onchange = onchange;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
@@ -277,18 +279,22 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.key = key;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setJavascriptTooltip(String javascriptTooltip) {
         this.javascriptTooltip = javascriptTooltip;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipCssClass(String tooltipCssClass) {
         this.tooltipCssClass = tooltipCssClass;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipDelay(String tooltipDelay) {
         this.tooltipDelay = tooltipDelay;
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipIconPath(String tooltipIconPath) {
         this.tooltipIconPath = tooltipIconPath;
     }

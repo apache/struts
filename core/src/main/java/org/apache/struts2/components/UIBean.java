@@ -300,7 +300,7 @@ import java.util.function.Function;
  * <!-- END SNIPPET: javascriptRelatedAttributes -->
  *
  * <!-- START SNIPPET: tooltipattributes -->
- *
+ * <strong>Deprecated since 7.0.1</strong
  * <table border="1" summary="">
  *  <tr>
  *     <td>Attribute</td>
@@ -344,7 +344,7 @@ import java.util.function.Function;
  *
  * <!-- START SNIPPET: tooltipdescription -->
  * <p>
- * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </b>
+ * <strong>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </strong>
  * </p>
  *
  * <p>
@@ -380,7 +380,7 @@ import java.util.function.Function;
  *
  * <pre>
  * <!-- START SNIPPET: tooltipexample -->
- *
+ * <strong>Deprecated since 7.0.1</strong>
  * &lt;!-- Example 1: --&gt;
  * &lt;s:form
  *          tooltipDelay="500"
@@ -968,6 +968,7 @@ public abstract class UIBean extends Component {
         }
     }
 
+    @Deprecated(since = "7.0.1", forRemoval = true)
     protected Map<String, String> getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getAttributes().get("tooltipConfig");
         Map<String, String> result = new LinkedHashMap<>();
@@ -1237,11 +1238,13 @@ public abstract class UIBean extends Component {
     }
 
     @StrutsTagAttribute(description="Set the tooltip of this particular component")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
 
     @StrutsTagAttribute(description="Deprecated. Use individual tooltip configuration attributes instead.")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
@@ -1252,22 +1255,26 @@ public abstract class UIBean extends Component {
     }
 
     @StrutsTagAttribute(description="Use JavaScript to generate tooltips", type="Boolean", defaultValue="false")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setJavascriptTooltip(String javascriptTooltip) {
         this.javascriptTooltip = javascriptTooltip;
     }
 
     @StrutsTagAttribute(description="CSS class applied to JavaScrip tooltips", defaultValue="StrutsTTClassic")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipCssClass(String tooltipCssClass) {
         this.tooltipCssClass = tooltipCssClass;
     }
 
     @StrutsTagAttribute(description="Delay in milliseconds, before showing JavaScript tooltips ",
         defaultValue="Classic")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipDelay(String tooltipDelay) {
         this.tooltipDelay = tooltipDelay;
     }
 
     @StrutsTagAttribute(description="Icon path used for image that will have the tooltip")
+    @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipIconPath(String tooltipIconPath) {
         this.tooltipIconPath = tooltipIconPath;
     }

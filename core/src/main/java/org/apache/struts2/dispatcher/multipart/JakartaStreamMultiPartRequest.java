@@ -25,7 +25,6 @@ import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededExcepti
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -315,7 +314,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
-        if (!isAccepted(fieldName)) {
+        if (isExcluded(fieldName)) {
             LOG.warn("Form field [{}] rejected!", normalizeSpace(fieldName));
             return;
         }
@@ -347,7 +346,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        if (!isAccepted(itemStream.getName())) {
+        if (isExcluded(itemStream.getName())) {
             LOG.warn("File field [{}] rejected", normalizeSpace(itemStream.getName()));
             return;
         }

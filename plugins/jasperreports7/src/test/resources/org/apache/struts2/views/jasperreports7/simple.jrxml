@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<jasperReport name="SimpleReport" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802"
+              uuid="3de5a1ab-15fd-4dec-bc88-dc18453bf715">
+    <parameter name="title"/>
+    <field name="firstName"/>
+    <field name="lastName"/>
+
+    <title height="40">
+        <element kind="textField" x="0" y="10" width="515" height="30" fontSize="22.0" hTextAlign="Center"
+                 uuid="26fc2f4f-de0f-411a-b386-e67caf96f441">
+            <expression><![CDATA[$P{title}]]> + " Report"</expression>
+        </element>
+    </title>
+    <detail>
+        <band height="16">
+            <element kind="textField" x="0" y="0" width="100" height="16"
+                     uuid="ef0654b5-f925-42ed-a611-bc5b3db61c43">
+                <expression>"Hello " + <![CDATA[$F{firstName}]]> + " " + <![CDATA[$F{lastName}]]> + "!"</expression>
+            </element>
+        </band>
+    </detail>
+</jasperReport>

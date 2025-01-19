@@ -236,7 +236,13 @@ class ContainerImpl implements Container {
             Inject annotation = findInject(annotationsIterator.next());
             String name = annotation == null ? defaultName : annotation.value();
             Key<?> key = Key.newInstance(parameterType, name);
-            parameterInjectors.add(createParameterInjector(key, member));
+            try {
+                parameterInjectors.add(createParameterInjector(key, member));
+            } catch (MissingDependencyException e) {
+                if (annotation != null && annotation.required()) {
+                    throw e;
+                }
+            }
         }
 
         return toArray(parameterInjectors);
@@ -419,8 +425,14 @@ class ContainerImpl implements Container {
                 // First time through...
                 constructionContext.startConstruction();
                 try {
-                    if (constructor.getParameterCount() > 0 && parameterInjectors == null) {
+                    if (constructor.getParameterCount() == 0) {
+                        t = constructor.newInstance();
+                    } else if (constructor.getParameterCount() > 0 && parameterInjectors == null) {
                         t = constructor.newInstance(new Object[constructor.getParameterCount()]);
+                    } else if (constructor.getParameterCount() > parameterInjectors.length) {
+                        final Object[] parameters = getParameters(constructor, context, parameterInjectors);
+                        final Object[] finalParameters = Arrays.copyOf(parameters, constructor.getParameterCount());
+                        t = constructor.newInstance(finalParameters);
                     } else {
                         final Object[] parameters = getParameters(constructor, context, parameterInjectors);
                         t = constructor.newInstance(parameters);

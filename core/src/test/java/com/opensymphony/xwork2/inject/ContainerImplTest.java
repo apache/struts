@@ -28,6 +28,7 @@ import java.util.concurrent.Callable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -90,6 +91,20 @@ public class ContainerImplTest {
     public void optionalConstructorInjector() {
         OptionalConstructorCheck constructorCheck = c.inject(OptionalConstructorCheck.class);
         assertNull(constructorCheck.getName());
+    }
+
+    @Test
+    public void requiredOptionalConstructorInjector() {
+        RequiredOptionalConstructorCheck constructorCheck = c.inject(RequiredOptionalConstructorCheck.class);
+        assertNotNull(constructorCheck.getExistingName());
+        assertNull(constructorCheck.getNonExitingName());
+    }
+
+    @Test
+    public void optionalRequiredConstructorInjector() {
+        OptionalRequiredConstructorCheck constructorCheck = c.inject(OptionalRequiredConstructorCheck.class);
+        assertNull(constructorCheck.getNonExitingName());
+        assertNotNull(constructorCheck.getExistingName());
     }
 
     /**
@@ -241,6 +256,50 @@ public class ContainerImplTest {
 
         public String getName() {
             return name;
+        }
+    }
+
+    public static class RequiredOptionalConstructorCheck {
+        private final String existingName;
+        private final String nonExitingName;
+
+        @Inject(required = false)
+        public RequiredOptionalConstructorCheck(
+                @Inject("constructorCheck.name") String existingName,
+                @Inject(value = "nonExistingConstant", required = false) String nonExitingName
+        ) {
+            this.existingName = existingName;
+            this.nonExitingName = nonExitingName;
+        }
+
+        public String getExistingName() {
+            return existingName;
+        }
+
+        public String getNonExitingName() {
+            return nonExitingName;
+        }
+    }
+
+    public static class OptionalRequiredConstructorCheck {
+        private final String existingName;
+        private final String nonExitingName;
+
+        @Inject(required = false)
+        public OptionalRequiredConstructorCheck(
+                @Inject(value = "nonExistingConstant", required = false) String nonExitingName,
+                @Inject("constructorCheck.name") String existingName
+        ) {
+            this.existingName = existingName;
+            this.nonExitingName = nonExitingName;
+        }
+
+        public String getExistingName() {
+            return existingName;
+        }
+
+        public String getNonExitingName() {
+            return nonExitingName;
         }
     }
 

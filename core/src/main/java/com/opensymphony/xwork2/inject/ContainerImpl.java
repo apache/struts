@@ -236,11 +236,40 @@ class ContainerImpl implements Container {
             Inject annotation = findInject(annotationsIterator.next());
             String name = annotation == null ? defaultName : annotation.value();
             Key<?> key = Key.newInstance(parameterType, name);
+            parameterInjectors.add(createParameterInjector(key, member));
+        }
+
+        return toArray(parameterInjectors);
+    }
+
+    /**
+     * Gets parameter injectors with nulls for optional dependencies.
+     *
+     * @param member         to which the parameters belong
+     * @param annotations    on the parameters
+     * @param parameterTypes parameter types
+     * @return injections
+     */
+    <M extends AccessibleObject & Member> ParameterInjector<?>[] getParametersInjectorsWithNulls(
+        M member,
+        Annotation[][] annotations,
+        Class<?>[] parameterTypes,
+        String defaultName
+    ) throws MissingDependencyException {
+        final List<ParameterInjector<?>> parameterInjectors = new ArrayList<>();
+
+        final Iterator<Annotation[]> annotationsIterator = Arrays.asList(annotations).iterator();
+        for (Class<?> parameterType : parameterTypes) {
+            Inject annotation = findInject(annotationsIterator.next());
+            String name = annotation == null ? defaultName : annotation.value();
+            Key<?> key = Key.newInstance(parameterType, name);
             try {
                 parameterInjectors.add(createParameterInjector(key, member));
             } catch (MissingDependencyException e) {
                 if (annotation != null && annotation.required()) {
                     throw e;
+                } else {
+                    parameterInjectors.add(createNullParameterInjector(key, member));
                 }
             }
         }
@@ -253,6 +282,23 @@ class ContainerImpl implements Container {
         if (factory == null) {
             throw new MissingDependencyException("No mapping found for dependency " + key + " in " + member + ".");
         }
+
+        final ExternalContext<T> externalContext = ExternalContext.newInstance(member, key, this);
+        return new ParameterInjector<>(externalContext, factory);
+    }
+
+    <T> ParameterInjector<T> createNullParameterInjector(Key<T> key, Member member) throws MissingDependencyException {
+        final InternalFactory<? extends T> factory = new InternalFactory<T>() {
+            @Override
+            public T create(InternalContext context) {
+                return null;
+            }
+
+            @Override
+            public Class<? extends T> type() {
+                return key.getType();
+            }
+        };
 
         final ExternalContext<T> externalContext = ExternalContext.newInstance(member, key, this);
         return new ParameterInjector<>(externalContext, factory);
@@ -367,7 +413,7 @@ class ContainerImpl implements Container {
             Inject inject, ContainerImpl container, Constructor<T> constructor) throws MissingDependencyException {
             return constructor.getParameterTypes().length == 0
                 ? null // default constructor.
-                : container.getParametersInjectors(
+                : container.getParametersInjectorsWithNulls(
                 constructor,
                 constructor.getParameterAnnotations(),
                 constructor.getParameterTypes(),
@@ -425,18 +471,8 @@ class ContainerImpl implements Container {
                 // First time through...
                 constructionContext.startConstruction();
                 try {
-                    if (constructor.getParameterCount() == 0) {
-                        t = constructor.newInstance();
-                    } else if (constructor.getParameterCount() > 0 && parameterInjectors == null) {
-                        t = constructor.newInstance(new Object[constructor.getParameterCount()]);
-                    } else if (constructor.getParameterCount() > parameterInjectors.length) {
-                        final Object[] parameters = getParameters(constructor, context, parameterInjectors);
-                        final Object[] finalParameters = Arrays.copyOf(parameters, constructor.getParameterCount());
-                        t = constructor.newInstance(finalParameters);
-                    } else {
-                        final Object[] parameters = getParameters(constructor, context, parameterInjectors);
-                        t = constructor.newInstance(parameters);
-                    }
+                    final Object[] parameters = getParameters(constructor, context, parameterInjectors);
+                    t = constructor.newInstance(parameters);
                     constructionContext.setProxyDelegates(t);
                 } finally {
                     constructionContext.finishConstruction();

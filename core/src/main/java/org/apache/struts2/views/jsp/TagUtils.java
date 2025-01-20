@@ -29,6 +29,8 @@ import org.apache.struts2.dispatcher.AttributeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
+
 public class TagUtils {
 
     private static final Logger LOG = LogManager.getLogger(TagUtils.class);
@@ -46,8 +48,8 @@ public class TagUtils {
         } else {
             LOG.trace("Adds the current PageContext to ActionContext");
             stack.getActionContext()
-                .withPageContext(pageContext)
-                .with("attr", new AttributeMap(stack.getContext()));
+                    .withPageContext(pageContext)
+                    .with(ATTRIBUTES, new AttributeMap(stack.getContext()));
         }
 
         return stack;

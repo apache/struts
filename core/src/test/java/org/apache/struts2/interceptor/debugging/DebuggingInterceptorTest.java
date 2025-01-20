@@ -26,9 +26,10 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ValueStack;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.assertj.core.util.Maps;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -47,6 +48,7 @@ public class DebuggingInterceptorTest extends StrutsJUnit4InternalTestCase {
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     private ActionContext context;
+    private TestAction action;
 
     @Test
     public void noDevMode() throws Exception {
@@ -509,6 +511,31 @@ public class DebuggingInterceptorTest extends StrutsJUnit4InternalTestCase {
                 """);
     }
 
+    @Test
+    public void allowlist() throws Exception {
+        interceptor.setDevMode("true");
+        context.withParameters(HttpParameters.create(Maps.newHashMap("debug", "browser")).build());
+
+        assertThat(container.getInstance(ThreadAllowlist.class))
+                .extracting(ThreadAllowlist::getAllowlist).asInstanceOf(InstanceOfAssertFactories.SET)
+                .isEmpty();
+
+        interceptor.intercept(invocation);
+        invocation.invoke();
+
+        assertThat(container.getInstance(ThreadAllowlist.class))
+                .extracting(ThreadAllowlist::getAllowlist).asInstanceOf(InstanceOfAssertFactories.SET)
+                .contains(
+                        org.apache.struts2.interceptor.ValidationAware.class,
+                        org.apache.struts2.Validateable.class,
+                        org.apache.struts2.action.Action.class,
+                        org.apache.struts2.text.TextProvider.class,
+                        org.apache.struts2.ActionSupport.class,
+                        org.apache.struts2.locale.LocaleProvider.class,
+                        org.apache.struts2.TestAction.class
+                );
+    }
+
     @Before
     public void before() {
         request = new MockHttpServletRequest();
@@ -530,23 +557,13 @@ public class DebuggingInterceptorTest extends StrutsJUnit4InternalTestCase {
         invocation = new MockActionInvocation();
         invocation.setResultCode("mock");
         invocation.setInvocationContext(context);
-        invocation.setAction(new TestAction());
+        action = new TestAction();
+        invocation.setAction(action);
         invocation.setStack(valueStack);
 
         valueStack.set("action", invocation.getAction());
 
         context = context.withActionInvocation(invocation).bind();
-    }
-
-    @After
-    public void after() {
-        interceptor.destroy();
-        interceptor = null;
-        invocation = null;
-
-        servletContext = null;
-        request = null;
-        response = null;
     }
 
 }

@@ -23,7 +23,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -204,9 +204,7 @@ public class DebugTagTest extends AbstractUITagTest {
     }
 
     private void setDevMode(final boolean devMode) {
-        setStrutsConstant(new HashMap<>() {{
-            put(StrutsConstants.STRUTS_DEVMODE, Boolean.toString(devMode));
-        }});
+        setStrutsConstant(Collections.singletonMap(StrutsConstants.STRUTS_DEVMODE, Boolean.toString(devMode)));
     }
 
     /**

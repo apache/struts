@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -32,6 +31,7 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.dispatcher.AttributeMap;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
@@ -47,6 +47,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import static java.util.Collections.emptyMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
 
 /**
  * <p>
@@ -440,6 +444,9 @@ public abstract class UIBean extends Component {
 
     private static final Logger LOG = LogManager.getLogger(UIBean.class);
 
+    static final String TEMPLATE_DIR = "templateDir";
+    static final String THEME = "theme";
+
     protected static final String ATTR_FIELD_VALUE = "fieldValue";
     protected static final String ATTR_NAME_VALUE = "nameValue";
     protected static final String ATTR_VALUE = "value";
@@ -602,13 +609,18 @@ public abstract class UIBean extends Component {
             result = findString(this.templateDir);
         }
 
+        // Check Request, Session, Application scopes
+        if (isBlank(result)) {
+            result = (String) getAttrMap().get(TEMPLATE_DIR);
+        }
+
         // Default template set
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             result = defaultTemplateDir;
         }
 
         // Defaults to 'template'
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             result = "template";
         }
 
@@ -622,26 +634,36 @@ public abstract class UIBean extends Component {
             result = findString(this.theme);
         }
 
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             Form form = (Form) findAncestor(Form.class);
             if (form != null) {
                 result = form.getTheme();
             }
         }
 
+        // Check Request, Session, Application scopes
+        if (isBlank(result)) {
+            result = (String) getAttrMap().get(THEME);
+        }
+
         // Default theme set
-        if (StringUtils.isBlank(result)) {
+        if (isBlank(result)) {
             result = defaultUITheme;
         }
 
         return result;
     }
 
+    private Map<String, Object> getAttrMap() {
+        AttributeMap attrMap = (AttributeMap) getStack().getContext().get(ATTRIBUTES);
+        return attrMap != null ? attrMap : emptyMap();
+    }
+
     public void evaluateParams() {
         String gotTheme = getTheme();
 
-        addParameter("templateDir", getTemplateDir());
-        addParameter("theme", gotTheme);
+        addParameter(TEMPLATE_DIR, getTemplateDir());
+        addParameter(THEME, gotTheme);
         addParameter("template", template != null ? findString(template) : getDefaultTemplate());
         addParameter("dynamicAttributes", dynamicAttributes);
         addParameter("themeExpansionToken", uiThemeExpansionToken);

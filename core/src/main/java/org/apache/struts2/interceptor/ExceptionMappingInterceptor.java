@@ -18,11 +18,14 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.config.entities.ExceptionMappingConfig;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.util.List;
 import java.util.Map;
@@ -42,11 +45,11 @@ import java.util.Map;
  * you make this interceptor the first interceptor on the stack, ensuring that it has full access to catch any
  * exception, even those caused by other interceptors.
  * </p>
- *
+ * <p>
  * <!-- END SNIPPET: description -->
  *
  * <p><u>Interceptor parameters:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
@@ -64,11 +67,11 @@ import java.util.Map;
  * The parameters above enables us to log all thrown exceptions with stacktace in our own logfile,
  * and present a friendly webpage (with no stacktrace) to the end user.
  * </p>
- *
+ * <p>
  * <!-- END SNIPPET: parameters -->
  *
  * <p><u>Extending the interceptor:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: extending -->
  * <p>
  * If you want to add custom handling for publishing the Exception, you may override
@@ -158,11 +161,17 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
 
+    private transient ThreadAllowlist threadAllowlist;
+
     protected Logger categoryLogger;
     protected boolean logEnabled = false;
     protected String logCategory;
     protected String logLevel;
 
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
+    }
 
     public boolean isLogEnabled() {
         return logEnabled;
@@ -173,20 +182,20 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     }
 
     public String getLogCategory() {
-		return logCategory;
-	}
+        return logCategory;
+    }
 
-	public void setLogCategory(String logCatgory) {
-		this.logCategory = logCatgory;
-	}
+    public void setLogCategory(String logCategory) {
+        this.logCategory = logCategory;
+    }
 
-	public String getLogLevel() {
-		return logLevel;
-	}
+    public String getLogLevel() {
+        return logLevel;
+    }
 
-	public void setLogLevel(String logLevel) {
-		this.logLevel = logLevel;
-	}
+    public void setLogLevel(String logLevel) {
+        this.logLevel = logLevel;
+    }
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -200,13 +209,16 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
             }
             List<ExceptionMappingConfig> exceptionMappings = invocation.getProxy().getConfig().getExceptionMappings();
             ExceptionMappingConfig mappingConfig = this.findMappingFromExceptions(exceptionMappings, e);
-            if (mappingConfig != null && mappingConfig.getResult()!=null) {
+            if (mappingConfig != null && mappingConfig.getResult() != null) {
                 Map<String, String> mappingParams = mappingConfig.getParams();
                 // create a mutable HashMap since some interceptors will remove parameters, and parameterMap is immutable
                 HttpParameters parameters = HttpParameters.create(mappingParams).build();
                 invocation.getInvocationContext().withParameters(parameters);
                 result = mappingConfig.getResult();
-                publishException(invocation, new ExceptionHolder(e));
+                ExceptionHolder holder = new ExceptionHolder(e);
+                threadAllowlist.allowClass(holder.getClass());
+                threadAllowlist.allowClass(e.getClass());
+                publishException(invocation, holder);
             } else {
                 throw e;
             }
@@ -221,55 +233,45 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
      * @param e the exception to log.
      */
     protected void handleLogging(Exception e) {
-    	if (logCategory != null) {
-        	if (categoryLogger == null) {
-        		// init category logger
-        		categoryLogger = LogManager.getLogger(logCategory);
-        	}
-        	doLog(categoryLogger, e);
-    	} else {
-    		doLog(LOG, e);
-    	}
+        if (logCategory != null) {
+            if (categoryLogger == null) {
+                // init category logger
+                categoryLogger = LogManager.getLogger(logCategory);
+            }
+            doLog(categoryLogger, e);
+        } else {
+            doLog(LOG, e);
+        }
     }
 
     /**
      * Performs the actual logging.
      *
-     * @param logger  the provided logger to use.
-     * @param e  the exception to log.
+     * @param logger the provided logger to use.
+     * @param e      the exception to log.
      */
     protected void doLog(Logger logger, Exception e) {
-    	if (logLevel == null) {
-    		logger.debug(e.getMessage(), e);
-    		return;
-    	}
+        if (logLevel == null) {
+            logger.debug(e.getMessage(), e);
+            return;
+        }
 
-    	if ("trace".equalsIgnoreCase(logLevel)) {
-    		logger.trace(e.getMessage(), e);
-    	} else if ("debug".equalsIgnoreCase(logLevel)) {
-    		logger.debug(e.getMessage(), e);
-    	} else if ("info".equalsIgnoreCase(logLevel)) {
-    		logger.info(e.getMessage(), e);
-    	} else if ("warn".equalsIgnoreCase(logLevel)) {
-    		logger.warn(e.getMessage(), e);
-    	} else if ("error".equalsIgnoreCase(logLevel)) {
-    		logger.error(e.getMessage(), e);
-    	} else if ("fatal".equalsIgnoreCase(logLevel)) {
-    		logger.fatal(e.getMessage(), e);
-    	} else {
-    		throw new IllegalArgumentException("LogLevel [" + logLevel + "] is not supported");
-    	}
+        Level level = Level.getLevel(logLevel);
+        if (level == null)  {
+            throw new IllegalArgumentException("LogLevel [" + logLevel + "] is not supported");
+        }
+        logger.log(level, e.getMessage(), e);
     }
 
     /**
      * Try to find appropriate {@link ExceptionMappingConfig} based on provided Throwable
      *
      * @param exceptionMappings list of defined exception mappings
-     * @param t caught exception
+     * @param t                 caught exception
      * @return appropriate mapping or null
      */
     protected ExceptionMappingConfig findMappingFromExceptions(List<ExceptionMappingConfig> exceptionMappings, Throwable t) {
-    	ExceptionMappingConfig config = null;
+        ExceptionMappingConfig config = null;
         // Check for specific exception mappings.
         if (exceptionMappings != null) {
             int deepest = Integer.MAX_VALUE;
@@ -288,15 +290,15 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
      * Return the depth to the superclass matching. 0 means ex matches exactly. Returns -1 if there's no match.
      * Otherwise, returns depth. Lowest depth wins.
      *
-     * @param exceptionMapping  the mapping classname
-     * @param t  the cause
+     * @param exceptionMapping the mapping classname
+     * @param t                the cause
      * @return the depth, if not found -1 is returned.
      */
     public int getDepth(String exceptionMapping, Throwable t) {
         return getDepth(exceptionMapping, t.getClass(), 0);
     }
 
-    private int getDepth(String exceptionMapping, Class exceptionClass, int depth) {
+    private int getDepth(String exceptionMapping, Class<?> exceptionClass, int depth) {
         if (exceptionClass.getName().contains(exceptionMapping)) {
             // Found it!
             return depth;
@@ -312,7 +314,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
      * Default implementation to handle ExceptionHolder publishing. Pushes given ExceptionHolder on the stack.
      * Subclasses may override this to customize publishing.
      *
-     * @param invocation The invocation to publish Exception for.
+     * @param invocation      The invocation to publish Exception for.
      * @param exceptionHolder The exceptionHolder wrapping the Exception to publish.
      */
     protected void publishException(ActionInvocation invocation, ExceptionHolder exceptionHolder) {

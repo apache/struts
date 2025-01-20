@@ -18,7 +18,10 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +43,7 @@ public class Debug extends UIBean {
 
     protected ReflectionProvider reflectionProvider;
 
+    private ThreadAllowlist threadAllowlist;
 
     public Debug(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -48,6 +52,11 @@ public class Debug extends UIBean {
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     protected String getDefaultTemplate() {
@@ -59,22 +68,35 @@ public class Debug extends UIBean {
 
         if (showDebug()) {
             ValueStack stack = getStack();
-            Iterator iter = stack.getRoot().iterator();
-            List stackValues = new ArrayList(stack.getRoot().size());
+            allowList(stack.getRoot());
+
+            Iterator<Object> iter = stack.getRoot().iterator();
+            List<Object> stackValues = new ArrayList<>(stack.getRoot().size());
             while (iter.hasNext()) {
                 Object o = iter.next();
-                Map values;
+                Map<String, Object> values;
                 try {
                     values = reflectionProvider.getBeanMap(o);
                 } catch (Exception e) {
                     throw new StrutsException("Caught an exception while getting the property values of " + o, e);
                 }
+                allowListClass(o);
                 stackValues.add(new DebugMapEntry(o.getClass().getName(), values));
             }
 
             addParameter("stackValues", stackValues);
         }
         return result;
+    }
+
+    private void allowList(CompoundRoot root) {
+        root.forEach(this::allowListClass);
+    }
+
+    private void allowListClass(Object o) {
+        threadAllowlist.allowClass(o.getClass());
+        ClassUtils.getAllSuperclasses(o.getClass()).forEach(threadAllowlist::allowClass);
+        ClassUtils.getAllInterfaces(o.getClass()).forEach(threadAllowlist::allowClass);
     }
 
     @Override
@@ -91,17 +113,17 @@ public class Debug extends UIBean {
         return (devMode || Boolean.TRUE == PrepareOperations.getDevModeOverride());
     }
 
-    private static class DebugMapEntry implements Map.Entry {
-        private final Object key;
+    private static class DebugMapEntry implements Map.Entry<String, Object> {
+        private final String key;
         private Object value;
 
-        DebugMapEntry(Object key, Object value) {
+        DebugMapEntry(String key, Object value) {
             this.key = key;
             this.value = value;
         }
 
         @Override
-        public Object getKey() {
+        public String getKey() {
             return key;
         }
 

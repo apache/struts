@@ -18,21 +18,23 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.AbstractInterceptor;
-import org.apache.struts2.util.ValueStack;
-import org.apache.struts2.util.reflection.ReflectionProvider;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -101,10 +103,10 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "org.apache.struts2.", "xwork."};
     private final Set<String> ignoreKeys = Set.of(
-        DispatcherConstants.APPLICATION,
-        DispatcherConstants.SESSION,
-        DispatcherConstants.PARAMETERS,
-        DispatcherConstants.REQUEST
+            DispatcherConstants.APPLICATION,
+            DispatcherConstants.SESSION,
+            DispatcherConstants.PARAMETERS,
+            DispatcherConstants.REQUEST
     );
 
     private final static String XML_MODE = "xml";
@@ -126,6 +128,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private boolean consoleEnabled = false;
     private ReflectionProvider reflectionProvider;
+    private transient ThreadAllowlist threadAllowlist;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
@@ -140,6 +143,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     @Inject
     public void setReflectionProvider(ReflectionProvider reflectionProvider) {
         this.reflectionProvider = reflectionProvider;
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     /*
@@ -200,7 +208,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 res.setContentType("text/plain");
 
                 try (PrintWriter writer =
-                         ServletActionContext.getResponse().getWriter()) {
+                             ServletActionContext.getResponse().getWriter()) {
                     writer.print(stack.findValue(cmd));
                 } catch (IOException ex) {
                     LOG.warn("Interceptor in: {} mode has failed!", COMMAND_MODE, ex);
@@ -217,6 +225,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                             String decorate = getParameter(DECORATE_PARAM);
                             ValueStack stack = ctx.getValueStack();
                             Object rootObject = stack.findValue(rootObjectExpression);
+                            allowListClass(rootObject);
 
                             try (StringWriter writer = new StringWriter()) {
                                 ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
@@ -228,8 +237,9 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
                                 //on the first request, response can be decorated
                                 //but we need plain text on the other ones
-                                if ("false".equals(decorate))
+                                if ("false".equals(decorate)) {
                                     ServletActionContext.getRequest().setAttribute("decorator", "none");
+                                }
 
                                 FreemarkerResult result = new FreemarkerResult();
                                 result.setFreemarkerManager(freemarkerManager);
@@ -239,7 +249,6 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                             } catch (Exception ex) {
                                 LOG.error("Unable to create debugging console", ex);
                             }
-
                         });
             }
         }
@@ -262,6 +271,14 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         }
     }
 
+    private void allowListClass(Object o) {
+        if (o != null) {
+            threadAllowlist.allowClass(o.getClass());
+            ClassUtils.getAllSuperclasses(o.getClass()).forEach(threadAllowlist::allowClass);
+            ClassUtils.getAllInterfaces(o.getClass()).forEach(threadAllowlist::allowClass);
+        }
+    }
+
     /**
      * Gets a single string from the request parameters
      *
@@ -277,12 +294,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
      * Prints the current context to the response in XML format.
      */
     protected void printContext() {
-        HttpServletResponse res = ServletActionContext.getResponse();
-        res.setContentType("text/xml");
+        HttpServletResponse response = ActionContext.getContext().getServletResponse();
+        response.setContentType("text/xml");
 
         try {
-            PrettyPrintWriter writer = new PrettyPrintWriter(
-                ServletActionContext.getResponse().getWriter());
+            PrettyPrintWriter writer = new PrettyPrintWriter(response.getWriter());
             printContext(writer);
             writer.close();
         } catch (IOException ex) {
@@ -311,6 +327,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 }
             }
             if (print) {
+                allowListClass(ctxMap.get(key));
                 serializeIt(ctxMap.get(key), key, writer, new ArrayList<>());
             }
         }
@@ -426,5 +443,3 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         return filter;
     }
 }
-
-

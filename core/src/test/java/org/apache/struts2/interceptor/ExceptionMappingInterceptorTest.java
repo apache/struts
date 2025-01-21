@@ -19,16 +19,17 @@
 package org.apache.struts2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.ValidationException;
-import org.apache.struts2.StrutsException;
 
 /**
  * Unit test for ExceptionMappingInterceptor.
@@ -52,7 +53,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         String result = interceptor.intercept(invocation);
         assertNotNull(stack.findValue("exception"));
         assertEquals(stack.findValue("exception"), exception);
-        assertEquals(result, "spooky");
+        assertEquals("spooky", result);
         ExceptionHolder holder = (ExceptionHolder) stack.getRoot().get(0); // is on top of the root
         assertNotNull(holder.getExceptionStack()); // to invoke the method for unit test
     }
@@ -67,7 +68,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         String result = interceptor.intercept(invocation);
         assertNotNull(stack.findValue("exception"));
         assertEquals(stack.findValue("exception"), exception);
-        assertEquals(result, "throwable");
+        assertEquals("throwable", result);
     }
 
     public void testNoThrownException() throws Exception {
@@ -77,7 +78,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockInvocation.matchAndReturn("getAction", action.proxy());
         String result = interceptor.intercept(invocation);
-        assertEquals(result, Action.SUCCESS);
+        assertEquals(Action.SUCCESS, result);
         assertNull(stack.findValue("exception"));
     }
 
@@ -106,7 +107,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
+            interceptor.setLogEnabled(true);
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -123,8 +124,8 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -141,9 +142,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("fatal");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("fatal");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -164,9 +165,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("error");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("error");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -183,9 +184,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("warn");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("warn");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -202,9 +203,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("info");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("info");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -221,9 +222,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("debug");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("debug");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -240,9 +241,9 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogCategory("showcase.unhandled");
-        	interceptor.setLogLevel("trace");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogCategory("showcase.unhandled");
+            interceptor.setLogLevel("trace");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (Exception e) {
@@ -259,12 +260,12 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.matchAndReturn("getAction", action.proxy());
 
         try {
-        	interceptor.setLogEnabled(true);
-        	interceptor.setLogLevel("xxx");
+            interceptor.setLogEnabled(true);
+            interceptor.setLogLevel("xxx");
             interceptor.intercept(invocation);
             fail("Should not have reached this point.");
         } catch (IllegalArgumentException e) {
-        	// success
+            // success
         }
     }
 
@@ -296,6 +297,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("getInvocationContext", ActionContext.of().bind());
         interceptor = new ExceptionMappingInterceptor();
+        interceptor.setThreadAllowlist(new ThreadAllowlist());
         interceptor.init();
     }
 

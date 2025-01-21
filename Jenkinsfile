@@ -81,7 +81,7 @@ pipeline {
         stage('Code Quality') {
           when {
             anyOf {
-              branch 'master'; branch 'release/struts-7-0-x'
+              branch 'main'
             }
           }
           steps {
@@ -92,7 +92,7 @@ pipeline {
         }
         stage('Build Source & JavaDoc') {
           when {
-            branch 'release/struts-7-0-x'
+            branch 'release/struts-6-7-x'
           }
           steps {
             dir("local-snapshots-dir/") {
@@ -103,7 +103,7 @@ pipeline {
         }
         stage('Deploy Snapshot') {
           when {
-            branch 'release/struts-7-0-x'
+            branch 'release/struts-6-7-x'
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
@@ -113,7 +113,7 @@ pipeline {
         }
         stage('Upload nightlies') {
           when {
-            branch 'release/struts-7-0-x'
+            branch 'release/struts-6-7-x'
           }
           steps {
             sh './mvnw -B package -DskipTests --no-transfer-progress'
@@ -170,7 +170,7 @@ pipeline {
         }
         stage('Build Source & JavaDoc') {
           when {
-            branch 'master'
+            branch 'main'
           }
           steps {
             dir("local-snapshots-dir/") {
@@ -181,7 +181,7 @@ pipeline {
         }
         stage('Deploy Snapshot') {
           when {
-            branch 'master'
+            branch 'main'
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
@@ -191,7 +191,7 @@ pipeline {
         }
         stage('Upload nightlies') {
           when {
-            branch 'master'
+            branch 'main'
           }
           steps {
             sh './mvnw -B package -DskipTests --no-transfer-progress'

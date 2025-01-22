@@ -69,7 +69,7 @@ pipeline {
       stages {
         stage('Test & Coverage') {
           steps {
-            sh './mvnw -B verify -Pcoverage -DskipAssembly --no-transfer-progress'
+            sh './mvnw -B verify -Pcoverage -DskipAssembly'
           }
           post {
             always {
@@ -81,56 +81,13 @@ pipeline {
         stage('Code Quality') {
           when {
             anyOf {
-              branch 'main'
+              branch 'release/struts-6-7-x'
             }
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --no-transfer-progress'
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
-          }
-        }
-        stage('Build Source & JavaDoc') {
-          when {
-            branch 'release/struts-6-7-x'
-          }
-          steps {
-            dir("local-snapshots-dir/") {
-              deleteDir()
-            }
-            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly --no-transfer-progress'
-          }
-        }
-        stage('Deploy Snapshot') {
-          when {
-            branch 'release/struts-6-7-x'
-          }
-          steps {
-            withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly --no-transfer-progress'
-            }
-          }
-        }
-        stage('Upload nightlies') {
-          when {
-            branch 'release/struts-6-7-x'
-          }
-          steps {
-            sh './mvnw -B package -DskipTests --no-transfer-progress'
-            sshPublisher(publishers: [
-                sshPublisherDesc(
-                    configName: 'Nightlies',
-                    transfers: [
-                        sshTransfer(
-                            remoteDirectory: '/struts/snapshot',
-                            removePrefix: 'assembly/target/assembly/out',
-                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
-                            cleanRemote: true
-                        )
-                    ],
-                    verbose: true
-                )
-            ])
           }
         }
       }
@@ -154,12 +111,12 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh './mvnw -B clean install -DskipTests -DskipAssembly --no-transfer-progress'
+            sh './mvnw -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
-            sh './mvnw -B verify --no-transfer-progress'
+            sh './mvnw -B verify -DskipAssembly'
           }
           post {
             always {
@@ -170,31 +127,31 @@ pipeline {
         }
         stage('Build Source & JavaDoc') {
           when {
-            branch 'main'
+            branch 'release/struts-6-7-x'
           }
           steps {
             dir("local-snapshots-dir/") {
               deleteDir()
             }
-            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly --no-transfer-progress'
+            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
           }
         }
         stage('Deploy Snapshot') {
           when {
-            branch 'main'
+            branch 'release/struts-6-7-x'
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly --no-transfer-progress'
+              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
             }
           }
         }
         stage('Upload nightlies') {
           when {
-            branch 'main'
+            branch 'release/struts-6-7-x'
           }
           steps {
-            sh './mvnw -B package -DskipTests --no-transfer-progress'
+            sh './mvnw -B package -DskipTests'
             sshPublisher(publishers: [
                 sshPublisherDesc(
                     configName: 'Nightlies',

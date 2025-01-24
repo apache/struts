@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>6.7.1-SNASPHOT</version>
+    <version>6.7.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>https://struts.apache.org/</url>
@@ -104,7 +104,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2024-12-18T13:42:43Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-01-24T06:58:03Z</project.build.outputTimestamp>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 

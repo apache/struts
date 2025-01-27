@@ -111,7 +111,7 @@
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.7.1</asm.version>
-        <byte-buddy.version>1.15.11</byte-buddy.version>
+        <byte-buddy.version>1.16.1</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <jackson.version>2.18.2</jackson.version>

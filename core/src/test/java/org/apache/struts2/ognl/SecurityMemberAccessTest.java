@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.ognl;
 
+import com.mockobjects.util.Null;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.test.TestBean2;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
@@ -390,7 +392,7 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void testDefaultPackageExclusionSetting() throws Exception {
-        sma.useDisallowDefaultPackageAccess(Boolean.TRUE.toString());
+        sma.useDisallowDefaultPackageAccess(TRUE.toString());
 
         Class<?> clazz = Class.forName("PackagelessAction");
         boolean actual = sma.isAccessible(null, clazz.getConstructor().newInstance(), clazz.getMethod("execute"), null);
@@ -685,7 +687,7 @@ public class SecurityMemberAccessTest {
         assertFalse("Access to method of excluded class isn't blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testBlockAccessIfClassIsExcluded_2() throws Exception {
         // given
         sma.useExcludedClasses(ClassLoader.class.getName());
@@ -712,7 +714,7 @@ public class SecurityMemberAccessTest {
         assertTrue("Invalid test! Access to method of non-excluded class is blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
         // given
         sma.useExcludedClasses(Class.class.getName());
@@ -848,6 +850,24 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
+    public void testAccessConstructorWhenDisallowProxyAccesses() {
+        sma.useDisallowProxyMemberAccess(TRUE.toString());
+        sma.useDisallowProxyObjectAccess(TRUE.toString());
+        boolean accessible = false;
+        boolean exceptionOccured = false;
+        try {
+            accessible = sma.isAccessible(context,
+                    ToBeInstanced.class,
+                    ToBeInstanced.class.getConstructors()[0],
+                    null);
+        } catch (NullPointerException npe) {
+            exceptionOccured=true;
+        }
+        assertFalse("Invalid test ! NPE occured!", exceptionOccured);
+        assertTrue("Invalid test ! constructor of ToBeInstanced class should be accessible", accessible);
+    }
+
+    @Test
     public void testPackageNameExclusionAsCommaDelimited() {
         // given
         sma.useExcludedPackageNames("java.lang");
@@ -864,7 +884,7 @@ public class SecurityMemberAccessTest {
      */
     @Test
     public void classInclusion() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getData");
@@ -881,7 +901,7 @@ public class SecurityMemberAccessTest {
      */
     @Test
     public void packageInclusion() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getData");
@@ -898,7 +918,7 @@ public class SecurityMemberAccessTest {
      */
     @Test
     public void classInclusion_subclass() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
         sma.useAllowlistClasses(TestBean2.class.getName());
 
         TestBean2 bean = new TestBean2();
@@ -912,7 +932,7 @@ public class SecurityMemberAccessTest {
      */
     @Test
     public void classInclusion_subclass_both() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
         sma.useAllowlistClasses(String.join(",", TestBean.class.getName(), TestBean2.class.getName()));
 
         TestBean2 bean = new TestBean2();
@@ -927,7 +947,7 @@ public class SecurityMemberAccessTest {
      */
     @Test
     public void packageInclusion_subclass() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
         sma.useAllowlistPackageNames(TestBean2.class.getPackage().getName());
 
         TestBean2 bean = new TestBean2();
@@ -944,8 +964,8 @@ public class SecurityMemberAccessTest {
         FooBarInterface proxyObject = mockHibernateProxy(new FooBar(), FooBarInterface.class);
         Method proxyMethod = proxyObject.getClass().getMethod("fooLogic");
 
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
-        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
+        sma.useDisallowProxyObjectAccess(TRUE.toString());
         sma.useAllowlistClasses(FooBar.class.getName());
 
         assertFalse(sma.checkAllowlist(proxyObject, proxyMethod));
@@ -960,7 +980,7 @@ public class SecurityMemberAccessTest {
         FooBarInterface proxyObject = mockHibernateProxy(new FooBar(), FooBarInterface.class);
         Method proxyMethod = proxyObject.getClass().getMethod("fooLogic");
 
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
         sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
         sma.useAllowlistClasses(FooBar.class.getName());
 
@@ -969,7 +989,7 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void packageInclusion_subclass_both() throws Exception {
-        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useEnforceAllowlistEnabled(TRUE.toString());
         sma.useAllowlistPackageNames(String.join(",",
                 TestBean.class.getPackage().getName(),
                 TestBean2.class.getPackage().getName()));
@@ -1083,7 +1103,7 @@ enum MyValues {
     ONE, TWO, THREE;
 
     public static MyValues[] values(String notUsed) {
-        return new MyValues[] {ONE, TWO, THREE};
+        return new MyValues[]{ONE, TWO, THREE};
     }
 }
 

@@ -18,46 +18,30 @@
  */
 package org.apache.struts2.ognl;
 
-import org.apache.struts2.SimpleAction;
-import org.apache.struts2.TestBean;
-import org.apache.struts2.text.TextProvider;
-import org.apache.struts2.XWorkTestCase;
-import org.apache.struts2.config.ConfigurationException;
-import org.apache.struts2.conversion.impl.ConversionData;
-import org.apache.struts2.conversion.impl.XWorkConverter;
-import org.apache.struts2.inject.ContainerBuilder;
-import org.apache.struts2.ognl.accessor.RootAccessor;
-import org.apache.struts2.test.StubConfigurationProvider;
-import org.apache.struts2.test.TestBean2;
-import org.apache.struts2.util.Bar;
-import org.apache.struts2.util.BarJunior;
-import org.apache.struts2.util.Cat;
-import org.apache.struts2.util.Dog;
-import org.apache.struts2.util.Foo;
-import org.apache.struts2.util.ValueStackFactory;
-import org.apache.struts2.util.location.LocatableProperties;
-import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
+import org.apache.struts2.*;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.DefaultPropertiesProvider;
+import org.apache.struts2.conversion.impl.ConversionData;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.ognl.accessor.RootAccessor;
+import org.apache.struts2.test.StubConfigurationProvider;
+import org.apache.struts2.test.TestBean2;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.util.Foo;
+import org.apache.struts2.util.*;
+import org.apache.struts2.util.location.LocatableProperties;
+import org.apache.struts2.util.reflection.ReflectionContextState;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.struts2.ognl.SecurityMemberAccessTest.reflectField;
 
@@ -251,11 +235,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
             if (logMissingProperties) {
                 assertEquals(3, testAppender.logEvents.size());
                 assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
-                    testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+                        testAppender.logEvents.get(0).getMessage().getFormattedMessage());
                 assertEquals("Could not find property [missingProp2]!",
-                    testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+                        testAppender.logEvents.get(1).getMessage().getFormattedMessage());
                 assertEquals("Could not find property [missingProp3]!",
-                    testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+                        testAppender.logEvents.get(2).getMessage().getFormattedMessage());
             } else {
                 assertEquals(0, testAppender.logEvents.size());
             }
@@ -332,7 +316,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
                 }
             });
             int repeat = Integer.parseInt(
-                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+                    container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
 
             try {
                 vs.findValue(StringUtils.repeat('.', repeat + 1), true);
@@ -1232,6 +1216,21 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull("accessed final private field (result not null) ?", accessedValue);
         accessedValue = vs.findValue("@org.apache.struts2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
         assertNull("accessed private field (result not null) ?", accessedValue);
+    }
+
+    public void testFindValueWithNewWhenDisallowProxyAccesses() {
+        enableDisallowProxyAccesses();
+        String value = "test";
+        String ognlResult;
+        ognlResult = (String) vs.findValue("new org.apache.struts2.ognl.ToBeInstanced('" + value + "').getValue()", String.class);
+
+        assertEquals(value, ognlResult);
+    }
+
+    private void enableDisallowProxyAccesses() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Boolean.TRUE.toString(),
+                StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Boolean.TRUE.toString()));
+        refreshContainerFields();
     }
 
     static class BadJavaBean {

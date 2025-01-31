@@ -1663,6 +1663,24 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertSame(e, e2); // Exception is cached
     }
 
+    public void testGetValueWithNewWhenDisallowProxyAccesses_shouldNotRaiseNPE() throws OgnlException {
+        Exception expected = null;
+        try {
+            resetOgnlUtil(Map.of(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Boolean.TRUE.toString(),
+                    StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Boolean.TRUE.toString()
+            ));
+
+            var root=new Object();
+
+            String value = "test";
+            String result = (String) ognlUtil.getValue("new org.apache.struts2.ognl.ToBeInstanced('" + value + "').getValue()", ognlUtil.createDefaultContext(root), root, String.class);
+            assertEquals(value, result);
+        } catch (NullPointerException e) {
+            expected = e;
+        }
+        assertNull(expected);
+    }
+
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.

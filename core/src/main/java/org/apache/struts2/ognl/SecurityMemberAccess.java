@@ -141,7 +141,7 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        if (target != null) {
+        if (target != null && member != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
                 if (!isStatic(member) && !Constructor.class.equals(member.getClass())) {
@@ -157,44 +157,44 @@ public class SecurityMemberAccess implements MemberAccess {
             }
         }
 
-        if (!checkProxyObjectAccess(target)) {
+        if (target != null && !checkProxyObjectAccess(target)) {
             LOG.warn("Access to proxy is blocked! Target [{}], proxy class [{}]", target, target.getClass().getName());
             return false;
         }
 
-        if (!checkProxyMemberAccess(target, member)) {
+        if (target != null && member != null && !checkProxyMemberAccess(target, member)) {
             LOG.warn("Access to proxy is blocked! Member class [{}] of target [{}], member [{}]", member.getDeclaringClass(), target, member);
             return false;
         }
 
-        if (!checkPublicMemberAccess(member)) {
+        if (member != null && !checkPublicMemberAccess(member)) {
             LOG.warn("Access to non-public [{}] is blocked!", member);
             return false;
         }
 
-        if (!checkStaticFieldAccess(member)) {
+        if (member != null && !checkStaticFieldAccess(member)) {
             LOG.warn("Access to static field [{}] is blocked!", member);
             return false;
         }
 
-        if (!checkStaticMethodAccess(member)) {
+        if (member != null && !checkStaticMethodAccess(member)) {
             LOG.warn("Access to static method [{}] is blocked!", member);
             return false;
         }
 
-        if (!checkDefaultPackageAccess(target, member)) {
+        if (target != null && member != null && !checkDefaultPackageAccess(target, member)) {
             return false;
         }
 
-        if (!checkExclusionList(target, member)) {
+        if (target != null && member != null && !checkExclusionList(target, member)) {
             return false;
         }
 
-        if (!checkAllowlist(target, member)) {
+        if (target != null && member != null && !checkAllowlist(target, member)) {
             return false;
         }
 
-        if (!isAcceptableProperty(propertyName)) {
+        if (propertyName != null && !isAcceptableProperty(propertyName)) {
             return false;
         }
 

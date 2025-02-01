@@ -141,6 +141,10 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
+        if (member == null){
+            return false;
+        }
+
         if (target != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
@@ -158,7 +162,7 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (!checkProxyObjectAccess(target)) {
-            LOG.warn("Access to proxy is blocked! Target [{}], proxy class [{}]", target, target.getClass().getName());
+            LOG.warn("Access to proxy is blocked! Target [{}], proxy class [{}]", target, getClassName(target));
             return false;
         }
 
@@ -199,6 +203,10 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         return true;
+    }
+
+    private static String getClassName(Object target) {
+        return target==null?null:target.getClass().getName();
     }
 
     /**
@@ -322,14 +330,14 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if proxy object access is allowed
      */
     protected boolean checkProxyObjectAccess(Object target) {
-        return !(disallowProxyObjectAccess && ProxyUtil.isProxy(target));
+        return !(disallowProxyObjectAccess && target!=null && ProxyUtil.isProxy(target));
     }
 
     /**
      * @return {@code true} if proxy member access is allowed
      */
     protected boolean checkProxyMemberAccess(Object target, Member member) {
-        return !(disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target));
+        return !(disallowProxyMemberAccess && target!=null && ProxyUtil.isProxyMember(member, target));
     }
 
     /**

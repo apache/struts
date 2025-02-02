@@ -18,9 +18,6 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.security.DefaultExcludedPatternsChecker;
-import org.apache.struts2.security.ExcludedPatternsChecker;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
@@ -28,11 +25,15 @@ import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.security.DefaultExcludedPatternsChecker;
+import org.apache.struts2.security.ExcludedPatternsChecker;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -54,7 +55,8 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
 
-    private static final String EXCLUDED_FILE_PATTERN = ".*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*";
+    private static final String EXCLUDED_FILE_PATTERN = "^(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$";
+    private static final String EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT = "^(?!action:[^<>&\"'|;\\\\/?*:]+(![^<>&\"'|;\\\\/?*:]+)?$)(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$\n";
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -114,9 +116,13 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private final ExcludedPatternsChecker patternsChecker;
 
-    protected AbstractMultiPartRequest() {
+    protected AbstractMultiPartRequest(String dmiValue) {
         patternsChecker = new DefaultExcludedPatternsChecker();
-        ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+        if (BooleanUtils.toBoolean(dmiValue)) {
+            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT);
+        } else {
+            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+        }
     }
 
     /**

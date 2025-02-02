@@ -25,6 +25,8 @@ import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpl
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -40,6 +42,16 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
+
+    public JakartaMultiPartRequest() {
+        super(Boolean.FALSE.toString());
+    }
+
+    public JakartaMultiPartRequest(
+            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
+    ) {
+        super(dmiValue);
+    }
 
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {

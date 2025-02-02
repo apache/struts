@@ -26,7 +26,9 @@ import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.inject.Inject;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,6 +57,16 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
+
+    public JakartaStreamMultiPartRequest() {
+        super(Boolean.FALSE.toString());
+    }
+
+    public JakartaStreamMultiPartRequest(
+            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
+    ) {
+        super(dmiValue);
+    }
 
     /**
      * Processes the upload.

@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -40,7 +41,8 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
 
-    private static final String EXCLUDED_FILE_PATTERN = ".*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*";
+    private static final String EXCLUDED_FILE_PATTERN = "^(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$";
+    private static final String EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT = "^(?!action:[^<>&\"'|;\\\\/?*:]+(![^<>&\"'|;\\\\/?*:]+)?$)(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$\n";
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -86,9 +88,13 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private final ExcludedPatternsChecker patternsChecker;
 
-    public AbstractMultiPartRequest() {
+    protected AbstractMultiPartRequest(String dmiValue) {
         patternsChecker = new DefaultExcludedPatternsChecker();
-        ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+        if (BooleanUtils.toBoolean(dmiValue)) {
+            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT);
+        } else {
+            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
+        }
     }
 
     /**

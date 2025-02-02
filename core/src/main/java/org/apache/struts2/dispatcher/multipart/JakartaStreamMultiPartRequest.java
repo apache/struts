@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -27,6 +28,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -204,6 +206,15 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                 errors.add(errorMessage);
             }
         }
+    }
+
+    public JakartaStreamMultiPartRequest() {
+        super(Boolean.FALSE.toString());
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public JakartaStreamMultiPartRequest(String dmiValue) {
+        super(dmiValue);
     }
 
     /**

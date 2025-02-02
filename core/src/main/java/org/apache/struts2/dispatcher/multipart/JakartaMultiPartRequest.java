@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -29,6 +30,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +60,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     // maps parameter name -> List of param values
     protected Map<String, List<String>> params = new HashMap<>();
+    public JakartaMultiPartRequest() {
+        super(Boolean.FALSE.toString());
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public JakartaMultiPartRequest(String dmiValue) {
+        super(dmiValue);
+    }
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's

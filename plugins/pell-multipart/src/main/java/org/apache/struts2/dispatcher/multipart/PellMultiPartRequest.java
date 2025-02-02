@@ -18,9 +18,11 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.inject.Inject;
 import http.utils.multipartrequest.ServletMultipartRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -37,6 +39,11 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
     private static final Logger LOG = LogManager.getLogger(PellMultiPartRequest.class);
 
     private ServletMultipartRequest multi;
+
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public PellMultiPartRequest(String dmiValue) {
+        super(dmiValue);
+    }
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's

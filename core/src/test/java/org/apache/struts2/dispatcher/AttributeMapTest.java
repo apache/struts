@@ -18,18 +18,6 @@
  */
 package org.apache.struts2.dispatcher;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.struts2.StrutsStatics;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -41,6 +29,22 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.jsp.PageContext;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AttributeMapTest {
 
@@ -359,6 +363,23 @@ public class AttributeMapTest {
 
         Object value = am.get("attr");
         assertEquals("value", value);
+    }
+
+    @Test
+    public void get_whenPageContextHasNoRequest() {
+        PageContext pageContext = mock(PageContext.class);
+        when(pageContext.getRequest()).thenReturn(null);
+
+        var req = new MockHttpServletRequest();
+        req.setAttribute("attr", "reqValue");
+
+        var attributeMap = new AttributeMap(Map.of(
+                StrutsStatics.PAGE_CONTEXT, pageContext,
+                DispatcherConstants.REQUEST, new RequestMap(req)
+        ));
+
+        assertEquals("reqValue", attributeMap.get("attr"));
+        verify(pageContext, never()).findAttribute(anyString());
     }
 
 }

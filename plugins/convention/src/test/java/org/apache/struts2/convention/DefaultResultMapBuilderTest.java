@@ -18,36 +18,48 @@
  */
 package org.apache.struts2.convention;
 
+import jakarta.servlet.ServletContext;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.entities.ResultTypeConfig;
-import org.apache.struts2.inject.Container;
-import junit.framework.TestCase;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
-import org.apache.struts2.convention.actions.result.*;
+import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
+import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
+import org.apache.struts2.convention.actions.result.ActionLevelResultsNamesAction;
+import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
+import org.apache.struts2.convention.actions.result.ClassLevelResultsAction;
+import org.apache.struts2.convention.actions.result.GlobalResultAction;
+import org.apache.struts2.convention.actions.result.GlobalResultOverrideAction;
+import org.apache.struts2.convention.actions.result.InheritedResultExtends;
+import org.apache.struts2.convention.actions.result.InheritedResultsExtends;
+import org.apache.struts2.convention.actions.result.OverrideInheritedResultExtends;
+import org.apache.struts2.convention.actions.result.OverrideResultAction;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.junit.Before;
+import org.junit.Test;
 
-import jakarta.servlet.ServletContext;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.apache.struts2.convention.ReflectionTools.getAnnotation;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
- * <p>
  * This class tests the simple result map builder.
- * </p>
  */
-public class DefaultResultMapBuilderTest extends TestCase {
+public class DefaultResultMapBuilderTest {
+
     private Container container;
     private ConventionsService conventionsService;
 
-    public void testBuild() throws Exception {
+    @Test
+    public void testBuild() {
         ServletContext context = mockServletContext("/WEB-INF/location");
 
         // Test with a slash
@@ -66,7 +78,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         verify(context, "/WEB-INF/location", results, false);
     }
 
-    public void testResultOverrride() throws Exception {
+    @Test
+    public void testResultOverride() throws Exception {
         ServletContext context = mockServletContext("/WEB-INF/location");
 
         // Test with a slash
@@ -80,7 +93,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("/WEB-INF/location/namespace/error-overriden.jsp", result.getParams().get("location"));
     }
 
-    public void testGlobalResult() throws Exception {
+    @Test
+    public void testGlobalResult() {
 
         ServletContext context = mockServletContext("/WEB-INF/location");
         this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
@@ -105,8 +119,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals("/globalError.jsp", result.getParams().get("location"));
     }
 
-    public void testGlobalResultOverride() throws Exception {
-
+    @Test
+    public void testGlobalResultOverride() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         String resultPath = "/WEB-INF/location";
         // Setup some mock jsps
@@ -139,7 +153,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         assertEquals(resultPath + "/namespace/action-error.jsp", result.getParams().get("location"));
     }
 
-    public void testNull() throws Exception {
+    @Test
+    public void testNull() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(context.getResourcePaths("/WEB-INF/location/namespace/")).andReturn(null);
         EasyMock.replay(context);
@@ -153,7 +168,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testResultPath() throws Exception {
+    @Test
+    public void testResultPath() {
         ServletContext context = mockServletContext("/class-level");
 
         // Test with a result path
@@ -164,7 +180,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         verify(context, "/class-level", results, false);
     }
 
-    public void testFromServletContextWithBadNames() throws Exception {
+    @Test
+    public void testFromServletContextWithBadNames() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -184,7 +201,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
     }
 
-    public void testFromServletContext() throws Exception {
+    @Test
+    public void testFromServletContext() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -218,7 +236,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
     }
 
-    public void testFromServletContextNotFlat() throws Exception {
+    @Test
+    public void testFromServletContextNotFlat() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -254,7 +273,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testIgnoreFilesWithoutName() throws Exception {
+    @Test
+    public void testIgnoreFilesWithoutName() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -278,7 +298,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
 
     }
 
-    public void testClassLevelSingleResultAnnotation() throws Exception {
+    @Test
+    public void testClassLevelSingleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -301,7 +322,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testClassLevelInheritedSingleResultAnnotation() throws Exception {
+    @Test
+    public void testClassLevelInheritedSingleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -324,7 +346,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-     public void testClassLevelOverwriteInheritedSingleResultAnnotation() throws Exception {
+    @Test
+    public void testClassLevelOverwriteInheritedSingleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -349,7 +372,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testClassLevelMultipleResultAnnotation() throws Exception {
+    @Test
+    public void testClassLevelMultipleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -388,7 +412,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testClassLevelInheritanceMultipleResultAnnotation() throws Exception {
+    @Test
+    public void testClassLevelInheritanceMultipleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -427,7 +452,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testActionLevelSingleResultAnnotation() throws Exception {
+    @Test
+    public void testActionLevelSingleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -450,7 +476,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testActionLevelMultipleResultAnnotation() throws Exception {
+    @Test
+    public void testActionLevelMultipleResultAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -485,7 +512,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testActionLevelMultipleResultNamesAnnotation() throws Exception {
+    @Test
+    public void testActionLevelMultipleResultNamesAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -520,7 +548,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testActionLevelMultipleResultNamesAnnotationNoName() throws Exception {
+    @Test
+    public void testActionLevelMultipleResultNamesAnnotationNoName() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
 
         // Setup some mock jsps
@@ -543,7 +572,8 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    public void testClassPath() throws Exception {
+    @Test
+    public void testClassPath() {
         ServletContext context = EasyMock.createNiceMock(ServletContext.class);
 
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("freemarker", "org.apache.struts2.result.ServletDispatcherResult").
@@ -600,8 +630,7 @@ public class DefaultResultMapBuilderTest extends TestCase {
         return context;
     }
 
-    private void verify(ServletContext context, String resultPath, Map<String, ResultConfig> results,
-                        boolean redirect) {
+    private void verify(ServletContext context, String resultPath, Map<String, ResultConfig> results, boolean redirect) {
         assertEquals(4, results.size());
         assertEquals("success", results.get("success").getName());
         assertEquals("input", results.get("input").getName());
@@ -633,16 +662,13 @@ public class DefaultResultMapBuilderTest extends TestCase {
         EasyMock.verify(context);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setup() {
         this.container = EasyMock.createNiceMock(Container.class);
-        EasyMock.expect(container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE)).andReturn("convention").anyTimes();
-        EasyMock.expect(container.getInstance(ConventionsService.class, "convention")).andAnswer(new IAnswer<ConventionsService>() {
-            public ConventionsService answer() throws Throwable {
-                return DefaultResultMapBuilderTest.this.conventionsService;
-            }
-        }).anyTimes();
+        EasyMock.expect(container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE))
+                .andReturn("convention").anyTimes();
+        EasyMock.expect(container.getInstance(ConventionsService.class, "convention"))
+                .andAnswer(() -> DefaultResultMapBuilderTest.this.conventionsService).anyTimes();
         EasyMock.replay(this.container);
     }
 }

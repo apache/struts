@@ -40,6 +40,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AttributeMapTest {
 
@@ -358,6 +363,23 @@ public class AttributeMapTest {
 
         Object value = am.get("attr");
         assertEquals("value", value);
+    }
+
+    @Test
+    public void get_whenPageContextHasNoRequest() {
+        PageContext pageContext = mock(PageContext.class);
+        when(pageContext.getRequest()).thenReturn(null);
+
+        HttpServletRequest req = new MockHttpServletRequest();
+        req.setAttribute("attr", "reqValue");
+
+        AttributeMap attributeMap = new AttributeMap(new HashMap<String, Object>() {{
+            put(StrutsStatics.PAGE_CONTEXT, pageContext);
+            put(DispatcherConstants.REQUEST, new RequestMap(req));
+        }});
+
+        assertEquals("reqValue", attributeMap.get("attr"));
+        verify(pageContext, never()).findAttribute(anyString());
     }
 
 }

@@ -47,9 +47,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         super(Boolean.FALSE.toString());
     }
 
-    public JakartaMultiPartRequest(
-            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
-    ) {
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public JakartaMultiPartRequest(String dmiValue) {
         super(dmiValue);
     }
 

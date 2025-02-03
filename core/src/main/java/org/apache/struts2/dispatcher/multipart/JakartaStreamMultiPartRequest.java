@@ -62,9 +62,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         super(Boolean.FALSE.toString());
     }
 
-    public JakartaStreamMultiPartRequest(
-            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
-    ) {
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public JakartaStreamMultiPartRequest(String dmiValue) {
         super(dmiValue);
     }
 

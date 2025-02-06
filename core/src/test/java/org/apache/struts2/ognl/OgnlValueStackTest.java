@@ -18,17 +18,26 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.OgnlException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.SimpleAction;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestBean;
-import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.test.TestBean2;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.util.Bar;
 import org.apache.struts2.util.BarJunior;
 import org.apache.struts2.util.Cat;
@@ -37,15 +46,6 @@ import org.apache.struts2.util.Foo;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.OgnlException;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.appender.AbstractAppender;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.DefaultPropertiesProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1232,6 +1232,33 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull("accessed final private field (result not null) ?", accessedValue);
         accessedValue = vs.findValue("@org.apache.struts2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
         assertNull("accessed private field (result not null) ?", accessedValue);
+    }
+
+    public void testFindValueWithConstructorAndProxyChecks() {
+        loadButSet(Map.of(
+                StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Boolean.TRUE.toString(),
+                StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Boolean.TRUE.toString()));
+        refreshContainerFields();
+
+        String value = "test";
+        String ognlResult = (String) vs.findValue(
+                "new org.apache.struts2.ognl.OgnlValueStackTest$ValueHolder('" + value + "').value", String.class);
+
+        assertEquals(value, ognlResult);
+    }
+
+    @SuppressWarnings({"unused", "ClassCanBeRecord"})
+    public static class ValueHolder {
+        // See testFindValueWithConstructorAndProxyChecks
+        private final String value;
+
+        public ValueHolder(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     static class BadJavaBean {

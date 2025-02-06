@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.ognl;
 
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ProxyUtil;
 import ognl.MemberAccess;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.ProxyUtil;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -38,6 +38,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static java.text.MessageFormat.format;
+import static java.util.Collections.emptySet;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.util.ConfigParseUtil.toClassObjectsSet;
 import static org.apache.struts2.util.ConfigParseUtil.toClassesSet;
 import static org.apache.struts2.util.ConfigParseUtil.toNewClassesSet;
@@ -45,10 +49,6 @@ import static org.apache.struts2.util.ConfigParseUtil.toNewPackageNamesSet;
 import static org.apache.struts2.util.ConfigParseUtil.toNewPatternsSet;
 import static org.apache.struts2.util.ConfigParseUtil.toPackageNamesSet;
 import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.emptySet;
-import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
-import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -141,6 +141,9 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
+        if (member == null) {
+            throw new IllegalArgumentException("Member cannot be null!");
+        }
         if (target != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
@@ -209,7 +212,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
-        if (!disallowProxyObjectAccess && target != null && ProxyUtil.isProxy(target)) {
+        if (!disallowProxyObjectAccess && ProxyUtil.isProxy(target)) {
             // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
             // classes/members. This allows the allowlist capability to continue working and offer some level of
             // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate

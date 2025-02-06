@@ -18,16 +18,17 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -44,12 +45,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     private static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
 
     public JakartaMultiPartRequest() {
-        super(Boolean.FALSE.toString());
+        super();
     }
 
     @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
     public JakartaMultiPartRequest(String dmiValue) {
-        super(dmiValue);
+        super(BooleanUtils.toBoolean(dmiValue));
     }
 
     @Override
@@ -88,15 +89,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
-        LOG.debug("Item: {} is a normal form field", item.getName());
+        var fieldName = item.getFieldName();
+        LOG.debug("Item: {} is a normal form field", fieldName);
 
-        if (isExcluded(item.getFieldName())) {
-            LOG.warn(() -> "Form field [%s] is rejected!".formatted(normalizeSpace(item.getFieldName())));
+        if (isInvalidInput(fieldName)) {
             return;
         }
 
         List<String> values;
-        String fieldName = item.getFieldName();
         if (parameters.get(fieldName) != null) {
             values = parameters.get(fieldName);
         } else {
@@ -116,19 +116,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processFileField(DiskFileItem item) {
-        if (isExcluded(item.getName())) {
-            LOG.warn(() -> "File name [%s] is not accepted".formatted(normalizeSpace(item.getName())));
-            return;
-        }
-
-        if (isExcluded(item.getFieldName())) {
-            LOG.warn(() -> "Field name [%s] is not accepted".formatted(normalizeSpace(item.getFieldName())));
-            return;
-        }
-
-        // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(item.getFieldName()));
+        if (isInvalidInput(item.getFieldName(), item.getName())) {
             return;
         }
 

@@ -81,6 +81,7 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxy(Object object) {
+        if (object == null) return false;
         Class<?> clazz = object.getClass();
         Boolean flag = isProxyCache.get(clazz);
         if (flag != null) {
@@ -121,7 +122,7 @@ public class ProxyUtil {
      */
     public static boolean isHibernateProxy(Object object) {
         try {
-            return HibernateProxy.class.isAssignableFrom(object.getClass());
+            return object != null && HibernateProxy.class.isAssignableFrom(object.getClass());
         } catch (NoClassDefFoundError ignored) {
             return false;
         }

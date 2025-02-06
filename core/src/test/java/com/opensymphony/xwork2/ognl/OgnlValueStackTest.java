@@ -1233,6 +1233,34 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull("accessed private field (result not null) ?", accessedValue);
     }
 
+    public void testFindValueWithConstructorAndProxyChecks() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Boolean.TRUE.toString());
+        properties.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Boolean.TRUE.toString());
+        loadButSet(properties);
+        refreshContainerFields();
+
+        String value = "test";
+        String ognlResult = (String) vs.findValue(
+                "new com.opensymphony.xwork2.ognl.OgnlValueStackTest$ValueHolder('" + value + "').value", String.class);
+
+        assertEquals(value, ognlResult);
+    }
+
+    @SuppressWarnings({"unused"})
+    public static class ValueHolder {
+        // See testFindValueWithConstructorAndProxyChecks
+        private final String value;
+
+        public ValueHolder(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     static class BadJavaBean {
         private int count;
         private int count2;

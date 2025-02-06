@@ -18,14 +18,13 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
 import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +34,7 @@ import org.apache.struts2.inject.Inject;
 import org.apache.struts2.security.DefaultExcludedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -45,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Abstract class with some helper methods, it should be used
  * when starting development of another implementation of {@link MultiPartRequest}
@@ -52,6 +54,8 @@ import java.util.Map;
 public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
+    protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD = "struts.messages.upload.error.illegal.characters.field";
+    protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME = "struts.messages.upload.error.illegal.characters.name";
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
 
@@ -116,13 +120,14 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     private final ExcludedPatternsChecker patternsChecker;
 
-    protected AbstractMultiPartRequest(String dmiValue) {
-        patternsChecker = new DefaultExcludedPatternsChecker();
-        if (BooleanUtils.toBoolean(dmiValue)) {
-            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT);
-        } else {
-            ((DefaultExcludedPatternsChecker) patternsChecker).setAdditionalExcludePatterns(EXCLUDED_FILE_PATTERN);
-        }
+    protected AbstractMultiPartRequest() {
+        this(false);
+    }
+
+    protected AbstractMultiPartRequest(boolean dmiValue) {
+        var patternsChecker = new DefaultExcludedPatternsChecker();
+        patternsChecker.setAdditionalExcludePatterns(dmiValue ? EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT : EXCLUDED_FILE_PATTERN);
+        this.patternsChecker = patternsChecker;
     }
 
     /**
@@ -302,16 +307,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * @return the canonical name based on the supplied filename
      */
     protected String getCanonicalName(final String originalFileName) {
-        String fileName = originalFileName;
-
-        int forwardSlash = fileName.lastIndexOf('/');
-        int backwardSlash = fileName.lastIndexOf('\\');
-        if (forwardSlash != -1 && forwardSlash > backwardSlash) {
-            fileName = fileName.substring(forwardSlash + 1);
-        } else {
-            fileName = fileName.substring(backwardSlash + 1);
-        }
-        return fileName;
+        return FilenameUtils.getName(originalFileName);
     }
 
     /**
@@ -443,4 +439,32 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return patternsChecker.isExcluded(fileName).isExcluded();
     }
 
+    protected boolean isInvalidInput(String fieldName, String fileName) {
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (fileName == null || fileName.isBlank()) {
+            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(fieldName));
+            return true;
+        }
+
+        if (isExcluded(fileName)) {
+            var normalizedFileName = normalizeSpace(fileName);
+            LOG.debug("File name [{}] is not accepted", normalizedFileName);
+            errors.add(new LocalizedMessage(getClass(), STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME, null,
+                    new String[]{normalizedFileName}));
+            return true;
+        }
+
+        return isInvalidInput(fieldName);
+    }
+
+    protected boolean isInvalidInput(String fieldName) {
+        if (isExcluded(fieldName)) {
+            var normalizedFieldName = normalizeSpace(fieldName);
+            LOG.debug("Form field [{}}] is rejected!", normalizedFieldName);
+            errors.add(new LocalizedMessage(getClass(), STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD, null,
+                    new String[]{normalizedFieldName}));
+            return true;
+        }
+        return false;
+    }
 }

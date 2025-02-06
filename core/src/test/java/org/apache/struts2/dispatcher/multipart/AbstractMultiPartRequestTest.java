@@ -518,8 +518,8 @@ abstract class AbstractMultiPartRequestTest {
 
         multiPart.parse(mockRequest, tempDir);
 
-        assertThat(multiPart.getErrors())
-                .isEmpty();
+        assertThat(multiPart.getErrors()).extracting(LocalizedMessage::getTextKey)
+                .containsExactly(AbstractMultiPartRequest.STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD);
 
         assertThat(multiPart.getParameterNames().asIterator()).toIterable()
                 .isEmpty();
@@ -537,8 +537,8 @@ abstract class AbstractMultiPartRequestTest {
 
         multiPart.parse(mockRequest, tempDir);
 
-        assertThat(multiPart.getErrors())
-                .isEmpty();
+        assertThat(multiPart.getErrors()).extracting(LocalizedMessage::getTextKey)
+                .containsExactly(AbstractMultiPartRequest.STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME);
 
         assertThat(multiPart.getParameterNames().asIterator()).toIterable()
                 .hasSize(1);

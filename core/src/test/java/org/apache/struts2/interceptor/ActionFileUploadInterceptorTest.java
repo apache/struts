@@ -18,21 +18,21 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ActionSupport;
-import org.apache.struts2.locale.DefaultLocaleProvider;
-import org.apache.struts2.ValidationAwareSupport;
-import org.apache.struts2.mock.MockActionInvocation;
-import org.apache.struts2.mock.MockActionProxy;
-import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.apache.struts2.locale.DefaultLocaleProvider;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.assertj.core.util.Files;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -540,7 +540,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.intercept(mai);
 
-        assertFalse(action.hasActionErrors());
+        assertThat(action.getActionErrors())
+                .containsExactly("The multipart upload field name \"top.file\" contains illegal characters!");
         assertNull(action.getUploadFiles());
     }
 
@@ -570,7 +571,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.intercept(mai);
 
-        assertFalse(action.hasActionErrors());
+        assertThat(action.getActionErrors())
+                .containsExactly("The multipart upload filename \"../deleteme.txt\" contains illegal characters!");
         assertNull(action.getUploadFiles());
     }
 

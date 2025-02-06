@@ -24,9 +24,6 @@ import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
@@ -693,7 +690,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.intercept(mai);
 
-        assertFalse(action.hasActionErrors());
+        assertThat(action.getActionErrors())
+                .containsExactly("The multipart upload field name \"top.file\" contains illegal characters!");
         assertNull(action.getUploadFiles());
     }
 
@@ -724,7 +722,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.intercept(mai);
 
-        assertFalse(action.hasActionErrors());
+        assertThat(action.getActionErrors())
+                .containsExactly("The multipart upload filename \"../deleteme.txt\" contains illegal characters!");
         assertNull(action.getUploadFiles());
     }
 

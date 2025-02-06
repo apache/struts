@@ -87,4 +87,80 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectProxyMember, ""));
         assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectNonProxyMember, ""));
     }
+
+    @Test
+    public void nullTargetAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullTargetAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullTargetAndTargetAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertFalse(sma.isAccessible(context, proxy.getAction(), null, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, proxy.getAction(), null, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetNotAllowedAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertFalse(sma.isAccessible(context, proxy.getAction(), null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetNotAllowedAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertTrue(sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertTrue(sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullPropertyName() {
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectProxyMember, null));
+    }
 }

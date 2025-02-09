@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.inject.Inject;
 import http.utils.multipartrequest.ServletMultipartRequest;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -42,7 +43,7 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
 
     @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
     public PellMultiPartRequest(String dmiValue) {
-        super(dmiValue);
+        super(BooleanUtils.toBoolean(dmiValue));
     }
 
     /**

@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,13 +61,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     // maps parameter name -> List of param values
     protected Map<String, List<String>> params = new HashMap<>();
+
     public JakartaMultiPartRequest() {
-        super(Boolean.FALSE.toString());
+        super();
     }
 
     @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
     public JakartaMultiPartRequest(String dmiValue) {
-        super(dmiValue);
+        super(BooleanUtils.toBoolean(dmiValue));
     }
 
     /**
@@ -123,21 +125,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processFileField(FileItem item) {
-        LOG.debug("Item is a file upload");
-
-        if (isExcluded(item.getName())) {
-            LOG.warn("File name [{}] is not accepted", normalizeSpace(item.getName()));
-            return;
-        }
-
-        if (isExcluded(item.getFieldName())) {
-            LOG.warn("Field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
-            return;
-        }
-
-        // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", normalizeSpace(item.getFieldName()));
+        if (isInvalidInput(item.getFieldName(), item.getName())) {
             return;
         }
 
@@ -154,10 +142,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
         try {
-            LOG.debug("Item is a normal form field");
+            String fieldName = item.getFieldName();
+            LOG.debug("Item: {} is a normal form field", normalizeSpace(fieldName));
 
-            if (isExcluded(item.getFieldName())) {
-                LOG.warn("Form field name [{}] is not accepted", normalizeSpace(item.getFieldName()));
+            if (isInvalidInput(fieldName)) {
                 return;
             }
 

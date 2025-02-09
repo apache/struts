@@ -21,6 +21,8 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Script;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
 
 public class ScriptTest extends AbstractTest {
@@ -72,5 +74,6 @@ public class ScriptTest extends AbstractTest {
 
         this.tag = new Script(stack, request, response);
         tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
     }
 }

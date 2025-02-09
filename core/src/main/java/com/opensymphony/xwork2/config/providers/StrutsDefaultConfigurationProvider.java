@@ -68,6 +68,8 @@ import com.opensymphony.xwork2.validator.ValidatorFileParser;
 import ognl.PropertyAccessor;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.interceptor.csp.CspNonceReader;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.url.QueryStringBuilder;
@@ -159,7 +161,9 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(UrlEncoder.class, StrutsUrlEncoder.class, Scope.SINGLETON)
                 .factory(UrlDecoder.class, StrutsUrlDecoder.class, Scope.SINGLETON)
 
-                .factory(ExecutorProvider.class, StrutsExecutorProvider.class, Scope.SINGLETON);
+                .factory(ExecutorProvider.class, StrutsExecutorProvider.class, Scope.SINGLETON)
+
+                .factory(CspNonceReader.class, StrutsCspNonceReader.class, Scope.SINGLETON);
 
         for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             props.setProperty(entry.getKey(), String.valueOf(entry.getValue()));

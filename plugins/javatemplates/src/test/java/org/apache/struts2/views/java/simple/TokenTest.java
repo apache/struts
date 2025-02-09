@@ -23,6 +23,8 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.components.Token;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -49,6 +51,7 @@ public class TokenTest extends AbstractTest {
     protected void setUp() throws Exception {
         super.setUp();
         this.tag = new Token(stack, request, response);
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
 
         ActionContext.of()
             .withSession(new HashMap<>())

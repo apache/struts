@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -27,11 +26,9 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,15 +58,6 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     // maps parameter name -> List of param values
     protected Map<String, List<String>> params = new HashMap<>();
-
-    public JakartaMultiPartRequest() {
-        super();
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
-    public JakartaMultiPartRequest(String dmiValue) {
-        super(BooleanUtils.toBoolean(dmiValue));
-    }
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
@@ -125,7 +113,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processFileField(FileItem item) {
-        if (isInvalidInput(item.getFieldName(), item.getName())) {
+        LOG.debug("Item is a file upload");
+
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (item.getName() == null || item.getName().trim().isEmpty()) {
+            LOG.debug("No file has been uploaded for the field: {}", normalizeSpace(item.getFieldName()));
             return;
         }
 
@@ -142,12 +134,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
         try {
-            String fieldName = item.getFieldName();
-            LOG.debug("Item: {} is a normal form field", normalizeSpace(fieldName));
-
-            if (isInvalidInput(fieldName)) {
-                return;
-            }
+            LOG.debug("Item is a normal form field");
 
             List<String> values;
             if (params.get(item.getFieldName()) != null) {

@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -26,10 +25,8 @@ import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededExcepti
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -209,15 +206,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         }
     }
 
-    public JakartaStreamMultiPartRequest() {
-        super();
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
-    public JakartaStreamMultiPartRequest(String dmiValue) {
-        super(BooleanUtils.toBoolean(dmiValue));
-    }
-
     /**
      * Processes the upload.
      *
@@ -326,9 +314,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
-        if (isInvalidInput(fieldName)) {
-            return;
-        }
         try {
             List<String> values;
             String fieldValue = Streams.asString(itemStream.openStream());
@@ -351,7 +336,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param location   location
      */
     protected void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
-        if (isInvalidInput(itemStream.getFieldName(), itemStream.getName())) {
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (itemStream.getName() == null || itemStream.getName().trim().isEmpty()) {
+            LOG.debug("No file has been uploaded for the field: {}", normalizeSpace(itemStream.getFieldName()));
             return;
         }
 
@@ -400,9 +387,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         File file = File.createTempFile(prefix + "_", suffix, new File(location));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating temporary file [{}] (originally [{}]).", file.getName(), normalizeSpace(fileName));
-        }
+        LOG.debug("Creating temporary file [{}] (originally [{}]).", file.getName(), normalizeSpace(fileName));
         return file;
     }
 

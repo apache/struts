@@ -17,7 +17,8 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - 'release/*'
   pull_request:
 
 permissions:
@@ -41,15 +42,21 @@ jobs:
       matrix:
         language: [ 'java' ]
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3.27.1
-      with:
-        languages: ${{ matrix.language }}
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3.27.1
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3.27.1
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: 'maven'
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3.28.8
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3.28.8
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3.28.8
+        with:
+          category: "/language:${{matrix.language}}"

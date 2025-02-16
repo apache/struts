@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -157,16 +158,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * @return the canonical name based on the supplied filename
      */
     protected String getCanonicalName(final String originalFileName) {
-        String fileName = originalFileName;
-
-        int forwardSlash = fileName.lastIndexOf('/');
-        int backwardSlash = fileName.lastIndexOf('\\');
-        if (forwardSlash != -1 && forwardSlash > backwardSlash) {
-            fileName = fileName.substring(forwardSlash + 1);
-        } else {
-            fileName = fileName.substring(backwardSlash + 1);
-        }
-        return fileName;
+        return FilenameUtils.getName(originalFileName);
     }
 
 }

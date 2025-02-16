@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
 import org.apache.commons.fileupload2.core.FileUploadException;
@@ -30,11 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.security.DefaultExcludedPatternsChecker;
-import org.apache.struts2.security.ExcludedPatternsChecker;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -45,8 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-
 /**
  * Abstract class with some helper methods, it should be used
  * when starting development of another implementation of {@link MultiPartRequest}
@@ -54,13 +50,8 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
-    protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD = "struts.messages.upload.error.illegal.characters.field";
-    protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME = "struts.messages.upload.error.illegal.characters.name";
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
-
-    private static final String EXCLUDED_FILE_PATTERN = "^(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$";
-    private static final String EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT = "^(?!action:[^<>&\"'|;\\\\/?*:]+(![^<>&\"'|;\\\\/?*:]+)?$)(.*[<>&\"'|;\\\\/?*:]+.*|.*\\.\\..*)$\n";
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -116,19 +107,6 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * Map between non-file fields and values.
      */
     protected Map<String, List<String>> parameters = new HashMap<>();
-
-
-    private final ExcludedPatternsChecker patternsChecker;
-
-    protected AbstractMultiPartRequest() {
-        this(false);
-    }
-
-    protected AbstractMultiPartRequest(boolean dmiValue) {
-        var patternsChecker = new DefaultExcludedPatternsChecker();
-        patternsChecker.setAdditionalExcludePatterns(dmiValue ? EXCLUDED_FILE_PATTERN_WITH_DMI_SUPPORT : EXCLUDED_FILE_PATTERN);
-        this.patternsChecker = patternsChecker;
-    }
 
     /**
      * @param bufferSize Sets the buffer size to be used.
@@ -431,40 +409,4 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         }
     }
 
-    /**
-     * @param fileName file name to check
-     * @return true if the file name is excluded
-     */
-    protected boolean isExcluded(String fileName) {
-        return patternsChecker.isExcluded(fileName).isExcluded();
-    }
-
-    protected boolean isInvalidInput(String fieldName, String fileName) {
-        // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (fileName == null || fileName.isBlank()) {
-            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(fieldName));
-            return true;
-        }
-
-        if (isExcluded(fileName)) {
-            var normalizedFileName = normalizeSpace(fileName);
-            LOG.debug("File name [{}] is not accepted", normalizedFileName);
-            errors.add(new LocalizedMessage(getClass(), STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME, null,
-                    new String[]{normalizedFileName}));
-            return true;
-        }
-
-        return isInvalidInput(fieldName);
-    }
-
-    protected boolean isInvalidInput(String fieldName) {
-        if (isExcluded(fieldName)) {
-            var normalizedFieldName = normalizeSpace(fieldName);
-            LOG.debug("Form field [{}}] is rejected!", normalizedFieldName);
-            errors.add(new LocalizedMessage(getClass(), STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD, null,
-                    new String[]{normalizedFieldName}));
-            return true;
-        }
-        return false;
-    }
 }

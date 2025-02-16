@@ -19,13 +19,7 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
-import org.apache.struts2.config.Configuration;
-import org.apache.struts2.config.ConfigurationManager;
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.LocalizedMessage;
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.util.StrutsTestCaseHelper;
-import org.apache.struts2.views.jsp.StrutsMockServletContext;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,7 +47,6 @@ abstract class AbstractMultiPartRequestTest {
     protected final String endline = "\r\n";
 
     protected AbstractMultiPartRequest multiPart;
-    protected Container container;
 
     abstract protected AbstractMultiPartRequest createMultipartRequest();
 
@@ -67,13 +59,7 @@ abstract class AbstractMultiPartRequestTest {
     }
 
     @Before
-    public void before() throws Exception {
-        StrutsMockServletContext servletContext = new StrutsMockServletContext();
-        Dispatcher dispatcher = StrutsTestCaseHelper.initDispatcher(servletContext, Collections.emptyMap());
-        ConfigurationManager configurationManager = dispatcher.getConfigurationManager();
-        Configuration configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-
+    public void before() {
         mockRequest = new MockHttpServletRequest();
         mockRequest.setCharacterEncoding(StandardCharsets.UTF_8.name());
         mockRequest.setMethod("post");
@@ -504,47 +490,6 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
                 .containsExactly("struts.messages.upload.error.FileUploadException");
-    }
-
-    @Test
-    public void maliciousFields() throws IOException {
-        String content = formFile("file1", "test1.csv", "1,2,3,4") +
-                formField("top.param", "expression") +
-                endline + "--" + boundary + "--";
-
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-
-        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
-
-        multiPart.parse(mockRequest, tempDir);
-
-        assertThat(multiPart.getErrors()).extracting(LocalizedMessage::getTextKey)
-                .containsExactly(AbstractMultiPartRequest.STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_FIELD);
-
-        assertThat(multiPart.getParameterNames().asIterator()).toIterable()
-                .isEmpty();
-    }
-
-    @Test
-    public void maliciousFilename() throws IOException {
-        String content = formFile("file1", "../test1.csv", "1,2,3,4") +
-                formField("param", "expression") +
-                endline + "--" + boundary + "--";
-
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-
-        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
-
-        multiPart.parse(mockRequest, tempDir);
-
-        assertThat(multiPart.getErrors()).extracting(LocalizedMessage::getTextKey)
-                .containsExactly(AbstractMultiPartRequest.STRUTS_MESSAGES_UPLOAD_ERROR_ILLEGAL_CHARACTERS_NAME);
-
-        assertThat(multiPart.getParameterNames().asIterator()).toIterable()
-                .hasSize(1);
-        assertThat(multiPart.getParameterNames().asIterator()).toIterable()
-                .containsOnly("param");
-        assertThat(multiPart.getFileNames("file1")).isEmpty();
     }
 
     protected String formFile(String fieldName, String filename, String content) {

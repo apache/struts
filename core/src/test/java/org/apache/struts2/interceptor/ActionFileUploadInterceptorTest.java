@@ -18,21 +18,21 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
-import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionSupport;
-import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.ValidationAwareSupport;
+import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
-import org.apache.struts2.locale.DefaultLocaleProvider;
-import org.apache.struts2.mock.MockActionInvocation;
-import org.apache.struts2.mock.MockActionProxy;
-import org.apache.struts2.util.ClassLoaderUtil;
 import org.assertj.core.util.Files;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -514,73 +514,11 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
     }
 
-    public void testUnacceptedFieldName() throws Exception {
-        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        request.setMethod("post");
-        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
-
-        // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"top.file\"; filename=\"deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234--\r\n");
-        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
-
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
-
-        MockActionInvocation mai = new MockActionInvocation();
-        mai.setAction(action);
-        mai.setResultCode("success");
-        mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext()
-            .withServletRequest(createMultipartRequestMaxSize(2000));
-
-        interceptor.intercept(mai);
-
-        assertThat(action.getActionErrors())
-                .containsExactly("The multipart upload field name \"top.file\" contains illegal characters!");
-        assertNull(action.getUploadFiles());
-    }
-
-    public void testUnacceptedFileName() throws Exception {
-        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        request.setMethod("post");
-        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
-
-        // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"../deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234--\r\n");
-        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
-
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
-
-        MockActionInvocation mai = new MockActionInvocation();
-        mai.setAction(action);
-        mai.setResultCode("success");
-        mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext()
-            .withServletRequest(createMultipartRequestMaxSize(2000));
-
-        interceptor.intercept(mai);
-
-        assertThat(action.getActionErrors())
-                .containsExactly("The multipart upload filename \"../deleteme.txt\" contains illegal characters!");
-        assertNull(action.getUploadFiles());
-    }
-
     private String encodeTextFile(String filename, String contentType, String content) {
         return endline +
                 "--" + boundary +
                 endline +
-                "Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + filename + "\"" +
+                "Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + filename +
                 endline +
                 "Content-Type: " + contentType +
                 endline +

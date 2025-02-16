@@ -18,19 +18,16 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileItemInput;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
-import org.apache.struts2.inject.Inject;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -58,15 +55,6 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
-
-    public JakartaStreamMultiPartRequest() {
-        super();
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
-    public JakartaStreamMultiPartRequest(String dmiValue) {
-        super(BooleanUtils.toBoolean(dmiValue));
-    }
 
     /**
      * Processes the upload.
@@ -126,11 +114,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected void processFileItemAsFormField(FileItemInput fileItemInput) throws IOException {
         String fieldName = fileItemInput.getFieldName();
-        if (isInvalidInput(fieldName)) {
-            return;
-        }
-
         String fieldValue = readStream(fileItemInput.getInputStream());
+
         if (exceedsMaxStringLength(fieldName, fieldValue)) {
             return;
         }
@@ -202,7 +187,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param location      location
      */
     protected void processFileItemAsFileField(FileItemInput fileItemInput, Path location) throws IOException {
-        if (isInvalidInput(fileItemInput.getFieldName(), fileItemInput.getName())) {
+        // Skip file uploads that don't have a file name - meaning that no file was selected.
+        if (fileItemInput.getName() == null || fileItemInput.getName().trim().isEmpty()) {
+            LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(fileItemInput.getFieldName()));
             return;
         }
 
@@ -245,9 +232,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         InputStream input = fileItemInput.getInputStream();
         try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Streaming file: {} using buffer size: {}", normalizeSpace(fileItemInput.getName()), bufferSize);
-            }
+            LOG.debug("Streaming file: {} using buffer size: {}", normalizeSpace(fileItemInput.getName()), bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
             }

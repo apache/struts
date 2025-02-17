@@ -45,7 +45,7 @@ public interface CspSettings {
     String CSP_REPORT_TYPE = "application/csp-report";
 
     /**
-     * @deprecated use {@link #addCspHeaders(HttpServletRequest, HttpServletResponse)} instead
+     * @deprecated since 6.0.3, use {@link #addCspHeaders(HttpServletRequest, HttpServletResponse)} instead
      */
     @Deprecated
     void addCspHeaders(HttpServletResponse response);

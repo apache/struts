@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
@@ -86,5 +87,92 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
         assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectProxyMember, ""));
         assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectNonProxyMember, ""));
+    }
+
+    @Test
+    public void nullTargetAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullTargetAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullTargetAndTargetAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertTrue(sma.isAccessible(context, null, proxyObjectProxyMember, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        Object action = proxy.getAction();
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, action, null, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        Object action = proxy.getAction();
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, action, null, ""));
+    }
+
+    @Test
+    public void nullMemberAndTargetNotAllowedAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        Object action = proxy.getAction();
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, action, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetNotAllowedAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAllowedAndMemberNotAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullTargetAndMemberAndTargetAndMemberAllowed() {
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        assertThrows("Member cannot be null!", IllegalArgumentException.class,
+                () -> sma.isAccessible(context, null, null, ""));
+    }
+
+    @Test
+    public void nullPropertyName() {
+        sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        Object action = proxy.getAction();
+        assertTrue(sma.isAccessible(context, action, proxyObjectProxyMember, null));
     }
 }

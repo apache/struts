@@ -160,6 +160,9 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
+        if (member == null) {
+            throw new IllegalArgumentException("Member cannot be null!");
+        }
         if (target != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
@@ -228,7 +231,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
-        if (!disallowProxyObjectAccess && target != null && ProxyUtil.isProxy(target)) {
+        if (!disallowProxyObjectAccess && ProxyUtil.isProxy(target)) {
             // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
             // classes/members. This allows the allowlist capability to continue working and offer some level of
             // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate

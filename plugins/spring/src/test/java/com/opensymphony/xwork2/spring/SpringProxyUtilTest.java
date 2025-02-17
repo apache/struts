@@ -46,6 +46,8 @@ public class SpringProxyUtilTest extends XWorkTestCase {
     }
 
     public void testIsProxy() throws Exception {
+        assertFalse(ProxyUtil.isProxy(null));
+
         Object simpleAction = appContext.getBean("simple-action");
         assertFalse(ProxyUtil.isProxy(simpleAction));
 

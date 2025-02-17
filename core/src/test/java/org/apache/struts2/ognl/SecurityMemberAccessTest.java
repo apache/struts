@@ -649,7 +649,6 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
         // given
-        assignNewSma(false);
         sma.useExcludedClasses(String.join(",", Class.class.getName(), StaticTester.class.getName()));
 
         // when

@@ -114,24 +114,27 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
     public void nullMemberAndTargetAndMemberNotAllowed() {
         sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
         sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        Object action = proxy.getAction();
         assertThrows("Member cannot be null!", IllegalArgumentException.class,
-                () -> sma.isAccessible(context, proxy.getAction(), null, ""));
+                () -> sma.isAccessible(context, action, null, ""));
     }
 
     @Test
     public void nullMemberAndTargetAllowedAndMemberNotAllowed() {
         sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
         sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        Object action = proxy.getAction();
         assertThrows("Member cannot be null!", IllegalArgumentException.class,
-                () -> sma.isAccessible(context, proxy.getAction(), null, ""));
+                () -> sma.isAccessible(context, action, null, ""));
     }
 
     @Test
     public void nullMemberAndTargetNotAllowedAndMemberAllowed() {
         sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
         sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+        Object action = proxy.getAction();
         assertThrows("Member cannot be null!", IllegalArgumentException.class,
-                () -> sma.isAccessible(context, proxy.getAction(), null, ""));
+                () -> sma.isAccessible(context, action, null, ""));
     }
 
     @Test
@@ -169,6 +172,7 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
     @Test
     public void nullPropertyName() {
         sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
-        assertTrue(sma.isAccessible(context, proxy.getAction(), proxyObjectProxyMember, null));
+        Object action = proxy.getAction();
+        assertTrue(sma.isAccessible(context, action, proxyObjectProxyMember, null));
     }
 }

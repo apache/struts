@@ -160,12 +160,12 @@ public class SecurityMemberAccess implements MemberAccess {
             }
         }
 
-        if (target != null && !checkProxyObjectAccess(target)) {
+        if (!checkProxyObjectAccess(target)) {
             LOG.warn("Access to proxy is blocked! Target [{}], proxy class [{}]", target, target.getClass().getName());
             return false;
         }
 
-        if (target != null && !checkProxyMemberAccess(target, member)) {
+        if (!checkProxyMemberAccess(target, member)) {
             LOG.warn("Access to proxy is blocked! Member class [{}] of target [{}], member [{}]", member.getDeclaringClass(), target, member);
             return false;
         }
@@ -185,15 +185,15 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (target != null && !checkDefaultPackageAccess(target, member)) {
+        if (!checkDefaultPackageAccess(target, member)) {
             return false;
         }
 
-        if (target != null && !checkExclusionList(target, member)) {
+        if (!checkExclusionList(target, member)) {
             return false;
         }
 
-        if (target != null && !checkAllowlist(target, member)) {
+        if (!checkAllowlist(target, member)) {
             return false;
         }
 

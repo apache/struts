@@ -18,12 +18,11 @@
  */
 package org.apache.struts2.components;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -50,16 +49,15 @@ import jakarta.servlet.http.HttpServletResponse;
  * </pre>
  */
 @StrutsTag(
-    name="textfield",
-    tldTagClass="org.apache.struts2.views.jsp.ui.TextFieldTag",
-    description="Render an HTML input field of type text",
-    allowDynamicAttributes=true)
+        name = "textfield",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.TextFieldTag",
+        description = "Render an HTML input field of type text",
+        allowDynamicAttributes = true)
 public class TextField extends UIBean {
     /**
      * The name of the default template for the TextFieldTag
      */
     final public static String TEMPLATE = "text";
-
 
     protected String maxlength;
     protected String readonly;
@@ -95,27 +93,22 @@ public class TextField extends UIBean {
 
     }
 
-    @StrutsTagAttribute(description="HTML maxlength attribute", type="Integer")
+    @StrutsTagAttribute(description = "HTML maxlength attribute", type = "Integer")
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
     }
 
-    @StrutsTagAttribute(description="Deprecated. Use maxlength instead.", type="Integer")
-    public void setMaxLength(String maxlength) {
-        this.maxlength = maxlength;
-    }
-
-    @StrutsTagAttribute(description="Whether the input is readonly", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether the input is readonly", type = "Boolean", defaultValue = "false")
     public void setReadonly(String readonly) {
         this.readonly = readonly;
     }
 
-    @StrutsTagAttribute(description="HTML size attribute",  type="Integer")
+    @StrutsTagAttribute(description = "HTML size attribute", type = "Integer")
     public void setSize(String size) {
         this.size = size;
     }
 
-    @StrutsTagAttribute(description="Specifies the html5 type element to display. e.g. text, email, url", defaultValue="text")
+    @StrutsTagAttribute(description = "Specifies the html5 type element to display. e.g. text, email, url", defaultValue = "text")
     public void setType(String type) {
         this.type = type;
     }

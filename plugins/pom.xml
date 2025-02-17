@@ -38,6 +38,7 @@
         <module>config-browser</module>
         <module>convention</module>
         <module>jasperreports</module>
+        <module>jasperreports7</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
         <module>json</module>

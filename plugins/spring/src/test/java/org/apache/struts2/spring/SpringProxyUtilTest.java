@@ -23,9 +23,9 @@ import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.TestSubBean;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.util.ProxyUtil;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -46,6 +46,8 @@ public class SpringProxyUtilTest extends XWorkTestCase {
     }
 
     public void testIsProxy() throws Exception {
+        assertFalse(ProxyUtil.isProxy(null));
+
         Object simpleAction = appContext.getBean("simple-action");
         assertFalse(ProxyUtil.isProxy(simpleAction));
 

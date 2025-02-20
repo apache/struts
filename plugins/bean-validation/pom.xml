@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.7.4-SNAPSHOT</version>
+        <version>6.7.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

@@ -30,18 +30,25 @@ env:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build and Test (JDK ${{ matrix.java }})${{ matrix.profile == '-Pjakartaee11' && ' with Jakarta EE 11' || matrix.profile }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '17', '21' ]
+        include:
+          - java: '17'
+            profile: ''
+          - java: '21'
+            profile: ''
+          - java: '21'
+            profile: '-Pjakartaee11'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Setup Java ${{ matrix.java }}
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: 'maven'
-      - name: Build with Maven on Java ${{ matrix.java }}
-        run: mvn -B -V -DskipAssembly verify --no-transfer-progress
+      - name: Maven Verify on Java ${{ matrix.java }}${{ matrix.profile == '-Pjakartaee11' && ' (Jakarta EE 11)' || matrix.profile }}
+        run: mvn -B -V -DskipAssembly verify ${{ matrix.profile }} --no-transfer-progress

@@ -151,6 +151,13 @@
             </modules>
         </profile>
         <profile>
+            <id>jakartaee11</id>
+            <properties>
+                <jakarta-ee.version>11.0.0-M5</jakarta-ee.version>
+                <spring.version>7.0.0-M2</spring.version>
+            </properties>
+        </profile>
+        <profile>
             <id>dependency-check</id>
             <build>
                 <plugins>

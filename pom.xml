@@ -106,24 +106,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2025-02-17T09:41:25Z</project.build.outputTimestamp>
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.7.1</asm.version>
-        <byte-buddy.version>1.16.1</byte-buddy.version>
+        <byte-buddy.version>1.17.1</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
-        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
         <jackson.version>2.18.2</jackson.version>
+        <jakarta-ee.version>10.0.0</jakarta-ee.version>
+        <jaxb-impl.version>4.0.5</jaxb-impl.version>
         <log4j2.version>2.24.3</log4j2.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-        <mockito.version>5.8.0</mockito.version>
+        <mockito.version>5.15.2</mockito.version>
         <ognl.version>3.3.5</ognl.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <spring.platformVersion>6.0.13</spring.platformVersion>
-        <tiles.version>3.0.8</tiles.version>
-        <tiles-request.version>1.0.7</tiles-request.version>
+        <spring.version>6.2.3</spring.version>
         <velocity-tools.version>3.1</velocity-tools.version>
+        <weld.version>5.1.2.Final</weld.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -166,36 +165,6 @@
                         </executions>
                     </plugin>
                 </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk17</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <doclint>none</doclint>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>
-                                    --add-opens java.base/java.lang=ALL-UNNAMED
-                                    --add-opens java.base/java.util=ALL-UNNAMED
-                                    @{argLine}
-                                </argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
             </build>
         </profile>
         <profile>
@@ -253,7 +222,11 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <argLine>@{argLine}</argLine>
+                        <argLine>
+                            --add-opens java.base/java.lang=ALL-UNNAMED
+                            --add-opens java.base/java.util=ALL-UNNAMED
+                            @{argLine}
+                        </argLine>
                         <includes>
                             <include>**/*Test.java</include>
                         </includes>
@@ -459,6 +432,7 @@
                     </reportSet>
                 </reportSets>
                 <configuration>
+                    <doclint>none</doclint>
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>
@@ -587,7 +561,6 @@
                 <artifactId>struts2-velocity-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-xslt-plugin</artifactId>
@@ -612,23 +585,20 @@
                 <artifactId>velocity-engine-core</artifactId>
                 <version>2.4.1</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.velocity.tools</groupId>
+                <artifactId>velocity-tools-generic</artifactId>
+                <version>${velocity-tools.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.velocity.tools</groupId>
-                <artifactId>velocity-tools-generic</artifactId>
-                <version>${velocity-tools.version}</version>
             </dependency>
 
             <dependency>
@@ -648,65 +618,25 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-digester3</artifactId>
-                <version>3.2</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakarta-ee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.easymock</groupId>
-                <artifactId>easymock</artifactId>
-                <version>5.4.0</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.awaitility</groupId>
-                <artifactId>awaitility</artifactId>
-                <version>4.2.2</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.servlet</groupId>
-                <artifactId>jakarta.servlet-api</artifactId>
-                <version>6.0.0</version>
-                <scope>provided</scope>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-bom</artifactId>
+                <version>${jaxb-impl.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
                 <version>5.0.0-M1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.el</groupId>
-                <artifactId>jakarta.el-api</artifactId>
-                <version>5.0.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.servlet.jsp</groupId>
-                <artifactId>jakarta.servlet.jsp-api</artifactId>
-                <version>3.1.0</version>
-                <scope>provided</scope>
+                <scope>test</scope>
             </dependency>
 
             <!-- Commons -->
@@ -756,47 +686,52 @@
                 <artifactId>commons-validator</artifactId>
                 <version>1.9.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.27.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-digester3</artifactId>
+                <version>3.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>asm</groupId>
+                        <artifactId>asm</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
-            <!-- Mocks for unit testing (by Spring) -->
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.platformVersion}</version>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.platformVersion}</version>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>5.4.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${spring.platformVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aspects</artifactId>
-                <version>${spring.platformVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.platformVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.platformVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring.platformVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.platformVersion}</version>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>4.2.2</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>mockobjects</groupId>
@@ -810,21 +745,18 @@
                 <version>4.9.0</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>jmock</groupId>
                 <artifactId>jmock</artifactId>
                 <version>1.2.0</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.26.3</version>
+                <version>3.27.3</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -843,6 +775,12 @@
                 <version>${byte-buddy.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>7.11.0</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -857,34 +795,10 @@
 
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
+                <artifactId>log4j-bom</artifactId>
                 <version>${log4j2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-jcl</artifactId>
-                <version>${log4j2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>${log4j2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>1.27.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>7.5.1</version><!-- the latest version supporting Java 1.8 -->
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -900,52 +814,12 @@
             </dependency>
 
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
                 <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-xml</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.juneau</groupId>
-                <artifactId>juneau-marshall</artifactId>
-                <version>8.1.3</version>
-            </dependency>
-
-            <!-- CDI & Weld -->
-            <dependency>
-                <groupId>jakarta.enterprise</groupId>
-                <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                <version>4.0.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core-impl</artifactId>
-                <version>5.1.2.Final</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.annotation</groupId>
-                        <artifactId>jakarta.annotation-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.weld.se</groupId>
-                <artifactId>weld-se-core</artifactId>
-                <version>5.1.2.Final</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 

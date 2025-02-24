@@ -20,11 +20,9 @@ package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.ActionProxy;
-import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsTestCase;
-import org.easymock.EasyMock;
+import org.apache.struts2.util.ValueStack;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
@@ -34,42 +32,53 @@ import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-/**
- *
- */
 public class ChartResultTest extends StrutsTestCase {
+
+    private ChartResult result;
 
     private ActionInvocation actionInvocation;
     private JFreeChart mockChart;
     private MockServletOutputStream os;
-    private ValueStack stack;
-    private ActionProxy mockActionProxy;
     private HttpServletResponse responseMock;
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        result = new ChartResult();
+
+        var data = new DefaultPieDataset<String>();
+        data.setValue("Java", Double.valueOf(43.2));
+        data.setValue("Visual Basic", Double.valueOf(0.0));
+        data.setValue("C/C++", Double.valueOf(17.5));
+        mockChart = ChartFactory.createPieChart("Pie Chart", data, true, true, false);
+
+        actionInvocation = mock(ActionInvocation.class);
+        when(actionInvocation.getStack()).thenReturn(ActionContext.getContext().getValueStack());
+
+        os = new MockServletOutputStream();
+        responseMock = mock(HttpServletResponse.class);
+        when(responseMock.getOutputStream()).thenReturn(os);
+
+        ServletActionContext.setResponse(responseMock);
+    }
 
     public void testChart() throws Exception {
-        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
-        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-
-        ChartResult result = new ChartResult();
-
         result.setChart(mockChart);
 
         result.setHeight("10");
         result.setWidth("10");
         result.execute(actionInvocation);
 
-        EasyMock.verify(responseMock);
         assertTrue(os.isWritten());
     }
 
     public void testContentTypePng() throws Exception {
-        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
-        responseMock.setContentType("image/png");
-        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-        ChartResult result = new ChartResult();
-
         result.setChart(mockChart);
 
         result.setHeight("10");
@@ -77,16 +86,11 @@ public class ChartResultTest extends StrutsTestCase {
         result.setType("png");
         result.execute(actionInvocation);
 
-        EasyMock.verify(responseMock);
+        verify(responseMock).setContentType("image/png");
         assertTrue(os.isWritten());
     }
 
     public void testContentTypeJpg() throws Exception {
-        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
-        responseMock.setContentType("image/jpg");
-        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-        ChartResult result = new ChartResult();
-
         result.setChart(mockChart);
 
         result.setHeight("10");
@@ -94,36 +98,19 @@ public class ChartResultTest extends StrutsTestCase {
         result.setType("jpg");
         result.execute(actionInvocation);
 
-        EasyMock.verify(responseMock);
+        verify(responseMock).setContentType("image/jpg");
         assertTrue(os.isWritten());
     }
 
-
     public void testChartNotSet() {
-        ChartResult result = new ChartResult();
-        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-
-        // expect exception if chart not set.
         result.setChart(null);
 
-        try {
-            result.execute(actionInvocation);
-            fail();
-        } catch (Exception e) {
-        }
+        assertThrows(NullPointerException.class, () -> result.execute(actionInvocation));
 
-        EasyMock.verify(responseMock);
         assertFalse(os.isWritten());
     }
 
-
     public void testChartWithOGNLProperties() throws Exception {
-        EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
-        EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-
-
-        ChartResult result = new ChartResult();
-
         result.setChart(mockChart);
 
         result.setHeight("${myHeight}");
@@ -135,50 +122,14 @@ public class ChartResultTest extends StrutsTestCase {
 
         result.execute(actionInvocation);
 
-        EasyMock.verify(responseMock);
         assertEquals(result.getHeight(), stack.findValue("myHeight").toString());
         assertEquals(result.getWidth(), stack.findValue("myWidth").toString());
-        assertEquals("250", result.getHeight().toString());
-        assertEquals("150", result.getWidth().toString());
+        assertEquals("250", result.getHeight());
+        assertEquals("150", result.getWidth());
         assertTrue(os.isWritten());
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        DefaultPieDataset data = new DefaultPieDataset();
-        data.setValue("Java", new Double(43.2));
-        data.setValue("Visual Basic", new Double(0.0));
-        data.setValue("C/C++", new Double(17.5));
-        mockChart = ChartFactory.createPieChart("Pie Chart", data, true, true, false);
-
-
-        stack = ActionContext.getContext().getValueStack();
-
-        mockActionProxy = EasyMock.createNiceMock(ActionProxy.class);
-        EasyMock.expect(mockActionProxy.getNamespace()).andReturn("/html");
-
-        actionInvocation = EasyMock.createMock(ActionInvocation.class);
-
-        EasyMock.expect(actionInvocation.getStack()).andReturn(stack).anyTimes();
-
-
-        os = new MockServletOutputStream();
-        responseMock = EasyMock.createNiceMock(HttpServletResponse.class);
-
-        ServletActionContext.setResponse((HttpServletResponse) responseMock);
-    }
-
-    protected void tearDown() throws Exception {
-        actionInvocation = null;
-        os = null;
-        responseMock = null;
-        stack = null;
-        mockActionProxy = null;
-    }
-
-
-    private class MockServletOutputStream extends ServletOutputStream {
+    private static class MockServletOutputStream extends ServletOutputStream {
         // very simple check that outputStream was written to.
         private boolean written = false;
 
@@ -189,6 +140,7 @@ public class ChartResultTest extends StrutsTestCase {
             return written;
         }
 
+        @Override
         public void write(int arg0) throws IOException {
             written = true;
         }

@@ -931,7 +931,7 @@
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-core-impl</artifactId>
-                <version>5.1.2.Final</version>
+                <version>6.0.1.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>jakarta.annotation</groupId>

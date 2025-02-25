@@ -18,41 +18,42 @@
  */
 package org.apache.struts2.views.velocity.template;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.XWorkTestCase;
-import org.apache.struts2.inject.Container;
 import org.apache.struts2.components.template.FreemarkerTemplateEngine;
 import org.apache.struts2.components.template.JspTemplateEngine;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.inject.Container;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.Set;
 
-public class VelocityTemplateEngineTest extends XWorkTestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class VelocityTemplateEngineTest {
 
     private TemplateEngineManager mgr;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
-
         mgr = new TemplateEngineManager();
-        Mock mockContainer = new Mock(Container.class);
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("jsp")), new JspTemplateEngine());
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("vm")), new VelocityTemplateEngine());
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("ftl")), new FreemarkerTemplateEngine());
-        mockContainer.matchAndReturn("getInstanceNames", C.args(C.eq(TemplateEngine.class)), new HashSet<String>() {{
-            add("jsp");
-            add("vm");
-            add("ftl");
-        }});
 
-        mgr.setContainer((Container) mockContainer.proxy());
+        var mockContainer = mock(Container.class);
+        when(mockContainer.getInstance(TemplateEngine.class, "jsp")).thenReturn(new JspTemplateEngine());
+        when(mockContainer.getInstance(TemplateEngine.class, "vm")).thenReturn(new VelocityTemplateEngine());
+        when(mockContainer.getInstance(TemplateEngine.class, "ftl")).thenReturn(new FreemarkerTemplateEngine());
+        when(mockContainer.getInstanceNames(TemplateEngine.class)).thenReturn(Set.of("jsp", "vm", "ftl"));
+
+        mgr.setContainer(mockContainer);
         mgr.setDefaultTemplateType("jsp");
     }
 
-    public void testTemplateTypeFromTemplateNameAndDefaults() {
+    @Test
+    public void templateTypeFromTemplateNameAndDefaults() {
 
         TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), null);
         assertTrue(engine instanceof JspTemplateEngine);
@@ -60,7 +61,8 @@ public class VelocityTemplateEngineTest extends XWorkTestCase {
         assertTrue(engine instanceof VelocityTemplateEngine);
     }
 
-    public void testTemplateTypeOverrides() {
+    @Test
+    public void templateTypeOverrides() {
         TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), "ftl");
         assertTrue(engine instanceof FreemarkerTemplateEngine);
         engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo.vm"), "ftl");
@@ -69,16 +71,13 @@ public class VelocityTemplateEngineTest extends XWorkTestCase {
         assertTrue(engine instanceof FreemarkerTemplateEngine);
     }
 
-    public void testTemplateTypeUsesDefaultWhenNotSetInConfiguration() {
+    @Test
+    public void templateTypeUsesDefaultWhenNotSetInConfiguration() {
         mgr.setDefaultTemplateType(null);
         TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), null);
         Template template = new Template("/template", "simple", "foo." + TemplateEngineManager.DEFAULT_TEMPLATE_TYPE);
         TemplateEngine defaultTemplateEngine = mgr.getTemplateEngine(template, null);
         assertEquals(engine.getClass(), defaultTemplateEngine.getClass());
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
 }

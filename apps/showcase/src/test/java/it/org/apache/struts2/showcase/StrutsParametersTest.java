@@ -229,7 +229,8 @@ public class StrutsParametersTest {
     }
 
     private void assertText(Map<String, String> params, String text) throws IOException {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ParameterUtils.getBaseUrl()).path("/paramsannotation/test.action");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(ParameterUtils.getBaseUrl())
+                .path("/paramsannotation/test.action");
         params.forEach(builder::queryParam);
         String url = builder.toUriString();
         HtmlPage page = webClient.getPage(url);

@@ -21,11 +21,14 @@ package org.apache.struts2.cdi;
 import org.jboss.weld.bootstrap.api.helpers.RegistrySingletonProvider;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -33,14 +36,28 @@ import static org.junit.Assert.assertTrue;
 
 public class CdiObjectFactoryTest {
 
+    private static final String SHARED_JNDI = "org.osjava.sj.jndi.shared";
+    private static InitialContext context;
+    private static WeldContainer container;
+
     @BeforeClass
     public static void setup() throws Exception {
-        Weld weld = new Weld().containerId(RegistrySingletonProvider.STATIC_INSTANCE);
-        WeldContainer container = weld.initialize();
+        container = new Weld().containerId(RegistrySingletonProvider.STATIC_INSTANCE).initialize();
 
-        SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
-        builder.activate();
-        builder.bind(CdiObjectFactory.CDI_JNDIKEY_BEANMANAGER_COMP, container.getBeanManager());
+        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.osjava.sj.SimpleContextFactory");
+        System.setProperty(SHARED_JNDI, "true");
+        context = new InitialContext();
+        context.bind(CdiObjectFactory.CDI_JNDIKEY_BEANMANAGER_COMP, container.getBeanManager());
+    }
+
+    @AfterClass
+    public static void tearDown() throws NamingException {
+        container.shutdown();
+
+        context.unbind(CdiObjectFactory.CDI_JNDIKEY_BEANMANAGER_COMP);
+        context.close();
+        System.clearProperty(Context.INITIAL_CONTEXT_FACTORY);
+        System.clearProperty(SHARED_JNDI);
     }
 
     @Test
@@ -50,16 +67,16 @@ public class CdiObjectFactoryTest {
 
     @Test
     public void testGetBean() throws Exception {
-        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory();
-        FooConsumer fooConsumer = (FooConsumer) cdiObjectFactory.buildBean(FooConsumer.class.getCanonicalName(), null, false);
+        var cdiObjectFactory = new CdiObjectFactory();
+        var fooConsumer = (FooConsumer) cdiObjectFactory.buildBean(FooConsumer.class.getCanonicalName(), null, false);
         assertNotNull(fooConsumer);
         assertNotNull(fooConsumer.fooService);
     }
 
     @Test
     public void testGetInjectionTarget() {
-        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory();
-        final InjectionTarget<?> injectionTarget = cdiObjectFactory.getInjectionTarget(FooConsumer.class);
+        var cdiObjectFactory = new CdiObjectFactory();
+        InjectionTarget<?> injectionTarget = cdiObjectFactory.getInjectionTarget(FooConsumer.class);
         assertNotNull(injectionTarget);
         assertTrue(cdiObjectFactory.injectionTargetCache.containsKey(FooConsumer.class));
         assertSame(cdiObjectFactory.getInjectionTarget(FooConsumer.class), injectionTarget);

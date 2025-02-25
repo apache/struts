@@ -25,6 +25,7 @@
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
         <version>7.0.4-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
     <artifactId>struts2-apps</artifactId>
     <packaging>pom</packaging>
@@ -93,9 +94,7 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

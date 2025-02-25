@@ -417,7 +417,6 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
         // when
-        mockRequest.setCharacterEncoding(null);
         multiPart.setDefaultEncoding(StandardCharsets.ISO_8859_1.name());
         multiPart.parse(mockRequest, tempDir);
 

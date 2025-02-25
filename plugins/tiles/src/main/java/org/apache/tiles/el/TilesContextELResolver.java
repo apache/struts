@@ -70,7 +70,7 @@ public class TilesContextELResolver extends ELResolver {
     /**
      * {@inheritDoc}
      */
-    @Override
+    // @Override // To allow compilation with Maven profile jakartaee11 where this interface method does not exist
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
         // only resolve at the root of the context

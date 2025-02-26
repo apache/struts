@@ -50,6 +50,10 @@ import java.util.*;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -100,6 +104,29 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         Date dateRfc3339DateOnly = (Date) converter.convertValue(context, null, null, null, "2001-01-10", Date.class);
         assertEquals(date, dateRfc3339DateOnly);
+
+        // java.time library tests
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate localDate = LocalDate.parse("01/10/2001", formatterDate);
+
+        DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse("2001-01-10T10:11:12", formatterDateTime);
+
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime localTime = LocalTime.parse("10:11:12", formatterTime);
+
+        String localDateStr = (String) converter.convertValue(context, null, null, null, localDate, String.class);
+        String localDateTimeStr = (String) converter.convertValue(context, null, null, null, localDateTime, String.class);
+        String localTimeStr = (String) converter.convertValue(context, null, null, null, localTime, String.class);
+
+        LocalDate localDate2 = (LocalDate) converter.convertValue(context, null, null, null, localDateStr, LocalDate.class);
+        assertEquals(localDate, localDate2);
+
+        LocalDateTime localDateTime2 = (LocalDateTime) converter.convertValue(context, null, null, null, localDateTimeStr, LocalDateTime.class);
+        assertEquals(localDateTime, localDateTime2);
+
+        LocalTime localTime2 = (LocalTime) converter.convertValue(context, null, null, null, localTimeStr, LocalTime.class);
+        assertEquals(localTime, localTime2);
     }
 
     public void testDateConversionWithDefault() throws ParseException {

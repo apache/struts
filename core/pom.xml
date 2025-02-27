@@ -187,11 +187,17 @@
             <artifactId>commons-text</artifactId>
         </dependency>
 
-        <!-- Optional used in org.apache.struts2.util.ProxyUtil to detect if object is HibernateProxy -->
         <dependency>
+            <!-- Optional used in org.apache.struts2.util.ProxyUtil to detect if object is HibernateProxy -->
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.6.15.Final</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- Optional used in org.apache.struts2.util.ProxyUtil to detect if object is Spring proxy -->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
             <optional>true</optional>
         </dependency>
 

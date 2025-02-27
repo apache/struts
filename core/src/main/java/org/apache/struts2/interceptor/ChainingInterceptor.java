@@ -20,11 +20,11 @@ package org.apache.struts2.interceptor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.Unchainable;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ProxyUtil;
@@ -167,17 +167,18 @@ public class ChainingInterceptor extends AbstractInterceptor {
     }
 
     private void copyStack(ActionInvocation invocation, CompoundRoot root) {
-        List list = prepareList(root);
+        List<Object> list = prepareList(root);
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
-            if (shouldCopy(object)) {
-                Object action = invocation.getAction();
-                Class<?> editable = null;
-                if(ProxyUtil.isProxy(action)) {
-                    editable = ProxyUtil.ultimateTargetClass(action);
-                }
-                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
+            if (!shouldCopy(object)) {
+                continue;
             }
+            Object action = invocation.getAction();
+            Class<?> editable = null;
+            if (ProxyUtil.isProxy(action)) {
+                editable = ProxyUtil.ultimateTargetClass(action);
+            }
+            reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
         }
     }
 
@@ -204,9 +205,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
         return o != null && !(o instanceof Unchainable);
     }
 
-    @SuppressWarnings("unchecked")
-    private List prepareList(CompoundRoot root) {
-        List list = new ArrayList(root);
+    private List<Object> prepareList(CompoundRoot root) {
+        var list = new ArrayList<>(root);
         list.remove(0);
         Collections.reverse(list);
         return list;

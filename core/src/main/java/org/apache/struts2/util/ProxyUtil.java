@@ -26,15 +26,19 @@ import org.apache.struts2.ognl.OgnlCache;
 import org.apache.struts2.ognl.OgnlCacheFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.aop.SpringProxy;
+import org.springframework.aop.TargetClassAware;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 
 import static java.lang.reflect.Modifier.isPublic;
+import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * <code>ProxyUtil</code>
@@ -44,16 +48,13 @@ import static java.lang.reflect.Modifier.isPublic;
  *
  */
 public class ProxyUtil {
-    private static final String SPRING_ADVISED_CLASS_NAME = "org.springframework.aop.framework.Advised";
-    private static final String SPRING_SPRINGPROXY_CLASS_NAME = "org.springframework.aop.SpringProxy";
-    private static final String SPRING_SINGLETONTARGETSOURCE_CLASS_NAME = "org.springframework.aop.target.SingletonTargetSource";
-    private static final String SPRING_TARGETCLASSAWARE_CLASS_NAME = "org.springframework.aop.TargetClassAware";
-    private static final String HIBERNATE_HIBERNATEPROXY_CLASS_NAME = "org.hibernate.proxy.HibernateProxy";
     private static final int CACHE_MAX_SIZE = 10000;
     private static final int CACHE_INITIAL_CAPACITY = 256;
     private static final OgnlCache<Class<?>, Boolean> isProxyCache = new DefaultOgnlCacheFactory<Class<?>, Boolean>(
             CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
     private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
+            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+    private static final OgnlCache<Object, Class<?>> targetClassCache = new DefaultOgnlCacheFactory<Object, Class<?>>(
             CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
 
     /**
@@ -65,15 +66,18 @@ public class ProxyUtil {
      * object as fallback; never {@code null})
      */
     public static Class<?> ultimateTargetClass(Object candidate) {
-        Class<?> result = null;
-        if (isSpringAopProxy(candidate))
-            result = springUltimateTargetClass(candidate);
-
-        if (result == null) {
-            result = candidate.getClass();
-        }
-
-        return result;
+        return targetClassCache.computeIfAbsent(candidate, k -> {
+            Class<?> result = null;
+            if (isSpringAopProxy(k)) {
+                result = springUltimateTargetClass(k);
+            } else if (isHibernateProxy(k)) {
+                result = getHibernateProxyTarget(k).getClass();
+            }
+            if (result == null) {
+                result = k.getClass();
+            }
+            return result;
+        });
     }
 
     /**
@@ -82,16 +86,8 @@ public class ProxyUtil {
      */
     public static boolean isProxy(Object object) {
         if (object == null) return false;
-        Class<?> clazz = object.getClass();
-        Boolean flag = isProxyCache.get(clazz);
-        if (flag != null) {
-            return flag;
-        }
-
-        boolean isProxy = isSpringAopProxy(object) || isHibernateProxy(object);
-
-        isProxyCache.put(clazz, isProxy);
-        return isProxy;
+        return isProxyCache.computeIfAbsent(object.getClass(),
+                k -> isSpringAopProxy(object) || isHibernateProxy(object));
     }
 
     /**
@@ -100,19 +96,11 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxyMember(Member member, Object object) {
-        if (!Modifier.isStatic(member.getModifiers()) && !isProxy(object) && !isHibernateProxy(object)) {
+        if (!isStatic(member.getModifiers()) && !isProxy(object)) {
             return false;
         }
-
-        Boolean flag = isProxyMemberCache.get(member);
-        if (flag != null) {
-            return flag;
-        }
-
-        boolean isProxyMember = isSpringProxyMember(member) || isHibernateProxyMember(member);
-
-        isProxyMemberCache.put(member, isProxyMember);
-        return isProxyMember;
+        return isProxyMemberCache.computeIfAbsent(member,
+                k -> isSpringProxyMember(member) || isHibernateProxyMember(member));
     }
 
     /**
@@ -123,7 +111,7 @@ public class ProxyUtil {
     public static boolean isHibernateProxy(Object object) {
         try {
             return object != null && HibernateProxy.class.isAssignableFrom(object.getClass());
-        } catch (NoClassDefFoundError ignored) {
+        } catch (LinkageError ignored) {
             return false;
         }
     }
@@ -135,12 +123,10 @@ public class ProxyUtil {
      */
     public static boolean isHibernateProxyMember(Member member) {
         try {
-            Class<?> clazz = ClassLoaderUtil.loadClass(HIBERNATE_HIBERNATEPROXY_CLASS_NAME, ProxyUtil.class);
-            return hasMember(clazz, member);
-        } catch (ClassNotFoundException ignored) {
+            return hasMember(HibernateProxy.class, member);
+        } catch (LinkageError ignored) {
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -152,20 +138,11 @@ public class ProxyUtil {
      * object as fallback; never {@code null})
      */
     private static Class<?> springUltimateTargetClass(Object candidate) {
-        Object current = candidate;
-        Class<?> result = null;
-        while (null != current && implementsInterface(current.getClass(), SPRING_TARGETCLASSAWARE_CLASS_NAME)) {
-            try {
-                result = (Class<?>) MethodUtils.invokeMethod(current, "getTargetClass");
-            } catch (Throwable ignored) {
-            }
-            current = getSingletonTarget(current);
+        try {
+            return AopProxyUtils.ultimateTargetClass(candidate);
+        } catch (LinkageError ignored) {
+            return candidate.getClass();
         }
-        if (result == null) {
-            Class<?> clazz = candidate.getClass();
-            result = (isCglibProxyClass(clazz) ? clazz.getSuperclass() : candidate.getClass());
-        }
-        return result;
     }
 
     /**
@@ -173,9 +150,11 @@ public class ProxyUtil {
      * @param object the object to check
      */
     private static boolean isSpringAopProxy(Object object) {
-        Class<?> clazz = object.getClass();
-        return (implementsInterface(clazz, SPRING_SPRINGPROXY_CLASS_NAME) && (Proxy.isProxyClass(clazz)
-                || isCglibProxyClass(clazz)));
+        try {
+            return AopUtils.isAopProxy(object);
+        } catch (LinkageError ignored) {
+            return false;
+        }
     }
 
     /**
@@ -184,61 +163,15 @@ public class ProxyUtil {
      */
     private static boolean isSpringProxyMember(Member member) {
         try {
-            Class<?> clazz = ClassLoaderUtil.loadClass(SPRING_ADVISED_CLASS_NAME, ProxyUtil.class);
-            if (hasMember(clazz, member))
+            if (hasMember(Advised.class, member))
                 return true;
-            clazz = ClassLoaderUtil.loadClass(SPRING_TARGETCLASSAWARE_CLASS_NAME, ProxyUtil.class);
-            if (hasMember(clazz, member))
+            if (hasMember(TargetClassAware.class, member))
                 return true;
-            clazz = ClassLoaderUtil.loadClass(SPRING_SPRINGPROXY_CLASS_NAME, ProxyUtil.class);
-            if (hasMember(clazz, member))
+            if (hasMember(SpringProxy.class, member))
                 return true;
-        } catch (ClassNotFoundException ignored) {
+        } catch (LinkageError ignored) {
         }
-
         return false;
-    }
-
-    /**
-     * Obtain the singleton target object behind the given spring proxy, if any.
-     * @param candidate the (potential) spring proxy to check
-     * @return the singleton target object, or {@code null} in any other case
-     * (not a spring proxy, not an existing singleton target)
-     */
-    private static Object getSingletonTarget(Object candidate) {
-        try {
-            if (implementsInterface(candidate.getClass(), SPRING_ADVISED_CLASS_NAME)) {
-                Object targetSource = MethodUtils.invokeMethod(candidate, "getTargetSource");
-                if (implementsInterface(targetSource.getClass(), SPRING_SINGLETONTARGETSOURCE_CLASS_NAME)) {
-                    return MethodUtils.invokeMethod(targetSource, "getTarget");
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-
-        return null;
-    }
-
-    /**
-     * Check whether the specified class is a CGLIB-generated class.
-     * @param clazz the class to check
-     */
-    private static boolean isCglibProxyClass(Class<?> clazz) {
-        return (clazz != null && clazz.getName().contains("$$"));
-    }
-
-    /**
-     * Check whether the given class implements an interface with a given class name.
-     * @param clazz the class to check
-     * @param ifaceClassName the interface class name to check
-     */
-    private static boolean implementsInterface(Class<?> clazz, String ifaceClassName) {
-        try {
-            Class<?> ifaceClass = ClassLoaderUtil.loadClass(ifaceClassName, ProxyUtil.class);
-            return ifaceClass.isAssignableFrom(clazz);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 
     /**
@@ -247,16 +180,15 @@ public class ProxyUtil {
      * @param member the member to check
      */
     private static boolean hasMember(Class<?> clazz, Member member) {
-        if (member instanceof Method) {
-            return null != MethodUtils.getMatchingMethod(clazz, member.getName(), ((Method) member).getParameterTypes());
+        if (member instanceof Method method) {
+            return null != MethodUtils.getMatchingMethod(clazz, member.getName(), method.getParameterTypes());
         }
         if (member instanceof Field) {
             return null != FieldUtils.getField(clazz, member.getName(), true);
         }
-        if (member instanceof Constructor) {
-            return null != ConstructorUtils.getMatchingAccessibleConstructor(clazz, ((Constructor) member).getParameterTypes());
+        if (member instanceof Constructor<?> constructor) {
+            return null != ConstructorUtils.getMatchingAccessibleConstructor(clazz, constructor.getParameterTypes());
         }
-
         return false;
     }
 
@@ -266,26 +198,34 @@ public class ProxyUtil {
     public static Object getHibernateProxyTarget(Object object) {
         try {
             return Hibernate.unproxy(object);
-        } catch (NoClassDefFoundError ignored) {
+        } catch (LinkageError ignored) {
             return object;
         }
     }
 
     /**
+     * @deprecated since 7.1, use {@link #resolveTargetMember(Member, Class)} instead.
+     */
+    @Deprecated
+    public static Member resolveTargetMember(Member proxyMember, Object target) {
+        return resolveTargetMember(proxyMember, target.getClass());
+    }
+
+    /**
      * @return matching member on target object if one exists, otherwise the same member
      */
-    public static Member resolveTargetMember(Member proxyMember, Object target) {
+    public static Member resolveTargetMember(Member proxyMember, Class<?> targetClass) {
         int mod = proxyMember.getModifiers();
         if (proxyMember instanceof Method) {
             if (isPublic(mod)) {
-                return MethodUtils.getMatchingAccessibleMethod(target.getClass(), proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
+                return MethodUtils.getMatchingAccessibleMethod(targetClass, proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
             } else {
-                return MethodUtils.getMatchingMethod(target.getClass(), proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
+                return MethodUtils.getMatchingMethod(targetClass, proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
             }
         } else if (proxyMember instanceof Field) {
-            return FieldUtils.getField(target.getClass(), proxyMember.getName(), isPublic(mod));
+            return FieldUtils.getField(targetClass, proxyMember.getName(), isPublic(mod));
         } else if (proxyMember instanceof Constructor && isPublic(mod)) {
-            return ConstructorUtils.getMatchingAccessibleConstructor(target.getClass(), ((Constructor<?>) proxyMember).getParameterTypes());
+            return ConstructorUtils.getMatchingAccessibleConstructor(targetClass, ((Constructor<?>) proxyMember).getParameterTypes());
         }
         return proxyMember;
     }

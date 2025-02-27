@@ -18,15 +18,20 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StubValueStack;
-import org.apache.struts2.security.AcceptedPatternsChecker;
-import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
+import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.security.AcceptedPatternsChecker.IsAccepted;
+import org.apache.struts2.security.ExcludedPatternsChecker.IsExcluded;
+import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -56,9 +62,15 @@ public class StrutsParameterAnnotationTest {
         threadAllowlist = new ThreadAllowlist();
         parametersInterceptor.setThreadAllowlist(threadAllowlist);
 
+        var ognlUtil = new OgnlUtil(
+                new DefaultOgnlExpressionCacheFactory<>(String.valueOf(1000), LRU.toString()),
+                new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(1000), LRU.toString()),
+                new StrutsOgnlGuard());
+        parametersInterceptor.setOgnlUtil(ognlUtil);
+
         NotExcludedAcceptedPatternsChecker checker = mock(NotExcludedAcceptedPatternsChecker.class);
-        when(checker.isAccepted(anyString())).thenReturn(AcceptedPatternsChecker.IsAccepted.yes(""));
-        when(checker.isExcluded(anyString())).thenReturn(NotExcludedAcceptedPatternsChecker.IsExcluded.no(new HashSet<>()));
+        when(checker.isAccepted(anyString())).thenReturn(IsAccepted.yes(""));
+        when(checker.isExcluded(anyString())).thenReturn(IsExcluded.no(Set.of()));
         parametersInterceptor.setAcceptedPatterns(checker);
         parametersInterceptor.setExcludedPatterns(checker);
     }

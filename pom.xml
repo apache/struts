@@ -277,7 +277,6 @@
                     <configuration>
                         <doclint>none</doclint>
                         <failOnError>false</failOnError>
-                        <source>8</source>
                     </configuration>
                 </plugin>
                 <plugin>

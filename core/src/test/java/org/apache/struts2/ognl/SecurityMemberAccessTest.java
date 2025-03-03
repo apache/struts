@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.MemberAccess;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.test.TestBean2;
 import org.apache.struts2.util.Foo;
-import ognl.MemberAccess;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.junit.Before;

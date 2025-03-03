@@ -20,12 +20,15 @@ package org.apache.struts2.ognl;
 
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.XWorkJUnit4TestCase;
-import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.aop.MethodBeforeAdvice;
+import org.springframework.aop.framework.ProxyFactory;
 
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -174,5 +177,41 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
         Object action = proxy.getAction();
         assertTrue(sma.isAccessible(context, action, proxyObjectProxyMember, null));
+    }
+
+    /**
+     * When the allowlist is enabled and proxy object access is allowed, Spring proxies should be allowlisted based
+     * on their underlying target object. Class allowlisting should work as expected.
+     */
+    @Test
+    public void classInclusion_springProxy_allowProxyObjectAccess() throws Exception {
+        SpringService proxyObject = newSpringService();
+        Method proxyMethod = proxyObject.getClass().getMethod("doSomething");
+
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useAllowlistClasses(SpringServiceImpl.class.getName());
+
+        assertTrue(sma.checkAllowlist(proxyObject, proxyMethod));
+    }
+
+    private static SpringService newSpringService() {
+        SpringService target = new SpringServiceImpl();
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        proxyFactory.addAdvice(((MethodBeforeAdvice) (method, args, target1) -> {
+            System.out.println("Intercepting: " + method.getName());
+        }));
+        return (SpringService) proxyFactory.getProxy();
+    }
+}
+
+interface SpringService {
+    void doSomething();
+}
+
+class SpringServiceImpl implements SpringService {
+    @Override
+    public void doSomething() {
+        System.out.println("Doing something...");
     }
 }

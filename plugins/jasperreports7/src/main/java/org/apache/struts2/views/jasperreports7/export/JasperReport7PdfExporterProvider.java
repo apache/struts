@@ -52,7 +52,7 @@ public class JasperReport7PdfExporterProvider implements JasperReport7ExporterPr
             OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(responseStream);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output", e);
+            LOG.error("Error writing PDF report output using: {}", JasperReport7PdfExporterProvider.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

@@ -21,6 +21,7 @@ package org.apache.struts2.views.jasperreports7;
 import org.apache.struts2.util.ValueStack;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 
 /**
@@ -50,10 +51,11 @@ public class ValueStackShadowMap extends HashMap<String, Object> {
      * @return <tt>true</tt>, if contains key, <tt>false</tt> otherwise.
      * @see java.util.HashMap#containsKey
      */
-    public boolean containsKey(String key) {
+    @Override
+    public boolean containsKey(Object key) {
         boolean hasKey = super.containsKey(key);
 
-        if (!hasKey && valueStack.findValue(key) != null) {
+        if (!hasKey && key != null && valueStack.findValue(key.toString()) != null) {
             hasKey = true;
         }
 
@@ -67,11 +69,12 @@ public class ValueStackShadowMap extends HashMap<String, Object> {
      * @return value - The object from HashMap or if null, from the valueStack.
      * @see java.util.HashMap#get
      */
-    public Object get(String key) {
+    @Override
+    public Object get(Object key) {
         Object value = super.get(key);
 
-        if ((value == null)) {
-            value = valueStack.findValue(key);
+        if (key != null && value == null) {
+            value = valueStack.findValue(key.toString());
         }
 
         return value;

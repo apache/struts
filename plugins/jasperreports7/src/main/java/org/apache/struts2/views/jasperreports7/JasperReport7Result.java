@@ -209,7 +209,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
             }
             exportReport(invocation, jasperPrint, exporterProvider);
         } catch (StrutsException e) {
-            LOG.error("Error producing {} report for uri {}", format, systemId, e);
+            LOG.error("Error producing: {} report for uri: {}", format, systemId, e);
             throw new ServletException(e.getMessage(), e);
         } finally {
             try {
@@ -228,8 +228,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         if (reevaluate) {
             return new ValueStackDataSource(stack, parsedDataSource, wrapField);
         } else {
-            throw new ServletException(String.format("Error building dataSource for excluded or not accepted [%s]",
-                    parsedDataSource));
+            throw new ServletException(String.format("Unaccepted dataSource expression [%s]", parsedDataSource));
         }
     }
 
@@ -263,7 +262,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);
         Map<String, Object> reportParams = reevaluate ? (Map<String, Object>) stack.findValue(parsedReportParameters) : null;
         if (reportParams != null) {
-            LOG.debug("Found report parameters; adding to parameters...");
+            LOG.debug("Found report parameters: {}", reportParams);
             parameters.putAll(reportParams);
         }
     }

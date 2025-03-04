@@ -52,7 +52,7 @@ public class JasperReport7RtfExporterProvider implements JasperReport7ExporterPr
             WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(responseStream);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output", e);
+            LOG.error("Error writing RTF report output using: {}", JasperReport7RtfExporterProvider.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

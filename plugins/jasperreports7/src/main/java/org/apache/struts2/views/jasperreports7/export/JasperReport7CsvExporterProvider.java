@@ -46,15 +46,13 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
      */
     private String defaultDelimiter = ",";
 
-    public JasperReport7CsvExporterProvider() {
-    }
-
+    @Inject
     public JasperReport7CsvExporterProvider(
             @Inject(value = JasperReport7Constants.STRUTS_JASPER_REPORT_CSV_DELIMITER, required = false)
             String defaultDelimiter
     ) {
         if (StringUtils.isNoneEmpty(defaultDelimiter)) {
-            LOG.debug("Using custom delimiter [{}]", defaultDelimiter);
+            LOG.debug("Using custom default delimiter [{}]", defaultDelimiter);
             this.defaultDelimiter = defaultDelimiter;
         }
     }
@@ -89,7 +87,7 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
             WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(responseStream);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output", e);
+            LOG.error("Error writing CSV report output using: {}", JasperReport7CsvExporterProvider.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

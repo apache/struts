@@ -52,7 +52,7 @@ public class JasperReport7XlsxExporterProvider implements JasperReport7ExporterP
             OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(responseStream);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output", e);
+            LOG.error("Error writing XLSX report output using: {}", JasperReport7XlsxExporterProvider.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

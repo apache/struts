@@ -46,9 +46,7 @@ public class JasperReport7HtmlExporterProvider implements JasperReport7ExporterP
      */
     private String imageServletUrl = "/images/";
 
-    public JasperReport7HtmlExporterProvider() {
-    }
-
+    @Inject
     public JasperReport7HtmlExporterProvider(
             @Inject(value = JasperReport7Constants.STRUTS_JASPER_REPORT_HTML_IMAGE_SERVLET_URL, required = false)
             String imageServletUrl
@@ -78,7 +76,7 @@ public class JasperReport7HtmlExporterProvider implements JasperReport7ExporterP
             exporterOutput.setImageHandler(imageHandler);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output", e);
+            LOG.error("Error writing HTML report output using: {}", JasperReport7HtmlExporterProvider.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

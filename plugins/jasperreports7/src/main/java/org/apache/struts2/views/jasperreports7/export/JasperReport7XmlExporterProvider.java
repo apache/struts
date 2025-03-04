@@ -52,7 +52,7 @@ public class JasperReport7XmlExporterProvider implements JasperReport7ExporterPr
             XmlExporterOutput exporterOutput = new SimpleXmlExporterOutput(responseOutput);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {
-            LOG.error("Error writing report output using: {}", JRXmlExporter.class.getName(), e);
+            LOG.error("Error writing report XML output using: {}", JRXmlExporter.class.getName(), e);
             throw new StrutsException(e.getMessage(), e);
         }
 

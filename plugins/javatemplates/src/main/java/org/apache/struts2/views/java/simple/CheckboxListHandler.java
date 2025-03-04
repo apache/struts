@@ -68,14 +68,15 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                         .addIfTrue("checked", isChecked(params, itemKeyStr))
                         .addIfTrue("readonly", params.get("readonly")).addIfTrue("disabled", disabled)
                         .addIfExists("tabindex", params.get("tabindex"))
-                        .addIfExists("id", id + "-" + Integer.toString(cnt));
+                        .addIfExists("id", id + "-" + Integer.toString(cnt))
+                        .addIfExists("class", params.get("cssClass"))
+                        .addIfExists("style", params.get("cssStyle"));
                 start("input", a);
                 end("input");
 
                 // Label section
                 a = new Attributes();
-                a.add("for", id + "-" + Integer.toString(cnt)).addIfExists("class", params.get("cssClass"))
-                        .addIfExists("style", params.get("cssStyle"));
+                a.add("for", id + "-" + Integer.toString(cnt)).add("class", "checkboxLabel");
                 super.start("label", a);
                 if (StringUtils.isNotEmpty(itemValueStr))
                     characters(itemValueStr);

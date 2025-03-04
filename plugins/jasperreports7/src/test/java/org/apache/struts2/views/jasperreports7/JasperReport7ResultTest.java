@@ -87,8 +87,7 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         try {
             result.execute(this.invocation);
         } catch (ServletException e) {
-            assertEquals("Error building dataSource for excluded or not accepted [getDatasource()]",
-                    e.getMessage());
+            assertEquals("Unaccepted dataSource expression [getDatasource()]", e.getMessage());
         }
 
         // verify that above test has really effect

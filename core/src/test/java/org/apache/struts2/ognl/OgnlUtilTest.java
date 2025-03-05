@@ -18,8 +18,18 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.InappropriateExpressionException;
+import ognl.MethodFailedException;
+import ognl.NoSuchPropertyException;
+import ognl.NullHandler;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.SimpleNode;
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.text.StubTextProvider;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.StubValueStack;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.ConfigurationException;
@@ -30,6 +40,7 @@ import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.test.User;
+import org.apache.struts2.text.StubTextProvider;
 import org.apache.struts2.util.Bar;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.Foo;
@@ -37,20 +48,11 @@ import org.apache.struts2.util.Owner;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.InappropriateExpressionException;
-import ognl.MethodFailedException;
-import ognl.NoSuchPropertyException;
-import ognl.NullHandler;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
-import ognl.OgnlRuntime;
-import ognl.SimpleNode;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
+import org.mockito.MockedStatic;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -66,6 +68,7 @@ import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.BASIC;
 import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 
 public class OgnlUtilTest extends XWorkTestCase {
 
@@ -430,6 +433,17 @@ public class OgnlUtilTest extends XWorkTestCase {
         // LRU cache should not contain TestBean1 beaninfo anymore.  A new entry should exist in the cache.
         Object beanInfo1_4 = ognlUtil.getBeanInfo(testBean1);
         assertNotSame("BeanInfo dropped from LRU cache is the same as newly added ?", beanInfo1_1, beanInfo1_4);
+    }
+
+    /**
+     * Ensure any {@link IntrospectionException} thrown by {@link Introspector} are propagated as is.
+     */
+    public void testBeanInfoCacheExceptionHandling() {
+        try (MockedStatic<Introspector> introspector = mockStatic(Introspector.class)) {
+            var exception = new IntrospectionException("Test Exception");
+            introspector.when(() -> Introspector.getBeanInfo(TestBean1.class, Object.class)).thenThrow(exception);
+            assertSame(exception, assertThrows(IntrospectionException.class, () -> ognlUtil.getBeanInfo(new TestBean1())));
+        }
     }
 
     public void testClearRuntimeCache() {

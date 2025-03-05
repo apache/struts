@@ -18,12 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import org.apache.struts2.conversion.impl.XWorkConverter;
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.ognl.accessor.RootAccessor;
-import org.apache.struts2.util.CompoundRoot;
-import org.apache.struts2.util.reflection.ReflectionException;
 import ognl.ClassResolver;
 import ognl.Ognl;
 import ognl.OgnlContext;
@@ -35,7 +29,12 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.accessor.RootAccessor;
+import org.apache.struts2.util.CompoundRoot;
+import org.apache.struts2.util.reflection.ReflectionException;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -676,13 +675,19 @@ public class OgnlUtil {
      * @throws IntrospectionException is thrown if an exception occurs during introspection.
      */
     public BeanInfo getBeanInfo(Class<?> clazz) throws IntrospectionException {
-        synchronized (beanInfoCache) {
-            BeanInfo beanInfo = beanInfoCache.get(clazz);
-            if (beanInfo == null) {
-                beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-                beanInfoCache.putIfAbsent(clazz, beanInfo);
+        try {
+            return beanInfoCache.computeIfAbsent(clazz, k -> {
+                try {
+                    return Introspector.getBeanInfo(k, Object.class);
+                } catch (IntrospectionException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            });
+        } catch (IllegalArgumentException e) {
+            if (e.getCause() instanceof IntrospectionException innerEx) {
+                throw innerEx;
             }
-            return beanInfo;
+            throw e;
         }
     }
 

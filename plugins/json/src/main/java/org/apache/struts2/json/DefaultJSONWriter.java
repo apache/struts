@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ProxyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
 import org.apache.struts2.json.bridge.FieldBridge;
 import org.apache.struts2.json.bridge.ParameterizedBridge;
+import org.apache.struts2.util.ProxyUtil;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -221,7 +221,7 @@ public class DefaultJSONWriter implements JSONWriter {
         BeanInfo info;
 
         try {
-            Class clazz = excludeProxyProperties ? ProxyUtil.ultimateTargetClass(object) : object.getClass();
+            Class<?> clazz = excludeProxyProperties ? ProxyUtil.ultimateTargetClass(object) : object.getClass();
 
             info = ((object == this.root) && this.ignoreHierarchy)
                     ? getBeanInfoIgnoreHierarchy(clazz)

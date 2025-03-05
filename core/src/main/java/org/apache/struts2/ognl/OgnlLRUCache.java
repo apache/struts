@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * <p>A basic OGNL LRU cache implementation.</p>
@@ -52,6 +53,11 @@ public class OgnlLRUCache<K, V> implements OgnlCache<K, V> {
     @Override
     public V get(K key) {
         return ognlLRUCache.get(key);
+    }
+
+    @Override
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        return ognlLRUCache.computeIfAbsent(key, mappingFunction);
     }
 
     @Override

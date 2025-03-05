@@ -18,6 +18,8 @@ package org.apache.struts2.ognl;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.function.Function;
+
 /**
  * <p>This OGNL Cache implementation is backed by {@link Caffeine} which uses the Window TinyLfu algorithm.</p>
  *
@@ -44,6 +46,11 @@ public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
     @Override
     public V get(K key) {
         return cache.getIfPresent(key);
+    }
+
+    @Override
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        return cache.asMap().computeIfAbsent(key, mappingFunction);
     }
 
     @Override

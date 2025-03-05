@@ -17,6 +17,7 @@ package org.apache.struts2.ognl;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * <p>Basic OGNL cache implementation.</p>
@@ -46,15 +47,20 @@ public class OgnlDefaultCache<K, V> implements OgnlCache<K, V> {
     }
 
     @Override
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        return ognlCache.computeIfAbsent(key, mappingFunction);
+    }
+
+    @Override
     public void put(K key, V value) {
         ognlCache.put(key, value);
-        this.clearIfEvictionLimitExceeded();
+        clearIfEvictionLimitExceeded();
     }
 
     @Override
     public void putIfAbsent(K key, V value) {
         ognlCache.putIfAbsent(key, value);
-        this.clearIfEvictionLimitExceeded();
+        clearIfEvictionLimitExceeded();
     }
 
     @Override
@@ -69,12 +75,12 @@ public class OgnlDefaultCache<K, V> implements OgnlCache<K, V> {
 
     @Override
     public int getEvictionLimit() {
-        return this.cacheEvictionLimit.get();
+        return cacheEvictionLimit.get();
     }
 
     @Override
-    public void setEvictionLimit(int cacheEvictionLimit) {
-        this.cacheEvictionLimit.set(cacheEvictionLimit);
+    public void setEvictionLimit(int newCacheEvictionLimit) {
+        cacheEvictionLimit.set(newCacheEvictionLimit);
     }
 
     /**

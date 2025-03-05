@@ -15,21 +15,37 @@
  */
 package org.apache.struts2.ognl;
 
+import java.util.function.Function;
+
+import static java.util.Objects.requireNonNull;
+
 /**
- * A basic cache interface for use with OGNL processing (such as Expression, BeanInfo).
- * All OGNL caches will have an eviction limit, but setting an extremely high value can
- * simulate an "effectively unlimited" cache.
+ * A basic cache interface for use with OGNL processing (such as Expression, BeanInfo). Implementation must be
+ * thread-safe. All OGNL caches will have an eviction limit, but setting an extremely high value can simulate an
+ * "effectively unlimited" cache.
  *
- * @param <Key> The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * @param <K> The type for the cache key entries
+ * @param <V> The type for the cache value entries
  */
-public interface OgnlCache<Key, Value> {
+public interface OgnlCache<K, V> {
 
-    Value get(Key key);
+    V get(K key);
 
-    void put(Key key, Value value);
+    /**
+     * @since 7.1
+     */
+    default V computeIfAbsent(K key,
+                              Function<? super K, ? extends V> mappingFunction) {
+        requireNonNull(mappingFunction);
+        if (get(key) == null) {
+            putIfAbsent(key, mappingFunction.apply(key));
+        }
+        return get(key);
+    }
 
-    void putIfAbsent(Key key, Value value);
+    void put(K key, V value);
+
+    void putIfAbsent(K key, V value);
 
     int size();
 

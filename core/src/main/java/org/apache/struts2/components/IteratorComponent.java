@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.IteratorStatus;
@@ -307,7 +307,7 @@ public class IteratorComponent extends ContextBean {
             stack.push(currentValue);
 
             if (currentValue != null) {
-                threadAllowlist.allowClass(currentValue.getClass());
+                threadAllowlist.allowClassHierarchy(currentValue.getClass());
             }
 
             String var = getVar();

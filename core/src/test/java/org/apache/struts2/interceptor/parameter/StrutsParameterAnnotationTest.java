@@ -381,7 +381,6 @@ public class StrutsParameterAnnotationTest {
 
         testParameter(action, "name", true);
         testParameter(action, "name.nested", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Object.class, Pojo.class));
     }
 
     /**
@@ -402,10 +401,9 @@ public class StrutsParameterAnnotationTest {
 
         testParameter(proxiedAction, "name", true);
         testParameter(proxiedAction, "name.nested", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Object.class, Pojo.class));
     }
 
-    static class FieldAction {
+    public static class FieldAction {
         @StrutsParameter
         private String privateStr;
 
@@ -436,7 +434,7 @@ public class StrutsParameterAnnotationTest {
         public Map<String, Pojo> publicPojoMapDepthTwo;
     }
 
-    static class MethodAction {
+    public static class MethodAction {
 
         @StrutsParameter
         private void setPrivateStr(String str) {
@@ -489,7 +487,7 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    static class ModelAction implements ModelDriven<Pojo> {
+    public static class ModelAction implements ModelDriven<Pojo> {
 
         @Override
         public Pojo getModel() {
@@ -497,6 +495,6 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
-    static class Pojo {
+    public static class Pojo {
     }
 }

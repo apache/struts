@@ -20,6 +20,8 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ModelDriven;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 
@@ -79,20 +81,27 @@ import org.apache.struts2.util.ValueStack;
 public class ModelDrivenInterceptor extends AbstractInterceptor {
 
     protected boolean refreshModelBeforeResult = false;
+    private ThreadAllowlist threadAllowlist;
 
     public void setRefreshModelBeforeResult(boolean val) {
         this.refreshModelBeforeResult = val;
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
-        if (action instanceof ModelDriven modelDriven) {
+        if (action instanceof ModelDriven<?> modelDriven) {
             ValueStack stack = invocation.getStack();
             Object model = modelDriven.getModel();
-            if (model !=  null) {
-            	stack.push(model);
+            if (model != null) {
+                stack.push(model);
+                threadAllowlist.allowClassHierarchy(model.getClass());
             }
             if (refreshModelBeforeResult) {
                 invocation.addPreResultListener(new RefreshModelBeforeResult(modelDriven, model));

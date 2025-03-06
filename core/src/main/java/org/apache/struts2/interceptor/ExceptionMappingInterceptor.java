@@ -215,9 +215,9 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
                 HttpParameters parameters = HttpParameters.create(mappingParams).build();
                 invocation.getInvocationContext().withParameters(parameters);
                 result = mappingConfig.getResult();
-                ExceptionHolder holder = new ExceptionHolder(e);
-                threadAllowlist.allowClass(holder.getClass());
-                threadAllowlist.allowClass(e.getClass());
+                var holder = new ExceptionHolder(e);
+                threadAllowlist.allowClassHierarchy(ExceptionHolder.class);
+                threadAllowlist.allowClassHierarchy(e.getClass());
                 publishException(invocation, holder);
             } else {
                 throw e;

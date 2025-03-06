@@ -18,18 +18,17 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.commons.lang3.ClassUtils;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionProvider;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.annotations.StrutsTag;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -94,9 +93,7 @@ public class Debug extends UIBean {
     }
 
     private void allowListClass(Object o) {
-        threadAllowlist.allowClass(o.getClass());
-        ClassUtils.getAllSuperclasses(o.getClass()).forEach(threadAllowlist::allowClass);
-        ClassUtils.getAllInterfaces(o.getClass()).forEach(threadAllowlist::allowClass);
+        threadAllowlist.allowClassHierarchy(o.getClass());
     }
 
     @Override

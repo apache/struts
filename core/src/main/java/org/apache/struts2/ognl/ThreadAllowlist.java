@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.ognl;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +35,15 @@ import static java.util.Collections.unmodifiableSet;
 public class ThreadAllowlist {
 
     private final ThreadLocal<Set<Class<?>>> allowlist = new ThreadLocal<>();
+
+    /**
+     * @since 7.1.0
+     */
+    public void allowClassHierarchy(Class<?> clazz) {
+        allowClass(clazz);
+        ClassUtils.getAllSuperclasses(clazz).forEach(this::allowClass);
+        ClassUtils.getAllInterfaces(clazz).forEach(this::allowClass);
+    }
 
     public void allowClass(Class<?> clazz) {
         if (allowlist.get() == null) {

@@ -20,16 +20,19 @@ package org.apache.struts2.interceptor;
 
 import com.mockobjects.dynamic.ConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ValueStack;
 
 import java.util.Date;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author $Author$
@@ -40,6 +43,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
     Action action;
     Mock mockActionInvocation;
     ModelDrivenInterceptor modelDrivenInterceptor;
+    ThreadAllowlist threadAllowlist;
     Object model;
     PreResultListener preResultListener;
     ValueStack stack;
@@ -55,6 +59,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
 
         Object topOfStack = stack.pop();
         assertEquals("our model should be on the top of the stack", model, topOfStack);
+        verify(threadAllowlist).allowClassHierarchy(model.getClass());
     }
 
     private void setupRefreshModelBeforeResult() {
@@ -167,6 +172,8 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
         super.setUp();
         mockActionInvocation = new Mock(ActionInvocation.class);
         modelDrivenInterceptor = new ModelDrivenInterceptor();
+        threadAllowlist = mock(ThreadAllowlist.class);
+        modelDrivenInterceptor.setThreadAllowlist(threadAllowlist);
         stack = ActionContext.getContext().getValueStack();
         model = new Date(); // any object will do
     }

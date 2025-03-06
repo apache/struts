@@ -19,7 +19,6 @@
 package org.apache.struts2.interceptor.parameter;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
@@ -358,9 +357,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
         if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
-            LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement and OGNL allowlisting model type");
-            // (Exempted by annotation on org.apache.struts2.ModelDriven#getModel)
-            return hasValidAnnotatedMember("model", action, paramDepth + 1);
+            LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement");
+            return true;
         }
 
         if (requireAnnotationsTransitionMode && paramDepth == 0) {
@@ -447,15 +445,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void allowlistParamType(Type paramType) {
-        if (paramType instanceof Class) {
-            allowlistClass((Class<?>) paramType);
+        if (paramType instanceof Class<?> clazz) {
+            allowlistClass(clazz);
         }
     }
 
     protected void allowlistClass(Class<?> clazz) {
-        threadAllowlist.allowClass(clazz);
-        ClassUtils.getAllSuperclasses(clazz).forEach(threadAllowlist::allowClass);
-        ClassUtils.getAllInterfaces(clazz).forEach(threadAllowlist::allowClass);
+        threadAllowlist.allowClassHierarchy(clazz);
     }
 
     protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
@@ -527,10 +523,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected BeanInfo getBeanInfo(Object action) {
+        Class<?> actionClass = ultimateClass(action);
         try {
-            return ognlUtil.getBeanInfo(ultimateClass(action));
+            return ognlUtil.getBeanInfo(actionClass);
         } catch (IntrospectionException e) {
-            LOG.warn("Error introspecting Action {} for parameter injection validation", action.getClass(), e);
+            LOG.warn("Error introspecting Action {} for parameter injection validation", actionClass, e);
             return null;
         }
     }

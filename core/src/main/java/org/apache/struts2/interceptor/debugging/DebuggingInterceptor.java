@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
@@ -38,6 +36,7 @@ import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -273,9 +272,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private void allowListClass(Object o) {
         if (o != null) {
-            threadAllowlist.allowClass(o.getClass());
-            ClassUtils.getAllSuperclasses(o.getClass()).forEach(threadAllowlist::allowClass);
-            ClassUtils.getAllInterfaces(o.getClass()).forEach(threadAllowlist::allowClass);
+            threadAllowlist.allowClassHierarchy(o.getClass());
         }
     }
 

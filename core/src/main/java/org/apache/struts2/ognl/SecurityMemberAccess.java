@@ -212,16 +212,17 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
+        Class<?> targetClass = target != null ? target.getClass() : null;
+
         if (!disallowProxyObjectAccess && ProxyUtil.isProxy(target)) {
-            // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
-            // classes/members. This allows the allowlist capability to continue working and offer some level of
+            // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities and Spring proxies to their
+            // underlying classes/members. This allows the allowlist capability to continue working and still offer
             // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate
-            // entities. This is preferred to having to disable the allowlist capability entirely.
-            Object newTarget = ProxyUtil.getHibernateProxyTarget(target);
-            if (newTarget != target) {
-                logAllowlistHibernateEntity(target, newTarget);
-                target = newTarget;
-                member = ProxyUtil.resolveTargetMember(member, newTarget);
+            // entities and Spring proxies. This is preferred to having to disable the allowlist capability entirely.
+            Class<?> newTargetClass = ProxyUtil.ultimateTargetClass(target);
+            if (newTargetClass != targetClass) {
+                targetClass = newTargetClass;
+                member = ProxyUtil.resolveTargetMember(member, newTargetClass);
             }
         }
 
@@ -231,30 +232,16 @@ public class SecurityMemberAccess implements MemberAccess {
                     memberClass, member, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
-        if (target == null || target.getClass() == memberClass) {
+
+        if (targetClass == null || targetClass == memberClass) {
             return true;
         }
-        Class<?> targetClass = target.getClass();
         if (!isClassAllowlisted(targetClass)) {
             LOG.warn("Target class [{}] of target [{}] is not allowlisted! Add to '{}' or '{}' configuration.",
                     targetClass, target, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
         return true;
-    }
-
-    private void logAllowlistHibernateEntity(Object original, Object resolved) {
-        if (!isDevMode && !LOG.isDebugEnabled()) {
-            return;
-        }
-        String msg = "Hibernate entity [{}] resolved to [{}] for purpose of OGNL allowlisting." +
-                " We don't recommend executing OGNL expressions against Hibernate entities, you may disallow this behaviour using the configuration `{}=true`.";
-        Object[] args = {original, resolved, StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS};
-        if (isDevMode) {
-            LOG.warn(msg, args);
-        } else {
-            LOG.debug(msg, args);
-        }
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {

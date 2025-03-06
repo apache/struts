@@ -33,12 +33,14 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.DefaultAcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 import org.apache.struts2.util.ClearableValueStack;
 import org.apache.struts2.util.MemberAccessValueStack;
+import org.apache.struts2.util.ProxyUtil;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
@@ -46,7 +48,6 @@ import org.apache.struts2.util.reflection.ReflectionContextState;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -93,6 +94,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean requireAnnotationsTransitionMode = false;
 
     private ValueStackFactory valueStackFactory;
+    private OgnlUtil ognlUtil;
     protected ThreadAllowlist threadAllowlist;
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
@@ -102,6 +104,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
+    }
+
+    @Inject
+    public void setOgnlUtil(OgnlUtil ognlUtil) {
+        this.ognlUtil = ognlUtil;
     }
 
     @Inject
@@ -395,6 +402,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean hasValidAnnotatedPropertyDescriptor(Object action, PropertyDescriptor propDesc, long paramDepth) {
+        Class<?> actionClass = ultimateClass(action);
         Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
         if (relevantMethod == null) {
             return false;
@@ -412,7 +420,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         LOG.debug("Success: Matching annotated method [{}] found for property [{}] of depth [{}] on Action [{}]",
-                relevantMethod.getName(), propDesc.getName(), paramDepth, action.getClass().getSimpleName());
+                relevantMethod.getName(), propDesc.getName(), paramDepth, actionClass.getSimpleName());
         if (paramDepth >= 1) {
             allowlistClass(propDesc.getPropertyType());
         }
@@ -451,24 +459,25 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
+        Class<?> actionClass = ultimateClass(action);
         LOG.debug("No matching annotated method found for property [{}] of depth [{}] on Action [{}], now also checking for public field",
-                fieldName, paramDepth, action.getClass().getSimpleName());
+                fieldName, paramDepth, actionClass.getSimpleName());
         Field field;
         try {
-            field = action.getClass().getDeclaredField(fieldName);
+            field = actionClass.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
-            LOG.debug("Matching field for property [{}] not found on Action [{}]", fieldName, action.getClass().getSimpleName());
+            LOG.debug("Matching field for property [{}] not found on Action [{}]", fieldName, actionClass.getSimpleName());
             return false;
         }
         if (!Modifier.isPublic(field.getModifiers())) {
-            LOG.debug("Matching field [{}] is not public on Action [{}]", field.getName(), action.getClass().getSimpleName());
+            LOG.debug("Matching field [{}] is not public on Action [{}]", field.getName(), actionClass.getSimpleName());
             return false;
         }
         if (getPermittedInjectionDepth(field) < paramDepth) {
             String logMessage = format(
                     "Parameter injection for field [%s] on Action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
                     field.getName(),
-                    action.getClass().getName());
+                    actionClass.getName());
             if (devMode) {
                 notifyDeveloperOfError(LOG, action, logMessage);
             } else {
@@ -477,7 +486,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         LOG.debug("Success: Matching annotated public field [{}] found for property of depth [{}] on Action [{}]",
-                field.getName(), paramDepth, action.getClass().getSimpleName());
+                field.getName(), paramDepth, actionClass.getSimpleName());
         if (paramDepth >= 1) {
             allowlistClass(field.getType());
         }
@@ -510,9 +519,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return element.getAnnotation(StrutsParameter.class);
     }
 
+    protected Class<?> ultimateClass(Object action) {
+        if (ProxyUtil.isProxy(action)) {
+            return ProxyUtil.ultimateTargetClass(action);
+        }
+        return action.getClass();
+    }
+
     protected BeanInfo getBeanInfo(Object action) {
         try {
-            return Introspector.getBeanInfo(action.getClass());
+            return ognlUtil.getBeanInfo(ultimateClass(action));
         } catch (IntrospectionException e) {
             LOG.warn("Error introspecting Action {} for parameter injection validation", action.getClass(), e);
             return null;

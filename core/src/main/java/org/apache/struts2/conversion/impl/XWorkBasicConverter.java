@@ -28,6 +28,7 @@ import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -107,6 +108,8 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         } else if (LocalDateTime.class.isAssignableFrom(toType)) {
             result = doConvertToDate(context, value, toType);
         } else if (LocalTime.class.isAssignableFrom(toType)) {
+            result = doConvertToDate(context, value, toType);
+        } else if (OffsetDateTime.class.isAssignableFrom(toType)) {
             result = doConvertToDate(context, value, toType);
         } else if (Calendar.class.isAssignableFrom(toType)) {
             result = doConvertToCalendar(context, value);

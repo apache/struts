@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
@@ -116,6 +117,14 @@ public class DateConverter extends DefaultTypeConverter {
                     throw new TypeConversionException("Could not parse date", e);
                 }
 
+            } else if (OffsetDateTime.class == toType) {
+                DateTimeFormatter dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+                try {
+                    return OffsetDateTime.parse(sa, dtf);
+                } catch (DateTimeParseException e) {
+                    throw new TypeConversionException("Could not parse OffsetDateTime", e);
+                }
             }
 
             // final fallback for dates without time

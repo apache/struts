@@ -54,6 +54,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -115,9 +116,13 @@ public class XWorkConverterTest extends XWorkTestCase {
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime localTime = LocalTime.parse("10:11:12", formatterTime);
 
+        DateTimeFormatter formatterOffsetDateTime = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse("2001-01-10T10:11:12+05:00", formatterOffsetDateTime);
+
         String localDateStr = (String) converter.convertValue(context, null, null, null, localDate, String.class);
         String localDateTimeStr = (String) converter.convertValue(context, null, null, null, localDateTime, String.class);
         String localTimeStr = (String) converter.convertValue(context, null, null, null, localTime, String.class);
+        String offsetDateTimeStr = (String) converter.convertValue(context, null, null, null, offsetDateTime, String.class);
 
         LocalDate localDate2 = (LocalDate) converter.convertValue(context, null, null, null, localDateStr, LocalDate.class);
         assertEquals(localDate, localDate2);
@@ -127,6 +132,9 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         LocalTime localTime2 = (LocalTime) converter.convertValue(context, null, null, null, localTimeStr, LocalTime.class);
         assertEquals(localTime, localTime2);
+
+        OffsetDateTime offsetDateTime2 = (OffsetDateTime) converter.convertValue(context, null, null, null, offsetDateTimeStr, OffsetDateTime.class);
+        assertEquals(offsetDateTime, offsetDateTime2);
     }
 
     public void testDateConversionWithDefault() throws ParseException {

@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,7 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptor;
+import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.security.AcceptedPatternsChecker;
@@ -54,7 +56,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
@@ -83,8 +88,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
     private static final Pattern DMI_IGNORED_PATTERN = Pattern.compile("^(action|method):.*", Pattern.CASE_INSENSITIVE);
+    private static final String PARAMETER = "Parameter Interceptor";
+    private static final ConcurrentHashMap<String,Rejected> REJECTED = new ConcurrentHashMap<>();
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
+    private Reporter reporter = null;
     private boolean devMode = false;
     private boolean dmiEnabled = false;
 
@@ -169,6 +177,54 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      */
     public void setParamNameMaxLength(int paramNameMaxLength) {
         this.paramNameMaxLength = paramNameMaxLength;
+    }
+
+    /**
+     * Set reporter for injection failed.
+     *
+     * @param reporterClass reporter class with package
+     */
+    public void setReporter(String reporterClass) {
+        try {
+            final Class<?> clz = Class.forName(reporterClass);
+            if(clz.isAssignableFrom(Reporter.class)) {
+                reporter = (Reporter)clz.getDeclaredConstructor().newInstance();
+            }
+            return;
+        } catch(Exception ignore) {
+        }
+        LOG.warn(reporterClass + " can not be Reporter");
+    }
+    public void setReporter(Reporter reporter) {
+        this.reporter = reporter;
+    }
+
+    static private void addError(final Object action, final Rejected err, final long depth, final boolean report) {
+        final AtomicBoolean rept1, rept2;
+
+        final HttpServletRequest req = ActionContext.getContext().getServletRequest();
+        rept1 = (AtomicBoolean)req.getAttribute(PARAMETER);
+        if(rept1 != null) {
+            rept2 = rept1;
+        } else {
+            rept2 = new AtomicBoolean(true);
+            req.setAttribute(PARAMETER, rept2);
+        }
+        if(report && rept2.get()) {
+            rept2.set(false);
+            if(action instanceof final ValidationAware vAware) {
+                vAware.addActionError("Setting Parameter(s) rejected.");
+            }
+        }
+        REJECTED.compute(err.name, (key, err2) -> {
+            if(err2 == null) {
+                err.depth = depth;
+                return err;
+            } else if(err2.depth < depth) {
+                err2.depth = depth;
+            }
+            return err2;
+        });
     }
 
     static private int countOGNLCharacters(String s) {
@@ -291,6 +347,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 acceptableParameters.put(parameterName, parameterValue);
             }
         }
+        if(reporter != null && !REJECTED.isEmpty()) {
+            try {
+                final AtomicBoolean error = (AtomicBoolean)ActionContext.getContext().getServletRequest().getAttribute(PARAMETER);
+                if(error != null) {
+                    reporter.report(REJECTED.values());
+                }
+            } catch(final Throwable e) {
+                LOG.error("report errored", e);
+            }
+        }
         return acceptableParameters;
     }
 
@@ -406,16 +472,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
-            String logMessage = format(
-                    "Parameter injection for method [%s] on Action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
-                    relevantMethod.getName(),
-                    relevantMethod.getDeclaringClass().getName());
-            if (devMode) {
-                notifyDeveloperOfError(LOG, action, logMessage);
-            } else {
-                LOG.debug(logMessage);
-            }
-            return false;
+            final boolean isErr = !(devMode && action instanceof ModelDriven && "getModel".equals(relevantMethod.getName()));
+            addError(action, new Rejected(relevantMethod), paramDepth, isErr);
+            if(isErr) return false;
         }
         LOG.debug("Success: Matching annotated method [{}] found for property [{}] of depth [{}] on Action [{}]",
                 relevantMethod.getName(), propDesc.getName(), paramDepth, actionClass.getSimpleName());
@@ -470,15 +529,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         if (getPermittedInjectionDepth(field) < paramDepth) {
-            String logMessage = format(
-                    "Parameter injection for field [%s] on Action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
-                    field.getName(),
-                    actionClass.getName());
-            if (devMode) {
-                notifyDeveloperOfError(LOG, action, logMessage);
-            } else {
-                LOG.debug(logMessage);
-            }
+            addError(action, new Rejected(field), paramDepth, true);
             return false;
         }
         LOG.debug("Success: Matching annotated public field [{}] found for property of depth [{}] on Action [{}]",
@@ -801,5 +852,23 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         } finally {
             excludedValuePatterns = unmodifiableSet(excludedValuePatterns);
         }
+    }
+    public static class Rejected {
+        final String name;
+        long depth;
+
+        private Rejected(final Method method) {
+            name = format("%s#%s()",
+                    method.getDeclaringClass().getName(),
+                    method.getName());
+        }
+        private Rejected(final Field field) {
+            name = format("%s#%s",
+                    field.getDeclaringClass().getName(),
+                    field.getName());
+        }
+    }
+    public interface Reporter {
+        void report(Collection<Rejected> list);
     }
 }

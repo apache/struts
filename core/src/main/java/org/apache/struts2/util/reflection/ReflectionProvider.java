@@ -19,6 +19,7 @@
 package org.apache.struts2.util.reflection;
 
 import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -43,7 +44,7 @@ public interface ReflectionProvider {
      * @param o       the object
      * @param context the action context
      */
-    void setProperties(Map<String, ?> props, Object o, Map<String, Object> context);
+    void setProperties(Map<String, ?> props, Object o, StrutsContext context);
 
     /**
      * Sets the object's properties using the default type converter.
@@ -54,7 +55,7 @@ public interface ReflectionProvider {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the properties
      */
-    void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException;
+    void setProperties(Map<String, ?> props, Object o, StrutsContext context, boolean throwPropertyExceptions) throws ReflectionException;
 
     /**
      * Sets the properties on the object using the default context, defaulting to not throwing
@@ -91,7 +92,7 @@ public interface ReflectionProvider {
      * @param inclusions collection of method names to included copying  (can be null)
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
-    void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions);
+    void copy(Object from, Object to, StrutsContext context, Collection<String> exclusions, Collection<String> inclusions);
 
     /**
      * Copies the properties in the object "from" and sets them in the object "to"
@@ -107,7 +108,7 @@ public interface ReflectionProvider {
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      * @param editable the class (or interface) to restrict property setting to
      */
-    void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable);
+    void copy(Object from, Object to, StrutsContext context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable);
 
     /**
      * Looks for the real target with the specified property given a root Object which may be a
@@ -119,7 +120,7 @@ public interface ReflectionProvider {
      * @return the real target or null if no object can be found with the specified property
      * @throws ReflectionException in case of reflection problems
      */
-    Object getRealTarget(String property, Map<String, Object> context, Object root) throws ReflectionException;
+    Object getRealTarget(String property, StrutsContext context, Object root) throws ReflectionException;
 
     /**
      * Sets the named property to the supplied value on the Object,
@@ -131,7 +132,7 @@ public interface ReflectionProvider {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the properties
      */
-    void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions);
+    void setProperty(String name, Object value, Object o, StrutsContext context, boolean throwPropertyExceptions);
 
     /**
      * Sets the named property to the supplied value on the Object, defaults to not throwing
@@ -142,7 +143,7 @@ public interface ReflectionProvider {
      * @param o       the object upon which to set the property
      * @param context the context which may include the TypeConverter
      */
-    void setProperty(String name, Object value, Object o, Map<String, Object> context);
+    void setProperty(String name, Object value, Object o, StrutsContext context);
 
     /**
      * Creates a Map with read properties for the given source object.
@@ -166,7 +167,7 @@ public interface ReflectionProvider {
      * @param root the root object for the OGNL expression
      * @return the result of evaluating the expression
      */
-    Object getValue( String expression, Map<String, Object> context, Object root ) throws ReflectionException;
+    Object getValue( String expression, StrutsContext context, Object root ) throws ReflectionException;
 
     /**
      * Evaluates the given OGNL expression to insert a value into the object graph
@@ -177,7 +178,7 @@ public interface ReflectionProvider {
      * @param context the naming context for the evaluation
      * @param value the value to insert into the object graph
      */
-    void setValue( String expression, Map<String, Object> context, Object root, Object value ) throws ReflectionException;
+    void setValue( String expression, StrutsContext context, Object root, Object value ) throws ReflectionException;
 
     /**
      * Get's the java beans property descriptors for the given source.

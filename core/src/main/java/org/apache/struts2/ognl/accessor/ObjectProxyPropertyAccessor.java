@@ -54,7 +54,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
@@ -63,7 +63,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
@@ -77,7 +77,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
      * @param context
      * @param proxy
      */
-    private void setupContext(Map context, ObjectProxy proxy) {
+    private void setupContext(OgnlContext context, ObjectProxy proxy) {
         ReflectionContextState.setLastBeanClassAccessed(context, proxy.getLastClassAccessed());
         ReflectionContextState.setLastBeanPropertyAccessed(context, proxy.getLastPropertyAccessed());
     }

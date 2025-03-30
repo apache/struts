@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.ognl.accessor;
 
-import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MethodFailedException;
 import ognl.ObjectMethodAccessor;
 import ognl.OgnlContext;
@@ -26,11 +25,11 @@ import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.util.reflection.ReflectionContextState;
 
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Allows methods to be executed under normal cirumstances, except when {@link ReflectionContextState#DENY_METHOD_EXECUTION}
@@ -41,40 +40,39 @@ import java.util.Map;
  */
 public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
-	private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
+    private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
     @Override
-    public Object callMethod(Map context, Object object, String string, Object[] objects) throws MethodFailedException {
+    public Object callMethod(OgnlContext context, Object object, String string, Object[] objects) throws MethodFailedException {
 
         //Collection property accessing
         //this if statement ensures that ognl
         //statements of the form someBean.mySet('keyPropVal')
         //return the set element with value of the keyProp given
 
-        if (objects.length == 1 && context instanceof OgnlContext) {
+        if (objects.length == 1 && context != null) {
             try {
-              OgnlContext ogContext=(OgnlContext)context;
-              if (OgnlRuntime.hasSetProperty(ogContext, object, string))  {
-                  	PropertyDescriptor descriptor=OgnlRuntime.getPropertyDescriptor(object.getClass(), string);
-                  	Class propertyType=descriptor.getPropertyType();
-                  	if ((Collection.class).isAssignableFrom(propertyType)) {
-                  	    //go directly through OgnlRuntime here
-                  	    //so that property strings are not cleared
-                  	    //i.e. OgnlUtil should be used initially, OgnlRuntime
-                  	    //thereafter
+                if (OgnlRuntime.hasSetProperty(context, object, string)) {
+                    PropertyDescriptor descriptor = OgnlRuntime.getPropertyDescriptor(object.getClass(), string);
+                    Class<?> propertyType = descriptor.getPropertyType();
+                    if ((Collection.class).isAssignableFrom(propertyType)) {
+                        //go directly through OgnlRuntime here
+                        //so that property strings are not cleared
+                        //i.e. OgnlUtil should be used initially, OgnlRuntime
+                        //thereafter
 
-                  	    Object propVal=OgnlRuntime.getProperty(ogContext, object, string);
-                  	    //use the Collection property accessor instead of the individual property accessor, because
-                  	    //in the case of Lists otherwise the index property could be used
-                  	    PropertyAccessor accessor=OgnlRuntime.getPropertyAccessor(Collection.class);
-                  	    ReflectionContextState.setGettingByKeyProperty(ogContext,true);
-                  	    return accessor.getProperty(ogContext,propVal,objects[0]);
-                  	}
-              }
-            }	catch (Exception oe) {
+                        Object propVal = OgnlRuntime.getProperty(context, object, string);
+                        //use the Collection property accessor instead of the individual property accessor, because
+                        //in the case of Lists otherwise the index property could be used
+                        PropertyAccessor accessor = OgnlRuntime.getPropertyAccessor(Collection.class);
+                        ReflectionContextState.setGettingByKeyProperty(context, true);
+                        return accessor.getProperty(context, propVal, objects[0]);
+                    }
+                }
+            } catch (Exception oe) {
                 //this exception should theoretically never happen
                 //log it
-            	LOG.error("An unexpected exception occurred", oe);
+                LOG.error("An unexpected exception occurred", oe);
             }
 
         }
@@ -96,23 +94,22 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-    private Object callMethodWithDebugInfo(Map context, Object object, String methodName, Object[] objects) throws MethodFailedException {
+    private Object callMethodWithDebugInfo(OgnlContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {
         try {
             return super.callMethod(context, object, methodName, objects);
-		}
-		catch(MethodFailedException e) {
-			if (LOG.isDebugEnabled()) {
-				if (!(e.getReason() instanceof NoSuchMethodException)) {
-					// the method exists on the target object, but something went wrong
+        } catch (MethodFailedException e) {
+            if (LOG.isDebugEnabled()) {
+                if (!(e.getReason() instanceof NoSuchMethodException)) {
+                    // the method exists on the target object, but something went wrong
                     LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}] - {}", object.toString(), methodName, Arrays.toString(objects), e.getReason());
                 }
             }
-			throw e;
-		}
-	}
+            throw e;
+        }
+    }
 
     @Override
-    public Object callStaticMethod(Map context, Class aClass, String string, Object[] objects) throws MethodFailedException {
+    public Object callStaticMethod(OgnlContext context, Class aClass, String string, Object[] objects) throws MethodFailedException {
         boolean e = ReflectionContextState.isDenyMethodExecution(context);
 
         if (!e) {
@@ -122,19 +119,18 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-	private Object callStaticMethodWithDebugInfo(Map context, Class aClass, String methodName,
-			Object[] objects) throws MethodFailedException {
-		try {
-			return super.callStaticMethod(context, aClass, methodName, objects);
-		}
-		catch(MethodFailedException e) {
-			if (LOG.isDebugEnabled()) {
-				if (!(e.getReason() instanceof NoSuchMethodException)) {
-					// the method exists on the target class, but something went wrong
-					LOG.debug("Error calling method through OGNL, class: [{}] method: [{}] args: [{}] - {}", aClass.getName(), methodName, Arrays.toString(objects), e.getReason());
-				}
-			}
-			throw e;
-		}
-	}
+    private Object callStaticMethodWithDebugInfo(OgnlContext context, Class<?> aClass, String methodName,
+                                                 Object[] objects) throws MethodFailedException {
+        try {
+            return super.callStaticMethod(context, aClass, methodName, objects);
+        } catch (MethodFailedException e) {
+            if (LOG.isDebugEnabled()) {
+                if (!(e.getReason() instanceof NoSuchMethodException)) {
+                    // the method exists on the target class, but something went wrong
+                    LOG.debug("Error calling method through OGNL, class: [{}] method: [{}] args: [{}] - {}", aClass.getName(), methodName, Arrays.toString(objects), e.getReason());
+                }
+            }
+            throw e;
+        }
+    }
 }

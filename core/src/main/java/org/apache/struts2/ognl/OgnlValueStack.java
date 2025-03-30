@@ -68,7 +68,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private static final String MAP_IDENTIFIER_KEY = "org.apache.struts2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
 
     protected CompoundRoot root;
-    protected transient Map<String, Object> context;
+    protected transient StrutsContext context;
     protected Class defaultType;
     protected Map<Object, Object> overrides;
     protected transient OgnlUtil ognlUtil;
@@ -121,11 +121,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
-        this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        this.context = StrutsContext.wrap(Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter)));
         this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
-        ((OgnlContext) context).setTraceEvaluations(false);
-        ((OgnlContext) context).setKeepLastEvaluation(false);
+        context.setTraceEvaluations(false);
+        context.setKeepLastEvaluation(false);
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -147,7 +147,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @see org.apache.struts2.util.ValueStack#getContext()
      */
     @Override
-    public Map<String, Object> getContext() {
+    public StrutsContext getContext() {
         return context;
     }
 
@@ -212,7 +212,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     @Override
     public void setValue(String expr, Object value, boolean throwExceptionOnFailure) {
-        Map<String, Object> context = getContext();
+        StrutsContext context = getContext();
         try {
             trySetValue(expr, value, throwExceptionOnFailure, context);
         } catch (OgnlException e) {
@@ -224,7 +224,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context) throws OgnlException {
+    private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, StrutsContext context) throws OgnlException {
         context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
         context.put(REPORT_ERRORS_ON_NO_PROP, throwExceptionOnFailure || logMissingProperties ? Boolean.TRUE : Boolean.FALSE);
         ognlUtil.setValue(expr, context, root, value);

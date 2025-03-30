@@ -18,11 +18,13 @@
  */
 package org.apache.struts2.ognl.accessor;
 
+import ognl.OgnlContext;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
@@ -83,10 +85,10 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
      * a Map returning a JavaBean with the value of id property matching
      * the input.
      *
-     * @see ognl.PropertyAccessor#getProperty(java.util.Map, Object, Object)
+     * @see ognl.PropertyAccessor#getProperty(OgnlContext, Object, Object)
      */
     @Override
-    public Object getProperty(Map context, Object target, Object key) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object key) throws OgnlException {
         LOG.trace("Entering getProperty()");
 
         //check if it is a generic type property.
@@ -185,7 +187,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
       * Gets an indexed Map by a given key property with the key being
       * the value of the property and the value being the
       */
-    private Map getSetMap(Map context, Collection collection, String property) throws OgnlException {
+    private Map getSetMap(OgnlContext context, Collection collection, String property) throws OgnlException {
         LOG.trace("getting set Map");
 
         String path = ReflectionContextState.getCurrentPropertyPath(context);
@@ -210,7 +212,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     /*
       * gets a bean with the given
       */
-    public Object getPropertyThroughIteration(Map context, Collection collection, String property, Object key)
+    public Object getPropertyThroughIteration(OgnlContext context, Collection collection, String property, Object key)
             throws OgnlException {
         //TODO
         for (Object currTest : collection) {
@@ -223,7 +225,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         Class convertToClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, name);
@@ -238,7 +240,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
             for (Object v : values) {
                 try {
                     Object o = objectFactory.buildBean(convertToClass, context);
-                    ognlUtil.setValue((String) name, context, o, v);
+                    ognlUtil.setValue((String) name, (StrutsContext) context, o, v);
                     c.add(o);
                 } catch (Exception e) {
                     throw new OgnlException("Error converting given String values for Collection.", e);

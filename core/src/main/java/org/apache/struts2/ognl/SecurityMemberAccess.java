@@ -19,6 +19,7 @@
 package org.apache.struts2.ognl;
 
 import ognl.MemberAccess;
+import ognl.OgnlContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -108,7 +109,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public Object setup(Map context, Object target, Member member, String propertyName) {
+    public Object setup(OgnlContext context, Object target, Member member, String propertyName) {
         Object result = null;
 
         if (isAccessible(context, target, member, propertyName)) {
@@ -123,7 +124,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public void restore(Map context, Object target, Member member, String propertyName, Object state) {
+    public void restore(OgnlContext context, Object target, Member member, String propertyName, Object state) {
         if (state == null) {
             return;
         }
@@ -138,7 +139,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+    public boolean isAccessible(OgnlContext context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
         if (member == null) {

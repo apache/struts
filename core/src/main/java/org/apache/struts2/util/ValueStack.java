@@ -19,6 +19,7 @@
 package org.apache.struts2.util;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public interface ValueStack {
      *
      * @return  the context.
      */
-    Map<String, Object> getContext();
+    StrutsContext getContext();
 
     ActionContext getActionContext();
 

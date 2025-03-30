@@ -22,6 +22,7 @@ import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.NullHandler;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
@@ -97,12 +98,14 @@ public class InstantiatingNullHandler implements NullHandler {
         this.objectFactory = fac;
     }
 
-    public Object nullMethodResult(Map<String, Object> context, Object target, String methodName, Object[] args) {
+    @Override
+    public Object nullMethodResult(StrutsContext context, Object target, String methodName, Object[] args) {
         LOG.debug("Entering nullMethodResult");
         return null;
     }
 
-    public Object nullPropertyValue(Map<String, Object> context, Object target, Object property) {
+    @Override
+    public Object nullPropertyValue(StrutsContext context, Object target, Object property) {
         LOG.debug("Entering nullPropertyValue [target={}, property={}]", target, property);
         boolean c = ReflectionContextState.isCreatingNullObjects(context);
 

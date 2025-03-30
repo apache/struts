@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.ognl.accessor;
 
+import ognl.OgnlContext;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.conversion.impl.XWorkConverter;
@@ -62,7 +63,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         LOG.trace("Entering getProperty ({},{},{})", context, target, name);
 
         ReflectionContextState.updateCurrentPropertyPath(context, name);
@@ -122,7 +123,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         LOG.trace("Entering setProperty({},{},{},{})", context, target, name, value);
 
         Object key = getKey(context, name);
@@ -130,7 +131,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
         map.put(key, getValue(context, value));
      }
 
-    private Object getValue(Map context, Object value) {
+    private Object getValue(OgnlContext context, Object value) {
          Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
          String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
          if (lastClass == null || lastProperty == null) {
@@ -143,7 +144,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
          return xworkConverter.convertValue(context, value, elementClass);
     }
 
-    private Object getKey(Map context, Object name) {
+    private Object getKey(OgnlContext context, Object name) {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         if (lastClass == null || lastProperty == null) {

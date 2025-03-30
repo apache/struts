@@ -213,7 +213,7 @@ public class OgnlUtil {
      * @param o       the object
      * @param context the action context
      */
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context) {
+    public void setProperties(Map<String, ?> props, Object o, StrutsContext context) {
         setProperties(props, o, context, false);
     }
 
@@ -226,7 +226,7 @@ public class OgnlUtil {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the properties
      */
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    public void setProperties(Map<String, ?> props, Object o, StrutsContext context, boolean throwPropertyExceptions) throws ReflectionException{
         if (props == null) {
             return;
         }
@@ -262,7 +262,7 @@ public class OgnlUtil {
      *                                problems setting the properties
      */
     public void setProperties(Map<String, ?> properties, Object o, boolean throwPropertyExceptions) {
-        Map<String, Object> context = createDefaultContext(o);
+        StrutsContext context = createDefaultContext(o);
         setProperties(properties, o, context, throwPropertyExceptions);
     }
 
@@ -275,7 +275,7 @@ public class OgnlUtil {
      * @param o       the object upon which to set the property
      * @param context the context which may include the TypeConverter
      */
-    public void setProperty(String name, Object value, Object o, Map<String, Object> context) {
+    public void setProperty(String name, Object value, Object o, StrutsContext context) {
         setProperty(name, value, o, context, false);
     }
 
@@ -289,7 +289,7 @@ public class OgnlUtil {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the property
      */
-    public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
+    public void setProperty(String name, Object value, Object o, StrutsContext context, boolean throwPropertyExceptions) {
 
         Object oldRoot = Ognl.getRoot(context);
         Ognl.setRoot(context, o);
@@ -310,7 +310,7 @@ public class OgnlUtil {
      * @return the real target or null if no object can be found with the specified property
      * @throws OgnlException in case of ognl errors
      */
-    public Object getRealTarget(String property, Map<String, Object> context, Object root) throws OgnlException {
+    public Object getRealTarget(String property, StrutsContext context, Object root) throws OgnlException {
         //special keyword, they must be cutting the stack
         if ("top".equals(property)) {
             return root;
@@ -322,9 +322,9 @@ public class OgnlUtil {
 
             try {
                 for (Object target : cr) {
-                    if (OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
-                            || OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
-                            || OgnlRuntime.getIndexedPropertyType((OgnlContext) context, target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
+                    if (OgnlRuntime.hasSetProperty(context, target, property)
+                            || OgnlRuntime.hasGetProperty(context, target, property)
+                            || OgnlRuntime.getIndexedPropertyType(target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
                             ) {
                         return target;
                     }
@@ -349,58 +349,40 @@ public class OgnlUtil {
      *
      * @throws OgnlException in case of ognl errors
      */
-    public void setValue(final String name, final Map<String, Object> context, final Object root, final Object value) throws OgnlException {
+    public void setValue(final String name, final StrutsContext context, final Object root, final Object value) throws OgnlException {
         ognlSet(name, context, root, value, context, this::checkEvalExpression, this::checkArithmeticExpression);
     }
 
-    private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
-            OgnlContext ognlContext = null;
-
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
-            }
-            return node.isEvalChain(ognlContext) || node.isSequence(ognlContext);
+    private boolean isEvalExpression(Object tree, StrutsContext context) throws OgnlException {
+        if (tree instanceof SimpleNode node) {
+            return node.isEvalChain(context) || node.isSequence(context);
         }
         return false;
     }
 
-    private boolean isArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
-            OgnlContext ognlContext = null;
-
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
-            }
-            return node.isOperation(ognlContext);
+    private boolean isArithmeticExpression(Object tree, StrutsContext context) throws OgnlException {
+        if (tree instanceof SimpleNode node) {
+            return node.isOperation(context);
         }
         return false;
     }
 
-    private boolean isSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
-            OgnlContext ognlContext = null;
-
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
-            }
-            return node.isSimpleMethod(ognlContext) && !node.isChain(ognlContext);
+    private boolean isSimpleMethod(Object tree, StrutsContext context) throws OgnlException {
+        if (tree instanceof SimpleNode node) {
+            return node.isSimpleMethod(context) && !node.isChain(context);
         }
         return false;
     }
 
-    public Object getValue(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+    public Object getValue(final String name, final StrutsContext context, final Object root) throws OgnlException {
         return getValue(name, context, root, null);
     }
 
-    public Object callMethod(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
+    public Object callMethod(final String name, final StrutsContext context, final Object root) throws OgnlException {
         return ognlGet(name, context, root, null, context, this::checkSimpleMethod);
     }
 
-    public Object getValue(final String name, final Map<String, Object> context, final Object root, final Class<?> resultType) throws OgnlException {
+    public Object getValue(final String name, final StrutsContext context, final Object root, final Class<?> resultType) throws OgnlException {
         return ognlGet(name, context, root, resultType, context, this::checkEnableEvalExpression);
     }
 
@@ -408,7 +390,7 @@ public class OgnlUtil {
         return compile(expression, null);
     }
 
-    private void ognlSet(String expr, Map<String, Object> context, Object root, Object value, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
+    private void ognlSet(String expr, StrutsContext context, Object root, Object value, StrutsContext checkContext, TreeValidator... treeValidators) throws OgnlException {
         Object tree = toTree(expr);
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
@@ -416,7 +398,7 @@ public class OgnlUtil {
         Ognl.setValue(tree, context, root, value);
     }
 
-    private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
+    private <T> T ognlGet(String expr, StrutsContext context, Object root, Class<T> resultType, StrutsContext checkContext, TreeValidator... treeValidators) throws OgnlException {
         Object tree = toTree(expr);
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
@@ -462,31 +444,31 @@ public class OgnlUtil {
         throw e;
     }
 
-    public Object compile(String expression, Map<String, Object> context) throws OgnlException {
+    public Object compile(String expression, StrutsContext context) throws OgnlException {
         Object tree = toTree(expression);
         checkEnableEvalExpression(tree, context);
         return tree;
     }
 
-    private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
+    private void checkEnableEvalExpression(Object tree, StrutsContext context) throws OgnlException {
         if (!enableEvalExpression && isEvalExpression(tree, context)) {
             throw new OgnlException("Eval expressions/chained expressions have been disabled!");
         }
     }
 
-    private void checkSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
+    private void checkSimpleMethod(Object tree, StrutsContext context) throws OgnlException {
         if (!isSimpleMethod(tree, context)) {
             throw new OgnlException("It isn't a simple method which can be called!");
         }
     }
 
-    private void checkEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
+    private void checkEvalExpression(Object tree, StrutsContext context) throws OgnlException {
         if (isEvalExpression(tree, context)) {
             throw new OgnlException("Eval expression/chained expressions cannot be used as parameter name");
         }
     }
 
-    private void checkArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
+    private void checkArithmeticExpression(Object tree, StrutsContext context) throws OgnlException {
         if (isArithmeticExpression(tree, context)) {
             throw new OgnlException("Arithmetic expressions cannot be used as parameter name");
         }
@@ -504,7 +486,7 @@ public class OgnlUtil {
      * @param inclusions collection of method names to included copying  (can be null)
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
-    public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
+    public void copy(final Object from, final Object to, final StrutsContext context, Collection<String> exclusions, Collection<String> inclusions) {
         copy(from, to, context, exclusions, inclusions, null);
     }
 
@@ -524,7 +506,7 @@ public class OgnlUtil {
      */
     public void copy(final Object from,
                      final Object to,
-                     final Map<String, Object> context,
+                     final StrutsContext context,
                      Collection<String> exclusions,
                      Collection<String> inclusions,
                      Class<?> editable) {
@@ -534,8 +516,8 @@ public class OgnlUtil {
             return;
         }
 
-        final Map<String, Object> contextFrom = createDefaultContext(from);
-        final Map<String, Object> contextTo = createDefaultContext(to);
+        final StrutsContext contextFrom = createDefaultContext(from);
+        final StrutsContext contextTo = createDefaultContext(to);
 
         PropertyDescriptor[] fromPds;
         PropertyDescriptor[] toPds;
@@ -597,7 +579,7 @@ public class OgnlUtil {
      * @param to      the target object
      * @param context the action context we're running under
      */
-    public void copy(Object from, Object to, Map<String, Object> context) {
+    public void copy(Object from, Object to, StrutsContext context) {
         copy(from, to, context, null, null);
     }
 
@@ -640,13 +622,13 @@ public class OgnlUtil {
      */
     public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
         Map<String, Object> beanMap = new HashMap<>();
-        final Map<String, Object> sourceMap = createDefaultContext(source);
+        final StrutsContext sourceContext = createDefaultContext(source);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             final String propertyName = propertyDescriptor.getDisplayName();
             Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                final Object value = ognlGet(propertyName, sourceMap, source, null, null, this::checkEnableEvalExpression);
+                final Object value = ognlGet(propertyName, sourceContext, source, null, null, this::checkEnableEvalExpression);
                 beanMap.put(propertyName, value);
             } else {
                 beanMap.put(propertyName, "There is no read method for " + propertyName);
@@ -691,7 +673,7 @@ public class OgnlUtil {
         }
     }
 
-    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    void internalSetProperty(String name, Object value, Object o, StrutsContext context, boolean throwPropertyExceptions) throws ReflectionException{
         try {
             setValue(name, context, o, value);
         } catch (OgnlException e) {
@@ -710,22 +692,22 @@ public class OgnlUtil {
         }
     }
 
-    protected Map<String, Object> createDefaultContext(Object root) {
+    protected StrutsContext createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
 
-    protected Map<String, Object> createDefaultContext(Object root, ClassResolver resolver) {
+    protected StrutsContext createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }
         }
-        return Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
+        return StrutsContext.wrap(Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter));
     }
 
     @FunctionalInterface
     private interface TreeValidator {
-        void validate(Object tree, Map<String, Object> context) throws OgnlException;
+        void validate(Object tree, StrutsContext context) throws OgnlException;
     }
 }

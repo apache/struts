@@ -48,30 +48,22 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     @Override
     public Method getGetMethod(Class targetClass, String propertyName)
             throws IntrospectionException, ReflectionException {
-        try {
-            return OgnlRuntime.getGetMethod(null, targetClass, propertyName);
-        } catch (OgnlException e) {
-            throw new ReflectionException(e);
-        }
+        return OgnlRuntime.getGetMethod(targetClass, propertyName);
     }
 
     @Override
     public Method getSetMethod(Class targetClass, String propertyName)
             throws IntrospectionException, ReflectionException {
-        try {
-            return OgnlRuntime.getSetMethod(null, targetClass, propertyName);
-        } catch (OgnlException e) {
-            throw new ReflectionException(e);
-        }
+        return OgnlRuntime.getSetMethod(null, targetClass, propertyName);
     }
 
     @Override
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context) {
+    public void setProperties(Map<String, ?> props, Object o, StrutsContext context) {
         ognlUtil.setProperties(props, o, context);
     }
 
     @Override
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    public void setProperties(Map<String, ?> props, Object o, StrutsContext context, boolean throwPropertyExceptions) throws ReflectionException{
         ognlUtil.setProperties(props, o, context, throwPropertyExceptions);
     }
 
@@ -92,19 +84,19 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public void copy(Object from, Object to, Map<String, Object> context,
+    public void copy(Object from, Object to, StrutsContext context,
             Collection<String> exclusions, Collection<String> inclusions) {
         copy(from, to, context, exclusions, inclusions, null);
     }
 
     @Override
-    public void copy(Object from, Object to, Map<String, Object> context,
+    public void copy(Object from, Object to, StrutsContext context,
                      Collection<String> exclusions, Collection<String> inclusions, Class<?> editable) {
         ognlUtil.copy(from, to, context, exclusions, inclusions, editable);
     }
 
     @Override
-    public Object getRealTarget(String property, Map<String, Object> context, Object root)
+    public Object getRealTarget(String property, StrutsContext context, Object root)
             throws ReflectionException {
         try {
             return ognlUtil.getRealTarget(property, context, root);
@@ -114,12 +106,12 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public void setProperty(String name, Object value, Object o, Map<String, Object> context) {
+    public void setProperty(String name, Object value, Object o, StrutsContext context) {
         ognlUtil.setProperty(name, value, o, context);
     }
 
     @Override
-    public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
+    public void setProperty(String name, Object value, Object o, StrutsContext context, boolean throwPropertyExceptions) {
         ognlUtil.setProperty(name, value, o, context, throwPropertyExceptions);
     }
 
@@ -134,7 +126,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public Object getValue(String expression, Map<String, Object> context, Object root)
+    public Object getValue(String expression, StrutsContext context, Object root)
             throws ReflectionException {
         try {
             return ognlUtil.getValue(expression, context, root);
@@ -144,7 +136,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public void setValue(String expression, Map<String, Object> context, Object root,
+    public void setValue(String expression, StrutsContext context, Object root,
             Object value) throws ReflectionException {
         try {
             ognlUtil.setValue(expression, context, root, value);

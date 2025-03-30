@@ -94,9 +94,8 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
-        OgnlContext ognlContext = (OgnlContext) context;
 
         for (Object o : root) {
             if (o == null) {
@@ -104,8 +103,8 @@ public class CompoundRootAccessor implements RootAccessor {
             }
 
             try {
-                if (OgnlRuntime.hasSetProperty(ognlContext, o, name)) {
-                    OgnlRuntime.setProperty(ognlContext, o, name, value);
+                if (OgnlRuntime.hasSetProperty(context, o, name)) {
+                    OgnlRuntime.setProperty(context, o, name, value);
 
                     return;
                 } else if (o instanceof Map) {
@@ -143,9 +142,8 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
-        OgnlContext ognlContext = (OgnlContext) context;
 
         if (name instanceof Integer index) {
             return root.cutStack(index);
@@ -164,8 +162,8 @@ public class CompoundRootAccessor implements RootAccessor {
                 }
 
                 try {
-                    if ((OgnlRuntime.hasGetProperty(ognlContext, o, name)) || ((o instanceof Map) && ((Map) o).containsKey(name))) {
-                        return OgnlRuntime.getProperty(ognlContext, o, name);
+                    if ((OgnlRuntime.hasGetProperty(context, o, name)) || ((o instanceof Map) && ((Map) o).containsKey(name))) {
+                        return OgnlRuntime.getProperty(context, o, name);
                     }
                 } catch (OgnlException e) {
                     if (e.getReason() != null) {
@@ -188,7 +186,7 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object callMethod(Map context, Object target, String name, Object[] objects) throws MethodFailedException {
+    public Object callMethod(OgnlContext context, Object target, String name, Object[] objects) throws MethodFailedException {
         CompoundRoot root = (CompoundRoot) target;
 
         if ("describe".equals(name)) {
@@ -204,19 +202,18 @@ public class CompoundRootAccessor implements RootAccessor {
                 return v.toString();
             }
 
-            try {
-                Map<String, PropertyDescriptor> descriptors = OgnlRuntime.getPropertyDescriptors(v.getClass());
+            Map<String, PropertyDescriptor> descriptors = OgnlRuntime.getPropertyDescriptors(v.getClass());
 
-                int maxSize = 0;
-                for (String pdName : descriptors.keySet()) {
+            int maxSize = 0;
+            for (String pdName : descriptors.keySet()) {
                     if (pdName.length() > maxSize) {
                         maxSize = pdName.length();
                     }
                 }
 
-                SortedSet<String> set = new TreeSet<>();
+            SortedSet<String> set = new TreeSet<>();
 
-                for (PropertyDescriptor pd : descriptors.values()) {
+            for (PropertyDescriptor pd : descriptors.values()) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(pd.getName()).append(": ");
 
@@ -228,15 +225,11 @@ public class CompoundRootAccessor implements RootAccessor {
                     set.add(sb.toString());
                 }
 
-                StringBuilder sb = new StringBuilder();
-                for (String aSet : set) {
+            StringBuilder sb = new StringBuilder();
+            for (String aSet : set) {
                     sb.append(aSet).append("\n");
                 }
-                return sb.toString();
-            } catch (IntrospectionException | OgnlException e) {
-                LOG.debug("Got exception in callMethod", e);
-            }
-            return null;
+            return sb.toString();
         }
 
         Throwable reason = null;
@@ -281,16 +274,16 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object callStaticMethod(Map transientVars, Class aClass, String s, Object[] objects) throws MethodFailedException {
+    public Object callStaticMethod(OgnlContext transientVars, Class aClass, String s, Object[] objects) throws MethodFailedException {
         return null;
     }
 
     @Override
-    public Class classForName(String className, Map context) throws ClassNotFoundException {
+    public Class classForName(String className, OgnlContext context) throws ClassNotFoundException {
         Object root = Ognl.getRoot(context);
 
         if (disallowCustomOgnlMap) {
-            String nodeClassName = ((OgnlContext) context).getCurrentNode().getClass().getName();
+            String nodeClassName = context.getCurrentNode().getClass().getName();
             if ("ognl.ASTMap".equals(nodeClassName) && !ALLOWED_MAP_CLASSES.contains(className)) {
                 LOG.error("Constructing OGNL ASTMap's from custom classes is forbidden. Attempted class: {}", className);
                 return null;

@@ -113,11 +113,9 @@ public class ActionContext implements Serializable {
      * Creates a new ActionContext initialized with another context.
      *
      * @param context a context map.
-     * @deprecated use {@link #ActionContext(StrutsContext)} instead.
      */
-    @Deprecated(since = "7.1.0", forRemoval = true)
     protected ActionContext(Map<String, Object> context) {
-        this.context = StrutsContext.wrap(context);
+        this.context = StrutsContext.of(context);
     }
 
     /**
@@ -139,7 +137,7 @@ public class ActionContext implements Serializable {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null!");
         }
-        return new ActionContext(context);
+        return new ActionContext(StrutsContext.of(context));
     }
 
     /**
@@ -148,7 +146,7 @@ public class ActionContext implements Serializable {
      * @return new ActionContext
      */
     public static ActionContext of() {
-        return of(new HashMap<>());
+        return of(StrutsContext.empty());
     }
 
     /**

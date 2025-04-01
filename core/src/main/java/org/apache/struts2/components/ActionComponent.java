@@ -23,6 +23,7 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -167,7 +168,7 @@ public class ActionComponent extends ContextBean {
         return end;
     }
 
-    protected Map<String, Object> createExtraContext() {
+    protected StrutsContext createExtraContext() {
         HttpParameters newParams = createParametersForContext();
 
         ActionContext ctx = stack.getActionContext();
@@ -176,7 +177,7 @@ public class ActionComponent extends ContextBean {
         Map<String, Object> application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map<String, Object> extraContext = du.createContextMap(
+        StrutsContext extraContext = du.createStrutsContext(
             new RequestMap(req),
             newParams,
             session,
@@ -190,7 +191,7 @@ public class ActionComponent extends ContextBean {
             .withValueStack(newStack)
             // add page context, such that ServletDispatcherResult will do an include
             .withPageContext(pageContext)
-            .getContextMap();
+            .getStrutsContext();
     }
 
     /**

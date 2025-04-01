@@ -24,6 +24,7 @@ import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -221,11 +221,11 @@ public class ActionChainResult implements Result {
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
-        Map<String, Object> extraContext = ActionContext.of()
+        StrutsContext extraContext = ActionContext.of()
             .withValueStack(invocation.getInvocationContext().getValueStack())
             .withParameters(invocation.getInvocationContext().getParameters())
             .with(CHAIN_HISTORY, ActionChainResult.getChainHistory())
-            .getContextMap();
+            .getStrutsContext();
 
         LOG.debug("Chaining to action {}", finalActionName);
 

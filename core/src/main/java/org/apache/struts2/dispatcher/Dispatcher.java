@@ -65,6 +65,7 @@ import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ClassLoaderUtil;
@@ -686,7 +687,7 @@ public class Dispatcher {
     public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
         throws ServletException {
 
-        Map<String, Object> extraContext = createContextMap(request, response, mapping);
+        StrutsContext extraContext = createStrutsContext(request, response, mapping);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
@@ -700,7 +701,7 @@ public class Dispatcher {
         if (stack != null) {
             extraContext = ActionContext.of(extraContext)
                 .withValueStack(valueStackFactory.createValueStack(stack))
-                .getContextMap();
+                .getStrutsContext();
         }
 
         try {
@@ -740,7 +741,7 @@ public class Dispatcher {
         }
     }
 
-    protected ActionProxy prepareActionProxy(Map<String, Object> extraContext, String actionNamespace, String actionName, String actionMethod) {
+    protected ActionProxy prepareActionProxy(StrutsContext extraContext, String actionNamespace, String actionName, String actionMethod) {
         ActionProxy proxy;
         //check if we are probably in an async resuming
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
@@ -759,7 +760,7 @@ public class Dispatcher {
         return proxy;
     }
 
-    protected ActionProxy createActionProxy(String namespace, String name, String method, Map<String, Object> extraContext) {
+    protected ActionProxy createActionProxy(String namespace, String name, String method, StrutsContext extraContext) {
         return actionProxyFactory.createActionProxy(namespace, name, method, extraContext, true, false);
     }
 
@@ -796,9 +797,17 @@ public class Dispatcher {
      * @param mapping  The action mapping
      * @return A map of context objects
      * @since 2.3.17
+     * @deprecated since 7.1.0, use {@link #createStrutsContext(HttpServletRequest, HttpServletResponse, ActionMapping)} instead
      */
-    public Map<String, Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
-                                                ActionMapping mapping) {
+    @Deprecated(since = "7.1.0", forRemoval = true)
+    public Map<String, Object> createContextMap(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) {
+        return createStrutsContext(request, response, mapping);
+    }
+
+    /**
+     * @since 7.1.0
+     */
+    public StrutsContext createStrutsContext(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) {
 
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
@@ -812,7 +821,7 @@ public class Dispatcher {
         // application map wrapping the ServletContext
         Map application = new ApplicationMap(servletContext);
 
-        Map<String, Object> extraContext = createContextMap(requestMap, params, session, application, request, response);
+        StrutsContext extraContext = createStrutsContext(requestMap, params, session, application, request, response);
 
         if (mapping != null) {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
@@ -832,14 +841,28 @@ public class Dispatcher {
      * @param response       the HttpServletResponse object.
      * @return a HashMap representing the <tt>Action</tt> context.
      * @since 2.3.17
+     * @deprecated since 7.1.0, use {@link #createStrutsContext(Map, HttpParameters, Map, Map, HttpServletRequest, HttpServletResponse)} instead
      */
+    @Deprecated(since = "7.1.0", forRemoval = true)
     public Map<String, Object> createContextMap(Map<String, Object> requestMap,
                                                 HttpParameters parameters,
                                                 Map<String, Object> sessionMap,
                                                 Map<String, Object> applicationMap,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) {
-        Map<String, Object> extraContext = ActionContext.of()
+        return createStrutsContext(requestMap, parameters, sessionMap, applicationMap, request, response);
+    }
+
+    /**
+     * @since 7.1.0
+     */
+    public StrutsContext createStrutsContext(Map<String, Object> requestMap,
+                                                HttpParameters parameters,
+                                                Map<String, Object> sessionMap,
+                                                Map<String, Object> applicationMap,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+        StrutsContext extraContext = ActionContext.of()
             .withParameters(parameters)
             .withSession(sessionMap)
             .withApplication(applicationMap)
@@ -851,7 +874,7 @@ public class Dispatcher {
             .with(DispatcherConstants.REQUEST, requestMap)
             .with(DispatcherConstants.SESSION, sessionMap)
             .with(DispatcherConstants.APPLICATION, applicationMap)
-            .getContextMap();
+            .getStrutsContext();
 
         AttributeMap attrMap = new AttributeMap(extraContext);
         extraContext.put(DispatcherConstants.ATTRIBUTES, attrMap);

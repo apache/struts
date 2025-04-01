@@ -69,7 +69,7 @@ public interface WithLazyParams {
         public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 Object paramValue = textParser.evaluate(new char[]{ '$' }, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
-                ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
+                ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getStrutsContext());
             }
             return interceptor;
         }

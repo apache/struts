@@ -18,12 +18,9 @@
  */
 package org.apache.struts2.ognl;
 
-import ognl.OgnlContext;
 import org.apache.struts2.conversion.NullHandler;
 
-import java.util.Map;
-
-public class OgnlNullHandlerWrapper implements ognl.NullHandler {
+public class OgnlNullHandlerWrapper implements ognl.NullHandler<StrutsContext> {
 
     private final NullHandler wrapped;
 
@@ -32,13 +29,13 @@ public class OgnlNullHandlerWrapper implements ognl.NullHandler {
     }
 
     @Override
-    public Object nullMethodResult(OgnlContext context, Object target,
+    public Object nullMethodResult(StrutsContext context, Object target,
                                    String methodName, Object[] args) {
         return wrapped.nullMethodResult(context, target, methodName, args);
     }
 
     @Override
-    public Object nullPropertyValue(OgnlContext context, Object target, Object property) {
+    public Object nullPropertyValue(StrutsContext context, Object target, Object property) {
         return wrapped.nullPropertyValue(context, target, property);
     }
 

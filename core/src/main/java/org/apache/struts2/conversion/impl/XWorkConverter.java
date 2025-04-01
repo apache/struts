@@ -18,10 +18,13 @@
  */
 package org.apache.struts2.conversion.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
-import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.ConversionAnnotationProcessor;
 import org.apache.struts2.conversion.ConversionFileProcessor;
 import org.apache.struts2.conversion.TypeConverter;
@@ -29,15 +32,13 @@ import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.annotations.Conversion;
 import org.apache.struts2.conversion.annotations.TypeConversion;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
+import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.util.AnnotationUtils;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
@@ -249,8 +250,8 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     @Override
-    public Object convertValue(Map<String, Object> map, Object o, Class aClass) {
-        return convertValue(map, null, null, null, o, aClass);
+    public Object convertValue(StrutsContext context, Object o, Class aClass) {
+        return convertValue(context, null, null, null, o, aClass);
     }
 
     /**
@@ -261,10 +262,10 @@ public class XWorkConverter extends DefaultTypeConverter {
      * <li>supplying context, target and value.</li>
      * </ul>
      *
-     * @see TypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.reflect.Member, java.lang.String, java.lang.Object, java.lang.Class)
+     * @see TypeConverter#convertValue(StrutsContext, java.lang.Object, java.lang.reflect.Member, java.lang.String, java.lang.Object, java.lang.Class)
      */
     @Override
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String property, Object value, Class toClass) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String property, Object value, Class toClass) {
         //
         // Process the conversion using the default mappings, if one exists
         //
@@ -474,7 +475,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     private Object[] getClassProperty(Map<String, Object> context) {
         Object lastClass = context.get(LAST_BEAN_CLASS_ACCESSED);
         Object lastProperty = context.get(LAST_BEAN_PROPERTY_ACCESSED);
-        return (lastClass != null && lastProperty != null) ? new Object[] {lastClass, lastProperty} : null;
+        return (lastClass != null && lastProperty != null) ? new Object[]{lastClass, lastProperty} : null;
     }
 
     /**

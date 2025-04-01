@@ -57,7 +57,7 @@ import java.util.Set;
  * <li>If the property is declared as a {@link Map}, then a HashMap will be returned and assigned to the null
  * references.</li>
  * <li>If the null property is a simple bean with a no-arg constructor, it will simply be created using the {@link
- * ObjectFactory#buildBean(java.lang.Class, java.util.Map)} method.</li>
+ * ObjectFactory#buildBean(java.lang.Class, StrutsContext)} method.</li>
  * </ul>
  *
  * <!-- END SNIPPET: javadoc -->
@@ -148,7 +148,7 @@ public class InstantiatingNullHandler implements NullHandler {
         return null;
     }
 
-    private Object createObject(Class clazz, Object target, String property, Map<String, Object> context) throws Exception {
+    private Object createObject(Class clazz, Object target, String property, StrutsContext context) throws Exception {
         if (Set.class.isAssignableFrom(clazz)) {
             return new HashSet();
         } else if (Collection.class.isAssignableFrom(clazz)) {

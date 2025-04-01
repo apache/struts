@@ -18,7 +18,13 @@
  */
 package org.apache.struts2.ognl.accessor;
 
+import ognl.ObjectPropertyAccessor;
 import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.SetPropertyAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.conversion.impl.XWorkConverter;
@@ -26,12 +32,6 @@ import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.ObjectPropertyAccessor;
-import ognl.OgnlException;
-import ognl.OgnlRuntime;
-import ognl.SetPropertyAccessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * @author Gabe
  */
-public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
+public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(XWorkCollectionPropertyAccessor.class);
 
@@ -50,7 +50,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     //use a basic object Ognl property accessor here
     //to access properties of the objects in the Set
     //so that nothing is put in the context to screw things up
-    private final ObjectPropertyAccessor _accessor = new ObjectPropertyAccessor();
+    private final ObjectPropertyAccessor<StrutsContext> _accessor = new ObjectPropertyAccessor<>();
 
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;
@@ -88,7 +88,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
      * @see ognl.PropertyAccessor#getProperty(OgnlContext, Object, Object)
      */
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object key) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object key) throws OgnlException {
         LOG.trace("Entering getProperty()");
 
         //check if it is a generic type property.
@@ -96,14 +96,14 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
         //superclass which will determine this.
         if (!ReflectionContextState.isGettingByKeyProperty(context) && !key.equals(KEY_PROPERTY_FOR_CREATION)) {
             return super.getProperty(context, target, key);
-        }	else {
+        } else {
             //reset context property
-            ReflectionContextState.setGettingByKeyProperty(context,false);
+            ReflectionContextState.setGettingByKeyProperty(context, false);
         }
-        Collection c = (Collection) target;
+        Collection<Object> c = (Collection<Object>) target;
 
         //get the bean that this collection is a property of
-        Class lastBeanClass = ReflectionContextState.getLastBeanClassAccessed(context);
+        Class<?> lastBeanClass = ReflectionContextState.getLastBeanClassAccessed(context);
 
         //get the property name that this collection uses
         String lastPropertyClass = ReflectionContextState.getLastBeanPropertyAccessed(context);
@@ -121,19 +121,18 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
         String keyProperty = objectTypeDeterminer.getKeyProperty(lastBeanClass, lastPropertyClass);
 
         //get the collection class of the
-        Class collClass = objectTypeDeterminer.getElementClass(lastBeanClass, lastPropertyClass, key);
+        Class<?> collClass = objectTypeDeterminer.getElementClass(lastBeanClass, lastPropertyClass, key);
 
-        Class keyType;
-        Class toGetTypeFrom = (collClass != null) ? collClass : c.iterator().next().getClass();
+        Class<?> keyType;
+        Class<?> toGetTypeFrom = (collClass != null) ? collClass : c.iterator().next().getClass();
         try {
             keyType = OgnlRuntime.getPropertyDescriptor(toGetTypeFrom, keyProperty).getPropertyType();
         } catch (Exception exc) {
             throw new OgnlException("Error getting property descriptor: " + exc.getMessage());
         }
 
-
         if (ReflectionContextState.isCreatingNullObjects(context)) {
-            Map collMap = getSetMap(context, c, keyProperty);
+            Map<Object, Object> collMap = getSetMap(context, c, keyProperty);
             if (key.toString().equals(KEY_PROPERTY_FOR_CREATION)) {
                 //this should return the XWorkList
                 //for this set that contains new entries
@@ -146,26 +145,26 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
             if (value == null
                     && ReflectionContextState.isCreatingNullObjects(context)
                     && objectTypeDeterminer
-                    .shouldCreateIfNew(lastBeanClass,lastPropertyClass,c,keyProperty,false)) {
-                	//create a new element and
-                    //set the value of keyProperty
-                    //to be the given value
-                	try {
-                	    value=objectFactory.buildBean(collClass, context);
+                    .shouldCreateIfNew(lastBeanClass, lastPropertyClass, c, keyProperty, false)) {
+                //create a new element and
+                //set the value of keyProperty
+                //to be the given value
+                try {
+                    value = objectFactory.buildBean(collClass, context);
 
-                	    //set the value of the keyProperty
-                	    _accessor.setProperty(context,value,keyProperty,realKey);
+                    //set the value of the keyProperty
+                    _accessor.setProperty(context, value, keyProperty, realKey);
 
-                	    //add the new object to the collection
-                	    c.add(value);
+                    //add the new object to the collection
+                    c.add(value);
 
-                	    //add to the Map if accessed later
-                	    collMap.put(realKey, value);
+                    //add to the Map if accessed later
+                    collMap.put(realKey, value);
 
 
-                	}	catch (Exception exc) {
-                	    throw new OgnlException("Error adding new element to collection", exc);
-                	}
+                } catch (Exception exc) {
+                    throw new OgnlException("Error adding new element to collection", exc);
+                }
 
             }
             return value;
@@ -184,19 +183,19 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     /*
-      * Gets an indexed Map by a given key property with the key being
-      * the value of the property and the value being the
-      */
-    private Map getSetMap(OgnlContext context, Collection collection, String property) throws OgnlException {
+     * Gets an indexed Map by a given key property with the key being
+     * the value of the property and the value being the
+     */
+    private Map<Object, Object> getSetMap(StrutsContext context, Collection<Object> collection, String property) throws OgnlException {
         LOG.trace("getting set Map");
 
         String path = ReflectionContextState.getCurrentPropertyPath(context);
-        Map map = ReflectionContextState.getSetMap(context, path);
+        Map<Object, Object> map = ReflectionContextState.getSetMap(context, path);
 
         if (map == null) {
             LOG.trace("creating set Map");
 
-            map = new HashMap();
+            map = new HashMap<>();
             map.put(null, new SurrugateList(collection));
             for (Object currTest : collection) {
                 Object currKey = _accessor.getProperty(context, currTest, property);
@@ -210,9 +209,9 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     /*
-      * gets a bean with the given
-      */
-    public Object getPropertyThroughIteration(OgnlContext context, Collection collection, String property, Object key)
+     * gets a bean with the given
+     */
+    public Object getPropertyThroughIteration(StrutsContext context, Collection<Object> collection, String property, Object key)
             throws OgnlException {
         //TODO
         for (Object currTest : collection) {
@@ -225,22 +224,22 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
-        Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
+        Class<?> lastClass = (Class<?>) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
-        Class convertToClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, name);
+        Class<?> convertToClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, name);
 
         if (name instanceof String && value.getClass().isArray()) {
             // looks like the input game in the form of "someCollection.foo" and
             // we are expected to define the index values ourselves.
             // So let's do it:
 
-            Collection c = (Collection) target;
+            Collection<Object> c = (Collection<Object>) target;
             Object[] values = (Object[]) value;
             for (Object v : values) {
                 try {
                     Object o = objectFactory.buildBean(convertToClass, context);
-                    ognlUtil.setValue((String) name, (StrutsContext) context, o, v);
+                    ognlUtil.setValue((String) name, context, o, v);
                     c.add(o);
                 } catch (Exception e) {
                     throw new OgnlException("Error converting given String values for Collection.", e);
@@ -257,7 +256,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
         super.setProperty(context, target, name, realValue);
     }
 
-    private Object getRealValue(Map context, Object value, Class convertToClass) {
+    private Object getRealValue(StrutsContext context, Object value, Class<?> convertToClass) {
         if (value == null || convertToClass == null) {
             return value;
         }
@@ -268,11 +267,11 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
 /**
  * @author Gabe
  */
-class SurrugateList extends ArrayList {
+class SurrugateList extends ArrayList<Object> {
 
-    private final Collection surrugate;
+    private final Collection<Object> surrugate;
 
-    public SurrugateList(Collection surrugate) {
+    public SurrugateList(Collection<Object> surrugate) {
         this.surrugate = surrugate;
     }
 

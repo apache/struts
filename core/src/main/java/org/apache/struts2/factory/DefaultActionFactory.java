@@ -21,6 +21,7 @@ package org.apache.struts2.factory;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class DefaultActionFactory implements ActionFactory {
         this.objectFactory = objectFactory;
     }
 
-    public Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception {
+    public Object buildAction(String actionName, String namespace, ActionConfig config, StrutsContext extraContext) throws Exception {
         return objectFactory.buildBean(config.getClassName(), extraContext);
     }
 

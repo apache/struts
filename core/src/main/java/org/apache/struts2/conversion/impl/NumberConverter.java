@@ -21,6 +21,7 @@ package org.apache.struts2.conversion.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.conversion.TypeConversionException;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
@@ -35,7 +36,7 @@ public class NumberConverter extends DefaultTypeConverter {
 
     private static final Logger LOG = LogManager.getLogger(NumberConverter.class);
 
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value instanceof String) {
             String stringValue = String.valueOf(value);
 

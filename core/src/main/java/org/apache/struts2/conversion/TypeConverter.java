@@ -18,8 +18,9 @@
  */
 package org.apache.struts2.conversion;
 
+import org.apache.struts2.ognl.StrutsContext;
+
 import java.lang.reflect.Member;
-import java.util.Map;
 
 /**
  * Interface for accessing the type conversion facilities within a context.
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public interface TypeConverter {
+public interface TypeConverter<C extends StrutsContext> {
     /**
      * Converts the given value to a given type.  The OGNL context, target, member and
      * name of property being set are given.  This method should be able to handle
@@ -44,7 +45,7 @@ public interface TypeConverter {
      * @return Converted value of type toType or TypeConverter.NoConversionPossible to indicate that the
      * conversion was not possible.
      */
-    Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType);
+    Object convertValue(C context, Object target, Member member, String propertyName, Object value, Class<?> toType);
 
     Object NO_CONVERSION_POSSIBLE = "ognl.NoConversionPossible";
 

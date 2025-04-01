@@ -78,7 +78,7 @@ public class DefaultValidatorFactory implements ValidatorFactory, Initializable 
         try {
             // instantiate the validator, and set configured parameters
             //todo - can this use the ThreadLocal?
-            validator = objectFactory.buildValidator(className, cfg.getParams(), ActionContext.getContext().getContextMap());
+            validator = objectFactory.buildValidator(className, cfg.getParams(), ActionContext.getContext().getStrutsContext());
         } catch (Exception e) {
             final String msg = "There was a problem creating a Validator of type " + className + " : caused by " + e.getMessage();
             throw new StrutsException(msg, e, cfg);

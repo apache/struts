@@ -19,6 +19,7 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
@@ -46,8 +47,8 @@ public class DateConverter extends DefaultTypeConverter {
     private final static Logger LOG = LogManager.getLogger(DateConverter.class);
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName,
-            Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName,
+                               Object value, Class toType) {
         Date result = null;
 
         if (value instanceof String sa && !sa.isEmpty()) {

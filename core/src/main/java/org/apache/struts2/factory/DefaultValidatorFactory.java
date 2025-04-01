@@ -20,6 +20,7 @@ package org.apache.struts2.factory;
 
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.validator.Validator;
 
@@ -43,8 +44,8 @@ public class DefaultValidatorFactory implements ValidatorFactory {
         this.reflectionProvider = reflectionProvider;
     }
 
-    public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
-        Validator validator = (Validator) objectFactory.buildBean(className, extraContext);
+    public Validator buildValidator(String className, Map<String, Object> params, StrutsContext extraContext) throws Exception {
+        Validator validator = objectFactory.buildBean(className, extraContext);
         reflectionProvider.setProperties(params, validator, extraContext);
 
         return validator;

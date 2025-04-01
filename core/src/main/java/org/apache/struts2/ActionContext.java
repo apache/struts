@@ -28,6 +28,7 @@ import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.inject.Container;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.ValueStack;
 
 import java.io.Serializable;
@@ -106,14 +107,25 @@ public class ActionContext implements Serializable {
      */
     private static final String CONTAINER = "org.apache.struts2.ActionContext.container";
 
-    private final Map<String, Object> context;
+    private final StrutsContext context;
 
     /**
      * Creates a new ActionContext initialized with another context.
      *
      * @param context a context map.
+     * @deprecated use {@link #ActionContext(StrutsContext)} instead.
      */
+    @Deprecated(since = "7.1.0", forRemoval = true)
     protected ActionContext(Map<String, Object> context) {
+        this.context = StrutsContext.wrap(context);
+    }
+
+    /**
+     * Creates a new ActionContext initialized with another context.
+     *
+     * @param context a StrutsContext
+     */
+    protected ActionContext(StrutsContext context) {
         this.context = context;
     }
 
@@ -234,6 +246,10 @@ public class ActionContext implements Serializable {
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
+        return context;
+    }
+
+    public StrutsContext getStrutsContext() {
         return context;
     }
 

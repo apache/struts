@@ -21,11 +21,11 @@ package org.apache.struts2.conversion.impl;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.lang.reflect.Member;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -39,7 +39,7 @@ public class CollectionConverter extends DefaultTypeConverter {
         this.objectTypeDeterminer = determiner;
     }
 
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class toType) {
         Collection result;
         Class memberType = String.class;
 

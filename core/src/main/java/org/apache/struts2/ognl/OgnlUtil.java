@@ -61,7 +61,7 @@ public class OgnlUtil {
 
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
-    private TypeConverter defaultConverter;
+    private TypeConverter<StrutsContext> defaultConverter;
     private final OgnlGuard ognlGuard;
 
     private boolean devMode;
@@ -696,7 +696,7 @@ public class OgnlUtil {
         return createDefaultContext(root, null);
     }
 
-    protected StrutsContext createDefaultContext(Object root, ClassResolver resolver) {
+    protected StrutsContext createDefaultContext(Object root, ClassResolver<StrutsContext> resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {

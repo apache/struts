@@ -18,9 +18,10 @@
  */
 package org.apache.struts2.util;
 
-import java.util.Map;
-
 import org.apache.struts2.conversion.impl.DefaultTypeConverter;
+import org.apache.struts2.ognl.StrutsContext;
+
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -45,7 +46,8 @@ import org.apache.struts2.conversion.impl.DefaultTypeConverter;
  *
  */
 public abstract class StrutsTypeConverter extends DefaultTypeConverter {
-    public Object convertValue(Map context, Object o, Class toClass) {
+
+    public Object convertValue(StrutsContext context, Object o, Class toClass) {
         if (toClass.equals(String.class)) {
             return convertToString(context, o);
         } else if (o instanceof String[]) {
@@ -67,7 +69,7 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
      * @param toClass the class to convert to
      * @return The fallback conversion
      */
-    protected Object performFallbackConversion(Map context, Object o, Class toClass) {
+    protected Object performFallbackConversion(StrutsContext context, Object o, Class toClass) {
         return super.convertValue(context, o, toClass);
     }
 
@@ -80,7 +82,7 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
      * @param toClass the class to convert to
      * @return the converted object
      */
-    public abstract Object convertFromString(Map context, String[] values, Class toClass);
+    public abstract Object convertFromString(StrutsContext context, String[] values, Class toClass);
 
     /**
      * Converts the specified object to a String.
@@ -89,5 +91,5 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
      * @param o       the object to be converted
      * @return the converted String
      */
-    public abstract String convertToString(Map context, Object o);
+    public abstract String convertToString(StrutsContext context, Object o);
 }

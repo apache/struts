@@ -20,10 +20,11 @@
  */
 package org.apache.struts2.showcase.chat;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.StrutsTypeConverter;
 
 import java.text.ParseException;
@@ -33,36 +34,35 @@ import java.util.Map;
 
 public class DateConverter extends StrutsTypeConverter {
 
-	private static final Logger LOG = LogManager.getLogger(DateConverter.class);
+    private static final Logger LOG = LogManager.getLogger(DateConverter.class);
 
-	private XWorkConverter fallbackConverter;
+    private XWorkConverter fallbackConverter;
 
-	@Inject
-	public void setXWorkConverter(XWorkConverter fallbackConverter) {
-		this.fallbackConverter = fallbackConverter;
-	}
+    @Inject
+    public void setXWorkConverter(XWorkConverter fallbackConverter) {
+        this.fallbackConverter = fallbackConverter;
+    }
 
-	public Object convertFromString(Map context, String[] values, Class toClass) {
+    public Object convertFromString(StrutsContext context, String[] values, Class toClass) {
 
-		if (values.length > 0 && values[0] != null && values[0].trim().length() > 0) {
-			SimpleDateFormat sdf = new SimpleDateFormat();
-			try {
-				return sdf.parse(values[0]);
-			} catch (ParseException e) {
-				LOG.warn("error converting value [" + values[0] + "] to Date. Trying fallback converter.");
-				return this.fallbackConverter.convertValue(context, values[0], toClass);
-			}
-		}
-		return null;
-	}
+        if (values.length > 0 && values[0] != null && values[0].trim().length() > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat();
+            try {
+                return sdf.parse(values[0]);
+            } catch (ParseException e) {
+                LOG.warn("error converting value [" + values[0] + "] to Date. Trying fallback converter.");
+                return this.fallbackConverter.convertValue(context, values[0], toClass);
+            }
+        }
+        return null;
+    }
 
-	public String convertToString(Map context, Object o) {
-
-		if (o instanceof Date) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-			return sdf.format((Date) o);
-		}
-		return "";
-	}
+    public String convertToString(StrutsContext context, Object o) {
+        if (o instanceof Date) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            return sdf.format((Date) o);
+        }
+        return "";
+    }
 }
 

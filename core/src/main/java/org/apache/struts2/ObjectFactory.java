@@ -34,6 +34,7 @@ import org.apache.struts2.factory.ValidatorFactory;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.validator.Validator;
@@ -46,7 +47,7 @@ import java.util.Map;
  * own implementation of the ObjectFactory to control instantiation of these Objects.
  *
  * <p>
- * This default implementation uses the {@link #buildBean(Class,java.util.Map) buildBean}
+ * This default implementation uses the {@link #buildBean(Class,StrutsContext) buildBean}
  * method to create all classes (interceptors, actions, results, etc).
  * </p>
  *
@@ -127,9 +128,9 @@ public class ObjectFactory implements Serializable {
      * @return The class itself
      * @throws ClassNotFoundException if class not found in classpath
      */
-    public Class getClassInstance(String className) throws ClassNotFoundException {
+    public <T> Class<T> getClassInstance(String className) throws ClassNotFoundException {
         if (ccl != null) {
-            return ccl.loadClass(className);
+            return (Class<T>) ccl.loadClass(className);
         }
 
         return ClassLoaderUtil.loadClass(className, this.getClass());
@@ -144,7 +145,7 @@ public class ObjectFactory implements Serializable {
      * @return instance of the action class to handle a web request
      * @throws Exception in case of any error
      */
-    public Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception {
+    public Object buildAction(String actionName, String namespace, ActionConfig config, StrutsContext extraContext) throws Exception {
         return actionFactory.buildAction(actionName, namespace, config, extraContext);
     }
 
@@ -156,7 +157,7 @@ public class ObjectFactory implements Serializable {
      * @return object for the given type
      * @throws Exception in case of any error
      */
-    public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
+    public <T> T buildBean(Class<T> clazz, StrutsContext extraContext) throws Exception {
         return container.inject(clazz);
     }
 
@@ -180,7 +181,7 @@ public class ObjectFactory implements Serializable {
      * @return object for the given type
      * @throws Exception in case of any error
      */
-    public Object buildBean(String className, Map<String, Object> extraContext) throws Exception {
+    public <T> T buildBean(String className, StrutsContext extraContext) throws Exception {
         return buildBean(className, extraContext, true);
     }
 
@@ -193,8 +194,8 @@ public class ObjectFactory implements Serializable {
      * @return object for the given type
      * @throws Exception in case of any error
      */
-    public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
-        Class clazz = getClassInstance(className);
+    public <T> T buildBean(String className, StrutsContext extraContext, boolean injectInternal) throws Exception {
+        Class<T> clazz = getClassInstance(className);
         return buildBean(clazz, extraContext);
     }
 
@@ -224,7 +225,7 @@ public class ObjectFactory implements Serializable {
      * @return result
      * @throws Exception in case of any error
      */
-    public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
+    public Result buildResult(ResultConfig resultConfig, StrutsContext extraContext) throws Exception {
         return resultFactory.buildResult(resultConfig, extraContext);
     }
 
@@ -238,7 +239,7 @@ public class ObjectFactory implements Serializable {
      * @return validator of the given type
      * @throws Exception in case of any error
      */
-    public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
+    public <T> Validator<T> buildValidator(String className, Map<String, Object> params, StrutsContext extraContext) throws Exception {
         return validatorFactory.buildValidator(className, params, extraContext);
     }
 
@@ -250,7 +251,7 @@ public class ObjectFactory implements Serializable {
      * @return instance of converterClass with inject dependencies
      * @throws Exception in case of any error
      */
-    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
+    public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, StrutsContext extraContext) throws Exception {
         return converterFactory.buildConverter(converterClass, extraContext);
     }
 

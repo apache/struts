@@ -80,7 +80,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -102,7 +102,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }

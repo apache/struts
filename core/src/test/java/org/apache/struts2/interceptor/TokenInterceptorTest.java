@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -41,13 +42,12 @@ import java.util.TreeMap;
  */
 public class TokenInterceptorTest extends StrutsInternalTestCase {
 
-    ActionContext oldContext;
-    HttpSession httpSession;
-    Map<String, Object> extraContext;
-    Map<String, Object> params;
-    Map<String, Object> session;
-    StrutsMockHttpServletRequest request;
-
+    protected ActionContext oldContext;
+    protected HttpSession httpSession;
+    protected StrutsContext extraContext;
+    protected Map<String, Object> params;
+    protected Map<String, Object> session;
+    protected StrutsMockHttpServletRequest request;
 
     public void testNoTokenInParams() throws Exception {
         ActionProxy proxy = buildProxy(getActionName());
@@ -108,11 +108,11 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
         session = new TreeMap<>();
         params = new TreeMap<>();
-        extraContext = new TreeMap<>();
+        extraContext = StrutsContext.empty();
         extraContext = ActionContext.of(extraContext)
             .withSession(session)
             .withParameters(HttpParameters.create().build())
-            .getContextMap();
+            .getStrutsContext();
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();

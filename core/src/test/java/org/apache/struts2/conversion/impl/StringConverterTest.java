@@ -20,17 +20,17 @@ package org.apache.struts2.conversion.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.math.BigDecimal;
 import java.util.Locale;
-import java.util.Map;
 
 public class StringConverterTest extends StrutsInternalTestCase {
 
     public void testIntegerToStringConversionPL() throws Exception {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when
         Object value = converter.convertValue(context, null, null, null, Integer.MIN_VALUE, null);
@@ -42,7 +42,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
     public void testDoubleToStringConversionPL() throws Exception {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when has max fraction digits
         Object value = converter.convertValue(context, null, null, null, Double.MIN_VALUE, null);
@@ -66,7 +66,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
     public void testFloatToStringConversionPL() throws Exception {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when has max fraction digits
         Object value = converter.convertValue(context, null, null, null, Float.MIN_VALUE, null);
@@ -90,7 +90,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
     public void testBigDecimalToStringConversionPL() throws Exception {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when a bit bigger than double
         String aBitBiggerThanDouble = "17976931348623157" + StringUtils.repeat('0', 291) + "1."
@@ -105,25 +105,25 @@ public class StringConverterTest extends StrutsInternalTestCase {
     public void testStringArrayToStringConversion() {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when
-        Object value = converter.convertValue(context, null, null, null, new String[] {"foo", "baz"}, null);
+        Object value = converter.convertValue(context, null, null, null, new String[]{"foo", "baz"}, null);
 
         // then
         assertEquals("foo, baz", value);
-   }
+    }
 
     public void testArrayOfNullToStringConversion() {
         // given
         StringConverter converter = new StringConverter();
-        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+        StrutsContext context = createContextWithLocale(new Locale("pl", "PL"));
 
         // when
-        Object value = converter.convertValue(context, null, null, null, new String[] {null}, null);
+        Object value = converter.convertValue(context, null, null, null, new String[]{null}, null);
 
         // then
         assertEquals("", value);
-   }
+    }
 
 }

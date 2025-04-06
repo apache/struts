@@ -504,7 +504,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         TestBean2 tb2 = new TestBean2();
 
         vs.push(tb2);
-        Map myContext = vs.getContext();
+        StrutsContext myContext = vs.getContext();
 
         Map props = new HashMap();
         props.put("cat", "Kitty");
@@ -657,14 +657,14 @@ public class OgnlValueStackTest extends XWorkTestCase {
         //assertEquals(new Boolean(false), vs.findValue("'Rover'.endsWith('Jack')"));
         //assertEquals(new Boolean(false), vs.findValue("'Rover'.endsWith(name)"));
         //assertEquals("RoverJack", vs.findValue("[1].name + name"));
-        assertEquals(new Boolean(false), vs.findValue("[1].name.endsWith(name)"));
+        assertEquals(Boolean.FALSE, vs.findValue("[1].name.endsWith(name)"));
 
-        assertEquals(new Integer(1 * 7), vs.findValue("computeDogYears()"));
-        assertEquals(new Integer(1 * 2), vs.findValue("multiplyAge(2)"));
-        assertEquals(new Integer(12 * 7), vs.findValue("[1].computeDogYears()"));
-        assertEquals(new Integer(12 * 5), vs.findValue("[1].multiplyAge(5)"));
+        assertEquals(Integer.valueOf(1 * 7), vs.findValue("computeDogYears()"));
+        assertEquals(Integer.valueOf(1 * 2), vs.findValue("multiplyAge(2)"));
+        assertEquals(Integer.valueOf(12 * 7), vs.findValue("[1].computeDogYears()"));
+        assertEquals(Integer.valueOf(12 * 5), vs.findValue("[1].multiplyAge(5)"));
         assertNull(vs.findValue("thisMethodIsBunk()"));
-        assertEquals(new Integer(12 * 1), vs.findValue("[1].multiplyAge(age)"));
+        assertEquals(Integer.valueOf(12 * 1), vs.findValue("[1].multiplyAge(age)"));
 
         assertEquals("Jack", vs.findValue("name"));
         assertEquals("Rover", vs.findValue("[1].name"));

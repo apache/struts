@@ -21,11 +21,11 @@ package org.apache.struts2.validator;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.MockConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.interceptor.ValidationAware;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +41,7 @@ public class LongRangeValidatorTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

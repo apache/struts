@@ -20,20 +20,19 @@ package org.apache.struts2.conversion;
 
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.apache.struts2.ognl.StrutsContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.Member;
-import java.util.Collections;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UploadedFileConverterTest {
 
-    private Map<String, Object> context;
+    private StrutsContext context;
     private Class<?> target;
     private Member member;
     private String propertyName;
@@ -43,7 +42,7 @@ public class UploadedFileConverterTest {
 
     @Before
     public void setUp() throws Exception {
-        context = Collections.emptyMap();
+        context = StrutsContext.empty();
         target = File.class;
         member = File.class.getMethod("length");
         propertyName = "ignore";
@@ -78,10 +77,10 @@ public class UploadedFileConverterTest {
         // given
         UploadedFileConverter ufc = new UploadedFileConverter();
         UploadedFile[] uploadedFile = new UploadedFile[]{
-            StrutsUploadedFile.Builder.create(tempFile)
-                .withContentType(this.contentType)
-                .withOriginalName(this.originalName)
-                .build()
+                StrutsUploadedFile.Builder.create(tempFile)
+                        .withContentType(this.contentType)
+                        .withOriginalName(this.originalName)
+                        .build()
         };
 
         // when

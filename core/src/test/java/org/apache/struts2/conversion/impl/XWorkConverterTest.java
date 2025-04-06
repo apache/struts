@@ -18,25 +18,26 @@
  */
 package org.apache.struts2.conversion.impl;
 
+import ognl.OgnlRuntime;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ModelDrivenAction;
 import org.apache.struts2.SimpleAction;
-import org.apache.struts2.text.StubTextProvider;
 import org.apache.struts2.StubValueStack;
 import org.apache.struts2.TestBean;
-import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.ognl.OgnlValueStack;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.test.ModelDrivenAction2;
 import org.apache.struts2.test.User;
+import org.apache.struts2.text.StubTextProvider;
+import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.util.Bar;
 import org.apache.struts2.util.Cat;
 import org.apache.struts2.util.Foo;
 import org.apache.struts2.util.FurColor;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.OgnlRuntime;
-import org.apache.struts2.conversion.TypeConverter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -46,21 +47,28 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static org.junit.Assert.assertArrayEquals;
-
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class XWorkConverterTest extends XWorkTestCase {
 
-    private Map<String, Object> context;
+    private StrutsContext context;
     private XWorkConverter converter;
     private OgnlValueStack stack;
 
@@ -166,12 +174,12 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         stack.push(action);
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        ognlStackContext.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, "bean.birth");
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        strutsStackContext.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, "bean.birth");
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action.getBean(), null, "birth", value, Date.class));
         stack.pop();
 
         Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
@@ -186,14 +194,14 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         stack.push(action);
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "date", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action, null, "date", value, Date.class));
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.of(strutsStackContext).getConversionErrors();
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("date"));
@@ -205,15 +213,15 @@ public class XWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action, null, "birth", value, Date.class));
         stack.pop();
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.of(strutsStackContext).getConversionErrors();
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("birth"));
@@ -261,11 +269,11 @@ public class XWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String value = "asdf:123";
-        Object o = converter.convertValue(ognlStackContext, action.getModel(), null, "barObj", value, Bar.class);
+        Object o = converter.convertValue(strutsStackContext, action.getModel(), null, "barObj", value, Bar.class);
         assertNotNull(o);
         assertTrue(o instanceof Bar);
 
@@ -355,7 +363,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         Locale locale = Locale.GERMANY;
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String dateString = df.format(date);
-        context = ActionContext.of(context).withLocale(locale).getContextMap();
+        context = ActionContext.of(context).withLocale(locale).getStrutsContext();
 
         assertEquals(dateString, converter.convertValue(context, null, null, null, date, String.class));
     }
@@ -366,10 +374,10 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         stack.push(action);
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "count", "111.1", int.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action.getBean(), null, "count", "111.1", int.class));
         stack.pop();
 
         Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
@@ -593,7 +601,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToInt() {
         assertEquals(123, converter.convertValue(context, null, null, null, "123", int.class));
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
@@ -602,7 +610,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", int.class));
-        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getStrutsContext();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
@@ -616,7 +624,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToInteger() {
         assertEquals(123, converter.convertValue(context, null, null, null, "123", Integer.class));
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Integer.class));
@@ -627,7 +635,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
 
-        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getStrutsContext();
         // WRONG: locale separator is wrongly placed
         assertEquals(12312, converter.convertValue(context, null, null, null, "123.12", Integer.class));
         assertEquals(1234, converter.convertValue(context, null, null, null, "1.234", Integer.class));
@@ -641,7 +649,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToPrimitiveDouble() {
         assertEquals(123d, converter.convertValue(context, null, null, null, "123", double.class));
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
@@ -651,7 +659,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
 
-        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getStrutsContext();
         assertEquals(12312d, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
@@ -664,7 +672,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToDouble() {
         assertEquals(123d, converter.convertValue(context, null, null, null, "123", Double.class));
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Double.class));
@@ -675,7 +683,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
 
-        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getStrutsContext();
         // WRONG: locale separator is wrongly placed
         assertEquals(12312d, converter.convertValue(context, null, null, null, "123.12", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
@@ -823,7 +831,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         converter = container.getInstance(XWorkConverter.class);
 
         ActionContext ac = ActionContext.getContext().withLocale(Locale.US);
-        context = ac.getContextMap();
+        context = ac.getStrutsContext();
         stack = (OgnlValueStack) ac.getValueStack();
     }
 

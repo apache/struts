@@ -18,11 +18,10 @@
  */
 package org.apache.struts2.util;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
+import org.apache.struts2.ognl.StrutsContext;
+
+import java.util.Date;
 
 
 /**
@@ -38,7 +37,7 @@ public class StrutsTypeConverterTest extends TestCase {
      */
     public void testConvertToString() throws Exception {
         InternalStrutsTypeConverter strutsTypeConverter = new InternalStrutsTypeConverter();
-        strutsTypeConverter.convertValue(new HashMap(), "", String.class);
+        strutsTypeConverter.convertValue(StrutsContext.empty(), "", String.class);
         assertTrue(strutsTypeConverter.isConvertToString);
         assertEquals(strutsTypeConverter.objToBeConverted, "");
     }
@@ -50,10 +49,10 @@ public class StrutsTypeConverterTest extends TestCase {
      */
     public void testConvertFromString() throws Exception {
         InternalStrutsTypeConverter strutsTypeConverter = new InternalStrutsTypeConverter();
-        strutsTypeConverter.convertValue(new HashMap(), "12/12/1997", Date.class);
+        strutsTypeConverter.convertValue(StrutsContext.empty(), "12/12/1997", Date.class);
         assertTrue(strutsTypeConverter.isConvertFromString);
         assertTrue(strutsTypeConverter.objToBeConverted instanceof String[]);
-        assertEquals(((String[])strutsTypeConverter.objToBeConverted).length, 1);
+        assertEquals(((String[]) strutsTypeConverter.objToBeConverted).length, 1);
     }
 
     /**
@@ -64,21 +63,21 @@ public class StrutsTypeConverterTest extends TestCase {
      */
     public void testConvertFromStringInArrayForm() throws Exception {
         InternalStrutsTypeConverter strutsTypeConverter = new InternalStrutsTypeConverter();
-        strutsTypeConverter.convertValue(new HashMap(), new String[] { "12/12/1997", "1/1/1977" }, Date.class);
+        strutsTypeConverter.convertValue(StrutsContext.empty(), new String[]{"12/12/1997", "1/1/1977"}, Date.class);
         assertTrue(strutsTypeConverter.isConvertFromString);
         assertTrue(strutsTypeConverter.objToBeConverted instanceof String[]);
-        assertEquals(((String[])strutsTypeConverter.objToBeConverted).length, 2);
+        assertEquals(((String[]) strutsTypeConverter.objToBeConverted).length, 2);
     }
 
 
     public void testFallbackConversion() throws Exception {
         InternalStrutsTypeConverter strutsTypeConverter = new InternalStrutsTypeConverter();
-        strutsTypeConverter.convertValue(new HashMap(), new Object(), Date.class);
+        strutsTypeConverter.convertValue(StrutsContext.empty(), new Object(), Date.class);
         assertTrue(strutsTypeConverter.fallbackConversion);
     }
 
     // === internal class for testing
-    class InternalStrutsTypeConverter extends StrutsTypeConverter {
+    static class InternalStrutsTypeConverter extends StrutsTypeConverter {
 
         boolean isConvertFromString = false;
         boolean isConvertToString = false;
@@ -86,19 +85,22 @@ public class StrutsTypeConverterTest extends TestCase {
 
         Object objToBeConverted;
 
-        public Object convertFromString(Map context, String[] values, Class toClass) {
+        @Override
+        public Object convertFromString(StrutsContext context, String[] values, Class toClass) {
             isConvertFromString = true;
             objToBeConverted = values;
             return null;
         }
 
-        public String convertToString(Map context, Object o) {
+        @Override
+        public String convertToString(StrutsContext context, Object o) {
             isConvertToString = true;
             objToBeConverted = o;
             return null;
         }
 
-        protected Object performFallbackConversion(Map context, Object o, Class toClass) {
+        @Override
+        protected Object performFallbackConversion(StrutsContext context, Object o, Class toClass) {
             fallbackConversion = true;
             return null;
         }

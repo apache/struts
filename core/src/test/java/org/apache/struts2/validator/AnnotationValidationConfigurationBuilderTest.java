@@ -338,9 +338,9 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         // ActionContext is destroyed during rebuilding configuration
         ActionContext.getContext().withLocale(locale);
 
-        ActionInvocation invocation = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), true);
+        ActionInvocation invocation = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), true);
         container.inject(invocation);
-        invocation.init(actionProxyFactory.createActionProxy("", "annotation", null, ActionContext.getContext().getContextMap()));
+        invocation.init(actionProxyFactory.createActionProxy("", "annotation", null, ActionContext.getContext().getStrutsContext()));
 
         AnnotationActionValidatorManager manager = new AnnotationActionValidatorManager();
         container.inject(manager);

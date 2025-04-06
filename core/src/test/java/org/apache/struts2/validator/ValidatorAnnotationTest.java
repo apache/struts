@@ -21,10 +21,10 @@ package org.apache.struts2.validator;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.XWorkTestCase;
-import org.apache.struts2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ValidationAware;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -55,7 +55,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testNotAnnotatedMethodSuccess2() throws Exception {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create().build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -66,7 +66,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     public void testAnnotatedMethodFailure() throws Exception {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create().build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasActionErrors());
         Collection errors = ((ValidationAware) proxy.getAction()).getActionErrors();
@@ -85,7 +85,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }
@@ -98,7 +98,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }
@@ -111,7 +111,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getStrutsContext());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }

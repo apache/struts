@@ -18,17 +18,17 @@
  */
 package org.apache.struts2.conversion.impl;
 
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.AnnotatedCat;
 import org.apache.struts2.util.Bar;
 import org.apache.struts2.util.Cat;
 
 import java.lang.reflect.Member;
-import java.util.Map;
 
 public class FooBarConverter extends DefaultTypeConverter {
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object value, Class<?> toType) {
         if (toType == String.class) {
             Bar bar = (Bar) value;
 
@@ -63,7 +63,7 @@ public class FooBarConverter extends DefaultTypeConverter {
     }
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object source, Member member, String property, Object value, Class toClass) {
+    public Object convertValue(StrutsContext context, Object source, Member member, String property, Object value, Class<?> toClass) {
         return convertValue(context, value, toClass);
     }
 }

@@ -49,7 +49,7 @@ public class ModelDrivenValidationTest extends XWorkTestCase {
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "TestModelDrivenValidation", null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "TestModelDrivenValidation", null, context.getStrutsContext());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ModelDrivenAction action = (ModelDrivenAction) proxy.getAction();

@@ -28,6 +28,7 @@ import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
@@ -161,7 +162,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingExistingExecuteMethod() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
@@ -186,7 +187,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingMissingMethod() {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
@@ -225,7 +226,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingExistingMethodThatThrowsException() {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
@@ -256,7 +257,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatThrowsException() {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
@@ -295,7 +296,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatReturnsNull() {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
@@ -333,7 +334,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatReturnsSuccess() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getStrutsContext(), false);
         container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
@@ -371,10 +372,10 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of()
                 .withParameters(HttpParameters.create(params).build());
 
-        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getStrutsContext(), true);
         container.inject(defaultActionInvocation);
 
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFoo", null, extraContext.getContextMap());
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFoo", null, extraContext.getStrutsContext());
         defaultActionInvocation.init(actionProxy);
         defaultActionInvocation.invoke();
 
@@ -385,7 +386,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
     }
 
     public void testInvokeWithAsyncManager() throws Exception {
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<>(), false);
+        DefaultActionInvocation dai = new DefaultActionInvocation(StrutsContext.empty(), false);
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
 
         final Semaphore lock = new Semaphore(1);
@@ -458,7 +459,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testActionEventListener() throws Exception {
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("",
-            "ExceptionFoo", "exceptionMethod", new HashMap<>());
+                "ExceptionFoo", "exceptionMethod", StrutsContext.empty());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
 
         SimpleActionEventListener actionEventListener = new SimpleActionEventListener("prepared", "exceptionHandled");
@@ -483,7 +484,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
     }
 
     public void testActionChainResult() throws Exception {
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null, new HashMap<>());
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null, StrutsContext.empty());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -500,7 +501,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
     }
 
     public void testNoResultDefined() {
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null, new HashMap<>());
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null, StrutsContext.empty());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -512,7 +513,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
     }
 
     public void testNullResultPossible() throws Exception {
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "NullFoo", "nullMethod", new HashMap<>());
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "NullFoo", "nullMethod", StrutsContext.empty());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -557,7 +558,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
 class DefaultActionInvocationTester extends DefaultActionInvocation {
     DefaultActionInvocationTester(List<InterceptorMapping> interceptorMappings) {
-        super(new HashMap<>(), false);
+        super(StrutsContext.empty(), false);
         interceptors = interceptorMappings.iterator();
         MockActionProxy actionProxy = new MockActionProxy();
         actionProxy.setMethod("execute");

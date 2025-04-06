@@ -26,10 +26,9 @@ import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.location.LocatableProperties;
-
-import java.util.Map;
 
 
 /**
@@ -93,9 +92,9 @@ public class ActionNestingTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         assertEquals(VALUE, stack.findValue(KEY));
 
-        Map<String, Object> extraContext = ActionContext.of()
-            .withValueStack(stack)
-            .getContextMap();
+        StrutsContext extraContext = ActionContext.of()
+                .withValueStack(stack)
+                .getStrutsContext();
 
         ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, STACK_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -123,20 +122,20 @@ public class ActionNestingTest extends XWorkTestCase {
         public void loadPackages() {
 
             PackageConfig packageContext = new PackageConfig.Builder("nestedActionTest")
-                .addActionConfig(SIMPLE_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", SIMPLE_ACTION_NAME, SimpleAction.class.getName())
-                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                    .addResultConfig(new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build())
-                    .build())
-                .addActionConfig(NO_STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", NO_STACK_ACTION_NAME, NestedAction.class.getName())
-                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                    .methodName("noStack")
-                    .build())
-                .addActionConfig(STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", STACK_ACTION_NAME, NestedAction.class.getName())
-                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                    .methodName("stack")
-                    .build())
-                .namespace(NAMESPACE)
-                .build();
+                    .addActionConfig(SIMPLE_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", SIMPLE_ACTION_NAME, SimpleAction.class.getName())
+                            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                            .addResultConfig(new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build())
+                            .build())
+                    .addActionConfig(NO_STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", NO_STACK_ACTION_NAME, NestedAction.class.getName())
+                            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                            .methodName("noStack")
+                            .build())
+                    .addActionConfig(STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", STACK_ACTION_NAME, NestedAction.class.getName())
+                            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                            .methodName("stack")
+                            .build())
+                    .namespace(NAMESPACE)
+                    .build();
             configuration.addPackageConfig("nestedActionTest", packageContext);
         }
 

@@ -18,20 +18,20 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Stub value stack for testing
  */
 public class StubValueStack implements ValueStack {
-    Map<String, Object> ctx = new HashMap<>();
+    StrutsContext ctx = StrutsContext.empty();
     CompoundRoot root = new CompoundRoot();
 
-    public Map<String, Object> getContext() {
+    public StrutsContext getContext() {
         return ctx;
     }
 

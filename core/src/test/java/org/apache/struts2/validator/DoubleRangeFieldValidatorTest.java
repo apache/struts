@@ -21,16 +21,16 @@ package org.apache.struts2.validator;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionSupport;
-import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.MockConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.12);
         ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -76,7 +76,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         params.put("percentage", 1.234567d);
         ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null, context.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -202,7 +202,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         params.put("percentage", 100.12);
         ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

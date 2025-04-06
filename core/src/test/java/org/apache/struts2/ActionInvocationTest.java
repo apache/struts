@@ -99,7 +99,7 @@ public class ActionInvocationTest extends XWorkTestCase {
                 .withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", "Foo", null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "Foo", null, extraContext.getStrutsContext());
             proxy.execute();
             assertEquals("this is blah", proxy.getInvocation().getStack().findValue("[1].blah"));
         } catch (Exception e) {

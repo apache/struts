@@ -49,7 +49,7 @@ public class DateRangeValidatorTest extends XWorkTestCase {
         ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build())
                 .withLocale(Locale.US);  // Force US Locale for date conversion tests on JDK9+
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getStrutsContext());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

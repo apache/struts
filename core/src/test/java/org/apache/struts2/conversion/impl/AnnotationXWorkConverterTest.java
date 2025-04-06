@@ -24,6 +24,7 @@ import org.apache.struts2.GenericsBean;
 import org.apache.struts2.ModelDrivenAnnotationAction;
 import org.apache.struts2.SimpleAnnotationAction;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.test.AnnotationUser;
 import org.apache.struts2.test.ModelDrivenAnnotationAction2;
 import org.apache.struts2.util.Bar;
@@ -43,7 +44,7 @@ import static org.junit.Assert.assertArrayEquals;
 public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
     private ActionContext ac;
-    private Map<String, Object> context;
+    private StrutsContext context;
     private XWorkConverter converter;
 
 //    public void testConversionToSetKeepsOriginalSetAndReplacesContents() {
@@ -104,12 +105,12 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        ognlStackContext.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, "bean.birth");
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        strutsStackContext.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, "bean.birth");
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action.getBean(), null, "birth", value, Date.class));
         stack.pop();
 
         Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
@@ -125,14 +126,14 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "date", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action, null, "date", value, Date.class));
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.of(strutsStackContext).getConversionErrors();
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("date"));
@@ -145,15 +146,15 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String[] value = new String[]{"invalid date"};
-        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "birth", value, Date.class));
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(strutsStackContext, action, null, "birth", value, Date.class));
         stack.pop();
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.of(strutsStackContext).getConversionErrors();
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("birth"));
@@ -183,11 +184,11 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        Map<String, Object> ognlStackContext = stack.getContext();
-        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        StrutsContext strutsStackContext = stack.getContext();
+        strutsStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
         String value = "asdf:123";
-        Object o = converter.convertValue(ognlStackContext, action.getModel(), null, "barObj", value, Bar.class);
+        Object o = converter.convertValue(strutsStackContext, action.getModel(), null, "barObj", value, Bar.class);
         assertNotNull(o);
         assertTrue("class is: " + o.getClass(), o instanceof Bar);
 
@@ -195,7 +196,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         assertEquals(value, b.getTitle() + ":" + b.getSomethingElse());
 
         String value2 = "qwer:456";
-        Object o2 = converter.convertValue(ognlStackContext, action.getModel(), null, "supperBarObj", value2, Bar.class);
+        Object o2 = converter.convertValue(strutsStackContext, action.getModel(), null, "supperBarObj", value2, Bar.class);
         assertNotNull(o2);
         assertTrue("class is: " + o.getClass(), o2 instanceof Bar);
 
@@ -208,7 +209,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         Locale locale = Locale.GERMANY;
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String dateString = df.format(date);
-        context = ActionContext.of(context).withLocale(locale).getContextMap();
+        context = ActionContext.of(context).withLocale(locale).getStrutsContext();
         assertEquals(dateString, converter.convertValue(context, null, null, null, date, String.class));
     }
 
@@ -470,7 +471,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         converter = container.getInstance(XWorkConverter.class);
 
         ac = ActionContext.getContext().withLocale(Locale.US);
-        context = ac.getContextMap();
+        context = ac.getStrutsContext();
     }
 
     @Override

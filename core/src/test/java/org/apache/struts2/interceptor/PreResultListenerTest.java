@@ -20,7 +20,6 @@ package org.apache.struts2.interceptor;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionProxyFactory;
@@ -28,15 +27,15 @@ import org.apache.struts2.DefaultActionProxyFactory;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.SimpleFooAction;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.location.LocatableProperties;
-
-import java.util.HashMap;
 
 
 /**
@@ -51,7 +50,7 @@ public class PreResultListenerTest extends XWorkTestCase {
 
 
     public void testPreResultListenersAreCalled() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, StrutsContext.empty(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         Mock preResultListenerMock1 = new Mock(PreResultListener.class);
         preResultListenerMock1.expect("beforeResult", C.args(C.eq(invocation), C.eq(Action.SUCCESS)));
@@ -61,7 +60,7 @@ public class PreResultListenerTest extends XWorkTestCase {
     }
 
     public void testPreResultListenersAreCalledInOrder() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, new HashMap<String, Object>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("package", "action", null, StrutsContext.empty(), false, true);
         ActionInvocation invocation = proxy.getInvocation();
         CountPreResultListener listener1 = new CountPreResultListener();
         CountPreResultListener listener2 = new CountPreResultListener();
@@ -78,6 +77,7 @@ public class PreResultListenerTest extends XWorkTestCase {
         super.setUp();
         loadConfigurationProviders(new ConfigurationProvider() {
             Configuration configuration;
+
             public void destroy() {
             }
 

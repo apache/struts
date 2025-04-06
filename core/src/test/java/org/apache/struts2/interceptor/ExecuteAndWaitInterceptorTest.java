@@ -34,6 +34,7 @@ import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.mock.MockResult;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.location.LocatableProperties;
 import jakarta.servlet.http.HttpSession;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -59,7 +60,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
     private StrutsMockHttpServletRequest request;
     private HttpSession httpSession;
-    private Map<String, Object> context;
+    private StrutsContext context;
     private Map<String, Object> params;
     private Map<String, Object> session;
     private ExecuteAndWaitInterceptor waitInterceptor;
@@ -202,7 +203,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         ByteArrayInputStream bais = new ByteArrayInputStream(b);
         ObjectInputStream ois = new ObjectInputStream(bais);
         session = (Map<String, Object>) ois.readObject();
-        context = ActionContext.of(context).withSession(session).getContextMap();
+        context = ActionContext.of(context).withSession(session).getStrutsContext();
         ois.close();
         bais.close();
 
@@ -229,7 +230,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
         session = new HashMap<>();
         params = new HashMap<>();
-        context = new HashMap<>();
+        context = StrutsContext.empty();
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();
@@ -240,7 +241,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
             .withSession(session)
             .withParameters(HttpParameters.create().build())
             .withServletRequest(request)
-            .getContextMap();
+            .getStrutsContext();
 
         container.inject(waitInterceptor);
         container.inject(parametersInterceptor);

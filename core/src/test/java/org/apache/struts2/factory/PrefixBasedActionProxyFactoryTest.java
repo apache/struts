@@ -28,6 +28,7 @@ import org.apache.struts2.inject.Context;
 import org.apache.struts2.inject.Factory;
 import org.apache.struts2.inject.Scope;
 import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -43,30 +44,30 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     public void testDifferentPrefixes() throws Exception {
         initFactory("/ns1:prefix1,/ns2:prefix2");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", StrutsContext.empty(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", StrutsContext.empty(), false, true);
         assertTrue(proxy2 instanceof Prefix2ActionProxy);
     }
 
     public void testFallbackToDefault() throws Exception {
         initFactory("/ns1:prefix1");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", StrutsContext.empty(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", StrutsContext.empty(), false, true);
         assertTrue(proxy2 instanceof StrutsActionProxy);
     }
 
     public void testEmptyPrefix() throws Exception {
         initFactory(":prefix1");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", StrutsContext.empty(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", StrutsContext.empty(), false, true);
         assertTrue(proxy2 instanceof Prefix1ActionProxy);
     }
 

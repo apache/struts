@@ -21,9 +21,10 @@ package org.apache.struts2.ognl.accessor;
 import ognl.ClassResolver;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * @since 6.4.0
  */
-public interface RootAccessor extends PropertyAccessor, MethodAccessor, ClassResolver {
+public interface RootAccessor extends PropertyAccessor<StrutsContext>, MethodAccessor<StrutsContext>, ClassResolver<StrutsContext> {
 }

@@ -20,6 +20,7 @@ package org.apache.struts2.ognl;
 
 import ognl.ClassResolver;
 import ognl.Ognl;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.SimpleNode;
@@ -702,7 +703,8 @@ public class OgnlUtil {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }
         }
-        return StrutsContext.of(Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter));
+        SecurityMemberAccess memberAccess = container.getInstance(SecurityMemberAccess.class);
+        return StrutsContext.of(root, resolver, defaultConverter, memberAccess);
     }
 
     @FunctionalInterface

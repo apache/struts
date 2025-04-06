@@ -242,7 +242,9 @@ public class ActionContext implements Serializable {
      * Gets the context map.
      *
      * @return the context map.
+     * @deprecated since 7.1.0, use {@link #getStrutsContext()} instead
      */
+    @Deprecated(since = "7.1.0", forRemoval = true)
     public Map<String, Object> getContextMap() {
         return context;
     }

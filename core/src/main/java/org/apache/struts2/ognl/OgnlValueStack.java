@@ -121,7 +121,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
-        this.context = StrutsContext.of(Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter)));
+        this.context = StrutsContext.of(this.root, accessor, new OgnlTypeConverterWrapper(xworkConverter), securityMemberAccess);
         this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
         context.setTraceEvaluations(false);

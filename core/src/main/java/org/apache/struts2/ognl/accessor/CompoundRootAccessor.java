@@ -20,12 +20,12 @@ package org.apache.struts2.ognl.accessor;
 
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlValueStack;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import org.apache.commons.lang3.BooleanUtils;
@@ -63,7 +63,7 @@ public class CompoundRootAccessor implements RootAccessor {
      * Used by OGNl to generate bytecode
      */
     @Override
-    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
+    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
         return null;
     }
 
@@ -71,7 +71,7 @@ public class CompoundRootAccessor implements RootAccessor {
      * Used by OGNl to generate bytecode
      */
     @Override
-    public String getSourceSetter(OgnlContext context, Object target, Object index) {
+    public String getSourceSetter(StrutsContext context, Object target, Object index) {
         return null;
     }
 
@@ -94,7 +94,7 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
 
         for (Object o : root) {
@@ -142,7 +142,7 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
 
         if (name instanceof Integer index) {
@@ -186,7 +186,7 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object callMethod(OgnlContext context, Object target, String name, Object[] objects) throws MethodFailedException {
+    public Object callMethod(StrutsContext context, Object target, String name, Object[] objects) throws MethodFailedException {
         CompoundRoot root = (CompoundRoot) target;
 
         if ("describe".equals(name)) {
@@ -249,7 +249,7 @@ public class CompoundRootAccessor implements RootAccessor {
 
             if ((argTypes == null) || !invalidMethods.containsKey(mc)) {
                 try {
-                    return OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
+                    return OgnlRuntime.callMethod(context, o, name, objects);
                 } catch (OgnlException e) {
                     reason = e.getReason();
 
@@ -274,12 +274,12 @@ public class CompoundRootAccessor implements RootAccessor {
     }
 
     @Override
-    public Object callStaticMethod(OgnlContext transientVars, Class aClass, String s, Object[] objects) throws MethodFailedException {
+    public Object callStaticMethod(StrutsContext transientVars, Class aClass, String s, Object[] objects) throws MethodFailedException {
         return null;
     }
 
     @Override
-    public Class classForName(String className, OgnlContext context) throws ClassNotFoundException {
+    public Class classForName(String className, StrutsContext context) throws ClassNotFoundException {
         Object root = Ognl.getRoot(context);
 
         if (disallowCustomOgnlMap) {

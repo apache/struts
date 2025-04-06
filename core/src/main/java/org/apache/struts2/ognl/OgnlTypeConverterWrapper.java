@@ -29,9 +29,9 @@ import java.util.Map;
  */
 public class OgnlTypeConverterWrapper implements ognl.TypeConverter<StrutsContext> {
 
-    private final TypeConverter typeConverter;
+    private final TypeConverter<StrutsContext> typeConverter;
 
-    public OgnlTypeConverterWrapper(TypeConverter converter) {
+    public OgnlTypeConverterWrapper(TypeConverter<StrutsContext> converter) {
         if (converter == null) {
             throw new IllegalArgumentException("Wrapped type converter cannot be null");
         }
@@ -43,7 +43,7 @@ public class OgnlTypeConverterWrapper implements ognl.TypeConverter<StrutsContex
         return typeConverter.convertValue(context, target, member, propertyName, value, toType);
     }
 
-    public TypeConverter getTarget() {
+    public TypeConverter<StrutsContext> getTarget() {
         return typeConverter;
     }
 }

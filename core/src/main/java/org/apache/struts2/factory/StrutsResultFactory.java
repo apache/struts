@@ -22,6 +22,7 @@ import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.ParamNameAwareResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.reflection.ReflectionException;
@@ -49,7 +50,7 @@ public class StrutsResultFactory implements ResultFactory {
     }
 
     @Override
-    public Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception {
+    public Result buildResult(ResultConfig resultConfig, StrutsContext extraContext) throws Exception {
         String resultClassName = resultConfig.getClassName();
 
         if (resultClassName == null) {
@@ -68,7 +69,7 @@ public class StrutsResultFactory implements ResultFactory {
         return result;
     }
 
-    protected void setParameters(Map<String, Object> extraContext, Result result, Map<String, String> params) {
+    protected void setParameters(StrutsContext extraContext, Result result, Map<String, String> params) {
         for (Map.Entry<String, String> paramEntry : params.entrySet()) {
             try {
                 String name = paramEntry.getKey();
@@ -82,7 +83,7 @@ public class StrutsResultFactory implements ResultFactory {
         }
     }
 
-    protected void setParameter(Result result, String name, String value, Map<String, Object> extraContext) {
+    protected void setParameter(Result result, String name, String value, StrutsContext extraContext) {
         if (!(result instanceof ParamNameAwareResult paramNameAwareResult) || paramNameAwareResult.acceptableParameterName(name, value)) {
             reflectionProvider.setProperty(name, value, result, extraContext, true);
         }

@@ -28,6 +28,7 @@ import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.inject.Container;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.ValueStack;
 
 import java.io.Serializable;
@@ -106,7 +107,7 @@ public class ActionContext implements Serializable {
      */
     private static final String CONTAINER = "org.apache.struts2.ActionContext.container";
 
-    private final Map<String, Object> context;
+    private final StrutsContext context;
 
     /**
      * Creates a new ActionContext initialized with another context.
@@ -114,6 +115,15 @@ public class ActionContext implements Serializable {
      * @param context a context map.
      */
     protected ActionContext(Map<String, Object> context) {
+        this.context = StrutsContext.of(context);
+    }
+
+    /**
+     * Creates a new ActionContext initialized with another context.
+     *
+     * @param context a StrutsContext
+     */
+    protected ActionContext(StrutsContext context) {
         this.context = context;
     }
 
@@ -127,7 +137,7 @@ public class ActionContext implements Serializable {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null!");
         }
-        return new ActionContext(context);
+        return new ActionContext(StrutsContext.of(context));
     }
 
     /**
@@ -136,7 +146,7 @@ public class ActionContext implements Serializable {
      * @return new ActionContext
      */
     public static ActionContext of() {
-        return of(new HashMap<>());
+        return of(StrutsContext.empty());
     }
 
     /**
@@ -234,6 +244,10 @@ public class ActionContext implements Serializable {
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
+        return context;
+    }
+
+    public StrutsContext getStrutsContext() {
         return context;
     }
 

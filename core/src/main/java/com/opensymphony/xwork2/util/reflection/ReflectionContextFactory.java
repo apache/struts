@@ -20,6 +20,10 @@ package com.opensymphony.xwork2.util.reflection;
 
 import java.util.Map;
 
+/**
+ * @deprecated since 6.8.0, avoid using this interface and any of its implementation, it's going to be removed soon
+ */
+@Deprecated
 public interface ReflectionContextFactory {
     /**
      * Creates and returns a new standard naming context for evaluating an OGNL

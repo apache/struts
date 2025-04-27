@@ -24,8 +24,6 @@ import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.TypeConverter;
 
-import java.util.Map;
-
 /**
  * StrutsContext is Struts specific implementation of {@link OgnlContext}
  *
@@ -36,21 +34,43 @@ public class StrutsContext extends OgnlContext<StrutsContext> {
     private StrutsContext(
             MemberAccess<StrutsContext> memberAccess,
             ClassResolver<StrutsContext> classResolver,
-            TypeConverter<StrutsContext> typeConverter,
-            StrutsContext initialContext
+            TypeConverter<StrutsContext> typeConverter
     ) {
-        super(memberAccess, classResolver, typeConverter, initialContext);
+        super(memberAccess, classResolver, typeConverter);
     }
 
     public static StrutsContext of(StrutsContext context) {
-        return new StrutsContext(context.getMemberAccess(), context.getClassResolver(), context.getTypeConverter(), context);
+        StrutsContext strutsContext = new Builder()
+                .withMemberAccess(context.getMemberAccess())
+                .withClassResolver(context.getClassResolver())
+                .withTypeConverter(context.getTypeConverter())
+                .build();
+        strutsContext.setValues(context.getValues());
+        return strutsContext;
     }
 
-    public static StrutsContext of(Map<String, Object> context) {
-        return StrutsContext.of(Ognl.createDefaultContext(null, context));
+    public static StrutsContext of(Object root, MemberAccess<StrutsContext> memberAccess) {
+        return new Builder()
+                .withMemberAccess(memberAccess)
+                .withRoot(root)
+                .build();
     }
 
-    public static StrutsContext empty() {
-        return StrutsContext.of(Ognl.createDefaultContext(null));
+    public static StrutsContext of(Object root, ClassResolver<StrutsContext> resolver, TypeConverter<StrutsContext> converter, MemberAccess<StrutsContext> memberAccess) {
+        return new StrutsContext.Builder()
+                .withMemberAccess(memberAccess)
+                .withClassResolver(resolver)
+                .withTypeConverter(converter)
+                .withRoot(root)
+                .build();
+    }
+
+    public static class Builder extends OgnlContext.Builder<StrutsContext> {
+
+        private Builder() {
+            super(b -> new StrutsContext(b.getMemberAccess(), b.getClassResolver(), b.getTypeConverter()));
+            Ognl.withBuilderProvider(this);
+        }
+
     }
 }

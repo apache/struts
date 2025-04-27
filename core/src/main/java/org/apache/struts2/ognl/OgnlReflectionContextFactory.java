@@ -23,6 +23,10 @@ import ognl.Ognl;
 
 import java.util.Map;
 
+/**
+ * @deprecated since 6.8.0, to be removed, see {@link ReflectionContextFactory}
+ */
+@Deprecated(since = "6.8.0", forRemoval = true)
 public class OgnlReflectionContextFactory implements ReflectionContextFactory {
 
     @Override

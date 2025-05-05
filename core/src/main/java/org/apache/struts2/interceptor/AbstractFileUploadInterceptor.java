@@ -116,7 +116,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         }
 
         // If it's null the upload failed
-        if (file == null) {
+        if (file == null || file.getContent() == null) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);

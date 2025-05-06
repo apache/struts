@@ -98,6 +98,53 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         }
     };
 
+    public static final UploadedFile NULL_CONTENT = new UploadedFile() {
+        @Override
+        public Long length() {
+            return 0L;
+        }
+
+        @Override
+        public String getName() {
+            return "";
+        }
+
+        @Override
+        public boolean isFile() {
+            return false;
+        }
+
+        @Override
+        public boolean delete() {
+            return false;
+        }
+
+        @Override
+        public String getAbsolutePath() {
+            return null;
+        }
+
+        @Override
+        public File getContent() {
+            return null;
+        }
+
+        @Override
+        public String getOriginalName() {
+            return null;
+        }
+
+        @Override
+        public String getContentType() {
+            return null;
+        }
+
+        @Override
+        public String getInputName() {
+            return null;
+        }
+    };
+
     private ActionFileUploadInterceptor interceptor;
     private File tempDir;
 
@@ -194,6 +241,22 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
         boolean notOk = interceptor.acceptFile(validation, null, "filename.html", "text/html", "inputName");
+
+        assertFalse(notOk);
+        assertFalse(validation.getFieldErrors().isEmpty());
+        assertTrue(validation.hasErrors());
+        List<String> errors = validation.getFieldErrors().get("inputName");
+        assertEquals(1, errors.size());
+        String msg = errors.get(0);
+        assertTrue(msg.startsWith("Error uploading:"));
+        assertTrue(msg.indexOf("inputName") > 0);
+    }
+
+    public void testAcceptFileWithNoContent() {
+        interceptor.setAllowedTypes("text/plain");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        boolean notOk = interceptor.acceptFile(validation, NULL_CONTENT, "filename.html", "text/plain", "inputName");
 
         assertFalse(notOk);
         assertFalse(validation.getFieldErrors().isEmpty());

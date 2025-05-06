@@ -509,4 +509,11 @@ public final class StrutsConstants {
 
     /** See {@link org.apache.struts2.interceptor.exec.ExecutorProvider} */
     public static final String STRUTS_EXECUTOR_PROVIDER = "struts.executor.provider";
+
+    /**
+     * See {@link org.apache.struts2.interceptor.csp.CspNonceReader}
+     * @since 6.8.0
+     */
+    public static final String STRUTS_CSP_NONCE_READER = "struts.csp.nonce.reader";
+    public static final String STRUTS_CSP_NONCE_SOURCE = "struts.csp.nonce.source";
 }

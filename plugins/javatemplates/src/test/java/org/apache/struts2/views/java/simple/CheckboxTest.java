@@ -23,6 +23,8 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Checkbox;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
 public class CheckboxTest extends AbstractCommonAttributesTest {
     private Checkbox tag;
@@ -88,6 +90,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         super.setUp();
         tag = new Checkbox(stack, request, response);
         tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
     }
 
     @Override

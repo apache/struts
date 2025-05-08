@@ -19,27 +19,28 @@
 package org.apache.struts2.test.annotations;
 
 import org.apache.struts2.conversion.impl.DefaultTypeConverter;
+import org.apache.struts2.ognl.StrutsContext;
 
-import java.util.Map;
-
+@SuppressWarnings("unused")
 public class PersonTypeConverter extends DefaultTypeConverter {
-	@Override
-    public Object convertValue(Map<String, Object> context, Object value, Class toType) {
-		if(value instanceof String) {
-			return decodePerson((String)value);
-		} else if(value instanceof String && value.getClass().isArray()) {
-			return decodePerson(((String[])value)[0]);
-		} else {
-			Person person = (Person)value;
-			return person.getFirstName() + ":" + person.getLastName();
-		}
-	}
 
-	private Person decodePerson(String encodedPerson) {
-		String[] parts = ((String)encodedPerson).split(":");
-		Person person = new Person();
-		person.setFirstName(parts[0]);
-		person.setLastName(parts[1]);
-		return person;
-	}
+    @Override
+    public Object convertValue(StrutsContext context, Object value, Class<?> toType) {
+        if (value instanceof String) {
+            return decodePerson((String) value);
+        } else if (value instanceof String && value.getClass().isArray()) {
+            return decodePerson(((String[]) value)[0]);
+        } else {
+            Person person = (Person) value;
+            return person.getFirstName() + ":" + person.getLastName();
+        }
+    }
+
+    private Person decodePerson(String encodedPerson) {
+        String[] parts = encodedPerson.split(":");
+        Person person = new Person();
+        person.setFirstName(parts[0]);
+        person.setLastName(parts[1]);
+        return person;
+    }
 }

@@ -21,19 +21,18 @@ package org.apache.struts2.util;
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import jakarta.servlet.jsp.tagext.TagSupport;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.views.jsp.ActionTag;
 
 import java.lang.reflect.Member;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
-    private Map context;
+    private StrutsContext context;
 
     @Override
     public void setUp() throws Exception {
-        context = new HashMap();
+        context = StrutsContext.empty();
     }
 
     public void testJavaxServletPackageAccess() throws Exception {

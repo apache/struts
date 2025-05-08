@@ -36,10 +36,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -53,7 +51,7 @@ import static org.mockito.Mockito.when;
 
 public class SecurityMemberAccessTest {
 
-    private Map context;
+    private StrutsContext context;
     private FooBar target;
     protected SecurityMemberAccess sma;
     protected ProviderAllowlist mockedProviderAllowlist;
@@ -61,7 +59,7 @@ public class SecurityMemberAccessTest {
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<>();
+        context = StrutsContext.empty();
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
@@ -685,7 +683,7 @@ public class SecurityMemberAccessTest {
         assertFalse("Access to method of excluded class isn't blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testBlockAccessIfClassIsExcluded_2() throws Exception {
         // given
         sma.useExcludedClasses(ClassLoader.class.getName());
@@ -712,7 +710,7 @@ public class SecurityMemberAccessTest {
         assertTrue("Invalid test! Access to method of non-excluded class is blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
         // given
         sma.useExcludedClasses(Class.class.getName());
@@ -1083,7 +1081,7 @@ enum MyValues {
     ONE, TWO, THREE;
 
     public static MyValues[] values(String notUsed) {
-        return new MyValues[] {ONE, TWO, THREE};
+        return new MyValues[]{ONE, TWO, THREE};
     }
 }
 

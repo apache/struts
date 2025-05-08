@@ -20,10 +20,10 @@ package org.apache.struts2.ognl.accessor;
 
 import ognl.IteratorPropertyAccessor;
 import ognl.ObjectPropertyAccessor;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 
 import java.util.Map;
-
 
 /**
  * @author plightbo
@@ -33,7 +33,7 @@ public class XWorkIteratorPropertyAccessor extends IteratorPropertyAccessor {
     private final ObjectPropertyAccessor opa = new ObjectPropertyAccessor();
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         opa.setProperty(context, target, name, value);
     }
 }

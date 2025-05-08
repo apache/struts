@@ -19,6 +19,7 @@
 package org.apache.struts2.factory;
 
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public interface ActionFactory {
      *
      * @throws Exception in case of any errors
      */
-    Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception;
+    Object buildAction(String actionName, String namespace, ActionConfig config, StrutsContext extraContext) throws Exception;
 
 }
 

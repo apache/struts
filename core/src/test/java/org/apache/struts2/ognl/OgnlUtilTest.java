@@ -92,12 +92,12 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testCanSetADependentObject() {
         String dogName = "fido";
 
-        OgnlRuntime.setNullHandler(Owner.class, new NullHandler() {
-            public Object nullMethodResult(Map map, Object o, String s, Object[] objects) {
+        OgnlRuntime.setNullHandler(Owner.class, new NullHandler<StrutsContext>() {
+            public Object nullMethodResult(StrutsContext context, Object o, String s, Object[] objects) {
                 return null;
             }
 
-            public Object nullPropertyValue(Map map, Object o, Object o1) {
+            public Object nullPropertyValue(StrutsContext context, Object o, Object o1) {
                 String methodName = o1.toString();
                 String getter = "set" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
                 Method[] methods = o.getClass().getDeclaredMethods();
@@ -125,7 +125,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         });
 
         Owner owner = new Owner();
-        Map<String, Object> context = ognlUtil.createDefaultContext(owner);
+        StrutsContext context = ognlUtil.createDefaultContext(owner);
         Map<String, Object> props = new HashMap<>();
         props.put("dog.name", dogName);
 
@@ -201,7 +201,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testExpressionIsCachedIrrespectiveOfItsExecutionStatus() throws OgnlException {
         Foo foo = new Foo();
-        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Expression which executes with success
         try {
@@ -225,7 +225,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil.setContainer(container);  // Must be explicitly set as the generated OgnlUtil instance has no container
         ognlUtil.setEnableExpressionCache("true");
         Foo foo = new Foo();
-        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Expression which executes with success
         try {
@@ -245,7 +245,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testMethodExpressionIsCachedIrrespectiveOfItsExecutionStatus() throws Exception {
         Foo foo = new Foo();
-        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Method expression which executes with success
         try {
@@ -460,7 +460,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testCanSetDependentObjectArray() {
         EmailAction action = new EmailAction();
-        Map<String, Object> context = ognlUtil.createDefaultContext(action);
+        StrutsContext context = ognlUtil.createDefaultContext(action);
 
         Map<String, Object> props = new HashMap<>();
         props.put("email[0].address", "addr1");
@@ -478,7 +478,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo1 = new Foo();
         Foo foo2 = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
+        StrutsContext context = ognlUtil.createDefaultContext(foo1);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -524,7 +524,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         foo2.setTitle("foo2 title");
         foo2.setNumber(2);
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
+        StrutsContext context = ognlUtil.createDefaultContext(foo1);
 
         List<String> excludes = new ArrayList<>();
         excludes.add("title");
@@ -572,7 +572,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo1 = new Foo();
         Foo foo2 = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
+        StrutsContext context = ognlUtil.createDefaultContext(foo1);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -599,7 +599,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         Bar bar = new Bar();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -623,7 +623,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         foo.setBar(new Bar());
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("bar.title", "i am barbaz");
@@ -659,7 +659,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testOgnlHandlesCrapAtTheEndOfANumber() {
         Foo foo = new Foo();
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("aLong", "123a");
@@ -696,7 +696,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesBoolean() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("useful", "true");
@@ -714,7 +714,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesDate() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         ValueStack stack = new StubValueStack();
         stack.push(new StubTextProvider(new HashMap<>()));
@@ -723,9 +723,9 @@ public class OgnlUtilTest extends XWorkTestCase {
         props.put("birthday", "02/12/1982");
         // US style test
         context = ActionContext.of(context)
-            .withLocale(Locale.US)
-            .withValueStack(stack)
-            .getContextMap();
+                .withLocale(Locale.US)
+                .withValueStack(stack)
+                .getStrutsContext();
 
         ognlUtil.setProperties(props, foo, context);
 
@@ -749,7 +749,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date eventTime = cal.getTime();
         String formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-            .format(eventTime);
+                .format(eventTime);
         props.put("event", formatted);
 
         cal = Calendar.getInstance(Locale.UK);
@@ -762,10 +762,10 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date meetingTime = cal.getTime();
         formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-            .format(meetingTime);
+                .format(meetingTime);
         props.put("meeting", formatted);
 
-        context = ActionContext.of(context).withLocale(Locale.UK).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.UK).getStrutsContext();
 
         ognlUtil.setProperties(props, foo, context);
 
@@ -775,7 +775,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         ognlUtil.setProperties(props, foo, context);
 
         cal = Calendar.getInstance(Locale.US);
@@ -791,7 +791,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         //test setting a calendar property
         props.put("calendar", "1996-12-19T16:39:57Z");
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context).withLocale(Locale.US).getStrutsContext();
         ognlUtil.setProperties(props, foo, context);
         assertEquals(cal, foo.getCalendar());
     }
@@ -799,7 +799,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesInt() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("number", "2");
@@ -811,7 +811,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesLongArray() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("points", new String[]{"1", "2"});
@@ -826,7 +826,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesString() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("title", "this is a title");
@@ -837,7 +837,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testSetProperty() {
         Foo foo = new Foo();
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
         assertFalse(123456 == foo.getNumber());
         ognlUtil.setProperty("number", "123456", foo, context);
         assertEquals(123456, foo.getNumber());
@@ -848,7 +848,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ChainingInterceptor foo = new ChainingInterceptor();
         ChainingInterceptor foo2 = new ChainingInterceptor();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(null);
+        StrutsContext context = ognlUtil.createDefaultContext(null);
         SimpleNode expression = (SimpleNode) Ognl.parseExpression("{'a','ruby','b','tom'}");
 
         Ognl.getValue(expression, context, "aksdj");
@@ -887,7 +887,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testStringToLong() {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         Map<String, Object> props = new HashMap<>();
         props.put("ALong", "123");
@@ -905,21 +905,21 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testBeanMapExpressions() throws OgnlException, NoSuchMethodException {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
         SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
 
         sma.useExcludedPackageNames("org.apache.struts2.ognl");
 
         String expression = "%{\n" +
-            "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.a.setBean(#request.get('struts.valueStack')) == true) +\n" +
-            "(#request.b=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.b.setBean(#request.get('a').get('context'))) +\n" +
-            "(#request.c=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.c.setBean(#request.get('b').get('memberAccess'))) +\n" +
-            "(#request.get('c').put('excluded'+'PackageNames',#@org.apache.commons.collections.BeanMap@{}.keySet())) +\n" +
-            "(#request.get('c').put('excludedClasses',#@org.apache.commons.collections.BeanMap@{}.keySet()))\n" +
-            "}";
+                "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.a.setBean(#request.get('struts.valueStack')) == true) +\n" +
+                "(#request.b=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.b.setBean(#request.get('a').get('context'))) +\n" +
+                "(#request.c=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.c.setBean(#request.get('b').get('memberAccess'))) +\n" +
+                "(#request.get('c').put('excluded'+'PackageNames',#@org.apache.commons.collections.BeanMap@{}.keySet())) +\n" +
+                "(#request.get('c').put('excludedClasses',#@org.apache.commons.collections.BeanMap@{}.keySet()))\n" +
+                "}";
 
         ognlUtil.setValue("title", context, foo, expression);
 
@@ -932,7 +932,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         foo.setALong(88);
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         ognlUtil.setProperties(null, foo, context);
         assertEquals(88, foo.getALong());
@@ -945,7 +945,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testCopyNull() {
         Foo foo = new Foo();
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
         ognlUtil.copy(null, null, context);
 
         ognlUtil.copy(foo, null, context);
@@ -954,7 +954,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetTopTarget() throws Exception {
         Foo foo = new Foo();
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         CompoundRoot root = new CompoundRoot();
         Object top = ognlUtil.getRealTarget("top", context, root);
@@ -1374,7 +1374,7 @@ public class OgnlUtilTest extends XWorkTestCase {
      * 2) When allowStaticFieldAccess false - blocks all static field access,
      */
     public void testStaticFieldGetValue() {
-        Map<String, Object> context = null;
+        StrutsContext context = null;
         Object accessedValue;
 
         try {
@@ -1549,7 +1549,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testAccessContext() throws Exception {
-        Map<String, Object> context = ognlUtil.createDefaultContext(null);
+        StrutsContext context = ognlUtil.createDefaultContext(null);
 
         Foo foo = new Foo();
 

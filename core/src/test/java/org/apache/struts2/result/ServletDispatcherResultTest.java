@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.result;
 
-import jakarta.servlet.RequestDispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
@@ -53,14 +52,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getForwardedUrl());
-
-        // Attributes required by Specification when forwarding to another resource
-        // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#forwarded-request-parameters
-        assertEquals("/app/namespace/my.action", request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI));
-        assertEquals("/app", request.getAttribute(RequestDispatcher.FORWARD_CONTEXT_PATH));
-        assertEquals("/namespace/my.action", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
-        assertNull(request.getAttribute(RequestDispatcher.FORWARD_PATH_INFO));
-        assertEquals("a=1&b=2", request.getAttribute(RequestDispatcher.FORWARD_QUERY_STRING));
     }
 
     public void testInclude() throws Exception {
@@ -79,14 +70,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getIncludedUrl());
-
-        // These attributes must be set when including another resource
-        // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#included-request-parameters
-        assertEquals("/app/namespace/my.action", request.getAttribute(RequestDispatcher.INCLUDE_REQUEST_URI));
-        assertEquals("/app", request.getAttribute(RequestDispatcher.INCLUDE_CONTEXT_PATH));
-        assertEquals("/namespace/my.action", request.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH));
-        assertNull(request.getAttribute(RequestDispatcher.INCLUDE_PATH_INFO));
-        assertEquals("a=1&b=2", request.getAttribute(RequestDispatcher.INCLUDE_QUERY_STRING));
     }
 
     public void testWithParameter() throws Exception {

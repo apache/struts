@@ -166,27 +166,9 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 
-                // These attributes are required when forwarding to another servlet, see specification:
-                // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#forwarded-request-parameters
-                request.setAttribute(RequestDispatcher.FORWARD_MAPPING, request.getHttpServletMapping());
-                request.setAttribute(RequestDispatcher.FORWARD_REQUEST_URI, request.getRequestURI());
-                request.setAttribute(RequestDispatcher.FORWARD_CONTEXT_PATH, request.getContextPath());
-                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, request.getServletPath());
-                request.setAttribute(RequestDispatcher.FORWARD_PATH_INFO, request.getPathInfo());
-                request.setAttribute(RequestDispatcher.FORWARD_QUERY_STRING, request.getQueryString());
-
                 dispatcher.forward(request, response);
             } else {
                 LOG.debug("Including location: {}", finalLocation);
-
-                // These attributes are required when including another resource, see specification:
-                // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#included-request-parameters
-                request.setAttribute(RequestDispatcher.INCLUDE_MAPPING, request.getHttpServletMapping());
-                request.setAttribute(RequestDispatcher.INCLUDE_REQUEST_URI, request.getRequestURI());
-                request.setAttribute(RequestDispatcher.INCLUDE_CONTEXT_PATH, request.getContextPath());
-                request.setAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH, request.getServletPath());
-                request.setAttribute(RequestDispatcher.INCLUDE_PATH_INFO, request.getPathInfo());
-                request.setAttribute(RequestDispatcher.INCLUDE_QUERY_STRING, request.getQueryString());
 
                 dispatcher.include(request, response);
             }

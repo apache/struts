@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.result;
 
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.inject.Inject;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +26,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.url.QueryStringParser;
 
 import java.io.Serial;
@@ -158,13 +158,6 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             //if we are inside an action tag, we always need to do an include
             boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
 
-            // this should allow integration with third-party view related frameworks
-            if (finalLocation.contains("?")) {
-                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation.substring(0, finalLocation.indexOf('?')));
-            } else {
-                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation);
-            }
-
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type
@@ -173,9 +166,28 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 request.setAttribute("struts.view_uri", finalLocation);
                 request.setAttribute("struts.request_uri", request.getRequestURI());
 
+                // These attributes are required when forwarding to another servlet, see specification:
+                // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#forwarded-request-parameters
+                request.setAttribute(RequestDispatcher.FORWARD_MAPPING, request.getHttpServletMapping());
+                request.setAttribute(RequestDispatcher.FORWARD_REQUEST_URI, request.getRequestURI());
+                request.setAttribute(RequestDispatcher.FORWARD_CONTEXT_PATH, request.getContextPath());
+                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, request.getServletPath());
+                request.setAttribute(RequestDispatcher.FORWARD_PATH_INFO, request.getPathInfo());
+                request.setAttribute(RequestDispatcher.FORWARD_QUERY_STRING, request.getQueryString());
+
                 dispatcher.forward(request, response);
             } else {
                 LOG.debug("Including location: {}", finalLocation);
+
+                // These attributes are required when forwarding to another servlet, see specification:
+                // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#included-request-parameters
+                request.setAttribute(RequestDispatcher.INCLUDE_MAPPING, request.getHttpServletMapping());
+                request.setAttribute(RequestDispatcher.INCLUDE_REQUEST_URI, request.getRequestURI());
+                request.setAttribute(RequestDispatcher.INCLUDE_CONTEXT_PATH, request.getContextPath());
+                request.setAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH, request.getServletPath());
+                request.setAttribute(RequestDispatcher.INCLUDE_PATH_INFO, request.getPathInfo());
+                request.setAttribute(RequestDispatcher.INCLUDE_QUERY_STRING, request.getQueryString());
+
                 dispatcher.include(request, response);
             }
         }

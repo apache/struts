@@ -179,7 +179,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             } else {
                 LOG.debug("Including location: {}", finalLocation);
 
-                // These attributes are required when forwarding to another servlet, see specification:
+                // These attributes are required when including another resource, see specification:
                 // https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0#included-request-parameters
                 request.setAttribute(RequestDispatcher.INCLUDE_MAPPING, request.getHttpServletMapping());
                 request.setAttribute(RequestDispatcher.INCLUDE_REQUEST_URI, request.getRequestURI());

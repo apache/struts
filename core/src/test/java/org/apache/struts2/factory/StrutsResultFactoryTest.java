@@ -41,7 +41,7 @@ public class StrutsResultFactoryTest extends StrutsInternalTestCase {
         ResultConfig config = new ResultConfig.Builder("struts", MyResult.class.getName()).addParams(params).build();
 
         // when
-        Result result = builder.buildResult(config, ActionContext.getContext().getContextMap());
+        Result result = builder.buildResult(config, ActionContext.getContext().getStrutsContext());
 
         // then
         assertEquals("ok", ((MyResult)result).getAccept());

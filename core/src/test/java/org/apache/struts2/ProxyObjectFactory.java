@@ -18,10 +18,11 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.ognl.StrutsContext;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
 
 /**
  * ObjectFactory that returns a FooProxy in the buildBean if the clazz is FooAction
@@ -36,13 +37,13 @@ public class ProxyObjectFactory extends ObjectFactory {
      * In this case, it returns a FooProxy of it.
      */
     @Override
-    public Object buildBean(Class clazz, Map<String, Object> extraContext)
-        throws Exception {
+    public Object buildBean(Class clazz, StrutsContext extraContext)
+            throws Exception {
         Object bean = super.buildBean(clazz, extraContext);
-        if(clazz.equals(ProxyInvocationAction.class)) {
+        if (clazz.equals(ProxyInvocationAction.class)) {
             return Proxy.newProxyInstance(bean.getClass()
-                .getClassLoader(), bean.getClass().getInterfaces(),
-                new ProxyInvocationProxy(bean));
+                            .getClassLoader(), bean.getClass().getInterfaces(),
+                    new ProxyInvocationProxy(bean));
 
         }
         return bean;
@@ -60,7 +61,7 @@ public class ProxyObjectFactory extends ObjectFactory {
         }
 
         public Object invoke(Object proxy, Method m, Object[] args)
-            throws Throwable {
+                throws Throwable {
             return m.invoke(target, args);
         }
     }

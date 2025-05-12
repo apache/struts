@@ -19,6 +19,7 @@
 package org.apache.struts2.ognl.accessor;
 
 import ognl.ObjectPropertyAccessor;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.struts2.dispatcher.Parameter;
 
@@ -27,7 +28,7 @@ import java.util.Map;
 public class ParameterPropertyAccessor extends ObjectPropertyAccessor {
 
     @Override
-    public Object getProperty(Map context, Object target, Object oname) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object oname) throws OgnlException {
         if (target instanceof Parameter) {
             if ("value".equalsIgnoreCase(String.valueOf(oname))) {
                 throw new OgnlException("Access to " + oname + " is not allowed! Call parameter name directly!");
@@ -38,7 +39,7 @@ public class ParameterPropertyAccessor extends ObjectPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object oname, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object oname, Object value) throws OgnlException {
         if (target instanceof Parameter) {
             throw new OgnlException("Access to " + target.getClass().getName() + " is read-only!");
         } else {

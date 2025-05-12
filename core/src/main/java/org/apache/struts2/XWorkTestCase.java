@@ -27,6 +27,7 @@ import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.inject.Context;
 import org.apache.struts2.inject.Factory;
 import org.apache.struts2.inject.Scope;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.util.XWorkTestCaseHelper;
 import org.apache.struts2.util.location.LocatableProperties;
@@ -114,10 +115,10 @@ public abstract class XWorkTestCase extends TestCase {
         });
     }
 
-    protected Map<String, Object> createContextWithLocale(Locale locale) {
+    protected StrutsContext createContextWithLocale(Locale locale) {
         return ActionContext.of()
             .withLocale(locale)
-            .getContextMap();
+            .getStrutsContext();
     }
 
     protected void setStrutsConstant(String constant, String value) {

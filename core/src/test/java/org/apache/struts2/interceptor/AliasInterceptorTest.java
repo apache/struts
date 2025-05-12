@@ -18,18 +18,19 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.SimpleFooAction;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.action.Action;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,13 +61,13 @@ import static org.junit.Assert.assertNotEquals;
 public class AliasInterceptorTest extends XWorkTestCase {
 
     public void testUsingDefaultInterceptorThatAliasPropertiesAreCopied() throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("aliasSource", "source here");
+        StrutsContext context = StrutsContext.empty();
+        context.put("aliasSource", "source here");
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, params);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, context);
         SimpleAction actionOne = (SimpleAction) proxy.getAction();
         actionOne.setAliasSource("name to be copied");
         actionOne.setFoo(17);
@@ -78,19 +79,19 @@ public class AliasInterceptorTest extends XWorkTestCase {
     }
 
     public void testNameNotAccepted() throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("aliasSource", "source here");
+        StrutsContext context = StrutsContext.empty();
+        context.put("aliasSource", "source here");
 
         Map<String, String> httpParams = new HashMap<>();
         httpParams.put("name", "getAliasSource()");
         httpParams.put("value", "aliasDest");
-        params.put("parameters", HttpParameters.create(httpParams).build());
+        context.put("parameters", HttpParameters.create(httpParams).build());
 
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, context);
         SimpleAction actionOne = (SimpleAction) proxy.getAction();
         actionOne.setAliasSource("name to be copied");
 
@@ -102,10 +103,10 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertEquals("name to be copied", actionOne.getAliasSource());
         assertNotEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
 
-        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
-        ((AliasInterceptor)proxy.getConfig().getInterceptors().get(1).getInterceptor())
+        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, context);
+        ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
                 .setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        ((AliasInterceptor)proxy.getConfig().getInterceptors().get(1).getInterceptor())
+        ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
                 .setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
 
         actionOne = (SimpleAction) proxy.getAction();
@@ -121,19 +122,19 @@ public class AliasInterceptorTest extends XWorkTestCase {
     }
 
     public void testValueNotAccepted() throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("aliasSource", "source here");
+        StrutsContext context = StrutsContext.empty();
+        context.put("aliasSource", "source here");
 
         Map<String, String> httpParams = new HashMap<>();
         httpParams.put("name", "aliasSource");
         httpParams.put("value", "[0].aliasDest");
-        params.put("parameters", HttpParameters.create(httpParams).build());
+        context.put("parameters", HttpParameters.create(httpParams).build());
 
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, context);
         SimpleAction actionOne = (SimpleAction) proxy.getAction();
         actionOne.setAliasSource("name to be copied");
 
@@ -145,7 +146,7 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertEquals("name to be copied", actionOne.getAliasSource());
         assertNotEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
 
-        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, context);
         ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
                 .setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
         ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
@@ -167,12 +168,12 @@ public class AliasInterceptorTest extends XWorkTestCase {
         Map<String, Object> httpParams = new HashMap<>();
         httpParams.put("notExisting", "from http parameter");
         ActionContext context = ActionContext.of()
-            .withParameters(HttpParameters.create(httpParams).build());
+                .withParameters(HttpParameters.create(httpParams).build());
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, context.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, context.getStrutsContext());
         SimpleAction actionOne = (SimpleAction) proxy.getAction();
 
         // prevent ERROR result
@@ -191,8 +192,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-            .addParam("aliases", "invalid alias expression")
-            .build();
+                .addParam("aliases", "invalid alias expression")
+                .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);
@@ -214,8 +215,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-            .addParam("hello", "invalid alias expression")
-            .build();
+                .addParam("hello", "invalid alias expression")
+                .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);
@@ -238,8 +239,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-            .addParam("hello", "invalid alias expression")
-            .build();
+                .addParam("hello", "invalid alias expression")
+                .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);

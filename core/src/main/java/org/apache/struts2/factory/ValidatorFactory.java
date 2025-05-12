@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.factory;
 
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.validator.Validator;
 
 import java.util.Map;
@@ -38,6 +39,6 @@ public interface ValidatorFactory {
      *
      * @throws Exception in case of any errors
      */
-    Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception;
+    Validator buildValidator(String className, Map<String, Object> params, StrutsContext extraContext) throws Exception;
 
 }

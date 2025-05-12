@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.conversion;
 
+import org.apache.struts2.ognl.StrutsContext;
+
 import java.util.Map;
 
 /**
@@ -41,7 +43,7 @@ public interface NullHandler
      *
      *  @return object
      */
-    Object nullMethodResult(Map<String, Object> context, Object target, String methodName, Object[] args);
+    Object nullMethodResult(StrutsContext context, Object target, String methodName, Object[] args);
 
     /**
      *   Property in target evaluated to null.  Property can be a constant
@@ -53,5 +55,5 @@ public interface NullHandler
      *
      *  @return object
      */
-    Object nullPropertyValue(Map<String, Object> context, Object target, Object property);
+    Object nullPropertyValue(StrutsContext context, Object target, Object property);
 }

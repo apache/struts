@@ -23,6 +23,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
@@ -295,4 +296,18 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
 
         return buffer.toString();
     }
+
+    protected void setDevMode(final boolean devMode) {
+        setStrutsConstant(Collections.singletonMap(StrutsConstants.STRUTS_DEVMODE, Boolean.toString(devMode)));
+    }
+
+    /**
+     * Overwrite the Struts Constant and reload container
+     */
+    @Override
+    protected void setStrutsConstant(final Map<String, String> overwritePropeties) {
+        super.setStrutsConstant(overwritePropeties);
+        stack.getActionContext().withContainer(container);
+    }
+
 }

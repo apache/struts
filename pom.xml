@@ -110,7 +110,7 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>9.7.1</asm.version>
+        <asm.version>9.8</asm.version>
         <byte-buddy.version>1.17.5</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>

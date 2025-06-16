@@ -34,7 +34,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jasperreports7.version>7.0.1</jasperreports7.version>
+        <jasperreports7.version>7.0.3</jasperreports7.version>
     </properties>
 
     <dependencies>

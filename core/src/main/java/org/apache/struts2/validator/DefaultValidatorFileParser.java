@@ -140,7 +140,7 @@ public class DefaultValidatorFileParser implements ValidatorFileParser {
 
                 try {
                     // catch any problems here
-                    objectFactory.buildValidator(className, new HashMap<>(), ActionContext.getContext().getContextMap());
+                    objectFactory.buildValidator(className, new HashMap<>(), ActionContext.getContext().getStrutsContext());
                     validators.put(name, className);
                 } catch (Exception e) {
                     throw new ConfigurationException("Unable to load validator class " + className, e, validatorElement);

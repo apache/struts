@@ -18,11 +18,12 @@
  */
 package org.apache.struts2.conversion.impl;
 
-import java.util.Map;
+import org.apache.struts2.ognl.StrutsContext;
 
 public class FooNumberConverter extends DefaultTypeConverter {
+
     @Override
-    public Object convertValue(Map<String, Object> map, Object object, Class aClass) {
+    public Object convertValue(StrutsContext context, Object object, Class<?> aClass) {
         String s = (String) object;
 
         int length = s.length();
@@ -31,6 +32,6 @@ public class FooNumberConverter extends DefaultTypeConverter {
             r.append(s.charAt(i - 1));
         }
 
-        return super.convertValue(map, r.toString(), aClass);
+        return super.convertValue(context, r.toString(), aClass);
     }
 }

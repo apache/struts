@@ -217,7 +217,7 @@ public class TextParseUtil {
             XWorkConverter conv = actionContext.getContainer().getInstance(XWorkConverter.class);
 
             for (Object element : casted) {
-                String stringElement = (String) conv.convertValue(actionContext.getContextMap(), element, String.class);
+                String stringElement = (String) conv.convertValue(actionContext.getStrutsContext(), element, String.class);
                 if (shallBeIncluded(stringElement, excludeEmptyElements)) {
                     if (evaluator != null) {
                         stringElement = evaluator.evaluate(stringElement).toString();

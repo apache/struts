@@ -19,12 +19,12 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.ognl.XWorkTypeConverterWrapper;
-import ognl.OgnlContext;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
@@ -40,7 +40,7 @@ import java.util.Map;
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public abstract class DefaultTypeConverter implements TypeConverter {
+public abstract class DefaultTypeConverter implements TypeConverter<StrutsContext> {
 
     protected static final String MILLISECOND_FORMAT = ".SSS";
 
@@ -65,26 +65,21 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         this.container = container;
     }
 
-    public Object convertValue(Map<String, Object> context, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object value, Class<?> toType) {
         return convertValue(value, toType);
     }
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object target, Member member,
-            String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class<?> toType) {
         return convertValue(context, value, toType);
     }
 
-    public TypeConverter getTypeConverter( Map<String, Object> context ) {
-        ognl.TypeConverter converter = null;
-
-        if (context instanceof OgnlContext) {
-            converter = ((OgnlContext) context).getTypeConverter();
-        }
+    public TypeConverter<StrutsContext> getTypeConverter(StrutsContext context) {
+        ognl.TypeConverter<StrutsContext> converter = context.getTypeConverter();
 
         if (converter != null) {
             if (converter instanceof TypeConverter) {
-                return (TypeConverter) converter;
+                return (TypeConverter<StrutsContext>) converter;
             } else {
                 return new XWorkTypeConverterWrapper(converter);
             }
@@ -106,7 +101,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @return converted value of the type given, or value if the value cannot
      *         be converted to the given type.
      */
-    public Object convertValue(Object value, Class toType) {
+    public Object convertValue(Object value, Class<?> toType) {
         Object result = null;
 
         if (value != null) {

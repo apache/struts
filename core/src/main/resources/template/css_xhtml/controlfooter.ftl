@@ -19,29 +19,26 @@
  */
 -->
 ${attributes.after!}<#t/>
-    <#lt/>
 <#if !attributes.labelPosition?? && (attributes.form.labelPosition)??>
 <#assign labelPos = attributes.form.labelPosition/>
 <#elseif attributes.labelPosition??>
 <#assign labelPos = attributes.labelPosition/>
 </#if>
 <#if (labelPos!"top") == 'top'>
-</div> <#rt/>
+</div><#rt/>
 <#else>
-</span> <#rt/>
+</span><#rt/>
 </#if>
 <#if (attributes.errorposition!"top") == 'bottom'>
 <#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
 <#if hasFieldErrors>
 <div <#rt/><#if attributes.id??>id="wwerr_${attributes.id}"<#rt/></#if> class="wwerr">
 <#list fieldErrors.get(attributes.name) as error>
-    <div<#rt/>
-    <#if attributes.id??>
-     errorFor="${attributes.id}"<#rt/>
-    </#if>
-    class="errorMessage">
-             ${error}
-    </div><#t/>
+<div<#rt/>
+<#if attributes.id??>
+ errorFor="${attributes.id}"<#rt/>
+</#if>
+ class="errorMessage">${error}</div><#rt/>
 </#list>
 </div><#t/>
 </#if>

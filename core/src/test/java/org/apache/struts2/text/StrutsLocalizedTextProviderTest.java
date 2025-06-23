@@ -30,6 +30,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.test.ModelDrivenAction2;
 import org.apache.struts2.test.TestBean2;
 import org.apache.struts2.util.Bar;
@@ -141,7 +142,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     public void testAddDefaultResourceBundle2() throws Exception {
         localizedTextProvider.addDefaultResourceBundle("org/apache/struts2/SimpleAction");
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", null, new HashMap<>(), false, true);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("/", "packagelessAction", null, StrutsContext.empty(), false, true);
         proxy.execute();
     }
 

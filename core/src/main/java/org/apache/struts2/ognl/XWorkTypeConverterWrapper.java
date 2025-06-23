@@ -21,21 +21,20 @@ package org.apache.struts2.ognl;
 import org.apache.struts2.conversion.TypeConverter;
 
 import java.lang.reflect.Member;
-import java.util.Map;
 
 /**
  * Wraps an OGNL TypeConverter as an XWork TypeConverter
  */
-public class XWorkTypeConverterWrapper implements TypeConverter {
+public class XWorkTypeConverterWrapper implements TypeConverter<StrutsContext> {
 
-    private final ognl.TypeConverter typeConverter;
+    private final ognl.TypeConverter<StrutsContext> typeConverter;
 
-    public XWorkTypeConverterWrapper(ognl.TypeConverter conv) {
+    public XWorkTypeConverterWrapper(ognl.TypeConverter<StrutsContext> conv) {
         this.typeConverter = conv;
     }
 
     @Override
-    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class<?> toType) {
         return typeConverter.convertValue(context, target, member, propertyName, value, toType);
     }
 }

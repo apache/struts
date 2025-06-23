@@ -19,12 +19,13 @@
 package org.apache.struts2;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.mock.MockResult;
-import org.apache.struts2.result.ActionChainResult;
-import org.apache.struts2.util.ValueStack;
 import junit.framework.TestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.mock.MockResult;
+import org.apache.struts2.ognl.StrutsContext;
+import org.apache.struts2.result.ActionChainResult;
+import org.apache.struts2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -127,7 +128,7 @@ public class ChainResultTest extends XWorkTestCase {
 
     public void testNamespaceChain() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy(null, "chain_with_namespace", null, null);
-        ((SimpleAction)proxy.getAction()).setBlah("%{foo}");
+        ((SimpleAction) proxy.getAction()).setBlah("%{foo}");
 
         proxy.execute();
 
@@ -147,28 +148,16 @@ public class ChainResultTest extends XWorkTestCase {
             this.returnVal = returnVal;
         }
 
-        public ActionProxy createActionProxy(String namespace, String actionName, Map<String, Object> extraContext) {
+        @Override
+        public ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext) {
             TestCase.assertEquals(expectedNamespace, namespace);
             TestCase.assertEquals(expectedActionName, actionName);
 
             return returnVal;
         }
 
-        public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext) {
-            TestCase.assertEquals(expectedNamespace, namespace);
-            TestCase.assertEquals(expectedActionName, actionName);
-
-            return returnVal;
-        }
-
-        public ActionProxy createActionProxy(String namespace, String actionName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
-            TestCase.assertEquals(expectedNamespace, namespace);
-            TestCase.assertEquals(expectedActionName, actionName);
-
-            return returnVal;
-        }
-
-        public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
+        @Override
+        public ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext, boolean executeResult, boolean cleanupContext) {
             TestCase.assertEquals(expectedNamespace, namespace);
             TestCase.assertEquals(expectedActionName, actionName);
 
@@ -180,18 +169,6 @@ public class ChainResultTest extends XWorkTestCase {
             TestCase.assertEquals(expectedActionName, actionName);
 
             return returnVal;
-        }
-
-        public ActionProxy createActionProxy(String namespace, String actionName, String method, boolean executeResult, boolean cleanupContext) {
-            TestCase.assertEquals(expectedNamespace, namespace);
-            TestCase.assertEquals(expectedActionName, actionName);
-
-            return returnVal;
-        }
-
-        public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName,
-                                             Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
-            return null;
         }
     }
 }

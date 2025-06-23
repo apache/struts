@@ -22,6 +22,7 @@ import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.NullHandler;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
@@ -56,7 +57,7 @@ import java.util.Set;
  * <li>If the property is declared as a {@link Map}, then a HashMap will be returned and assigned to the null
  * references.</li>
  * <li>If the null property is a simple bean with a no-arg constructor, it will simply be created using the {@link
- * ObjectFactory#buildBean(java.lang.Class, java.util.Map)} method.</li>
+ * ObjectFactory#buildBean(java.lang.Class, StrutsContext)} method.</li>
  * </ul>
  *
  * <!-- END SNIPPET: javadoc -->
@@ -97,12 +98,14 @@ public class InstantiatingNullHandler implements NullHandler {
         this.objectFactory = fac;
     }
 
-    public Object nullMethodResult(Map<String, Object> context, Object target, String methodName, Object[] args) {
+    @Override
+    public Object nullMethodResult(StrutsContext context, Object target, String methodName, Object[] args) {
         LOG.debug("Entering nullMethodResult");
         return null;
     }
 
-    public Object nullPropertyValue(Map<String, Object> context, Object target, Object property) {
+    @Override
+    public Object nullPropertyValue(StrutsContext context, Object target, Object property) {
         LOG.debug("Entering nullPropertyValue [target={}, property={}]", target, property);
         boolean c = ReflectionContextState.isCreatingNullObjects(context);
 
@@ -145,7 +148,7 @@ public class InstantiatingNullHandler implements NullHandler {
         return null;
     }
 
-    private Object createObject(Class clazz, Object target, String property, Map<String, Object> context) throws Exception {
+    private Object createObject(Class clazz, Object target, String property, StrutsContext context) throws Exception {
         if (Set.class.isAssignableFrom(clazz)) {
             return new HashSet();
         } else if (Collection.class.isAssignableFrom(clazz)) {

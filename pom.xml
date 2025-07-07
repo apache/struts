@@ -114,7 +114,7 @@
         <byte-buddy.version>1.17.5</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
-        <jackson.version>2.18.3</jackson.version>
+        <jackson.version>2.19.1</jackson.version>
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.5</jaxb-impl.version>
         <log4j2.version>2.24.3</log4j2.version>

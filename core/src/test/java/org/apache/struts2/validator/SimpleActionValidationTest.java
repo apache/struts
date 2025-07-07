@@ -21,15 +21,16 @@ package org.apache.struts2.validator;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.SimpleAction;
-import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.MockConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts2.ognl.StrutsContext;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.validator.validators.ValidatorSupport;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,10 +53,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         params.put("date", "12/23/2002");
         params.put("percentage", "1.23456789");
 
-        Map<String, Object> extraContext = ActionContext.of()
-            .withParameters(HttpParameters.create(params).build())
-            .bind()
-            .getContextMap();
+        StrutsContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build())
+                .bind()
+                .getStrutsContext();
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
@@ -66,9 +67,9 @@ public class SimpleActionValidationTest extends XWorkTestCase {
 
             params.put("bar", "42");
             extraContext = ActionContext.of()
-                .withParameters(HttpParameters.create(params).build())
-                .bind()
-                .getContextMap();
+                    .withParameters(HttpParameters.create(params).build())
+                    .bind()
+                    .getStrutsContext();
 
             proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ALIAS_NAME, null, extraContext);
             proxy.execute();
@@ -107,7 +108,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -131,7 +132,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
             ValueStack stack = ActionContext.getContext().getValueStack();
             stack.getActionContext().withLocale(Locale.US);
 
@@ -182,7 +183,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getStrutsContext());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -216,7 +217,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, null, extraContext.getStrutsContext());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -236,7 +237,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     public void testInitializable() throws Exception {
         ValidatorFactory validatorFactory = container.getInstance(ValidatorFactory.class);
         assertEquals("org.apache.struts2.validator.validators.RequiredFieldValidator",
-            validatorFactory.lookupRegisteredValidatorType("requiredAnother"));
+                validatorFactory.lookupRegisteredValidatorType("requiredAnother"));
     }
 
     @Override

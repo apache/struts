@@ -61,7 +61,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of().withLocale(mxLocale);
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, TIME_01_59_10, Time.class);
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, TIME_01_59_10, Time.class);
         assertEquals("01:59:10", value.toString());
     }
 
@@ -70,7 +70,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of().withLocale(mxLocale);
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, INPUT_TIME_STAMP_STR,
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, INPUT_TIME_STAMP_STR,
                 Timestamp.class);
         assertEquals(RES_TIME_STAMP_STR, value.toString());
     }
@@ -87,7 +87,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
             .withLocale(new Locale("es_MX", "MX"))
             .withValueStack(stack);
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, DATE_STR, Date.class);
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, DATE_STR, Date.class);
         assertTrue(value.toString().startsWith(DATE_CONVERTED));
     }
 
@@ -103,7 +103,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
                 .withValueStack(stack);
 
         try {
-            converter.convertValue(context.getContextMap(), null, null, null, INVALID_DATE, Date.class);
+            converter.convertValue(context.getStrutsContext(), null, null, null, INVALID_DATE, Date.class);
             fail("TypeConversionException expected - Conversion error occurred");
         } catch (Exception ex) {
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -117,7 +117,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ActionContext context = ActionContext.of().withLocale(mxLocale);
 
         try {
-            converter.convertValue(context.getContextMap(), null, null, null, INPUT_WHEN_LONG_CONSTRUCTOR_STR, null);
+            converter.convertValue(context.getStrutsContext(), null, null, null, INPUT_WHEN_LONG_CONSTRUCTOR_STR, null);
             fail("TypeConversionException expected - Error using default (long) constructor");
         } catch (Exception ex) {
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -130,7 +130,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of();
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATETIME_STR,
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, LOCALDATETIME_STR,
                 LocalDateTime.class);
         assertTrue(value.toString().startsWith(LOCALDATETIME_CONVERTED));
     }
@@ -146,7 +146,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ActionContext context = ActionContext.of().withLocale(mxLocale)
                 .withValueStack(stack);
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATETIME1_STR,
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, LOCALDATETIME1_STR,
                 LocalDateTime.class);
         assertTrue(value.toString().startsWith(LOCALDATETIME_CONVERTED));
     }
@@ -157,7 +157,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ActionContext context = ActionContext.of();
 
         try {
-            converter.convertValue(context.getContextMap(), null, null, null, INVALID_LOCALDATETIME,
+            converter.convertValue(context.getStrutsContext(), null, null, null, INVALID_LOCALDATETIME,
                     LocalDateTime.class);
             fail("TypeConversionException expected - Conversion error occurred");
         } catch (Exception ex) {
@@ -171,7 +171,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of();
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATE_STR,
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, LOCALDATE_STR,
                 LocalDate.class);
         assertTrue(value.toString().startsWith(LOCALDATE_STR));
     }
@@ -181,7 +181,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of();
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALTIME_STR,
+        Object value = converter.convertValue(context.getStrutsContext(), null, null, null, LOCALTIME_STR,
                 LocalTime.class);
         assertTrue(value.toString().startsWith(LOCALTIME_STR));
     }

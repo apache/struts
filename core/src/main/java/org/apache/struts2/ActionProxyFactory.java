@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import java.util.Map;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * The {@link ActionProxyFactory} is used to create {@link ActionProxy}s to be executed.
@@ -48,7 +48,7 @@ public interface ActionProxyFactory {
      * @return ActionProxy  the created action proxy
      * @since 2.1.1
      */
-    ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext);
+    ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext);
 
     /**
      * Creates an {@link ActionProxy} for the given namespace and action name by looking up the configuration.The ActionProxy
@@ -63,10 +63,10 @@ public interface ActionProxyFactory {
      * @return ActionProxy  the created action proxy
      * @since 2.1.1
      */
-    ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext);
+    ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext, boolean executeResult, boolean cleanupContext);
 
 
-     /**
+    /**
      * Creates an {@link ActionProxy} for the given namespace and action name by looking up the configuration.The ActionProxy
      * should be fully initialized when it is returned, including passed {@link ActionInvocation} instance.
      *
@@ -80,6 +80,6 @@ public interface ActionProxyFactory {
      * @since 2.1.1
      */
     ActionProxy createActionProxy(ActionInvocation actionInvocation, String namespace, String actionName, String methodName,
-                                         boolean executeResult, boolean cleanupContext);
+                                  boolean executeResult, boolean cleanupContext);
 
 }

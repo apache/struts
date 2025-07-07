@@ -62,9 +62,9 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.getContext();
         ValueStack stack = context.getValueStack();
-        context.getContextMap().put("value1", "value 1");
-        context.getContextMap().put("value2", "value 2");
-        context.getContextMap().put("value3", "value 3");
+        context.getStrutsContext().put("value1", "value 1");
+        context.getStrutsContext().put("value2", "value 2");
+        context.getStrutsContext().put("value3", "value 3");
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         context.put(ServletActionContext.HTTP_REQUEST, req);
@@ -120,12 +120,12 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.getContext();
         ValueStack stack = context.getValueStack();
-        context.getContextMap().put("value1", "value 1");
-        context.getContextMap().put("value2", "value 2");
-        context.getContextMap().put("value3", "value 3");
-        context.getContextMap().put("namespaceName", "${1-1}");
-        context.getContextMap().put("actionName", "${1-1}");
-        context.getContextMap().put("methodName", "${1-1}");
+        context.getStrutsContext().put("value1", "value 1");
+        context.getStrutsContext().put("value2", "value 2");
+        context.getStrutsContext().put("value3", "value 3");
+        context.getStrutsContext().put("namespaceName", "${1-1}");
+        context.getStrutsContext().put("actionName", "${1-1}");
+        context.getStrutsContext().put("methodName", "${1-1}");
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         context.put(ServletActionContext.HTTP_REQUEST, req);
@@ -191,9 +191,9 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.getContext();
         ValueStack stack = context.getValueStack();
-        context.getContextMap().put("value1", "value 1");
-        context.getContextMap().put("value2", "value 2");
-        context.getContextMap().put("value3", "value 3");
+        context.getStrutsContext().put("value1", "value 1");
+        context.getStrutsContext().put("value2", "value 2");
+        context.getStrutsContext().put("value3", "value 3");
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         context.put(ServletActionContext.HTTP_REQUEST, req);
@@ -299,7 +299,7 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
             .build();
 
         ObjectFactory factory = container.getInstance(ObjectFactory.class);
-        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, ActionContext.getContext().getContextMap());
+        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, ActionContext.getContext().getStrutsContext());
         assertNotNull(result);
     }
 

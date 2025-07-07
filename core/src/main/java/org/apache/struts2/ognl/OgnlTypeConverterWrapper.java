@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.OgnlContext;
 import org.apache.struts2.conversion.TypeConverter;
 
 import java.lang.reflect.Member;
@@ -26,11 +27,11 @@ import java.util.Map;
 /**
  * Wraps an XWork type conversion class for as an OGNL TypeConverter
  */
-public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
+public class OgnlTypeConverterWrapper implements ognl.TypeConverter<StrutsContext> {
 
-    private final TypeConverter typeConverter;
+    private final TypeConverter<StrutsContext> typeConverter;
 
-    public OgnlTypeConverterWrapper(TypeConverter converter) {
+    public OgnlTypeConverterWrapper(TypeConverter<StrutsContext> converter) {
         if (converter == null) {
             throw new IllegalArgumentException("Wrapped type converter cannot be null");
         }
@@ -38,11 +39,11 @@ public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
     }
 
     @Override
-    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class toType) {
         return typeConverter.convertValue(context, target, member, propertyName, value, toType);
     }
 
-    public TypeConverter getTarget() {
+    public TypeConverter<StrutsContext> getTarget() {
         return typeConverter;
     }
 }

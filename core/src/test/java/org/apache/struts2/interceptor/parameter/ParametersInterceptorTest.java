@@ -226,7 +226,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext.getStrutsContext());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         String property = System.getProperty("xwork.security.test");
@@ -244,7 +244,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext.getStrutsContext());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ModelDrivenAction action = (ModelDrivenAction) proxy.getAction();
@@ -269,7 +269,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         ValueStack stack = proxy.getInvocation().getStack();
         HashMap<String, Object> session = new HashMap<>();
         stack.getContext().put("session", session);
@@ -343,7 +343,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         ValueStack stack = proxy.getInvocation().getStack();
 
         // when
@@ -363,7 +363,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
     }
@@ -375,7 +375,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         assertEquals(0, ((ActionSupport) proxy.getAction()).getActionMessages().size());
         assertEquals(0, ((ActionSupport) proxy.getAction()).getActionErrors().size());
@@ -390,7 +390,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
         assertEquals(0, existingMap.size());
@@ -402,7 +402,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         Map<String, String> existingMap = ((SimpleAction) proxy.getAction()).getTheProtectedMap();
         assertEquals(1, existingMap.size());
@@ -457,7 +457,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         ParametersInterceptor pi = (ParametersInterceptor) config.getInterceptors().get(0).getInterceptor();
@@ -487,7 +487,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         ParametersInterceptor pi = (ParametersInterceptor) config.getInterceptors().get(0).getInterceptor();
@@ -509,7 +509,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         SimpleAction action = (SimpleAction) proxy.getAction();
         assertEquals(1, action.getTheProtectedMap().size());
@@ -524,7 +524,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         SimpleAction action = (SimpleAction) proxy.getAction();
         assertEquals(1, action.getTheProtectedMap().size());
@@ -547,7 +547,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         @SuppressWarnings("unused")
         SimpleAction action = (SimpleAction) proxy.getAction();
@@ -564,7 +564,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         SimpleAction action = (SimpleAction) proxy.getAction();
         assertEquals(1, action.getTheExistingMap().size());
@@ -584,7 +584,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         container.inject(config.getInterceptors().get(0).getInterceptor());
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         final String actionError = "" + ((SimpleAction) proxy.getAction()).getActionMessages().toArray()[0];
         assertTrue(actionError.contains("Error setting expression 'not_a_property' with value 'There is no action property named like this'"));
@@ -602,7 +602,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         container.inject(config.getInterceptors().get(0).getInterceptor());
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         assertTrue(((SimpleAction) proxy.getAction()).getActionMessages().isEmpty());
     }
@@ -768,7 +768,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("",
-            MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+            MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getStrutsContext());
         proxy.execute();
         SimpleAction action = (SimpleAction) proxy.getAction();
         assertNotNull(action);

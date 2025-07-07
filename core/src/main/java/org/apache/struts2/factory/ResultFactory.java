@@ -19,6 +19,7 @@
 package org.apache.struts2.factory;
 
 import org.apache.struts2.config.entities.ResultConfig;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.Result;
 
 import java.util.Map;
@@ -28,6 +29,6 @@ import java.util.Map;
  */
 public interface ResultFactory {
 
-    Result buildResult(ResultConfig resultConfig, Map<String, Object> extraContext) throws Exception;
+    Result buildResult(ResultConfig resultConfig, StrutsContext extraContext) throws Exception;
 
 }

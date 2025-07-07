@@ -25,6 +25,7 @@ import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,8 +88,9 @@ public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory impl
         }
     }
 
+    @Override
     public ActionProxy createActionProxy(String namespace, String actionName, String methodName,
-                                         Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
+                                         StrutsContext extraContext, boolean executeResult, boolean cleanupContext) {
 
         String uri = namespace + (namespace.endsWith("/") ? actionName : "/" + actionName);
         for (int lastIndex = uri.lastIndexOf('/'); lastIndex > (-1); lastIndex = uri.lastIndexOf('/', lastIndex - 1)) {

@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.RequestContext;
 import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
@@ -42,6 +44,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * Abstract class with some helper methods, it should be used
@@ -187,7 +191,21 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * @param charset used charset from incoming request
      * @param saveDir a temporary folder to store uploaded files (not always needed)
      */
-    protected abstract JakartaServletDiskFileUpload createJakartaFileUpload(Charset charset, Path saveDir);
+    protected JakartaServletDiskFileUpload createJakartaFileUpload(Charset charset, Path saveDir) {
+        DiskFileItemFactory.Builder builder = DiskFileItemFactory.builder();
+
+        LOG.debug("Using file save directory: {}", saveDir);
+        builder.setPath(saveDir);
+
+        LOG.debug("Sets buffer size: {}", bufferSize);
+        builder.setBufferSize(bufferSize);
+
+        LOG.debug("Using charset: {}", charset);
+        builder.setCharset(charset);
+
+        DiskFileItemFactory factory = builder.get();
+        return new JakartaServletDiskFileUpload(factory);
+    }
 
     protected JakartaServletDiskFileUpload prepareServletFileUpload(Charset charset, Path saveDir) {
         JakartaServletDiskFileUpload servletFileUpload = createJakartaFileUpload(charset, saveDir);
@@ -207,11 +225,15 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return servletFileUpload;
     }
 
+    protected RequestContext createRequestContext(HttpServletRequest request) {
+        return new StrutsRequestContext(request);
+    }
+
     protected boolean exceedsMaxStringLength(String fieldName, String fieldValue) {
         if (maxStringLength != null && fieldValue.length() > maxStringLength) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Form field: {} of size: {} bytes exceeds limit of: {}.",
-                        sanitizeNewlines(fieldName), fieldValue.length(), maxStringLength);
+                        normalizeSpace(fieldName), fieldValue.length(), maxStringLength);
             }
             LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(),
                     STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY, null,
@@ -234,7 +256,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         try {
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
-            LOG.debug("Error parsing the multi-part request!", e);
+            LOG.warn("Error parsing the multi-part request!", e);
             Class<? extends Throwable> exClass = FileUploadException.class;
             Object[] args = new Object[]{};
 
@@ -257,7 +279,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
                 errors.add(errorMessage);
             }
         } catch (IOException e) {
-            LOG.debug("Unable to parse request", e);
+            LOG.warn("Unable to parse request", e);
             LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), new Object[]{});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);

@@ -25,6 +25,7 @@ import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpl
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import java.io.File;
 import java.io.IOException;
@@ -139,6 +140,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             } catch (IOException e) {
                 LOG.warn("Failed to create temporary file for in-memory uploaded item: {}",
                         normalizeSpace(item.getName()), e);
+                
+                // Add the error to the errors list for proper user feedback
+                LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), new Object[]{item.getName()});
+                if (!errors.contains(errorMessage)) {
+                    errors.add(errorMessage);
+                }
             }
         } else {
             UploadedFile uploadedFile = StrutsUploadedFile.Builder

@@ -19,7 +19,6 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileItemInput;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
@@ -45,7 +44,7 @@ import java.util.UUID;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
- * Multi-part form data request adapter for Jakarta Commons FileUpload package that
+ * Multipart form data request adapter for Jakarta Commons FileUpload package that
  * leverages the streaming API rather than the traditional non-streaming API.
  * <p>
  * For more details see WW-3025
@@ -80,22 +79,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                 processFileItemAsFileField(item, location);
             }
         });
-    }
-
-    protected JakartaServletDiskFileUpload createJakartaFileUpload(Charset charset, Path location) {
-        DiskFileItemFactory.Builder builder = DiskFileItemFactory.builder();
-
-        LOG.debug("Using file save directory: {}", location);
-        builder.setPath(location);
-
-        LOG.debug("Sets buffer size: {}", bufferSize);
-        builder.setBufferSize(bufferSize);
-
-        LOG.debug("Using charset: {}", charset);
-        builder.setCharset(charset);
-
-        DiskFileItemFactory factory = builder.get();
-        return new JakartaServletDiskFileUpload(factory);
     }
 
     private String readStream(InputStream inputStream) throws IOException {

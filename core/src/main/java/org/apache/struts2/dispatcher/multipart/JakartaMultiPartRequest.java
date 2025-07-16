@@ -20,12 +20,13 @@ package org.apache.struts2.dispatcher.multipart;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItem;
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.RequestContext;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -41,6 +42,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
 
+    /**
+     * List to track all DiskFileItem instances for proper cleanup
+     */
+    private final List<DiskFileItem> diskFileItems = new ArrayList<>();
+
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
         Charset charset = readCharsetEncoding(request);
@@ -48,7 +54,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         JakartaServletDiskFileUpload servletFileUpload =
                 prepareServletFileUpload(charset, Path.of(saveDir));
 
-        for (DiskFileItem item : servletFileUpload.parseRequest(request)) {
+        RequestContext requestContext = createRequestContext(request);
+        
+        for (DiskFileItem item : servletFileUpload.parseRequest(requestContext)) {
+            // Track all DiskFileItem instances for cleanup
+            diskFileItems.add(item);
+
             LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
                 processNormalFormField(item, charset);
@@ -57,23 +68,6 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 processFileField(item);
             }
         }
-    }
-
-    @Override
-    protected JakartaServletDiskFileUpload createJakartaFileUpload(Charset charset, Path saveDir) {
-        DiskFileItemFactory.Builder builder = DiskFileItemFactory.builder();
-
-        LOG.debug("Using file save directory: {}", saveDir);
-        builder.setPath(saveDir);
-
-        LOG.debug("Sets minimal buffer size to always write file to disk");
-        builder.setBufferSize(1);
-
-        LOG.debug("Using charset: {}", charset);
-        builder.setCharset(charset);
-
-        DiskFileItemFactory factory = builder.get();
-        return new JakartaServletDiskFileUpload(factory);
     }
 
     protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
@@ -114,7 +108,30 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         if (item.isInMemory()) {
-            LOG.warn(() -> "Storing uploaded files just in memory isn't supported currently, skipping file: %s!".formatted(normalizeSpace(item.getName())));
+            LOG.debug("Creating temporary file representing in-memory uploaded item: {}", normalizeSpace(item.getFieldName()));
+            try {
+                File tempFile = File.createTempFile("struts_upload_", "_" + item.getName());
+                tempFile.deleteOnExit(); // Ensure cleanup on JVM exit
+
+                // Write the in-memory content to the temporary file
+                try (java.io.FileOutputStream fos = new java.io.FileOutputStream(tempFile)) {
+                    fos.write(item.get());
+                }
+
+                UploadedFile uploadedFile = StrutsUploadedFile.Builder
+                        .create(tempFile)
+                        .withOriginalName(item.getName())
+                        .withContentType(item.getContentType())
+                        .withInputName(item.getFieldName())
+                        .build();
+                values.add(uploadedFile);
+
+                LOG.debug("Created temporary file for in-memory uploaded item: {} at {}",
+                         normalizeSpace(item.getName()), tempFile.getAbsolutePath());
+            } catch (IOException e) {
+                LOG.warn("Failed to create temporary file for in-memory uploaded item: {}",
+                        normalizeSpace(item.getName()), e);
+            }
         } else {
             UploadedFile uploadedFile = StrutsUploadedFile.Builder
                     .create(item.getPath().toFile())
@@ -126,6 +143,35 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         uploadedFiles.put(item.getFieldName(), values);
+    }
+
+    /**
+     * Override cleanUp to ensure all DiskFileItem instances are properly cleaned up
+     */
+    @Override
+    public void cleanUp() {
+        super.cleanUp();
+        try {
+            LOG.debug("Clean up all DiskFileItem instances (both form fields and file uploads");
+            for (DiskFileItem item : diskFileItems) {
+                try {
+                    if (item.isInMemory()) {
+                        LOG.debug("Cleaning up in-memory item: {}", normalizeSpace(item.getFieldName()));
+                    } else {
+                        LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), item.getPath());
+                        if (item.getPath() != null && item.getPath().toFile().exists()) {
+                            if (!item.getPath().toFile().delete()) {
+                                LOG.warn("There was a problem attempting to delete temporary file: {}", item.getPath());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Error cleaning up DiskFileItem: {}", normalizeSpace(item.getFieldName()), e);
+                }
+            }
+        } finally {
+            diskFileItems.clear();
+        }
     }
 
 }

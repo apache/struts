@@ -46,6 +46,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * List to track all DiskFileItem instances for proper cleanup
      */
     private final List<DiskFileItem> diskFileItems = new ArrayList<>();
+    
+    /**
+     * List to track temporary files created for in-memory uploads
+     */
+    private final List<File> temporaryFiles = new ArrayList<>();
 
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
@@ -111,7 +116,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             LOG.debug("Creating temporary file representing in-memory uploaded item: {}", normalizeSpace(item.getFieldName()));
             try {
                 File tempFile = File.createTempFile("struts_upload_", "_" + item.getName());
-                tempFile.deleteOnExit(); // Ensure cleanup on JVM exit
+                tempFile.deleteOnExit(); // Ensure cleanup on JVM exit as fallback
+                
+                // Track the temporary file for explicit cleanup
+                temporaryFiles.add(tempFile);
 
                 // Write the in-memory content to the temporary file
                 try (java.io.FileOutputStream fos = new java.io.FileOutputStream(tempFile)) {
@@ -146,31 +154,63 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * Override cleanUp to ensure all DiskFileItem instances are properly cleaned up
+     * Cleans up disk file items by deleting associated temporary files.
+     * This method can be overridden by subclasses to customize cleanup behavior.
+     */
+    protected void cleanUpDiskFileItems() {
+        LOG.debug("Clean up all DiskFileItem instances (both form fields and file uploads");
+        for (DiskFileItem item : diskFileItems) {
+            try {
+                if (item.isInMemory()) {
+                    LOG.debug("Cleaning up in-memory item: {}", normalizeSpace(item.getFieldName()));
+                } else {
+                    LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), item.getPath());
+                    if (item.getPath() != null && item.getPath().toFile().exists()) {
+                        if (!item.getPath().toFile().delete()) {
+                            LOG.warn("There was a problem attempting to delete temporary file: {}", item.getPath());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                LOG.warn("Error cleaning up DiskFileItem: {}", normalizeSpace(item.getFieldName()), e);
+            }
+        }
+    }
+
+    /**
+     * Cleans up temporary files created for in-memory uploads.
+     * This method can be overridden by subclasses to customize cleanup behavior.
+     */
+    protected void cleanUpTemporaryFiles() {
+        LOG.debug("Cleaning up {} temporary files created for in-memory uploads", temporaryFiles.size());
+        for (File tempFile : temporaryFiles) {
+            try {
+                if (tempFile.exists()) {
+                    LOG.debug("Deleting temporary file: {}", tempFile.getAbsolutePath());
+                    if (!tempFile.delete()) {
+                        LOG.warn("There was a problem attempting to delete temporary file: {}", tempFile.getAbsolutePath());
+                    }
+                } else {
+                    LOG.debug("Temporary file already deleted: {}", tempFile.getAbsolutePath());
+                }
+            } catch (Exception e) {
+                LOG.warn("Error cleaning up temporary file: {}", tempFile.getAbsolutePath(), e);
+            }
+        }
+    }
+
+    /**
+     * Override cleanUp to ensure all DiskFileItem instances and temporary files are properly cleaned up
      */
     @Override
     public void cleanUp() {
         super.cleanUp();
         try {
-            LOG.debug("Clean up all DiskFileItem instances (both form fields and file uploads");
-            for (DiskFileItem item : diskFileItems) {
-                try {
-                    if (item.isInMemory()) {
-                        LOG.debug("Cleaning up in-memory item: {}", normalizeSpace(item.getFieldName()));
-                    } else {
-                        LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), item.getPath());
-                        if (item.getPath() != null && item.getPath().toFile().exists()) {
-                            if (!item.getPath().toFile().delete()) {
-                                LOG.warn("There was a problem attempting to delete temporary file: {}", item.getPath());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    LOG.warn("Error cleaning up DiskFileItem: {}", normalizeSpace(item.getFieldName()), e);
-                }
-            }
+            cleanUpDiskFileItems();
+            cleanUpTemporaryFiles();
         } finally {
             diskFileItems.clear();
+            temporaryFiles.clear();
         }
     }
 

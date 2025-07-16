@@ -491,6 +491,101 @@ abstract class AbstractMultiPartRequestTest {
                 .containsExactly("struts.messages.upload.error.FileUploadException");
     }
 
+    @Test
+    public void cleanupDoesNotClearErrorsList() throws IOException {
+        // given - create a scenario that generates errors
+        String content = formFile("file1", "test1.csv", "1,2,3,4");
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        multiPart.setMaxSize("1"); // Very small to trigger error
+        multiPart.parse(mockRequest, tempDir);
+        
+        // Verify errors exist
+        assertThat(multiPart.getErrors()).isNotEmpty();
+        int originalErrorCount = multiPart.getErrors().size();
+        
+        // when
+        multiPart.cleanUp();
+        
+        // then - errors should remain (cleanup doesn't clear errors)
+        assertThat(multiPart.getErrors()).hasSize(originalErrorCount);
+    }
+
+    @Test
+    public void largeFileUploadHandling() throws IOException {
+        // Test that large files are handled properly
+        StringBuilder largeContent = new StringBuilder();
+        for (int i = 0; i < 1000; i++) {
+            largeContent.append("line").append(i).append(",");
+        }
+        
+        String content = formFile("largefile", "large.csv", largeContent.toString()) +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should complete without memory issues
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFile("largefile")).hasSize(1);
+        
+        // Cleanup should properly handle large files
+        multiPart.cleanUp();
+        assertThat(multiPart.uploadedFiles).isEmpty();
+    }
+
+    @Test
+    public void multipleFileUploadWithMixedContent() throws IOException {
+        // Test mixed content with multiple files and parameters
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                        formField("param1", "value1") +
+                        formFile("file2", "test2.csv", "5,6,7,8") +
+                        formField("param2", "value2") +
+                        formFile("file3", "test3.csv", "9,10,11,12") +
+                        formField("param3", "value3") +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - verify all content was processed
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFile("file1")).hasSize(1);
+        assertThat(multiPart.getFile("file2")).hasSize(1);
+        assertThat(multiPart.getFile("file3")).hasSize(1);
+        assertThat(multiPart.getParameter("param1")).isEqualTo("value1");
+        assertThat(multiPart.getParameter("param2")).isEqualTo("value2");
+        assertThat(multiPart.getParameter("param3")).isEqualTo("value3");
+        
+        // Store file paths for post-cleanup verification
+        List<String> filePaths = new ArrayList<>();
+        for (UploadedFile file : multiPart.getFile("file1")) {
+            filePaths.add(file.getAbsolutePath());
+        }
+        for (UploadedFile file : multiPart.getFile("file2")) {
+            filePaths.add(file.getAbsolutePath());
+        }
+        for (UploadedFile file : multiPart.getFile("file3")) {
+            filePaths.add(file.getAbsolutePath());
+        }
+        
+        // when - cleanup
+        multiPart.cleanUp();
+        
+        // then - verify complete cleanup
+        assertThat(multiPart.uploadedFiles).isEmpty();
+        assertThat(multiPart.parameters).isEmpty();
+        
+        // Verify files are deleted
+        for (String filePath : filePaths) {
+            assertThat(new File(filePath)).doesNotExist();
+        }
+    }
+
     protected String formFile(String fieldName, String filename, String content) {
         return endline +
                 "--" + boundary + endline +

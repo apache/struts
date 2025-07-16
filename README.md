@@ -19,7 +19,7 @@ The Apache Struts web framework
 
 [![Build Status](https://ci-builds.apache.org/buildStatus/icon?job=Struts%2FStruts+Core%2Fmain)](https://ci-builds.apache.org/job/Struts/job/Struts%20Core/job/main/)
 [![Java Build](https://github.com/apache/struts/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/struts/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/)
+[![Maven Central](https://maven-badges.sml.io/maven-central/org.apache.struts/struts2-core/badge.svg)](https://maven-badges.sml.io/maven-central/org.apache.struts/struts2-core/)
 [![Javadocs](https://javadoc.io/badge/org.apache.struts/struts2-core.svg)](https://javadoc.io/doc/org.apache.struts/struts2-core)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=apache_struts&metric=coverage)](https://sonarcloud.io/summary/new_code?id=apache_struts)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/struts/badge)](https://deps.dev/maven/org.apache.struts%3Astruts2-core)

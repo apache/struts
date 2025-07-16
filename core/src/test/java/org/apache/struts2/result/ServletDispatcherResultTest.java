@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.result;
 
-import jakarta.servlet.RequestDispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
@@ -39,30 +38,38 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         ServletDispatcherResult view = new ServletDispatcherResult();
         view.setLocation("foo.jsp");
 
+        request.setRequestURI("/app/namespace/my.action");
+        request.setContextPath("/app");
+        request.setServletPath("/namespace/my.action");
+        request.setPathInfo(null);
+        request.setQueryString("a=1&b=2");
+
         request.setAttribute("struts.actiontag.invocation", null);
         request.setAttribute("jakarta.servlet.include.servlet_path", null);
-        request.setRequestURI("foo.jsp");
 
         response.setCommitted(Boolean.FALSE);
 
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getForwardedUrl());
-        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     public void testInclude() throws Exception {
         ServletDispatcherResult view = new ServletDispatcherResult();
         view.setLocation("foo.jsp");
 
+        request.setRequestURI("/app/namespace/my.action");
+        request.setContextPath("/app");
+        request.setServletPath("/namespace/my.action");
+        request.setPathInfo(null);
+        request.setQueryString("a=1&b=2");
+
         request.setAttribute("struts.actiontag.invocation", null);
         response.setCommitted(Boolean.TRUE);
-        request.setRequestURI("foo.jsp");
 
         view.execute(invocation);
 
         assertEquals("foo.jsp", response.getIncludedUrl());
-        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     public void testWithParameter() throws Exception {
@@ -76,7 +83,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         // See https://issues.apache.org/jira/browse/WW-5486
         assertEquals("1", stack.findString("#parameters.bar"));
-        assertEquals("foo.jsp", request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH));
     }
 
     @Override

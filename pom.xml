@@ -110,11 +110,11 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>9.7.1</asm.version>
-        <byte-buddy.version>1.17.1</byte-buddy.version>
+        <asm.version>9.8</asm.version>
+        <byte-buddy.version>1.17.5</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
-        <jackson.version>2.18.3</jackson.version>
+        <jackson.version>2.19.1</jackson.version>
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.5</jaxb-impl.version>
         <log4j2.version>2.24.3</log4j2.version>
@@ -124,7 +124,7 @@
         <slf4j.version>2.0.16</slf4j.version>
         <spring.version>6.2.3</spring.version>
         <velocity-tools.version>3.1</velocity-tools.version>
-        <weld.version>5.1.2.Final</weld.version>
+        <weld.version>6.0.3.Final</weld.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -217,7 +217,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -258,7 +258,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.9</version>
+                    <version>6.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -322,7 +322,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>10.0.4</version>
+                    <version>12.1.1</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -395,7 +395,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.20.0</version>
+                <version>3.21.0</version>
                 <configuration>
                     <relativizeSiteLinks>false</relativizeSiteLinks>
                 </configuration>
@@ -408,7 +408,7 @@
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.12.0</version>
+                        <version>2.0.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.result;
 
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.inject.Inject;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +26,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.url.QueryStringParser;
 
 import java.io.Serial;
@@ -158,13 +158,6 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             //if we are inside an action tag, we always need to do an include
             boolean insideActionTag = (Boolean) ObjectUtils.defaultIfNull(request.getAttribute(StrutsStatics.STRUTS_ACTION_TAG_INVOCATION), Boolean.FALSE);
 
-            // this should allow integration with third-party view related frameworks
-            if (finalLocation.contains("?")) {
-                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation.substring(0, finalLocation.indexOf('?')));
-            } else {
-                request.setAttribute(RequestDispatcher.FORWARD_SERVLET_PATH, finalLocation);
-            }
-
             // If we're included, then include the view
             // Otherwise do forward
             // This allow the page to, for example, set content type
@@ -176,6 +169,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 dispatcher.forward(request, response);
             } else {
                 LOG.debug("Including location: {}", finalLocation);
+
                 dispatcher.include(request, response);
             }
         }

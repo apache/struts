@@ -25,6 +25,7 @@ import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.beans.BeanInfo;
@@ -49,17 +50,11 @@ public class ShowValidatorAction extends ListValidatorsAction {
     private Set<PropertyInfo> properties = Collections.emptySet();
     private int selected = 0;
 
-    ReflectionProvider reflectionProvider;
-    ReflectionContextFactory reflectionContextFactory;
+    private ReflectionProvider reflectionProvider;
 
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
-    }
-
-    @Inject
-    public void setReflectionContextFactory(ReflectionContextFactory fac) {
-        this.reflectionContextFactory = fac;
     }
 
     public int getSelected() {
@@ -85,7 +80,6 @@ public class ShowValidatorAction extends ListValidatorsAction {
         Validator validator = getSelectedValidator();
         properties = new TreeSet<>();
         try {
-            Map<String, Object> context = reflectionContextFactory.createDefaultContext(validator);
             BeanInfo beanInfoFrom;
             try {
                 beanInfoFrom = Introspector.getBeanInfo(validator.getClass(), Object.class);
@@ -97,6 +91,7 @@ public class ShowValidatorAction extends ListValidatorsAction {
 
             PropertyDescriptor[] pds = beanInfoFrom.getPropertyDescriptors();
 
+            Map<String, Object> context = ActionContext.getContext().getContextMap();
             for (PropertyDescriptor pd : pds) {
                 String name = pd.getName();
                 Object value = null;
@@ -113,9 +108,9 @@ public class ShowValidatorAction extends ListValidatorsAction {
             }
         } catch (Exception e) {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Unable to retrieve properties.", e);
+                LOG.warn("Unable to retrieve properties.", e);
             }
-            addActionError("Unable to retrieve properties: " + e.toString());
+            addActionError("Unable to retrieve properties: " + e);
         }
 
         if (hasErrors()) {

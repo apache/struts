@@ -243,20 +243,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * Creates a temporary file based on the given filename and location.
-     *
-     * @param fileName file name
-     * @param location location
-     * @return a temporary file based on the given filename and location
-     */
-    protected File createTemporaryFile(String fileName, Path location) {
-        String uid = UUID.randomUUID().toString().replace("-", "_");
-        File file = location.resolve("upload_" + uid + ".tmp").toFile();
-        LOG.debug("Creating temporary file: {} (originally: {})", file.getName(), fileName);
-        return file;
-    }
-
-    /**
      * Streams the file upload stream to the specified file.
      *
      * @param fileItemInput file item input

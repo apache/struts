@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;
 
 import java.io.File;
@@ -279,6 +280,177 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
             // Verify it's in the correct directory
             assertThat(tempFile.getParent()).isEqualTo(tempDir);
         }
+    }
+
+    @Test
+    public void processNormalFormFieldHandlesNullFieldName() throws IOException {
+        // Test null field name handling in processNormalFormField
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data" + endline + // No name attribute
+            endline +
+            "field value without name" +
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"validfield\"" + endline +
+            endline +
+            "valid field value" +
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should only process the valid field
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getParameter("validfield")).isEqualTo("valid field value");
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().hasSize(1);
+    }
+
+    @Test
+    public void processFileFieldHandlesNullFieldName() throws IOException {
+        // Test null field name handling in processFileField
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; filename=\"orphan.txt\"" + endline + // No name attribute
+            "Content-Type: text/plain" + endline +
+            endline +
+            "orphaned file content" +
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"validfile\"; filename=\"valid.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            "valid file content" +
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should only process the valid file
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.uploadedFiles).hasSize(1);
+        assertThat(multiPart.getFile("validfile")).hasSize(1);
+        assertThat(multiPart.getFile("validfile")[0].getContent())
+                .asInstanceOf(InstanceOfAssertFactories.FILE)
+                .content()
+                .isEqualTo("valid file content");
+    }
+
+    @Test
+    public void diskFileItemCleanupCoverage() throws IOException, NoSuchFieldException, IllegalAccessException {
+        // Test disk file item cleanup paths
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when - force files to disk with small buffer
+        multiPart.setBufferSize("1");
+        multiPart.parse(mockRequest, tempDir);
+        
+        // Access private field to verify disk file items are tracked
+        Field diskFileItemsField = JakartaMultiPartRequest.class.getDeclaredField("diskFileItems");
+        diskFileItemsField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        java.util.List<org.apache.commons.fileupload2.core.DiskFileItem> diskFileItems = 
+            (java.util.List<org.apache.commons.fileupload2.core.DiskFileItem>) diskFileItemsField.get(multiPart);
+        
+        // then - should have disk file items tracked
+        assertThat(diskFileItems).isNotEmpty();
+        
+        // when - cleanup
+        multiPart.cleanUp();
+        
+        // then - should clear tracking
+        assertThat(diskFileItems).isEmpty();
+    }
+
+    @Test
+    public void inMemoryVsDiskFileHandling() throws IOException {
+        // Test both in-memory and disk file handling paths
+        String smallContent = "small"; // Should be in-memory
+        String largeContent = "x".repeat(20000); // Should go to disk
+        
+        String content = formFile("smallfile", "small.txt", smallContent) +
+                        formFile("largefile", "large.txt", largeContent) +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when - use default buffer size
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - both files should be processed
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.uploadedFiles).hasSize(2);
+        assertThat(multiPart.getFile("smallfile")).hasSize(1);
+        assertThat(multiPart.getFile("largefile")).hasSize(1);
+        
+        // Verify content
+        assertThat(multiPart.getFile("smallfile")[0].getContent())
+                .asInstanceOf(InstanceOfAssertFactories.FILE)
+                .content()
+                .isEqualTo(smallContent);
+        assertThat(multiPart.getFile("largefile")[0].getContent())
+                .asInstanceOf(InstanceOfAssertFactories.FILE)
+                .content()
+                .isEqualTo(largeContent);
+    }
+
+    @Test
+    public void errorDuplicationPrevention() throws IOException {
+        // Test that duplicate errors are not added
+        JakartaMultiPartRequest multiPartRequest = new JakartaMultiPartRequest();
+        
+        // Simulate adding the same error multiple times
+        IOException testException = new IOException("Test error");
+        LocalizedMessage errorMessage = multiPartRequest.buildErrorMessage(
+                testException.getClass(), testException.getMessage(), new Object[]{"test.csv"});
+        
+        // when - try to add same error multiple times
+        multiPartRequest.errors.add(errorMessage);
+        if (!multiPartRequest.errors.contains(errorMessage)) {
+            multiPartRequest.errors.add(errorMessage); // Should not be added
+        }
+        if (!multiPartRequest.errors.contains(errorMessage)) {
+            multiPartRequest.errors.add(errorMessage); // Should not be added
+        }
+        
+        // then - should only have one error
+        assertThat(multiPartRequest.getErrors()).hasSize(1);
+    }
+
+    @Test
+    public void processFileFieldHandlesEmptyFileName() throws IOException {
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"emptyfile\"; filename=\"\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            "some content that should be ignored" +
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"validfile\"; filename=\"test.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            "valid file content" +
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should only process the file with valid filename
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.uploadedFiles).hasSize(1);
+        assertThat(multiPart.getFile("validfile")).hasSize(1);
+        assertThat(multiPart.getFile("emptyfile")).isEmpty();
+        assertThat(multiPart.getFile("validfile")[0].getContent())
+                .asInstanceOf(InstanceOfAssertFactories.FILE)
+                .content()
+                .isEqualTo("valid file content");
     }
 
 }

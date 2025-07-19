@@ -39,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
@@ -136,7 +135,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        List<String> values = parameters.computeIfAbsent(fieldName, ArrayList::new);
+        List<String> values = parameters.computeIfAbsent(fieldName, k -> new ArrayList<>());
         values.add(fieldValue);
     }
 

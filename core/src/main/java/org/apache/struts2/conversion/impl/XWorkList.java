@@ -18,23 +18,23 @@
  */
 package org.apache.struts2.conversion.impl;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ObjectFactory;
-import org.apache.struts2.conversion.TypeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A simple list that guarantees that inserting and retrieving objects will always work regardless
  * of the current size of the list.  Upon insertion, type conversion is also performed if necessary.
  * Empty beans will be created to fill the gap between the current list size and the requested index
- * using ObjectFactory's {@link ObjectFactory#buildBean(Class,java.util.Map) buildBean} method.
+ * using ObjectFactory's {@link ObjectFactory#buildBean(Class, StrutsContext) buildBean} method.
  *
  * @author Patrick Lightbody
  */
@@ -182,7 +182,7 @@ public class XWorkList extends ArrayList {
     public synchronized Object get(int index) {
         while (index >= this.size()) {
             try {
-                this.add(getObjectFactory().buildBean(clazz, ActionContext.getContext().getContextMap()));
+                this.add(getObjectFactory().buildBean(clazz, ActionContext.getContext().getStrutsContext()));
             } catch (Exception e) {
                 throw new StrutsException(e);
             }
@@ -226,7 +226,7 @@ public class XWorkList extends ArrayList {
             // convert to correct type
             LOG.debug("Converting from {} to {}", element.getClass().getName(), clazz.getName());
             TypeConverter converter = getTypeConverter();
-            Map<String, Object> context = ActionContext.getContext().getContextMap();
+            StrutsContext context = ActionContext.getContext().getStrutsContext();
             element = converter.convertValue(context, null, null, null, element, clazz);
         }
 

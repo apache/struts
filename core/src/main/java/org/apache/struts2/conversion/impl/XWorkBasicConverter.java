@@ -23,6 +23,7 @@ import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.TypeConversionException;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.lang.reflect.Member;
 import java.time.LocalDate;
@@ -32,8 +33,6 @@ import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
-
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -75,7 +74,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object o, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object o, Member member, String propertyName, Object value, Class<?> toType) {
         Object result = null;
 
         if (value == null || toType.isAssignableFrom(value.getClass())) {
@@ -148,7 +147,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         return result;
     }
 
-    private Object doConvertToCalendar(Map<String, Object> context, Object value) {
+    private Object doConvertToCalendar(StrutsContext context, Object value) {
         Object result = null;
         Date dateResult = (Date) doConvertToDate(context, value, Date.class);
         if (dateResult != null) {
@@ -173,8 +172,8 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         return null;
     }
 
-    private Class doConvertToClass(Object value) {
-        Class clazz = null;
+    private Class<?> doConvertToClass(Object value) {
+        Class<?> clazz = null;
         if (value instanceof String st && !st.isEmpty()) {
             try {
                 clazz = Class.forName(st);
@@ -185,40 +184,40 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         return clazz;
     }
 
-    private Object doConvertToCollection(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
-        TypeConverter converter = container.getInstance(CollectionConverter.class);
+    private Object doConvertToCollection(StrutsContext context, Object o, Member member, String prop, Object value, Class<?> toType) {
+        TypeConverter<StrutsContext> converter = container.getInstance(CollectionConverter.class);
         if (converter == null) {
             throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_COLLECTION);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
 
-    private Object doConvertToArray(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
-        TypeConverter converter = container.getInstance(ArrayConverter.class);
+    private Object doConvertToArray(StrutsContext context, Object o, Member member, String prop, Object value, Class<?> toType) {
+        TypeConverter<StrutsContext> converter = container.getInstance(ArrayConverter.class);
         if (converter == null) {
             throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_ARRAY);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
 
-    private Object doConvertToDate(Map<String, Object> context, Object value, Class toType) {
-        TypeConverter converter = container.getInstance(DateConverter.class);
+    private Object doConvertToDate(StrutsContext context, Object value, Class<?> toType) {
+        TypeConverter<StrutsContext> converter = container.getInstance(DateConverter.class);
         if (converter == null) {
             throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_DATE);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
 
-    private Object doConvertToNumber(Map<String, Object> context, Object value, Class toType) {
-        TypeConverter converter = container.getInstance(NumberConverter.class);
+    private Object doConvertToNumber(StrutsContext context, Object value, Class<?> toType) {
+        TypeConverter<StrutsContext> converter = container.getInstance(NumberConverter.class);
         if (converter == null) {
             throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_NUMBER);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
 
-    private Object doConvertToString(Map<String, Object> context, Object value) {
-        TypeConverter converter = container.getInstance(StringConverter.class);
+    private Object doConvertToString(StrutsContext context, Object value) {
+        TypeConverter<StrutsContext> converter = container.getInstance(StringConverter.class);
         if (converter == null) {
             throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_STRING);
         }

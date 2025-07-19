@@ -30,6 +30,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -584,6 +587,160 @@ abstract class AbstractMultiPartRequestTest {
         for (String filePath : filePaths) {
             assertThat(new File(filePath)).doesNotExist();
         }
+    }
+
+    @Test
+    public void createTemporaryFileGeneratesSecureNames() {
+        // Create a test instance to access the protected method
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+        
+        // when - create multiple temporary files
+        File tempFile1 = testRequest.createTemporaryFile("test1.csv", testLocation);
+        File tempFile2 = testRequest.createTemporaryFile("test2.csv", testLocation);
+        File tempFile3 = testRequest.createTemporaryFile("../../../malicious.csv", testLocation);
+        
+        // then - verify secure naming
+        assertThat(tempFile1.getName()).startsWith("upload_");
+        assertThat(tempFile1.getName()).endsWith(".tmp");
+        assertThat(tempFile2.getName()).startsWith("upload_");
+        assertThat(tempFile2.getName()).endsWith(".tmp");
+        assertThat(tempFile3.getName()).startsWith("upload_");
+        assertThat(tempFile3.getName()).endsWith(".tmp");
+        
+        // Verify each file has a unique name
+        assertThat(tempFile1.getName()).isNotEqualTo(tempFile2.getName());
+        assertThat(tempFile2.getName()).isNotEqualTo(tempFile3.getName());
+        assertThat(tempFile1.getName()).isNotEqualTo(tempFile3.getName());
+        
+        // Verify all files are in the correct location
+        assertThat(tempFile1.getParent()).isEqualTo(tempDir);
+        assertThat(tempFile2.getParent()).isEqualTo(tempDir);
+        assertThat(tempFile3.getParent()).isEqualTo(tempDir);
+        
+        // Verify malicious filename doesn't affect the location
+        assertThat(tempFile3.getName()).doesNotContain("..");
+        assertThat(tempFile3.getName()).doesNotContain("/");
+        assertThat(tempFile3.getName()).doesNotContain("\\");
+        
+        // Clean up test files
+        tempFile1.delete();
+        tempFile2.delete();
+        tempFile3.delete();
+    }
+
+    @Test
+    public void createTemporaryFileInSpecificDirectory() throws IOException {
+        // Create a subdirectory for testing
+        Path subDir = Paths.get(tempDir, "subdir");
+        Files.createDirectories(subDir);
+        
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        
+        // when
+        File tempFile = testRequest.createTemporaryFile("test.csv", subDir);
+        
+        // then - verify file is created in the specified subdirectory
+        assertThat(tempFile.getParent()).isEqualTo(subDir.toString());
+        assertThat(tempFile.getName()).startsWith("upload_");
+        assertThat(tempFile.getName()).endsWith(".tmp");
+        
+        // Clean up
+        tempFile.delete();
+        Files.delete(subDir);
+    }
+
+    @Test
+    public void createTemporaryFileWithNullFileName() throws IOException {
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+        
+        // when - create temp file with null filename
+        File tempFile = testRequest.createTemporaryFile(null, testLocation);
+        
+        // then - should still create a valid temporary file
+        assertThat(tempFile.getName()).startsWith("upload_");
+        assertThat(tempFile.getName()).endsWith(".tmp");
+        assertThat(tempFile.getParent()).isEqualTo(tempDir);
+        
+        // Clean up
+        tempFile.delete();
+    }
+
+    @Test
+    public void createTemporaryFileWithEmptyFileName() throws IOException {
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+        
+        // when - create temp file with empty filename
+        File tempFile = testRequest.createTemporaryFile("", testLocation);
+        
+        // then - should still create a valid temporary file
+        assertThat(tempFile.getName()).startsWith("upload_");
+        assertThat(tempFile.getName()).endsWith(".tmp");
+        assertThat(tempFile.getParent()).isEqualTo(tempDir);
+        
+        // Clean up
+        tempFile.delete();
+    }
+
+    @Test
+    public void createTemporaryFileWithSpecialCharacters() {
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+        
+        // when - create temp files with various special characters
+        File tempFile1 = testRequest.createTemporaryFile("file with spaces.csv", testLocation);
+        File tempFile2 = testRequest.createTemporaryFile("file@#$%^&*().csv", testLocation);
+        File tempFile3 = testRequest.createTemporaryFile("файл.csv", testLocation); // Cyrillic
+        
+        // then - all should create valid secure temporary files
+        File[] tempFiles = {tempFile1, tempFile2, tempFile3};
+        for (File tempFile : tempFiles) {
+            assertThat(tempFile.getName()).startsWith("upload_");
+            assertThat(tempFile.getName()).endsWith(".tmp");
+            assertThat(tempFile.getParent()).isEqualTo(tempDir);
+            // Verify no special characters leak into the actual filename
+            assertThat(tempFile.getName()).matches("upload_[a-zA-Z0-9_]+\\.tmp");
+        }
+        
+        // All should have unique names
+        assertThat(tempFile1.getName()).isNotEqualTo(tempFile2.getName());
+        assertThat(tempFile2.getName()).isNotEqualTo(tempFile3.getName());
+        assertThat(tempFile1.getName()).isNotEqualTo(tempFile3.getName());
+        
+        // Clean up
+        tempFile1.delete();
+        tempFile2.delete();
+        tempFile3.delete();
+    }
+
+    @Test
+    public void createTemporaryFileConsistentNaming() {
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+        
+        // when - create many temporary files to verify naming consistency
+        List<File> tempFiles = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            tempFiles.add(testRequest.createTemporaryFile("test" + i + ".csv", testLocation));
+        }
+        
+        // then - all should follow the same naming pattern
+        for (File tempFile : tempFiles) {
+            assertThat(tempFile.getName()).startsWith("upload_");
+            assertThat(tempFile.getName()).endsWith(".tmp");
+            assertThat(tempFile.getParent()).isEqualTo(tempDir);
+            // Verify UUID pattern (without hyphens, replaced with underscores)
+            assertThat(tempFile.getName()).matches("upload_[a-zA-Z0-9_]+\\.tmp");
+        }
+        
+        // Verify all names are unique
+        List<String> fileNames = tempFiles.stream().map(File::getName).toList();
+        assertThat(fileNames).doesNotHaveDuplicates();
+        
+        // Clean up
+        tempFiles.forEach(File::delete);
     }
 
     protected String formFile(String fieldName, String filename, String content) {

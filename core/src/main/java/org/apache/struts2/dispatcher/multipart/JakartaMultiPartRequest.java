@@ -209,7 +209,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         List<UploadedFile> values = uploadedFiles.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
         if (item.isInMemory()) {
-            LOG.debug("Creating temporary file representing in-memory uploaded item: {}", normalizeSpace(item.getFieldName()));
+            LOG.debug(() -> "Creating temporary file representing in-memory uploaded item: " + normalizeSpace(item.getFieldName()));
             try {
                 File tempFile = createTemporaryFile(item.getName(), Path.of(saveDir));
                 
@@ -229,8 +229,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                         .build();
                 values.add(uploadedFile);
 
-                LOG.debug("Created temporary file for in-memory uploaded item: {} at {}",
-                         normalizeSpace(item.getName()), tempFile.getAbsolutePath());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Created temporary file for in-memory uploaded item: {} at {}",
+                             normalizeSpace(item.getName()), tempFile.getAbsolutePath());
+                }
             } catch (IOException e) {
                 LOG.warn("Failed to create temporary file for in-memory uploaded item: {}",
                         normalizeSpace(item.getName()), e);
@@ -277,10 +279,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         for (DiskFileItem item : diskFileItems) {
             try {
                 if (item.isInMemory()) {
-                    LOG.debug("Cleaning up in-memory item: {}", normalizeSpace(item.getFieldName()));
+                    LOG.debug(() -> "Cleaning up in-memory item: " + normalizeSpace(item.getFieldName()));
                 } else {
                     Path itemPath = item.getPath();
-                    LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), itemPath);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), itemPath);
+                    }
                     if (itemPath != null) {
                         File itemFile = itemPath.toFile();
                         if (itemFile.exists() && !itemFile.delete()) {

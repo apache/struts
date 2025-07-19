@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
@@ -112,7 +114,7 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
         // Create a custom implementation that simulates temp file creation failure
         class FaultyJakartaMultiPartRequest extends JakartaMultiPartRequest {
             @Override
-            protected void processFileField(DiskFileItem item) {
+            protected void processFileField(DiskFileItem item, String saveDir) {
                 // Simulate in-memory upload that fails to create temp file
                 if (item.isInMemory()) {
                     try {
@@ -127,7 +129,7 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
                         }
                     }
                 } else {
-                    super.processFileField(item);
+                    super.processFileField(item, saveDir);
                 }
             }
         }
@@ -217,6 +219,66 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
         // then - verify complete cleanup
         assertThat(multiPart.uploadedFiles).isEmpty();
         assertThat(multiPart.parameters).isEmpty();
+    }
+
+    @Test
+    public void temporaryFilesCreatedInSaveDirectory() throws IOException, NoSuchFieldException, IllegalAccessException {
+        // Test that temporary files for in-memory uploads are created in the saveDir, not system temp
+        String content = formFile("file1", "test1.csv", "small,content") +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // Access private field to get temporary files
+        Field tempFilesField = JakartaMultiPartRequest.class.getDeclaredField("temporaryFiles");
+        tempFilesField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<File> temporaryFiles = (List<File>) tempFilesField.get(multiPart);
+        
+        // then - verify temporary files are created in saveDir
+        assertThat(temporaryFiles).isNotEmpty();
+        for (File tempFile : temporaryFiles) {
+            // Verify the temporary file is in the saveDir, not system temp
+            assertThat(tempFile.getParent()).isEqualTo(tempDir);
+            assertThat(tempFile.getName()).startsWith("upload_");
+            assertThat(tempFile.getName()).endsWith(".tmp");
+            assertThat(tempFile).exists();
+        }
+    }
+
+    @Test
+    public void secureTemporaryFileNaming() throws IOException, NoSuchFieldException, IllegalAccessException {
+        // Test that temporary files use UUID-based naming for security
+        String content = formFile("file1", "malicious../../../etc/passwd", "content") +
+                        endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // Access private field to get temporary files
+        Field tempFilesField = JakartaMultiPartRequest.class.getDeclaredField("temporaryFiles");
+        tempFilesField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<File> temporaryFiles = (List<File>) tempFilesField.get(multiPart);
+        
+        // then - verify secure naming prevents directory traversal
+        assertThat(temporaryFiles).isNotEmpty();
+        for (File tempFile : temporaryFiles) {
+            // Verify the temporary file uses secure UUID naming
+            assertThat(tempFile.getName()).startsWith("upload_");
+            assertThat(tempFile.getName()).endsWith(".tmp");
+            // Verify it doesn't contain malicious path elements
+            assertThat(tempFile.getName()).doesNotContain("..");
+            assertThat(tempFile.getName()).doesNotContain("/");
+            assertThat(tempFile.getName()).doesNotContain("\\");
+            // Verify it's in the correct directory
+            assertThat(tempFile.getParent()).isEqualTo(tempDir);
+        }
     }
 
 }

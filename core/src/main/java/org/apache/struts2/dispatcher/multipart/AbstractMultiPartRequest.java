@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
@@ -404,6 +406,22 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             return null;
         }
         return values.toArray(new String[0]);
+    }
+
+    /**
+     * Creates a secure temporary file in the specified directory using UUID-based naming.
+     * This method ensures files are created in a controlled location rather than the
+     * system temporary directory, reducing security risks.
+     *
+     * @param fileName the original filename for logging purposes
+     * @param location the directory where the temporary file should be created
+     * @return a new temporary file in the specified location
+     */
+    protected File createTemporaryFile(String fileName, Path location) {
+        String uid = UUID.randomUUID().toString().replace("-", "_");
+        File file = location.resolve("upload_" + uid + ".tmp").toFile();
+        LOG.debug("Creating temporary file: {} (originally: {})", file.getName(), fileName);
+        return file;
     }
 
     /* (non-Javadoc)

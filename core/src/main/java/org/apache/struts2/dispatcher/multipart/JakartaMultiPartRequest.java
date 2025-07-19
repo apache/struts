@@ -38,6 +38,37 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * Multipart form data request adapter for Jakarta Commons FileUpload package.
+ * 
+ * <p>This implementation provides secure handling of multipart requests with proper
+ * resource management and cleanup. It tracks all temporary files created during
+ * the upload process and ensures they are properly cleaned up to prevent
+ * resource leaks and security vulnerabilities.</p>
+ * 
+ * <p>Key features:</p>
+ * <ul>
+ *   <li>Automatic tracking and cleanup of temporary files</li>
+ *   <li>Proper error handling with user-friendly error messages</li>
+ *   <li>Support for both in-memory and disk-based file uploads</li>
+ *   <li>Extensible cleanup mechanisms for customization</li>
+ * </ul>
+ * 
+ * <p>Usage example:</p>
+ * <pre>
+ * JakartaMultiPartRequest multipartRequest = new JakartaMultiPartRequest();
+ * try {
+ *     multipartRequest.parse(request, "/tmp/uploads");
+ *     // Process uploaded files
+ *     for (String fieldName : multipartRequest.getFileParameterNames()) {
+ *         List&lt;UploadedFile&gt; files = multipartRequest.getFile(fieldName);
+ *         // Handle files
+ *     }
+ * } finally {
+ *     multipartRequest.cleanUp(); // Always clean up resources
+ * }
+ * </pre>
+ * 
+ * @see AbstractMultiPartRequest
+ * @see org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload
  */
 public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
@@ -53,6 +84,27 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      */
     private final List<File> temporaryFiles = new ArrayList<>();
 
+    /**
+     * Processes the multipart upload request using Jakarta Commons FileUpload.
+     * 
+     * <p>This method handles the core upload processing by:</p>
+     * <ol>
+     *   <li>Reading the character encoding from the request</li>
+     *   <li>Preparing the Jakarta servlet file upload handler</li>
+     *   <li>Creating a request context for processing</li>
+     *   <li>Iterating through all form items (fields and files)</li>
+     *   <li>Processing each item appropriately based on its type</li>
+     * </ol>
+     * 
+     * <p>All {@link org.apache.commons.fileupload2.core.DiskFileItem} instances
+     * are automatically tracked for proper cleanup.</p>
+     * 
+     * @param request the HTTP servlet request containing the multipart data
+     * @param saveDir the directory where uploaded files will be stored
+     * @throws IOException if an error occurs during upload processing
+     * @see #processNormalFormField(DiskFileItem, Charset)
+     * @see #processFileField(DiskFileItem)
+     */
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
         Charset charset = readCharsetEncoding(request);
@@ -63,29 +115,51 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         RequestContext requestContext = createRequestContext(request);
         
         for (DiskFileItem item : servletFileUpload.parseRequest(requestContext)) {
-            // Track all DiskFileItem instances for cleanup
+            // Track all DiskFileItem instances for cleanup - this is critical for security
+            // as it ensures temporary files are properly cleaned up even if processing fails
             diskFileItems.add(item);
 
             LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
+                // Process regular form fields (text inputs, checkboxes, etc.)
                 processNormalFormField(item, charset);
             } else {
+                // Process file upload fields
                 LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
                 processFileField(item);
             }
         }
     }
 
+    /**
+     * Processes a normal form field (non-file) from the multipart request.
+     * 
+     * <p>This method handles text form fields by:</p>
+     * <ol>
+     *   <li>Validating the field name is not null</li>
+     *   <li>Extracting the field value using the specified charset</li>
+     *   <li>Checking if the field value exceeds maximum string length</li>
+     *   <li>Adding the value to the parameters map</li>
+     * </ol>
+     * 
+     * <p>Fields with null names are skipped with a warning log message.</p>
+     * <p>Empty form fields are stored as empty strings.</p>
+     * 
+     * @param item the disk file item representing the form field
+     * @param charset the character set to use for decoding the field value
+     * @throws IOException if an error occurs reading the field value
+     * @see #exceedsMaxStringLength(String, String)
+     */
     protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
         LOG.debug("Item: {} is a normal form field", normalizeSpace(item.getName()));
 
-        List<String> values;
         String fieldName = item.getFieldName();
-        if (parameters.get(fieldName) != null) {
-            values = parameters.get(fieldName);
-        } else {
-            values = new ArrayList<>();
+        if (fieldName == null) {
+            LOG.warn("Form field has null fieldName, skipping");
+            return;
         }
+        
+        List<String> values = parameters.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
         String fieldValue = item.getString(charset);
         if (exceedsMaxStringLength(fieldName, fieldValue)) {
@@ -99,6 +173,26 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         parameters.put(fieldName, values);
     }
 
+    /**
+     * Processes a file field from the multipart request.
+     * 
+     * <p>This method handles file uploads by:</p>
+     * <ol>
+     *   <li>Validating the file name and field name are not null/empty</li>
+     *   <li>Determining if the file is stored in memory or on disk</li>
+     *   <li>For in-memory files: creating a temporary file and copying content</li>
+     *   <li>For disk files: using the existing file directly</li>
+     *   <li>Creating an {@link UploadedFile} abstraction</li>
+     *   <li>Adding the file to the uploaded files collection</li>
+     * </ol>
+     * 
+     * <p>Temporary files created for in-memory uploads are automatically
+     * tracked for cleanup. Any errors during temporary file creation are
+     * logged and added to the error list for user feedback.</p>
+     * 
+     * @param item the disk file item representing the uploaded file
+     * @see #cleanUpTemporaryFiles()
+     */
     protected void processFileField(DiskFileItem item) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
@@ -106,18 +200,18 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        List<UploadedFile> values;
-        if (uploadedFiles.get(item.getFieldName()) != null) {
-            values = uploadedFiles.get(item.getFieldName());
-        } else {
-            values = new ArrayList<>();
+        String fieldName = item.getFieldName();
+        if (fieldName == null) {
+            LOG.warn("File field has null fieldName, skipping");
+            return;
         }
+        
+        List<UploadedFile> values = uploadedFiles.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
         if (item.isInMemory()) {
             LOG.debug("Creating temporary file representing in-memory uploaded item: {}", normalizeSpace(item.getFieldName()));
             try {
                 File tempFile = File.createTempFile("struts_upload_", "_" + item.getName());
-                tempFile.deleteOnExit(); // Ensure cleanup on JVM exit as fallback
                 
                 // Track the temporary file for explicit cleanup
                 temporaryFiles.add(tempFile);
@@ -157,12 +251,26 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             values.add(uploadedFile);
         }
 
-        uploadedFiles.put(item.getFieldName(), values);
+        uploadedFiles.put(fieldName, values);
     }
 
     /**
      * Cleans up disk file items by deleting associated temporary files.
-     * This method can be overridden by subclasses to customize cleanup behavior.
+     * 
+     * <p>This method iterates through all tracked {@link DiskFileItem} instances
+     * and performs cleanup operations:</p>
+     * <ul>
+     *   <li>For in-memory items: logs cleanup (no files to delete)</li>
+     *   <li>For disk items: deletes the associated temporary file</li>
+     * </ul>
+     * 
+     * <p>This method is called automatically during {@link #cleanUp()} but can
+     * be overridden by subclasses to customize cleanup behavior. All exceptions
+     * are caught and logged to prevent cleanup failures from affecting the
+     * overall cleanup process.</p>
+     * 
+     * @see #cleanUp()
+     * @see #cleanUpTemporaryFiles()
      */
     protected void cleanUpDiskFileItems() {
         LOG.debug("Clean up all DiskFileItem instances (both form fields and file uploads");
@@ -171,10 +279,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 if (item.isInMemory()) {
                     LOG.debug("Cleaning up in-memory item: {}", normalizeSpace(item.getFieldName()));
                 } else {
-                    LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), item.getPath());
-                    if (item.getPath() != null && item.getPath().toFile().exists()) {
-                        if (!item.getPath().toFile().delete()) {
-                            LOG.warn("There was a problem attempting to delete temporary file: {}", item.getPath());
+                    Path itemPath = item.getPath();
+                    LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), itemPath);
+                    if (itemPath != null) {
+                        File itemFile = itemPath.toFile();
+                        if (itemFile.exists() && !itemFile.delete()) {
+                            LOG.warn("There was a problem attempting to delete temporary file: {}", itemPath);
                         }
                     }
                 }
@@ -186,7 +296,26 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     /**
      * Cleans up temporary files created for in-memory uploads.
-     * This method can be overridden by subclasses to customize cleanup behavior.
+     * 
+     * <p>This method deletes all temporary files that were created when
+     * processing in-memory uploads. These files are created in
+     * {@link #processFileField(DiskFileItem)} when an uploaded file is
+     * stored in memory and needs to be written to disk.</p>
+     * 
+     * <p>The cleanup process:</p>
+     * <ol>
+     *   <li>Iterates through all tracked temporary files</li>
+     *   <li>Checks if each file still exists</li>
+     *   <li>Attempts to delete existing files</li>
+     *   <li>Logs warnings for files that cannot be deleted</li>
+     * </ol>
+     * 
+     * <p>This method can be overridden by subclasses to customize cleanup
+     * behavior. All exceptions are caught and logged to ensure cleanup
+     * continues even if individual file deletions fail.</p>
+     * 
+     * @see #cleanUp()
+     * @see #cleanUpDiskFileItems()
      */
     protected void cleanUpTemporaryFiles() {
         LOG.debug("Cleaning up {} temporary files created for in-memory uploads", temporaryFiles.size());
@@ -207,7 +336,28 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * Override cleanUp to ensure all DiskFileItem instances and temporary files are properly cleaned up
+     * Performs complete cleanup of all resources associated with this request.
+     * 
+     * <p>This method extends the parent cleanup functionality to ensure proper
+     * cleanup of Jakarta-specific resources:</p>
+     * <ol>
+     *   <li>Calls parent cleanup to handle base class resources</li>
+     *   <li>Cleans up all tracked {@link DiskFileItem} instances</li>
+     *   <li>Cleans up all temporary files created for in-memory uploads</li>
+     *   <li>Clears internal tracking collections</li>
+     * </ol>
+     * 
+     * <p>This method is designed to be safe to call multiple times and will
+     * not throw exceptions even if cleanup operations fail. All errors are
+     * logged for debugging purposes.</p>
+     * 
+     * <p><strong>Important:</strong> This method should always be called in a
+     * finally block to ensure resources are properly released, even if
+     * exceptions occur during request processing.</p>
+     * 
+     * @see #cleanUpDiskFileItems()
+     * @see #cleanUpTemporaryFiles()
+     * @see AbstractMultiPartRequest#cleanUp()
      */
     @Override
     public void cleanUp() {

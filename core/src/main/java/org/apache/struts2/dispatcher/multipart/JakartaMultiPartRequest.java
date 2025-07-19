@@ -103,7 +103,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * @param saveDir the directory where uploaded files will be stored
      * @throws IOException if an error occurs during upload processing
      * @see #processNormalFormField(DiskFileItem, Charset)
-     * @see #processFileField(DiskFileItem)
+     * @see #processFileField(DiskFileItem, String)
      */
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
@@ -126,7 +126,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             } else {
                 // Process file upload fields
                 LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
-                processFileField(item);
+                processFileField(item, saveDir);
             }
         }
     }
@@ -193,7 +193,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * @param item the disk file item representing the uploaded file
      * @see #cleanUpTemporaryFiles()
      */
-    protected void processFileField(DiskFileItem item) {
+    protected void processFileField(DiskFileItem item, String saveDir) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
             LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(item.getFieldName()));
@@ -211,7 +211,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         if (item.isInMemory()) {
             LOG.debug("Creating temporary file representing in-memory uploaded item: {}", normalizeSpace(item.getFieldName()));
             try {
-                File tempFile = File.createTempFile("struts_upload_", "_" + item.getName());
+                File tempFile = createTemporaryFile(item.getName(), Path.of(saveDir));
                 
                 // Track the temporary file for explicit cleanup
                 temporaryFiles.add(tempFile);
@@ -299,7 +299,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * 
      * <p>This method deletes all temporary files that were created when
      * processing in-memory uploads. These files are created in
-     * {@link #processFileField(DiskFileItem)} when an uploaded file is
+     * {@link #processFileField(DiskFileItem, String)} when an uploaded file is
      * stored in memory and needs to be written to disk.</p>
      * 
      * <p>The cleanup process:</p>

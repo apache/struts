@@ -81,36 +81,62 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         });
     }
 
+    /**
+     * Reads the entire contents of an input stream into a string.
+     * 
+     * <p>This method uses a buffered approach to efficiently read the stream
+     * content without loading the entire stream into memory at once. It uses
+     * try-with-resources to ensure proper cleanup of resources.</p>
+     * 
+     * @param inputStream the input stream to read from
+     * @return the stream contents as a UTF-8 string
+     * @throws IOException if an error occurs reading the stream
+     */
     private String readStream(InputStream inputStream) throws IOException {
+        // Use try-with-resources to ensure ByteArrayOutputStream is properly closed
         try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1024]; // 1KB buffer for efficient reading
+            // Read the stream in chunks to avoid loading everything into memory at once
             for (int length; (length = inputStream.read(buffer)) != -1; ) {
                 result.write(buffer, 0, length);
             }
+            // Convert to string using UTF-8 encoding
             return result.toString(StandardCharsets.UTF_8);
         }
     }
 
     /**
-     * Processes the FileItem as a normal form field.
-     *
-     * @param fileItemInput a form field item input
+     * Processes a normal form field (non-file) from the multipart request using streaming API.
+     * 
+     * <p>This method handles text form fields by:</p>
+     * <ol>
+     *   <li>Validating the field name is not null</li>
+     *   <li>Reading the field value from the input stream</li>
+     *   <li>Checking if the field value exceeds maximum string length</li>
+     *   <li>Adding the value to the parameters collection</li>
+     * </ol>
+     * 
+     * <p>Fields with null names are skipped with a warning log message.</p>
+     * <p>The streaming approach is more memory-efficient for large form data.</p>
+     * 
+     * @param fileItemInput a form field item input from the streaming API
+     * @throws IOException if an error occurs reading the input stream
+     * @see #readStream(InputStream)
+     * @see #exceedsMaxStringLength(String, String)
      */
     protected void processFileItemAsFormField(FileItemInput fileItemInput) throws IOException {
         String fieldName = fileItemInput.getFieldName();
+        if (fieldName == null) {
+            LOG.warn("Form field has null fieldName, skipping");
+            return;
+        }
+        
         String fieldValue = readStream(fileItemInput.getInputStream());
-
         if (exceedsMaxStringLength(fieldName, fieldValue)) {
             return;
         }
 
-        List<String> values;
-        if (parameters.containsKey(fieldName)) {
-            values = parameters.get(fieldName);
-        } else {
-            values = new ArrayList<>();
-            parameters.put(fieldName, values);
-        }
+        List<String> values = parameters.computeIfAbsent(fieldName, k -> new ArrayList<>());
         values.add(fieldValue);
     }
 
@@ -165,15 +191,39 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * Processes the FileItem as a file field.
-     *
-     * @param fileItemInput file item representing upload file
-     * @param location      location
+     * Processes a file field from the multipart request using streaming API.
+     * 
+     * <p>This method handles file uploads by:</p>
+     * <ol>
+     *   <li>Validating the file name and field name are not null/empty</li>
+     *   <li>Checking if the upload exceeds maximum file count</li>
+     *   <li>Creating a temporary file in the specified location</li>
+     *   <li>Streaming the file content directly to disk</li>
+     *   <li>Checking if the total size exceeds maximum allowed size</li>
+     *   <li>Creating an {@link UploadedFile} abstraction or cleaning up on size exceeded</li>
+     * </ol>
+     * 
+     * <p>Files with null names or field names are skipped with appropriate logging.</p>
+     * <p>The streaming approach is more memory-efficient for large file uploads
+     * as it writes directly to disk rather than loading into memory first.</p>
+     * 
+     * @param fileItemInput file item representing upload file from streaming API
+     * @param location the directory where temporary files will be created
+     * @throws IOException if an error occurs during file processing
+     * @see #createTemporaryFile(String, Path)
+     * @see #streamFileToDisk(FileItemInput, File)
+     * @see #createUploadedFile(FileItemInput, File)
      */
     protected void processFileItemAsFileField(FileItemInput fileItemInput, Path location) throws IOException {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (fileItemInput.getName() == null || fileItemInput.getName().trim().isEmpty()) {
             LOG.debug(() -> "No file has been uploaded for the field: " + normalizeSpace(fileItemInput.getFieldName()));
+            return;
+        }
+        
+        // Skip file uploads that don't have a field name
+        if (fileItemInput.getFieldName() == null) {
+            LOG.warn("File upload has null fieldName, skipping");
             return;
         }
 
@@ -224,29 +274,40 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * Create {@link UploadedFile} abstraction over uploaded file
-     *
-     * @param fileItemInput file item stream
-     * @param file          the file
+     * Creates an {@link UploadedFile} abstraction over an uploaded file.
+     * 
+     * <p>This method creates a wrapper around the uploaded file that provides
+     * a consistent interface for accessing file information and content.
+     * The created {@link UploadedFile} instance contains:</p>
+     * <ul>
+     *   <li>The original filename as provided by the client</li>
+     *   <li>The content type (MIME type) if available</li>
+     *   <li>The form field name that contained the file</li>
+     *   <li>A reference to the temporary file on disk</li>
+     * </ul>
+     * 
+     * <p>The file is automatically added to the uploaded files collection,
+     * grouped by field name to support multiple file uploads per field.</p>
+     * 
+     * @param fileItemInput file item stream containing file metadata
+     * @param file the temporary file containing the uploaded content
+     * @see UploadedFile
+     * @see StrutsUploadedFile
      */
     protected void createUploadedFile(FileItemInput fileItemInput, File file) {
         String fileName = fileItemInput.getName();
         String fieldName = fileItemInput.getFieldName();
-
+        
+        // fieldName null check already done in processFileItemAsFileField
         UploadedFile uploadedFile = StrutsUploadedFile.Builder
                 .create(file)
                 .withOriginalName(fileName)
                 .withContentType(fileItemInput.getContentType())
-                .withInputName(fileItemInput.getFieldName())
+                .withInputName(fieldName)
                 .build();
 
-        if (uploadedFiles.containsKey(fieldName)) {
-            uploadedFiles.get(fieldName).add(uploadedFile);
-        } else {
-            List<UploadedFile> infos = new ArrayList<>();
-            infos.add(uploadedFile);
-            uploadedFiles.put(fieldName, infos);
-        }
+        List<UploadedFile> infos = uploadedFiles.computeIfAbsent(fieldName, key -> new ArrayList<>());
+        infos.add(uploadedFile);
     }
 
 }

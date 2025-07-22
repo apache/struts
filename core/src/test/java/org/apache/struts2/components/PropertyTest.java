@@ -18,15 +18,14 @@
  */
 package org.apache.struts2.components;
 
-import java.io.StringWriter;
-import java.util.Map;
-
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.util.StrutsTypeConverter;
-
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.conversion.impl.XWorkConverter;
+import org.apache.struts2.ognl.StrutsContext;
+import org.apache.struts2.util.StrutsTypeConverter;
 import org.apache.struts2.util.ValueStack;
+
+import java.io.StringWriter;
 
 /**
  *
@@ -43,6 +42,7 @@ public class PropertyTest extends StrutsInternalTestCase {
         super.tearDown();
         converter = null;
     }
+
     public void testNormalBehaviour() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
@@ -127,11 +127,13 @@ public class PropertyTest extends StrutsInternalTestCase {
     }
 
     private final class FooBarConverter extends StrutsTypeConverter {
-        public Object convertFromString(Map context, String[] values, Class toClass) {
+        @Override
+        public Object convertFromString(StrutsContext context, String[] values, Class toClass) {
             return null;
         }
 
-        public String convertToString(Map context, Object o) {
+        @Override
+        public String convertToString(StrutsContext context, Object o) {
             FooBar fooBar = (FooBar) o;
             if (fooBar.getBar() == null) {
                 return null;

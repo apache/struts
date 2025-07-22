@@ -20,8 +20,7 @@ package org.apache.struts2;
 
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
-
-import java.util.Map;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Default factory for {@link org.apache.struts2.ActionProxyFactory}.
@@ -41,27 +40,28 @@ public class DefaultActionProxyFactory implements ActionProxyFactory {
         this.container = container;
     }
 
-    public ActionProxy createActionProxy(String namespace, String actionName, Map<String, Object> extraContext) {
+    public ActionProxy createActionProxy(String namespace, String actionName, StrutsContext extraContext) {
         return createActionProxy(namespace, actionName, null, extraContext, true, true);
     }
 
-    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext) {
+    @Override
+    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext) {
         return createActionProxy(namespace, actionName, methodName, extraContext, true, true);
     }
 
-    public ActionProxy createActionProxy(String namespace, String actionName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
+    public ActionProxy createActionProxy(String namespace, String actionName, StrutsContext extraContext, boolean executeResult, boolean cleanupContext) {
         return createActionProxy(namespace, actionName, null, extraContext, executeResult, cleanupContext);
     }
 
     @Override
-    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
+    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, StrutsContext extraContext, boolean executeResult, boolean cleanupContext) {
 
         ActionInvocation inv = createActionInvocation(extraContext, true);
         container.inject(inv);
         return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);
     }
 
-    protected ActionInvocation createActionInvocation(Map<String, Object> extraContext, boolean pushAction) {
+    protected ActionInvocation createActionInvocation(StrutsContext extraContext, boolean pushAction) {
         return new DefaultActionInvocation(extraContext, pushAction);
     }
 

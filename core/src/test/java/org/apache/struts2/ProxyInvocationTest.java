@@ -21,6 +21,7 @@ package org.apache.struts2;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,12 +52,12 @@ public class ProxyInvocationTest extends XWorkTestCase {
     /**
      * Needed for the creation of the action proxy
      */
-    private Map<String, Object> createDummyContext() {
+    private StrutsContext createDummyContext() {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "this is blah");
         return ActionContext.of()
             .withParameters(HttpParameters.create(params).build())
-            .getContextMap();
+            .getStrutsContext();
     }
 
     @Override

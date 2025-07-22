@@ -20,9 +20,8 @@ package org.apache.struts2;
 
 import org.apache.struts2.mock.DummyTextProvider;
 import org.apache.struts2.mock.InjectableAction;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.text.TextProvider;
-
-import java.util.HashMap;
 
 public class ObjectFactoryTest extends StrutsInternalTestCase {
 
@@ -37,7 +36,7 @@ public class ObjectFactoryTest extends StrutsInternalTestCase {
         ObjectFactory of = container.getInstance(ObjectFactory.class);
 
         // when
-        InjectableAction action = (InjectableAction) of.buildBean(InjectableAction.class, new HashMap<String, Object>());
+        InjectableAction action = (InjectableAction) of.buildBean(InjectableAction.class, StrutsContext.empty());
 
         // then
         assertNotNull(action.getTextProvider());

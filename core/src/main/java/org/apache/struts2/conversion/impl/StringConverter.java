@@ -19,6 +19,7 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
@@ -37,7 +38,7 @@ import java.util.Objects;
 public class StringConverter extends DefaultTypeConverter {
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class toType) {
         String result;
 
         if (value.getClass().isArray()) {

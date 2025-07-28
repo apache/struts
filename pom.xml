@@ -113,7 +113,7 @@
         <asm.version>9.8</asm.version>
         <byte-buddy.version>1.17.5</byte-buddy.version>
         <freemarker.version>2.3.34</freemarker.version>
-        <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
         <jackson.version>2.19.1</jackson.version>
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.5</jaxb-impl.version>

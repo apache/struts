@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(mvn:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": []
+  }
+}

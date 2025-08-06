@@ -136,7 +136,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        List<String> values = parameters.computeIfAbsent(fieldName, k -> new ArrayList<>());
+        List<String> values = parameters.computeIfAbsent(fieldName, ArrayList::new);
         values.add(fieldValue);
     }
 

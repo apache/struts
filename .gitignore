@@ -1,5 +1,5 @@
 # IDEA
-.idea
+.idea/
 *.iml
 *.ipr
 *.iws
@@ -38,11 +38,14 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-plugins/testng/test-output
-test-output
+plugins/testng/test-output/
+test-output/
 
 # Sonar
-/.sonar/
+.sonar/
 
 # Tidelift CLI scanner
 .tidelift
+
+# Claude Code specific local settings
+.claude/

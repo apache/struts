@@ -42,7 +42,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
@@ -58,6 +57,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     // maps parameter name -> List of param values
     protected Map<String, List<String>> params = new HashMap<>();
+
+    // List to track all FileItem instances for comprehensive cleanup
+    protected List<FileItem> allFileItems = new ArrayList<>();
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
@@ -103,6 +105,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         if (ServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
                 LOG.debug("Found file item: [{}]", normalizeSpace(item.getFieldName()));
+                
+                // Track all FileItem instances for comprehensive cleanup
+                allFileItems.add(item);
+                
                 if (item.isFormField()) {
                     processNormalFormField(item, request.getCharacterEncoding());
                 } else {
@@ -240,7 +246,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             // Ensure file exists even if it is empty.
             if (diskFileItem.getSize() == 0 && storeLocation != null && !storeLocation.exists()) {
                 try {
-                    storeLocation.createNewFile();
+                    if (storeLocation.createNewFile()) {
+                        LOG.debug("File {} has been created", storeLocation.getAbsolutePath());
+                    } else {
+                        LOG.warn("File {} already exists", storeLocation.getAbsolutePath());
+                    }
                 } catch (IOException e) {
                     LOG.error("Cannot write uploaded empty file to disk: {}", storeLocation.getAbsolutePath(), e);
                 }
@@ -357,15 +367,31 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
      */
     public void cleanUp() {
-        Set<String> names = files.keySet();
-        for (String name : names) {
-            List<FileItem> items = files.get(name);
-            for (FileItem item : items) {
-                LOG.debug("Removing file [{}]", normalizeSpace(name));
-                if (!item.isInMemory()) {
-                    item.delete();
+        try {
+            LOG.debug("Performing comprehensive cleanup for {} file items.", allFileItems.size());
+            for (FileItem item : allFileItems) {
+                try {
+                    if (item instanceof DiskFileItem) {
+                        DiskFileItem diskItem = (DiskFileItem) item;
+                        File storeLocation = diskItem.getStoreLocation();
+                        if (storeLocation != null && storeLocation.exists()) {
+                            LOG.debug("Deleting temporary file: [{}]", storeLocation.getName());
+                            if (!storeLocation.delete()) {
+                                LOG.warn("Unable to delete temporary file: [{}]", storeLocation.getName());
+                            }
+                        }
+                    }
+                    // Also call the item's delete method as backup
+                    if (!item.isInMemory()) {
+                        item.delete();
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Error during cleanup of file item: [{}]", normalizeSpace(item.getFieldName()), e);
                 }
             }
+        } finally {
+            // Clear only the tracking collection, preserve parsed data
+            allFileItems.clear();
         }
     }
 

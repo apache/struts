@@ -24,6 +24,7 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.Unchainable;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.CompoundRoot;
@@ -168,7 +169,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     private void copyStack(ActionInvocation invocation, CompoundRoot root) {
         List<Object> list = prepareList(root);
-        Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
+        StrutsContext ctxMap = invocation.getInvocationContext().getStrutsContext();
         for (Object object : list) {
             if (!shouldCopy(object)) {
                 continue;

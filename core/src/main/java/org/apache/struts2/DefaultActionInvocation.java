@@ -34,6 +34,7 @@ import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.ValueStack;
@@ -60,7 +61,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Object action;
     protected ActionProxy proxy;
     protected List<PreResultListener> preResultListeners;
-    protected Map<String, Object> extraContext;
+    protected StrutsContext extraContext;
     protected ActionContext invocationContext;
     protected Iterator<InterceptorMapping> interceptors;
     protected ValueStack stack;
@@ -79,7 +80,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Callable<?> asyncAction;
     protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
-    public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
+    public DefaultActionInvocation(final StrutsContext extraContext, final boolean pushAction) {
         this.extraContext = extraContext;
         this.pushAction = pushAction;
     }
@@ -234,7 +235,7 @@ public class DefaultActionInvocation implements ActionInvocation {
 
         if (resultConfig != null) {
             try {
-                return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
+                return objectFactory.buildResult(resultConfig, invocationContext.getStrutsContext());
             } catch (Exception e) {
                 LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
                 throw new StrutsException(e, resultConfig);
@@ -320,10 +321,10 @@ public class DefaultActionInvocation implements ActionInvocation {
         return invokeAction(getAction(), proxy.getConfig());
     }
 
-    protected void createAction(Map<String, Object> contextMap) {
+    protected void createAction(StrutsContext context) {
         // load action
         try {
-            action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
+            action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), context);
         } catch (InstantiationException e) {
             throw new StrutsException("Unable to instantiate Action!", e, proxy.getConfig());
         } catch (IllegalAccessException e) {
@@ -350,8 +351,13 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
     }
 
+    @Deprecated
     protected Map<String, Object> createContextMap() {
-        ActionContext actionContext;
+        return createStrutsContext();
+    }
+
+    protected StrutsContext createStrutsContext() {
+        StrutsContext context;
 
         if (ActionContext.containsValueStack(extraContext)) {
             // In case the ValueStack was passed in
@@ -368,13 +374,13 @@ public class DefaultActionInvocation implements ActionInvocation {
 
             // create the action context
         }
-        actionContext = stack.getActionContext();
+        ActionContext actionContext = stack.getActionContext();
 
         return actionContext
             .withExtraContext(extraContext)
             .withActionInvocation(this)
             .withContainer(container)
-            .getContextMap();
+            .getStrutsContext();
     }
 
     /**
@@ -400,7 +406,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     @Override
     public void init(ActionProxy proxy) {
         this.proxy = proxy;
-        Map<String, Object> contextMap = createContextMap();
+        StrutsContext contextMap = createStrutsContext();
 
         // Setting this so that other classes, like object factories, can use the ActionProxy and other
         // contextual information to operate

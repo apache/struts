@@ -23,16 +23,16 @@ import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.SimpleAction;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.providers.MockConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.util.location.LocatableProperties;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +69,7 @@ public class ConfigurationTest extends XWorkTestCase {
                 .withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("/does/not/exist", "Foo", null, extraContext.getContextMap());
+            ActionProxy proxy = actionProxyFactory.createActionProxy("/does/not/exist", "Foo", null, extraContext.getStrutsContext());
             proxy.execute();
             assertEquals("this is blah", proxy.getInvocation().getStack().findValue("[1].blah"));
         } catch (Exception e) {
@@ -362,7 +362,7 @@ public class ConfigurationTest extends XWorkTestCase {
         }
 
         public void init(Configuration configuration)
-            throws ConfigurationException {
+                throws ConfigurationException {
             config = configuration;
         }
 

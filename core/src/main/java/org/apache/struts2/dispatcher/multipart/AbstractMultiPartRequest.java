@@ -18,15 +18,14 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
-import org.apache.commons.fileupload2.core.RequestContext;
-import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
 import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.RequestContext;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -422,6 +422,45 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         File file = location.resolve("upload_" + uid + ".tmp").toFile();
         LOG.debug("Creating temporary file: {} (originally: {})", file.getName(), fileName);
         return file;
+    }
+
+    /**
+     * Validates that an uploaded file is not empty (0 bytes) and adds an error if it is.
+     *
+     * <p>Empty file uploads are rejected as they are not considered valid uploads.
+     * This validation ensures consistent behavior across all multipart implementations
+     * and provides proper user feedback when empty files are uploaded.</p>
+     *
+     * <p>When an empty file is detected:</p>
+     * <ul>
+     *   <li>A debug log message is written with field name and filename</li>
+     *   <li>A localized error message is created and added to the errors list</li>
+     *   <li>The method returns true to indicate the file should be rejected</li>
+     * </ul>
+     *
+     * @param fileSize  the size of the uploaded file in bytes
+     * @param fileName  the original filename of the uploaded file
+     * @param fieldName the form field name containing the file upload
+     * @return true if the file is empty and should be rejected, false otherwise
+     * @see #buildErrorMessage(Class, String, Object[])
+     */
+    protected boolean rejectEmptyFile(long fileSize, String fileName, String fieldName) {
+        if (fileSize == 0) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Rejecting empty file upload for field: {} with filename: {}",
+                        normalizeSpace(fieldName), normalizeSpace(fileName));
+            }
+            LocalizedMessage errorMessage = buildErrorMessage(
+                    IllegalArgumentException.class,
+                    "Empty files are not allowed",
+                    new Object[]{fileName, fieldName}
+            );
+            if (!errors.contains(errorMessage)) {
+                errors.add(errorMessage);
+            }
+            return true;
+        }
+        return false;
     }
 
     /* (non-Javadoc)

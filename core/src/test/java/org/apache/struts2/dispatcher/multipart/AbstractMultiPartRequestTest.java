@@ -743,6 +743,119 @@ abstract class AbstractMultiPartRequestTest {
         tempFiles.forEach(File::delete);
     }
 
+    @Test
+    public void emptyFileUploadsAreRejected() throws IOException {
+        // Test that empty files (0 bytes) are rejected with proper error message
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"emptyfile\"; filename=\"empty.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            // No content - this creates a 0-byte file
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should reject empty file and add error
+        assertThat(multiPart.getErrors())
+                .hasSize(1)
+                .first()
+                .satisfies(error -> {
+                    assertThat(error.getTextKey()).isEqualTo("struts.messages.upload.error.IllegalArgumentException");
+                    assertThat(error.getArgs()).containsExactly("empty.txt", "emptyfile");
+                });
+        assertThat(multiPart.uploadedFiles).isEmpty();
+        assertThat(multiPart.getFile("emptyfile")).isEmpty();
+    }
+
+    @Test
+    public void mixedEmptyAndValidFilesProcessedCorrectly() throws IOException {
+        // Test that valid files are processed while empty files are rejected
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"emptyfile1\"; filename=\"empty1.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            // No content - empty file
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"validfile\"; filename=\"valid.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            "some valid content" +
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"emptyfile2\"; filename=\"empty2.txt\"" + endline +
+            "Content-Type: application/octet-stream" + endline +
+            endline +
+            // Another empty file
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should have 2 errors for empty files, 1 valid file processed
+        assertThat(multiPart.getErrors()).hasSize(2);
+        assertThat(multiPart.getErrors().get(0))
+                .satisfies(error -> {
+                    assertThat(error.getTextKey()).isEqualTo("struts.messages.upload.error.IllegalArgumentException");
+                    assertThat(error.getArgs()).containsExactly("empty1.txt", "emptyfile1");
+                });
+        assertThat(multiPart.getErrors().get(1))
+                .satisfies(error -> {
+                    assertThat(error.getTextKey()).isEqualTo("struts.messages.upload.error.IllegalArgumentException");
+                    assertThat(error.getArgs()).containsExactly("empty2.txt", "emptyfile2");
+                });
+        
+        // Only the valid file should be processed
+        assertThat(multiPart.uploadedFiles).hasSize(1);
+        assertThat(multiPart.getFile("validfile")).hasSize(1);
+        assertThat(multiPart.getFile("emptyfile1")).isEmpty();
+        assertThat(multiPart.getFile("emptyfile2")).isEmpty();
+        
+        // Verify valid file content
+        assertThat(multiPart.getFile("validfile")[0].getContent())
+                .asInstanceOf(InstanceOfAssertFactories.FILE)
+                .content()
+                .isEqualTo("some valid content");
+    }
+
+    @Test
+    public void emptyFileTemporaryFileCleanup() throws IOException {
+        // Test that temporary files for empty files are properly cleaned up
+        String content = 
+            endline + "--" + boundary + endline +
+            "Content-Disposition: form-data; name=\"emptyfile\"; filename=\"empty.txt\"" + endline +
+            "Content-Type: text/plain" + endline +
+            endline +
+            // Empty file
+            endline + "--" + boundary + "--";
+        
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+        
+        // Count temp files before processing
+        File[] tempFilesBefore = new File(tempDir).listFiles((dir, name) -> name.startsWith("upload_") && name.endsWith(".tmp"));
+        int countBefore = tempFilesBefore != null ? tempFilesBefore.length : 0;
+        
+        // when
+        multiPart.parse(mockRequest, tempDir);
+        
+        // then - should reject empty file and clean up temp file
+        assertThat(multiPart.getErrors()).hasSize(1);
+        assertThat(multiPart.uploadedFiles).isEmpty();
+        
+        // Verify that temporary files are cleaned up (may have implementation differences)
+        // Some implementations create temp files first, others don't create any for empty uploads
+        File[] tempFilesAfter = new File(tempDir).listFiles((dir, name) -> name.startsWith("upload_") && name.endsWith(".tmp"));
+        int countAfter = tempFilesAfter != null ? tempFilesAfter.length : 0;
+        
+        // Allow for implementation differences - just ensure no new temp files remain
+        assertThat(countAfter).isLessThanOrEqualTo(countBefore);
+    }
+
     protected String formFile(String fieldName, String filename, String content) {
         return endline +
                 "--" + boundary + endline +

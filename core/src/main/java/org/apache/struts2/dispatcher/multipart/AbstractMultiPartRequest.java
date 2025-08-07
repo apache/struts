@@ -424,6 +424,43 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         return file;
     }
 
+    /**
+     * Validates that an uploaded file is not empty (0 bytes) and adds an error if it is.
+     * 
+     * <p>Empty file uploads are rejected as they are not considered valid uploads.
+     * This validation ensures consistent behavior across all multipart implementations
+     * and provides proper user feedback when empty files are uploaded.</p>
+     * 
+     * <p>When an empty file is detected:</p>
+     * <ul>
+     *   <li>A debug log message is written with field name and filename</li>
+     *   <li>A localized error message is created and added to the errors list</li>
+     *   <li>The method returns true to indicate the file should be rejected</li>
+     * </ul>
+     * 
+     * @param fileSize the size of the uploaded file in bytes
+     * @param fileName the original filename of the uploaded file
+     * @param fieldName the form field name containing the file upload
+     * @return true if the file is empty and should be rejected, false otherwise
+     * @see #buildErrorMessage(Class, String, Object[])
+     */
+    protected boolean rejectEmptyFile(long fileSize, String fileName, String fieldName) {
+        if (fileSize == 0) {
+            LOG.debug("Rejecting empty file upload for field: {} with filename: {}", 
+                     normalizeSpace(fieldName), normalizeSpace(fileName));
+            LocalizedMessage errorMessage = buildErrorMessage(
+                IllegalArgumentException.class,
+                "Empty files are not allowed", 
+                new Object[]{fileName, fieldName}
+            );
+            if (!errors.contains(errorMessage)) {
+                errors.add(errorMessage);
+            }
+            return true;
+        }
+        return false;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
      */

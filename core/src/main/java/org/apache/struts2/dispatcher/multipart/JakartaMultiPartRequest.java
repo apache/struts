@@ -206,6 +206,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
         
+        // Reject empty files (0 bytes) as they are not considered valid uploads
+        if (rejectEmptyFile(item.getSize(), item.getName(), fieldName)) {
+            return;
+        }
+        
         List<UploadedFile> values = uploadedFiles.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
         if (item.isInMemory()) {

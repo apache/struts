@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.factory;
 
-import org.apache.struts2.conversion.TypeConverter;
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.inject.Inject;
 
 import java.util.Map;
 
@@ -30,19 +30,18 @@ import java.util.Map;
  * Default implementation
  */
 public class StrutsConverterFactory implements ConverterFactory {
-
     private static final Logger LOG = LogManager.getLogger(StrutsConverterFactory.class);
 
-    private Container container;
+    private ObjectFactory objectFactory;
 
     @Inject
-    public void setContainer(Container container) {
-        this.container = container;
+    public void setObjectFactory(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
     }
 
+    @Override
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
         LOG.debug("Creating converter of type [{}]", converterClass.getCanonicalName());
-        return container.inject(converterClass);
+        return (TypeConverter)objectFactory.buildBean(converterClass, extraContext);
     }
-
 }

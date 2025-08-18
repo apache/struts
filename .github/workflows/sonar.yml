@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.base.repo.fork && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: actions/setup-java@v4

@@ -232,6 +232,15 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
         File file = createTemporaryFile(fileItemInput.getName(), location);
         streamFileToDisk(fileItemInput, file);
+        
+        // Reject empty files (0 bytes) as they are not considered valid uploads
+        if (rejectEmptyFile(file.length(), fileItemInput.getName(), fileItemInput.getFieldName())) {
+            // Clean up the empty temporary file
+            if (!Files.deleteIfExists(file.toPath())) {
+                LOG.warn("Failed to delete empty temporary file: {}", file.getAbsolutePath());
+            }
+            return;
+        }
 
         Long currentFilesSize = maxSizeOfFiles != null ? actualSizeOfUploadedFiles() : null;
         if (maxSizeOfFiles != null && currentFilesSize + file.length() >= maxSizeOfFiles) {

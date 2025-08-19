@@ -46,3 +46,6 @@ test-output
 
 # Tidelift CLI scanner
 .tidelift
+
+# Claude Code local settings
+.claude/

@@ -30,6 +30,7 @@ import org.apache.struts2.dispatcher.LocalizedMessage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,6 +207,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
         
+        // Reject empty files (0 bytes) as they are not considered valid uploads
+        if (rejectEmptyFile(item.getSize(), item.getName(), fieldName)) {
+            return;
+        }
+        
         List<UploadedFile> values = uploadedFiles.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
         if (item.isInMemory()) {
@@ -285,11 +291,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), itemPath);
                     }
-                    if (itemPath != null) {
-                        File itemFile = itemPath.toFile();
-                        if (itemFile.exists() && !itemFile.delete()) {
-                            LOG.warn("There was a problem attempting to delete temporary file: {}", itemPath);
-                        }
+                    if (!Files.deleteIfExists(itemPath)) {
+                        LOG.warn("There was a problem attempting to delete uploaded file: {}", itemPath);
                     }
                 }
             } catch (Exception e) {
@@ -325,13 +328,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Cleaning up {} temporary files created for in-memory uploads", temporaryFiles.size());
         for (File tempFile : temporaryFiles) {
             try {
-                if (tempFile.exists()) {
-                    LOG.debug("Deleting temporary file: {}", tempFile.getAbsolutePath());
-                    if (!tempFile.delete()) {
-                        LOG.warn("There was a problem attempting to delete temporary file: {}", tempFile.getAbsolutePath());
-                    }
-                } else {
-                    LOG.debug("Temporary file already deleted: {}", tempFile.getAbsolutePath());
+                if (!Files.deleteIfExists(tempFile.toPath())) {
+                    LOG.warn("There was a problem attempting to delete temporary file: {}", tempFile.getAbsolutePath());
                 }
             } catch (Exception e) {
                 LOG.warn("Error cleaning up temporary file: {}", tempFile.getAbsolutePath(), e);

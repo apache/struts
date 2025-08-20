@@ -18,7 +18,6 @@
  * under the License.
  */
 -->
-<#--include "/${attributes.templateDir}/css_xhtml/controlheader.ftl" /-->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <label<#rt/>
 <#if attributes.id??>

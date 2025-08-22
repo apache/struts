@@ -53,11 +53,6 @@ public class DefaultCspSettings implements CspSettings {
     protected String cspHeader = CSP_REPORT_HEADER;
 
     @Override
-    public void addCspHeaders(HttpServletResponse response) {
-        throw new UnsupportedOperationException("Unsupported implementation, use #addCspHeaders(HttpServletRequest request, HttpServletResponse response)");
-    }
-
-    @Override
     public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {
         if (isSessionActive(request)) {
             LOG.trace("Session is active, applying CSP settings");

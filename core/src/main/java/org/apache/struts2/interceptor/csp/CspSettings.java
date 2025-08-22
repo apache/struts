@@ -45,11 +45,10 @@ public interface CspSettings {
     String CSP_REPORT_TYPE = "application/csp-report";
 
     /**
-     * @deprecated use {@link #addCspHeaders(HttpServletRequest, HttpServletResponse)} instead
+     * Adds CSP related headers to response based on request state (e.g., if session has been created)
+     * 
+     * @since Struts 6.0.3
      */
-    @Deprecated
-    void addCspHeaders(HttpServletResponse response);
-
     void addCspHeaders(HttpServletRequest request, HttpServletResponse response);
 
     /**

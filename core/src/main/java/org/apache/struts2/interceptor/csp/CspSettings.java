@@ -44,6 +44,11 @@ public interface CspSettings {
     String HTTPS = "https:";
     String CSP_REPORT_TYPE = "application/csp-report";
 
+    /**
+     * Adds CSP related headers to response based on request state (e.g., if session has been created)
+     *
+     * @since Struts 6.0.3
+     */
     void addCspHeaders(HttpServletRequest request, HttpServletResponse response);
 
     /**

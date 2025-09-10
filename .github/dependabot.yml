@@ -8,4 +8,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore: []
+    target-branch: "main"
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "release/struts-6-7-x"

@@ -21,6 +21,7 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -32,6 +33,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
@@ -236,6 +238,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
+
         txtFld.setAccesskey(accesskeyValue);
         txtFld.evaluateParams();
 
@@ -250,6 +254,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
+
         txtFld.addParameter("value", value);
         txtFld.evaluateParams();
 
@@ -338,6 +344,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
+
         txtFld.setCssClass(cssClass);
         txtFld.evaluateParams();
 
@@ -352,6 +360,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(req);
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
+
         txtFld.setStyle(cssStyle);
         txtFld.evaluateParams();
 
@@ -372,6 +382,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         actionContext.withSession(new SessionMap(req));
 
         DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
+        container.inject(dblSelect);
+
         dblSelect.evaluateParams();
 
         assertEquals(nonceVal, dblSelect.getAttributes().get("nonce"));
@@ -392,9 +404,33 @@ public class UIBeanTest extends StrutsInternalTestCase {
         session.invalidate();
 
         DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
+        container.inject(dblSelect);
+
         dblSelect.evaluateParams();
 
         assertNull(dblSelect.getAttributes().get("nonce"));
+    }
+
+    public void testNonceOfRequestAttribute() {
+        Map<String, String> params = new HashMap<String, String>(){{
+            put(StrutsConstants.STRUTS_CSP_NONCE_SOURCE, "request");
+        }};
+        initDispatcher(params);
+
+        String nonceVal = "r4nd0m";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAttribute("nonce", nonceVal);
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext actionContext = stack.getActionContext();
+        actionContext.withServletRequest(req);
+
+        DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
+        container.inject(dblSelect);
+
+        dblSelect.evaluateParams();
+
+        assertEquals(nonceVal, dblSelect.getAttributes().get("nonce"));
     }
 
     public void testSetNullUiStaticContentPath() {

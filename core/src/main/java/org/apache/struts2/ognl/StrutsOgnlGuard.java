@@ -18,91 +18,76 @@
  */
 package org.apache.struts2.ognl;
 
-import org.apache.struts2.config.ConfigurationException;
-import org.apache.struts2.inject.Inject;
-import ognl.Node;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.apache.struts2.util.TextParseUtil.commaDelimitedStringToSet;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableSet;
+import org.apache.struts2.ognl.OgnlUtil;
+import ognl.Ognl;
+import ognl.OgnlException;
 
 /**
- * The default implementation of {@link OgnlGuard}.
+ * Guards all expressions parsed by Struts Core. It is evaluated by {@link OgnlUtil} immediately after parsing any
+ * expression.
  *
  * @since 6.4.0
  */
-public class StrutsOgnlGuard implements OgnlGuard {
+public interface OgnlGuard {
 
-    private static final Logger LOG = LogManager.getLogger(StrutsOgnlGuard.class);
+    String EXPR_BLOCKED = "_ognl_guard_blocked";
 
-    protected Set<String> excludedNodeTypes = emptySet();
-
-    @Inject(value = StrutsConstants.STRUTS_OGNL_EXCLUDED_NODE_TYPES, required = false)
-    public void useExcludedNodeTypes(String excludedNodeTypes) {
-        Set<String> incomingExcludedNodeTypes = commaDelimitedStringToSet(excludedNodeTypes);
-        validateExcludedNodeTypes(incomingExcludedNodeTypes);
-        Set<String> newExcludeNodeTypes = new HashSet<>(this.excludedNodeTypes);
-        newExcludeNodeTypes.addAll(incomingExcludedNodeTypes);
-        this.excludedNodeTypes = unmodifiableSet(newExcludeNodeTypes);
+    /**
+     * Determines whether an OGNL expression should be blocked based on validation done on both the raw expression and
+     * the parsed tree.
+     *
+     * @param expr OGNL expression
+     * @return whether the expression should be blocked
+     */
+    default boolean isBlocked(String expr) throws OgnlException {
+        return EXPR_BLOCKED.equals(parseExpression(expr));
     }
 
-    protected void validateExcludedNodeTypes(Set<String> incomingExcludedNodeTypes) throws ConfigurationException {
-        for (String excludedNodeType : incomingExcludedNodeTypes) {
-            try {
-                if (!Node.class.isAssignableFrom(Class.forName(excludedNodeType))) {
-                    throw new ConfigurationException("Excluded node type [" + excludedNodeType + "] is not a subclass of " + Node.class.getName());
-                }
-            } catch (ClassNotFoundException e) {
-                throw new ConfigurationException("Excluded node type [" + excludedNodeType + "] does not exist or cannot be loaded");
-            }
+    /**
+     * Parses an OGNL expression and returns the resulting tree only if the expression is not blocked as per defined
+     * validation rules in {@link #isRawExpressionBlocked} and {@link #isParsedTreeBlocked}.
+     *
+     * @param expr OGNL expression
+     * @return parsed expression or {@link #EXPR_BLOCKED} if the expression should be blocked
+     */
+    default Object parseExpression(String expr) throws OgnlException {
+        if (isRawExpressionBlocked(expr)) {
+            return EXPR_BLOCKED;
         }
-    }
-
-    @Override
-    public boolean isRawExpressionBlocked(String expr) {
-        return false;
-    }
-
-    @Override
-    public boolean isParsedTreeBlocked(Object tree) {
-        if (!(tree instanceof Node) || skipTreeCheck((Node) tree)) {
-            return false;
+        Object tree = Ognl.parseExpression(expr);
+        if (isParsedTreeBlocked(tree)) {
+            return EXPR_BLOCKED;
         }
-        return recurseNodes((Node) tree);
+        return tree;
     }
 
-    protected boolean skipTreeCheck(Node tree) {
-        return excludedNodeTypes.isEmpty();
+    /**
+     * Determines whether an OGNL expression should be blocked based on validation done on only the raw expression,
+     * without parsing the tree.
+     *
+     * @param expr OGNL expression
+     * @return whether the expression should be blocked
+     */
+    /**
+     * Determines whether the OGNL expression is blocked based on the raw string.
+     * By default blocks any expression except simple attribute/bean property lookups
+     * (alphanumeric and underscores only, no symbols, dots, method calls, array access, etc).
+     * Override this for stricter/looser heuristics.
+     *
+     * @param expr OGNL expression
+     */
+    default boolean isRawExpressionBlocked(String expr) {
+        // Only allow bare property names: a-z, A-Z, 0-9, and _
+        if (expr == null) return true; // Block null
+        // Disallow everything except [a-zA-Z0-9_]+ (no expressions containing dots, parentheses, etc)
+        return !expr.matches("^[a-zA-Z0-9_]+$");
     }
 
-    protected boolean recurseNodes(Node node) {
-        if (checkNode(node)) {
-            return true;
-        }
-        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            if (recurseNodes(node.jjtGetChild(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean checkNode(Node node) {
-        return containsExcludedNodeType(node);
-    }
-
-    protected boolean containsExcludedNodeType(Node node) {
-        String nodeClassName = node.getClass().getName();
-        if (excludedNodeTypes.contains(nodeClassName)) {
-            LOG.warn("Expression contains blocked node type [{}]", nodeClassName);
-            return true;
-        }
-        return false;
-    }
+    /**
+     * Determines whether a parsed OGNL tree should be blocked based on some validation rules.
+     *
+     * @param tree parsed OGNL tree
+     * @return whether the parsed tree should be blocked
+     */
+    boolean isParsedTreeBlocked(Object tree);
 }

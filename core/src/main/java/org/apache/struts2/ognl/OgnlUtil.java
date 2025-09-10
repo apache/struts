@@ -417,6 +417,10 @@ public class OgnlUtil {
     }
 
     private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
+        // Validate before parse/evaluation
+        if (ognlGuard.isRawExpressionBlocked(expr)) {
+            throw new OgnlException("Blocked potentially unsafe OGNL expression: " + expr);
+        }
         Object tree = toTree(expr);
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);

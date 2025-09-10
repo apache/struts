@@ -117,7 +117,7 @@
         <jackson.version>2.19.1</jackson.version>
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.5</jaxb-impl.version>
-        <log4j2.version>2.24.3</log4j2.version>
+        <log4j2.version>2.25.1</log4j2.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
         <mockito.version>5.15.2</mockito.version>
         <ognl.version>3.3.5</ognl.version>

@@ -282,18 +282,15 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.15</version>
+                    <version>0.16.1</version>
                     <configuration>
                         <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
                         <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
-                        <licenses>
-                            <license implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
-                        </licenses>
-                        <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
-                        </licenseFamilies>
+                        <approvedLicenses>
+                            <approvedLicense>AL</approvedLicense>
+                        </approvedLicenses>
                         <includes>
                             <include>pom.xml</include>
                             <include>src/**</include>

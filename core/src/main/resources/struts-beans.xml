@@ -265,4 +265,7 @@
     <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" name="struts"
           class="org.apache.struts2.interceptor.exec.StrutsExecutorProvider"/>
 
+    <bean type="org.apache.struts2.interceptor.csp.CspNonceReader" name="struts"
+          class="org.apache.struts2.interceptor.csp.StrutsCspNonceReader"/>
+
 </struts>

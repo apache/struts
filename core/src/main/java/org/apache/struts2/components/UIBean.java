@@ -36,6 +36,7 @@ import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.dispatcher.AttributeMap;
 import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.interceptor.csp.CspNonceReader;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -528,6 +529,8 @@ public abstract class UIBean extends Component {
 
     protected TemplateEngineManager templateEngineManager;
 
+    protected CspNonceReader cspNonceReader;
+
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
@@ -551,6 +554,11 @@ public abstract class UIBean extends Component {
     @Inject
     public void setTemplateEngineManager(TemplateEngineManager mgr) {
         this.templateEngineManager = mgr;
+    }
+
+    @Inject
+    public void setCspNonceReader(CspNonceReader cspNonceReader) {
+        this.cspNonceReader = cspNonceReader;
     }
 
     @Override
@@ -886,13 +894,12 @@ public abstract class UIBean extends Component {
         }
 
         // to be used with the CSP interceptor - adds the nonce value as a parameter to be accessed from ftl files
-        HttpSession session = stack.getActionContext().getServletRequest().getSession(false);
-        Object nonceValue = session != null ? session.getAttribute("nonce") : null;
+        CspNonceReader.NonceValue nonceValue = cspNonceReader.readNonceValue(stack);
 
-        if (nonceValue != null) {
-            addParameter("nonce", nonceValue.toString());
+        if (nonceValue.isNonceValueSet()) {
+            addParameter("nonce", nonceValue.getNonceValue());
         } else {
-            LOG.debug("Session is not active, cannot obtain nonce value");
+            LOG.debug("Nonce not defined in: {}", nonceValue.getSource());
         }
 
         evaluateExtraParams();

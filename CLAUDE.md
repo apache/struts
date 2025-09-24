@@ -1,12 +1,73 @@
-# Claude Code Best Practices for Apache Struts
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 This document outlines essential practices for working with Claude Code on the Apache Struts project, based on security improvements and testing implementations.
 
-## Project Context
-- **Framework**: Apache Struts 2 (Java-based web framework)
-- **Technology Stack**: Jakarta EE, Maven, Java 17
-- **Key Libraries**: OGNL, Commons FileUpload2, Log4j2, JUnit, AssertJ
-- **Build System**: Maven with standard lifecycle
+## Project Overview
+
+Apache Struts is a mature MVC web application framework for Java, originally based on WebWork 2. The project follows a modular architecture with clear separation between core framework, plugins, and applications.
+
+### Build System & Environment
+- **Build Tool**: Maven with multi-module structure
+- **Java Version**: Java 17+
+- **Testing**: JUnit 5 with AssertJ assertions
+- **IDE Support**: IntelliJ IDEA with project-specific configurations
+
+### Key Build Commands
+```bash
+# Full build with tests
+mvn clean install
+
+# Run tests only (skip assembly to avoid docs/examples ZIP creation)
+mvn test -DskipAssembly
+
+# Run specific test class
+mvn test -Dtest=ClassName
+
+# Run tests matching pattern
+mvn test -Dtest=*Pattern*Test
+
+# Build without running tests
+mvn clean install -DskipTests
+
+# Generate site documentation
+mvn site
+```
+
+### Project Structure
+```
+struts/
+├── core/           # Core framework (struts2-core)
+├── plugins/        # Plugin modules (tiles, json, etc.)
+├── apps/          # Sample applications (showcase, rest-showcase)
+├── assembly/      # Distribution packaging
+├── bom/           # Bill of Materials for dependency management
+├── parent/        # Parent POM with shared configuration
+└── jakarta/       # Jakarta EE compatibility modules
+```
+
+### Core Architecture Components
+
+#### MVC Framework Components
+- **ActionSupport**: Base class for actions with validation and internationalization
+- **ActionContext**: Thread-local context holding request/response data
+- **ActionProxy/ActionInvocation**: Handles action execution lifecycle
+- **Dispatcher**: Core request dispatcher and framework initialization
+- **Interceptors**: Cross-cutting concerns (validation, file upload, security)
+
+#### Key Packages
+- `org.apache.struts2.dispatcher`: Request handling and context management
+- `org.apache.struts2.interceptor`: Interceptor implementations
+- `org.apache.struts2.components`: UI component system
+- `org.apache.struts2.views`: View technologies (JSP, FreeMarker, Velocity)
+- `org.apache.struts2.security`: Security-related utilities
+
+### Technology Stack
+- **Jakarta EE**: Servlet API, JSP, JSTL
+- **Core Libraries**: OGNL (expression language), Commons FileUpload2, Log4j2
+- **Template Engines**: FreeMarker, Velocity (via plugins)
+- **Build Dependencies**: Maven, various plugins for assembly and site generation
 
 ## Security-First Development
 

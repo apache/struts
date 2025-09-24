@@ -48,4 +48,4 @@ test-output
 .tidelift
 
 # Claude Code local settings
-.claude/
+.claude/settings.local.json

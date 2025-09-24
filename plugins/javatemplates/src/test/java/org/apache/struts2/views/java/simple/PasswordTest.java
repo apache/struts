@@ -22,15 +22,14 @@ package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.components.Password;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.interceptor.csp.CspNonceSource;
+import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
 public class PasswordTest extends AbstractCommonAttributesTest {
 
     private Password tag;
 
     public void testRenderPassword() throws Exception {
-        super.setUp();
-        this.tag = new Password(stack, request, response);
-
         tag.setName("name");
         tag.setValue("val1");
         tag.setSize("10");
@@ -51,9 +50,6 @@ public class PasswordTest extends AbstractCommonAttributesTest {
     }
 
     public void testRenderPasswordShowIt() throws Exception {
-        super.setUp();
-        this.tag = new Password(stack, request, response);
-
         tag.setName("name");
         tag.setValue("val1");
         tag.setSize("10");
@@ -75,7 +71,9 @@ public class PasswordTest extends AbstractCommonAttributesTest {
 
     @Override
     protected void setUp() throws Exception {
-        //dont call base setup
+        super.setUp();
+        this.tag = new Password(stack, request, response);
+        this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
     }
 
     @Override
@@ -85,8 +83,6 @@ public class PasswordTest extends AbstractCommonAttributesTest {
 
     @Override
     protected UIBean getUIBean() throws Exception {
-        super.setUp();
-        this.tag = new Password(stack, request, response);
         return tag;
     }
 

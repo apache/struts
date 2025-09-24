@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:apache.org)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:issues.apache.org)",
+      "WebFetch(domain:freemarker.apache.org)",
+      "Bash(mvn:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "mcp__jetbrains"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

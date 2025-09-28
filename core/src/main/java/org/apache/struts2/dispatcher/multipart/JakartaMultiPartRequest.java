@@ -291,7 +291,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Cleaning up disk item: {} at {}", normalizeSpace(item.getFieldName()), itemPath);
                     }
-                    if (!Files.deleteIfExists(itemPath)) {
+                    if (Files.exists(itemPath) && !Files.deleteIfExists(itemPath)) {
                         LOG.warn("There was a problem attempting to delete uploaded file: {}", itemPath);
                     }
                 }
@@ -328,7 +328,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Cleaning up {} temporary files created for in-memory uploads", temporaryFiles.size());
         for (File tempFile : temporaryFiles) {
             try {
-                if (!Files.deleteIfExists(tempFile.toPath())) {
+                if (Files.exists(tempFile.toPath()) && !Files.deleteIfExists(tempFile.toPath())) {
                     LOG.warn("There was a problem attempting to delete temporary file: {}", tempFile.getAbsolutePath());
                 }
             } catch (Exception e) {

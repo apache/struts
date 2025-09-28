@@ -236,7 +236,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         // Reject empty files (0 bytes) as they are not considered valid uploads
         if (rejectEmptyFile(file.length(), fileItemInput.getName(), fileItemInput.getFieldName())) {
             // Clean up the empty temporary file
-            if (!Files.deleteIfExists(file.toPath())) {
+            if (Files.exists(file.toPath()) && !Files.deleteIfExists(file.toPath())) {
                 LOG.warn("Failed to delete empty temporary file: {}", file.getAbsolutePath());
             }
             return;

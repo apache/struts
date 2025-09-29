@@ -1092,7 +1092,7 @@
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jsp-2.1</artifactId>
-                <version>6.1.26</version>
+                <version>7.0.0pre2</version>
             </dependency>
 
             <!-- Portlet -->

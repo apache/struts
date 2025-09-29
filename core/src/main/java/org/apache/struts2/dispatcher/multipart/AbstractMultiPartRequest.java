@@ -38,6 +38,7 @@ import org.apache.struts2.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -481,4 +482,18 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         }
     }
 
+    /**
+     * Delete file if exists, reports warning if file cannot be deleted
+     * 
+     * @param filePath a file to delete
+     */
+    protected void deleteFile(Path filePath) {
+        if (Files.exists(filePath)) {
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                LOG.warn("Failed to delete file: {}", filePath, e);
+            }
+        }
+    }
 }

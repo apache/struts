@@ -7,8 +7,13 @@
       "WebFetch(domain:issues.apache.org)",
       "WebFetch(domain:freemarker.apache.org)",
       "Bash(mvn:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*",
+      "Bash(git push:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
+      "Bash(gh pr create:*",
       "mcp__jetbrains"
     ],
     "deny": [],

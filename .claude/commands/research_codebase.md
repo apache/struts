@@ -57,15 +57,15 @@ Then wait for the user's research query.
    - Use thoughts/ findings as supplementary historical context
    - Connect findings across different components
    - Include specific file paths and line numbers for reference
-   - Verify all thoughts/ paths are correct (e.g., thoughts/allison/ not thoughts/shared/ for personal files)
+   - Verify all thoughts/ paths are correct (e.g., thoughts/$USER/ not thoughts/shared/ for personal files)
    - Highlight patterns, connections, and architectural decisions
    - Answer the user's specific questions with concrete evidence
 
 5. **Gather metadata for the research document:**
    - Filename: `thoughts/shared/research/YYYY-MM-DD-WW-XXXX-description.md`
-     - Format: `YYYY-MM-DD-ENG-XXXX-description.md` where:
+     - Format: `YYYY-MM-DD-WW-XXXX-description.md` where:
        - YYYY-MM-DD is today's date
-       - WW-XXXX is the ticket number (omit if no ticket)
+       - WW-XXXX is the Apache Struts JIRA ticket number (omit if no ticket)
        - description is a brief kebab-case description of the research topic
      - Examples:
        - With ticket: `2025-01-08-WW-1478-parent-child-tracking.md`
@@ -112,7 +112,7 @@ Then wait for the user's research query.
      ## Historical Context (from thoughts/)
      [Relevant insights from thoughts/ directory with references]
      - `thoughts/shared/something.md` - Historical decision about X
-     - `thoughts/local/notes.md` - Past exploration of Y
+     - `thoughts/$USER/notes.md` - Past exploration of Y
      Note: Paths exclude "searchable/" even if found there
 
      ## Related Research
@@ -154,6 +154,9 @@ Then wait for the user's research query.
 - Keep the main agent focused on synthesis, not deep file reading
 - Encourage sub-agents to find examples and usage patterns, not just definitions
 - Explore all of thoughts/ directory, not just research subdirectory
+- **Apache Struts specific**: Consider Maven modules (`/core/`, `/plugins/`, `/apps/`, `/jakarta/`)
+- **Security focus**: Always analyze OGNL usage patterns and potential CVE-related issues
+- **Testing patterns**: Use `mvn test -DskipAssembly` for running tests efficiently
 - **File reading**: Always read mentioned files FULLY (no limit/offset) before spawning sub-tasks
 - **Critical ordering**: Follow the numbered steps exactly
   - ALWAYS read mentioned files first before spawning sub-tasks (step 1)
@@ -163,10 +166,10 @@ Then wait for the user's research query.
 - **Path handling**: The thoughts/searchable/ directory contains hard links for searching
   - Always document paths by removing ONLY "searchable/" - preserve all other subdirectories
   - Examples of correct transformations:
-    - `thoughts/searchable/allison/old_stuff/notes.md` → `thoughts/allison/old_stuff/notes.md`
-    - `thoughts/searchable/shared/prs/123.md` → `thoughts/shared/prs/123.md`
+    - `thoughts/searchable/$USER/old_stuff/notes.md` → `thoughts/$USER/old_stuff/notes.md`
+    - `thoughts/searchable/shared/prs/WW-123.md` → `thoughts/shared/prs/WW-123.md`
     - `thoughts/searchable/global/shared/templates.md` → `thoughts/global/shared/templates.md`
-  - NEVER change allison/ to shared/ or vice versa - preserve the exact directory structure
+  - NEVER change $USER/ to shared/ or vice versa - preserve the exact directory structure
   - This ensures paths are correct for editing and navigation
 - **Frontmatter consistency**:
   - Always include frontmatter at the beginning of research documents

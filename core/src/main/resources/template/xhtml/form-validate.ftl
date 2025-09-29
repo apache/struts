@@ -19,10 +19,10 @@
  */
 -->
 <#if attributes.validate!false == true>
-	<@s.script src="${base}${attributes.staticContentPath}/xhtml/validation.js" />
-	<#if attributes.onsubmit??>
-		${tag.addParameter('onsubmit', "${attributes.onsubmit}; return validateForm_${attributes.escapedId}();")}
-	<#else>
-		${tag.addParameter('onsubmit', "return validateForm_${attributes.escapedId}();")}
-	</#if>
+<@s.script src="${base}${attributes.staticContentPath}/xhtml/validation.js" />
+<#if attributes.onsubmit??>
+    ${tag.addParameter('onsubmit', "${attributes.onsubmit}; return validateForm_${attributes.escapedId}();")}
+<#else>
+    ${tag.addParameter('onsubmit', "return validateForm_${attributes.escapedId}();")}
+</#if>
 </#if>

@@ -4,6 +4,7 @@
       "WebSearch",
       "WebFetch(domain:apache.org)",
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:issues.apache.org)",
       "WebFetch(domain:freemarker.apache.org)",
       "Bash(mvn:*)",

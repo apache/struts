@@ -70,22 +70,14 @@ public class InterceptorBuilder {
             throw new ConfigurationException("Unable to find interceptor class referenced by ref-name " + refName, location);
         } else {
             if (referencedConfig instanceof InterceptorConfig config) {
-                try {
-                    Interceptor inter = objectFactory.buildInterceptor(config, refParams);
-                    result.add(new InterceptorMapping(refName, inter, refParams));
-                } catch (ConfigurationException ex) {
-              	    LOG.warn(new ParameterizedMessage("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
-                            config.getClassName(), ex.getLocation(), config.getName()), ex);
-                }
-
+                Interceptor inter = objectFactory.buildInterceptor(config, refParams);
+                result.add(new InterceptorMapping(refName, inter, refParams));
             } else if (referencedConfig instanceof InterceptorStackConfig stackConfig) {
-
                 if (refParams != null && !refParams.isEmpty()) {
                     result = constructParameterizedInterceptorReferences(interceptorLocator, stackConfig, refParams, objectFactory);
                 } else {
                     result.addAll(stackConfig.getInterceptors());
                 }
-
             } else {
                 LOG.error("Got unexpected type for interceptor {}. Got {}", refName, referencedConfig);
             }

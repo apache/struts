@@ -20,7 +20,9 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.RuntimeConfiguration;
+import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.InterceptorStackConfig;
@@ -158,7 +160,7 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         // Ensure we're using the specific test configuration, not the default simple configuration.
         XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("struts-testing.xml");
         container.inject(configurationProvider);
-        loadConfigurationProviders(configurationProvider);
+        loadConfigurationProviders(configurationProvider, new DefaultPropertiesProvider(), new StrutsBeanSelectionProvider());
 
         // The test configuration in "struts-testing.xml" should define a "default" package.  That "default" package should contain a "defaultInterceptorStack" containing
         // a "fetchMetadata" interceptor parameter "fetchMetadata.setExemptedPaths".  If the parameter method injection is working correctly for the FetchMetadataInterceptor,

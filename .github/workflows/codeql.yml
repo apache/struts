@@ -52,12 +52,12 @@ jobs:
         java-version: 17
         cache: 'maven'
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3.30.5
+      uses: github/codeql-action/init@v3.30.6
       with:
         languages: ${{ matrix.language }}
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v3.30.5
+      uses: github/codeql-action/autobuild@v3.30.6
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3.30.5
+      uses: github/codeql-action/analyze@v3.30.6
       with:
         category: "/language:${{matrix.language}}"

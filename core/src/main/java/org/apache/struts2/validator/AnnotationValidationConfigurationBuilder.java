@@ -312,6 +312,24 @@ public class AnnotationValidationConfigurationBuilder {
                 }
             }
         }
+        DoubleRangeFieldValidator[] doublerfv = validations.doubleRangeFields();
+        if (doublerfv != null) {
+            for (DoubleRangeFieldValidator v : doublerfv) {
+                ValidatorConfig temp = processDoubleRangeFieldValidatorAnnotation(v, fieldName, methodName);
+                if (temp != null) {
+                    result.add(temp);
+                }
+            }
+        }
+        ShortRangeFieldValidator[] shortfv = validations.shortRangeFields();
+        if (shortfv != null) {
+            for (ShortRangeFieldValidator v : shortfv) {
+                ValidatorConfig temp = processShortRangeFieldValidatorAnnotation(v, fieldName, methodName);
+                if (temp != null) {
+                    result.add(temp);
+                }
+            }
+        }
         RegexFieldValidator[] rfv = validations.regexFields();
         if (rfv != null) {
             for (RegexFieldValidator v : rfv) {
@@ -567,7 +585,7 @@ public class AnnotationValidationConfigurationBuilder {
         if (StringUtils.isNotEmpty(v.minLengthExpression())) {
             params.put("minLengthExpression", v.minLengthExpression());
         }
-        if (StringUtils.isNotEmpty(v.trimExpression())){
+        if (StringUtils.isNotEmpty(v.trimExpression())) {
             params.put("trimExpression", v.trimExpression());
         } else {
             params.put("trim", String.valueOf(v.trim()));

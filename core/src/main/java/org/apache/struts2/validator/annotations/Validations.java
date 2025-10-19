@@ -29,13 +29,13 @@ import java.lang.annotation.Target;
  * <!-- END SNIPPET: description -->
  *
  * <p><u>Annotation usage:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: usage -->
  * <p>Used at METHOD level.</p>
  * <!-- END SNIPPET: usage -->
  *
  * <p><u>Annotation parameters:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: parameters -->
  * <table class='confluenceTable' summary=''>
  *
@@ -80,6 +80,21 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> intRangeFields </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'> Add list of IntRangeFieldValidators </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> longRangeFields </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'> Add list of LongRangeFieldValidators </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> doubleRangeFields </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'> Add list of DoubleRangeFieldValidators </td>
+ * </tr>
+ * <tr>
+ * <td class='confluenceTd'> shortRangeFields </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'> Add list of ShortRangeFieldValidators </td>
  * </tr>
  * <tr>
  * <td class='confluenceTd'> requiredStrings </td>
@@ -133,6 +148,8 @@ import java.lang.annotation.Target;
  *                   { &#64;IntRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "intfield", min = "6", max = "10", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
  *           longRangeFields =
  *                   { &#64;LongRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "intfield", min = "6", max = "10", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
+ *           doubleRangeFields =
+ *                   { &#64;DoubleRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "doublefield", minInclusive = "0.01", maxInclusive = "999.99", message = "bar must be between ${minInclusive} and ${maxInclusive}, current value is ${bar}.")},
  *           shortRangeFields =
  *                   { &#64;ShortRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "shortfield", min = "1", max = "128", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
  *           dateRangeFields =
@@ -154,7 +171,7 @@ import java.lang.annotation.Target;
  * @author jepjep
  * @author Rainer Hermanns
  */
-@Target( { ElementType.METHOD, ElementType.TYPE })
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Validations {
 
@@ -178,6 +195,10 @@ public @interface Validations {
     IntRangeFieldValidator[] intRangeFields() default {};
 
     LongRangeFieldValidator[] longRangeFields() default {};
+
+    DoubleRangeFieldValidator[] doubleRangeFields() default {};
+
+    ShortRangeFieldValidator[] shortRangeFields() default {};
 
     RequiredFieldValidator[] requiredFields() default {};
 

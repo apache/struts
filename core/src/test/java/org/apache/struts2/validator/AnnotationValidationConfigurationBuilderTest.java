@@ -310,6 +310,51 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
     }
 
+    public void testValidationsContainerWithRangeValidators() throws Exception {
+        // given
+        AnnotationActionValidatorManager manager = createValidationManager( AnnotationValidationsContainerAction.class, Locale.US);
+
+        // when
+        List<Validator> validators = manager.getValidators(AnnotationValidationsContainerAction.class, null);
+
+        // then
+        assertEquals(4, validators.size());
+
+        int doubleValidators = 0;
+        int shortValidators = 0;
+
+        for (Validator validator : validators) {
+            if (validator.getValidatorType().equals("double")) {
+                DoubleRangeFieldValidator drfv = (DoubleRangeFieldValidator) validator;
+                doubleValidators++;
+                if ("price".equals(drfv.getFieldName())) {
+                    assertEquals(0.01, drfv.getMinInclusive());
+                    assertEquals(999999.99, drfv.getMaxInclusive());
+                    assertEquals("Price must be between 0.01 and 999999.99", drfv.getDefaultMessage());
+                } else if ("discount".equals(drfv.getFieldName())) {
+                    assertEquals(0.0, drfv.getMinInclusive());
+                    assertEquals(100.0, drfv.getMaxInclusive());
+                    assertEquals("Discount must be between 0.0 and 100.0", drfv.getDefaultMessage());
+                }
+            } else if (validator.getValidatorType().equals("short")) {
+                ShortRangeFieldValidator srfv = (ShortRangeFieldValidator) validator;
+                shortValidators++;
+                if ("quantity".equals(srfv.getFieldName())) {
+                    assertEquals(Short.valueOf("1"), srfv.getMin());
+                    assertEquals(Short.valueOf("1000"), srfv.getMax());
+                    assertEquals("Quantity must be between 1 and 1000", srfv.getDefaultMessage());
+                } else if ("priority".equals(srfv.getFieldName())) {
+                    assertEquals(Short.valueOf("1"), srfv.getMin());
+                    assertEquals(Short.valueOf("10"), srfv.getMax());
+                    assertEquals("Priority must be between 1 and 10", srfv.getDefaultMessage());
+                }
+            }
+        }
+
+        assertEquals(2, doubleValidators);
+        assertEquals(2, shortValidators);
+    }
+
     private AnnotationActionValidatorManager createValidationManager(final Class<? extends ActionSupport> actionClass, Locale locale) throws Exception {
         loadConfigurationProviders(new ConfigurationProvider() {
             public void destroy() {

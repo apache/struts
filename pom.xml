@@ -848,7 +848,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-juli</artifactId>
-                <version>8.5.53</version>
+                <version>11.0.13</version>
             </dependency>
 
             <!-- Commons -->

@@ -71,6 +71,79 @@ import java.util.List;
  * a file reference to be set on the action. If none is specified allow all extensions to be uploaded.</li>
  * </ul>
  *
+ * <h3>Dynamic Parameter Evaluation</h3>
+ * <p>
+ * This interceptor implements {@link WithLazyParams}, which enables dynamic parameter evaluation at runtime.
+ * Parameters can use <code>${...}</code> expressions that will be evaluated against the ValueStack for each request,
+ * allowing file upload validation rules to be determined dynamically based on action properties, session data,
+ * or other runtime values.
+ * </p>
+ *
+ * <p><strong>Static configuration example:</strong></p>
+ * <pre>
+ * &lt;action name="upload" class="com.example.UploadAction"&gt;
+ *     &lt;interceptor-ref name="actionFileUpload"&gt;
+ *         &lt;param name="allowedTypes"&gt;image/jpeg,image/png,application/pdf&lt;/param&gt;
+ *         &lt;param name="allowedExtensions"&gt;.jpg,.png,.pdf&lt;/param&gt;
+ *         &lt;param name="maximumSize"&gt;5242880&lt;/param&gt;
+ *     &lt;/interceptor-ref&gt;
+ *     &lt;interceptor-ref name="basicStack"/&gt;
+ * &lt;/action&gt;
+ * </pre>
+ *
+ * <p><strong>Dynamic configuration example:</strong></p>
+ * <pre>
+ * &lt;action name="dynamicUpload" class="com.example.DynamicUploadAction"&gt;
+ *     &lt;interceptor-ref name="actionFileUpload"&gt;
+ *         &lt;param name="allowedTypes"&gt;${uploadConfig.allowedMimeTypes}&lt;/param&gt;
+ *         &lt;param name="allowedExtensions"&gt;${uploadConfig.allowedExtensions}&lt;/param&gt;
+ *         &lt;param name="maximumSize"&gt;${uploadConfig.maxFileSize}&lt;/param&gt;
+ *     &lt;/interceptor-ref&gt;
+ *     &lt;interceptor-ref name="basicStack"/&gt;
+ * &lt;/action&gt;
+ * </pre>
+ *
+ * <p><strong>Action class with dynamic configuration:</strong></p>
+ * <pre>
+ *  package com.example;
+ *
+ *  import org.apache.struts2.ActionSupport;
+ *  import org.apache.struts2.action.UploadedFilesAware;
+ *
+ *  public class DynamicUploadAction extends ActionSupport implements UploadedFilesAware {
+ *    private UploadedFile uploadedFile;
+ *    private UploadConfig uploadConfig;
+ *
+ *    public void prepare() {
+ *        // Load configuration dynamically (from database, properties, etc.)
+ *        uploadConfig = new UploadConfig();
+ *        uploadConfig.setAllowedMimeTypes("image/jpeg,image/png");
+ *        uploadConfig.setAllowedExtensions(".jpg,.png");
+ *        uploadConfig.setMaxFileSize(5242880L);
+ *    }
+ *
+ *    &#064;Override
+ *    public void withUploadedFiles(List&lt;UploadedFile&gt; uploadedFiles) {
+ *        if (!uploadedFiles.isEmpty()) {
+ *            this.uploadedFile = uploadedFiles.get(0);
+ *        }
+ *    }
+ *
+ *    public UploadConfig getUploadConfig() {
+ *        return uploadConfig;
+ *    }
+ *
+ *    public String execute() {
+ *       //...
+ *       return SUCCESS;
+ *    }
+ *  }
+ * </pre>
+ *
+ * <p><strong>Performance Note:</strong> When using dynamic parameters with <code>${...}</code> expressions,
+ * parameters are evaluated for each request. For static validation rules, use literal values for better performance.
+ * </p>
+ *
  * <p>Example code:</p>
  *
  * <pre>
@@ -124,8 +197,12 @@ import java.util.List;
  *    }
  *  }
  * </pre>
+ *
+ * @see WithLazyParams
+ * @see UploadedFilesAware
+ * @see AbstractFileUploadInterceptor
  */
-public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
+public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor implements WithLazyParams {
 
     protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 

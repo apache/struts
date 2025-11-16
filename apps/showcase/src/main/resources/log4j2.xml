@@ -30,5 +30,8 @@
             <AppenderRef ref="STDOUT"/>
         </Root>
         <Logger name="org.apache.struts2" level="info"/>
+        <Logger name="org.apache.struts2.showcase.fileupload" level="debug"/>
+        <Logger name="org.apache.struts2.inject" level="debug"/>
+        <Logger name="org.apache.struts2.interceptor.ActionFileUploadInterceptor" level="debug"/>
     </Loggers>
 </Configuration>

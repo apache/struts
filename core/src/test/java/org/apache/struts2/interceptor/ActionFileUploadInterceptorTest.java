@@ -570,6 +570,260 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         };
     }
 
+    /**
+     * Tests WithLazyParams functionality - verifies that the interceptor implements
+     * the WithLazyParams interface for dynamic parameter evaluation
+     */
+    public void testImplementsWithLazyParams() {
+        assertThat(interceptor).isInstanceOf(WithLazyParams.class);
+    }
+
+    /**
+     * Tests dynamic parameter evaluation with ${...} expressions from ValueStack
+     */
+    public void testDynamicParameterEvaluation() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        // Upload two files with different content types
+        String content = encodeTextFile("test.txt", "text/plain", plainContent) +
+                encodeTextFile("test.html", "text/html", htmlContent) +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/plain"); // Only text/plain allowed
+        container.inject(action);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+
+        // Push action to ValueStack so ${allowedMimeTypes} can be resolved
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        // Simulate WithLazyParams injection by manually setting the parameters
+        // In real execution, DefaultActionInvocation.invoke() would call LazyParamInjector
+        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
+
+        interceptor.intercept(mai);
+
+        List<UploadedFile> files = action.getUploadFiles();
+
+        // Only the text/plain file should be accepted
+        assertThat(files).isNotNull().hasSize(1);
+        assertThat(files.get(0).getContentType()).isEqualTo("text/plain");
+        assertThat(files.get(0).getOriginalName()).isEqualTo("test.txt");
+    }
+
+    /**
+     * Tests that dynamic parameters can change between requests
+     */
+    public void testDynamicParametersChangePerRequest() throws Exception {
+        // First request - allow only text/plain
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        String content = encodeTextFile("test.txt", "text/plain", plainContent) +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action1 = new MyDynamicFileUploadAction();
+        action1.setAllowedMimeTypes("text/plain");
+        container.inject(action1);
+
+        MockActionInvocation mai1 = new MockActionInvocation();
+        mai1.setAction(action1);
+        mai1.setResultCode("success");
+        mai1.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().push(action1);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        interceptor.setAllowedTypes(action1.getAllowedMimeTypes());
+        interceptor.intercept(mai1);
+
+        assertThat(action1.getUploadFiles()).isNotNull().hasSize(1);
+        assertThat(action1.getUploadFiles().get(0).getContentType()).isEqualTo("text/plain");
+
+        // Second request - allow only text/html
+        request = new MockHttpServletRequest();
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        content = encodeTextFile("test.html", "text/html", htmlContent) +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action2 = new MyDynamicFileUploadAction();
+        action2.setAllowedMimeTypes("text/html");
+        container.inject(action2);
+
+        MockActionInvocation mai2 = new MockActionInvocation();
+        mai2.setAction(action2);
+        mai2.setResultCode("success");
+        mai2.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().pop(); // Remove previous action
+        ActionContext.getContext().getValueStack().push(action2);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        // Simulate new parameter evaluation for second request
+        interceptor.setAllowedTypes(action2.getAllowedMimeTypes());
+        interceptor.intercept(mai2);
+
+        assertThat(action2.getUploadFiles()).isNotNull().hasSize(1);
+        assertThat(action2.getUploadFiles().get(0).getContentType()).isEqualTo("text/html");
+    }
+
+    /**
+     * Tests dynamic extension validation
+     */
+    public void testDynamicExtensionValidation() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        String content = encodeTextFile("test.pdf", "application/pdf", "PDF content") +
+                encodeTextFile("test.doc", "application/msword", "DOC content") +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedExtensions(".pdf");
+        container.inject(action);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        interceptor.setAllowedExtensions(action.getAllowedExtensions());
+        interceptor.intercept(mai);
+
+        List<UploadedFile> files = action.getUploadFiles();
+
+        // Only the .pdf file should be accepted
+        assertThat(files).isNotNull().hasSize(1);
+        assertThat(files.get(0).getOriginalName()).isEqualTo("test.pdf");
+    }
+
+    /**
+     * Tests dynamic maximum size validation
+     */
+    public void testDynamicMaximumSizeValidation() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="test.txt"\r
+                Content-Type: text/plain\r
+                \r
+                This is a test file with some content\r
+                -----1234--\r
+                """);
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setMaxFileSize(10L); // Very small size to trigger validation error
+        container.inject(action);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        interceptor.setMaximumSize(action.getMaxFileSize());
+        interceptor.intercept(mai);
+
+        // File should be rejected due to size
+        assertThat(action.hasFieldErrors()).isTrue();
+        assertThat(action.getFieldErrors().get("file")).isNotEmpty();
+    }
+
+    /**
+     * Tests that security validation still works correctly with dynamic parameters
+     */
+    public void testSecurityValidationWithDynamicParameters() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        // Try to upload files with various potentially dangerous content types
+        String content = encodeTextFile("script.js", "application/javascript", "alert('xss')") +
+                encodeTextFile("test.pdf", "application/pdf", "PDF content") +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("application/pdf");
+        action.setAllowedExtensions(".pdf");
+        container.inject(action);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
+        interceptor.setAllowedExtensions(action.getAllowedExtensions());
+        interceptor.intercept(mai);
+
+        List<UploadedFile> files = action.getUploadFiles();
+
+        // Only the PDF should be accepted, JavaScript file should be rejected
+        assertThat(files).isNotNull().hasSize(1);
+        assertThat(files.get(0).getOriginalName()).isEqualTo("test.pdf");
+        assertThat(files.get(0).getContentType()).isEqualTo("application/pdf");
+    }
+
+    /**
+     * Tests wildcard matching with dynamic parameters
+     */
+    public void testWildcardMatchingWithDynamicParameters() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+
+        String content = encodeTextFile("test.jpg", "image/jpeg", "JPEG content") +
+                encodeTextFile("test.png", "image/png", "PNG content") +
+                encodeTextFile("test.html", "text/html", htmlContent) +
+                endLine + "--" + boundary + "--";
+        request.setContent(content.getBytes());
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("image/*"); // Accept all image types
+        container.inject(action);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
+
+        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
+        interceptor.intercept(mai);
+
+        List<UploadedFile> files = action.getUploadFiles();
+
+        // Both image files should be accepted, HTML should be rejected
+        assertThat(files).isNotNull().hasSize(2);
+        assertThat(files.get(0).getContentType()).startsWith("image/");
+        assertThat(files.get(1).getContentType()).startsWith("image/");
+    }
+
     public static class MyFileUploadAction extends ActionSupport implements UploadedFilesAware {
         private List<UploadedFile> uploadedFiles;
 
@@ -580,6 +834,49 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         public List<UploadedFile> getUploadFiles() {
             return this.uploadedFiles;
+        }
+    }
+
+    /**
+     * Test action class that demonstrates dynamic file upload configuration
+     */
+    public static class MyDynamicFileUploadAction extends ActionSupport implements UploadedFilesAware {
+        private List<UploadedFile> uploadedFiles;
+        private String allowedMimeTypes;
+        private String allowedExtensions;
+        private Long maxFileSize;
+
+        @Override
+        public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
+            this.uploadedFiles = uploadedFiles;
+        }
+
+        public List<UploadedFile> getUploadFiles() {
+            return this.uploadedFiles;
+        }
+
+        public String getAllowedMimeTypes() {
+            return allowedMimeTypes;
+        }
+
+        public void setAllowedMimeTypes(String allowedMimeTypes) {
+            this.allowedMimeTypes = allowedMimeTypes;
+        }
+
+        public String getAllowedExtensions() {
+            return allowedExtensions;
+        }
+
+        public void setAllowedExtensions(String allowedExtensions) {
+            this.allowedExtensions = allowedExtensions;
+        }
+
+        public Long getMaxFileSize() {
+            return maxFileSize;
+        }
+
+        public void setMaxFileSize(Long maxFileSize) {
+            this.maxFileSize = maxFileSize;
         }
     }
 

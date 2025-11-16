@@ -45,7 +45,7 @@
         </action>
 
         <action name="ExceptionFoo" class="org.apache.struts2.SimpleAction" method="exceptionMethod">
-            <result name="exceptionHandled" type="void" />
+            <result name="exceptionHandled" type="void"/>
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
         </action>
@@ -56,77 +56,86 @@
         </action>
 
         <action name="LazyFoo" class="org.apache.struts2.SimpleAction">
-          <result name="error" type="void" />
-          <interceptor-ref name="params"/>
-          <interceptor-ref name="lazy">
-            <param name="foo">${blah}</param>
-          </interceptor-ref>
+            <result name="error" type="void"/>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="lazy">
+                <param name="foo">${blah}</param>
+            </interceptor-ref>
+        </action>
+
+        <action name="LazyFooWithStackParams" class="org.apache.struts2.SimpleAction">
+            <result name="error" type="void"/>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="lazy">
+                <param name="foo">${blah}</param>
+                <param name="bar">static value</param>
+            </interceptor-ref>
         </action>
 
         <action name="WildCard" class="org.apache.struts2.SimpleAction">
             <param name="foo">17</param>
             <param name="bar">23</param>
-            <result name="success" type="void" />
-            <result name="*" type="mock" />
+            <result name="success" type="void"/>
+            <result name="*" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="WildCardInput" class="org.apache.struts2.SimpleAction" method="input">
             <param name="foo">17</param>
             <param name="bar">23</param>
-            <result name="success" type="void" />
-            <result name="*" type="mock" />
+            <result name="success" type="void"/>
+            <result name="*" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="WildCardError" class="org.apache.struts2.SimpleAction">
-            <result name="success" type="void" />
-            <result name="*" type="mock" />
+            <result name="success" type="void"/>
+            <result name="*" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
-		<action name="WildCard/*/*" class="org.apache.struts2.{1}Action"
-			method="{2}">
+        <action name="WildCard/*/*" class="org.apache.struts2.{1}Action"
+                method="{2}">
             <param name="foo">{1}</param>
             <param name="bar">{2}</param>
-            <result name="success" type="void" />
+            <result name="success" type="void"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="aliasTest" class="org.apache.struts2.SimpleAction">
-           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz", "notExisting":"blah" }</param>
-			<interceptor-ref name="params"/>
-         	<interceptor-ref name="alias"/>
-         	<result name="success" type="mock" />
+            <param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz", "notExisting":"blah" }</param>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="alias"/>
+            <result name="success" type="mock"/>
         </action>
 
         <action name="dynamicAliasTest" class="org.apache.struts2.SimpleAction">
             <param name="aliases">#{ #parameters['name'] : #parameters['value'] }</param>
             <interceptor-ref name="params"/>
             <interceptor-ref name="alias"/>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
         </action>
 
         <action name="packagelessAction" class="PackagelessAction">
         </action>
 
         <action name="Bar" class="org.apache.struts2.SimpleAction">
-        	<param name="foo">17</param>
+            <param name="foo">17</param>
             <param name="bar">23</param>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
 
         <action name="MyBean" class="org.apache.struts2.util.MyBeanAction">
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
         </action>
 
         <action name="TestInterceptorParam" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="expectedFoo">expectedFoo</param>
             </interceptor-ref>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
 
         <action name="TestInterceptorParamOverride" class="org.apache.struts2.SimpleAction">
@@ -134,18 +143,18 @@
                 <param name="foo">foo123</param>
                 <param name="expectedFoo">foo123</param>
             </interceptor-ref>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
 
         <action name="TestModelDrivenValidation" class="org.apache.struts2.ModelDrivenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="validation"/>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
         </action>
 
         <!-- chain resursion detection -->
         <action name="InfiniteRecursionChain" class="org.apache.struts2.ActionSupport">
-                <result name="success" type="chain">InfiniteRecursionChain</result>
+            <result name="success" type="chain">InfiniteRecursionChain</result>
         </action>
         <action name="chain_with_namespace" class="org.apache.struts2.SimpleAction">
             <result name="error" type="chain">
@@ -163,9 +172,9 @@
             <interceptor-ref name="defaultStack"/>
         </action>
 
-   </package>
+    </package>
 
-   <package name="bar" extends="default" namespace="/foo/bar">
+    <package name="bar" extends="default" namespace="/foo/bar">
         <interceptors>
             <interceptor-stack name="barDefaultStack">
                 <interceptor-ref name="debugStack"/>
@@ -179,14 +188,14 @@
 
         <action name="Bar" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="barDefaultStack"/>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
 
         <action name="TestInterceptorParamInheritance" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="expectedFoo">expectedFoo</param>
             </interceptor-ref>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
 
         <action name="TestInterceptorParamInehritanceOverride" class="org.apache.struts2.SimpleAction">
@@ -194,7 +203,7 @@
                 <param name="foo">foo123</param>
                 <param name="expectedFoo">foo123</param>
             </interceptor-ref>
-            <result name="error" type="mock" />
+            <result name="error" type="mock"/>
         </action>
     </package>
 
@@ -210,7 +219,7 @@
             <result name="error" type="chain">
                 <param name="actionName">bar</param>
             </result>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="staticParams"/>
         </action>
         <action name="myCommand" class="org.apache.struts2.SimpleAction" method="commandMethod">
@@ -222,10 +231,10 @@
             <interceptor-ref name="logger"/>
         </action>
         <action name="doMethodTest" class="org.apache.struts2.SimpleAction" method="input">
-            <result name="input" type="mock" />
+            <result name="input" type="mock"/>
         </action>
         <action name="unknownMethodTest" class="org.apache.struts2.SimpleAction">
-            <result name="found" type="mock" />
+            <result name="found" type="mock"/>
         </action>
         <action name="resultAction" class="org.apache.struts2.SimpleAction" method="resultAction">
             <param name="bar">456</param>
@@ -238,7 +247,7 @@
 
     <package name="wildcardNamespaces" extends="default" namespace="/animals/*">
         <action name="commandTest" class="org.apache.struts2.SimpleAction">
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="staticParams"/>
         </action>
     </package>
@@ -253,47 +262,47 @@
     </package>
 
 
-	<package name="Abstract-crud" extends="default">
-  	<!--  edit is often used as the create/view -->
-  			   <default-class-ref class="org.apache.struts2.SimpleAction"/>
-                <action name="edit" >
-                        <result name="input" type="mock">edit.vm</result>
-                        <result name="success" type="mock">edit.vm</result>
-                        <result name="error" type="mock">edit.vm</result>
-                </action>
-                <action name="save" >
-                        <result name="input" type="mock">edit.vm</result>
-                        <result name="success" type="chain">list</result>
-                        <result name="error" type="mock">edit.vm</result>
-                        <result name="cancel" type="mock">list.action</result>
-                </action>
-                <action name="list">
-                        <result name="success" type="mock">list</result>
-                </action>
-                <action name="delete">
-                        <result name="success" type="mock">list</result>
-                </action>
+    <package name="Abstract-crud" extends="default">
+        <!--  edit is often used as the create/view -->
+        <default-class-ref class="org.apache.struts2.SimpleAction"/>
+        <action name="edit">
+            <result name="input" type="mock">edit.vm</result>
+            <result name="success" type="mock">edit.vm</result>
+            <result name="error" type="mock">edit.vm</result>
+        </action>
+        <action name="save">
+            <result name="input" type="mock">edit.vm</result>
+            <result name="success" type="chain">list</result>
+            <result name="error" type="mock">edit.vm</result>
+            <result name="cancel" type="mock">list.action</result>
+        </action>
+        <action name="list">
+            <result name="success" type="mock">list</result>
+        </action>
+        <action name="delete">
+            <result name="success" type="mock">list</result>
+        </action>
 
-        </package>
+    </package>
 
-        <package name="Example" extends="Abstract-crud" namespace="/example">
-                 <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
-        </package>
+    <package name="Example" extends="Abstract-crud" namespace="/example">
+        <default-class-ref class="org.apache.struts2.ModelDrivenAction"/>
+    </package>
 
-        <package name="Example2" extends="Abstract-crud" namespace="/example2">
-                <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
-                <action name="override">
-                        <result name="success" type="mock">somethingelse.vm</result>
-                </action>
-        </package>
+    <package name="Example2" extends="Abstract-crud" namespace="/example2">
+        <default-class-ref class="org.apache.struts2.ModelDrivenAction"/>
+        <action name="override">
+            <result name="success" type="mock">somethingelse.vm</result>
+        </action>
+    </package>
 
-        <package name="SubItem" extends="Abstract-crud" namespace="/example2/subItem">
-                <default-class-ref class="org.apache.struts2.ModelDrivenAction" />
-        </package>
+    <package name="SubItem" extends="Abstract-crud" namespace="/example2/subItem">
+        <default-class-ref class="org.apache.struts2.ModelDrivenAction"/>
+    </package>
 
-        <package name="Example3" extends="Abstract-crud" namespace="/example3">
- 			<!--  default-class-ref is expected to be inherited -->
-        </package>
+    <package name="Example3" extends="Abstract-crud" namespace="/example3">
+        <!--  default-class-ref is expected to be inherited -->
+    </package>
 
     <include file="includeTest.xml"/>
 </struts>

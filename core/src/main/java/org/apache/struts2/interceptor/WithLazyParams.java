@@ -29,10 +29,19 @@ import org.apache.struts2.util.reflection.ReflectionProvider;
 import java.util.Map;
 
 /**
- * Interceptors marked with this interface won't be fully initialised during initialisation.
- * Appropriated params will be injected just before usage of the interceptor.
- *
- * Please be aware that in such case {@link Interceptor#init()} method must be prepared for this.
+ * Interceptors marked with this interface support dynamic parameter evaluation at action invocation time.
+ * Parameters are set during interceptor creation (factory time), then re-evaluated during each action
+ * invocation to resolve expressions like ${someValue}.
+ * <p>
+ * This enables both:
+ * <ul>
+ *   <li>Static configuration in interceptor stacks (e.g., allowedTypes="image/png,image/jpeg")</li>
+ *   <li>Dynamic expressions evaluated per-request (e.g., maximumSize="${maxUploadSize}")</li>
+ * </ul>
+ * <p>
+ * The {@link Interceptor#init()} method is called after initial parameter setting, so interceptors
+ * can rely on configured values during initialization. Expression parameters (containing ${...})
+ * are re-evaluated at invocation time via {@link LazyParamInjector}.
  *
  * @since 2.5.9
  */
@@ -68,7 +77,7 @@ public interface WithLazyParams {
 
         public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                Object paramValue = textParser.evaluate(new char[]{ '$' }, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
+                Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
                 ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
             }
             return interceptor;

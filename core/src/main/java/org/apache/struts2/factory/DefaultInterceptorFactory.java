@@ -68,11 +68,10 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
             }
 
+            reflectionProvider.setProperties(params, interceptor);
             if (interceptor instanceof WithLazyParams) {
-                LOG.debug("Interceptor {} is marked with interface {} and params will be set during action invocation",
+                LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated during action invocation",
                         interceptorClassName, WithLazyParams.class.getName());
-            } else {
-                reflectionProvider.setProperties(params, interceptor);
             }
 
             interceptor.init();

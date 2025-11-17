@@ -21,20 +21,36 @@ package org.apache.struts2.mock;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
-import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
 
 public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams {
 
     private String foo = "";
+    private String bar = "";
 
     public void setFoo(String foo) {
         this.foo = foo;
     }
 
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setBar(String bar) {
+        this.bar = bar;
+    }
+
+    public String getBar() {
+        return bar;
+    }
+
     public String intercept(ActionInvocation invocation) throws Exception {
         if (invocation.getAction() instanceof SimpleAction) {
             ((SimpleAction) invocation.getAction()).setName(foo);
+            // Only set blah if bar is configured (not empty)
+            if (bar != null && !bar.isEmpty()) {
+                ((SimpleAction) invocation.getAction()).setBlah(bar);
+            }
         }
         return invocation.invoke();
     }

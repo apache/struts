@@ -110,7 +110,7 @@
                                 <arg>-AjspVersion=2.0</arg>
                                 <arg>-AshortName=s</arg>
                                 <arg>-AdisplayName=Struts Tags</arg>
-                                <arg>-AoutFile=${basedir}/target/classes/META-INF/struts-tags.tld</arg>
+                                <arg>-AoutFile=${project.build.outputDirectory}/META-INF/struts-tags.tld</arg>
                                 <arg>-Adescription="To make it easier to access dynamic data;
                                     the Apache Struts framework includes a library of custom tags.
                                     The tags interact with the framework's validation and
@@ -118,8 +118,15 @@
                                     to ensure that input is correct and output is localized.
                                     The Struts Tags can be used with JSP FreeMarker or Velocity."
                                 </arg>
-                                <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
+                                <arg>-AoutTemplatesDir=${project.basedir}/src/site/resources/tags</arg>
                             </compilerArgs>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>struts-annotations</artifactId>
+                                    <version>${struts-annotations.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
                         </configuration>
                         <executions>
                             <execution>

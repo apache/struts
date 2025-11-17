@@ -37,6 +37,7 @@
     <properties>
         <maven.site.skip>true</maven.site.skip>
         <maven.site.deploy.skip>true</maven.site.deploy.skip>
+        <struts-annotations.version>2.0</struts-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -44,7 +45,7 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
-                <version>2.0</version>
+                <version>${struts-annotations.version}</version>
             </dependency>
 
             <dependency>

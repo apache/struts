@@ -41,6 +41,8 @@ jobs:
             profile: ''
           - java: '21'
             profile: '-Pjakartaee11'
+          - java: '25'
+            profile: ''
     steps:
       - name: Checkout code
         uses: actions/checkout@v5

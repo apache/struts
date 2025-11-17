@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
 /*
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +20,7 @@
 */
 -->
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<html>
+<html lang="en">
 <head>
     <title>Struts2 Showcase - Dynamic File Upload Validation</title>
 </head>

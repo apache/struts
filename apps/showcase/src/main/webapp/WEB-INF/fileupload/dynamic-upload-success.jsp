@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
 /*
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,7 @@
         contentType="text/html; charset=UTF-8"
         pageEncoding="UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<html>
+<html lang="en">
 <head>
     <title>Struts2 Showcase - Dynamic File Upload Success</title>
 </head>
@@ -88,7 +89,7 @@
                     </dl>
                     <p class="text-muted">
                         <small>
-                            These validation rules were determined dynamically at runtime 
+                            These validation rules were determined dynamically at runtime
                             using <code>WithLazyParams</code> and evaluated from the ValueStack.
                         </small>
                     </p>

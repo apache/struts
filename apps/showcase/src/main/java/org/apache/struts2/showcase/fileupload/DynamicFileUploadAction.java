@@ -63,8 +63,9 @@ public class DynamicFileUploadAction extends ActionSupport implements UploadedFi
     private String inputName;
     private String uploadType = "document";
 
-    private UploadConfig uploadConfig;
+    private transient UploadConfig uploadConfig;
 
+    @Override
     public String input() {
         prepareUploadConfig(uploadType);
         return INPUT;
@@ -82,7 +83,7 @@ public class DynamicFileUploadAction extends ActionSupport implements UploadedFi
     @Override
     public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
         if (!uploadedFiles.isEmpty()) {
-            LOG.info("Uploaded file: {}",  uploadedFiles.get(0));
+            LOG.info("Uploaded file: {}", uploadedFiles.get(0));
             this.uploadedFile = uploadedFiles.get(0);
             this.fileName = uploadedFile.getName();
             this.contentType = uploadedFile.getContentType();

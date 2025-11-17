@@ -67,22 +67,13 @@
     <div class="row">
         <div class="col-md-12">
             <s:form action="doDynamicUpload" method="POST" enctype="multipart/form-data" cssClass="form-vertical">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Upload Type:</label>
-                    <div class="col-sm-10">
-                        <s:radio name="uploadType"
-                                 list="#{'document':'Documents (PDF, Word) - up to 5MB', 'image':'Images (JPEG, PNG) - up to 2MB'}"/>
-                    </div>
-                </div>
+                <s:radio name="uploadType" label="Upload type"
+                         list="#{'document':'Documents (PDF, Word) - up to 5MB', 'image':'Images (JPEG, PNG) - up to 2MB'}"/>
 
                 <s:file name="upload" label="Select File" cssClass="form-control"/>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <s:submit value="Upload File" cssClass="btn btn-primary"/>
-                        <s:submit value="Refresh Rules" action="dynamicUpload" cssClass="btn btn-default"/>
-                    </div>
-                </div>
+                <s:submit value="Upload File" cssClass="btn btn-primary"/>
+                <s:submit value="Refresh Rules" action="dynamicUpload" cssClass="btn btn-default"/>
             </s:form>
         </div>
     </div>

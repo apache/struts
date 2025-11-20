@@ -25,6 +25,7 @@ import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.mock.MockResult;
@@ -400,6 +401,17 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooWithStackParams", null, extraContext.getContextMap());
         defaultActionInvocation.init(actionProxy);
+
+        // Verify InterceptorMapping has params before invocation (WW-5587)
+        List<InterceptorMapping> interceptors = actionProxy.getConfig().getInterceptors();
+        InterceptorMapping lazyInterceptor = interceptors.stream()
+                .filter(m -> m.getInterceptor() instanceof WithLazyParams)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("WithLazyParams interceptor not found"));
+
+        assertFalse("WithLazyParams interceptor should have params in InterceptorMapping",
+                lazyInterceptor.getParams().isEmpty());
+
         defaultActionInvocation.invoke();
 
         SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();

@@ -30,8 +30,13 @@ public interface Preparable {
     /**
      * This method is called to allow the action to prepare itself.
      *
+     * <p>Default implementation is empty, allowing actions to implement only
+     * per-method variants like {@code prepareInput()}, {@code prepareEdit()}, etc.</p>
+     *
      * @throws Exception thrown if a system level exception occurs.
      */
-    void prepare() throws Exception;
+    default void prepare() throws Exception {
+        // default empty implementation
+    }
 
 }

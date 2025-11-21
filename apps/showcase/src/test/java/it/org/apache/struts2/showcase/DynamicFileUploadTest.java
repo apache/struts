@@ -18,6 +18,7 @@
  */
 package it.org.apache.struts2.showcase;
 
+import org.assertj.core.api.Assertions;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlFileInput;
 import org.htmlunit.html.HtmlForm;
@@ -51,20 +52,20 @@ public class DynamicFileUploadTest {
             documentRadio.setChecked(true);
 
             // Create a small PDF-like file
-            File pdfFile = createTestFile("test.pdf", "txt", 1024);
+            File pdfFile = createTestFile("test.pdf", 1024);
             pdfFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(pdfFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
             assertThat(content).contains(
                     "File Upload Successful",
-                    "Upload Type: Document",
-                    "File Name: test.pdf"
+                    "Upload Type:\nDocument",
+                    "Original Name:\n" + pdfFile.getName()
             );
         }
     }
@@ -79,21 +80,28 @@ public class DynamicFileUploadTest {
             HtmlRadioButtonInput imageRadio = form.getInputByValue("image");
             imageRadio.setChecked(true);
 
+            assertThat(imageRadio)
+                    .isNotNull()
+                    .hasFieldOrProperty("value")
+                    .isNotNull()
+                    .extracting(HtmlRadioButtonInput::isChecked)
+                    .asInstanceOf(Assertions.BOOLEAN).isTrue();
+            
             // Create a small image-like file
-            File imageFile = createTestFile("test.png", "png", 1024);
+            File imageFile = createTestFile("test.png", 1024);
             imageFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(imageFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
             assertThat(content).contains(
                     "File Upload Successful",
-                    "Upload Type: Image",
-                    "File Name: test.png"
+                    "Upload Type:\nImage",
+                    "Original Name:\n" + imageFile.getName()
             );
         }
     }
@@ -109,17 +117,22 @@ public class DynamicFileUploadTest {
             documentRadio.setChecked(true);
 
             // Try to upload an image file
-            File imageFile = createTestFile("test.jpg", "jpg", 512);
+            File imageFile = createTestFile("test.jpg", 512);
             imageFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(imageFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
-            assertThat(content).containsIgnoringCase("error");
+            assertThat(content).contains(
+                    "Content-Type not allowed",
+                    "image/jpeg",
+                    "File extension not allowed"
+                    
+            );
         }
     }
 
@@ -134,17 +147,21 @@ public class DynamicFileUploadTest {
             imageRadio.setChecked(true);
 
             // Try to upload a PDF file
-            File pdfFile = createTestFile("test.pdf", "pdf", 512);
+            File pdfFile = createTestFile("test.pdf", 512);
             pdfFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(pdfFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
-            assertThat(content).containsIgnoringCase("error");
+            assertThat(content).contains(
+                    "Content-Type not allowed",
+                    "application/pdf",
+                    "File extension not allowed"
+            );
         }
     }
 
@@ -159,13 +176,13 @@ public class DynamicFileUploadTest {
             documentRadio.setChecked(true);
 
             // Create a file larger than 5MB
-            File largeFile = createLargeTestFile("large.pdf", "pdf", 5 * 1024 * 1024 + 1024);
+            File largeFile = createLargeTestFile("large.pdf", 5 * 1024 * 1024 + 1024);
             largeFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(largeFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
@@ -184,13 +201,13 @@ public class DynamicFileUploadTest {
             imageRadio.setChecked(true);
 
             // Create a file larger than 2MB
-            File largeFile = createLargeTestFile("large.png", "png", 2 * 1024 * 1024 + 1024);
+            File largeFile = createLargeTestFile("large.png", 2 * 1024 * 1024 + 1024);
             largeFile.deleteOnExit();
 
             HtmlFileInput uploadInput = form.getInputByName("upload");
             uploadInput.setFiles(largeFile);
 
-            final HtmlSubmitInput button = (HtmlSubmitInput) form.getInputByValue("Upload File");
+            final HtmlSubmitInput button = form.getInputByValue("Upload File");
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
@@ -213,7 +230,7 @@ public class DynamicFileUploadTest {
             HtmlRadioButtonInput imageRadio = form.getInputByValue("image");
             imageRadio.setChecked(true);
 
-            final HtmlSubmitInput refreshButton = (HtmlSubmitInput) form.getInputByValue("Refresh Rules");
+            final HtmlSubmitInput refreshButton = form.getInputByValue("Refresh Rules");
             final HtmlPage refreshedPage = refreshButton.click();
 
             // Verify rules changed to image mode
@@ -229,8 +246,8 @@ public class DynamicFileUploadTest {
     /**
      * Creates a small test file with specified name and extension.
      */
-    private File createTestFile(String fileName, String extension, int sizeInBytes) throws Exception {
-        File tempFile = File.createTempFile("test_" + fileName, "." + extension);
+    private File createTestFile(String fileName, int sizeInBytes) throws Exception {
+        File tempFile = File.createTempFile("test_", fileName);
         try (FileWriter writer = new FileWriter(tempFile)) {
             // Write some content to make it non-empty
             for (int i = 0; i < sizeInBytes; i++) {
@@ -244,8 +261,8 @@ public class DynamicFileUploadTest {
     /**
      * Creates a large test file for size limit testing.
      */
-    private File createLargeTestFile(String fileName, String extension, int sizeInBytes) throws Exception {
-        File tempFile = File.createTempFile("large_test_" + fileName, "." + extension);
+    private File createLargeTestFile(String fileName, int sizeInBytes) throws Exception {
+        File tempFile = File.createTempFile("large_test_", fileName);
         SecureRandom rng = new SecureRandom();
 
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {

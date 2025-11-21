@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
@@ -52,7 +53,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
 
-    private Long maximumSize;
+    private String maximumSize;
     private Set<String> allowedTypesSet = Collections.emptySet();
     private Set<String> allowedExtensionsSet = Collections.emptySet();
 
@@ -92,7 +93,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      *
      * @param maximumSize The maximum size in bytes
      */
-    public void setMaximumSize(Long maximumSize) {
+    public void setMaximumSize(String maximumSize) {
         this.maximumSize = maximumSize;
     }
 
@@ -129,7 +130,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        if (maximumSize != null && maximumSize < file.length()) {
+        Long maxSize = getMaximumSize();
+        if (maxSize != null && maxSize < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)
             });
@@ -159,8 +161,16 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return errorMessages.isEmpty();
     }
 
+    private Long getMaximumSize() {
+        if (NumberUtils.isParsable(maximumSize)) {
+            return NumberUtils.toLong(maximumSize);
+        } else {
+            return null;
+        }
+    }
+
     private String getMaximumSizeStr(Object action) {
-        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
+        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(getMaximumSize());
     }
 
     /**

@@ -21,6 +21,8 @@ package org.apache.struts2.showcase.fileupload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionSupport;
+import org.apache.struts2.Preparable;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
@@ -52,7 +54,7 @@ import java.util.List;
  * @see org.apache.struts2.interceptor.WithLazyParams
  * @see org.apache.struts2.interceptor.ActionFileUploadInterceptor
  */
-public class DynamicFileUploadAction extends ActionSupport implements UploadedFilesAware {
+public class DynamicFileUploadAction extends ActionSupport implements Preparable, UploadedFilesAware {
 
     private static final Logger LOG = LogManager.getLogger(DynamicFileUploadAction.class);
 
@@ -67,7 +69,6 @@ public class DynamicFileUploadAction extends ActionSupport implements UploadedFi
 
     @Override
     public String input() {
-        prepareUploadConfig(uploadType);
         return INPUT;
     }
 
@@ -125,7 +126,16 @@ public class DynamicFileUploadAction extends ActionSupport implements UploadedFi
     @StrutsParameter
     public void setUploadType(String uploadType) {
         this.uploadType = uploadType;
-        prepareUploadConfig(uploadType);
+    }
+
+    @Override
+    public void prepare() throws Exception {
+        // no-op
+    }
+
+    public void prepareUpload() {
+        String type = ServletActionContext.getRequest().getParameter("uploadType");
+        prepareUploadConfig(type != null ? type : "document");
     }
 
     private void prepareUploadConfig(String uploadType) {

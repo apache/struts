@@ -259,7 +259,14 @@ public class DefaultActionInvocation implements ActionInvocation {
                 final InterceptorMapping interceptorMapping = interceptors.next();
                 Interceptor interceptor = interceptorMapping.getInterceptor();
                 if (interceptor instanceof WithLazyParams) {
-                    interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                    Map<String, String> params = interceptorMapping.getParams();
+
+                    proxy.getConfig().getInterceptors().stream()
+                            .filter(im -> im.getName().equals(interceptorMapping.getName()))
+                            .findFirst()
+                            .ifPresent(im -> params.putAll(im.getParams()));
+                    
+                    interceptor = lazyParamInjector.injectParams(interceptor, params, invocationContext);
                 }
                 if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
                     resultCode = executeConditional(conditionalInterceptor);

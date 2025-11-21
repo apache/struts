@@ -18,8 +18,11 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -73,15 +76,25 @@ public class Compress extends Component {
     private static final Logger LOG = LogManager.getLogger(Compress.class);
 
     private String force;
+    private boolean compressionEnabled = true;
 
     public Compress(ValueStack stack) {
         super(stack);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_COMPRESS_ENABLED, required = false)
+    public void setCompressionEnabled(String compressionEnabled) {
+        this.compressionEnabled = BooleanUtils.toBoolean(compressionEnabled);
     }
 
     @Override
     public boolean end(Writer writer, String body) {
         Object forceValue = findValue(force, Boolean.class);
         boolean forced = forceValue != null && Boolean.parseBoolean(forceValue.toString());
+        if (!compressionEnabled && !forced) {
+            LOG.debug("Compression disabled globally, skipping: {}", body);
+            return super.end(writer, body, true);
+        }
         if (devMode && !forced) {
             LOG.debug("Avoids compressing output: {} in DevMode", body);
             return super.end(writer, body, true);

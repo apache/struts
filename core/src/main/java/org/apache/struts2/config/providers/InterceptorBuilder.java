@@ -51,16 +51,16 @@ public class InterceptorBuilder {
      * Builds a list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
      *
      * @param interceptorLocator interceptor locator
-     * @param refName reference name
-     * @param refParams reference parameters
-     * @param location location
-     * @param objectFactory object factory
+     * @param refName            reference name
+     * @param refParams          reference parameters
+     * @param location           location
+     * @param objectFactory      object factory
      * @return list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
      * @throws ConfigurationException in case of any configuration errors
      */
     public static List<InterceptorMapping> constructInterceptorReference(InterceptorLocator interceptorLocator,
                                                                          String refName,
-                                                                         Map<String,String> refParams,
+                                                                         Map<String, String> refParams,
                                                                          Location location,
                                                                          ObjectFactory objectFactory) throws ConfigurationException {
         Object referencedConfig = interceptorLocator.getInterceptorConfig(refName);
@@ -91,14 +91,14 @@ public class InterceptorBuilder {
      * of the referenced interceptor with refParams.
      *
      * @param interceptorLocator interceptor locator
-     * @param stackConfig interceptor stack configuration
-     * @param refParams The overridden interceptor properties
+     * @param stackConfig        interceptor stack configuration
+     * @param refParams          The overridden interceptor properties
      * @return list of interceptors referenced by the refName in the supplied PackageConfig overridden with refParams.
      */
     private static List<InterceptorMapping> constructParameterizedInterceptorReferences(
             InterceptorLocator interceptorLocator,
             InterceptorStackConfig stackConfig,
-            Map<String,String> refParams,
+            Map<String, String> refParams,
             ObjectFactory objectFactory) {
         List<InterceptorMapping> result;
         Map<String, Map<String, String>> params = new LinkedHashMap<>();
@@ -174,7 +174,7 @@ public class InterceptorBuilder {
             if (interceptorCfgObj instanceof InterceptorConfig cfg) {  //  interceptor-ref param refer to an interceptor
                 Interceptor interceptor = objectFactory.buildInterceptor(cfg, map);
 
-                InterceptorMapping mapping = new InterceptorMapping(key, interceptor);
+                InterceptorMapping mapping = new InterceptorMapping(key, interceptor, map);
                 if (result.contains(mapping)) {
                     for (int index = 0; index < result.size(); index++) {
                         InterceptorMapping interceptorMapping = result.get(index);
@@ -186,8 +186,7 @@ public class InterceptorBuilder {
                 } else {
                     result.add(mapping);
                 }
-            } else
-            if (interceptorCfgObj instanceof InterceptorStackConfig stackCfg) {  // interceptor-ref param refer to an interceptor stack
+            } else if (interceptorCfgObj instanceof InterceptorStackConfig stackCfg) {  // interceptor-ref param refer to an interceptor stack
 
                 // If its an interceptor-stack, we call this method recursively until,
                 // all the params (eg. interceptorStack1.interceptor1.param etc.)

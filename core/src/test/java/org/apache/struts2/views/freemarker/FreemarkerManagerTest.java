@@ -113,6 +113,60 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         // then
         assertEquals(Configuration.VERSION_2_3_32, manager.config.getIncompatibleImprovements());
     }
+
+    public void testWhitespaceStrippingEnabledByDefault() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertTrue(manager.config.getWhitespaceStripping());
+    }
+
+    public void testWhitespaceStrippingDisabledViaConfiguration() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        manager.setWhitespaceStripping("false");
+        manager.setDevMode("false");
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertFalse(manager.config.getWhitespaceStripping());
+    }
+
+    public void testWhitespaceStrippingDisabledInDevMode() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        manager.setWhitespaceStripping("true");
+        manager.setDevMode("true");
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertFalse(manager.config.getWhitespaceStripping());
+    }
+
+    public void testWhitespaceStrippingEnabledWhenNotInDevMode() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        manager.setWhitespaceStripping("true");
+        manager.setDevMode("false");
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertTrue(manager.config.getWhitespaceStripping());
+    }
 }
 
 class DummyFreemarkerManager extends FreemarkerManager {

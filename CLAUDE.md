@@ -2,19 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This document outlines essential practices for working with Claude Code on the Apache Struts project. For detailed procedures, use the specialized agents and commands available in `.claude/agents/` and `.claude/commands/`.
+This document outlines essential practices for working with Claude Code on the Apache Struts project. For detailed
+procedures, use the specialized agents and commands available in `.claude/agents/` and `.claude/commands/`.
 
 ## Project Overview
 
-Apache Struts is a mature MVC web application framework for Java, originally based on WebWork 2. The project follows a modular architecture with clear separation between core framework, plugins, and applications.
+Apache Struts is a mature MVC web application framework for Java, originally based on WebWork 2. The project follows a
+modular architecture with clear separation between core framework, plugins, and applications.
 
 ### Build System & Environment
+
 - **Build Tool**: Maven with multi-module structure
 - **Java Version**: Java 17+
 - **Testing**: JUnit 5 with AssertJ assertions
 - **IDE Support**: IntelliJ IDEA with project-specific configurations
 
 ### Key Build Commands
+
 ```bash
 # Full build with tests
 mvn clean install
@@ -27,6 +31,7 @@ mvn clean install -DskipTests
 ```
 
 ### Project Structure
+
 ```
 struts/
 ├── core/           # Core framework (struts2-core)
@@ -41,6 +46,7 @@ struts/
 ### Core Architecture Components
 
 #### MVC Framework Components
+
 - **ActionSupport**: Base class for actions with validation and internationalization
 - **ActionContext**: Thread-local context holding request/response data
 - **ActionProxy/ActionInvocation**: Handles action execution lifecycle
@@ -48,6 +54,7 @@ struts/
 - **Interceptors**: Cross-cutting concerns (validation, file upload, security)
 
 #### Key Packages
+
 - `org.apache.struts2.dispatcher`: Request handling and context management
 - `org.apache.struts2.interceptor`: Interceptor implementations
 - `org.apache.struts2.components`: UI component system
@@ -55,6 +62,7 @@ struts/
 - `org.apache.struts2.security`: Security-related utilities
 
 ### Technology Stack
+
 - **Jakarta EE**: Servlet API, JSP, JSTL
 - **Core Libraries**: OGNL (expression language), Commons FileUpload2, Log4j2
 - **Template Engines**: FreeMarker, Velocity (via plugins)
@@ -63,6 +71,7 @@ struts/
 ## Security-First Development
 
 ### Critical Security Principles
+
 1. **Never create files in system temp directories** - always use controlled application directories
 2. **Use UUID-based naming** for temporary files to prevent collisions and path traversal
 3. **Implement proper resource cleanup** with try-with-resources and finally blocks
@@ -72,6 +81,7 @@ struts/
 **For comprehensive security analysis, use:** `/security_scan`
 
 ### Security Implementation Patterns
+
 ```java
 // GOOD: Secure temporary file creation
 protected File createTemporaryFile(String fileName, Path location) {
@@ -87,6 +97,7 @@ protected File createTemporaryFile(String fileName, Path location) {
 **For intelligent test execution and analysis, use:** `/run_tests`
 
 ### Test Structure & Coverage
+
 - **Unit Tests**: Test individual methods with mocked dependencies
 - **Integration Tests**: Test complete workflows with real file I/O
 - **Security Tests**: Verify directory traversal prevention, secure naming
@@ -94,6 +105,7 @@ protected File createTemporaryFile(String fileName, Path location) {
 - **Cleanup Tests**: Verify resource cleanup and tracking
 
 ### Basic Testing Command
+
 ```bash
 # Run all tests (use -DskipAssembly to avoid building docs/examples)
 mvn test -DskipAssembly
@@ -104,6 +116,7 @@ mvn test -DskipAssembly
 **For comprehensive documentation quality analysis, use:** `/quality_check`
 
 ### Documentation Requirements
+
 - **Always document security implications** in methods handling files/user input
 - **Include usage examples** for complex methods and classes
 - **Document exception conditions** and error handling behavior
@@ -113,6 +126,7 @@ mvn test -DskipAssembly
 ## Error Handling & Logging
 
 ### Logging Best Practices
+
 - Use parameterized logging for performance: `LOG.debug("Processing: {}", value)`
 - Log security-relevant operations appropriately
 - Use appropriate log levels (debug/info/warn/error)
@@ -123,6 +137,7 @@ mvn test -DskipAssembly
 **For comprehensive code quality analysis, use:** `/quality_check`
 
 ### Key Principles
+
 - Use `protected` for methods that subclasses might override
 - Catch specific exceptions rather than generic `Exception`
 - Use clear, descriptive method and variable names
@@ -131,6 +146,7 @@ mvn test -DskipAssembly
 ## Available Automated Tools
 
 ### Commands
+
 - `/security_scan` - Comprehensive security analysis
 - `/run_tests` - Intelligent test execution and analysis
 - `/quality_check` - Code quality and documentation analysis
@@ -141,6 +157,7 @@ mvn test -DskipAssembly
 - `/research_codebase` - Comprehensive codebase research
 
 ### Specialized Agents
+
 - `security-analyzer` - OGNL injection scanning, CVE detection
 - `test-runner` - Maven test execution and coverage analysis
 - `code-quality-checker` - JavaDoc compliance, pattern consistency
@@ -149,6 +166,13 @@ mvn test -DskipAssembly
 - `codebase-analyzer` - Project structure and architecture analysis
 - `codebase-locator` - Code and file location assistance
 - `codebase-pattern-finder` - Pattern examples and usage
+
+## Pull Request Guidelines
+
+- **PR title must start with Jira ticket ID** (e.g., `WW-5588 Allow Preparable interface...`)
+- **PR description must link to the ticket** using GitHub keywords:
+    - `Closes [WW-XXXX](https://issues.apache.org/jira/browse/WW-XXXX)`
+    - `Fixes [WW-XXXX](https://issues.apache.org/jira/browse/WW-XXXX)`
 
 ## Common Pitfalls to Avoid
 

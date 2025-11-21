@@ -25,7 +25,7 @@
 
 <struts>
 
-    <constant name="struts.multipart.maxSize" value="902400"/>
+    <constant name="struts.multipart.maxSize" value="10240"/>
 
     <package name="fileupload" extends="struts-default" namespace="/fileupload">
 

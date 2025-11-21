@@ -186,7 +186,7 @@ public class DynamicFileUploadTest {
             final HtmlPage resultPage = button.click();
 
             String content = resultPage.getVisibleText();
-            assertThat(content).containsAnyOf("size", "Size", "limit", "exceed");
+            assertThat(content).contains("Request exceeded allowed size limit! Max size allowed is:");
         }
     }
 

@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
@@ -53,7 +52,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
 
-    private String maximumSize;
+    private Long maximumSize;
     private Set<String> allowedTypesSet = Collections.emptySet();
     private Set<String> allowedExtensionsSet = Collections.emptySet();
 
@@ -93,7 +92,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      *
      * @param maximumSize The maximum size in bytes
      */
-    public void setMaximumSize(String maximumSize) {
+    public void setMaximumSize(Long maximumSize) {
         this.maximumSize = maximumSize;
     }
 
@@ -111,8 +110,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
-        if (action instanceof ValidationAware) {
-            validation = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAware) {
+            validation = validationAware;
         }
 
         // If it's null the upload failed
@@ -126,12 +125,11 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         }
 
         if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{originalFilename});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{originalFilename});
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        Long maxSize = getMaximumSize();
-        if (maxSize != null && maxSize < file.length()) {
+        if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)
             });
@@ -161,16 +159,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return errorMessages.isEmpty();
     }
 
-    private Long getMaximumSize() {
-        if (NumberUtils.isParsable(maximumSize)) {
-            return NumberUtils.toLong(maximumSize);
-        } else {
-            return null;
-        }
-    }
-
     private String getMaximumSizeStr(Object action) {
-        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(getMaximumSize());
+        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 
     /**
@@ -210,24 +200,13 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return matcher.match(new HashMap<>(), text, o);
     }
 
-    protected boolean isNonEmpty(Object[] objArray) {
-        boolean result = false;
-        for (Object o : objArray) {
-            if (o != null) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
     protected String getTextMessage(String messageKey, String[] args) {
         return getTextMessage(this, messageKey, args);
     }
 
     protected String getTextMessage(Object action, String messageKey, String[] args) {
-        if (action instanceof TextProvider) {
-            return ((TextProvider) action).getText(messageKey, args);
+        if (action instanceof TextProvider textProvider) {
+            return textProvider.getText(messageKey, args);
         }
         return getTextProvider(action).getText(messageKey, args);
     }
@@ -239,8 +218,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
     private LocaleProvider getLocaleProvider(Object action) {
         LocaleProvider localeProvider;
-        if (action instanceof LocaleProvider) {
-            localeProvider = (LocaleProvider) action;
+        if (action instanceof LocaleProvider lp) {
+            localeProvider = lp;
         } else {
             LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
@@ -250,8 +229,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
     protected void applyValidation(Object action, MultiPartRequestWrapper multiWrapper) {
         ValidationAware validation = null;
-        if (action instanceof ValidationAware) {
-            validation = (ValidationAware) action;
+        if (action instanceof ValidationAware va) {
+            validation = va;
         }
 
         if (multiWrapper.hasErrors() && validation != null) {

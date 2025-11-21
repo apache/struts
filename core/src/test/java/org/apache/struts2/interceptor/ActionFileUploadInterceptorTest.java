@@ -172,7 +172,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testAcceptFileWithMaxSize() throws Exception {
-        interceptor.setMaximumSize("10");
+        interceptor.setMaximumSize(10L);
 
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
@@ -732,7 +732,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
-        action.setMaxFileSize("10"); // Very small size to trigger validation error
+        action.setMaxFileSize(10L); // Very small size to trigger validation error
         container.inject(action);
 
         MockActionInvocation mai = new MockActionInvocation();
@@ -844,7 +844,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         private List<UploadedFile> uploadedFiles;
         private String allowedMimeTypes;
         private String allowedExtensions;
-        private String maxFileSize;
+        private Long maxFileSize;
 
         @Override
         public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
@@ -871,11 +871,11 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             this.allowedExtensions = allowedExtensions;
         }
 
-        public String getMaxFileSize() {
+        public Long getMaxFileSize() {
             return maxFileSize;
         }
 
-        public void setMaxFileSize(String maxFileSize) {
+        public void setMaxFileSize(Long maxFileSize) {
             this.maxFileSize = maxFileSize;
         }
     }

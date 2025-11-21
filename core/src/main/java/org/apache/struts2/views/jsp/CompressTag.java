@@ -28,6 +28,7 @@ import java.io.Serial;
 
 /**
  * @see org.apache.struts2.components.Compress
+ * @since 7.2.0
  */
 public class CompressTag extends ComponentTagSupport {
 

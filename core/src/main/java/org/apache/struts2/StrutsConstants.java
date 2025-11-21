@@ -327,6 +327,15 @@ public final class StrutsConstants {
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 
     /**
+     * Controls FreeMarker whitespace stripping during template compilation.
+     * When enabled (default), removes indentation and trailing whitespace from lines containing only FTL tags.
+     * Automatically disabled when devMode is enabled.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_FREEMARKER_WHITESPACE_STRIPPING = "struts.freemarker.whitespaceStripping";
+
+    /**
      * Extension point for the Struts CompoundRootAccessor
      */
     public static final String STRUTS_COMPOUND_ROOT_ACCESSOR = "struts.compoundRootAccessor";
@@ -676,6 +685,7 @@ public final class StrutsConstants {
 
     /**
      * See {@link org.apache.struts2.interceptor.csp.CspNonceReader}
+     *
      * @since 6.8.0
      */
     public static final String STRUTS_CSP_NONCE_READER = "struts.csp.nonce.reader";

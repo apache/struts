@@ -63,6 +63,8 @@ import java.io.Writer;
  *  <!-- END SNIPPET: example -->
  * </pre>
  * "shouldCompress" is a field with getter define on action used in expression evaluation
+ *
+ * @since 7.2.0
  */
 @StrutsTag(name = "compress", tldTagClass = "org.apache.struts2.views.jsp.CompressTag",
         description = "Compress wrapped content")

@@ -123,6 +123,53 @@ public class CompressTest extends StrutsInternalTestCase {
         assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
     }
 
+    public void testCompressionDisabledGlobally() {
+        Compress compress = new Compress(stack);
+
+        String body = """
+                <html>
+                <head>
+                    <title>File upload: result</title>
+                </head>
+                <body>
+                    <h1>File upload: result</h1>
+                </body>
+                </html>
+                """;
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.setCompressionEnabled("false");
+        compress.end(writer, body);
+
+        assertEquals(body, writer.toString());
+    }
+
+    public void testCompressionDisabledGloballyButForced() {
+        Compress compress = new Compress(stack);
+
+        String body = """
+                <html>
+                <head>
+                    <title>File upload: result</title>
+                </head>
+                <body>
+                    <h1>File upload: result</h1>
+                </body>
+                </html>
+                """;
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.setCompressionEnabled("false");
+        compress.setForce("true");
+        compress.end(writer, body);
+
+        assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
+    }
+
     @Override
     public void setUp() throws Exception {
         super.setUp();

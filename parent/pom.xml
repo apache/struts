@@ -34,11 +34,6 @@
     <name>Struts Parent POM</name>
     <description>Apache Struts</description>
 
-    <properties>
-        <maven.site.skip>true</maven.site.skip>
-        <maven.site.deploy.skip>true</maven.site.deploy.skip>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>

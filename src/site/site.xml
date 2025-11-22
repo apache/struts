@@ -26,33 +26,31 @@
         <version>${fluido-skin.version}</version>
     </skin>
     <bannerLeft>
-        <name>Apache Software Foundation</name>
-        <src>http://www.apache.org/images/asf-logo.gif</src>
-        <href>http://www.apache.org/</href>
+        <src>https://struts.apache.org/img/struts-logo.svg</src>
+        <href>https://struts.apache.org/</href>
     </bannerLeft>
     <bannerRight>
-        <name>Apache Struts</name>
-        <src>http://struts.apache.org/img/struts-logo.svg</src>
-        <href>http://struts.apache.org/</href>
+        <src>https://struts.apache.org/img/apache.png</src>
+        <href>https://www.apache.org/</href>
     </bannerRight>
-    <publishDate position="left"/>
+    <publishDate/>
     <version position="right"/>
     <body>
+        <head>
+            <![CDATA[<link rel="stylesheet" href="https://struts.apache.org/maven/css/site.css">]]>
+        </head>
         <links>
-            <item name="Apache" href="http://www.apache.org/"/>
-            <item name="Struts" href="http://struts.apache.org/"/>
+            <item name="Apache" href="https://www.apache.org/"/>
+            <item name="Struts" href="https://struts.apache.org/"/>
         </links>
 
-        <menu name="Top Site">
-            <item name="Apache Struts" href="http://struts.apache.org/"/>
+        <menu name="Top Site" inherit="top">
+            <item name="Apache Struts" href="https://struts.apache.org/"/>
         </menu>
 
-        <menu ref="reports"/>
-        <menu name="Modules">
-            <item name="Struts 2 Core" href="struts2-core/index.html"/>
-            <item name="Struts Plugins" href="struts2-plugins/index.html"/>
-            <item name="Struts OSGi Bundles" href="struts2-osgi-bundles/index.html"/>
-        </menu>
+        <menu ref="parent" inherit="top"/>
+        <menu ref="reports" inherit="top"/>
+        <menu ref="modules" inherit="top"/>
 
         <footer>
             <![CDATA[<div class="row span12">
@@ -60,6 +58,5 @@
             logos are trademarks of The Apache Software Foundation.
             </div>]]>
         </footer>
-
     </body>
 </project>

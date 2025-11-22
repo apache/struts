@@ -109,6 +109,10 @@
         <project.build.outputTimestamp>2025-10-01T06:32:34Z</project.build.outputTimestamp>
         <maven.compiler.release>17</maven.compiler.release>
 
+        <!-- Maven plugin -->
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.9</asm.version>
         <byte-buddy.version>1.17.7</byte-buddy.version>
@@ -118,7 +122,6 @@
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.5</jaxb-impl.version>
         <log4j2.version>2.25.2</log4j2.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <mockito.version>5.20.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -128,7 +131,7 @@
         <weld.version>6.0.3.Final</weld.version>
 
         <!-- Site generation -->
-        <fluido-skin.version>1.9</fluido-skin.version>
+        <fluido-skin.version>2.1.0</fluido-skin.version>
 
         <!-- Sonar -->
         <sonar.organization>apache</sonar.organization>
@@ -274,10 +277,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.3</version>
+                    <version>${maven-javadoc-plugin.version}</version>
                     <configuration>
                         <doclint>none</doclint>
                         <failOnError>false</failOnError>
+                        <excludePackageNames>
+                            org.apache.struts2.views.jasperreports:org.apache.tiles.request.velocity.*:org.demo.rest.example:org.apache.struts.beanvalidation.*
+                        </excludePackageNames>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -360,6 +366,11 @@
                     <artifactId>maven-wrapper-plugin</artifactId>
                     <version>3.3.4</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.21.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -391,11 +402,10 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.21.0</version>
                 <configuration>
                     <relativizeSiteLinks>false</relativizeSiteLinks>
+                    <pomPackagingOnly>false</pomPackagingOnly>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -403,12 +413,26 @@
                         <artifactId>doxia-core</artifactId>
                         <version>2.0.0</version>
                     </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>2.0.0</version>
-                    </dependency>
                 </dependencies>
+                <executions>
+                    <execution>
+                        <id>site-inheritance</id>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stage-for-scm-publish</id>
+                        <phase>post-site</phase>
+                        <goals>
+                            <goal>stage</goal>
+                        </goals>
+                        <configuration>
+                            <skipDeploy>false</skipDeploy>
+                        </configuration>
+                        <inherited>false</inherited>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.rat</groupId>
@@ -442,6 +466,14 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <reportSets>
                     <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>default</id>
                         <reports>
                             <report>javadoc</report>
                         </reports>

@@ -1,0 +1,44 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+div.container-top, div.container-fluid-top {
+    padding-top: 0;
+}
+
+#banner {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #37a3c5), color-stop(0.1, #39a9c6), color-stop(0.3, #3babc7), color-stop(0.5, #37a1c5), color-stop(0.7, #3186c3), color-stop(0.9, #2b66bf), color-stop(1, #2b66bf));
+    background-image: -webkit-linear-gradient(left, #37a3c5 0%, #39a9c6 10%, #3babc7 30%, #37a1c5 50%, #3186c3 70%, #2b66bf 90%, #2b66bf 100%);
+    background-image: -moz-linear-gradient(left, #37a3c5 0%, #39a9c6 10%, #3babc7 30%, #37a1c5 50%, #3186c3 70%, #2b66bf 90%, #2b66bf 100%);
+    background-image: -o-linear-gradient(left, #37a3c5 0%, #39a9c6 10%, #3babc7 30%, #37a1c5 50%, #3186c3 70%, #2b66bf 90%, #2b66bf 100%);
+    background-image: -ms-linear-gradient(left, #37a3c5 0%, #39a9c6 10%, #3babc7 30%, #37a1c5 50%, #3186c3 70%, #2b66bf 90%, #2b66bf 100%);
+    background-image: linear-gradient(left, #37a3c5 0%, #39a9c6 10%, #3babc7 30%, #37a1c5 50%, #3186c3 70%, #2b66bf 90%, #2b66bf 100%);
+    border: none;
+}
+
+#bannerLeft {
+    width: 240px;
+    margin-left: 14px;
+    margin-top: 10px;
+}
+
+#bannerRight {
+    width: 240px;
+    margin-right: 14px;
+    margin-top: 10px;
+}

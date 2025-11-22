@@ -284,36 +284,33 @@
                     <artifactId>apache-rat-plugin</artifactId>
                     <version>0.17</version>
                     <configuration>
-                        <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
-                        <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
-                        <useDefaultExcludes>true</useDefaultExcludes>
-                        <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
-                        <approvedLicenses>
-                            <approvedLicense>AL</approvedLicense>
-                        </approvedLicenses>
-                        <includes>
+                        <inputExcludeStds>ALL</inputExcludeStds>
+                        <inputIncludes>
                             <include>pom.xml</include>
                             <include>src/**</include>
-                        </includes>
-                        <excludes>
-                            <exclude>Jenkinsfile</exclude>
-                            <exclude>src/main/groovy/Jenkinsfile.gdsl</exclude>
-                            <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                        </inputIncludes>
+                        <inputExcludes>
+                            <exclude>CLAUDE.md</exclude>
+                            <exclude>CODEOWNERS</exclude>
+                            <exclude>SECURITY.md</exclude>
+                            <exclude>**/README.md</exclude>
+                            <exclude>src/main/resources/*-LICENSE.txt</exclude>
                             <exclude>src/site/resources/tags/**/*.html</exclude>
-                            <exclude>src/main/resources/*LICENSE.txt</exclude>
                             <exclude>src/test/resources/**/*.txt</exclude>
+                            <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
                             <exclude>src/main/webapp/**/*.css</exclude>
                             <exclude>src/main/webapp/**/*.map</exclude>
                             <exclude>src/main/webapp/**/*.js</exclude>
                             <exclude>src/main/webapp/**/*.svg</exclude>
                             <exclude>src/main/webapp/**/*.txt</exclude>
-                            <exclude>src/main/resources/**/docs-urls.txt</exclude>
+                            <exclude>**/src/main/resources/**/docs-urls.txt</exclude>
                             <exclude>src/etc/header.txt</exclude>
                             <exclude>src/main/resources/static/css/**/*.css</exclude>
                             <exclude>src/main/resources/static/js/**/*.js</exclude>
-                            <exclude>src/main/resources/docs.cfg</exclude>
+                            <exclude>**/src/main/resources/docs.cfg</exclude>
                             <exclude>src/main/webapp/fonts/**/*</exclude>
-                        </excludes>
+                            <exclude>thoughts/**/*.md</exclude>
+                        </inputExcludes>
                     </configuration>
                 </plugin>
                 <plugin>

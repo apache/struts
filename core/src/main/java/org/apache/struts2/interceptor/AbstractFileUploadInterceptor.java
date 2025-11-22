@@ -110,8 +110,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
-        if (action instanceof ValidationAware) {
-            validation = (ValidationAware) action;
+        if (action instanceof ValidationAware validationAware) {
+            validation = validationAware;
         }
 
         // If it's null the upload failed
@@ -125,7 +125,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         }
 
         if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{originalFilename});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{originalFilename});
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
@@ -200,24 +200,13 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return matcher.match(new HashMap<>(), text, o);
     }
 
-    protected boolean isNonEmpty(Object[] objArray) {
-        boolean result = false;
-        for (Object o : objArray) {
-            if (o != null) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
     protected String getTextMessage(String messageKey, String[] args) {
         return getTextMessage(this, messageKey, args);
     }
 
     protected String getTextMessage(Object action, String messageKey, String[] args) {
-        if (action instanceof TextProvider) {
-            return ((TextProvider) action).getText(messageKey, args);
+        if (action instanceof TextProvider textProvider) {
+            return textProvider.getText(messageKey, args);
         }
         return getTextProvider(action).getText(messageKey, args);
     }
@@ -229,8 +218,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
     private LocaleProvider getLocaleProvider(Object action) {
         LocaleProvider localeProvider;
-        if (action instanceof LocaleProvider) {
-            localeProvider = (LocaleProvider) action;
+        if (action instanceof LocaleProvider lp) {
+            localeProvider = lp;
         } else {
             LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
@@ -240,8 +229,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
     protected void applyValidation(Object action, MultiPartRequestWrapper multiWrapper) {
         ValidationAware validation = null;
-        if (action instanceof ValidationAware) {
-            validation = (ValidationAware) action;
+        if (action instanceof ValidationAware va) {
+            validation = va;
         }
 
         if (multiWrapper.hasErrors() && validation != null) {

@@ -20,43 +20,66 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts>
 
-	<constant name="struts.multipart.maxSize" value="10240" />
+    <constant name="struts.multipart.maxSize" value="10240"/>
 
-	<package name="fileupload" extends="struts-default" namespace="/fileupload">
+    <package name="fileupload" extends="struts-default" namespace="/fileupload">
 
         <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">
-			<result>/WEB-INF/fileupload/upload.jsp</result>
-		</action>
+            <result>/WEB-INF/fileupload/upload.jsp</result>
+        </action>
 
         <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
-        	<result name="input">/WEB-INF/fileupload/upload.jsp</result>
-			<result>/WEB-INF/fileupload/upload-success.jsp</result>
-		</action>
+            <result name="input">/WEB-INF/fileupload/upload.jsp</result>
+            <result>/WEB-INF/fileupload/upload-success.jsp</result>
+        </action>
 
-		<action name="multipleUploadUsingList">
-			<result>/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
-		</action>
+        <action name="multipleUploadUsingList">
+            <result>/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
+        </action>
 
-		<action name="doMultipleUploadUsingList" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
-			<result name="input">/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
-			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
-		</action>
+        <action name="doMultipleUploadUsingList"
+                class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
+            <result name="input">/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
+            <result>/WEB-INF/fileupload/multiple-success.jsp</result>
+        </action>
 
 
-		<action name="multipleUploadUsingArray">
-			<result>/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
-		</action>
+        <action name="multipleUploadUsingArray">
+            <result>/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
+        </action>
 
-		<action name="doMultipleUploadUsingArray" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
-			<result name="input">/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
-			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
-		</action>
+        <action name="doMultipleUploadUsingArray"
+                class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
+            <result name="input">/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
+            <result>/WEB-INF/fileupload/multiple-success.jsp</result>
+        </action>
 
+        <!-- Dynamic File Upload with WithLazyParams -->
+        <action name="dynamicUpload" class="org.apache.struts2.showcase.fileupload.DynamicFileUploadAction"
+                method="input">
+            <result name="input">/WEB-INF/fileupload/dynamic-upload.jsp</result>
+        </action>
+
+        <action name="doDynamicUpload" class="org.apache.struts2.showcase.fileupload.DynamicFileUploadAction"
+                method="upload">
+            <!-- 
+                WithLazyParams allows dynamic parameter evaluation.
+                The ${...} expressions are evaluated at runtime from the ValueStack,
+                allowing validation rules to be determined by action state.
+            -->
+            <interceptor-ref name="defaultStack">
+                <param name="actionFileUpload.allowedTypes">${uploadConfig.allowedMimeTypes}</param>
+                <param name="actionFileUpload.allowedExtensions">${uploadConfig.allowedExtensions}</param>
+                <param name="actionFileUpload.maximumSize">${uploadConfig.maxFileSize}</param>
+            </interceptor-ref>
+            <result name="input">/WEB-INF/fileupload/dynamic-upload.jsp</result>
+            <result>/WEB-INF/fileupload/dynamic-upload-success.jsp</result>
+        </action>
 
     </package>
 </struts>

@@ -193,6 +193,10 @@
                                 <s:a href="%{#url}">Single File Upload</s:a>
                             </li>
                             <li>
+                                <s:url var="url" action="dynamicUpload" namespace="/fileupload"/>
+                                <s:a href="%{#url}">Single File Upload - dynamic config</s:a>
+                            </li>
+                            <li>
                                 <s:url var="url" action="multipleUploadUsingList" namespace="/fileupload"/>
                                 <s:a href="%{#url}">Multiple File Upload (List)</s:a>
 

@@ -18,25 +18,25 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#compress>
 <label
-<#if parameters.id?has_content>
- id="${parameters.id}"
+<#if attributes.id?has_content>
+ id="${attributes.id}"
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title?has_content>
- title="${parameters.title}"
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"
 </#if>
-<#if parameters.for?has_content>
- for="${parameters.for}"
+<#if attributes.for?has_content>
+ for="${attributes.for}"
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >
-<#if parameters.nameValue??>
-<@s.property value="parameters.nameValue"/>
+<#if attributes.nameValue??>
+<@s.property value="attributes.nameValue"/>
 </#if>
 </label>
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

@@ -59,6 +59,17 @@ public class TextfieldTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericHtml5() throws Exception {
+        TextFieldTag tag = new TextFieldTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
+
     public void testErrors() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

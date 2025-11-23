@@ -59,6 +59,19 @@ public class CheckboxListTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"tabindex","cssClass","cssStyle","id"});
     }
 
+    public void testGenericHtml5() throws Exception {
+        CheckboxListTag tag = new CheckboxListTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "html5", new String[]{"tabindex","cssClass","cssStyle","id"});
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        CheckboxListTag tag = new CheckboxListTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "html5", new String[]{"tabindex","cssClass","cssStyle","id"});
+    }
+
     private void prepareTagGeneric(CheckboxListTag tag) {
         TestAction testAction = (TestAction) action;
         Collection<String> collection = new ArrayList<String>(2);

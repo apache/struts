@@ -19,46 +19,46 @@
  */
 -->
 <#compress>
-<#if parameters.onclick??>
- onclick="<#outputformat 'JavaScript'>${parameters.onclick}</#outputformat>"
+<#if attributes.onclick??>
+ onclick="<#outputformat 'JavaScript'>${attributes.onclick}</#outputformat>"
 </#if>
-<#if parameters.ondblclick??>
- ondblclick="<#outputformat 'JavaScript'>${parameters.ondblclick}</#outputformat>"
+<#if attributes.ondblclick??>
+ ondblclick="<#outputformat 'JavaScript'>${attributes.ondblclick}</#outputformat>"
 </#if>
-<#if parameters.onmousedown??>
- onmousedown="<#outputformat 'JavaScript'>${parameters.onmousedown}</#outputformat>"
+<#if attributes.onmousedown??>
+ onmousedown="<#outputformat 'JavaScript'>${attributes.onmousedown}</#outputformat>"
 </#if>
-<#if parameters.onmouseup??>
- onmouseup="<#outputformat 'JavaScript'>${parameters.onmouseup}</#outputformat>"
+<#if attributes.onmouseup??>
+ onmouseup="<#outputformat 'JavaScript'>${attributes.onmouseup}</#outputformat>"
 </#if>
-<#if parameters.onmouseover??>
- onmouseover="<#outputformat 'JavaScript'>${parameters.onmouseover}</#outputformat>"
+<#if attributes.onmouseover??>
+ onmouseover="<#outputformat 'JavaScript'>${attributes.onmouseover}</#outputformat>"
 </#if>
-<#if parameters.onmousemove??>
- onmousemove="<#outputformat 'JavaScript'>${parameters.onmousemove}</#outputformat>"
+<#if attributes.onmousemove??>
+ onmousemove="<#outputformat 'JavaScript'>${attributes.onmousemove}</#outputformat>"
 </#if>
-<#if parameters.onmouseout??>
- onmouseout="<#outputformat 'JavaScript'>${parameters.onmouseout}</#outputformat>"
+<#if attributes.onmouseout??>
+ onmouseout="<#outputformat 'JavaScript'>${attributes.onmouseout}</#outputformat>"
 </#if>
-<#if parameters.onfocus??>
- onfocus="<#outputformat 'JavaScript'>${parameters.onfocus}</#outputformat>"
+<#if attributes.onfocus??>
+ onfocus="<#outputformat 'JavaScript'>${attributes.onfocus}</#outputformat>"
 </#if>
-<#if parameters.onblur??>
- onblur="<#outputformat 'JavaScript'>${parameters.onblur}</#outputformat>"
+<#if attributes.onblur??>
+ onblur="<#outputformat 'JavaScript'>${attributes.onblur}</#outputformat>"
 </#if>
-<#if parameters.onkeypress??>
- onkeypress="<#outputformat 'JavaScript'>${parameters.onkeypress}</#outputformat>"
+<#if attributes.onkeypress??>
+ onkeypress="<#outputformat 'JavaScript'>${attributes.onkeypress}</#outputformat>"
 </#if>
-<#if parameters.onkeydown??>
- onkeydown="<#outputformat 'JavaScript'>${parameters.onkeydown}</#outputformat>"
+<#if attributes.onkeydown??>
+ onkeydown="<#outputformat 'JavaScript'>${attributes.onkeydown}</#outputformat>"
 </#if>
-<#if parameters.onkeyup??>
- onkeyup="<#outputformat 'JavaScript'>${parameters.onkeyup}</#outputformat>"
+<#if attributes.onkeyup??>
+ onkeyup="<#outputformat 'JavaScript'>${attributes.onkeyup}</#outputformat>"
 </#if>
-<#if parameters.onselect??>
- onselect="<#outputformat 'JavaScript'>${parameters.onselect}</#outputformat>"
+<#if attributes.onselect??>
+ onselect="<#outputformat 'JavaScript'>${attributes.onselect}</#outputformat>"
 </#if>
-<#if parameters.onchange??>
- onchange="<#outputformat 'JavaScript'>${parameters.onchange}</#outputformat>"
+<#if attributes.onchange??>
+ onchange="<#outputformat 'JavaScript'>${attributes.onchange}</#outputformat>"
 </#if>
 </#compress>

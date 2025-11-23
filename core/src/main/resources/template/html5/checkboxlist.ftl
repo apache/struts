@@ -18,103 +18,103 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#compress>
 <#assign itemCount = 0/>
-<#if parameters.list??>
-<@s.iterator value="parameters.list">
+<#if attributes.list??>
+<@s.iterator value="attributes.list">
     <#assign itemCount = itemCount + 1/>
-    <#if parameters.listKey??>
-        <#assign itemKey = stack.findValue(parameters.listKey)/>
-        <#assign itemKeyStr = stack.findString(parameters.listKey)/>
+    <#if attributes.listKey??>
+        <#assign itemKey = stack.findValue(attributes.listKey)/>
+        <#assign itemKeyStr = stack.findString(attributes.listKey)/>
     <#else>
         <#assign itemKey = stack.findValue('top')/>
         <#assign itemKeyStr = stack.findString('top')>
     </#if>
-    <#if parameters.listLabelKey??>
+    <#if attributes.listLabelKey??>
     <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale
        file for it's localized value.  This is then used as a label -->
-        <#assign itemValue = struts.getText(stack.findString(parameters.listLabelKey))/>
-    <#elseif parameters.listValue??>
-        <#assign itemValue = stack.findString(parameters.listValue)!""/>
+        <#assign itemValue = struts.getText(stack.findString(attributes.listLabelKey))/>
+    <#elseif attributes.listValue??>
+        <#assign itemValue = stack.findString(attributes.listValue)!""/>
     <#else>
          <#assign itemValue = stack.findString('top')/>
     </#if>
-    <#if parameters.listCssClass??>
-        <#if stack.findString(parameters.listCssClass)??>
-          <#assign itemCssClass= stack.findString(parameters.listCssClass)/>
+    <#if attributes.listCssClass??>
+        <#if stack.findString(attributes.listCssClass)??>
+          <#assign itemCssClass= stack.findString(attributes.listCssClass)/>
         <#else>
           <#assign itemCssClass = ''/>
         </#if>
     </#if>
-    <#if parameters.listCssStyle??>
-        <#if stack.findString(parameters.listCssStyle)??>
-          <#assign itemCssStyle= stack.findString(parameters.listCssStyle)/>
+    <#if attributes.listCssStyle??>
+        <#if stack.findString(attributes.listCssStyle)??>
+          <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/>
         <#else>
           <#assign itemCssStyle = ''/>
         </#if>
     </#if>
-    <#if parameters.listTitle??>
-        <#if stack.findString(parameters.listTitle)??>
-          <#assign itemTitle= stack.findString(parameters.listTitle)/>
+    <#if attributes.listTitle??>
+        <#if stack.findString(attributes.listTitle)??>
+          <#assign itemTitle= stack.findString(attributes.listTitle)/>
         <#else>
           <#assign itemTitle = ''/>
         </#if>
     </#if>
-<input type="checkbox" name="${parameters.name}" value="${itemKeyStr}"
-<#if parameters.id?has_content>
- id="${parameters.id}-${itemCount}"
+<input type="checkbox" name="${attributes.name}" value="${itemKeyStr}"
+<#if attributes.id?has_content>
+ id="${attributes.id}-${itemCount}"
 <#else>
- id="${parameters.name}-${itemCount}"
+ id="${attributes.name}-${itemCount}"
 </#if>
-<#if tag.contains(parameters.nameValue, itemKey)>
+<#if tag.contains(attributes.nameValue, itemKey)>
  checked="checked"
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"
 </#if>
 <#if itemCssClass??>
  class="${itemCssClass}"
 <#else>
-<#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"
 </#if>
 </#if>
 <#if itemCssStyle??>
  style="${itemCssStyle}"
 <#else>
-<#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"
 </#if>
 </#if>
 <#if itemTitle??>
  title="${itemTitle}"
 <#else>
-<#if parameters.title?has_content>
- title="${parameters.title}"
+<#if attributes.title?has_content>
+ title="${attributes.title}"
 </#if>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
 <#global evaluate_dynamic_attributes = true/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 
 <label
-<#if parameters.id?has_content>
- for="${parameters.id}-${itemCount}"
+<#if attributes.id?has_content>
+ for="${attributes.id}-${itemCount}"
 <#else>
- for="${parameters.name}-${itemCount}"
+ for="${attributes.name}-${itemCount}"
 </#if>
  class="checkboxLabel">${itemValue}</label>
 </@s.iterator>
 <#else>
 </#if>
-<input type="hidden" id="__multiselect_${parameters.id}" name="__multiselect_${parameters.name}"
+<input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.name}"
  value=""
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"
 </#if>
  />
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

@@ -18,48 +18,48 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#compress>
     <textarea
-            name="${(parameters.name!"")}"
-<#if parameters.cols?has_content>
-    cols="${(parameters.cols!"")}"
+            name="${(attributes.name!"")}"
+<#if attributes.cols?has_content>
+    cols="${(attributes.cols!"")}"
 </#if>
-            <#if parameters.rows?has_content>
-                rows="${(parameters.rows!"")}"
+            <#if attributes.rows?has_content>
+                rows="${(attributes.rows!"")}"
             </#if>
-            <#if parameters.wrap?has_content>
-                wrap="${parameters.wrap}"
+            <#if attributes.wrap?has_content>
+                wrap="${attributes.wrap}"
             </#if>
-            <#if parameters.disabled!false>
+            <#if attributes.disabled!false>
                 disabled="disabled"
             </#if>
-            <#if parameters.readonly!false>
+            <#if attributes.readonly!false>
                 readonly="readonly"
             </#if>
-            <#if parameters.tabindex?has_content>
-                tabindex="${parameters.tabindex}"
+            <#if attributes.tabindex?has_content>
+                tabindex="${attributes.tabindex}"
             </#if>
-            <#if parameters.id?has_content>
-                id="${parameters.id}"
+            <#if attributes.id?has_content>
+                id="${attributes.id}"
             </#if>
-            <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-            <#if parameters.title?has_content>
-                title="${parameters.title}"
+            <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+            <#if attributes.title?has_content>
+                title="${attributes.title}"
             </#if>
-            <#if parameters.maxlength?has_content>
-                maxlength="${parameters.maxlength}"
+            <#if attributes.maxlength?has_content>
+                maxlength="${attributes.maxlength}"
             </#if>
-            <#if parameters.minlength?has_content>
-                minlength="${parameters.minlength}"
+            <#if attributes.minlength?has_content>
+                minlength="${attributes.minlength}"
             </#if>
-            <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-            <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-            <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+            <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+            <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+            <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >
-<#if parameters.nameValue??>
-    <@s.property value="parameters.nameValue"/>
+<#if attributes.nameValue??>
+    <@s.property value="attributes.nameValue"/>
 </#if>
 </textarea>
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

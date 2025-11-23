@@ -22,21 +22,21 @@
 <#if (actionErrors?? && actionErrors?size > 0)>
     <@compress single_line=true>
         <ul
-                <#if parameters.id??>
-                    id="${parameters.id}"
+                <#if attributes.id??>
+                    id="${attributes.id}"
                 </#if>
-                <#if parameters.cssClass??>
-                    class="${parameters.cssClass}"
+                <#if attributes.cssClass??>
+                    class="${attributes.cssClass}"
                 <#else>
                     class="errorMessage"
                 </#if>
-                <#if parameters.cssStyle??>
-                    style="${parameters.cssStyle}"
+                <#if attributes.cssStyle??>
+                    style="${attributes.cssStyle}"
                 </#if>
         >
             <#list actionErrors as error>
                 <#if error??><#t/>
-                    <li><span><#if parameters.escape>${error!}<#else>${error!?no_esc}</#if></span></li>
+                    <li><span><#if attributes.escape>${error!}<#else>${error!?no_esc}</#if></span></li>
                 </#if>
             </#list>
         </ul>

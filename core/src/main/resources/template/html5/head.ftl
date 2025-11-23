@@ -19,5 +19,5 @@
  */
 -->
 <@compress single_line=true>
-<@s.script src="${base}${parameters.staticContentPath}/utils.js" />
+<@s.script src="${base}${attributes.staticContentPath}/utils.js" />
 </@compress>

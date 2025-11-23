@@ -19,7 +19,7 @@
  */
 -->
 <#compress>
-<#if parameters.nonce?has_content>
- nonce="${parameters.nonce}"
+<#if attributes.nonce?has_content>
+ nonce="${attributes.nonce}"
 </#if>
 </#compress>

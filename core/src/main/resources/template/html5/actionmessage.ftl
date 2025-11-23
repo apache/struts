@@ -19,24 +19,24 @@
  * under the License.
  */
 -->
-<#if (actionMessages?? && actionMessages?size > 0 && !parameters.isEmptyList)>
+<#if (actionMessages?? && actionMessages?size > 0 && !attributes.isEmptyList)>
     <@compress single_line=true>
         <ul
-                <#if parameters.id??>
-                    id="${parameters.id}"
+                <#if attributes.id??>
+                    id="${attributes.id}"
                 </#if>
-                <#if parameters.cssClass??>
-                    class="${parameters.cssClass}"
+                <#if attributes.cssClass??>
+                    class="${attributes.cssClass}"
                 <#else>
                     class="actionMessage"
                 </#if>
-                <#if parameters.cssStyle??>
-                    style="${parameters.cssStyle}"
+                <#if attributes.cssStyle??>
+                    style="${attributes.cssStyle}"
                 </#if>
         >
             <#list actionMessages as message>
                 <#if message??><#t/>
-                    <li><span><#if parameters.escape>${message!}<#else>${message!?no_esc}</#if></span></li>
+                    <li><span><#if attributes.escape>${message!}<#else>${message!?no_esc}</#if></span></li>
                 </#if>
             </#list>
         </ul>

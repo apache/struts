@@ -41,7 +41,7 @@
 <br>
 
 <a href="#" id="toggle-button">[Debug]</a>
-<div style="display:none" id="<#if parameters.id??>${parameters.id}<#else>debug</#if>">
+<div style="display:none" id="<#if attributes.id??>${attributes.id}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
 <br>
 
@@ -50,7 +50,7 @@
     <tr><th>Object</th><th>Property Name</th><th>Property Value</th><th>Property Class</th></tr>
 
     <#assign index=1>
-    <#list parameters.stackValues as stackObject>
+    <#list attributes.stackValues as stackObject>
     <tr>
         <td rowspan="${stackObject.value.size()}">${stackObject.key}</td>
 
@@ -86,7 +86,7 @@
 </div>
 <@s.script>
     document.getElementById('toggle-button').onclick = function() {
-        toggleDebug('<#if parameters.id??>${parameters.id}<#else>debug</#if>');
+        toggleDebug('<#if attributes.id??>${attributes.id}<#else>debug</#if>');
         return false;
     }
 </@s.script>

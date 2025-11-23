@@ -18,32 +18,32 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#compress>
 <input type="file"
- name="${(parameters.name!"")}"
-<#if parameters.get("size")?has_content>
- size="${parameters.get("size")}"
+ name="${(attributes.name!"")}"
+<#if attributes.get("size")?has_content>
+ size="${attributes.get("size")}"
 </#if>
-<#if parameters.disabled!false>
+<#if attributes.disabled!false>
  disabled="disabled"
 </#if>
-<#if parameters.accept?has_content>
- accept="${parameters.accept}"
+<#if attributes.accept?has_content>
+ accept="${attributes.accept}"
 </#if>
-<#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"
 </#if>
-<#if parameters.id?has_content>
- id="${parameters.id}"
+<#if attributes.id?has_content>
+ id="${attributes.id}"
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
-<#if parameters.title?has_content>
- title="${parameters.title}"
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 />
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

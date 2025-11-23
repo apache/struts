@@ -584,4 +584,15 @@ public class ResetTest extends AbstractUITagTest {
         ResetTag tag = new ResetTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
+
+    public void testGenericHtml5() throws Exception {
+        ResetTag tag = new ResetTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        ResetTag tag = new ResetTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
 }

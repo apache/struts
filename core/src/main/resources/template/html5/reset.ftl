@@ -18,67 +18,67 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#compress>
-    <#if parameters.type?? && parameters.type=="button">
+    <#if attributes.type?? && attributes.type=="button">
         <button type="reset"
-                <#if parameters.name?has_content>
-                    name="${parameters.name}"
+                <#if attributes.name?has_content>
+                    name="${attributes.name}"
                 </#if>
-                <#if parameters.nameValue??>
-                    value="<@s.property value="parameters.nameValue"/>"
+                <#if attributes.nameValue??>
+                    value="<@s.property value="attributes.nameValue"/>"
                 </#if>
-                <#if parameters.cssClass?has_content>
-                    class="${parameters.cssClass}"
+                <#if attributes.cssClass?has_content>
+                    class="${attributes.cssClass}"
                 </#if>
-                <#if parameters.cssStyle?has_content>
-                    style="${parameters.cssStyle}"
+                <#if attributes.cssStyle?has_content>
+                    style="${attributes.cssStyle}"
                 </#if>
-                <#if parameters.disabled!false>
+                <#if attributes.disabled!false>
                     disabled="disabled"
                 </#if>
-                <#if parameters.tabindex?has_content>
-                    tabindex="${parameters.tabindex}"
+                <#if attributes.tabindex?has_content>
+                    tabindex="${attributes.tabindex}"
                 </#if>
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-        ><#if parameters.src?has_content>
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/>
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+        ><#if attributes.src?has_content>
                 <img
-                <#if parameters.label?has_content>
-                    alt="${parameters.label}"
+                <#if attributes.label?has_content>
+                    alt="${attributes.label}"
                 </#if>
-                <#if parameters.src?has_content>
-                    src="${parameters.src}"
+                <#if attributes.src?has_content>
+                    src="${attributes.src}"
                 </#if>
-                /><#else><#if parameters.label?has_content><@s.property value="parameters.label"/></#if></#if></button>
+                /><#else><#if attributes.label?has_content><@s.property value="attributes.label"/></#if></#if></button>
     <#else>
         <input type="reset"
-                <#if parameters.name?has_content>
-                    name="${parameters.name}"
+                <#if attributes.name?has_content>
+                    name="${attributes.name}"
                 </#if>
-                <#if parameters.nameValue??>
-                    value="<@s.property value="parameters.nameValue"/>"
+                <#if attributes.nameValue??>
+                    value="<@s.property value="attributes.nameValue"/>"
                 </#if>
-                <#if parameters.cssClass?has_content>
-                    class="${parameters.cssClass}"
+                <#if attributes.cssClass?has_content>
+                    class="${attributes.cssClass}"
                 </#if>
-                <#if parameters.cssStyle?has_content>
-                    style="${parameters.cssStyle}"
+                <#if attributes.cssStyle?has_content>
+                    style="${attributes.cssStyle}"
                 </#if>
-                <#if parameters.title?has_content>
-                    title="${parameters.title}"
+                <#if attributes.title?has_content>
+                    title="${attributes.title}"
                 </#if>
-                <#if parameters.disabled!false>
+                <#if attributes.disabled!false>
                     disabled="disabled"
                 </#if>
-                <#if parameters.tabindex?has_content>
-                    tabindex="${parameters.tabindex}"
+                <#if attributes.tabindex?has_content>
+                    tabindex="${attributes.tabindex}"
                 </#if>
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-                <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+                <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
         />
     </#if>
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

@@ -19,11 +19,11 @@
  */
 -->
 <#compress>
-<#if parameters.type?? && parameters.type=="button">
-<#if parameters.body?length gt 0>${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}<#elseif parameters.label??><@s.property value="parameters.label"/></#if>
+<#if attributes.type?? && attributes.type=="button">
+<#if attributes.body?length gt 0>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#elseif attributes.label??><@s.property value="attributes.label"/></#if>
 </button>
 <#else>
-${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}
+${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}
 </#if>
 </#compress>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

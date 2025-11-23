@@ -19,7 +19,7 @@
  */
 -->
 <#compress>
-<#if parameters.accesskey?has_content>
- accesskey="${parameters.accesskey}"
+<#if attributes.accesskey?has_content>
+ accesskey="${attributes.accesskey}"
 </#if>
 </#compress>

@@ -20,34 +20,34 @@
 -->
 <@compress single_line=true>
 <script
-        <#if parameters.async?has_content && parameters.async == "true">
+        <#if attributes.async?has_content && attributes.async == "true">
             async
         </#if>
-        <#if parameters.charset?has_content>
-            charset="${parameters.charset}"
+        <#if attributes.charset?has_content>
+            charset="${attributes.charset}"
         </#if>
-        <#if parameters.defer?has_content && parameters.defer=="true">
+        <#if attributes.defer?has_content && attributes.defer=="true">
             defer
         </#if>
-        <#if parameters.type?has_content>
-            type="${parameters.type}"
+        <#if attributes.type?has_content>
+            type="${attributes.type}"
         </#if>
-        <#if parameters.src?has_content>
-            src="${parameters.src}"
+        <#if attributes.src?has_content>
+            src="${attributes.src}"
         </#if>
-        <#if parameters.referrerpolicy?has_content>
-            referrerpolicy="${parameters.referrerpolicy}"
+        <#if attributes.referrerpolicy?has_content>
+            referrerpolicy="${attributes.referrerpolicy}"
         </#if>
-        <#if parameters.nomodule?has_content && parameters.nomodule=="true">
+        <#if attributes.nomodule?has_content && attributes.nomodule=="true">
             nomodule
         </#if>
-        <#if parameters.integrity?has_content>
-            integrity="${parameters.integrity}"
+        <#if attributes.integrity?has_content>
+            integrity="${attributes.integrity}"
         </#if>
-        <#if parameters.crossorigin?has_content>
-            crossorigin="${parameters.crossorigin}"
+        <#if attributes.crossorigin?has_content>
+            crossorigin="${attributes.crossorigin}"
         </#if>
-        <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-        <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-        <#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" />>
+        <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
+        <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+        <#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />>
 </@compress>

@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 /**
@@ -54,7 +54,7 @@ public abstract class FormButton extends ClosingUIBean {
 
         addParameter("type", submitType);
 
-        if (!BUTTON_TYPE_INPUT.equals(submitType) && (label == null)) {
+        if (!BUTTON_TYPE_INPUT.equals(submitType) && (getLabel() == null)) {
             addParameter("label", getAttributes().get("nameValue"));
         }
 
@@ -94,15 +94,15 @@ public abstract class FormButton extends ClosingUIBean {
      */
     protected void populateComponentHtmlId(Form form) {
         String tmpId = "";
-        if (id != null) {
+        if (getId() != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            tmpId = findString(id);
+            tmpId = findString(getId());
         } else {
             if (form != null && form.getAttributes().get("id") != null) {
                 tmpId = tmpId + form.getAttributes().get("id").toString() + "_";
             }
-            if (name != null) {
-                tmpId = tmpId + escape(findString(name));
+            if (getName() != null) {
+                tmpId = tmpId + escape(findString(getName()));
             } else if (action != null || method != null) {
                 if (action != null) {
                     tmpId = tmpId + escape(findString(action));
@@ -141,7 +141,7 @@ public abstract class FormButton extends ClosingUIBean {
 
 
     @StrutsTagAttribute(description = "The type of submit to use. Valid values are <i>input</i>, " +
-        "<i>button</i> and <i>image</i>.", defaultValue = "input")
+            "<i>button</i> and <i>image</i>.", defaultValue = "input")
     public void setType(String type) {
         this.type = type;
     }

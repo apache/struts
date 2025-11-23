@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ValueStack;
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.util.TextProviderHelper;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -59,7 +59,7 @@ import java.util.List;
  * action context (action scope).
  * </p>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
@@ -69,13 +69,13 @@ import java.util.List;
  *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
  *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: params -->
  *
  * <p>
  * Example:
  * </p>
- *
+ * <p>
  * <!-- START SNIPPET: exdescription -->
  * <p>Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through the framework in the second example.</p>
  * <!-- END SNIPPET: exdescription -->
@@ -118,16 +118,16 @@ import java.util.List;
  *
  */
 @StrutsTag(
-    name="text",
-    tldTagClass="org.apache.struts2.views.jsp.TextTag",
-    description="Render a I18n text message")
+        name = "text",
+        tldTagClass = "org.apache.struts2.views.jsp.TextTag",
+        description = "Render a I18n text message")
 public class Text extends ContextBean implements Param.UnnamedParametric {
 
     private static final Logger LOG = LogManager.getLogger(Text.class);
 
     protected List<Object> values = Collections.emptyList();
     protected String actualName;
-    protected String name;
+    private String name;
     private boolean escapeHtml = false;
     private boolean escapeJavaScript = false;
     private boolean escapeXml = false;
@@ -137,27 +137,36 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         super(stack);
     }
 
+    /**
+     * Gets the name of the resource property to fetch.
+     *
+     * @return the resource property name
+     */
+    public String getName() {
+        return name;
+    }
+
     @StrutsTagAttribute(description = "Name of resource property to fetch", required = true)
     public void setName(String name) {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to escape HTML", type = "Boolean", defaultValue = "false")
     public void setEscapeHtml(boolean escape) {
         this.escapeHtml = escape;
     }
 
-    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to escape Javascript", type = "Boolean", defaultValue = "false")
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
 
-    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to escape XML", type = "Boolean", defaultValue = "false")
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }
 
-    @StrutsTagAttribute(description="Whether to escape CSV (useful to escape a value for a column)", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to escape CSV (useful to escape a value for a column)", type = "Boolean", defaultValue = "false")
     public void setEscapeCsv(boolean escapeCsv) {
         this.escapeCsv = escapeCsv;
     }

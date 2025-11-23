@@ -18,13 +18,8 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.config.ConfigurationException;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.TextParseUtil;
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,11 +29,15 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.dispatcher.AttributeMap;
 import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.csp.CspNonceReader;
 import org.apache.struts2.util.ComponentUtils;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.TextProviderHelper;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
 
@@ -105,9 +104,9 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  *       </tr>
  *    </tbody>
  * </table>
- *
+ * <p>
  * <!-- END SNIPPET: templateRelatedAttributes -->
- *
+ * <p>
  * <!-- START SNIPPET: generalAttributes -->
  *
  * <table border="1" summary="">
@@ -174,7 +173,7 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  *          <td>String</td>
  *          <td>define required label position of form element (left/right), default to right</td>
  *       </tr>
-  *       <tr>
+ *       <tr>
  *          <td>errorPosition</td>
  *          <td>xhtml</td>
  *          <td>String</td>
@@ -206,9 +205,9 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  *       </tr>
  *    </tbody>
  * </table>
- *
+ * <p>
  * <!-- END SNIPPET: generalAttributes -->
- *
+ * <p>
  * <!-- START SNIPPET: javascriptRelatedAttributes -->
  *
  * <table border="1" summary="">
@@ -301,9 +300,9 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  *       </tr>
  *    </tbody>
  * </table>
- *
+ * <p>
  * <!-- END SNIPPET: javascriptRelatedAttributes -->
- *
+ * <p>
  * <!-- START SNIPPET: tooltipattributes -->
  * <strong>Deprecated since 7.0.1</strong
  * <table border="1" summary="">
@@ -343,10 +342,10 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  *      <td>The name of the property this input field represents.  This will auto populate the name, label, and value</td>
  *   </tr>
  * </table>
- *
+ * <p>
  * <!-- END SNIPPET: tooltipattributes -->
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: tooltipdescription -->
  * <p>
  * <strong>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </strong>
@@ -379,7 +378,7 @@ import static org.apache.struts2.dispatcher.DispatcherConstants.ATTRIBUTES;
  * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br>
  * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br>
  * </p>
- *
+ * <p>
  * <!-- END SNIPPET: tooltipdescription -->
  *
  *
@@ -475,21 +474,21 @@ public abstract class UIBean extends Component {
     // shortcut, sets label, name, and value
     protected String key;
 
-    protected String id;
+    private String id;
     protected String cssClass;
     protected String cssStyle;
     protected String cssErrorClass;
     protected String cssErrorStyle;
     protected String disabled;
-    protected String label;
+    private String label;
     protected String labelPosition;
     protected String labelSeparator;
     protected String requiredPosition;
     protected String errorPosition;
-    protected String name;
+    private String name;
     protected String requiredLabel;
     protected String tabindex;
-    protected String value;
+    private String value;
     protected String title;
 
     // HTML scripting events attributes
@@ -569,8 +568,7 @@ public abstract class UIBean extends Component {
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
             throw new StrutsException(e);
-        }
-        finally {
+        } finally {
             popComponentStack();
         }
 
@@ -684,11 +682,11 @@ public abstract class UIBean extends Component {
 
         if (this.key != null) {
 
-            if(this.name == null) {
+            if (this.name == null) {
                 setName(key);
             }
 
-            if(this.label == null) {
+            if (this.label == null) {
                 // lookup the label from a TextProvider (default value is the key)
                 providedLabel = TextProviderHelper.getText(key, key, stack);
             }
@@ -826,10 +824,10 @@ public abstract class UIBean extends Component {
         // create HTML id element
         populateComponentHtmlId(form);
 
-        if (form != null ) {
+        if (form != null) {
             addParameter("form", form.getAttributes());
 
-            if ( translatedName != null ) {
+            if (translatedName != null) {
                 // list should have been created by the form component
                 List<String> tags = (List<String>) form.getAttributes().get("tagNames");
                 tags.add(translatedName);
@@ -857,13 +855,12 @@ public abstract class UIBean extends Component {
                 for (Map.Entry<String, String> entry : overallTooltipConfigMap.entrySet()) {
                     addParameter(entry.getKey(), entry.getValue());
                 }
-            }
-            else {
+            } else {
                 LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work");
             }
 
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String  jsTooltipEnabled = (String) getAttributes().get("jsTooltipEnabled");
+            String jsTooltipEnabled = (String) getAttributes().get("jsTooltipEnabled");
             if (jsTooltipEnabled != null)
                 this.javascriptTooltip = jsTooltipEnabled;
 
@@ -907,6 +904,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Tries to calculate the "value" parameter based either on the provided {@link #value} or {@link #name}
+     *
      * @param translatedName the already evaluated {@link #name}
      */
     protected void applyValueParameter(String translatedName) {
@@ -1039,7 +1037,7 @@ public abstract class UIBean extends Component {
      * Create HTML id element for the component and populate this component parameter
      * map. Additionally, a parameter named escapedId is populated which contains the found id value filtered by
      * {@link #escape(String)}, needed eg. for naming Javascript identifiers based on the id value.
-     *
+     * <p>
      * The order is as follows :-
      * <ol>
      *   <li>This component id attribute</li>
@@ -1067,30 +1065,58 @@ public abstract class UIBean extends Component {
         //fix for https://issues.apache.org/jira/browse/WW-4299
         //do not assign value to id if tryId is null
         if (tryId != null) {
-          addParameter("id", tryId);
-          addParameter("escapedId", escape(tryId));
+            addParameter("id", tryId);
+            addParameter("escapedId", escape(tryId));
         }
     }
 
     /**
      * Get's the id for referencing element.
+     *
      * @return the id for referencing element.
      */
     public String getId() {
         return id;
     }
 
-    @StrutsTagAttribute(description="HTML id attribute")
+    @StrutsTagAttribute(description = "HTML id attribute")
     public void setId(String id) {
         this.id = id;
     }
 
-    @StrutsTagAttribute(description="The template directory.")
+    /**
+     * Gets the label expression used for rendering an element specific label.
+     *
+     * @return the label expression
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * Gets the name to set for element.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the preset value of input element.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    @StrutsTagAttribute(description = "The template directory.")
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
     }
 
-    @StrutsTagAttribute(description="The theme (other than default) to use for rendering the element")
+    @StrutsTagAttribute(description = "The theme (other than default) to use for rendering the element")
     public void setTheme(String theme) {
         this.theme = theme;
     }
@@ -1099,210 +1125,210 @@ public abstract class UIBean extends Component {
         return template;
     }
 
-    @StrutsTagAttribute(description="The template (other than default) to use for rendering the element")
+    @StrutsTagAttribute(description = "The template (other than default) to use for rendering the element")
     public void setTemplate(String template) {
         this.template = template;
     }
 
-    @StrutsTagAttribute(description="The css class to use for element")
+    @StrutsTagAttribute(description = "The css class to use for element")
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
     }
 
-    @StrutsTagAttribute(description="The css style definitions for element to use")
+    @StrutsTagAttribute(description = "The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
-    @StrutsTagAttribute(description="The css style definitions for element to use - it's an alias of cssStyle attribute.")
+    @StrutsTagAttribute(description = "The css style definitions for element to use - it's an alias of cssStyle attribute.")
     public void setStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
-    @StrutsTagAttribute(description="The css error class to use for element")
+    @StrutsTagAttribute(description = "The css error class to use for element")
     public void setCssErrorClass(String cssErrorClass) {
         this.cssErrorClass = cssErrorClass;
     }
 
-    @StrutsTagAttribute(description="The css error style definitions for element to use")
+    @StrutsTagAttribute(description = "The css error style definitions for element to use")
     public void setCssErrorStyle(String cssErrorStyle) {
         this.cssErrorStyle = cssErrorStyle;
     }
 
-    @StrutsTagAttribute(description="Set the html title attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html title attribute on rendered html element")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @StrutsTagAttribute(description="Set the html disabled attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html disabled attribute on rendered html element")
     public void setDisabled(String disabled) {
         this.disabled = disabled;
     }
 
-    @StrutsTagAttribute(description="Label expression used for rendering an element specific label")
+    @StrutsTagAttribute(description = "Label expression used for rendering an element specific label")
     public void setLabel(String label) {
         this.label = label;
     }
 
-    @StrutsTagAttribute(description="String that will be appended to the label", defaultValue=":")
+    @StrutsTagAttribute(description = "String that will be appended to the label", defaultValue = ":")
     public void setLabelSeparator(String labelseparator) {
         this.labelSeparator = labelseparator;
     }
 
-    @StrutsTagAttribute(description="Define label position of form element (top/left)")
+    @StrutsTagAttribute(description = "Define label position of form element (top/left)")
     public void setLabelPosition(String labelPosition) {
         this.labelPosition = labelPosition;
     }
 
-    @StrutsTagAttribute(description="Define required position of required form element (left|right)")
+    @StrutsTagAttribute(description = "Define required position of required form element (left|right)")
     public void setRequiredPosition(String requiredPosition) {
         this.requiredPosition = requiredPosition;
     }
 
-    @StrutsTagAttribute(description="Define error position of form element (top|bottom)")
+    @StrutsTagAttribute(description = "Define error position of form element (top|bottom)")
     public void setErrorPosition(String errorPosition) {
         this.errorPosition = errorPosition;
     }
 
-    @StrutsTagAttribute(description="The name to set for element")
+    @StrutsTagAttribute(description = "The name to set for element")
     public void setName(String name) {
         if (name != null && name.startsWith("$")) {
             LOG.error("The name attribute should not usually be a templating variable." +
-                      " This can cause a critical vulnerability if the resolved value is derived from user input." +
-                      " If you are certain that you require this behaviour, please use OGNL expression syntax ( %{expr} ) instead.",
+                            " This can cause a critical vulnerability if the resolved value is derived from user input." +
+                            " If you are certain that you require this behaviour, please use OGNL expression syntax ( %{expr} ) instead.",
                     new IllegalStateException());
             return;
         }
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="If set to true, the rendered element will indicate that input is required", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "If set to true, the rendered element will indicate that input is required", type = "Boolean", defaultValue = "false")
     public void setRequiredLabel(String requiredLabel) {
         this.requiredLabel = requiredLabel;
     }
 
-    @StrutsTagAttribute(description="Set the html tabindex attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html tabindex attribute on rendered html element")
     public void setTabindex(String tabindex) {
         this.tabindex = tabindex;
     }
 
-    @StrutsTagAttribute(description="Preset the value of input element.")
+    @StrutsTagAttribute(description = "Preset the value of input element.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @StrutsTagAttribute(description="Set the html onclick attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onclick attribute on rendered html element")
     public void setOnclick(String onclick) {
         this.onclick = onclick;
     }
 
-    @StrutsTagAttribute(description="Set the html ondblclick attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html ondblclick attribute on rendered html element")
     public void setOndblclick(String ondblclick) {
         this.ondblclick = ondblclick;
     }
 
-    @StrutsTagAttribute(description="Set the html onmousedown attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onmousedown attribute on rendered html element")
     public void setOnmousedown(String onmousedown) {
         this.onmousedown = onmousedown;
     }
 
-    @StrutsTagAttribute(description="Set the html onmouseup attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onmouseup attribute on rendered html element")
     public void setOnmouseup(String onmouseup) {
         this.onmouseup = onmouseup;
     }
 
-    @StrutsTagAttribute(description="Set the html onmouseover attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onmouseover attribute on rendered html element")
     public void setOnmouseover(String onmouseover) {
         this.onmouseover = onmouseover;
     }
 
-    @StrutsTagAttribute(description="Set the html onmousemove attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onmousemove attribute on rendered html element")
     public void setOnmousemove(String onmousemove) {
         this.onmousemove = onmousemove;
     }
 
-    @StrutsTagAttribute(description="Set the html onmouseout attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onmouseout attribute on rendered html element")
     public void setOnmouseout(String onmouseout) {
         this.onmouseout = onmouseout;
     }
 
-    @StrutsTagAttribute(description="Set the html onfocus attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onfocus attribute on rendered html element")
     public void setOnfocus(String onfocus) {
         this.onfocus = onfocus;
     }
 
-    @StrutsTagAttribute(description=" Set the html onblur attribute on rendered html element")
+    @StrutsTagAttribute(description = " Set the html onblur attribute on rendered html element")
     public void setOnblur(String onblur) {
         this.onblur = onblur;
     }
 
-    @StrutsTagAttribute(description="Set the html onkeypress attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onkeypress attribute on rendered html element")
     public void setOnkeypress(String onkeypress) {
         this.onkeypress = onkeypress;
     }
 
-    @StrutsTagAttribute(description="Set the html onkeydown attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onkeydown attribute on rendered html element")
     public void setOnkeydown(String onkeydown) {
         this.onkeydown = onkeydown;
     }
 
-    @StrutsTagAttribute(description="Set the html onkeyup attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onkeyup attribute on rendered html element")
     public void setOnkeyup(String onkeyup) {
         this.onkeyup = onkeyup;
     }
 
-    @StrutsTagAttribute(description="Set the html onselect attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onselect attribute on rendered html element")
     public void setOnselect(String onselect) {
         this.onselect = onselect;
     }
 
-    @StrutsTagAttribute(description="Set the html onchange attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html onchange attribute on rendered html element")
     public void setOnchange(String onchange) {
         this.onchange = onchange;
     }
 
-    @StrutsTagAttribute(description="Set the html accesskey attribute on rendered html element")
+    @StrutsTagAttribute(description = "Set the html accesskey attribute on rendered html element")
     public void setAccesskey(String accesskey) {
         this.accesskey = accesskey;
     }
 
-    @StrutsTagAttribute(description="Set the tooltip of this particular component")
+    @StrutsTagAttribute(description = "Set the tooltip of this particular component")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
 
-    @StrutsTagAttribute(description="Deprecated. Use individual tooltip configuration attributes instead.")
+    @StrutsTagAttribute(description = "Deprecated. Use individual tooltip configuration attributes instead.")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
 
-    @StrutsTagAttribute(description="Set the key (name, value, label) for this particular component")
+    @StrutsTagAttribute(description = "Set the key (name, value, label) for this particular component")
     public void setKey(String key) {
         this.key = key;
     }
 
-    @StrutsTagAttribute(description="Use JavaScript to generate tooltips", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Use JavaScript to generate tooltips", type = "Boolean", defaultValue = "false")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setJavascriptTooltip(String javascriptTooltip) {
         this.javascriptTooltip = javascriptTooltip;
     }
 
-    @StrutsTagAttribute(description="CSS class applied to JavaScrip tooltips", defaultValue="StrutsTTClassic")
+    @StrutsTagAttribute(description = "CSS class applied to JavaScrip tooltips", defaultValue = "StrutsTTClassic")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipCssClass(String tooltipCssClass) {
         this.tooltipCssClass = tooltipCssClass;
     }
 
-    @StrutsTagAttribute(description="Delay in milliseconds, before showing JavaScript tooltips ",
-        defaultValue="Classic")
+    @StrutsTagAttribute(description = "Delay in milliseconds, before showing JavaScript tooltips ",
+            defaultValue = "Classic")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipDelay(String tooltipDelay) {
         this.tooltipDelay = tooltipDelay;
     }
 
-    @StrutsTagAttribute(description="Icon path used for image that will have the tooltip")
+    @StrutsTagAttribute(description = "Icon path used for image that will have the tooltip")
     @Deprecated(since = "7.0.1", forRemoval = true)
     public void setTooltipIconPath(String tooltipIconPath) {
         this.tooltipIconPath = tooltipIconPath;
@@ -1326,13 +1352,14 @@ public abstract class UIBean extends Component {
 
     /**
      * supports dynamic attributes for freemarker ui tags
+     *
      * @see <a href="https://issues.apache.org/jira/browse/WW-3174">WW-3174</a>
      * @see <a href="https://issues.apache.org/jira/browse/WW-4166">WW-4166</a>
      */
     @Override
     public void copyAttributes(Map<String, Object> attributesToCopy) {
         super.copyAttributes(attributesToCopy);
-        for (Map.Entry<String, Object>entry : attributesToCopy.entrySet()) {
+        for (Map.Entry<String, Object> entry : attributesToCopy.entrySet()) {
             String entryKey = entry.getKey();
             if (!isValidTagAttribute(entryKey) && !entryKey.equals("dynamicAttributes")) {
                 dynamicAttributes.put(entryKey, entry.getValue());

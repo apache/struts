@@ -18,38 +18,37 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.inject.Inject;
+import org.apache.struts2.locale.LocaleProvider;
+import org.apache.struts2.locale.LocaleProviderFactory;
+import org.apache.struts2.text.LocalizedTextProvider;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
 import java.io.Writer;
 import java.util.ResourceBundle;
 
-import org.apache.struts2.locale.LocaleProviderFactory;
-import org.apache.struts2.text.LocalizedTextProvider;
-import org.apache.struts2.text.TextProviderFactory;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.StrutsException;
-
-import org.apache.struts2.locale.LocaleProvider;
-import org.apache.struts2.text.TextProvider;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ValueStack;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Gets a resource bundle and place it on the value stack. This allows
  * the text tag to access messages from any bundle, and not just the bundle
  * associated with the current action.
- *
+ * <p>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p>
  * <!-- START SNIPPET: params-->
  *
  * <ul>
  *      <li>name* - the resource bundle's name (eg foo/bar/customBundle)</li>
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: params -->
  *
  * <p>
@@ -78,14 +77,14 @@ import org.apache.logging.log4j.Logger;
  * </pre>
  *
  */
-@StrutsTag(name="i18n", tldTagClass="org.apache.struts2.views.jsp.I18nTag", description="Get a resource bundle" +
-                " and place it on the value stack")
+@StrutsTag(name = "i18n", tldTagClass = "org.apache.struts2.views.jsp.I18nTag", description = "Get a resource bundle" +
+        " and place it on the value stack")
 public class I18n extends Component {
 
     private static final Logger LOG = LogManager.getLogger(I18n.class);
 
     protected boolean pushed;
-    protected String name;
+    private String name;
 
     private LocalizedTextProvider localizedTextProvider;
     private TextProvider textProvider;
@@ -145,17 +144,26 @@ public class I18n extends Component {
         if (pushed) {
             Object o = getStack().pop();
             if ((o == null) || (!o.equals(textProvider))) {
-                LOG.error("A closing i18n tag attempted to pop its own TextProvider from the top of the ValueStack but popped an unexpected object ("+(o != null ? o.getClass() : "null")+"). " +
-                            "Refactor the page within the i18n tags to ensure no objects are pushed onto the ValueStack without popping them prior to the closing tag. " +
-                            "If you see this message it's likely that the i18n's TextProvider is still on the stack and will continue to provide message resources after the closing tag.");
-                throw new StrutsException("A closing i18n tag attempted to pop its TextProvider from the top of the ValueStack but popped an unexpected object ("+(o != null ? o.getClass() : "null")+")");
+                LOG.error("A closing i18n tag attempted to pop its own TextProvider from the top of the ValueStack but popped an unexpected object (" + (o != null ? o.getClass() : "null") + "). " +
+                        "Refactor the page within the i18n tags to ensure no objects are pushed onto the ValueStack without popping them prior to the closing tag. " +
+                        "If you see this message it's likely that the i18n's TextProvider is still on the stack and will continue to provide message resources after the closing tag.");
+                throw new StrutsException("A closing i18n tag attempted to pop its TextProvider from the top of the ValueStack but popped an unexpected object (" + (o != null ? o.getClass() : "null") + ")");
             }
         }
 
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description="Name of resource bundle to use (eg foo/bar/customBundle)", required=true, defaultValue="String")
+    /**
+     * Gets the name of the resource bundle to use.
+     *
+     * @return the resource bundle name
+     */
+    public String getName() {
+        return name;
+    }
+
+    @StrutsTagAttribute(description = "Name of resource bundle to use (eg foo/bar/customBundle)", required = true, defaultValue = "String")
     public void setName(String name) {
         this.name = name;
     }

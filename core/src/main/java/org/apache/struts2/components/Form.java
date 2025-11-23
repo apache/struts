@@ -18,11 +18,15 @@
  */
 package org.apache.struts2.components;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptorUtil;
 import org.apache.struts2.util.ValueStack;
@@ -33,10 +37,6 @@ import org.apache.struts2.validator.ValidationInterceptor;
 import org.apache.struts2.validator.Validator;
 import org.apache.struts2.validator.ValidatorContext;
 import org.apache.struts2.validator.validators.VisitorFieldValidator;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -90,10 +90,10 @@ import java.util.Set;
  * </pre>
  */
 @StrutsTag(
-    name = "form",
-    tldTagClass = "org.apache.struts2.views.jsp.ui.FormTag",
-    description = "Renders an input form",
-    allowDynamicAttributes = true)
+        name = "form",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.FormTag",
+        description = "Renders an input form",
+        allowDynamicAttributes = true)
 public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
@@ -170,7 +170,7 @@ public class Form extends ClosingUIBean {
             addParameter("validate", findValue(validate, Boolean.class));
         }
 
-        if (name == null) {
+        if (getName() == null) {
             //make the name the same as the id
             String id = (String) getAttributes().get("id");
             if (StringUtils.isNotEmpty(id)) {
@@ -223,7 +223,7 @@ public class Form extends ClosingUIBean {
      */
     @Override
     protected void populateComponentHtmlId(Form form) {
-        if (id != null) {
+        if (getId() != null) {
             super.populateComponentHtmlId(null);
         }
 
@@ -508,7 +508,7 @@ public class Form extends ClosingUIBean {
     }
 
     @StrutsTagAttribute(description = "Whether client side/remote validation should be performed. Only" +
-        " useful with theme xhtml/ajax", type = "Boolean", defaultValue = "false")
+            " useful with theme xhtml/ajax", type = "Boolean", defaultValue = "false")
     public void setValidate(String validate) {
         this.validate = validate;
     }

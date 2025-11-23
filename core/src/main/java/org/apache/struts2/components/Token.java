@@ -18,15 +18,13 @@
  */
 package org.apache.struts2.components;
 
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.util.TokenHelper;
-
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.views.annotations.StrutsTag;
+
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -50,7 +48,7 @@ import org.apache.struts2.util.ValueStack;
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
  *
  */
-@StrutsTag(name="token", tldTagClass="org.apache.struts2.views.jsp.ui.TokenTag", description="Stop double-submission of forms")
+@StrutsTag(name = "token", tldTagClass = "org.apache.struts2.views.jsp.ui.TokenTag", description = "Stop double-submission of forms")
 public class Token extends UIBean {
 
     public static final String TEMPLATE = "token";
@@ -78,13 +76,13 @@ public class Token extends UIBean {
         if (parameters.containsKey("name")) {
             tokenName = (String) parameters.get("name");
         } else {
-            if (name == null) {
+            if (getName() == null) {
                 tokenName = TokenHelper.DEFAULT_TOKEN_NAME;
             } else {
-                tokenName = findString(name);
+                tokenName = findString(getName());
 
                 if (tokenName == null) {
-                    tokenName = name;
+                    tokenName = getName();
                 }
             }
 

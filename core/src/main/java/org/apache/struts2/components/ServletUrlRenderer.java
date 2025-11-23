@@ -18,19 +18,19 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.ActionContext;
-import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.config.entities.ActionConfig;
-import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.RequestDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.url.QueryStringParser;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.util.UrlHelper;
 
 import java.io.IOException;
@@ -172,12 +172,12 @@ public class ServletUrlRenderer implements UrlRenderer {
         String actionMethod = nameMapping.getMethod();
 
         final ActionConfig actionConfig = formComponent.configuration.getRuntimeConfiguration().getActionConfig(
-            namespace, actionName);
+                namespace, actionName);
         if (actionConfig != null) {
 
             ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.attributes);
             String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-                formComponent.request, formComponent.response, queryStringResult.getQueryParams(), scheme, formComponent.includeContext, true, false, false);
+                    formComponent.request, formComponent.response, queryStringResult.getQueryParams(), scheme, formComponent.includeContext, true, false, false);
             formComponent.addParameter("action", result);
 
             // let's try to get the actual action class and name
@@ -193,7 +193,7 @@ public class ServletUrlRenderer implements UrlRenderer {
             formComponent.addParameter("namespace", namespace);
 
             // if the name isn't specified, use the action name
-            if (formComponent.name == null) {
+            if (formComponent.getName() == null) {
                 formComponent.addParameter("name", actionName);
             }
 

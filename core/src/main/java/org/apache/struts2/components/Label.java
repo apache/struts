@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.util.TextProviderHelper;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -32,7 +32,7 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
- *
+ * <p>
  * <!-- START SNIPPET: exdescription -->
  * <p>In this example, a label is rendered. The label is retrieved from a ResourceBundle via the key attribute
  * giving you an output of 'User Name: Ford.Prefect'. Assuming that i18n message userName corresponds
@@ -51,10 +51,10 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
  *
  */
 @StrutsTag(
-    name="label",
-    tldTagClass="org.apache.struts2.views.jsp.ui.LabelTag",
-    description="Render a label that displays read-only information",
-    allowDynamicAttributes=true)
+        name = "label",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.LabelTag",
+        description = "Render a label that displays read-only information",
+        allowDynamicAttributes = true)
 public class Label extends UIBean {
     final public static String TEMPLATE = "label";
 
@@ -76,8 +76,8 @@ public class Label extends UIBean {
         }
 
         // try value, then key, then name (this overrides the default behavior in the superclass)
-        if (value != null) {
-            addParameter("nameValue", findString(value));
+        if (getValue() != null) {
+            addParameter("nameValue", findString(getValue()));
         } else if (key != null) {
             Object nameValue = attributes.get("nameValue");
             if (nameValue == null || nameValue.toString().isEmpty()) {
@@ -85,13 +85,13 @@ public class Label extends UIBean {
                 String providedLabel = TextProviderHelper.getText(key, key, stack);
                 addParameter("nameValue", providedLabel);
             }
-        } else if (name != null) {
-            String expr = completeExpression(name);
+        } else if (getName() != null) {
+            String expr = completeExpression(getName());
             addParameter("nameValue", findString(expr));
         }
     }
 
-    @StrutsTagAttribute(description=" HTML for attribute")
+    @StrutsTagAttribute(description = " HTML for attribute")
     public void setFor(String forAttr) {
         this.forAttr = forAttr;
     }

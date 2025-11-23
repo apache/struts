@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -102,17 +102,16 @@ import java.io.Writer;
  * </pre>
  * <!-- END SNIPPET: example2 -->
  *
- *
  * @see Include
  * @see Bean
  * @see Text
  *
  */
-@StrutsTag(name="param", tldTagClass="org.apache.struts2.views.jsp.ParamTag", description="Parametrize other tags")
+@StrutsTag(name = "param", tldTagClass = "org.apache.struts2.views.jsp.ParamTag", description = "Parametrize other tags")
 public class Param extends Component {
 
-    protected String name;
-    protected String value;
+    private String name;
+    private String value;
     protected boolean suppressEmptyParameters;
 
     public Param(ValueStack stack) {
@@ -170,17 +169,35 @@ public class Param extends Component {
         return true;
     }
 
-    @StrutsTagAttribute(description="Name of Parameter to set")
+    /**
+     * Gets the name of the parameter.
+     *
+     * @return the parameter name
+     */
+    public String getName() {
+        return name;
+    }
+
+    @StrutsTagAttribute(description = "Name of Parameter to set")
     public void setName(String name) {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Value expression for Parameter to set", defaultValue="The value of evaluating provided name against stack")
+    /**
+     * Gets the value expression for the parameter.
+     *
+     * @return the value expression
+     */
+    public String getValue() {
+        return value;
+    }
+
+    @StrutsTagAttribute(description = "Value expression for Parameter to set", defaultValue = "The value of evaluating provided name against stack")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @StrutsTagAttribute(description="Whether to suppress empty parameters", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to suppress empty parameters", type = "Boolean", defaultValue = "false")
     public void setSuppressEmptyParameters(boolean suppressEmptyParameters) {
         this.suppressEmptyParameters = suppressEmptyParameters;
     }
@@ -198,7 +215,8 @@ public class Param extends Component {
 
         /**
          * Adds the given value as a parameter to the outer tag.
-         * @param value  the value
+         *
+         * @param value the value
          */
         void addParameter(Object value);
     }

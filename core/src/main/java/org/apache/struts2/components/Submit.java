@@ -18,17 +18,15 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import org.apache.struts2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -44,10 +42,10 @@ import org.apache.logging.log4j.LogManager;
  * <!-- END SNIPPET: javadoc -->
  */
 @StrutsTag(
-    name="submit",
-    tldTagClass="org.apache.struts2.views.jsp.ui.SubmitTag",
-    description="Render a submit button",
-    allowDynamicAttributes=true)
+        name = "submit",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.SubmitTag",
+        description = "Render a submit button",
+        allowDynamicAttributes = true)
 public class Submit extends FormButton {
 
     private static final Logger LOG = LogManager.getLogger(Submit.class);
@@ -68,12 +66,12 @@ public class Submit extends FormButton {
     }
 
     public void evaluateParams() {
-        if ((key == null) && (value == null)) {
-            value = "Submit";
+        if ((key == null) && (getValue() == null)) {
+            setValue("Submit");
         }
 
-        if ((key != null) && (value == null)) {
-            this.value = "%{getText('"+key +"')}";
+        if ((key != null) && (getValue() == null)) {
+            setValue("%{getText('" + key + "')}");
         }
 
         super.evaluateParams();
@@ -98,7 +96,7 @@ public class Submit extends FormButton {
         return true;
     }
 
-    @StrutsTagAttribute(description="Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.")
+    @StrutsTagAttribute(description = "Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.")
     public void setSrc(String src) {
         this.src = src;
     }
@@ -124,8 +122,7 @@ public class Submit extends FormButton {
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);
-        }
-        finally {
+        } finally {
             popComponentStack();
         }
 

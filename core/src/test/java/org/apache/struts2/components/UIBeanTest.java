@@ -19,15 +19,15 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionContext;
-import org.apache.struts2.config.ConfigurationException;
-import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -412,7 +412,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
     }
 
     public void testNonceOfRequestAttribute() {
-        Map<String, String> params = new HashMap<String, String>(){{
+        Map<String, String> params = new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_CSP_NONCE_SOURCE, "request");
         }};
         initDispatcher(params);
@@ -487,7 +487,61 @@ public class UIBeanTest extends StrutsInternalTestCase {
     public void testPotentialDoubleEvaluationWarning() {
         bean.setName("${someVar}");
 
-        assertNull(bean.name);
+        assertNull(bean.getName());
+    }
+
+    /**
+     * Test that UIBean fields (label, name, value, id) being private doesn't cause
+     * OGNL security warnings when evaluating getText() expressions.
+     * <p>
+     * This is a regression test for WW-5368 where using getText() with resource bundle
+     * keys starting with "label" would trigger OGNL SecurityMemberAccess warnings:
+     * "Access to non-public [protected java.lang.String org.apache.struts2.components.UIBean.label] is blocked!"
+     * <p>
+     * By changing these fields from protected to private with public getters, OGNL's
+     * introspection will find the public getter methods instead of attempting to access
+     * the fields directly, eliminating the false-positive security warnings.
+     */
+    public void testNoOgnlWarningsForProtectedFields() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
+
+        // Create a UIBean component to push onto the stack
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setLabel("Test Label");
+        txtFld.setName("testName");
+        txtFld.setValue("testValue");
+        txtFld.setId("testId");
+
+        container.inject(txtFld);
+
+        // Push the component onto the stack to simulate tag rendering context
+        stack.push(txtFld);
+
+        try {
+            // These expressions simulate getText() calls with resource bundle keys
+            // that start with field names. OGNL should use public getters, not field access
+            Object labelResult = stack.findValue("label");
+            Object nameResult = stack.findValue("name");
+            Object valueResult = stack.findValue("value");
+            Object idResult = stack.findValue("id");
+
+            // Verify the values are accessible via getters
+            assertEquals("Test Label", labelResult);
+            assertEquals("testName", nameResult);
+            assertEquals("testValue", valueResult);
+            assertEquals("testId", idResult);
+
+            // Verify the public getters are accessible
+            assertNotNull(txtFld.getLabel());
+            assertNotNull(txtFld.getName());
+            assertNotNull(txtFld.getValue());
+            assertNotNull(txtFld.getId());
+        } finally {
+            stack.pop();
+        }
     }
 
 }

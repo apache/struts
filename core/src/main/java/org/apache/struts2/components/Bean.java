@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -36,10 +36,10 @@ import java.io.Writer;
  *
  * <p>If the var attribute is set on the BeanTag, it will place the instantiated bean into the
  * stack's Context.</p>
- *
+ * <p>
  * <!-- END SNIPPET: javadoc -->
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *      <li>var - the stack's context name (if supplied) that the created bean will be store under</li>
@@ -65,8 +65,8 @@ import java.io.Writer;
  * &lt;/s:bean&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: examplesdescription -->
  * <p>This example instantiates a bean called SimpleCounter and sets the foo property (setFoo('BAR')). The
  * SimpleCounter object is then pushed onto the Valuestack, which means that we can call its accessor methods (getFoo())
@@ -95,7 +95,7 @@ public class Bean extends ContextBean {
     protected static final Logger LOG = LogManager.getLogger(Bean.class);
 
     protected Object bean;
-    protected String name;
+    private String name;
     protected ObjectFactory objectFactory;
     protected ReflectionProvider reflectionProvider;
 
@@ -144,6 +144,15 @@ public class Bean extends ContextBean {
 
     public void addParameter(String key, Object value) {
         reflectionProvider.setProperty(key, value, bean, getStack().getContext());
+    }
+
+    /**
+     * Gets the class name of the bean to be instantiated.
+     *
+     * @return the class name
+     */
+    public String getName() {
+        return name;
     }
 
     @StrutsTagAttribute(description = "The class name of the bean to be instantiated (must respect JavaBean specification)", required = true)

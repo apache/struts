@@ -47,13 +47,13 @@ import jakarta.servlet.http.HttpServletResponse;
  * </pre>
  *
  */
-@StrutsTag(name="link",
-        tldTagClass="org.apache.struts2.views.jsp.ui.LinkTag",
-        description="Link tag automatically adds nonces to link elements - should be used in combination with Struts' CSP Interceptor.",
-        allowDynamicAttributes=true)
-public class Link extends UIBean{
+@StrutsTag(name = "link",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.LinkTag",
+        description = "Link tag automatically adds nonces to link elements - should be used in combination with Struts' CSP Interceptor.",
+        allowDynamicAttributes = true)
+public class Link extends UIBean {
 
-    private static final String TEMPLATE="link";
+    private static final String TEMPLATE = "link";
 
     protected String href;
     protected String hreflang;
@@ -69,47 +69,47 @@ public class Link extends UIBean{
         super(stack, request, response);
     }
 
-    @StrutsTagAttribute(description="HTML link href attribute")
+    @StrutsTagAttribute(description = "HTML link href attribute")
     public void setHref(String href) {
         this.href = href;
     }
 
-    @StrutsTagAttribute(description="HTML link hreflang attribute")
+    @StrutsTagAttribute(description = "HTML link hreflang attribute")
     public void setHreflang(String hreflang) {
         this.hreflang = hreflang;
     }
 
-    @StrutsTagAttribute(description="HTML link rel attribute")
+    @StrutsTagAttribute(description = "HTML link rel attribute")
     public void setRel(String rel) {
         this.rel = rel;
     }
 
-    @StrutsTagAttribute(description="HTML link sizes attribute")
+    @StrutsTagAttribute(description = "HTML link sizes attribute")
     public void setSizes(String sizes) {
         this.sizes = sizes;
     }
 
-    @StrutsTagAttribute(description="HTML link crossorigin attribute")
+    @StrutsTagAttribute(description = "HTML link crossorigin attribute")
     public void setCrossorigin(String crossorigin) {
         this.crossorigin = crossorigin;
     }
 
-    @StrutsTagAttribute(description="HTML link type attribute")
+    @StrutsTagAttribute(description = "HTML link type attribute")
     public void setType(String type) {
         this.type = type;
     }
 
-    @StrutsTagAttribute(description="HTML link as attribute")
+    @StrutsTagAttribute(description = "HTML link as attribute")
     public void setAs(String as) {
         this.as = as;
     }
 
-    @StrutsTagAttribute(description="HTML link media attribute")
+    @StrutsTagAttribute(description = "HTML link media attribute")
     public void setMedia(String media) {
         this.media = media;
     }
 
-    @StrutsTagAttribute(description="HTML link referrerpolicy attribute")
+    @StrutsTagAttribute(description = "HTML link referrerpolicy attribute")
     public void setReferrerpolicy(String referrerpolicy) {
         this.referrerpolicy = referrerpolicy;
     }
@@ -159,12 +159,12 @@ public class Link extends UIBean{
             addParameter("as", findString(as));
         }
 
-        if (disabled != null) {
-            addParameter("disabled", findString(disabled));
+        if (getDisabled() != null) {
+            addParameter("disabled", findString(getDisabled()));
         }
 
-        if (title != null) {
-            addParameter("title", findString(title));
+        if (getTitle() != null) {
+            addParameter("title", findString(getTitle()));
         }
     }
 }

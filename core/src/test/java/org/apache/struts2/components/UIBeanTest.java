@@ -544,4 +544,79 @@ public class UIBeanTest extends StrutsInternalTestCase {
         }
     }
 
+    /**
+     * Test that additional UIBean fields converted from protected to private (WW-5589)
+     * are accessible via public getters and don't cause OGNL security warnings.
+     * <p>
+     * This extends the fix for WW-5368 to cover all protected fields in UIBean that could
+     * potentially conflict with resource bundle keys or OGNL expressions. Fields like
+     * "key", "title", "disabled", "template", "theme", etc. are now private with public
+     * getters to prevent OGNL from attempting direct field access.
+     */
+    public void testNoOgnlWarningsForAdditionalFields() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext.getContext().withServletRequest(req);
+
+        // Create a UIBean component with many fields set
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setKey("testKey");
+        txtFld.setTitle("Test Title");
+        txtFld.setDisabled("false");
+        txtFld.setCssClass("test-class");
+        txtFld.setCssStyle("color: red");
+        txtFld.setTemplate("custom-template");
+        txtFld.setTheme("xhtml");
+        txtFld.setTabindex("1");
+        txtFld.setOnclick("alert('clicked')");
+        txtFld.setOndblclick("alert('double clicked')");
+        txtFld.setOnfocus("alert('focused')");
+        txtFld.setOnblur("alert('blurred')");
+        txtFld.setOnchange("alert('changed')");
+
+        container.inject(txtFld);
+
+        // Push the component onto the stack
+        stack.push(txtFld);
+
+        try {
+            // Test that OGNL can access these fields via getters
+            Object keyResult = stack.findValue("key");
+            Object titleResult = stack.findValue("title");
+            Object disabledResult = stack.findValue("disabled");
+            Object cssClassResult = stack.findValue("cssClass");
+            Object templateResult = stack.findValue("template");
+            Object themeResult = stack.findValue("theme");
+            Object tabindexResult = stack.findValue("tabindex");
+            Object onclickResult = stack.findValue("onclick");
+
+            // Verify values are accessible
+            assertEquals("testKey", keyResult);
+            assertEquals("Test Title", titleResult);
+            assertEquals("false", disabledResult);
+            assertEquals("test-class", cssClassResult);
+            assertEquals("custom-template", templateResult);
+            assertEquals("xhtml", themeResult);
+            assertEquals("1", tabindexResult);
+            assertEquals("alert('clicked')", onclickResult);
+
+            // Verify public getters exist and return correct values
+            assertEquals("testKey", txtFld.getKey());
+            assertEquals("Test Title", txtFld.getTitle());
+            assertEquals("false", txtFld.getDisabled());
+            assertEquals("test-class", txtFld.getCssClass());
+            assertEquals("custom-template", txtFld.getTemplate());
+            assertEquals("xhtml", txtFld.getTheme());
+            assertEquals("1", txtFld.getTabindex());
+            assertEquals("alert('clicked')", txtFld.getOnclick());
+            assertEquals("alert('double clicked')", txtFld.getOndblclick());
+            assertEquals("alert('focused')", txtFld.getOnfocus());
+            assertEquals("alert('blurred')", txtFld.getOnblur());
+            assertEquals("alert('changed')", txtFld.getOnchange());
+        } finally {
+            stack.pop();
+        }
+    }
+
 }

@@ -462,64 +462,64 @@ public abstract class UIBean extends Component {
     }
 
     // The templateSuffic to use, overrides the default one if not null.
-    protected String templateSuffix;
+    private String templateSuffix;
 
     // The template to use, overrides the default one.
-    protected String template;
+    private String template;
 
     // templateDir and theme attributes
-    protected String templateDir;
-    protected String theme;
+    private String templateDir;
+    private String theme;
 
     // shortcut, sets label, name, and value
-    protected String key;
+    private String key;
 
     private String id;
-    protected String cssClass;
-    protected String cssStyle;
-    protected String cssErrorClass;
-    protected String cssErrorStyle;
-    protected String disabled;
+    private String cssClass;
+    private String cssStyle;
+    private String cssErrorClass;
+    private String cssErrorStyle;
+    private String disabled;
     private String label;
-    protected String labelPosition;
-    protected String labelSeparator;
-    protected String requiredPosition;
-    protected String errorPosition;
+    private String labelPosition;
+    private String labelSeparator;
+    private String requiredPosition;
+    private String errorPosition;
     private String name;
-    protected String requiredLabel;
-    protected String tabindex;
+    private String requiredLabel;
+    private String tabindex;
     private String value;
-    protected String title;
+    private String title;
 
     // HTML scripting events attributes
-    protected String onclick;
-    protected String ondblclick;
-    protected String onmousedown;
-    protected String onmouseup;
-    protected String onmouseover;
-    protected String onmousemove;
-    protected String onmouseout;
-    protected String onfocus;
-    protected String onblur;
-    protected String onkeypress;
-    protected String onkeydown;
-    protected String onkeyup;
-    protected String onselect;
-    protected String onchange;
+    private String onclick;
+    private String ondblclick;
+    private String onmousedown;
+    private String onmouseup;
+    private String onmouseover;
+    private String onmousemove;
+    private String onmouseout;
+    private String onfocus;
+    private String onblur;
+    private String onkeypress;
+    private String onkeydown;
+    private String onkeyup;
+    private String onselect;
+    private String onchange;
 
     // common html attributes
-    protected String accesskey;
+    private String accesskey;
 
     // javascript tooltip attribute
-    protected String tooltip;
-    protected String tooltipConfig;
-    protected String javascriptTooltip;
-    protected String tooltipDelay;
-    protected String tooltipCssClass;
-    protected String tooltipIconPath;
+    private String tooltip;
+    private String tooltipConfig;
+    private String javascriptTooltip;
+    private String tooltipDelay;
+    private String tooltipCssClass;
+    private String tooltipIconPath;
 
     // dynamic attributes
-    protected Map<String, Object> dynamicAttributes = new HashMap<>();
+    private Map<String, Object> dynamicAttributes = new HashMap<>();
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
@@ -1109,6 +1109,342 @@ public abstract class UIBean extends Component {
      */
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Gets the template suffix.
+     *
+     * @return the template suffix
+     */
+    public String getTemplateSuffix() {
+        return templateSuffix;
+    }
+
+    /**
+     * Gets the key for this component.
+     *
+     * @return the key
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Gets the CSS class.
+     *
+     * @return the CSS class
+     */
+    public String getCssClass() {
+        return cssClass;
+    }
+
+    /**
+     * Gets the CSS style.
+     *
+     * @return the CSS style
+     */
+    public String getCssStyle() {
+        return cssStyle;
+    }
+
+    /**
+     * Gets the CSS error class.
+     *
+     * @return the CSS error class
+     */
+    public String getCssErrorClass() {
+        return cssErrorClass;
+    }
+
+    /**
+     * Gets the CSS error style.
+     *
+     * @return the CSS error style
+     */
+    public String getCssErrorStyle() {
+        return cssErrorStyle;
+    }
+
+    /**
+     * Gets the disabled attribute.
+     *
+     * @return the disabled attribute
+     */
+    public String getDisabled() {
+        return disabled;
+    }
+
+    /**
+     * Gets the label position.
+     *
+     * @return the label position
+     */
+    public String getLabelPosition() {
+        return labelPosition;
+    }
+
+    /**
+     * Gets the label separator.
+     *
+     * @return the label separator
+     */
+    public String getLabelSeparator() {
+        return labelSeparator;
+    }
+
+    /**
+     * Gets the required position.
+     *
+     * @return the required position
+     */
+    public String getRequiredPosition() {
+        return requiredPosition;
+    }
+
+    /**
+     * Gets the error position.
+     *
+     * @return the error position
+     */
+    public String getErrorPosition() {
+        return errorPosition;
+    }
+
+    /**
+     * Gets the required label.
+     *
+     * @return the required label
+     */
+    public String getRequiredLabel() {
+        return requiredLabel;
+    }
+
+    /**
+     * Gets the tabindex.
+     *
+     * @return the tabindex
+     */
+    public String getTabindex() {
+        return tabindex;
+    }
+
+    /**
+     * Gets the title.
+     *
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Gets the onclick event handler.
+     *
+     * @return the onclick handler
+     */
+    public String getOnclick() {
+        return onclick;
+    }
+
+    /**
+     * Gets the ondblclick event handler.
+     *
+     * @return the ondblclick handler
+     */
+    public String getOndblclick() {
+        return ondblclick;
+    }
+
+    /**
+     * Gets the onmousedown event handler.
+     *
+     * @return the onmousedown handler
+     */
+    public String getOnmousedown() {
+        return onmousedown;
+    }
+
+    /**
+     * Gets the onmouseup event handler.
+     *
+     * @return the onmouseup handler
+     */
+    public String getOnmouseup() {
+        return onmouseup;
+    }
+
+    /**
+     * Gets the onmouseover event handler.
+     *
+     * @return the onmouseover handler
+     */
+    public String getOnmouseover() {
+        return onmouseover;
+    }
+
+    /**
+     * Gets the onmousemove event handler.
+     *
+     * @return the onmousemove handler
+     */
+    public String getOnmousemove() {
+        return onmousemove;
+    }
+
+    /**
+     * Gets the onmouseout event handler.
+     *
+     * @return the onmouseout handler
+     */
+    public String getOnmouseout() {
+        return onmouseout;
+    }
+
+    /**
+     * Gets the onfocus event handler.
+     *
+     * @return the onfocus handler
+     */
+    public String getOnfocus() {
+        return onfocus;
+    }
+
+    /**
+     * Gets the onblur event handler.
+     *
+     * @return the onblur handler
+     */
+    public String getOnblur() {
+        return onblur;
+    }
+
+    /**
+     * Gets the onkeypress event handler.
+     *
+     * @return the onkeypress handler
+     */
+    public String getOnkeypress() {
+        return onkeypress;
+    }
+
+    /**
+     * Gets the onkeydown event handler.
+     *
+     * @return the onkeydown handler
+     */
+    public String getOnkeydown() {
+        return onkeydown;
+    }
+
+    /**
+     * Gets the onkeyup event handler.
+     *
+     * @return the onkeyup handler
+     */
+    public String getOnkeyup() {
+        return onkeyup;
+    }
+
+    /**
+     * Gets the onselect event handler.
+     *
+     * @return the onselect handler
+     */
+    public String getOnselect() {
+        return onselect;
+    }
+
+    /**
+     * Gets the onchange event handler.
+     *
+     * @return the onchange handler
+     */
+    public String getOnchange() {
+        return onchange;
+    }
+
+    /**
+     * Gets the accesskey.
+     *
+     * @return the accesskey
+     */
+    public String getAccesskey() {
+        return accesskey;
+    }
+
+    /**
+     * Gets the tooltip.
+     *
+     * @return the tooltip
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    /**
+     * Gets the tooltip config.
+     *
+     * @return the tooltip config
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getTooltipConfig() {
+        return tooltipConfig;
+    }
+
+    /**
+     * Gets the javascript tooltip setting.
+     *
+     * @return the javascript tooltip setting
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getJavascriptTooltip() {
+        return javascriptTooltip;
+    }
+
+    /**
+     * Gets the tooltip delay.
+     *
+     * @return the tooltip delay
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getTooltipDelay() {
+        return tooltipDelay;
+    }
+
+    /**
+     * Gets the tooltip CSS class.
+     *
+     * @return the tooltip CSS class
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getTooltipCssClass() {
+        return tooltipCssClass;
+    }
+
+    /**
+     * Gets the tooltip icon path.
+     *
+     * @return the tooltip icon path
+     * @deprecated since 7.0.1
+     */
+    @Deprecated(since = "7.0.1", forRemoval = true)
+    public String getTooltipIconPath() {
+        return tooltipIconPath;
+    }
+
+    /**
+     * Gets the dynamic attributes map.
+     *
+     * @return the dynamic attributes map
+     */
+    public Map<String, Object> getDynamicAttributes() {
+        return dynamicAttributes;
     }
 
     @StrutsTagAttribute(description = "The template directory.")

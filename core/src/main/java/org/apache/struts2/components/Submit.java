@@ -66,12 +66,12 @@ public class Submit extends FormButton {
     }
 
     public void evaluateParams() {
-        if ((key == null) && (getValue() == null)) {
+        if ((getKey() == null) && (getValue() == null)) {
             setValue("Submit");
         }
 
-        if ((key != null) && (getValue() == null)) {
-            setValue("%{getText('" + key + "')}");
+        if ((getKey() != null) && (getValue() == null)) {
+            setValue("%{getText('" + getKey() + "')}");
         }
 
         super.evaluateParams();
@@ -119,7 +119,7 @@ public class Submit extends FormButton {
         try {
             addParameter("body", body);
 
-            mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
+            mergeTemplate(writer, buildTemplateName(getTemplate(), getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);
         } finally {

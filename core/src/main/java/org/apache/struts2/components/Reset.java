@@ -82,7 +82,7 @@ public class Reset extends FormButton {
 
     public void evaluateParams() {
         if (getValue() == null) {
-            setValue(key != null ? "%{getText('" + key + "')}" : "Reset");
+            setValue(getKey() != null ? "%{getText('" + getKey() + "')}" : "Reset");
         }
         super.evaluateParams();
     }

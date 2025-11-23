@@ -78,11 +78,11 @@ public class Label extends UIBean {
         // try value, then key, then name (this overrides the default behavior in the superclass)
         if (getValue() != null) {
             addParameter("nameValue", findString(getValue()));
-        } else if (key != null) {
+        } else if (getKey() != null) {
             Object nameValue = attributes.get("nameValue");
             if (nameValue == null || nameValue.toString().isEmpty()) {
                 // get the label from a TextProvider (default value is the key)
-                String providedLabel = TextProviderHelper.getText(key, key, stack);
+                String providedLabel = TextProviderHelper.getText(getKey(), getKey(), stack);
                 addParameter("nameValue", providedLabel);
             }
         } else if (getName() != null) {

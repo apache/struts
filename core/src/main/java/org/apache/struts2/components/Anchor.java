@@ -117,7 +117,7 @@ public class Anchor extends ClosingUIBean {
 
     @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
     public void setUrlIncludeParams(String urlIncludeParams) {
-       urlProvider.setUrlIncludeParams(urlIncludeParams);
+        urlProvider.setUrlIncludeParams(urlIncludeParams);
     }
 
     @Inject
@@ -126,7 +126,7 @@ public class Anchor extends ClosingUIBean {
         this.urlRenderer = urlRenderer;
     }
 
-    @Inject(required=false)
+    @Inject(required = false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {
         urlProvider.setExtraParameterProvider(provider);
     }
@@ -147,7 +147,7 @@ public class Anchor extends ClosingUIBean {
         evaluateParams();
         try {
             addParameter("body", body);
-            mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
+            mergeTemplate(writer, buildTemplateName(getTemplate(), getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);
         } finally {

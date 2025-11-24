@@ -54,7 +54,7 @@ import static org.mockito.Mockito.when;
 
 public class SecurityMemberAccessTest {
 
-    private Map context;
+    private OgnlContext context;
     private FooBar target;
     protected SecurityMemberAccess sma;
     protected ProviderAllowlist mockedProviderAllowlist;
@@ -62,7 +62,7 @@ public class SecurityMemberAccessTest {
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<>();
+        context = (OgnlContext) ognl.Ognl.createDefaultContext(null);
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
@@ -168,7 +168,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -183,7 +183,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(FooBar.class.getName());
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse(accessible);
@@ -196,7 +196,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("toString() from Object is accessible!!!", accessible);
@@ -209,7 +209,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("hashCode() from FooBar isn't accessible!!!", accessible);
@@ -224,7 +224,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
@@ -239,7 +239,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("fooLogic() from FooInterface isn't accessible!!!", accessible);
@@ -254,7 +254,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
@@ -269,7 +269,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(FooInterface.class.getName());
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("barLogic() from BarInterface isn't accessible!!!", accessible);
@@ -284,7 +284,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("stringField is accessible!", actual);
@@ -301,7 +301,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("stringField isn't accessible!", actual);
@@ -316,7 +316,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("stringField is accessible!", actual);
@@ -333,7 +333,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("stringField isn't accessible!", actual);
@@ -351,7 +351,7 @@ public class SecurityMemberAccessTest {
         Member member = BarInterface.class.getMethod(propertyName);
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("barLogic is accessible!", actual);
@@ -369,7 +369,7 @@ public class SecurityMemberAccessTest {
         Member member = BarInterface.class.getMethod(propertyName);
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue("barLogic isn't accessible!", actual);
@@ -417,7 +417,7 @@ public class SecurityMemberAccessTest {
     public void testAccessEnum() throws Exception {
         // when
         Member values = MyValues.class.getMethod("values");
-        boolean actual = sma.isAccessible((OgnlContext) context, MyValues.class, values, null);
+        boolean actual = sma.isAccessible(context, MyValues.class, values, null);
 
         // then
         assertFalse("Access to enums is allowed!", actual);
@@ -427,7 +427,7 @@ public class SecurityMemberAccessTest {
     public void testAccessEnum_alternateValues() throws Exception {
         // when
         Member alternateValues = MyValues.class.getMethod("values", String.class);
-        boolean actual = sma.isAccessible((OgnlContext) context, MyValues.class, alternateValues, null);
+        boolean actual = sma.isAccessible(context, MyValues.class, alternateValues, null);
 
         // then
         assertFalse("Access to unrelated #values method not blocked!", actual);
@@ -440,7 +440,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible((OgnlContext) context, StaticTester.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static method is not blocked!", actual);
@@ -453,7 +453,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
-        boolean actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        boolean actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertTrue("Access to static field is blocked!", actual);
@@ -467,7 +467,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
-        boolean actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        boolean actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertTrue("Access to public static field is blocked?", actual);
@@ -479,7 +479,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.class.getField("MIN_VALUE");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertTrue("Access to public final static field is blocked?", actual);
@@ -491,7 +491,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PACKAGE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to package static field is allowed?", actual);
@@ -503,7 +503,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to package final static field is allowed?", actual);
@@ -515,7 +515,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PROTECTED_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to protected static field is allowed?", actual);
@@ -527,7 +527,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to protected final static field is allowed?", actual);
@@ -539,7 +539,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PRIVATE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to private static field is allowed?", actual);
@@ -551,7 +551,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to private final static field is allowed?", actual);
@@ -564,7 +564,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
-        boolean actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        boolean actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to public static field is allowed when flag false?", actual);
@@ -575,7 +575,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.class.getField("MIN_VALUE");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to public final static field is allowed when flag is false?", actual);
@@ -586,7 +586,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PACKAGE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to package static field is allowed?", actual);
@@ -597,7 +597,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to package final static field is allowed?", actual);
@@ -608,7 +608,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PROTECTED_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to protected static field is allowed?", actual);
@@ -619,7 +619,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to protected final static field is allowed?", actual);
@@ -630,7 +630,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("PRIVATE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to private static field is allowed?", actual);
@@ -641,7 +641,7 @@ public class SecurityMemberAccessTest {
 
         // when
         method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
-        actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to private final static field is allowed?", actual);
@@ -654,7 +654,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
-        boolean actual = sma.isAccessible((OgnlContext) context, null, method, null);
+        boolean actual = sma.isAccessible(context, null, method, null);
 
         // then
         assertFalse("Access to static field isn't blocked!", actual);
@@ -667,7 +667,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible((OgnlContext) context, StaticTester.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static isn't blocked!", actual);
@@ -680,7 +680,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
-        boolean actual = sma.isAccessible((OgnlContext) context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
 
         // then
         assertFalse("Access to method of excluded class isn't blocked!", actual);
@@ -694,7 +694,7 @@ public class SecurityMemberAccessTest {
         // when
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
         ClassLoader classLoaderTarget = this.getClass().getClassLoader();
-        boolean actual = sma.isAccessible((OgnlContext) context, classLoaderTarget, method, null);
+        boolean actual = sma.isAccessible(context, classLoaderTarget, method, null);
 
         // then
         assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
@@ -707,7 +707,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
-        boolean actual = sma.isAccessible((OgnlContext) context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, Class.class, method, null);
 
         // then
         assertTrue("Invalid test! Access to method of non-excluded class is blocked!", actual);
@@ -722,7 +722,7 @@ public class SecurityMemberAccessTest {
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
         String mismatchTarget = "misMatchTargetObject";
         try {
-            boolean actual = sma.isAccessible((OgnlContext) context, mismatchTarget, method, null);
+            boolean actual = sma.isAccessible(context, mismatchTarget, method, null);
 
             // then
             assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
@@ -741,7 +741,7 @@ public class SecurityMemberAccessTest {
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -766,7 +766,7 @@ public class SecurityMemberAccessTest {
         Member member = Double.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, myDouble, member, propertyName);
+        boolean accessible = sma.isAccessible(context, myDouble, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -776,7 +776,7 @@ public class SecurityMemberAccessTest {
         member = System.class.getMethod(propertyName, int.class);
 
         // when
-        accessible = sma.isAccessible((OgnlContext) context, System.class, member, propertyName);
+        accessible = sma.isAccessible(context, System.class, member, propertyName);
 
         // then
         assertFalse(accessible);
@@ -786,7 +786,7 @@ public class SecurityMemberAccessTest {
         member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        accessible = sma.isAccessible(context, target, member, propertyName);
         // then
         assertTrue(accessible);
 
@@ -795,7 +795,7 @@ public class SecurityMemberAccessTest {
         member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
-        accessible = sma.isAccessible((OgnlContext) context, target, member, propertyName);
+        accessible = sma.isAccessible(context, target, member, propertyName);
         // then
         assertTrue(accessible);
     }
@@ -810,7 +810,7 @@ public class SecurityMemberAccessTest {
         Member member = Double.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, myDouble, member, propertyName);
+        boolean accessible = sma.isAccessible(context, myDouble, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -826,7 +826,7 @@ public class SecurityMemberAccessTest {
         Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, sma, member, propertyName);
+        boolean accessible = sma.isAccessible(context, sma, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -842,7 +842,7 @@ public class SecurityMemberAccessTest {
         Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
-        boolean accessible = sma.isAccessible((OgnlContext) context, sma, member, propertyName);
+        boolean accessible = sma.isAccessible(context, sma, member, propertyName);
 
         // then
         assertFalse(accessible);

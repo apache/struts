@@ -23,7 +23,7 @@ modular architecture with clear separation between core framework, plugins, and 
 # Full build with tests
 mvn clean install
 
-# Run tests (use /run_tests command for intelligent test execution)
+# Run tests
 mvn test -DskipAssembly
 
 # Build without running tests
@@ -94,7 +94,21 @@ protected File createTemporaryFile(String fileName, Path location) {
 
 ## Testing Implementation
 
-**For intelligent test execution and analysis, use:** `/run_tests`
+### Intelligent Test Execution Approach
+
+When running tests, use this priority order:
+
+1. **JetBrains MCP** (when available in IntelliJ IDEA):
+   - Use `mcp__jetbrains__execute_run_configuration` for specific test configurations
+   - First check if configuration exists with `get_run_configurations`
+
+2. **test-runner agent** (primary method):
+   - Use Task tool with `subagent_type="test-runner"` for comprehensive test execution
+   - Provides intelligent test analysis and coverage reports
+
+3. **Direct Maven** (fallback):
+   - Use only when explicitly requested or for simple verification
+   - Command: `mvn test -DskipAssembly`
 
 ### Test Structure & Coverage
 
@@ -103,13 +117,6 @@ protected File createTemporaryFile(String fileName, Path location) {
 - **Security Tests**: Verify directory traversal prevention, secure naming
 - **Error Handling Tests**: Test exception scenarios and error reporting
 - **Cleanup Tests**: Verify resource cleanup and tracking
-
-### Basic Testing Command
-
-```bash
-# Run all tests (use -DskipAssembly to avoid building docs/examples)
-mvn test -DskipAssembly
-```
 
 ## Documentation Standards
 
@@ -148,7 +155,6 @@ mvn test -DskipAssembly
 ### Commands
 
 - `/security_scan` - Comprehensive security analysis
-- `/run_tests` - Intelligent test execution and analysis
 - `/quality_check` - Code quality and documentation analysis
 - `/config_analyze` - Configuration validation and optimization
 - `/create_plan` - Implementation planning assistance

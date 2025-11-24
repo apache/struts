@@ -1,6 +1,7 @@
 ---
 name: test-runner
-description: Use this agent to intelligently execute and analyze Apache Struts tests using Maven, with specialized knowledge of Struts testing patterns, coverage analysis, and security testing. Examples: <example>Context: Developer wants to run tests after implementing a new feature. user: 'Can you run the tests for my changes?' assistant: 'I'll use the test-runner agent to execute the relevant tests and analyze the results.' <commentary>The user needs test execution and analysis, which is the test-runner agent's specialty.</commentary></example> <example>Context: CI/CD pipeline needs comprehensive testing. user: 'Run all tests and check coverage for the security interceptor changes' assistant: 'Let me use the test-runner agent to run comprehensive tests and analyze coverage for your security changes.' <commentary>This requires intelligent test execution and coverage analysis, perfect for the test-runner agent.</commentary></example>
+description: Execute and analyze Maven tests for Apache Struts. Use PROACTIVELY when code changes, user mentions testing, asks to run tests, check test coverage, or validate changes. MUST BE USED for all Maven test execution (mvn test), test result analysis, and coverage reports.
+tools: bash_tool, view, str_replace
 model: sonnet
 color: green
 ---

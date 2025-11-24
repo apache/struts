@@ -39,7 +39,6 @@ import java.io.Writer;
  * <p>
  * <!-- END SNIPPET: javadoc -->
  * <p>
- * <p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *      <li>var - the stack's context name (if supplied) that the created bean will be store under</li>

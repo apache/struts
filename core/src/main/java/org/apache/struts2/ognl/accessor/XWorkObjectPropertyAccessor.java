@@ -21,6 +21,7 @@ package org.apache.struts2.ognl.accessor;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.ObjectPropertyAccessor;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class XWorkObjectPropertyAccessor extends ObjectPropertyAccessor {
     @Override
-    public Object getProperty(Map context, Object target, Object oname) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object oname) throws OgnlException {
         //set the last set objects in the context
         //so if the next objects accessed are
         //Maps or Collections they can use the information

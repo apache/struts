@@ -48,21 +48,13 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     @Override
     public Method getGetMethod(Class targetClass, String propertyName)
             throws IntrospectionException, ReflectionException {
-        try {
-            return OgnlRuntime.getGetMethod(null, targetClass, propertyName);
-        } catch (OgnlException e) {
-            throw new ReflectionException(e);
-        }
+        return OgnlRuntime.getGetMethod(targetClass, propertyName);
     }
 
     @Override
     public Method getSetMethod(Class targetClass, String propertyName)
             throws IntrospectionException, ReflectionException {
-        try {
-            return OgnlRuntime.getSetMethod(null, targetClass, propertyName);
-        } catch (OgnlException e) {
-            throw new ReflectionException(e);
-        }
+        return OgnlRuntime.getSetMethod(null, targetClass, propertyName);
     }
 
     @Override
@@ -71,7 +63,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     }
 
     @Override
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
         ognlUtil.setProperties(props, o, context, throwPropertyExceptions);
     }
 
@@ -82,7 +74,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
 
     @Override
     public PropertyDescriptor getPropertyDescriptor(Class targetClass,
-            String propertyName) throws IntrospectionException,
+                                                    String propertyName) throws IntrospectionException,
             ReflectionException {
         try {
             return OgnlRuntime.getPropertyDescriptor(targetClass, propertyName);
@@ -93,7 +85,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
 
     @Override
     public void copy(Object from, Object to, Map<String, Object> context,
-            Collection<String> exclusions, Collection<String> inclusions) {
+                     Collection<String> exclusions, Collection<String> inclusions) {
         copy(from, to, context, exclusions, inclusions, null);
     }
 
@@ -145,7 +137,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
 
     @Override
     public void setValue(String expression, Map<String, Object> context, Object root,
-            Object value) throws ReflectionException {
+                         Object value) throws ReflectionException {
         try {
             ognlUtil.setValue(expression, context, root, value);
         } catch (OgnlException e) {

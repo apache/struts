@@ -21,8 +21,6 @@ package org.apache.struts2.ognl;
 import ognl.OgnlContext;
 import org.apache.struts2.conversion.NullHandler;
 
-import java.util.Map;
-
 public class OgnlNullHandlerWrapper implements ognl.NullHandler {
 
     private final NullHandler wrapped;

@@ -23,12 +23,6 @@ import ognl.ObjectPropertyAccessor;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 
-import java.util.Map;
-
-
-/**
- * @author plightbo
- */
 public class XWorkEnumerationAccessor extends EnumerationPropertyAccessor {
 
     private final ObjectPropertyAccessor opa = new ObjectPropertyAccessor();

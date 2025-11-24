@@ -22,8 +22,6 @@ import ognl.OgnlContext;
 import org.apache.struts2.util.reflection.ReflectionContextFactory;
 import ognl.Ognl;
 
-import java.util.Map;
-
 /**
  * @deprecated since 6.8.0, to be removed, see {@link ReflectionContextFactory}
  */

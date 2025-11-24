@@ -26,12 +26,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
+import ognl.OgnlContext;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
@@ -42,7 +41,7 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
     private static final String PROXY_MEMBER_METHOD = "isExposeProxy";
     private static final String TEST_SUB_BEAN_CLASS_METHOD = "getIssueId";
 
-    private Map<String, Object> context;
+    private OgnlContext context;
     private ActionProxy proxy;
     private final SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
 
@@ -55,7 +54,7 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("org/apache/struts2/spring/actionContext-xwork.xml");
         loadConfigurationProviders(provider);
 
-        context = new HashMap<>();
+        context = ognl.Ognl.createDefaultContext(null);
         proxy = actionProxyFactory.createActionProxy(null, "chaintoAOPedTestSubBeanAction", null, context);
         proxyObjectProxyMember = proxy.getAction().getClass().getMethod(PROXY_MEMBER_METHOD);
         proxyObjectNonProxyMember = proxy.getAction().getClass().getMethod(TEST_SUB_BEAN_CLASS_METHOD);

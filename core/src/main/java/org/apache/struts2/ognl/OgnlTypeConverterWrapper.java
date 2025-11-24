@@ -22,7 +22,6 @@ import ognl.OgnlContext;
 import org.apache.struts2.conversion.TypeConverter;
 
 import java.lang.reflect.Member;
-import java.util.Map;
 
 /**
  * Wraps an XWork type conversion class for as an OGNL TypeConverter

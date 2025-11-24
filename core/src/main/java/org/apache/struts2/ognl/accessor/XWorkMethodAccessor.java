@@ -30,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Allows methods to be executed under normal cirumstances, except when {@link ReflectionContextState#DENY_METHOD_EXECUTION}
@@ -103,7 +102,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
             if (LOG.isDebugEnabled()) {
                 if (!(e.getReason() instanceof NoSuchMethodException)) {
                     // the method exists on the target object, but something went wrong
-                    LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}] - {}", object.toString(), methodName, Arrays.toString(objects), e.getReason());
+                    LOG.debug("Error calling method through OGNL: object: [{}] method: [{}] args: [{}] - {}", object, methodName, Arrays.toString(objects), e.getReason());
                 }
             }
             throw e;

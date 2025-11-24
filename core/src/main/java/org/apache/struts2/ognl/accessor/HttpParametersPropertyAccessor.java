@@ -23,8 +23,6 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import java.util.Map;
-
 public class HttpParametersPropertyAccessor extends ObjectPropertyAccessor {
 
     @Override

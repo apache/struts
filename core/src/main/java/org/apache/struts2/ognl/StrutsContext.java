@@ -50,8 +50,8 @@ public class StrutsContext extends OgnlContext {
      * @return a StrutsContext instance
      */
     public static StrutsContext wrap(OgnlContext context) {
-        if (context instanceof StrutsContext) {
-            return (StrutsContext) context;
+        if (context instanceof StrutsContext strutsContext) {
+            return strutsContext;
         }
         StrutsContext strutsContext = new StrutsContext(
                 context.getClassResolver(),

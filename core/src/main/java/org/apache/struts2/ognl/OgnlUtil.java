@@ -212,8 +212,8 @@ public class OgnlUtil {
      * @since 7.2.0
      */
     private OgnlContext ensureOgnlContext(Map<String, Object> context) {
-        if (context instanceof OgnlContext) {
-            return (OgnlContext) context;
+        if (context instanceof OgnlContext ognlContext) {
+            return ognlContext;
         }
         // Create a new OgnlContext and copy the Map contents
         OgnlContext ognlContext = createDefaultContext(null);
@@ -335,12 +335,9 @@ public class OgnlUtil {
             return root;
         }
 
-        if (root instanceof CompoundRoot) {
-            // find real target
-            CompoundRoot cr = (CompoundRoot) root;
-
+        if (root instanceof CompoundRoot compoundRoot) {
             try {
-                for (Object target : cr) {
+                for (Object target : compoundRoot) {
                     if (OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
                             || OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
                             || OgnlRuntime.getIndexedPropertyType(target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
@@ -372,12 +369,11 @@ public class OgnlUtil {
     }
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
+        if (tree instanceof SimpleNode node) {
             OgnlContext ognlContext = null;
 
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
+            if (context instanceof OgnlContext oc) {
+                ognlContext = oc;
             }
             return node.isEvalChain(ognlContext) || node.isSequence(ognlContext);
         }
@@ -385,12 +381,11 @@ public class OgnlUtil {
     }
 
     private boolean isArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
+        if (tree instanceof SimpleNode node) {
             OgnlContext ognlContext = null;
 
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
+            if (context instanceof OgnlContext oc) {
+                ognlContext = oc;
             }
             return node.isOperation(ognlContext);
         }
@@ -398,12 +393,11 @@ public class OgnlUtil {
     }
 
     private boolean isSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
-        if (tree instanceof SimpleNode) {
-            SimpleNode node = (SimpleNode) tree;
+        if (tree instanceof SimpleNode node) {
             OgnlContext ognlContext = null;
 
-            if (context instanceof OgnlContext) {
-                ognlContext = (OgnlContext) context;
+            if (context instanceof OgnlContext oc) {
+                ognlContext = oc;
             }
             return node.isSimpleMethod(ognlContext) && !node.isChain(ognlContext);
         }
@@ -460,9 +454,9 @@ public class OgnlUtil {
             if (enableExpressionCache) {
                 expressionCache.put(expr, tree);
             }
-            if (tree instanceof OgnlException) {
+            if (tree instanceof OgnlException exception) {
                 // Rethrow OgnlException after caching
-                throw (OgnlException) tree;
+                throw exception;
             }
         }
         if (EXPR_BLOCKED.equals(tree)) {

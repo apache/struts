@@ -37,14 +37,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -61,8 +60,8 @@ public class SecurityMemberAccessTest {
     protected ThreadAllowlist mockedThreadAllowlist;
 
     @Before
-    public void setUp() throws Exception {
-        context = (OgnlContext) ognl.Ognl.createDefaultContext(null);
+    public void setUp() {
+        context = ognl.Ognl.createDefaultContext(null);
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
@@ -84,6 +83,7 @@ public class SecurityMemberAccessTest {
         return reflectField(sma, fieldName);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T reflectField(Object instance, String fieldName) throws IllegalAccessException {
         return (T) FieldUtils.readField(instance, fieldName, true);
     }
@@ -728,7 +728,7 @@ public class SecurityMemberAccessTest {
             assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
             fail("Mismatch between target and member did not cause IllegalArgumentException?");
         } catch (IllegalArgumentException iex) {
-            // Expected result is this exception
+            assertEquals("Member does not exist on target!", iex.getMessage());
         }
     }
 

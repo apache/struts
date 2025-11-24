@@ -30,11 +30,11 @@ import java.util.Map;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
-    private Map context;
+    private OgnlContext context;
 
     @Override
     public void setUp() throws Exception {
-        context = new HashMap();
+        context = (OgnlContext) ognl.Ognl.createDefaultContext(null);
     }
 
     public void testJavaxServletPackageAccess() throws Exception {
@@ -47,7 +47,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, new ActionTag(), member, propertyName);
+        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
         assertTrue("jakarta.servlet package isn't accessible!", actual);
@@ -63,7 +63,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible((OgnlContext) context, new ActionTag(), member, propertyName);
+        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
         assertFalse("jakarta.servlet package is accessible!", actual);

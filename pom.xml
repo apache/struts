@@ -285,10 +285,6 @@
                     <version>0.17</version>
                     <configuration>
                         <inputExcludeStds>ALL</inputExcludeStds>
-                        <inputIncludes>
-                            <include>pom.xml</include>
-                            <include>src/**</include>
-                        </inputIncludes>
                         <inputExcludes>
                             <exclude>CLAUDE.md</exclude>
                             <exclude>CODEOWNERS</exclude>
@@ -310,6 +306,7 @@
                             <exclude>**/src/main/resources/docs.cfg</exclude>
                             <exclude>src/main/webapp/fonts/**/*</exclude>
                             <exclude>thoughts/**/*.md</exclude>
+                            <exclude>test-output/**</exclude>
                         </inputExcludes>
                     </configuration>
                 </plugin>

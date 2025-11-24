@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.OgnlContext;
 import org.apache.struts2.util.reflection.ReflectionContextFactory;
 import ognl.Ognl;
 
@@ -30,7 +31,7 @@ import java.util.Map;
 public class OgnlReflectionContextFactory implements ReflectionContextFactory {
 
     @Override
-    public Map createDefaultContext(Object root) {
+    public OgnlContext createDefaultContext(Object root) {
         return Ognl.createDefaultContext(root);
     }
 

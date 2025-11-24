@@ -82,8 +82,8 @@ public class OgnlUtil {
     public OgnlUtil(@Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
                     @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory,
                     @Inject OgnlGuard ognlGuard) {
-        this.expressionCache =  requireNonNull(ognlExpressionCacheFactory).buildOgnlCache();
-        this.beanInfoCache =  requireNonNull(ognlBeanInfoCacheFactory).buildOgnlCache();
+        this.expressionCache = requireNonNull(ognlExpressionCacheFactory).buildOgnlCache();
+        this.beanInfoCache = requireNonNull(ognlBeanInfoCacheFactory).buildOgnlCache();
         this.ognlGuard = requireNonNull(ognlGuard);
     }
 
@@ -138,11 +138,11 @@ public class OgnlUtil {
     /**
      * Convenience mechanism to clear the OGNL Runtime Cache via OgnlUtil.  May be utilized
      * by applications that generate many unique OGNL expressions over time.
-     *
+     * <p>
      * Note: This call affects the global OGNL cache, see ({@link ognl.OgnlRuntime#clearCache()} for details.
-     *
+     * <p>
      * Warning: Frequent calling if this method may negatively impact performance, but may be required
-     *          to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
+     * to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
      *
      * @since 2.5.21
      */
@@ -153,12 +153,12 @@ public class OgnlUtil {
     /**
      * Provide a mechanism to clear the OGNL expression cache.  May be utilized by applications
      * that generate many unique OGNL expressions over time.
-     *
+     * <p>
      * Note: This call affects the current OgnlUtil instance.  For Struts this is often a Singleton
-     *       instance so it can be "effectively global".
-     *
+     * instance so it can be "effectively global".
+     * <p>
      * Warning: Frequent calling if this method may negatively impact performance, but may be required
-     *          to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
+     * to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
      *
      * @since 2.5.21
      */
@@ -170,7 +170,6 @@ public class OgnlUtil {
      * Check the size of the expression cache (current number of elements).
      *
      * @return current number of elements in the expression cache.
-     *
      * @since 2.5.21
      */
     public int expressionCacheSize() {
@@ -181,12 +180,12 @@ public class OgnlUtil {
      * Provide a mechanism to clear the BeanInfo cache.  May be utilized by applications
      * that request BeanInfo and/or PropertyDescriptors for many unique classes or objects over time
      * (especially dynamic objects).
-     *
+     * <p>
      * Note: This call affects the current OgnlUtil instance.  For Struts this is often a Singleton
-     *       instance so it can be "effectively global".
-     *
+     * instance so it can be "effectively global".
+     * <p>
      * Warning: Frequent calling if this method may negatively impact performance, but may be required
-     *          to avoid memory exhaustion (resource leak) with too many BeanInfo elements being cached.
+     * to avoid memory exhaustion (resource leak) with too many BeanInfo elements being cached.
      *
      * @since 2.5.21
      */
@@ -198,7 +197,6 @@ public class OgnlUtil {
      * Check the size of the BeanInfo cache (current number of elements).
      *
      * @return current number of elements in the BeanInfo cache.
-     *
      * @since 2.5.21
      */
     public int beanInfoCacheSize() {
@@ -226,20 +224,21 @@ public class OgnlUtil {
      * @param throwPropertyExceptions boolean which tells whether it should throw exceptions for
      *                                problems setting the properties
      */
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
         if (props == null) {
             return;
         }
 
-        Object oldRoot = Ognl.getRoot(context);
-        Ognl.setRoot(context, o);
+        OgnlContext ognlContext = (OgnlContext) context;
+        Object oldRoot = Ognl.getRoot(ognlContext);
+        Ognl.setRoot(ognlContext, o);
 
         for (Map.Entry<String, ?> entry : props.entrySet()) {
             String expression = entry.getKey();
             internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
         }
 
-        Ognl.setRoot(context, oldRoot);
+        Ognl.setRoot(ognlContext, oldRoot);
     }
 
     /**
@@ -247,7 +246,7 @@ public class OgnlUtil {
      * exceptions for problems setting the properties.
      *
      * @param properties map of properties
-     * @param o object
+     * @param o          object
      */
     public void setProperties(Map<String, ?> properties, Object o) {
         setProperties(properties, o, false);
@@ -291,22 +290,22 @@ public class OgnlUtil {
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
 
-        Object oldRoot = Ognl.getRoot(context);
-        Ognl.setRoot(context, o);
+        OgnlContext ognlContext = (OgnlContext) context;
+        Object oldRoot = Ognl.getRoot(ognlContext);
+        Ognl.setRoot(ognlContext, o);
 
         internalSetProperty(name, value, o, context, throwPropertyExceptions);
 
-        Ognl.setRoot(context, oldRoot);
+        Ognl.setRoot(ognlContext, oldRoot);
     }
 
     /**
      * Looks for the real target with the specified property given a root Object which may be a
      * CompoundRoot.
      *
-     * @param property  the property
-     * @param context context map
-     * @param root compound root
-     *
+     * @param property the property
+     * @param context  context map
+     * @param root     compound root
      * @return the real target or null if no object can be found with the specified property
      * @throws OgnlException in case of ognl errors
      */
@@ -324,8 +323,8 @@ public class OgnlUtil {
                 for (Object target : cr) {
                     if (OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
                             || OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
-                            || OgnlRuntime.getIndexedPropertyType((OgnlContext) context, target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
-                            ) {
+                            || OgnlRuntime.getIndexedPropertyType(target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
+                    ) {
                         return target;
                     }
                 }
@@ -342,11 +341,10 @@ public class OgnlUtil {
     /**
      * Wrapper around Ognl#setValue
      *
-     * @param name  the name
+     * @param name    the name
      * @param context context map
-     * @param root root
-     * @param value value
-     *
+     * @param root    root
+     * @param value   value
      * @throws OgnlException in case of ognl errors
      */
     public void setValue(final String name, final Map<String, Object> context, final Object root, final Object value) throws OgnlException {
@@ -413,7 +411,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        Ognl.setValue(tree, context, root, value);
+        Ognl.setValue(tree, (OgnlContext) context, root, value);
     }
 
     private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
@@ -421,7 +419,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        return (T) Ognl.getValue(tree, context, root, resultType);
+        return (T) Ognl.getValue(tree, (OgnlContext) context, root, resultType);
     }
 
     private Object toTree(String expr) throws OgnlException {
@@ -520,7 +518,7 @@ public class OgnlUtil {
      * @param exclusions collection of method names to excluded from copying ( can be null)
      * @param inclusions collection of method names to included copying  (can be null)
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
-     * @param editable the class (or interface) to restrict property setting to
+     * @param editable   the class (or interface) to restrict property setting to
      */
     public void copy(final Object from,
                      final Object to,
@@ -691,7 +689,7 @@ public class OgnlUtil {
         }
     }
 
-    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
+    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException {
         try {
             setValue(name, context, o, value);
         } catch (OgnlException e) {
@@ -710,11 +708,11 @@ public class OgnlUtil {
         }
     }
 
-    protected Map<String, Object> createDefaultContext(Object root) {
+    protected OgnlContext createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
 
-    protected Map<String, Object> createDefaultContext(Object root, ClassResolver resolver) {
+    protected OgnlContext createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {

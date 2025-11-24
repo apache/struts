@@ -20,6 +20,7 @@ package org.apache.struts2.util;
 
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import jakarta.servlet.jsp.tagext.TagSupport;
+import ognl.OgnlContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
@@ -46,7 +47,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
+        boolean actual = sma.isAccessible((OgnlContext) context, new ActionTag(), member, propertyName);
 
         // then
         assertTrue("jakarta.servlet package isn't accessible!", actual);
@@ -62,7 +63,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
+        boolean actual = sma.isAccessible((OgnlContext) context, new ActionTag(), member, propertyName);
 
         // then
         assertFalse("jakarta.servlet package is accessible!", actual);

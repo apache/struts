@@ -353,7 +353,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
         Field field = ReflectionContextState.class.getField("DENY_METHOD_EXECUTION");
-        boolean allowStaticFieldAccess = ((OgnlContext) stack.getContext()).getMemberAccess().isAccessible(stack.getContext(), ReflectionContextState.class, field, "");
+        boolean allowStaticFieldAccess = ((OgnlContext) stack.getContext()).getMemberAccess().isAccessible((OgnlContext) stack.getContext(), ReflectionContextState.class, field, "");
         assertFalse(allowStaticFieldAccess);
     }
 

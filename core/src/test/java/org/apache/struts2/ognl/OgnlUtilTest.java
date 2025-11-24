@@ -93,11 +93,11 @@ public class OgnlUtilTest extends XWorkTestCase {
         String dogName = "fido";
 
         OgnlRuntime.setNullHandler(Owner.class, new NullHandler() {
-            public Object nullMethodResult(Map map, Object o, String s, Object[] objects) {
+            public Object nullMethodResult(OgnlContext context, Object o, String s, Object[] objects) {
                 return null;
             }
 
-            public Object nullPropertyValue(Map map, Object o, Object o1) {
+            public Object nullPropertyValue(OgnlContext context, Object o, Object o1) {
                 String methodName = o1.toString();
                 String getter = "set" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
                 Method[] methods = o.getClass().getDeclaredMethods();
@@ -723,9 +723,9 @@ public class OgnlUtilTest extends XWorkTestCase {
         props.put("birthday", "02/12/1982");
         // US style test
         context = ActionContext.of(context)
-            .withLocale(Locale.US)
-            .withValueStack(stack)
-            .getContextMap();
+                .withLocale(Locale.US)
+                .withValueStack(stack)
+                .getContextMap();
 
         ognlUtil.setProperties(props, foo, context);
 
@@ -749,7 +749,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date eventTime = cal.getTime();
         String formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-            .format(eventTime);
+                .format(eventTime);
         props.put("event", formatted);
 
         cal = Calendar.getInstance(Locale.UK);
@@ -762,7 +762,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date meetingTime = cal.getTime();
         formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-            .format(meetingTime);
+                .format(meetingTime);
         props.put("meeting", formatted);
 
         context = ActionContext.of(context).withLocale(Locale.UK).getContextMap();
@@ -848,7 +848,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ChainingInterceptor foo = new ChainingInterceptor();
         ChainingInterceptor foo2 = new ChainingInterceptor();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(null);
+        OgnlContext context = ognlUtil.createDefaultContext(null);
         SimpleNode expression = (SimpleNode) Ognl.parseExpression("{'a','ruby','b','tom'}");
 
         Ognl.getValue(expression, context, "aksdj");
@@ -905,21 +905,21 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testBeanMapExpressions() throws OgnlException, NoSuchMethodException {
         Foo foo = new Foo();
 
-        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
-        SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
+        OgnlContext context = ognlUtil.createDefaultContext(foo);
+        SecurityMemberAccess sma = (SecurityMemberAccess) context.getMemberAccess();
 
         sma.useExcludedPackageNames("org.apache.struts2.ognl");
 
         String expression = "%{\n" +
-            "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.a.setBean(#request.get('struts.valueStack')) == true) +\n" +
-            "(#request.b=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.b.setBean(#request.get('a').get('context'))) +\n" +
-            "(#request.c=#@org.apache.commons.collections.BeanMap@{}) +\n" +
-            "(#request.c.setBean(#request.get('b').get('memberAccess'))) +\n" +
-            "(#request.get('c').put('excluded'+'PackageNames',#@org.apache.commons.collections.BeanMap@{}.keySet())) +\n" +
-            "(#request.get('c').put('excludedClasses',#@org.apache.commons.collections.BeanMap@{}.keySet()))\n" +
-            "}";
+                "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.a.setBean(#request.get('struts.valueStack')) == true) +\n" +
+                "(#request.b=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.b.setBean(#request.get('a').get('context'))) +\n" +
+                "(#request.c=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+                "(#request.c.setBean(#request.get('b').get('memberAccess'))) +\n" +
+                "(#request.get('c').put('excluded'+'PackageNames',#@org.apache.commons.collections.BeanMap@{}.keySet())) +\n" +
+                "(#request.get('c').put('excludedClasses',#@org.apache.commons.collections.BeanMap@{}.keySet()))\n" +
+                "}";
 
         ognlUtil.setValue("title", context, foo, expression);
 

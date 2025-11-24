@@ -37,6 +37,7 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.Ognl;
+import ognl.OgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,11 +58,12 @@ public class SetPropertiesTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ognlUtil = container.getInstance(OgnlUtil.class);
-        ((OgnlValueStack)ActionContext.getContext().getValueStack()).setDevMode("true");
+        ((OgnlValueStack) ActionContext.getContext().getValueStack()).setDevMode("true");
     }
+
     public void testOgnlUtilEmptyStringAsLong() {
         Bar bar = new Bar();
-        Map context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(null, null));
+        OgnlContext context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(null, null));
         context.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         bar.setId(null);
 
@@ -85,7 +87,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         ValueStack vs = ActionContext.getContext().getValueStack();
         vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        XWorkConverter c = (XWorkConverter)((OgnlTypeConverterWrapper) Ognl.getTypeConverter(vs.getContext())).getTarget();
+        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) Ognl.getTypeConverter((OgnlContext) vs.getContext())).getTarget();
         c.registerConverter(Cat.class.getName(), new FooBarConverter());
         vs.push(foo);
 
@@ -101,7 +103,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         ValueStack vs = ActionContext.getContext().getValueStack();
         vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        XWorkConverter c = (XWorkConverter)((OgnlTypeConverterWrapper) Ognl.getTypeConverter(vs.getContext())).getTarget();
+        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) Ognl.getTypeConverter((OgnlContext) vs.getContext())).getTarget();
         c.registerConverter(Cat.class.getName(), new FooBarConverter());
         vs.push(foo);
 
@@ -131,22 +133,25 @@ public class SetPropertiesTest extends XWorkTestCase {
         assertNull(bar.getId());
         assertEquals(0, bar.getFieldErrors().size());
     }
+
     public void testAddingToListsWithObjectsTrue() {
         doTestAddingToListsWithObjects(true);
     }
+
     public void testAddingToListsWithObjectsFalse() {
         doTestAddingToListsWithObjects(false);
 
     }
+
     public void doTestAddingToListsWithObjects(final boolean allowAdditions) {
 
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
-                    LocatableProperties props) throws ConfigurationException {
+                                 LocatableProperties props) throws ConfigurationException {
                 builder.factory(ObjectTypeDeterminer.class, new Factory() {
                     public Object create(Context context) throws Exception {
-                        return new MockObjectTypeDeterminer(null,Cat.class,null,allowAdditions);
+                        return new MockObjectTypeDeterminer(null, Cat.class, null, allowAdditions);
                     }
 
                     @Override
@@ -173,14 +178,14 @@ public class SetPropertiesTest extends XWorkTestCase {
         }
         Object setCat = null;
         if (allowAdditions) {
-             setCat = foo.getMoreCats().get(2);
+            setCat = foo.getMoreCats().get(2);
 
 
             assertNotNull(setCat);
             assertTrue(setCat instanceof Cat);
             assertTrue(((Cat) setCat).getName().equals(spielname));
-        }	else {
-            assertTrue(foo.getMoreCats()==null || foo.getMoreCats().size()==0);
+        } else {
+            assertTrue(foo.getMoreCats() == null || foo.getMoreCats().size() == 0);
         }
 
         //now try to set a lower number
@@ -209,7 +214,7 @@ public class SetPropertiesTest extends XWorkTestCase {
 
     public void doTestAddingToMapsWithObjects(boolean allowAdditions) throws Exception {
 
-        loadButAdd(ObjectTypeDeterminer.class, new MockObjectTypeDeterminer(Long.class,Cat.class,null,allowAdditions));
+        loadButAdd(ObjectTypeDeterminer.class, new MockObjectTypeDeterminer(Long.class, Cat.class, null, allowAdditions));
 
         Foo foo = new Foo();
         foo.setAnotherCatMap(new HashMap());
@@ -225,7 +230,7 @@ public class SetPropertiesTest extends XWorkTestCase {
             assertNotNull(setCat);
             assertTrue(setCat instanceof Cat);
             assertTrue(((Cat) setCat).getName().equals(spielname));
-        }	else {
+        } else {
             assertNull(setCat);
         }
 
@@ -236,10 +241,12 @@ public class SetPropertiesTest extends XWorkTestCase {
     public void testAddingAndModifyingCollectionWithObjectsSet() {
         doTestAddingAndModifyingCollectionWithObjects(new HashSet());
     }
+
     public void testAddingAndModifyingCollectionWithObjectsList() {
         doTestAddingAndModifyingCollectionWithObjects(new ArrayList());
 
     }
+
     public void doTestAddingAndModifyingCollectionWithObjects(Collection barColl) {
 
         ValueStack vs = ActionContext.getContext().getValueStack();
@@ -325,12 +332,13 @@ public class SetPropertiesTest extends XWorkTestCase {
             }
         }
     }
+
     public void testAddingToCollectionBasedOnPermission() {
-        final MockObjectTypeDeterminer determiner = new MockObjectTypeDeterminer(Long.class,Bar.class,"id",true);
+        final MockObjectTypeDeterminer determiner = new MockObjectTypeDeterminer(Long.class, Bar.class, "id", true);
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
-                    LocatableProperties props) throws ConfigurationException {
+                                 LocatableProperties props) throws ConfigurationException {
                 builder.factory(ObjectTypeDeterminer.class, new Factory() {
                     public Object create(Context context) throws Exception {
                         return determiner;
@@ -344,7 +352,7 @@ public class SetPropertiesTest extends XWorkTestCase {
             }
         });
 
-        Collection barColl=new HashSet();
+        Collection barColl = new HashSet();
 
         ValueStack vs = ActionContext.getContext().getValueStack();
         ReflectionContextState.setCreatingNullObjects(vs.getContext(), true);
@@ -355,26 +363,26 @@ public class SetPropertiesTest extends XWorkTestCase {
 
         vs.push(foo);
 
-        String bar1Title="title";
+        String bar1Title = "title";
         vs.setValue("barCollection(11).title", bar1Title);
 
         assertEquals(1, barColl.size());
-        Object bar=barColl.iterator().next();
+        Object bar = barColl.iterator().next();
         assertTrue(bar instanceof Bar);
-        assertEquals(((Bar)bar).getTitle(), bar1Title);
-        assertEquals(((Bar)bar).getId(), new Long(11));
+        assertEquals(((Bar) bar).getTitle(), bar1Title);
+        assertEquals(((Bar) bar).getId(), new Long(11));
 
         //now test where there is no permission
         determiner.setShouldCreateIfNew(false);
 
-        String bar2Title="another title";
+        String bar2Title = "another title";
         vs.setValue("barCollection(22).title", bar1Title);
 
         assertEquals(1, barColl.size());
-        bar=barColl.iterator().next();
+        bar = barColl.iterator().next();
         assertTrue(bar instanceof Bar);
-        assertEquals(((Bar)bar).getTitle(), bar1Title);
-        assertEquals(((Bar)bar).getId(), new Long(11));
+        assertEquals(((Bar) bar).getTitle(), bar1Title);
+        assertEquals(((Bar) bar).getId(), new Long(11));
 
 
     }

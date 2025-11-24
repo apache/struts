@@ -204,6 +204,26 @@ public class OgnlUtil {
     }
 
     /**
+     * Ensures that the given context is an OgnlContext. If it's already an OgnlContext, returns it as-is.
+     * If it's a plain Map (like HashMap), wraps it in an OgnlContext to ensure compatibility with OGNL 3.4.8+.
+     *
+     * @param context the context map that may or may not be an OgnlContext
+     * @return an OgnlContext instance
+     * @since 7.2.0
+     */
+    private OgnlContext ensureOgnlContext(Map<String, Object> context) {
+        if (context instanceof OgnlContext) {
+            return (OgnlContext) context;
+        }
+        // Create a new OgnlContext and copy the Map contents
+        OgnlContext ognlContext = createDefaultContext(null);
+        if (context != null) {
+            ognlContext.putAll(context);
+        }
+        return ognlContext;
+    }
+
+    /**
      * Sets the object's properties using the default type converter, defaulting to not throw
      * exceptions for problems setting the properties.
      *
@@ -229,7 +249,7 @@ public class OgnlUtil {
             return;
         }
 
-        OgnlContext ognlContext = (OgnlContext) context;
+        OgnlContext ognlContext = ensureOgnlContext(context);
         Object oldRoot = Ognl.getRoot(ognlContext);
         Ognl.setRoot(ognlContext, o);
 
@@ -290,7 +310,7 @@ public class OgnlUtil {
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
 
-        OgnlContext ognlContext = (OgnlContext) context;
+        OgnlContext ognlContext = ensureOgnlContext(context);
         Object oldRoot = Ognl.getRoot(ognlContext);
         Ognl.setRoot(ognlContext, o);
 

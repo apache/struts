@@ -38,7 +38,7 @@ public class XWorkTypeConverterWrapper implements TypeConverter {
     @Override
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         // Cast context to OgnlContext for OGNL 3.4.8+ compatibility
-        OgnlContext ognlContext = (context instanceof OgnlContext) ? (OgnlContext) context : null;
+        OgnlContext ognlContext = (context instanceof OgnlContext oc) ? oc : null;
         if (ognlContext == null) {
             throw new IllegalArgumentException("Context must be an OgnlContext for OGNL 3.4.8+");
         }

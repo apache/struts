@@ -25,8 +25,6 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
 import java.lang.reflect.Member;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
@@ -34,7 +32,8 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     @Override
     public void setUp() throws Exception {
-        context = (OgnlContext) ognl.Ognl.createDefaultContext(null);
+        super.setUp();
+        context = ognl.Ognl.createDefaultContext(null);
     }
 
     public void testJavaxServletPackageAccess() throws Exception {

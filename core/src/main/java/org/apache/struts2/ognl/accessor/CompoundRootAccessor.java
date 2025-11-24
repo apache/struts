@@ -75,9 +75,10 @@ public class CompoundRootAccessor implements RootAccessor {
         return null;
     }
 
-    private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
-    private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    private static final Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
+    private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
+
     private boolean devMode;
     private boolean disallowCustomOgnlMap;
     private static final Set<String> ALLOWED_MAP_CLASSES = Set.of(
@@ -96,8 +97,7 @@ public class CompoundRootAccessor implements RootAccessor {
     @Override
     public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
-        OgnlContext ognlContext = (OgnlContext) context;
-
+        
         for (Object o : root) {
             if (o == null) {
                 continue;
@@ -118,12 +118,6 @@ public class CompoundRootAccessor implements RootAccessor {
                         // This is an unmodifiable Map, so move on to the next element in the stack
                     }
                 }
-//            } catch (OgnlException e) {
-//                if (e.getReason() != null) {
-//                    final String msg = "Caught an Ognl exception while setting property " + name;
-//                    log.error(msg, e);
-//                    throw new RuntimeException(msg, e.getReason());
-//                }
             } catch (IntrospectionException e) {
                 // this is OK if this happens, we'll just keep trying the next
             }
@@ -163,7 +157,7 @@ public class CompoundRootAccessor implements RootAccessor {
                 }
 
                 try {
-                    if ((OgnlRuntime.hasGetProperty(context, o, name)) || ((o instanceof Map) && ((Map) o).containsKey(name))) {
+                    if (OgnlRuntime.hasGetProperty(context, o, name) || (o instanceof Map map && map.containsKey(name))) {
                         return OgnlRuntime.getProperty(context, o, name);
                     }
                 } catch (OgnlException e) {

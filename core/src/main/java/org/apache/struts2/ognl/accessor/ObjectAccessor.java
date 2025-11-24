@@ -24,8 +24,6 @@ import ognl.ObjectPropertyAccessor;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 
-import java.util.Map;
-
 public class ObjectAccessor extends ObjectPropertyAccessor {
     @Override
     public Object getProperty(OgnlContext map, Object o, Object o1) throws OgnlException {
@@ -35,10 +33,5 @@ public class ObjectAccessor extends ObjectPropertyAccessor {
         map.put(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED, o1.toString());
         ReflectionContextState.updateCurrentPropertyPath(map, o1);
         return obj;
-    }
-
-    @Override
-    public void setProperty(OgnlContext map, Object o, Object o1, Object o2) throws OgnlException {
-        super.setProperty(map, o, o1, o2);
     }
 }

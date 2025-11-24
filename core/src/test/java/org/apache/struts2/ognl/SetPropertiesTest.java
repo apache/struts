@@ -43,13 +43,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
-
-/**
- * @author CameronBraid and Gabe
- * @author tm_jee
- */
 public class SetPropertiesTest extends XWorkTestCase {
 
     private OgnlUtil ognlUtil;
@@ -225,7 +219,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         vs.push(foo);
         vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         vs.setValue("anotherCatMap[\"3\"].name", spielname);
-        Object setCat = foo.getAnotherCatMap().get(new Long(3));
+        Object setCat = foo.getAnotherCatMap().get(3L);
         if (allowAdditions) {
             assertNotNull(setCat);
             assertTrue(setCat instanceof Cat);
@@ -254,10 +248,10 @@ public class SetPropertiesTest extends XWorkTestCase {
 
         foo.setBarCollection(barColl);
         Bar bar1 = new Bar();
-        bar1.setId(new Long(11));
+        bar1.setId(11L);
         barColl.add(bar1);
         Bar bar2 = new Bar();
-        bar2.setId(new Long(22));
+        bar2.setId(22L);
         barColl.add(bar2);
         foo.setAnnotatedBarCollection(barColl);
         //try modifying bar1 and bar2
@@ -279,10 +273,10 @@ public class SetPropertiesTest extends XWorkTestCase {
             }
         }
         Bar bar3 = new Bar();
-        bar3.setId(new Long(33));
+        bar3.setId(33L);
         barColl.add(bar3);
         Bar bar4 = new Bar();
-        bar4.setId(new Long(44));
+        bar4.setId(44L);
         barColl.add(bar4);
         String bar1TitleByAnnotation = "The Phantom Menace By Annotation";
         String bar2TitleByAnnotation = "The Clone Wars By Annotation";
@@ -370,21 +364,18 @@ public class SetPropertiesTest extends XWorkTestCase {
         Object bar = barColl.iterator().next();
         assertTrue(bar instanceof Bar);
         assertEquals(((Bar) bar).getTitle(), bar1Title);
-        assertEquals(((Bar) bar).getId(), new Long(11));
+        assertEquals(((Bar) bar).getId(), Long.valueOf(11L));
 
         //now test where there is no permission
         determiner.setShouldCreateIfNew(false);
 
-        String bar2Title = "another title";
         vs.setValue("barCollection(22).title", bar1Title);
 
         assertEquals(1, barColl.size());
         bar = barColl.iterator().next();
         assertTrue(bar instanceof Bar);
         assertEquals(((Bar) bar).getTitle(), bar1Title);
-        assertEquals(((Bar) bar).getId(), new Long(11));
-
-
+        assertEquals(((Bar) bar).getId(), Long.valueOf(11L));
     }
 
 }

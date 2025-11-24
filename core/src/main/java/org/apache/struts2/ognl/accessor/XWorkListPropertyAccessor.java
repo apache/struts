@@ -33,7 +33,6 @@ import org.apache.struts2.StrutsException;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Overrides the list property accessor so in the case of trying

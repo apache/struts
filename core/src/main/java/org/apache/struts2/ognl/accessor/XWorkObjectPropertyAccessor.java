@@ -24,8 +24,6 @@ import ognl.ObjectPropertyAccessor;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 
-import java.util.Map;
-
 /**
  * @author Gabe
  */

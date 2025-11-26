@@ -1,0 +1,6 @@
+<a
+ id="mylink"
+ href="a"
+ data-target="#myModal"
+ data-toggle="modal">
+</a>

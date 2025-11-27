@@ -80,7 +80,7 @@ import java.io.Writer;
  * @since 7.2.0
  */
 @StrutsTag(name = "compress", tldTagClass = "org.apache.struts2.views.jsp.CompressTag",
-        description = "Compress wrapped content")
+        description = "Compress wrapped content\n\n<p><b>Security:</b> The compress tag includes built-in protections against DoS attacks and sensitive data exposure. Large content exceeding the configured maximum size (default 10MB) will be skipped without compression. Log messages are automatically truncated to prevent sensitive data from appearing in logs.</p>")
 public class Compress extends Component {
 
     private static final Logger LOG = LogManager.getLogger(Compress.class);

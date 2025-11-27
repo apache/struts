@@ -108,6 +108,7 @@ public class Compress extends Component {
         LOG.trace("Compresses: {}", body);
         boolean useSingleLine = singleLineValue instanceof Boolean single && single;
         String compressedBody = compressWhitespace(body, useSingleLine);
+        LOG.trace("Compressed: {}", compressedBody);
         return super.end(writer, compressedBody, true);
     }
 
@@ -137,7 +138,7 @@ public class Compress extends Component {
      *                   if false, preserves line structure with single line breaks
      * @return the compressed string with normalized whitespace
      */
-    private static String compressWhitespace(String input, boolean singleLine) {
+    private String compressWhitespace(String input, boolean singleLine) {
         if (input == null || input.isEmpty()) {
             return input;
         }

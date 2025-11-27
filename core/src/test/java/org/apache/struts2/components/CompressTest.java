@@ -342,6 +342,148 @@ public class CompressTest extends StrutsInternalTestCase {
         assertEquals("", writer.toString()); // All whitespace removed in single-line mode
     }
 
+    public void testMaxSizeLimit() {
+        Compress compress = new Compress(stack);
+
+        // Create body larger than default maxSize (10MB)
+        StringBuilder largeBody = new StringBuilder();
+        largeBody.append("<html><body>");
+        for (int i = 0; i < 11_000_000; i++) { // ~11MB
+            largeBody.append("x");
+        }
+        largeBody.append("</body></html>");
+
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        compress.setMaxSize("10485760"); // 10MB
+
+        compress.end(writer, largeBody.toString());
+
+        // Should return original content without compression
+        assertEquals(largeBody.toString(), writer.toString());
+    }
+
+    public void testMaxSizeDisabled() {
+        Compress compress = new Compress(stack);
+
+        StringBuilder largeBody = new StringBuilder();
+        largeBody.append("<html><body>");
+        for (int i = 0; i < 11_000_000; i++) {
+            largeBody.append("x");
+        }
+        largeBody.append("</body></html>");
+
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        // Don't set maxSize - defaults to null (no limit)
+
+        compress.end(writer, largeBody.toString());
+
+        // Should compress even large content when limit is disabled
+        assertTrue("Content should be compressed when limit is disabled", 
+                   !largeBody.toString().equals(writer.toString()));
+    }
+
+    public void testLogTruncation() {
+        Compress compress = new Compress(stack);
+
+        StringBuilder longBody = new StringBuilder();
+        for (int i = 0; i < 500; i++) {
+            longBody.append("x");
+        }
+
+        compress.setLogMaxLength("200");
+
+        // Test that processing doesn't throw exceptions with long content
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        compress.end(writer, longBody.toString());
+
+        // Should process without errors
+        assertNotNull(writer.toString());
+    }
+
+    public void testVeryLargeInputSafety() {
+        Compress compress = new Compress(stack);
+
+        // Create input larger than 50MB hard limit
+        StringBuilder hugeBody = new StringBuilder();
+        hugeBody.append("<html><body>");
+        for (int i = 0; i < 60_000_000; i++) { // ~60MB
+            hugeBody.append("x");
+        }
+        hugeBody.append("</body></html>");
+
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        // Don't set maxSize - defaults to null (no config limit)
+
+        compress.end(writer, hugeBody.toString());
+
+        // Should return original content due to hard limit in compressWhitespace
+        assertEquals(hugeBody.toString(), writer.toString());
+    }
+
+    public void testInvalidMaxSizeConfiguration() {
+        Compress compress = new Compress(stack);
+
+        // Test negative value - should disable limit (null)
+        compress.setMaxSize("-1");
+        // Verify behavior: large content should be processed when limit is disabled
+        StringBuilder largeBody = new StringBuilder();
+        largeBody.append("<html><body>");
+        for (int i = 0; i < 11_000_000; i++) {
+            largeBody.append("x");
+        }
+        largeBody.append("</body></html>");
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        compress.end(writer, largeBody.toString());
+        // Should compress when limit is disabled
+        assertTrue("Content should be compressed when limit is disabled (negative value)", 
+                   !largeBody.toString().equals(writer.toString()));
+
+        // Test non-numeric value - should disable limit
+        compress.setMaxSize("invalid");
+        writer = new StringWriter();
+        compress.end(writer, largeBody.toString());
+        // Should compress when limit is disabled
+        assertTrue("Content should be compressed when limit is disabled (invalid value)", 
+                   !largeBody.toString().equals(writer.toString()));
+
+        // Test valid value
+        compress.setMaxSize("5242880"); // 5MB
+        writer = new StringWriter();
+        compress.end(writer, largeBody.toString());
+        // Should skip compression for content exceeding 5MB
+        assertEquals(largeBody.toString(), writer.toString());
+    }
+
+    public void testInvalidLogMaxLengthConfiguration() {
+        Compress compress = new Compress(stack);
+
+        // Test negative value - should use default (200)
+        compress.setLogMaxLength("-1");
+        // Verify behavior: processing should work normally
+        String body = "<html><body>Test</body></html>";
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
+        compress.end(writer, body);
+        assertNotNull(writer.toString());
+
+        // Test non-numeric value - should use default (200)
+        compress.setLogMaxLength("invalid");
+        writer = new StringWriter();
+        compress.end(writer, body);
+        assertNotNull(writer.toString());
+
+        // Test valid value
+        compress.setLogMaxLength("500");
+        writer = new StringWriter();
+        compress.end(writer, body);
+        assertNotNull(writer.toString());
+    }
+
     @Override
     public void setUp() throws Exception {
         super.setUp();

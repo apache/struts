@@ -50,6 +50,39 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setForce("false");
         compress.end(writer, body);
 
+        String expected = """
+                <html>
+                <head>
+                <title>File upload: result</title>
+                </head>
+                <body>
+                <h1>File upload: result</h1>
+                </body>
+                </html>
+                """.stripTrailing();
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testCompressSingleLineHtmlOutput() {
+        Compress compress = new Compress(stack);
+
+        String body = """
+                <html>
+                <head>
+                    <title>File upload: result</title>
+                </head>
+                <body>
+                    <h1>File upload: result</h1>
+                </body>
+                </html>
+                """;
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.setSingleLine("true");
+        compress.end(writer, body);
+
         assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
     }
 
@@ -93,6 +126,7 @@ public class CompressTest extends StrutsInternalTestCase {
 
         compress.setDevMode("true");
         compress.setForce("true");
+        compress.setSingleLine("true");
         compress.end(writer, body);
 
         assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
@@ -120,7 +154,17 @@ public class CompressTest extends StrutsInternalTestCase {
         StringWriter writer = new StringWriter();
         compress.end(writer, body);
 
-        assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
+        String expected = """
+                <html>
+                <head>
+                <title>File upload: result</title>
+                </head>
+                <body>
+                <h1>File upload: result</h1>
+                </body>
+                </html>
+                """.stripTrailing();
+        assertEquals(expected, writer.toString());
     }
 
     public void testCompressionDisabledGlobally() {
@@ -167,7 +211,135 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setForce("true");
         compress.end(writer, body);
 
-        assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
+        String expected = """
+                <html>
+                <head>
+                <title>File upload: result</title>
+                </head>
+                <body>
+                <h1>File upload: result</h1>
+                </body>
+                </html>
+                """.stripTrailing();
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testSingleLineAsExpression() {
+        Compress compress = new Compress(stack);
+
+        String body = """
+                <html>
+                <head>
+                    <title>Test</title>
+                </head>
+                </html>
+                """;
+
+        this.context.put("shouldUseSingleLine", Boolean.TRUE);
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.setSingleLine("shouldUseSingleLine");
+        compress.end(writer, body);
+
+        assertEquals("<html><head><title>Test</title></head></html>", writer.toString());
+    }
+
+    public void testContentWithCRLineBreaks() {
+        Compress compress = new Compress(stack);
+
+        String body = "<html>\r<head>\r<title>Test</title>\r</head>\r</html>";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testContentWithLFLineBreaks() {
+        Compress compress = new Compress(stack);
+
+        String body = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testContentWithCRLFLineBreaks() {
+        Compress compress = new Compress(stack);
+
+        String body = "<html>\r\n<head>\r\n<title>Test</title>\r\n</head>\r\n</html>";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testContentWithMixedLineBreaks() {
+        Compress compress = new Compress(stack);
+
+        String body = "<html>\r\n<head>\n<title>Test</title>\r</head>\r\n</html>";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testEmptyBody() {
+        Compress compress = new Compress(stack);
+
+        String body = "";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        assertEquals("", writer.toString());
+    }
+
+    public void testWhitespaceOnlyBody() {
+        Compress compress = new Compress(stack);
+
+        String body = "   \n\n\n   ";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.end(writer, body);
+
+        assertEquals("", writer.toString()); // Leading/trailing whitespace removed
+    }
+
+    public void testSingleLineWithWhitespaceOnlyBody() {
+        Compress compress = new Compress(stack);
+
+        String body = "   \n\n\n   ";
+
+        StringWriter writer = new StringWriter();
+
+        compress.setDevMode("false");
+        compress.setSingleLine("true");
+        compress.end(writer, body);
+
+        assertEquals("", writer.toString()); // All whitespace removed in single-line mode
     }
 
     @Override

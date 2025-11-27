@@ -36,6 +36,7 @@ public class CompressTag extends ComponentTagSupport {
     private static final long serialVersionUID = 7572566991679717145L;
 
     private String force;
+    private String singleLine;
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -48,9 +49,14 @@ public class CompressTag extends ComponentTagSupport {
 
         Compress compress = (Compress) component;
         compress.setForce(force);
+        compress.setSingleLine(singleLine);
     }
 
     public void setForce(String force) {
         this.force = force;
+    }
+
+    public void setSingleLine(String singleLine) {
+        this.singleLine = singleLine;
     }
 }

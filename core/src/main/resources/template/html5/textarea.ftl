@@ -22,9 +22,9 @@
 <#compress>
     <textarea
             name="${(attributes.name!"")}"
-<#if attributes.cols?has_content>
-    cols="${(attributes.cols!"")}"
-</#if>
+            <#if attributes.cols?has_content>
+                cols="${(attributes.cols!"")}"
+            </#if>
             <#if attributes.rows?has_content>
                 rows="${(attributes.rows!"")}"
             </#if>

@@ -27,4 +27,5 @@
     <mapping path="/images/*" exclude="true"/>
     <mapping path="/static/*" exclude="true"/>
     <mapping path="/nodecorate/*" exclude="true"/>
+    <mapping path="/html5/*" exclude="true"/>
 </sitemesh>

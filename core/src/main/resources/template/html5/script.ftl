@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<@compress single_line=true>
+<#compress>
 <script
         <#if attributes.async?has_content && attributes.async == "true">
             async
@@ -50,4 +50,4 @@
         <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
         <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
         <#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />>
-</@compress>
+</#compress>

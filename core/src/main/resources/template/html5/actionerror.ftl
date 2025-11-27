@@ -19,8 +19,8 @@
  * under the License.
  */
 -->
-<#if (actionErrors?? && actionErrors?size > 0)>
-    <@compress single_line=true>
+<#compress>
+    <#if (actionErrors?? && actionErrors?size > 0)>
         <ul
                 <#if attributes.id??>
                     id="${attributes.id}"
@@ -40,5 +40,5 @@
                 </#if>
             </#list>
         </ul>
-    </@compress>
-</#if>
+    </#if>
+</#compress>

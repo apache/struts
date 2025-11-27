@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@compress single_line=true>
+<#compress>
     <link
             <#if attributes.rel?has_content>
                 rel="${attributes.rel}"
@@ -70,5 +70,5 @@
             <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
             <#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />
     />
-</@compress>
+</#compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

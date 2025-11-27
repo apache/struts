@@ -20,14 +20,14 @@
 -->
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Struts2 Showcase - Html5 theme</title>
     <s:url var="bootstrapCss" value="/styles/bootstrap.css" encode="false" includeParams="none"/>
     <s:link theme="html5" href="%{bootstrapCss}"/>
     <s:url var="mainCss" value="/styles/main.css" encode="false" includeParams="none"/>
-    <s:link href="%{mainCss}" />
-    <s:head theme="html5"/>
+    <s:link theme="html5" href="%{mainCss}" />
+    <s:head />
+    <title>Struts2 Showcase - Html5 theme</title>
 </head>
 
 <body>
@@ -62,6 +62,14 @@
         </div>
         <div class="col-md-10">
             <s:actionmessage theme="html5"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <pre>&lt;s:fielderror/&gt;</pre>
+        </div>
+        <div class="col-md-10">
+            <s:fielderror theme="html5"/>
         </div>
     </div>
 </div>

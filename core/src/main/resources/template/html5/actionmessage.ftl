@@ -19,8 +19,8 @@
  * under the License.
  */
 -->
-<#if (actionMessages?? && actionMessages?size > 0 && !attributes.isEmptyList)>
-    <@compress single_line=true>
+<#compress>
+    <#if (actionMessages?? && actionMessages?size > 0 && !attributes.isEmptyList)>
         <ul
                 <#if attributes.id??>
                     id="${attributes.id}"
@@ -40,5 +40,5 @@
                 </#if>
             </#list>
         </ul>
-    </@compress>
-</#if>
+    </#if>
+</#compress>

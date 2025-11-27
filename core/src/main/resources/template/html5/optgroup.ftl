@@ -18,8 +18,8 @@
  * under the License.
  */
 -->
-<#if attributes.optGroupInternalListUiBeanList??>
-    <#compress>
+<#compress>
+    <#if attributes.optGroupInternalListUiBeanList??>
         <#assign optGroupInternalListUiBeans=attributes.optGroupInternalListUiBeanList />
         <#list optGroupInternalListUiBeans as optGroupInternalListUiBean>
             <optgroup<#rt>
@@ -67,5 +67,5 @@
                 </#list>
             </optgroup>
         </#list>
-    </#compress>
-</#if>
+    </#if>
+</#compress>

@@ -180,6 +180,9 @@
                                 <s:a href="%{#url}">Component Tag Example</s:a></li>
                             <li><s:url var="url" namespace="/tags/ui" action="actionTagExample" method="input"/><s:a
                                     href="%{url}">Action Tag Example</s:a></li>
+                            <li><s:url var="url" action="index"
+                                       namespace="/html5"/><s:a
+                                    href="%{#url}">Html 5 theme</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

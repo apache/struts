@@ -18,8 +18,8 @@
  * under the License.
  */
 -->
-<#if fieldErrors??>
-    <#compress>
+<#compress>
+    <#if fieldErrors??>
         <#assign eKeys = fieldErrors.keySet()>
         <#assign eKeysSize = eKeys.size()>
         <#assign doneStartUlTag=false>
@@ -80,5 +80,5 @@
                 </ul>
             </#if>
         </#if>
-    </#compress>
-</#if>
+    </#if>
+</#compress>

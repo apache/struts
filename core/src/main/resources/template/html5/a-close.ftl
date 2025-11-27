@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@compress single_line=true>
+<#compress>
 <a
 <#if attributes.id??>
  id="${attributes.id}"
@@ -46,5 +46,5 @@
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}</a>
-</@compress>
+</#compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

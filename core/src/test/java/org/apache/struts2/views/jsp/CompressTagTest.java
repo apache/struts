@@ -64,40 +64,13 @@ public class CompressTagTest extends AbstractUITagTest {
         tag.setBodyContent(bc);
         tag.doEndTag();
 
-        assertEquals("""
-                        <form action="/" method="post">
-                        <table class="wwFormTable"></table></form>
-                        """.stripTrailing(),
-                this.writer.toString());
-    }
-
-    public void testSingleLineAttribute() throws Exception {
-        CompressTag tag = new CompressTag();
-        tag.setPageContext(pageContext);
-        tag.setSingleLine("true");
-
-        StrutsBodyContent bc = new StrutsBodyContent(null);
-        bc.print("""
-                <form action="/" method="post">
-                <table class="wwFormTable"></table></form>
-                """
-        );
-
-        tag.doStartTag();
-        tag.setBodyContent(bc);
-        tag.doEndTag();
-
         assertEquals("<form action=\"/\" method=\"post\"><table class=\"wwFormTable\"></table></form>",
                 this.writer.toString());
     }
 
-    public void testAllAttributesTogether() throws Exception {
-        setDevMode(true);
-
+    public void testDefaultCompression() throws Exception {
         CompressTag tag = new CompressTag();
         tag.setPageContext(pageContext);
-        tag.setForce("true");
-        tag.setSingleLine("true");
 
         StrutsBodyContent bc = new StrutsBodyContent(null);
         bc.print("""

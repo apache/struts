@@ -25,14 +25,15 @@ import org.apache.struts2.util.ValueStackFactory;
 import java.io.StringWriter;
 import java.util.Map;
 
+import static org.junit.Assert.assertNotEquals;
+
 public class CompressTest extends StrutsInternalTestCase {
 
     private ValueStack stack;
     private Map<String, Object> context;
+    private Compress compress;
 
     public void testCompressHtmlOutput() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -50,22 +51,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setForce("false");
         compress.end(writer, body);
 
-        String expected = """
-                <html>
-                <head>
-                <title>File upload: result</title>
-                </head>
-                <body>
-                <h1>File upload: result</h1>
-                </body>
-                </html>
-                """.stripTrailing();
+        String expected = "<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>";
         assertEquals(expected, writer.toString());
     }
 
-    public void testCompressSingleLineHtmlOutput() {
-        Compress compress = new Compress(stack);
-
+    public void testCompressHtmlOutputSimpleAlgorithm() {
         String body = """
                 <html>
                 <head>
@@ -80,15 +70,12 @@ public class CompressTest extends StrutsInternalTestCase {
         StringWriter writer = new StringWriter();
 
         compress.setDevMode("false");
-        compress.setSingleLine("true");
         compress.end(writer, body);
 
         assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
     }
 
     public void testAvoidCompressingInDevModeHtmlOutput() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -109,8 +96,6 @@ public class CompressTest extends StrutsInternalTestCase {
     }
 
     public void testCompressHtmlOutputEvenInDevMode() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -126,15 +111,12 @@ public class CompressTest extends StrutsInternalTestCase {
 
         compress.setDevMode("true");
         compress.setForce("true");
-        compress.setSingleLine("true");
         compress.end(writer, body);
 
         assertEquals("<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>", writer.toString());
     }
 
     public void testCompressHtmlOutputEvenInDevModeAndForceIsExpression() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -154,22 +136,11 @@ public class CompressTest extends StrutsInternalTestCase {
         StringWriter writer = new StringWriter();
         compress.end(writer, body);
 
-        String expected = """
-                <html>
-                <head>
-                <title>File upload: result</title>
-                </head>
-                <body>
-                <h1>File upload: result</h1>
-                </body>
-                </html>
-                """.stripTrailing();
+        String expected = "<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>";
         assertEquals(expected, writer.toString());
     }
 
     public void testCompressionDisabledGlobally() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -191,8 +162,6 @@ public class CompressTest extends StrutsInternalTestCase {
     }
 
     public void testCompressionDisabledGloballyButForced() {
-        Compress compress = new Compress(stack);
-
         String body = """
                 <html>
                 <head>
@@ -211,43 +180,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setForce("true");
         compress.end(writer, body);
 
-        String expected = """
-                <html>
-                <head>
-                <title>File upload: result</title>
-                </head>
-                <body>
-                <h1>File upload: result</h1>
-                </body>
-                </html>
-                """.stripTrailing();
+        String expected = "<html><head><title>File upload: result</title></head><body><h1>File upload: result</h1></body></html>";
         assertEquals(expected, writer.toString());
     }
 
-    public void testSingleLineAsExpression() {
-        Compress compress = new Compress(stack);
-
-        String body = """
-                <html>
-                <head>
-                    <title>Test</title>
-                </head>
-                </html>
-                """;
-
-        this.context.put("shouldUseSingleLine", Boolean.TRUE);
-
-        StringWriter writer = new StringWriter();
-
-        compress.setDevMode("false");
-        compress.setSingleLine("shouldUseSingleLine");
-        compress.end(writer, body);
-
-        assertEquals("<html><head><title>Test</title></head></html>", writer.toString());
-    }
-
     public void testContentWithCRLineBreaks() {
-        Compress compress = new Compress(stack);
 
         String body = "<html>\r<head>\r<title>Test</title>\r</head>\r</html>";
 
@@ -256,13 +193,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setDevMode("false");
         compress.end(writer, body);
 
-        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        String expected = "<html><head><title>Test</title></head></html>";
         assertEquals(expected, writer.toString());
     }
 
     public void testContentWithLFLineBreaks() {
-        Compress compress = new Compress(stack);
-
         String body = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
 
         StringWriter writer = new StringWriter();
@@ -270,13 +205,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setDevMode("false");
         compress.end(writer, body);
 
-        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        String expected = "<html><head><title>Test</title></head></html>";
         assertEquals(expected, writer.toString());
     }
 
     public void testContentWithCRLFLineBreaks() {
-        Compress compress = new Compress(stack);
-
         String body = "<html>\r\n<head>\r\n<title>Test</title>\r\n</head>\r\n</html>";
 
         StringWriter writer = new StringWriter();
@@ -284,13 +217,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setDevMode("false");
         compress.end(writer, body);
 
-        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        String expected = "<html><head><title>Test</title></head></html>";
         assertEquals(expected, writer.toString());
     }
 
     public void testContentWithMixedLineBreaks() {
-        Compress compress = new Compress(stack);
-
         String body = "<html>\r\n<head>\n<title>Test</title>\r</head>\r\n</html>";
 
         StringWriter writer = new StringWriter();
@@ -298,13 +229,11 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.setDevMode("false");
         compress.end(writer, body);
 
-        String expected = "<html>\n<head>\n<title>Test</title>\n</head>\n</html>";
+        String expected = "<html><head><title>Test</title></head></html>";
         assertEquals(expected, writer.toString());
     }
 
     public void testEmptyBody() {
-        Compress compress = new Compress(stack);
-
         String body = "";
 
         StringWriter writer = new StringWriter();
@@ -316,8 +245,6 @@ public class CompressTest extends StrutsInternalTestCase {
     }
 
     public void testWhitespaceOnlyBody() {
-        Compress compress = new Compress(stack);
-
         String body = "   \n\n\n   ";
 
         StringWriter writer = new StringWriter();
@@ -328,29 +255,11 @@ public class CompressTest extends StrutsInternalTestCase {
         assertEquals("", writer.toString()); // Leading/trailing whitespace removed
     }
 
-    public void testSingleLineWithWhitespaceOnlyBody() {
-        Compress compress = new Compress(stack);
-
-        String body = "   \n\n\n   ";
-
-        StringWriter writer = new StringWriter();
-
-        compress.setDevMode("false");
-        compress.setSingleLine("true");
-        compress.end(writer, body);
-
-        assertEquals("", writer.toString()); // All whitespace removed in single-line mode
-    }
-
     public void testMaxSizeLimit() {
-        Compress compress = new Compress(stack);
-
         // Create body larger than default maxSize (10MB)
         StringBuilder largeBody = new StringBuilder();
         largeBody.append("<html><body>");
-        for (int i = 0; i < 11_000_000; i++) { // ~11MB
-            largeBody.append("x");
-        }
+        largeBody.append("x".repeat(11_000_000));
         largeBody.append("</body></html>");
 
         StringWriter writer = new StringWriter();
@@ -364,14 +273,11 @@ public class CompressTest extends StrutsInternalTestCase {
     }
 
     public void testMaxSizeDisabled() {
-        Compress compress = new Compress(stack);
-
+        // Create body with whitespace that will be compressed
         StringBuilder largeBody = new StringBuilder();
-        largeBody.append("<html><body>");
-        for (int i = 0; i < 11_000_000; i++) {
-            largeBody.append("x");
-        }
-        largeBody.append("</body></html>");
+        largeBody.append("<html>\n<body>\n");
+        largeBody.append("    <p>Content with whitespace</p>\n".repeat(1_000_000));
+        largeBody.append("</body>\n</html>");
 
         StringWriter writer = new StringWriter();
         compress.setDevMode("false");
@@ -380,38 +286,28 @@ public class CompressTest extends StrutsInternalTestCase {
         compress.end(writer, largeBody.toString());
 
         // Should compress even large content when limit is disabled
-        assertTrue("Content should be compressed when limit is disabled", 
-                   !largeBody.toString().equals(writer.toString()));
+        assertNotEquals("Content should be compressed when limit is disabled", largeBody.toString(), writer.toString());
     }
 
     public void testLogTruncation() {
-        Compress compress = new Compress(stack);
-
-        StringBuilder longBody = new StringBuilder();
-        for (int i = 0; i < 500; i++) {
-            longBody.append("x");
-        }
+        String longBody = "x".repeat(500);
 
         compress.setLogMaxLength("200");
 
         // Test that processing doesn't throw exceptions with long content
         StringWriter writer = new StringWriter();
         compress.setDevMode("false");
-        compress.end(writer, longBody.toString());
+        compress.end(writer, longBody);
 
         // Should process without errors
         assertNotNull(writer.toString());
     }
 
     public void testVeryLargeInputSafety() {
-        Compress compress = new Compress(stack);
-
         // Create input larger than 50MB hard limit
         StringBuilder hugeBody = new StringBuilder();
         hugeBody.append("<html><body>");
-        for (int i = 0; i < 60_000_000; i++) { // ~60MB
-            hugeBody.append("x");
-        }
+        hugeBody.append("x".repeat(60_000_000));
         hugeBody.append("</body></html>");
 
         StringWriter writer = new StringWriter();
@@ -425,63 +321,62 @@ public class CompressTest extends StrutsInternalTestCase {
     }
 
     public void testInvalidMaxSizeConfiguration() {
-        Compress compress = new Compress(stack);
+        // Test non-numeric value - should disable limit and compress
+        String largeBodyStr = "<html>\n<body>\n" +
+                "    <p>Content with whitespace</p>\n".repeat(1_000) +
+                "</body>\n</html>";
 
-        // Test negative value - should disable limit (null)
-        compress.setMaxSize("-1");
-        // Verify behavior: large content should be processed when limit is disabled
-        StringBuilder largeBody = new StringBuilder();
-        largeBody.append("<html><body>");
-        for (int i = 0; i < 11_000_000; i++) {
-            largeBody.append("x");
-        }
-        largeBody.append("</body></html>");
-        StringWriter writer = new StringWriter();
         compress.setDevMode("false");
-        compress.end(writer, largeBody.toString());
-        // Should compress when limit is disabled
-        assertTrue("Content should be compressed when limit is disabled (negative value)", 
-                   !largeBody.toString().equals(writer.toString()));
-
-        // Test non-numeric value - should disable limit
         compress.setMaxSize("invalid");
-        writer = new StringWriter();
-        compress.end(writer, largeBody.toString());
-        // Should compress when limit is disabled
-        assertTrue("Content should be compressed when limit is disabled (invalid value)", 
-                   !largeBody.toString().equals(writer.toString()));
 
-        // Test valid value
+        StringWriter writer = new StringWriter();
+        compress.end(writer, largeBodyStr);
+
+        // Should compress when limit is disabled (invalid value)
+        assertNotEquals("Content should be compressed when limit is disabled (invalid value)", largeBodyStr, writer.toString());
+    }
+
+    public void testValidMaxSizeConfiguration() {
+        // Test valid value - create body to exceed 5MB limit
+        StringBuilder hugeBody = new StringBuilder();
+        hugeBody.append("<html><body>");
+        hugeBody.append("x".repeat(6_000_000));
+        hugeBody.append("</body></html>");
+
+        compress.setDevMode("false");
         compress.setMaxSize("5242880"); // 5MB
-        writer = new StringWriter();
-        compress.end(writer, largeBody.toString());
+
+        StringWriter writer = new StringWriter();
+        compress.end(writer, hugeBody.toString());
+
         // Should skip compression for content exceeding 5MB
-        assertEquals(largeBody.toString(), writer.toString());
+        assertEquals(hugeBody.toString(), writer.toString());
     }
 
     public void testInvalidLogMaxLengthConfiguration() {
-        Compress compress = new Compress(stack);
-
-        // Test negative value - should use default (200)
+        // Test negative value - should use default (200) and work normally
         compress.setLogMaxLength("-1");
-        // Verify behavior: processing should work normally
+
         String body = "<html><body>Test</body></html>";
         StringWriter writer = new StringWriter();
         compress.setDevMode("false");
         compress.end(writer, body);
-        assertNotNull(writer.toString());
 
-        // Test non-numeric value - should use default (200)
-        compress.setLogMaxLength("invalid");
-        writer = new StringWriter();
-        compress.end(writer, body);
         assertNotNull(writer.toString());
+        assertEquals("<html><body>Test</body></html>", writer.toString());
+    }
 
-        // Test valid value
+    public void testValidLogMaxLengthConfiguration() {
+        // Test valid value - should work normally
         compress.setLogMaxLength("500");
-        writer = new StringWriter();
+
+        String body = "<html><body>Test</body></html>";
+        StringWriter writer = new StringWriter();
+        compress.setDevMode("false");
         compress.end(writer, body);
+
         assertNotNull(writer.toString());
+        assertEquals("<html><body>Test</body></html>", writer.toString());
     }
 
     @Override
@@ -489,5 +384,7 @@ public class CompressTest extends StrutsInternalTestCase {
         super.setUp();
         stack = container.getInstance(ValueStackFactory.class).createValueStack();
         context = stack.getContext();
+        compress = new Compress(stack);
+        stack.push(compress);
     }
 }

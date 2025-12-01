@@ -310,7 +310,7 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.15</version>
+                    <version>0.17</version>
                     <configuration>
                         <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
                         <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>

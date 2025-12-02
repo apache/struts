@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.convention;
 
-import org.apache.struts2.result.ActionChainResult;
 import jakarta.servlet.ServletContext;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
@@ -94,6 +93,7 @@ import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Scope.Strategy;
 import org.apache.struts2.ognl.OgnlReflectionProvider;
 import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.util.TextParseUtil;
@@ -127,8 +127,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         ActionContext.of()
-            .withContainer(new DummyContainer())
-            .bind();
+                .withContainer(new DummyContainer())
+                .bind();
     }
 
     public void testActionPackages() throws MalformedURLException {
@@ -155,9 +155,83 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         run("org.apache.struts2.convention.actions", null, null, "false");
     }
 
+    /**
+     * WW-5594: Tests that exclusion patterns properly exclude classes in root packages.
+     * <p>
+     * The issue was that pattern "org.apache.struts2.*" did NOT match package name
+     * "org.apache.struts2" (without trailing dot) because:
+     * 1. PackageBasedActionConfigBuilder extracts package name using substringBeforeLast(className, ".")
+     * 2. For class "org.apache.struts2.XWorkTestCase", this produces "org.apache.struts2" (no trailing dot)
+     * 3. The wildcard pattern requires a literal "." before the "*"
+     * <p>
+     * The fix is in checkExcludePackages() which now handles patterns ending with ".*" by also
+     * checking if the package name equals the base pattern (without ".*").
+     */
+    public void testWW5594_RootPackageExclusion() {
+        // Setup minimal configuration
+        final DummyContainer mockContainer = new DummyContainer();
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+
+        ResultTypeConfig[] defaultResults = new ResultTypeConfig[]{
+                new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName())
+                        .defaultResultParam("location").build()
+        };
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher", defaultResults);
+        configuration.addPackageConfig("struts-default", strutsDefault);
+
+        ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
+
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, of, "false", "struts-default", "false");
+
+        // Test 1: Wildcard pattern now properly excludes root package classes (WW-5594 fix)
+        builder.setActionPackages("org.apache.struts2");
+        builder.setExcludePackages("org.apache.struts2.*");
+
+        // Class in root package - package name is "org.apache.struts2" (no trailing dot)
+        // With the fix, pattern "org.apache.struts2.*" now also matches the base package
+        boolean includeRootPackageClass = builder.includeClassNameInActionScan("org.apache.struts2.XWorkTestCase");
+        assertFalse("With wildcard pattern, root package class should be excluded (WW-5594 fix)",
+                includeRootPackageClass);
+
+        // Test 2: Subpackage classes should also be excluded by wildcard pattern
+        boolean includeSubpackageClass = builder.includeClassNameInActionScan("org.apache.struts2.core.ActionSupport");
+        assertFalse("Subpackage classes should be excluded by wildcard pattern",
+                includeSubpackageClass);
+
+        // Test 3: Exact pattern still works for specific package exclusion
+        builder.setExcludePackages("org.apache.struts2");
+        boolean includeWithExactPattern = builder.includeClassNameInActionScan("org.apache.struts2.XWorkTestCase");
+        assertFalse("Exact pattern should exclude root package class",
+                includeWithExactPattern);
+
+        // Test 4: Exact pattern should NOT exclude subpackage classes
+        boolean includeSubpackageWithExact = builder.includeClassNameInActionScan("org.apache.struts2.core.ActionSupport");
+        assertTrue("Exact pattern should NOT exclude subpackage classes",
+                includeSubpackageWithExact);
+
+        // Test 5: Classes in unrelated packages should NOT be excluded
+        builder.setActionPackages("com.example.actions");
+        builder.setExcludePackages("org.apache.struts2.*");
+        boolean includeUnrelated = builder.includeClassNameInActionScan("com.example.actions.MyAction");
+        assertTrue("Classes in unrelated packages should not be excluded",
+                includeUnrelated);
+    }
+
     private void run(String actionPackages, String packageLocators, String excludePackages) throws MalformedURLException {
         run(actionPackages, packageLocators, excludePackages, "");
     }
+
     private void run(String actionPackages, String packageLocators, String excludePackages, String enableSmiInheritance) throws MalformedURLException {
         //setup interceptors
         List<InterceptorConfig> defaultInterceptors = new ArrayList<>();
@@ -198,7 +272,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         PackageConfig classLevelParentPkg = makePackageConfig("class-level", null, null, null);
 
         PackageConfig rootPkg = makePackageConfig("org.apache.struts2.convention.actions#struts-default#",
-            "", strutsDefault, null);
+                "", strutsDefault, null);
         PackageConfig paramsPkg = makePackageConfig("org.apache.struts2.convention.actions.params#struts-default#/params",
                 "/params", strutsDefault, null);
         PackageConfig defaultInterceptorPkg = makePackageConfig("org.apache.struts2.convention.actions.defaultinterceptor#struts-default#/defaultinterceptor",
@@ -206,17 +280,17 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         PackageConfig exceptionPkg = makePackageConfig("org.apache.struts2.convention.actions.exception#struts-default#/exception",
                 "/exception", strutsDefault, null);
         PackageConfig actionPkg = makePackageConfig("org.apache.struts2.convention.actions.action#struts-default#/action",
-            "/action", strutsDefault, null);
+                "/action", strutsDefault, null);
         PackageConfig idxPkg = makePackageConfig("org.apache.struts2.convention.actions.idx#struts-default#/idx",
-            "/idx", strutsDefault, null);
+                "/idx", strutsDefault, null);
         PackageConfig idx2Pkg = makePackageConfig("org.apache.struts2.convention.actions.idx.idx2#struts-default#/idx/idx2",
-            "/idx/idx2", strutsDefault, null);
+                "/idx/idx2", strutsDefault, null);
         PackageConfig interceptorRefsPkg = makePackageConfig("org.apache.struts2.convention.actions.interceptor#struts-default#/interceptor",
                 "/interceptor", strutsDefault, null);
         PackageConfig packageLevelPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage#package-level#/parentpackage",
-            "/parentpackage", packageLevelParentPkg, null);
+                "/parentpackage", packageLevelParentPkg, null);
         PackageConfig packageLevelSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#package-level#/parentpackage/sub",
-            "/parentpackage/sub", packageLevelParentPkg, null);
+                "/parentpackage/sub", packageLevelParentPkg, null);
 
         // Unexpected method call build(class org.apache.struts2.convention.actions.allowedmethods.PackageLevelAllowedMethodsAction, null, "package-level-allowed-methods", PackageConfig: [org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods] for namespace [/allowedmethods] with parents [[PackageConfig: [struts-default] for namespace [] with parents [[]]]]):
         PackageConfig packageLevelAllowedMethodsPkg = makePackageConfig("org.apache.struts2.convention.actions.allowedmethods#struts-default#/allowedmethods",
@@ -228,17 +302,17 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 "/allowedmethods", strutsDefault, null);
 
         PackageConfig differentPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage#class-level#/parentpackage",
-            "/parentpackage", classLevelParentPkg, null);
+                "/parentpackage", classLevelParentPkg, null);
         PackageConfig differentSubPkg = makePackageConfig("org.apache.struts2.convention.actions.parentpackage.sub#class-level#/parentpackage/sub",
-            "/parentpackage/sub", classLevelParentPkg, null);
+                "/parentpackage/sub", classLevelParentPkg, null);
         PackageConfig pkgLevelNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace#struts-default#/package-level",
-            "/package-level", strutsDefault, null);
+                "/package-level", strutsDefault, null);
         PackageConfig classLevelNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace#struts-default#/class-level",
-            "/class-level", strutsDefault, null);
+                "/class-level", strutsDefault, null);
         PackageConfig actionLevelNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace#struts-default#/action-level",
-            "/action-level", strutsDefault, null);
+                "/action-level", strutsDefault, null);
         PackageConfig defaultNamespacePkg = makePackageConfig("org.apache.struts2.convention.actions.namespace2#struts-default#/namespace2",
-            "/namespace2", strutsDefault, null);
+                "/namespace2", strutsDefault, null);
         PackageConfig namespaces1Pkg = makePackageConfig("org.apache.struts2.convention.actions.namespace3#struts-default#/namespaces1",
                 "/namespaces1", strutsDefault, null);
         PackageConfig namespaces2Pkg = makePackageConfig("org.apache.struts2.convention.actions.namespace3#struts-default#/namespaces2",
@@ -248,19 +322,19 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         PackageConfig namespaces4Pkg = makePackageConfig("org.apache.struts2.convention.actions.namespace4#struts-default#/namespaces4",
                 "/namespaces4", strutsDefault, null);
         PackageConfig resultPkg = makePackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result",
-            "/result", strutsDefault, null);
+                "/result", strutsDefault, null);
         PackageConfig globalResultPkg = makePackageConfig("org.apache.struts2.convention.actions.result#class-level#/result",
                 "/result", classLevelParentPkg, null);
         PackageConfig resultPathPkg = makePackageConfig("org.apache.struts2.convention.actions.resultpath#struts-default#/resultpath",
-            "/resultpath", strutsDefault, null);
+                "/resultpath", strutsDefault, null);
         PackageConfig skipPkg = makePackageConfig("org.apache.struts2.convention.actions.skip#struts-default#/skip",
-            "/skip", strutsDefault, null);
+                "/skip", strutsDefault, null);
         PackageConfig chainPkg = makePackageConfig("org.apache.struts2.convention.actions.chain#struts-default#/chain",
-            "/chain", strutsDefault, null);
+                "/chain", strutsDefault, null);
         PackageConfig transPkg = makePackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions",
-            "/transactions", strutsDefault, null);
+                "/transactions", strutsDefault, null);
         PackageConfig excludePkg = makePackageConfig("org.apache.struts2.convention.actions.exclude#struts-default#/exclude",
-            "/exclude", strutsDefault, null);
+                "/exclude", strutsDefault, null);
 
         ResultMapBuilder resultMapBuilder = createStrictMock(ResultMapBuilder.class);
         checkOrder(resultMapBuilder, false);
@@ -409,7 +483,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         mockContainer.setResultMapBuilder(resultMapBuilder);
         mockContainer.setConventionsService(new ConventionsServiceImpl(""));
 
-        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer , of, "false", "struts-default", enableSmiInheritance);
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer, of, "false", "struts-default", enableSmiInheritance);
         builder.setFileProtocols("jar");
         if (actionPackages != null) {
             builder.setActionPackages(actionPackages);
@@ -706,7 +780,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "default-result-path", DefaultResultPathAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "skip", Skip.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "idx", org.apache.struts2.convention.actions.idx.Index.class, "execute",
-            "org.apache.struts2.convention.actions.idx#struts-default#/idx");
+                "org.apache.struts2.convention.actions.idx#struts-default#/idx");
 
         /* org.apache.struts2.convention.actions.transactions */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.transactions#struts-default#/transactions");
@@ -741,7 +815,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     }
 
     private void verifyActionConfig(PackageConfig pkgConfig, String actionName, Class<?> actionClass,
-            String methodName, String packageName) {
+                                    String methodName, String packageName) {
         ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
         assertNotNull(ac);
         assertEquals(actionClass.getName(), ac.getClassName());
@@ -756,7 +830,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     }
 
     private void verifyMissingActionConfig(PackageConfig pkgConfig, String actionName, Class<?> actionClass,
-            String methodName, String packageName) {
+                                           String methodName, String packageName) {
         ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
         assertNull(ac);
     }
@@ -769,10 +843,10 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals(packageName, ac.getPackageName());
     }
 
-    private void checkSmiValue(PackageConfig pkgConfig, PackageConfig parentConfig,  boolean isSmiInheritanceEnabled) {
+    private void checkSmiValue(PackageConfig pkgConfig, PackageConfig parentConfig, boolean isSmiInheritanceEnabled) {
         if (isSmiInheritanceEnabled) {
             assertEquals(parentConfig.isStrictMethodInvocation(), pkgConfig.isStrictMethodInvocation());
-        } else if (!isSmiInheritanceEnabled && !parentConfig.isStrictMethodInvocation()){
+        } else if (!isSmiInheritanceEnabled && !parentConfig.isStrictMethodInvocation()) {
             assertTrue(pkgConfig.isStrictMethodInvocation());
         }
     }
@@ -788,13 +862,13 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     }
 
     private PackageConfig makePackageConfig(String name, String namespace, PackageConfig parent,
-            String defaultResultType, ResultTypeConfig... results) {
+                                            String defaultResultType, ResultTypeConfig... results) {
         return makePackageConfig(name, namespace, parent, defaultResultType, results, null, null, null, true);
     }
 
     private PackageConfig makePackageConfig(String name, String namespace, PackageConfig parent,
-            String defaultResultType, ResultTypeConfig[] results, List<InterceptorConfig> interceptors,
-            List<InterceptorStackConfig> interceptorStacks, Set<String> globalAllowedMethods, boolean strictMethodInvocation) {
+                                            String defaultResultType, ResultTypeConfig[] results, List<InterceptorConfig> interceptors,
+                                            List<InterceptorStackConfig> interceptorStacks, Set<String> globalAllowedMethods, boolean strictMethodInvocation) {
         PackageConfig.Builder builder = new PackageConfig.Builder(name);
         if (namespace != null) {
             builder.namespace(namespace);
@@ -852,7 +926,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         public boolean equals(Object obj) {
             PackageConfig other = (PackageConfig) obj;
             return getName().equals(other.getName()) && getNamespace().equals(other.getNamespace()) &&
-                getParents().get(0) == other.getParents().get(0) && getParents().size() == other.getParents().size();
+                    getParents().get(0) == other.getParents().get(0) && getParents().size() == other.getParents().size();
         }
     }
 
@@ -893,7 +967,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 T obj;
                 if (type == ObjectFactory.class) {
                     obj = type.getConstructor().newInstance();
-                    ((ObjectFactory)obj).setContainer(this);
+                    ((ObjectFactory) obj).setContainer(this);
 
                     OgnlReflectionProvider rp = new OgnlReflectionProvider() {
 
@@ -929,7 +1003,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 }
                 return obj;
             } catch (Exception e) {
-               throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 

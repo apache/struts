@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.convention;
 
+import org.apache.commons.lang3.Strings;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
@@ -406,7 +407,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             if (ctx != null) {
                 classLoaderInterface = (ClassLoaderInterface) ctx.get(ClassLoaderInterface.CLASS_LOADER_INTERFACE);
             }
-            return ObjectUtils.defaultIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
+            return ObjectUtils.getIfNull(classLoaderInterface, new ClassLoaderInterfaceDelegate(getClassLoader()));
         }
     }
 
@@ -561,7 +562,17 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     /**
-     * Checks if provided class package is on the exclude list
+     * Checks if provided class package is on the exclude list.
+     * <p>
+     * WW-5594: For patterns ending with ".*", this method also checks if the package name
+     * equals the base pattern (without ".*"). This ensures that classes directly in the
+     * root package are excluded, not just classes in subpackages.
+     * <p>
+     * For example, pattern "org.apache.struts2.*" will exclude both:
+     * <ul>
+     *   <li>Classes in subpackages like "org.apache.struts2.dispatcher.SomeClass"</li>
+     *   <li>Classes directly in the root package like "org.apache.struts2.XWorkTestCase"</li>
+     * </ul>
      *
      * @param classPackageName name of class package
      * @return false if class package is on the {@link #excludePackages} list
@@ -574,6 +585,16 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             Map<String, String> matchMap = new HashMap<>();
 
             for (String packageExclude : excludePackages) {
+                // WW-5594: For patterns ending with ".*", also check if package equals the base
+                // This handles root package exclusion (e.g., pattern "org.apache.struts2.*"
+                // should also exclude classes in package "org.apache.struts2")
+                if (packageExclude.endsWith(".*")) {
+                    String basePackage = packageExclude.substring(0, packageExclude.length() - 2);
+                    if (classPackageName.equals(basePackage)) {
+                        return false;
+                    }
+                }
+
                 int[] packagePattern = wildcardHelper.compilePattern(packageExclude);
                 if (wildcardHelper.match(matchMap, classPackageName, packagePattern)) {
                     return false;
@@ -647,7 +668,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * should be included in the package scan
      */
     protected Test<ClassFinder.ClassInfo> getActionClassTest() {
-        return new Test<ClassFinder.ClassInfo>() {
+        return new Test<>() {
             public boolean test(ClassFinder.ClassInfo classInfo) {
 
                 // Why do we call includeClassNameInActionScan here, when it's
@@ -973,7 +994,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         String className = actionClass.getName();
         if (annotation != null) {
             actionName = annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
-            actionName = StringUtils.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
+            actionName = Strings.CI.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
             if (!Action.DEFAULT_VALUE.equals(annotation.className())) {
                 className = annotation.className();
             }
@@ -1060,7 +1081,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         if (action != null && !action.value().equals(Action.DEFAULT_VALUE)) {
             LOG.trace("Using non-default action namespace from the Action annotation of [{}]", action.value());
             String actionName = action.value();
-            actionNamespace = StringUtils.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY;
+            actionNamespace = Strings.CI.contains(actionName, "/") ? StringUtils.substringBeforeLast(actionName, "/") : StringUtils.EMPTY;
         }
 
         // Next grab the parent annotation from the class

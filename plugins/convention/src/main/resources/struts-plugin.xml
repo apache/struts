@@ -21,53 +21,61 @@
 -->
 
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts order="20">
-  <bean type="org.apache.struts2.UnknownHandler" name="convention" class="org.apache.struts2.convention.ConventionUnknownHandler"/>
+    <bean type="org.apache.struts2.UnknownHandler" name="convention"
+          class="org.apache.struts2.convention.ConventionUnknownHandler"/>
 
-  <bean type="org.apache.struts2.convention.ActionConfigBuilder" name="convention" class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
-  <bean type="org.apache.struts2.convention.ActionNameBuilder" name="convention" class="org.apache.struts2.convention.SEOActionNameBuilder"/>
-  <bean type="org.apache.struts2.convention.ResultMapBuilder" name="convention" class="org.apache.struts2.convention.DefaultResultMapBuilder"/>
-  <bean type="org.apache.struts2.convention.InterceptorMapBuilder" name="convention" class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
-  <bean type="org.apache.struts2.convention.ConventionsService" name="convention" class="org.apache.struts2.convention.ConventionsServiceImpl"/>
+    <bean type="org.apache.struts2.convention.ActionConfigBuilder" name="convention"
+          class="org.apache.struts2.convention.PackageBasedActionConfigBuilder"/>
+    <bean type="org.apache.struts2.convention.ActionNameBuilder" name="convention"
+          class="org.apache.struts2.convention.SEOActionNameBuilder"/>
+    <bean type="org.apache.struts2.convention.ResultMapBuilder" name="convention"
+          class="org.apache.struts2.convention.DefaultResultMapBuilder"/>
+    <bean type="org.apache.struts2.convention.InterceptorMapBuilder" name="convention"
+          class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
+    <bean type="org.apache.struts2.convention.ConventionsService" name="convention"
+          class="org.apache.struts2.convention.ConventionsServiceImpl"/>
 
-  <bean type="org.apache.struts2.config.PackageProvider" name="convention.packageProvider" class="org.apache.struts2.convention.ClasspathPackageProvider"/>
-  <bean type="org.apache.struts2.config.PackageProvider" name="convention.containerProvider" class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
+    <bean type="org.apache.struts2.config.PackageProvider" name="convention.packageProvider"
+          class="org.apache.struts2.convention.ClasspathPackageProvider"/>
+    <bean type="org.apache.struts2.config.PackageProvider" name="convention.containerProvider"
+          class="org.apache.struts2.convention.ClasspathConfigurationProvider"/>
 
-  <constant name="struts.convention.actionConfigBuilder" value="convention"/>
-  <constant name="struts.convention.actionNameBuilder" value="convention"/>
-  <constant name="struts.convention.resultMapBuilder" value="convention"/>
-  <constant name="struts.convention.interceptorMapBuilder" value="convention"/>
-  <constant name="struts.convention.conventionsService" value="convention"/>
+    <constant name="struts.convention.actionConfigBuilder" value="convention"/>
+    <constant name="struts.convention.actionNameBuilder" value="convention"/>
+    <constant name="struts.convention.resultMapBuilder" value="convention"/>
+    <constant name="struts.convention.interceptorMapBuilder" value="convention"/>
+    <constant name="struts.convention.conventionsService" value="convention"/>
 
-  <constant name="struts.convention.result.path" value="/WEB-INF/content/"/>
-  <constant name="struts.convention.result.flatLayout" value="true"/>
-  <constant name="struts.convention.action.suffix" value="Action"/>
-  <constant name="struts.convention.action.disableScanning" value="false"/>
-  <constant name="struts.convention.action.mapAllMatches" value="false"/>
-  <constant name="struts.convention.action.checkImplementsAction" value="true"/>
-  <constant name="struts.convention.default.parent.package" value="convention-default"/>
-  <constant name="struts.convention.action.name.lowercase" value="true"/>
-  <constant name="struts.convention.action.name.separator" value="-"/>
-  <constant name="struts.convention.package.locators" value="action,actions,struts,struts2"/>
-  <constant name="struts.convention.package.locators.disable" value="false"/>
-  <constant name="struts.convention.package.locators.basePackage" value=""/>
-  <constant name="struts.convention.exclude.packages" value="org.apache.struts.*,org.apache.struts2.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>
-  <constant name="struts.convention.relative.result.types" value="dispatcher,velocity,freemarker"/>
-  <constant name="struts.convention.redirect.to.slash" value="true"/>
-  <constant name="struts.convention.action.alwaysMapExecute" value="true"/>
-  <constant name="struts.mapper.alwaysSelectFullNamespace" value="true"/>
-  <!-- <constant name="struts.convention.action.includeJars"  /> -->
-  <constant name="struts.convention.action.fileProtocols" value="jar" />
+    <constant name="struts.convention.result.path" value="/WEB-INF/content/"/>
+    <constant name="struts.convention.result.flatLayout" value="true"/>
+    <constant name="struts.convention.action.suffix" value="Action"/>
+    <constant name="struts.convention.action.disableScanning" value="false"/>
+    <constant name="struts.convention.action.mapAllMatches" value="false"/>
+    <constant name="struts.convention.action.checkImplementsAction" value="true"/>
+    <constant name="struts.convention.default.parent.package" value="convention-default"/>
+    <constant name="struts.convention.action.name.lowercase" value="true"/>
+    <constant name="struts.convention.action.name.separator" value="-"/>
+    <constant name="struts.convention.package.locators" value="action,actions,struts,struts2"/>
+    <constant name="struts.convention.package.locators.disable" value="false"/>
+    <constant name="struts.convention.package.locators.basePackage" value=""/>
+    <constant name="struts.convention.exclude.packages" value="org.apache.struts.*,org.apache.struts2.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>
+    <constant name="struts.convention.relative.result.types" value="dispatcher,velocity,freemarker"/>
+    <constant name="struts.convention.redirect.to.slash" value="true"/>
+    <constant name="struts.convention.action.alwaysMapExecute" value="true"/>
+    <constant name="struts.mapper.alwaysSelectFullNamespace" value="true"/>
+    <!-- <constant name="struts.convention.action.includeJars"  /> -->
+    <constant name="struts.convention.action.fileProtocols" value="jar"/>
 
-  <constant name="struts.convention.classes.reload" value="false" />
+    <constant name="struts.convention.classes.reload" value="false"/>
 
-  <constant name="struts.convention.exclude.parentClassLoader" value="true" />
+    <constant name="struts.convention.exclude.parentClassLoader" value="true"/>
 
-  <constant name="struts.convention.enable.smi.inheritance" value="false" />
+    <constant name="struts.convention.enable.smi.inheritance" value="false"/>
 
-  <package name="convention-default" extends="struts-default">
-  </package>
+    <package name="convention-default" extends="struts-default">
+    </package>
 </struts>

@@ -682,8 +682,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                 try {
                     return inPackage && (nameMatches || (checkImplementsAction && org.apache.struts2.action.Action.class.isAssignableFrom(classInfo.get())));
-                } catch (ClassNotFoundException ex) {
-                    LOG.error("Unable to load class [{}]", classInfo.getName(), ex);
+                } catch (ClassNotFoundException | NoClassDefFoundError ex) {
+                    LOG.error("Unable to load class [{}]. Perhaps it exists but certain dependencies are not available?",
+                            classInfo.getName(), ex);
                     return false;
                 }
             }

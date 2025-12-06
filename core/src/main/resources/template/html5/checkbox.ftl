@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <input type="checkbox" name="${attributes.name}" value="${attributes.fieldValue}"
 <#if attributes.nameValue?? && attributes.nameValue>
  checked="checked"
@@ -48,5 +48,5 @@
 </#if>
  />
 </#if>
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

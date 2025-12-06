@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <label
 <#if attributes.id?has_content>
  id="${attributes.id}"
@@ -38,5 +38,5 @@
 <@s.property value="attributes.nameValue"/>
 </#if>
 </label>
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

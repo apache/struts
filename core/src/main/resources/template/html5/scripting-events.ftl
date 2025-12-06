@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
 <#if attributes.onclick??>
  onclick="<#outputformat 'JavaScript'>${attributes.onclick}</#outputformat>"
 </#if>
@@ -61,4 +61,4 @@
 <#if attributes.onchange??>
  onchange="<#outputformat 'JavaScript'>${attributes.onchange}</#outputformat>"
 </#if>
-</#compress>
+</@s.compress>

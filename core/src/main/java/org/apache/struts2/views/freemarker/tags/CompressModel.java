@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,13 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<@s.compress>
-<#if attributes.type?? && attributes.type=="button">
-<#if attributes.body?length gt 0>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#elseif attributes.label??><@s.property value="attributes.label"/></#if>
-</button>
-<#else>
-${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}
-</#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+package org.apache.struts2.views.freemarker.tags;
+
+import org.apache.struts2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.Compress;
+
+/**
+ * @see Compress
+ */
+public class CompressModel extends TagModel {
+    public CompressModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        super(stack, req, res);
+    }
+
+    @Override
+    protected Component getBean() {
+        return new Compress(stack);
+    }
+}

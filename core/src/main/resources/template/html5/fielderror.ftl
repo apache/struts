@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
     <#if fieldErrors??>
         <#assign eKeys = fieldErrors.keySet()>
         <#assign eKeysSize = eKeys.size()>
@@ -81,4 +81,4 @@
             </#if>
         </#if>
     </#if>
-</#compress>
+</@s.compress>

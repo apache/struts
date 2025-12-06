@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
 <#function acceptKey(key)>
   <#if dynamic_attributes_ignore??>
     <#return !key?starts_with(dynamic_attributes_ignore) >
@@ -42,4 +42,4 @@
  ${aKey}="${value}"
 </#list>
 </#if>
-</#compress>
+</@s.compress>

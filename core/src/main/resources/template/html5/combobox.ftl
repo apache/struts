@@ -34,7 +34,7 @@
     }
 </@s.script>
 <#include "/${attributes.templateDir}/html5/text.ftl" />
-<#compress>
+<@s.compress>
     <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
     <#if attributes.list??>
         <select onChange="autoPopulate_${attributes.escapedId}(this);"
@@ -98,5 +98,5 @@
             </@s.iterator>
         </select>
     </#if>
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

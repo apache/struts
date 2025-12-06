@@ -19,7 +19,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
     <#if (actionErrors?? && actionErrors?size > 0)>
         <ul
                 <#if attributes.id??>
@@ -41,4 +41,4 @@
             </#list>
         </ul>
     </#if>
-</#compress>
+</@s.compress>

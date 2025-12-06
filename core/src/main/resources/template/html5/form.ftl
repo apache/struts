@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <#if (attributes.validate!false == false)>
  <#if attributes.onsubmit?has_content>
   ${tag.addParameter('onsubmit', "${attributes.onsubmit}") }
@@ -69,4 +69,4 @@
  onreset="${attributes.onreset}"
 </#if>
 >
-</#compress>
+</@s.compress>

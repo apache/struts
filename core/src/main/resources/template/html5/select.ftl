@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
     <#setting number_format="#.#####">
     <select
             name="${(attributes.name!"")}"
@@ -145,5 +145,5 @@
         </#if>
         />
     </#if>
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

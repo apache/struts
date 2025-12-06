@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <#if attributes.type?? && attributes.type=="button">
 <button type="submit"
         <#if attributes.id?has_content>
@@ -91,4 +91,4 @@
     <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 >
 </#if>
-</#compress>
+</@s.compress>

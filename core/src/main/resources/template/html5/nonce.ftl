@@ -18,8 +18,8 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
 <#if attributes.nonce?has_content>
  nonce="${attributes.nonce}"
 </#if>
-</#compress>
+</@s.compress>

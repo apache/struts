@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <#assign itemCount = 0/>
 <#if attributes.list??>
 <@s.iterator value="attributes.list">
@@ -116,5 +116,5 @@
  disabled="disabled"
 </#if>
  />
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

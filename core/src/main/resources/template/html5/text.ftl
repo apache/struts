@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
 <input
  type="${(attributes.type!"text")}"
  name="${(attributes.name!"")}"
@@ -52,5 +52,5 @@
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 />
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

@@ -19,7 +19,7 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<#compress>
+<@s.compress>
     <@s.iterator value="attributes.list">
         <#if attributes.listKey??>
             <#assign itemKey = stack.findValue(attributes.listKey)/>
@@ -103,5 +103,5 @@
             ${itemValue}
         </label>
     </@s.iterator>
-</#compress>
+</@s.compress>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />

@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
 <input type="hidden" name="${attributes.tokenNameField!""}" value="${attributes.name!""}" />
 <input type="hidden" name="${attributes.name!""}" value="${attributes.token!""}" />
-</#compress>
+</@s.compress>

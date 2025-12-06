@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#compress>
+<@s.compress>
 <#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
 <#if attributes.cssClass?has_content && !(hasFieldErrors && attributes.cssErrorClass??)>
  class="${attributes.cssClass}"
@@ -32,4 +32,4 @@
 <#elseif hasFieldErrors && attributes.cssErrorStyle??>
  style="${attributes.cssErrorStyle}"
 </#if>
-</#compress>
+</@s.compress>

@@ -209,6 +209,17 @@ public class LabelTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericHtml5() throws Exception {
+        LabelTag tag = new LabelTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        LabelTag tag = new LabelTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
+
     public void testWithKeyNoValueFromStack() throws Exception {
         TestAction testAction = (TestAction) action;
         final String key = "labelKey";

@@ -649,6 +649,17 @@ public class SubmitTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericHtml5() throws Exception {
+        SubmitTag tag = new SubmitTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
+
     /**
      * Test that by default submit tag body is HTML-escaped.
      */

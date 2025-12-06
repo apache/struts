@@ -2090,6 +2090,131 @@ public class FormTagTest extends AbstractUITagTest {
             strutsBodyTagsAreReflectionEqual(text, freshTag));
     }
 
+    public void testSimpleForm_html5() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("testAction");
+        tag.setMethod("post");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-1-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleForm_html5_clearTagStateSet() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("testAction");
+        tag.setMethod("post");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-1-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testFormWithValidation_html5() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("testAction");
+        tag.setValidate("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-validate-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testFormWithMethod_html5() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("testAction");
+        tag.setMethod("get");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-method-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testFormWithEnctype_html5() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("uploadAction");
+        tag.setMethod("post");
+        tag.setEnctype("multipart/form-data");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-enctype-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testFormWithDynamicAttributes_html5() throws Exception {
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setAction("testAction");
+        tag.setDynamicAttribute(null, "data-validation", "true");
+        tag.setDynamicAttribute(null, "data-ajax", "false");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-dynamic-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshTag = new FormTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

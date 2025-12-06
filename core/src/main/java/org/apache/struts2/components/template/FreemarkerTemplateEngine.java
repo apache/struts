@@ -127,6 +127,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
         model.put("tag", templateContext.getTag());
         model.put("themeProperties", getThemeProps(templateContext.getTemplate()));
+        
 
         // the BodyContent JSP writer doesn't like it when FM flushes automatically --
         // so let's just not do it (it will be flushed eventually anyway)

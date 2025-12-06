@@ -302,6 +302,88 @@ public class ActionMessageTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testWithActionMessages_html5() throws Exception {
+        ActionMessageTag tag = new ActionMessageTag();
+        tag.setTheme("html5");
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionMessage(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(ActionMessageTagTest.class.getResource("actionmessage-3-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithActionMessages_html5_clearTagStateSet() throws Exception {
+        ActionMessageTag tag = new ActionMessageTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setTheme("html5");
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionMessage(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ActionMessageTagTest.class.getResource("actionmessage-3-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithoutActionMessages_html5() throws Exception {
+        ActionMessageTag tag = new ActionMessageTag();
+        tag.setTheme("html5");
+        ((InternalActionSupport)action).setHasActionMessage(false);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(ActionMessageTagTest.class.getResource("actionmessage-1-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithEscape_html5() throws Exception {
+        ActionMessageTag tag = new ActionMessageTag();
+        tag.setTheme("html5");
+        TestAction testAction = new TestAction();
+        testAction.addActionMessage("<p>hey</p>");
+        stack.pop();
+        stack.push(testAction);
+        tag.setEscape(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals(normalize("<ul class=\"actionMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
+                normalize(writer.toString(), true));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     @Override
     public Action getAction() {
         return new InternalActionSupport();

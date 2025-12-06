@@ -19,10 +19,10 @@
  */
 -->
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader-core.ftl" />
-    <td
-        <#if attributes.align?? >
-            class="align-${attributes.align}"
-         <#else >
-            class="tdInput"
-        </#if>
+    <td<#rt/>
+<#if attributes.align?? >
+ class="align-${attributes.align}"<#rt/>
+<#else >
+ class="tdInput"<#rt/>
+</#if>
 ><#t/>

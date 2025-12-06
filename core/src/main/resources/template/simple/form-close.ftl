@@ -19,7 +19,6 @@
  */
 -->
 </form>
-
 <#if (attributes.customOnsubmitEnabled??)>
 <@s.script>
 <#--
@@ -98,5 +97,4 @@
 </#if>
 </@s.script>
 </#if>
-
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/form-close-tooltips.ftl" />

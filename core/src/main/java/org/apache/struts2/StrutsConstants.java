@@ -327,6 +327,37 @@ public final class StrutsConstants {
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 
     /**
+     * Controls FreeMarker whitespace stripping during template compilation.
+     * When enabled (default), removes indentation and trailing whitespace from lines containing only FTL tags.
+     * Automatically disabled when devMode is enabled.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_FREEMARKER_WHITESPACE_STRIPPING = "struts.freemarker.whitespaceStripping";
+
+    /**
+     * Controls whether the compress tag is enabled globally.
+     * When disabled, the compress tag will not compress output regardless of other settings.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_COMPRESS_ENABLED = "struts.compress.enabled";
+
+    /**
+     * Maximum size (in bytes) of body content that can be compressed. Content exceeding this limit will be skipped without compression.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_COMPRESS_MAX_SIZE = "struts.compress.maxSize";
+
+    /**
+     * Maximum length of body content to include in log messages. Content longer than this will be truncated with length indicator.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_COMPRESS_LOG_MAX_LENGTH = "struts.compress.log.maxLength";
+
+    /**
      * Extension point for the Struts CompoundRootAccessor
      */
     public static final String STRUTS_COMPOUND_ROOT_ACCESSOR = "struts.compoundRootAccessor";
@@ -676,6 +707,7 @@ public final class StrutsConstants {
 
     /**
      * See {@link org.apache.struts2.interceptor.csp.CspNonceReader}
+     *
      * @since 6.8.0
      */
     public static final String STRUTS_CSP_NONCE_READER = "struts.csp.nonce.reader";

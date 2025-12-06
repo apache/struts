@@ -19,12 +19,8 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Test case for {@link org.apache.struts2.components.Debug}.
@@ -203,16 +199,4 @@ public class DebugTagTest extends AbstractUITagTest {
         PrepareOperations.clearDevModeOverride();  // Clear DevMode override. Avoid ThreadLocal side-effects if test thread re-used.
     }
 
-    private void setDevMode(final boolean devMode) {
-        setStrutsConstant(Collections.singletonMap(StrutsConstants.STRUTS_DEVMODE, Boolean.toString(devMode)));
-    }
-
-    /**
-     * Overwrite the Struts Constant and reload container
-     */
-    @Override
-    protected void setStrutsConstant(final Map<String, String> overwritePropeties) {
-        super.setStrutsConstant(overwritePropeties);
-        stack.getActionContext().withContainer(container);
-    }
 }

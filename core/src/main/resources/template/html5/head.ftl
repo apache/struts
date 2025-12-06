@@ -18,6 +18,4 @@
  * under the License.
  */
 -->
-<@s.compress>
-<@s.script src="${base}${attributes.staticContentPath}/utils.js" />
-</@s.compress>
+<@s.script src="${base}${attributes.staticContentPath}/utils.js" /><#rt/>

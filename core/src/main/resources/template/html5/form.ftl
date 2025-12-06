@@ -18,55 +18,51 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<#if (attributes.validate!false == false)>
- <#if attributes.onsubmit?has_content>
-  ${tag.addParameter('onsubmit', "${attributes.onsubmit}") }
- </#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<#if (attributes.validate!false == false) && (attributes.onsubmit?has_content)>
+  ${tag.addParameter('onsubmit', "${attributes.onsubmit}") }<#rt/>
 </#if>
-<form
+<form<#rt/>
 <#if attributes.id?has_content>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
 <#if attributes.name?has_content>
- name="${attributes.name}"
+ name="${attributes.name}"<#rt/>
 </#if>
 <#if attributes.onsubmit?has_content>
- onsubmit="<#outputformat 'JavaScript'>${attributes.onsubmit}</#outputformat>"
+ onsubmit="<#outputformat 'JavaScript'>${attributes.onsubmit}</#outputformat>"<#rt/>
 </#if>
 <#if attributes.onreset?has_content>
- onreset="<#outputformat 'JavaScript'>${attributes.onreset}</#outputformat>"
+ onreset="<#outputformat 'JavaScript'>${attributes.onreset}</#outputformat>"<#rt/>
 </#if>
 <#if attributes.action?has_content>
- action="${attributes.action}"
+ action="${attributes.action}"<#rt/>
 </#if>
 <#if attributes.target?has_content>
- target="${attributes.target}"
+ target="${attributes.target}"<#rt/>
 </#if>
 <#if attributes.method?has_content>
- method="${attributes.method}"
+ method="${attributes.method}"<#rt/>
 <#else>
- method="post"
+ method="post"<#rt/>
 </#if>
 <#if attributes.enctype?has_content>
- enctype="${attributes.enctype}"
+ enctype="${attributes.enctype}"<#rt/>
 </#if>
 <#if attributes.cssClass?has_content>
- class="${attributes.cssClass}"
+ class="${attributes.cssClass}"<#rt/>
 </#if>
 <#if attributes.cssStyle?has_content>
- style="${attributes.cssStyle}"
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
 <#if attributes.title?has_content>
- title="${attributes.title}"
+ title="${attributes.title}"<#rt/>
 </#if>
 <#if attributes.acceptcharset?has_content>
- accept-charset="${attributes.acceptcharset}"
+ accept-charset="${attributes.acceptcharset}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
 <#if attributes.onreset?has_content>
- onreset="${attributes.onreset}"
+ onreset="${attributes.onreset}"<#rt/>
 </#if>
->
-</@s.compress>
+><#rt/>

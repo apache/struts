@@ -19,84 +19,83 @@
  */
 -->
 <@s.script>
-    function autoPopulate_${attributes.escapedId}(targetElement) {
-    <#if attributes.headerKey?? && attributes.headerValue??>
-        if (targetElement.options[targetElement.selectedIndex].value == '${attributes.headerKey?js_string}') {
-            return;
-        }
-    </#if>
-    <#if attributes.emptyOption!false>
-        if (targetElement.options[targetElement.selectedIndex].value == '') {
-            return;
-        }
-    </#if>
-        targetElement.form.elements['${attributes.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
-    }
+function autoPopulate_${attributes.escapedId}(targetElement) {
+<#if attributes.headerKey?? && attributes.headerValue??>
+  if (targetElement.options[targetElement.selectedIndex].value == '${attributes.headerKey?js_string}') {
+    return;
+  }
+</#if>
+<#if attributes.emptyOption!false>
+  if (targetElement.options[targetElement.selectedIndex].value == '') {
+    return;
+  }
+</#if>
+  targetElement.form.elements['${attributes.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
+}
 </@s.script>
-<#include "/${attributes.templateDir}/html5/text.ftl" />
-<@s.compress>
-    <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-    <#if attributes.list??>
-        <select onChange="autoPopulate_${attributes.escapedId}(this);"
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
-                <#if attributes.disabled!false>
-                    disabled="disabled"
-                </#if>
-        >
-            <#if (attributes.headerKey?? && attributes.headerValue??)>
-                <option value="${attributes.headerKey}">${attributes.headerValue}</option>
-            </#if>
-            <#if attributes.emptyOption!false>
-                <option value=""></option>
-            </#if>
-            <@s.iterator value="attributes.list">
-                <#if attributes.listKey??>
-                    <#assign tmpListKey = stack.findString(attributes.listKey) />
-                <#else>
-                    <#assign tmpListKey = stack.findString('top') />
-                </#if>
-                <#if attributes.listValue??>
-                    <#assign tmpListValue = stack.findString(attributes.listValue) />
-                <#else>
-                    <#assign tmpListValue = stack.findString('top') />
-                </#if>
-                <#if attributes.listCssClass??>
-                    <#if stack.findString(attributes.listCssClass)??>
-                        <#assign itemCssClass= stack.findString(attributes.listCssClass)/>
-                    <#else>
-                        <#assign itemCssClass = ''/>
-                    </#if>
-                </#if>
-                <#if attributes.listCssStyle??>
-                    <#if stack.findString(attributes.listCssStyle)??>
-                        <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/>
-                    <#else>
-                        <#assign itemCssStyle = ''/>
-                    </#if>
-                </#if>
-                <#if attributes.listTitle??>
-                    <#if stack.findString(attributes.listTitle)??>
-                        <#assign itemTitle= stack.findString(attributes.listTitle)/>
-                    <#else>
-                        <#assign itemTitle = ''/>
-                    </#if>
-                </#if>
-            <option value="${tmpListKey}"
-                    <#if (attributes.nameValue == tmpListKey)>
-                        selected="selected"
-                    </#if>
-                    <#if itemCssClass??>
-                        class="${itemCssClass}"
-                    </#if>
-                    <#if itemCssStyle??>
-                        style="${itemCssStyle}"
-                    </#if>
-                    <#if itemTitle??>
-                        title="${itemTitle}"
-                    </#if>
-            >${tmpListValue}</option>
-            </@s.iterator>
-        </select>
-    </#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/html5/text.ftl" /><#rt/>
+
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
+<#if attributes.list??>
+<select onChange="autoPopulate_${attributes.escapedId}(this);"<#rt/>
+ <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+><#rt/>
+<#if (attributes.headerKey?? && attributes.headerValue??)>
+<option value="${attributes.headerKey}">${attributes.headerValue}</option><#rt/>
+</#if>
+<#if attributes.emptyOption!false>
+<option value=""></option><#rt/>
+</#if>
+<@s.iterator value="attributes.list">
+<#if attributes.listKey??>
+ <#assign tmpListKey = stack.findString(attributes.listKey) /><#t/>
+<#else>
+ <#assign tmpListKey = stack.findString('top') /><#t/>
+</#if>
+<#if attributes.listValue??>
+ <#assign tmpListValue = stack.findString(attributes.listValue) /><#t/>
+<#else>
+ <#assign tmpListValue = stack.findString('top') /><#t/>
+</#if>
+<#if attributes.listCssClass??>
+<#if stack.findString(attributes.listCssClass)??>
+ <#assign itemCssClass= stack.findString(attributes.listCssClass)/><#t/>
+<#else>
+ <#assign itemCssClass = ''/><#t/>
+</#if>
+</#if>
+<#if attributes.listCssStyle??>
+<#if stack.findString(attributes.listCssStyle)??>
+ <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/><#t/>
+<#else>
+ <#assign itemCssStyle = ''/><#t/>
+</#if>
+</#if>
+<#if attributes.listTitle??>
+<#if stack.findString(attributes.listTitle)??>
+ <#assign itemTitle= stack.findString(attributes.listTitle)/><#t/>
+<#else>
+ <#assign itemTitle = ''/><#t/>
+</#if>
+</#if>
+<option value="${tmpListKey}"<#rt/>
+<#if (attributes.nameValue == tmpListKey)>
+ selected="selected"<#rt/>
+</#if>
+<#if itemCssClass??>
+ class="${itemCssClass}"<#rt/>
+</#if>
+<#if itemCssStyle??>
+ style="${itemCssStyle}"<#rt/>
+</#if>
+<#if itemTitle??>
+ title="${itemTitle}"<#rt/>
+</#if>
+>${tmpListValue}</option><#rt/>
+</@s.iterator>
+</select><#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

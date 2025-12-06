@@ -18,57 +18,55 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-    <link
-            <#if attributes.rel?has_content>
-                rel="${attributes.rel}"
-            <#else>
-                rel="stylesheet"
-            </#if>
-            <#if attributes.type?has_content>
-                type="${attributes.type}"
-            <#else>
-                type="text/css"
-            </#if>
-            <#if attributes.href?has_content>
-                href="${attributes.href}"
-            </#if>
-            <#if attributes.hreflang?has_content>
-                hreflang="${attributes.hreflang}"
-            </#if>
-            <#if attributes.disabled?has_content && attributes.disabled == "true">
-                disabled
-            </#if>
-            <#if attributes.media?has_content>
-                media="${attributes.media}"
-            <#else>
-                media="all"
-            </#if>
-            <#if attributes.title?has_content>
-                title="${attributes.title}"
-            </#if>
-            <#if attributes.as?has_content>
-                as="${attributes.as}"
-            </#if>
-            <#if attributes.referrerpolicy?has_content>
-                referrerpolicy="${attributes.referrerpolicy}"
-            </#if>
-            <#if attributes.sizes?has_content>
-                sizes="${attributes.sizes}"
-            </#if>
-            <#if attributes.crossorigin?has_content>
-                crossorigin="${attributes.crossorigin}"
-            </#if>
-            <#if attributes.integrity?has_content>
-                integrity="${attributes.integrity}"
-            </#if>
-            <#if attributes.importance?has_content>
-                importance="${attributes.importance}"
-            </#if>
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />
-    />
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<link<#rt/>
+<#if attributes.rel?has_content>
+ rel="${attributes.rel}"<#rt/>
+<#else>
+ rel="stylesheet"<#rt/>
+</#if>
+<#if attributes.type?has_content>
+ type="${attributes.type}"<#rt/>
+<#else>
+ type="text/css"<#rt/>
+</#if>
+<#if attributes.href?has_content>
+ href="${attributes.href}"<#rt/>
+</#if>
+<#if attributes.hreflang?has_content>
+ hreflang="${attributes.hreflang}"<#rt/>
+</#if>
+<#if attributes.disabled?has_content && attributes.disabled == "true">
+ disabled<#rt/>
+</#if>
+<#if attributes.media?has_content>
+ media="${attributes.media}"<#rt/>
+<#else>
+ media="all"<#rt/>
+</#if>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#if attributes.as?has_content>
+ as="${attributes.as}"<#rt/>
+</#if>
+<#if attributes.referrerpolicy?has_content>
+ referrerpolicy="${attributes.referrerpolicy}"<#rt/>
+</#if>
+<#if attributes.sizes?has_content>
+ sizes="${attributes.sizes}"<#rt/>
+</#if>
+<#if attributes.crossorigin?has_content>
+ crossorigin="${attributes.crossorigin}"<#rt/>
+</#if>
+<#if attributes.integrity?has_content>
+ integrity="${attributes.integrity}"<#rt/>
+</#if>
+<#if attributes.importance?has_content>
+ importance="${attributes.importance}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" /><#rt/>
+/><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

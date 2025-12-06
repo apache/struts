@@ -26,11 +26,11 @@
 <#if aKey?starts_with(prefix)>
 <#assign keyValue = attributes.dynamicAttributes.get(aKey)/>
 <#if keyValue?is_string>
-    <#assign value = struts.translateVariables(keyValue)!keyValue/>
+ <#assign value = struts.translateVariables(keyValue)!keyValue/><#t/>
 <#else>
-    <#assign value = keyValue?string/>
+ <#assign value = keyValue?string/><#t/>
 </#if>
- ${aKey?keep_after(prefix)}="${value}"
+ ${aKey?keep_after(prefix)}="${value}"<#rt/>
 </#if>
 </#list>
 </#if>

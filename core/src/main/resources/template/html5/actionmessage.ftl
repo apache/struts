@@ -1,4 +1,3 @@
-<#ftl strip_whitespace=true strip_text=true/>
 <#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,26 +18,24 @@
  * under the License.
  */
 -->
-<@s.compress>
-    <#if (actionMessages?? && actionMessages?size > 0 && !attributes.isEmptyList)>
-        <ul
-                <#if attributes.id??>
-                    id="${attributes.id}"
-                </#if>
-                <#if attributes.cssClass??>
-                    class="${attributes.cssClass}"
-                <#else>
-                    class="actionMessage"
-                </#if>
-                <#if attributes.cssStyle??>
-                    style="${attributes.cssStyle}"
-                </#if>
-        >
-            <#list actionMessages as message>
-                <#if message??><#t/>
-                    <li><span><#if attributes.escape>${message!}<#else>${message!?no_esc}</#if></span></li>
-                </#if>
-            </#list>
-        </ul>
-    </#if>
-</@s.compress>
+<#if (actionMessages?? && actionMessages?size > 0 && !attributes.isEmptyList)>
+<ul<#rt/>
+<#if attributes.id??>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#if attributes.cssClass??>
+ class="${attributes.cssClass}"<#rt/>
+<#else>
+ class="actionMessage"<#rt/>
+</#if>
+<#if attributes.cssStyle??>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+><#rt/>
+<#list actionMessages as message>
+<#if message??><#t/>
+<li><span><#if attributes.escape>${message!}<#else>${message!?no_esc}</#if></span></li><#rt/>
+</#if>
+</#list>
+</ul><#rt/>
+</#if>

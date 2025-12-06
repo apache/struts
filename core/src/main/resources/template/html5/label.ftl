@@ -18,25 +18,23 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<label
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<label<#rt/>
 <#if attributes.id?has_content>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#if attributes.title?has_content>
- title="${attributes.title}"
+ title="${attributes.title}"<#rt/>
 </#if>
 <#if attributes.for?has_content>
- for="${attributes.for}"
+ for="${attributes.for}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
->
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+><#rt/>
 <#if attributes.nameValue??>
-<@s.property value="attributes.nameValue"/>
+<@s.property value="attributes.nameValue"/><#rt/>
 </#if>
-</label>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+</label><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

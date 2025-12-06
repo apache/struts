@@ -18,77 +18,75 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
 <#if attributes.type?? && attributes.type=="button">
-<button type="submit"
-        <#if attributes.id?has_content>
-            id="${attributes.id}"
-        </#if>
-        <#if attributes.name?has_content>
-            name="${attributes.name}"
-        </#if>
-        <#if attributes.nameValue??>
-            value="<@s.property value="attributes.nameValue"/>"
-        </#if>
-        <#if attributes.disabled!false>
-            disabled="disabled"
-        </#if>
-        <#if attributes.cssClass?has_content>
-            class="${attributes.cssClass}"
-        </#if>
-        <#if attributes.cssStyle?has_content>
-            style="${attributes.cssStyle}"
-        </#if>
-        <#if attributes.title?has_content>
-            title="${attributes.title}"
-        </#if>
-        <#if attributes.tabindex?has_content>
-            tabindex="${attributes.tabindex}"
-        </#if>
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/>
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
->
+<button type="submit"<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
+</#if>
+<#if attributes.nameValue??>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+><#rt/>
 <#else>
 <#if attributes.type?? && attributes.type=="image">
-    <input type="image"
-    <#if attributes.label?has_content>
-     alt="${attributes.label}"
-    </#if>
-    <#if attributes.src?has_content>
-     src="${attributes.src}"
-    </#if>
-    <#else>
-    <input type="submit"
-    <#if attributes.nameValue?has_content>
-     value="<@s.property value="attributes.nameValue"/>"
-    </#if>
-    </#if>
-    <#if attributes.id?has_content>
-     id="${attributes.id}"
-    </#if>
-    <#if attributes.name?has_content>
-     name="${attributes.name}"
-    </#if>
-    <#if attributes.disabled!false>
-     disabled="disabled"
-    </#if>
-    <#if attributes.cssClass?has_content>
-     class="${attributes.cssClass}"
-    </#if>
-    <#if attributes.cssStyle?has_content>
-     style="${attributes.cssStyle}"
-    </#if>
-    <#if attributes.title?has_content>
-     title="${attributes.title}"
-    </#if>
-    <#if attributes.tabindex?has_content>
-     tabindex="${attributes.tabindex}"
-    </#if>
-    <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-    <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-    <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
->
+<input type="image"<#rt/>
+<#if attributes.label?has_content>
+ alt="${attributes.label}"<#rt/>
 </#if>
-</@s.compress>
+<#if attributes.src?has_content>
+ src="${attributes.src}"<#rt/>
+</#if>
+<#else>
+<input type="submit"<#rt/>
+<#if attributes.nameValue?has_content>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
+</#if>
+</#if>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+><#rt/>
+</#if>

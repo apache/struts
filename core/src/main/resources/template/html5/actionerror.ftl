@@ -1,4 +1,3 @@
-<#ftl strip_whitespace=true strip_text=true/>
 <#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,26 +18,24 @@
  * under the License.
  */
 -->
-<@s.compress>
-    <#if (actionErrors?? && actionErrors?size > 0)>
-        <ul
-                <#if attributes.id??>
-                    id="${attributes.id}"
-                </#if>
-                <#if attributes.cssClass??>
-                    class="${attributes.cssClass}"
-                <#else>
-                    class="errorMessage"
-                </#if>
-                <#if attributes.cssStyle??>
-                    style="${attributes.cssStyle}"
-                </#if>
-        >
-            <#list actionErrors as error>
-                <#if error??><#t/>
-                    <li><span><#if attributes.escape>${error!}<#else>${error!?no_esc}</#if></span></li>
-                </#if>
-            </#list>
-        </ul>
-    </#if>
-</@s.compress>
+<#if (actionErrors?? && actionErrors?size > 0)>
+<ul<#rt/>
+<#if attributes.id??>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#if attributes.cssClass??>
+ class="${attributes.cssClass}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if attributes.cssStyle??>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+><#rt/>
+<#list actionErrors as error>
+<#if error??>
+<li><span><#if attributes.escape>${error!}<#else>${error!?no_esc}</#if></span></li><#rt/>
+</#if>
+</#list>
+</ul><#rt/>
+</#if>

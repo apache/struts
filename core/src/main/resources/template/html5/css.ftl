@@ -18,18 +18,16 @@
  * under the License.
  */
 -->
-<@s.compress>
-<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/>
+<#assign hasFieldErrors = attributes.name?? && fieldErrors?? && fieldErrors.get(attributes.name)??/><#t/>
 <#if attributes.cssClass?has_content && !(hasFieldErrors && attributes.cssErrorClass??)>
- class="${attributes.cssClass}"
+ class="${attributes.cssClass}"<#rt/>
 <#elseif attributes.cssClass?has_content && (hasFieldErrors && attributes.cssErrorClass??)>
- class="${attributes.cssClass} ${attributes.cssErrorClass}"
+ class="${attributes.cssClass} ${attributes.cssErrorClass}"<#rt/>
 <#elseif !(attributes.cssClass?has_content) && (hasFieldErrors && attributes.cssErrorClass??)>
- class="${attributes.cssErrorClass}"
+ class="${attributes.cssErrorClass}"<#rt/>
 </#if>
 <#if attributes.cssStyle?has_content && !(hasFieldErrors && (attributes.cssErrorStyle?? || attributes.cssErrorClass??))>
- style="${attributes.cssStyle}"
+ style="${attributes.cssStyle}"<#rt/>
 <#elseif hasFieldErrors && attributes.cssErrorStyle??>
- style="${attributes.cssErrorStyle}"
+ style="${attributes.cssErrorStyle}"<#rt/>
 </#if>
-</@s.compress>

@@ -18,67 +18,68 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-    <#if attributes.type?? && attributes.type=="button">
-        <button type="reset"
-                <#if attributes.name?has_content>
-                    name="${attributes.name}"
-                </#if>
-                <#if attributes.nameValue??>
-                    value="<@s.property value="attributes.nameValue"/>"
-                </#if>
-                <#if attributes.cssClass?has_content>
-                    class="${attributes.cssClass}"
-                </#if>
-                <#if attributes.cssStyle?has_content>
-                    style="${attributes.cssStyle}"
-                </#if>
-                <#if attributes.disabled!false>
-                    disabled="disabled"
-                </#if>
-                <#if attributes.tabindex?has_content>
-                    tabindex="${attributes.tabindex}"
-                </#if>
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/>
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-        ><#if attributes.src?has_content>
-                <img
-                <#if attributes.label?has_content>
-                    alt="${attributes.label}"
-                </#if>
-                <#if attributes.src?has_content>
-                    src="${attributes.src}"
-                </#if>
-                /><#else><#if attributes.label?has_content><@s.property value="attributes.label"/></#if></#if></button>
-    <#else>
-        <input type="reset"
-                <#if attributes.name?has_content>
-                    name="${attributes.name}"
-                </#if>
-                <#if attributes.nameValue??>
-                    value="<@s.property value="attributes.nameValue"/>"
-                </#if>
-                <#if attributes.cssClass?has_content>
-                    class="${attributes.cssClass}"
-                </#if>
-                <#if attributes.cssStyle?has_content>
-                    style="${attributes.cssStyle}"
-                </#if>
-                <#if attributes.title?has_content>
-                    title="${attributes.title}"
-                </#if>
-                <#if attributes.disabled!false>
-                    disabled="disabled"
-                </#if>
-                <#if attributes.tabindex?has_content>
-                    tabindex="${attributes.tabindex}"
-                </#if>
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-                <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-        />
-    </#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<#if attributes.type?? && attributes.type=="button">
+<button type="reset"<#rt/>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
+</#if>
+<#if attributes.nameValue??>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
+</#if>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl"/><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+><#rt/>
+<#if attributes.src?has_content>
+<img<#rt/>
+<#if attributes.label?has_content>
+ alt="${attributes.label}"<#rt/>
+</#if>
+<#if attributes.src?has_content>
+ src="${attributes.src}"<#rt/>
+</#if>
+/><#rt/>
+<#else>
+<#if attributes.label?has_content><@s.property value="attributes.label"/></#if></#if></button><#rt/>
+<#else>
+<input type="reset"<#rt/>
+<#if attributes.name?has_content>
+ name="${attributes.name}"<#rt/>
+</#if>
+<#if attributes.nameValue??>
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
+</#if>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+/><#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

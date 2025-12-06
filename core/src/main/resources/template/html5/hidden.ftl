@@ -18,26 +18,24 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<input type="hidden"
- name="${(attributes.name!"")}"
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<input type="hidden"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
 <#if attributes.nameValue??>
- value="<@s.property value="attributes.nameValue"/>"
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
 </#if>
 <#if attributes.id?has_content>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
 <#if attributes.cssClass?has_content>
- class="${attributes.cssClass}"
+ class="${attributes.cssClass}"<#rt/>
 </#if>
 <#if attributes.cssStyle?has_content>
- style="${attributes.cssStyle}"
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
 <#if attributes.disabled!false>
- disabled="disabled"
+ disabled="disabled"<#rt/>
 </#if>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-/>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+/><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

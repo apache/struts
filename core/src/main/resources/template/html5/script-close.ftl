@@ -18,4 +18,4 @@
  * under the License.
  */
 -->
-</script>
+</script><#rt/>

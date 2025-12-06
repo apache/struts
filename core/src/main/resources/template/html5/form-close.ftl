@@ -18,5 +18,5 @@
  * under the License.
  */
 -->
-</form>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+</form><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

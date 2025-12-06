@@ -18,35 +18,33 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<input type="checkbox" name="${attributes.name}" value="${attributes.fieldValue}"
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<input type="checkbox" name="${attributes.name}" value="${attributes.fieldValue}"<#rt/>
 <#if attributes.nameValue?? && attributes.nameValue>
- checked="checked"
+ checked="checked"<#rt/>
 </#if>
 <#if attributes.disabled!false>
- disabled="disabled"
+ disabled="disabled"<#rt/>
 </#if>
 <#if attributes.tabindex?has_content>
- tabindex="${attributes.tabindex}"
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
 <#if attributes.id?has_content>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#if attributes.title?has_content>
- title="${attributes.title}"
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+/><#rt/>
 <#if attributes.submitUnchecked!false>
-<input type="hidden" id="__checkbox_${attributes.id}" name="__checkbox_${attributes.name}" value="${attributes.fieldValue}"
+<input type="hidden" id="__checkbox_${attributes.id}" name="__checkbox_${attributes.name}" value="${attributes.fieldValue}"<#rt/>
 <#if attributes.disabled!false>
- disabled="disabled"
+ disabled="disabled"<#rt/>
 </#if>
- />
+/><#rt/>
 </#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

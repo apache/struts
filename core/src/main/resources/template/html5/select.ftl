@@ -18,132 +18,128 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-    <#setting number_format="#.#####">
-    <select
-            name="${(attributes.name!"")}"
-            <#if attributes.get("size")?has_content>
-                size="${attributes.get("size")}"
-            </#if>
-            <#if attributes.disabled!false>
-                disabled="disabled"
-            </#if>
-            <#if attributes.tabindex?has_content>
-                tabindex="${attributes.tabindex}"
-            </#if>
-            <#if attributes.id?has_content>
-                id="${attributes.id}"
-            </#if>
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
-            <#if attributes.title?has_content>
-                title="${attributes.title}"
-            </#if>
-            <#if attributes.multiple!false>
-                multiple="multiple"
-            </#if>
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-            <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-    >
-        <#if attributes.headerKey?? && attributes.headerValue??>
-            <option value="${attributes.headerKey}"
-                    <#if tag.contains(attributes.nameValue, attributes.headerKey) == true>
-                        selected="selected"
-                    </#if>
-            >${attributes.headerValue}</option>
-        </#if>
-        <#if attributes.emptyOption!false>
-            <option value=""></option>
-        </#if>
-        <@s.iterator value="attributes.list">
-            <#if attributes.listKey??>
-                <#if stack.findValue(attributes.listKey)??>
-                    <#assign itemKey = stack.findValue(attributes.listKey)/>
-                    <#assign itemKeyStr = stack.findString(attributes.listKey)/>
-                <#else>
-                    <#assign itemKey = ''/>
-                    <#assign itemKeyStr = ''/>
-                </#if>
-            <#else>
-                <#assign itemKey = stack.findValue('top')/>
-                <#assign itemKeyStr = stack.findString('top')>
-            </#if>
-            <#if attributes.listValueKey??>
-            <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's
-               localized value.  This is then used as a label -->
-                <#assign valueKey = stack.findString(attributes.listValueKey)!'' />
-                <#if valueKey?has_content>
-                    <#assign itemValue = struts.getText(valueKey) />
-                <#else>
-                    <#assign itemValue = attributes.listValueKey />
-                </#if>
-            <#elseif attributes.listValue??>
-                <#if stack.findString(attributes.listValue)??>
-                    <#assign itemValue = stack.findString(attributes.listValue)/>
-                <#else>
-                    <#assign itemValue = ''/>
-                </#if>
-            <#else>
-                <#assign itemValue = stack.findString('top')/>
-            </#if>
-            <#if attributes.listCssClass??>
-                <#if stack.findString(attributes.listCssClass)??>
-                    <#assign itemCssClass= stack.findString(attributes.listCssClass)/>
-                <#else>
-                    <#assign itemCssClass = ''/>
-                </#if>
-            </#if>
-            <#if attributes.listCssStyle??>
-                <#if stack.findString(attributes.listCssStyle)??>
-                    <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/>
-                <#else>
-                    <#assign itemCssStyle = ''/>
-                </#if>
-            </#if>
-            <#if attributes.listTitle??>
-                <#if stack.findString(attributes.listTitle)??>
-                    <#assign itemTitle= stack.findString(attributes.listTitle)/>
-                <#else>
-                    <#assign itemTitle = ''/>
-                </#if>
-            </#if>
-            <option value="${itemKeyStr}"
-                    <#if tag.contains(attributes.nameValue, itemKey) == true>
-                        selected="selected"
-                    </#if>
-                    <#if itemCssClass?has_content>
-                        class="${itemCssClass}"
-                    </#if>
-                    <#if itemCssStyle?has_content>
-                        style="${itemCssStyle}"
-                    </#if>
-                    <#if itemTitle?has_content>
-                        title="${itemTitle}"
-                    </#if>
-            >${itemValue}</option>
-        </@s.iterator>
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/optgroup.ftl" />
-    </select>
-
-    <#if attributes.multiple!false>
-        <#if (attributes.id?? && attributes.name??)>
-            <input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.name}" value=""
-        </#if>
-        <#if (attributes.id?? && !attributes.name??)>
-            <input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.id}" value=""
-        </#if>
-        <#if ( !attributes.id?? && attributes.name??)>
-            <input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.id}" value=""
-        </#if>
-        <#if ( !attributes.id?? && !attributes.name??)>
-            <input type="hidden" id="" name="" value=""
-        </#if>
-
-        <#if attributes.disabled!false>
-            disabled="disabled"
-        </#if>
-        />
-    </#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<#setting number_format="#.#####"><#t/>
+<select<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
+<#if attributes.get("size")?has_content>
+ size="${attributes.get("size")}"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#if attributes.multiple!false>
+ multiple="multiple"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+><#rt/>
+<#if attributes.headerKey?? && attributes.headerValue??>
+<option value="${attributes.headerKey}"<#rt/>
+<#if tag.contains(attributes.nameValue, attributes.headerKey) == true>
+ selected="selected"<#rt/>
+</#if>
+>${attributes.headerValue}</option><#rt/>
+</#if>
+<#if attributes.emptyOption!false>
+<option value=""></option><#rt/>
+</#if>
+<@s.iterator value="attributes.list">
+<#if attributes.listKey??>
+<#if stack.findValue(attributes.listKey)??>
+ <#assign itemKey = stack.findValue(attributes.listKey)/><#t/>
+ <#assign itemKeyStr = stack.findString(attributes.listKey)/><#t/>
+<#else>
+ <#assign itemKey = ''/><#t/>
+ <#assign itemKeyStr = ''/><#t/>
+</#if>
+<#else>
+ <#assign itemKey = stack.findValue('top')/><#t/>
+ <#assign itemKeyStr = stack.findString('top')><#t/>
+</#if>
+<#if attributes.listValueKey??>
+<#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's
+localized value.  This is then used as a label -->
+ <#assign valueKey = stack.findString(attributes.listValueKey)!'' /><#t/>
+<#if valueKey?has_content>
+ <#assign itemValue = struts.getText(valueKey) /><#t/>
+<#else>
+ <#assign itemValue = attributes.listValueKey /><#t/>
+</#if>
+<#elseif attributes.listValue??>
+<#if stack.findString(attributes.listValue)??>
+ <#assign itemValue = stack.findString(attributes.listValue)/><#t/>
+<#else>
+ <#assign itemValue = ''/><#t/>
+</#if>
+<#else>
+ <#assign itemValue = stack.findString('top')/><#t/>
+</#if>
+<#if attributes.listCssClass??>
+<#if stack.findString(attributes.listCssClass)??>
+ <#assign itemCssClass= stack.findString(attributes.listCssClass)/><#t/>
+<#else>
+ <#assign itemCssClass = ''/><#t/>
+</#if>
+</#if>
+<#if attributes.listCssStyle??>
+<#if stack.findString(attributes.listCssStyle)??>
+ <#assign itemCssStyle= stack.findString(attributes.listCssStyle)/><#t/>
+<#else>
+ <#assign itemCssStyle = ''/><#t/>
+</#if>
+</#if>
+<#if attributes.listTitle??>
+<#if stack.findString(attributes.listTitle)??>
+ <#assign itemTitle= stack.findString(attributes.listTitle)/><#t/>
+<#else>
+ <#assign itemTitle = ''/><#t/>
+</#if>
+</#if>
+<option value="${itemKeyStr}"<#rt/>
+<#if tag.contains(attributes.nameValue, itemKey) == true>
+ selected="selected"<#rt/>
+</#if>
+<#if itemCssClass?has_content>
+ class="${itemCssClass}"<#rt/>
+</#if>
+<#if itemCssStyle?has_content>
+ style="${itemCssStyle}"<#rt/>
+</#if>
+<#if itemTitle?has_content>
+ title="${itemTitle}"<#rt/>
+</#if>
+>${itemValue}</option><#rt/>
+</@s.iterator>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/optgroup.ftl" /><#rt/>
+</select><#rt/>
+<#if attributes.multiple!false>
+<#if (attributes.id?? && attributes.name??)>
+<input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.name}" value=""<#rt/>
+</#if>
+<#if (attributes.id?? && !attributes.name??)>
+<input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.id}" value=""<#rt/>
+</#if>
+<#if ( !attributes.id?? && attributes.name??)>
+<input type="hidden" id="__multiselect_${attributes.id}" name="__multiselect_${attributes.id}" value=""<#rt/>
+</#if>
+<#if ( !attributes.id?? && !attributes.name??)>
+<input type="hidden" id="" name="" value=""<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+/><#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

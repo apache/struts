@@ -18,36 +18,35 @@
  * under the License.
  */
 -->
-<@s.compress>
-<script
-        <#if attributes.async?has_content && attributes.async == "true">
-            async
-        </#if>
-        <#if attributes.charset?has_content>
-            charset="${attributes.charset}"
-        </#if>
-        <#if attributes.defer?has_content && attributes.defer=="true">
-            defer
-        </#if>
-        <#if attributes.type?has_content>
-            type="${attributes.type}"
-        </#if>
-        <#if attributes.src?has_content>
-            src="${attributes.src}"
-        </#if>
-        <#if attributes.referrerpolicy?has_content>
-            referrerpolicy="${attributes.referrerpolicy}"
-        </#if>
-        <#if attributes.nomodule?has_content && attributes.nomodule=="true">
-            nomodule
-        </#if>
-        <#if attributes.integrity?has_content>
-            integrity="${attributes.integrity}"
-        </#if>
-        <#if attributes.crossorigin?has_content>
-            crossorigin="${attributes.crossorigin}"
-        </#if>
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
-        <#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" />>
-</@s.compress>
+<script<#rt/>
+<#if attributes.async?has_content && attributes.async == "true">
+ async<#rt/>
+</#if>
+<#if attributes.charset?has_content>
+ charset="${attributes.charset}"<#rt/>
+</#if>
+<#if attributes.defer?has_content && attributes.defer=="true">
+ defer<#rt/>
+</#if>
+<#if attributes.type?has_content>
+ type="${attributes.type}"<#rt/>
+</#if>
+<#if attributes.src?has_content>
+ src="${attributes.src}"<#rt/>
+</#if>
+<#if attributes.referrerpolicy?has_content>
+ referrerpolicy="${attributes.referrerpolicy}"<#rt/>
+</#if>
+<#if attributes.nomodule?has_content && attributes.nomodule=="true">
+ nomodule<#rt/>
+</#if>
+<#if attributes.integrity?has_content>
+ integrity="${attributes.integrity}"<#rt/>
+</#if>
+<#if attributes.crossorigin?has_content>
+ crossorigin="${attributes.crossorigin}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/nonce.ftl" /><#rt/>
+><#rt/>

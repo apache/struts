@@ -18,12 +18,10 @@
  * under the License.
  */
 -->
-<@s.compress>
 <#if attributes.type?? && attributes.type=="button">
 <#if attributes.body?length gt 0>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#elseif attributes.label??><@s.property value="attributes.label"/></#if>
-</button>
+</button><#rt/>
 <#else>
-${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}
+${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}<#t/>
 </#if>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

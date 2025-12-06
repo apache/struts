@@ -18,67 +18,63 @@
  * under the License.
  */
 -->
-<@s.compress>
-    <#if fieldErrors??>
-        <#assign eKeys = fieldErrors.keySet()>
-        <#assign eKeysSize = eKeys.size()>
-        <#assign doneStartUlTag=false>
-        <#assign doneEndUlTag=false>
-        <#assign haveMatchedErrorField=false>
-        <#if (fieldErrorFieldNames?size > 0) >
-            <#list fieldErrorFieldNames as fieldErrorFieldName>
-                <#list eKeys as eKey>
-                    <#if (eKey = fieldErrorFieldName)>
-                        <#assign haveMatchedErrorField=true>
-                        <#assign eValue = fieldErrors.get(fieldErrorFieldName)>
-                        <#if (haveMatchedErrorField && (!doneStartUlTag))>
-                            <ul
-                            <#if attributes.id?has_content>
-                                id="${attributes.id}"
-                            </#if>
-                            <#if attributes.cssClass?has_content>
-                                class="${attributes.cssClass}"
-                            <#else>
-                                class="errorMessage"
-                            </#if>
-                            <#if attributes.cssStyle?has_content>
-                                style="${attributes.cssStyle}"
-                            </#if>
-                            >
-                            <#assign doneStartUlTag=true>
-                        </#if>
-                        <#list eValue as eEachValue>
-                            <li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span>
-                            </li>
-                        </#list>
-                    </#if>
-                </#list>
-            </#list>
-            <#if (haveMatchedErrorField && (!doneEndUlTag))>
-                </ul>
-                <#assign doneEndUlTag=true>
-            </#if>
-        <#else>
-            <#if (eKeysSize > 0)>
-                <ul
-                        <#if attributes.cssClass?has_content>
-                            class="${attributes.cssClass}"
-                        <#else>
-                            class="errorMessage"
-                        </#if>
-                        <#if attributes.cssStyle?has_content>
-                            style="${attributes.cssStyle}"
-                        </#if>
-                >
-                    <#list eKeys as eKey>
-                        <#assign eValue = fieldErrors.get(eKey)>
-                        <#list eValue as eEachValue>
-                            <li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span>
-                            </li>
-                        </#list>
-                    </#list>
-                </ul>
-            </#if>
-        </#if>
-    </#if>
-</@s.compress>
+<#if fieldErrors??>
+<#assign eKeys = fieldErrors.keySet()><#t/>
+<#assign eKeysSize = eKeys.size()><#t/>
+<#assign doneStartUlTag=false><#t/>
+<#assign doneEndUlTag=false><#t/>
+<#assign haveMatchedErrorField=false>
+<#if (fieldErrorFieldNames?size > 0) >
+<#list fieldErrorFieldNames as fieldErrorFieldName>
+<#list eKeys as eKey>
+<#if (eKey = fieldErrorFieldName)>
+<#assign haveMatchedErrorField=true>
+<#assign eValue = fieldErrors.get(fieldErrorFieldName)>
+<#if (haveMatchedErrorField && (!doneStartUlTag))>
+<ul<#rt/>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+><#rt/>
+<#assign doneStartUlTag=true><#t/>
+</#if>
+<#list eValue as eEachValue>
+<li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li><#rt/>
+</#list>
+</#if>
+</#list>
+</#list>
+<#if (haveMatchedErrorField && (!doneEndUlTag))>
+</ul><#rt/>
+<#assign doneEndUlTag=true>
+</#if>
+<#else>
+<#if (eKeysSize > 0)>
+<ul<#rt/>
+<#if attributes.cssClass?has_content>
+ class="${attributes.cssClass}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if attributes.cssStyle?has_content>
+ style="${attributes.cssStyle}"<#rt/>
+</#if>
+><#rt/>
+<#list eKeys as eKey>
+<#assign eValue = fieldErrors.get(eKey)><#t/>
+<#list eValue as eEachValue>
+<li><span><#if attributes.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li><#rt/>
+</#list>
+</#list>
+</ul><#rt/>
+</#if>
+</#if>
+</#if>

@@ -18,8 +18,6 @@
  * under the License.
  */
 -->
-<@s.compress>
 <#if attributes.accesskey?has_content>
- accesskey="${attributes.accesskey}"
+ accesskey="${attributes.accesskey}"<#rt/>
 </#if>
-</@s.compress>

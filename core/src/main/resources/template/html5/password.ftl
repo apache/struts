@@ -18,38 +18,36 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<input type="password"
- name="${(attributes.name!"")}"
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<input type="password"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
 <#if attributes.get("size")?has_content>
- size="${attributes.get("size")}"
+ size="${attributes.get("size")}"<#rt/>
 </#if>
 <#if attributes.maxlength?has_content>
- maxlength="${attributes.maxlength}"
+ maxlength="${attributes.maxlength}"<#rt/>
 </#if>
 <#if attributes.nameValue?? && attributes.showPassword!false>
- value="<@s.property value="attributes.nameValue"/>"
+ value="<@s.property value="attributes.nameValue"/>"<#rt/>
 </#if>
 <#if attributes.disabled!false>
- disabled="disabled"
+ disabled="disabled"<#rt/>
 </#if>
 <#if attributes.readonly!false>
- readonly="readonly"
+ readonly="readonly"<#rt/>
 </#if>
 <#if attributes.tabindex?has_content>
- tabindex="${attributes.tabindex}"
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
 <#if attributes.id?has_content>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#if attributes.title?has_content>
- title="${attributes.title}"
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
 />
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

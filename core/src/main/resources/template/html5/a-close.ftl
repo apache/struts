@@ -18,33 +18,31 @@
  * under the License.
  */
 -->
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
-<@s.compress>
-<a
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<a<#rt/>
 <#if attributes.id??>
- id="${attributes.id}"
+ id="${attributes.id}"<#rt/>
 </#if>
 <#if attributes.href??>
- href="${attributes.href?no_esc}"
+ href="${attributes.href?no_esc}"<#rt/>
 </#if>
 <#if attributes.disabled!false>
- disabled="disabled"
+ disabled="disabled"<#rt/>
 </#if>
 <#if attributes.tabindex??>
- tabindex="${attributes.tabindex}"
+ tabindex="${attributes.tabindex}"<#rt/>
 </#if>
 <#if attributes.cssClass??>
- class="${attributes.cssClass}"
+ class="${attributes.cssClass}"<#rt/>
 </#if>
 <#if attributes.cssStyle??>
- style="${attributes.cssStyle}"
+ style="${attributes.cssStyle}"<#rt/>
 </#if>
 <#if attributes.title??>
- title="${attributes.title}"
+ title="${attributes.title}"<#rt/>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
->${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}</a>
-</@s.compress>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" />
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+>${tag.escapeHtmlBody()?then(attributes.body, attributes.body?no_esc)}</a><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

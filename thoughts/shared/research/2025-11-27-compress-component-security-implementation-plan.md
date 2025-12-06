@@ -55,7 +55,7 @@ Implement security enhancements to address three identified security issues in t
  *
  * @since 7.2.0
  */
-public static final String STRUTS_COMPRESS_MAX_SIZE = "struts.compress.maxSize";
+public static final String STRUTS_COMPRESS_MAX_SIZE = "struts.tag.compress.maxSize";
 
 /**
  * Maximum length of body content to include in log messages.
@@ -64,7 +64,7 @@ public static final String STRUTS_COMPRESS_MAX_SIZE = "struts.compress.maxSize";
  *
  * @since 7.2.0
  */
-public static final String STRUTS_COMPRESS_LOG_MAX_LENGTH = "struts.compress.log.maxLength";
+public static final String STRUTS_COMPRESS_LOG_MAX_LENGTH = "struts.tag.compress.log.maxLength";
 ```
 
 **Validation**:
@@ -77,19 +77,19 @@ public static final String STRUTS_COMPRESS_LOG_MAX_LENGTH = "struts.compress.log
 ### Phase 2: Default Properties
 
 **File**: `core/src/main/resources/org/apache/struts2/default.properties`
-**Location**: After line 215 (after `struts.compress.enabled=true`)
+**Location**: After line 215 (after `struts.tag.compress.enabled=true`)
 
 **Changes**:
 ```properties
 ### Maximum size (in bytes) of body content that can be compressed.
 ### Content exceeding this limit will be skipped without compression.
 ### Default: 10MB (10485760 bytes)
-struts.compress.maxSize=10485760
+struts.tag.compress.maxSize=10485760
 
 ### Maximum length of body content to include in log messages.
 ### Content longer than this will be truncated with length indicator.
 ### Default: 200 characters
-struts.compress.log.maxLength=200
+struts.tag.compress.log.maxLength=200
 ```
 
 **Validation**:
@@ -297,7 +297,7 @@ private String compressWhitespace(String input, boolean singleLine) {
  * </p>
  * <ul>
  *   <li>Body content is truncated in log messages to prevent sensitive data exposure</li>
- *   <li>Maximum size limit prevents DoS attacks via large inputs (configurable via struts.compress.maxSize)</li>
+ *   <li>Maximum size limit prevents DoS attacks via large inputs (configurable via struts.tag.compress.maxSize)</li>
  *   <li>Regex operations include safeguards against ReDoS attacks</li>
  * </ul>
  *
@@ -512,8 +512,8 @@ truncated to prevent sensitive data from appearing in logs.</p>
 - [ ] Verify naming conventions
 
 ### Phase 2: Default Properties
-- [ ] Add `struts.compress.maxSize=10485760`
-- [ ] Add `struts.compress.log.maxLength=200`
+- [ ] Add `struts.tag.compress.maxSize=10485760`
+- [ ] Add `struts.tag.compress.log.maxLength=200`
 - [ ] Add descriptive comments
 - [ ] Verify property file format
 
@@ -557,23 +557,23 @@ truncated to prevent sensitive data from appearing in logs.</p>
 
 ### Default Configuration (Recommended)
 ```properties
-struts.compress.maxSize=10485760
-struts.compress.log.maxLength=200
+struts.tag.compress.maxSize=10485760
+struts.tag.compress.log.maxLength=200
 ```
 
 ### Custom Size Limit (5MB)
 ```properties
-struts.compress.maxSize=5242880
+struts.tag.compress.maxSize=5242880
 ```
 
 ### Disable Size Limit (Not Recommended)
 ```properties
-struts.compress.maxSize=0
+struts.tag.compress.maxSize=0
 ```
 
 ### Increase Log Truncation Length
 ```properties
-struts.compress.log.maxLength=500
+struts.tag.compress.log.maxLength=500
 ```
 
 ---

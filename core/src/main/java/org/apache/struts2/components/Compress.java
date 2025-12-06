@@ -39,7 +39,7 @@ import java.io.Writer;
  * </p>
  * <ul>
  *   <li>Body content is truncated in log messages to prevent sensitive data exposure</li>
- *   <li>Maximum size limit prevents DoS attacks via large inputs (configurable via struts.compress.maxSize)</li>
+ *   <li>Maximum size limit prevents DoS attacks via large inputs (configurable via struts.tag.compress.maxSize)</li>
  *   <li>Regex operations include safeguards against ReDoS attacks</li>
  * </ul>
  *

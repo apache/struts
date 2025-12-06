@@ -25,6 +25,7 @@ import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.ListPropertyAccessor;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
@@ -32,7 +33,6 @@ import org.apache.struts2.StrutsException;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Overrides the list property accessor so in the case of trying
@@ -82,7 +82,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     }
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
 
         if (ReflectionContextState.isGettingByKeyProperty(context)
                 || name.equals(XWorkCollectionPropertyAccessor.KEY_PROPERTY_FOR_CREATION)) {
@@ -96,7 +96,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
 
         if (name instanceof Number
                 && ReflectionContextState.isCreatingNullObjects(context)
-                && objectTypeDeterminer.shouldCreateIfNew(lastClass,lastProperty,target,null,true)) {
+                && objectTypeDeterminer.shouldCreateIfNew(lastClass, lastProperty, target, null, true)) {
 
             List list = (List) target;
             int index = ((Number) name).intValue();
@@ -111,7 +111,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
 
                 if (index > autoGrowCollectionLimit) {
                     throw new OgnlException("Error auto growing collection size to " + index + " which limited to "
-                                            + autoGrowCollectionLimit);
+                            + autoGrowCollectionLimit);
                 }
 
                 for (int i = listSize; i < index; i++) {
@@ -137,7 +137,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value)
+    public void setProperty(OgnlContext context, Object target, Object name, Object value)
             throws OgnlException {
 
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
@@ -172,9 +172,9 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
             //make sure there are enough spaces in the List to set
             int listSize = list.size();
             int count = ((Number) name).intValue();
-            if(count > autoGrowCollectionLimit)
-            	throw new OgnlException("Error auto growing collection size to " + count + " which limited to "
-						+ autoGrowCollectionLimit);
+            if (count > autoGrowCollectionLimit)
+                throw new OgnlException("Error auto growing collection size to " + count + " which limited to "
+                        + autoGrowCollectionLimit);
             if (count >= listSize) {
                 for (int i = listSize; i <= count; i++) {
                     list.add(null);
@@ -185,7 +185,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
         super.setProperty(context, target, name, realValue);
     }
 
-    private Object getRealValue(Map context, Object value, Class convertToClass) {
+    private Object getRealValue(OgnlContext context, Object value, Class convertToClass) {
         if (value == null || convertToClass == null) {
             return value;
         }

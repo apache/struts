@@ -13,4 +13,4 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "release/struts-6-7-x"
+    target-branch: "release/struts-6-8-x"

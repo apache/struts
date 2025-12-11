@@ -76,10 +76,16 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Performing File Upload temporary storage cleanup.");
         for (List<FileInfo> fileInfoList : fileInfos.values()) {
             for (FileInfo fileInfo : fileInfoList) {
-                File file = fileInfo.getFile();
-                LOG.debug("Deleting file '{}'.", file.getName());
-                if (!file.delete()) {
-                    LOG.warn("There was a problem attempting to delete file [{}].", file.getName());
+                try {
+                    // catch any exceptions during cleanup to ensure all files are deleted.
+                    File file = fileInfo.getFile();
+                    LOG.debug("Deleting file '{}'.", file.getName());
+                    if (!file.delete()) {
+                        LOG.warn("There was a problem attempting to delete file [{}].",
+                            file.getName());
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Error during cleanup of file item: [{}]", normalizeSpace(fileInfo.getOriginalName()), e);
                 }
             }
         }

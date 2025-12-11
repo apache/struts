@@ -103,12 +103,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
         if (ServletFileUpload.isMultipartContent(request)) {
-            for (FileItem item : parseRequest(request, saveDir)) {
+            // Track all FileItem instances for comprehensive cleanup - addAll in case exception in for loop
+            allFileItems.addAll(parseRequest(request, saveDir));
+            for (FileItem item : allFileItems) {
                 LOG.debug("Found file item: [{}]", normalizeSpace(item.getFieldName()));
-                
-                // Track all FileItem instances for comprehensive cleanup
-                allFileItems.add(item);
-                
+
                 if (item.isFormField()) {
                     processNormalFormField(item, request.getCharacterEncoding());
                 } else {

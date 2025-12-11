@@ -152,4 +152,15 @@ public class TextareaTest extends AbstractUITagTest {
         TextareaTag tag = new TextareaTag();
         verifyGenericProperties(tag, "xhtml", new String[] {"value"});
     }
+
+    public void testGenericHtml5() throws Exception {
+        TextareaTag tag = new TextareaTag();
+        verifyGenericProperties(tag, "html5", new String[] {"value"});
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        TextareaTag tag = new TextareaTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", new String[] {"value"});
+    }
 }

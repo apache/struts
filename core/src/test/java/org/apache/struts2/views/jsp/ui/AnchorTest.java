@@ -338,4 +338,115 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
     }
 
+    public void testSimpleHref_html5() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setTheme("html5");
+        tag.setHref("a");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-1-html5.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleHref_html5_clearTagStateSet() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setTheme("html5");
+        tag.setHref("a");
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verifyResource("href-1-html5.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithDynamicAttributes_html5() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setTheme("html5");
+        tag.setHref("a");
+        tag.setDynamicAttribute("uri", "data-toggle", "modal");
+        tag.setDynamicAttribute("uri", "data-target", "#myModal");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("Anchor-dynamic-html5.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithBody_html5() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setTheme("html5");
+        tag.setHref("a");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("normal body text");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-3-html5.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDisabled_html5() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setTheme("html5");
+        tag.setHref("a");
+        tag.setDisabled("true");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("disabled anchor");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-disabled-html5.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
 }

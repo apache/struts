@@ -160,6 +160,12 @@
         </action>
     </package>
 
+    <package name="html5" extends="default" namespace="/html5">
+        <action name="index" class="org.apache.struts2.showcase.action.Html5Action">
+            <result>/WEB-INF/html5/index.jsp</result>
+        </action>
+    </package>
+
 </struts>
 
 <!-- END SNIPPET: xworkSample -->

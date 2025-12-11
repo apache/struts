@@ -84,4 +84,15 @@ public class PasswordTest extends AbstractUITagTest {
         PasswordTag tag = new PasswordTag();
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
+
+    public void testGenericHtml5() throws Exception {
+        PasswordTag tag = new PasswordTag();
+        verifyGenericProperties(tag, "html5", new String[]{"value"});
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        PasswordTag tag = new PasswordTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", new String[]{"value"});
+    }
 }

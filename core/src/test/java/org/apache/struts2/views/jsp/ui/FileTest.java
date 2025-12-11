@@ -113,4 +113,15 @@ public class FileTest extends AbstractUITagTest {
         FileTag tag = new FileTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
+
+    public void testGenericHtml5() throws Exception {
+        FileTag tag = new FileTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        FileTag tag = new FileTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
 }

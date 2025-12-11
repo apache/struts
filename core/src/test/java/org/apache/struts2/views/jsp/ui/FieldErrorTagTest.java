@@ -799,6 +799,105 @@ public class FieldErrorTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testWithFieldErrors_html5() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setTheme("html5");
+        ((InternalAction)action).setHaveFieldErrors(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FieldErrorTagTest.class.getResource("fielderror-3-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithFieldErrors_html5_clearTagStateSet() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setTheme("html5");
+        ((InternalAction)action).setHaveFieldErrors(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(FieldErrorTagTest.class.getResource("fielderror-3-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithFieldErrorsAndParamTag_html5() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setTheme("html5");
+        ((InternalAction)action).setHaveFieldErrors(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+            ParamTag pTag1 = new ParamTag();
+            pTag1.setPageContext(pageContext);
+            pTag1.setValue("%{'field1'}");
+            pTag1.doStartTag();
+            pTag1.doEndTag();
+        tag.doEndTag();
+
+        verify(FieldErrorTagTest.class.getResource("fielderror-filtered-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithoutFieldErrors_html5() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setTheme("html5");
+        ((InternalAction)action).setHaveFieldErrors(false);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FieldErrorTagTest.class.getResource("fielderror-2-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithSpecificFieldName_html5() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setTheme("html5");
+        tag.setFieldName("field1");
+        ((InternalAction)action).setHaveFieldErrors(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FieldErrorTagTest.class.getResource("fielderror-6-html5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     @Override
     public Action getAction() {
         return new InternalAction();

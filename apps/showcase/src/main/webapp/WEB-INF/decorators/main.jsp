@@ -132,54 +132,49 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Non UI Tags<b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><s:url var="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/><s:a
-                                    href="%{url}">Action Tag</s:a></li>
-                            <li><s:url var="url" namespace="/tags/non-ui" action="date"/><s:a
-                                    href="%{url}">Date Tag</s:a></li>
-                            <li><s:url var="url" action="debugTagDemo" namespace="/tags/non-ui"/><s:a
-                                    href="%{url}">Debug Tag</s:a></li>
-                            <li><s:url var="url" action="showGeneratorTagDemo"
-                                       namespace="/tags/non-ui/iteratorGeneratorTag"/><s:a
-                                    href="%{url}">Iterator Generator Tag</s:a></li>
+                            <li><s:url var="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/>
+                                <s:a href="%{url}">Action Tag</s:a></li>
+                            <li><s:url var="url" namespace="/tags/non-ui" action="date"/>
+                                <s:a href="%{url}">Date Tag</s:a></li>
+                            <li><s:url var="url" action="debugTagDemo" namespace="/tags/non-ui"/>
+                                <s:a href="%{url}">Debug Tag</s:a></li>
+                            <li><s:url var="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag"/>
+                                <s:a href="%{url}">Iterator Generator Tag</s:a></li>
                             <li>
-                                <s:url var="url" action="showAppendTagDemo"
-                                       namespace="/tags/non-ui/appendIteratorTag"/>
+                                <s:url var="url" action="showAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag"/>
                                 <s:a href="%{#url}">Append Iterator Tag</s:a>
                             <li>
-                                <s:url var="url" action="showMergeTagDemo"
-                                       namespace="/tags/non-ui/mergeIteratorTag"/>
+                                <s:url var="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag"/>
                                 <s:a href="%{#url}">Merge Iterator Demo</s:a>
                             <li>
-                                <s:url var="url" action="showSubsetTagDemo"
-                                       namespace="/tags/non-ui/subsetIteratorTag"/>
+                                <s:url var="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag"/>
                                 <s:a href="%{#url}">Subset Tag</s:a>
-                            <li><s:url var="url" action="actionPrefixExampleUsingFreemarker"
-                                       namespace="/tags/non-ui/actionPrefix"/><s:a
-                                    href="%{#url}">Action Prefix Example (Freemarker)</s:a></li>
-                            <li><s:url var="url" action="testIfTagJsp" namespace="/tags/non-ui/ifTag"/><s:a
-                                    href="%{#url}">If Tag (JSP)</s:a></li>
-                            <li><s:url var="url" action="testIfTagFreemarker"
-                                       namespace="/tags/non-ui/ifTag"/><s:a
-                                    href="%{#url}">If Tag (Freemarker)</s:a></li>
+                            <li><s:url var="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/actionPrefix"/>
+                                <s:a href="%{#url}">Action Prefix Example (Freemarker)</s:a></li>
+                            <li><s:url var="url" action="testIfTagJsp" namespace="/tags/non-ui/ifTag"/>
+                                <s:a href="%{#url}">If Tag (JSP)</s:a></li>
+                            <li><s:url var="url" action="testIfTagFreemarker" namespace="/tags/non-ui/ifTag"/>
+                                <s:a href="%{#url}">If Tag (Freemarker)</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">UI Tags<b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><s:url var="url" namespace="/tags/ui" action="example" method="input"/><s:a
-                                    href="%{url}">UI Example</s:a></li>
-                            <li><s:url var="url" namespace="/tags/ui" action="exampleVelocity"
-                                       method="input"/><s:a href="%{url}">UI Example (Velocity)</s:a></li>
-                            <li><s:url var="url" namespace="/tags/ui" action="lotsOfOptiontransferselect"
-                                       method="input"/><s:a
-                                    href="%{url}">Option Transfer Select UI Example</s:a></li>
-                            <li><s:url var="url" namespace="/tags/ui" action="moreSelects" method="input"/><s:a
-                                    href="%{url}">More Select Box UI Examples</s:a></li>
+                            <li><s:url var="url" namespace="/tags/ui" action="example" method="input"/>
+                                <s:a href="%{url}">UI Example</s:a></li>
+                            <li><s:url var="url" namespace="/tags/ui" action="exampleVelocity" method="input"/>
+                                <s:a href="%{url}">UI Example (Velocity)</s:a></li>
+                            <li><s:url var="url" namespace="/tags/ui" action="lotsOfOptiontransferselect" method="input"/>
+                                <s:a href="%{url}">Option Transfer Select UI Example</s:a></li>
+                            <li><s:url var="url" namespace="/tags/ui" action="moreSelects" method="input"/>
+                                <s:a href="%{url}">More Select Box UI Examples</s:a></li>
                             <li>
                                 <s:url var="url" namespace="/tags/ui" action="componentTagExample"/>
                                 <s:a href="%{#url}">Component Tag Example</s:a></li>
-                            <li><s:url var="url" namespace="/tags/ui" action="actionTagExample" method="input"/><s:a
-                                    href="%{url}">Action Tag Example</s:a></li>
+                            <li><s:url var="url" namespace="/tags/ui" action="actionTagExample" method="input"/>
+                                <s:a href="%{url}">Action Tag Example</s:a></li>
+                            <li><s:url var="url" action="index"  namespace="/html5"/>
+                                <s:a href="%{#url}">Html 5 theme</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -271,7 +266,7 @@
                 <ul class="nav navbar-nav pull-right">
                     <li class="dropdown last">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-question-sign"></i> Help<b lass="caret"></b></a>
+                            <i class="glyphicon glyphicon-question-sign"></i> Help<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <s:url var="help" action="help" namespace="/" includeContext="false" />
                             <li><s:a value="%{help}">Help</s:a></li>
@@ -317,9 +312,7 @@
 
     <div class="pull-left">
         Copyright &copy; 2003-<s:property value="#dateAction.now.year + 1900"/>
-        <a href="http://www.apache.org">
-            The Apache Software Foundation.
-        </a>
+        <a href="https://www.apache.org">The Apache Software Foundation.</a>
     </div>
 </footer>
 </body>

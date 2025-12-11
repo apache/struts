@@ -1,0 +1,1 @@
+<form id="testAction" name="testAction" action="/testAction.action" method="post" data-validation="true" data-ajax="false"></form>

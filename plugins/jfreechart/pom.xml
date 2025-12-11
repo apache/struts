@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.8.0</version>
+        <version>6.8.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-jfreechart-plugin</artifactId>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.6</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

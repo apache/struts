@@ -18,6 +18,10 @@
  */
 package org.apache.struts2.convention;
 
+import org.apache.struts2.result.ActionChainResult;
+import org.apache.struts2.util.finder.ClassFinder;
+import org.apache.struts2.util.finder.Test;
+
 import jakarta.servlet.ServletContext;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
@@ -129,6 +133,120 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         ActionContext.of()
                 .withContainer(new DummyContainer())
                 .bind();
+    }
+
+    /**
+     * Tests that NoClassDefFoundError is properly caught and handled
+     * when scanning action classes with missing dependencies.
+     * <p>
+     * This is a regression test for WW-5593: Convention plugin fails with
+     * NoClassDefFoundError when classes have missing optional dependencies.
+     *
+     * @see <a href="https://issues.apache.org/jira/browse/WW-5593">WW-5593</a>
+     */
+    public void testNoClassDefFoundErrorHandling() throws Exception {
+        // Setup minimal configuration
+        ResultTypeConfig defaultResult = new ResultTypeConfig.Builder("dispatcher",
+                ServletDispatcherResult.class.getName()).defaultResultParam("location").build();
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
+                new ResultTypeConfig[]{defaultResult}, null, null, null, true);
+
+        final DummyContainer mockContainer = new DummyContainer();
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+        configuration.addPackageConfig("struts-default", strutsDefault);
+
+        ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
+
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        // Create the builder with a package that will trigger NoClassDefFoundError simulation
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, of, "false", "struts-default", "false");
+        builder.setActionPackages("org.apache.struts2.convention.actions.noclass");
+        builder.setActionSuffix("Action");
+
+        DefaultFileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        fileManagerFactory.setContainer(ActionContext.getContext().getContainer());
+        fileManagerFactory.setFileManager(new DefaultFileManager());
+        builder.setFileManagerFactory(fileManagerFactory);
+        builder.setProviderAllowlist(new ProviderAllowlist());
+
+        // The getActionClassTest() method returns a Test that should catch NoClassDefFoundError
+        Test<ClassFinder.ClassInfo> actionClassTest = builder.getActionClassTest();
+
+        // Create a mock ClassInfo that throws NoClassDefFoundError when get() is called
+        // Note: Class name must NOT end with "Action" suffix to ensure classInfo.get() is actually called
+        // (otherwise nameMatches=true and the condition short-circuits without calling get())
+        ClassFinder.ClassInfo mockClassInfo = EasyMock.createMock(ClassFinder.ClassInfo.class);
+        EasyMock.expect(mockClassInfo.getName()).andReturn("org.apache.struts2.convention.actions.noclass.MissingDependency").anyTimes();
+        EasyMock.expect(mockClassInfo.get()).andThrow(new NoClassDefFoundError("junit/framework/TestCase"));
+        EasyMock.replay(mockClassInfo);
+
+        // This should return false (class excluded) instead of throwing NoClassDefFoundError
+        boolean result = actionClassTest.test(mockClassInfo);
+        assertFalse("NoClassDefFoundError should be caught and class should be excluded", result);
+    }
+
+    /**
+     * Tests that ClassNotFoundException is still properly handled.
+     * This is a companion test to testNoClassDefFoundErrorHandling() to ensure
+     * the existing ClassNotFoundException handling still works.
+     */
+    public void testClassNotFoundExceptionHandling() throws Exception {
+        // Setup minimal configuration
+        ResultTypeConfig defaultResult = new ResultTypeConfig.Builder("dispatcher",
+                ServletDispatcherResult.class.getName()).defaultResultParam("location").build();
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
+                new ResultTypeConfig[]{defaultResult}, null, null, null, true);
+
+        final DummyContainer mockContainer = new DummyContainer();
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+        configuration.addPackageConfig("struts-default", strutsDefault);
+
+        ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
+
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, of, "false", "struts-default", "false");
+        builder.setActionPackages("org.apache.struts2.convention.actions.noclass");
+        builder.setActionSuffix("Action");
+
+        DefaultFileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        fileManagerFactory.setContainer(ActionContext.getContext().getContainer());
+        fileManagerFactory.setFileManager(new DefaultFileManager());
+        builder.setFileManagerFactory(fileManagerFactory);
+        builder.setProviderAllowlist(new ProviderAllowlist());
+
+        Test<ClassFinder.ClassInfo> actionClassTest = builder.getActionClassTest();
+
+        // Create a mock ClassInfo that throws ClassNotFoundException when get() is called
+        // Note: Class name must NOT end with "Action" suffix to ensure classInfo.get() is actually called
+        // (otherwise nameMatches=true and the condition short-circuits without calling get())
+        ClassFinder.ClassInfo mockClassInfo = EasyMock.createMock(ClassFinder.ClassInfo.class);
+        EasyMock.expect(mockClassInfo.getName()).andReturn("org.apache.struts2.convention.actions.noclass.MissingClass").anyTimes();
+        EasyMock.expect(mockClassInfo.get()).andThrow(new ClassNotFoundException("org.example.MissingClass"));
+        EasyMock.replay(mockClassInfo);
+
+        // This should return false (class excluded) instead of throwing ClassNotFoundException
+        boolean result = actionClassTest.test(mockClassInfo);
+        assertFalse("ClassNotFoundException should be caught and class should be excluded", result);
     }
 
     public void testActionPackages() throws MalformedURLException {

@@ -280,4 +280,15 @@ public class HiddenTest extends AbstractUITagTest {
         HiddenTag tag = new HiddenTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
+
+    public void testGenericHtml5() throws Exception {
+        HiddenTag tag = new HiddenTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        HiddenTag tag = new HiddenTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
 }

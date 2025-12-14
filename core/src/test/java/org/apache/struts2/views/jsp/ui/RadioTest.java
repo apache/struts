@@ -553,6 +553,19 @@ public class RadioTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"id", "value"});
     }
 
+    public void testGenericHtml5() throws Exception {
+        RadioTag tag = new RadioTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "html5", new String[]{"id", "value"});
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        RadioTag tag = new RadioTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "html5", new String[]{"id", "value"});
+    }
+
     public void testDynamicAttributes() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

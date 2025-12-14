@@ -53,6 +53,17 @@ public class CheckboxTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericHtml5() throws Exception {
+        CheckboxTag tag = new CheckboxTag();
+        verifyGenericProperties(tag, "html5", null);
+    }
+
+    public void testGenericHtml5_clearTagStateSet() throws Exception {
+        CheckboxTag tag = new CheckboxTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        verifyGenericProperties(tag, "html5", null);
+    }
+
     public void testChecked() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("true");

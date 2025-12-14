@@ -165,10 +165,9 @@ When running tests, use this priority order:
 ### Specialized Agents
 
 - `security-analyzer` - OGNL injection scanning, CVE detection
-- `test-runner` - Maven test execution and coverage analysis
+- `test-runner` - Maven test execution and coverage analysis, use this agent to RUN the tests
 - `code-quality-checker` - JavaDoc compliance, pattern consistency
 - `config-validator` - struts.xml validation, interceptor analysis
-- `jakarta-migration-helper` - Jakarta EE migration assistance
 - `codebase-analyzer` - Project structure and architecture analysis
 - `codebase-locator` - Code and file location assistance
 - `codebase-pattern-finder` - Pattern examples and usage

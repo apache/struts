@@ -80,4 +80,57 @@ public class WildcardHelperTest extends XWorkTestCase {
         assertEquals("", matchedPatterns.get("1"));
     }
 
+    /**
+     * WW-5594: Tests that pattern "org.apache.struts2.*" does NOT match "org.apache.struts2"
+     * (package name without trailing dot).
+     * <p>
+     * This is important because when checking exclusion patterns, the convention plugin
+     * extracts package names from class names using StringUtils.substringBeforeLast(className, "."),
+     * which produces package names without trailing dots.
+     * <p>
+     * For example:
+     * - Class "org.apache.struts2.XWorkTestCase" -> package "org.apache.struts2" (no trailing dot)
+     * - Pattern "org.apache.struts2.*" requires a literal "." before the wildcard
+     * - Result: Pattern doesn't match, class is not excluded
+     * <p>
+     * The fix is to include both "org.apache.struts2" and "org.apache.struts2.*" in exclusion patterns.
+     */
+    public void testWW5594_WildcardPatternRequiresTrailingDot() {
+        // given
+        HashMap<String, String> matchedPatterns = new HashMap<>();
+        int[] wildcardPattern = wildcardHelper.compilePattern("org.apache.struts2.*");
+
+        // when & then - Pattern with wildcard does NOT match package name without trailing dot
+        // This is the root cause of WW-5594
+        assertFalse("Pattern 'org.apache.struts2.*' should NOT match 'org.apache.struts2' (no trailing dot)",
+                wildcardHelper.match(matchedPatterns, "org.apache.struts2", wildcardPattern));
+
+        // But it DOES match with trailing dot
+        assertTrue("Pattern 'org.apache.struts2.*' should match 'org.apache.struts2.' (with trailing dot)",
+                wildcardHelper.match(matchedPatterns, "org.apache.struts2.", wildcardPattern));
+
+        // And it DOES match full class names
+        assertTrue("Pattern 'org.apache.struts2.*' should match 'org.apache.struts2.SomeClass'",
+                wildcardHelper.match(matchedPatterns, "org.apache.struts2.SomeClass", wildcardPattern));
+    }
+
+    /**
+     * WW-5594: Tests that exact package pattern matches package names correctly.
+     * To properly exclude classes in a root package, use both the exact package name
+     * and the wildcard pattern.
+     */
+    public void testWW5594_ExactPackagePatternMatchesPackageName() {
+        // given
+        HashMap<String, String> matchedPatterns = new HashMap<>();
+        int[] exactPattern = wildcardHelper.compilePattern("org.apache.struts2");
+
+        // when & then - Exact pattern matches exactly
+        assertTrue("Exact pattern 'org.apache.struts2' should match 'org.apache.struts2'",
+                wildcardHelper.match(matchedPatterns, "org.apache.struts2", exactPattern));
+
+        // But exact pattern does NOT match subpackages
+        assertFalse("Exact pattern 'org.apache.struts2' should NOT match 'org.apache.struts2.core'",
+                wildcardHelper.match(matchedPatterns, "org.apache.struts2.core", exactPattern));
+    }
+
 }

@@ -60,7 +60,7 @@ public class Attributes extends LinkedHashMap<String, String> {
     public Attributes addIfExists(String attrName, Object paramValue, boolean encode) {
         if (paramValue != null) {
             String val = paramValue.toString();
-            if (StringUtils.isNotBlank(val))
+            if (StringUtils.isNotEmpty(val))
                 put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(val)) : val));
         }
         return this;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.ognl;
+package org.test;
 
 import java.util.HashMap;
 

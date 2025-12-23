@@ -30,7 +30,7 @@ import java.util.Map;
 public class AnyScopePropertyAccessor implements PropertyAccessor {
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) {
+    public Object getProperty(OgnlContext context, Object target, Object name) {
         Request request = (Request) target;
         String attributeName = (String) name;
         for (String scopeName : request.getAvailableScopes()) {
@@ -70,7 +70,7 @@ public class AnyScopePropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
         Request request = (Request) target;
         String attributeName = (String) name;
         String[] availableScopes = request.getAvailableScopes().toArray(new String[0]);

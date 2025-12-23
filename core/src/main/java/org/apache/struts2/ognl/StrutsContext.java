@@ -39,8 +39,28 @@ public class StrutsContext extends OgnlContext {
      * @param typeConverter the type converter
      * @param memberAccess  the member access policy
      */
-    public StrutsContext(ClassResolver classResolver, TypeConverter typeConverter, MemberAccess memberAccess) {
+    private StrutsContext(ClassResolver classResolver, TypeConverter typeConverter, MemberAccess memberAccess) {
         super(classResolver, typeConverter, memberAccess);
+    }
+
+    /**
+     * Creates a new StrutsContext with the specified configuration and root object.
+     * This is the preferred factory method for creating contexts in Struts.
+     *
+     * @param root          the root object for OGNL evaluation
+     * @param memberAccess  the member access policy
+     * @param classResolver the class resolver
+     * @param typeConverter the type converter
+     * @return a new StrutsContext instance
+     * @since 7.2.0
+     */
+    public static StrutsContext create(Object root, MemberAccess memberAccess,
+                                       ClassResolver classResolver, TypeConverter typeConverter) {
+        StrutsContext context = new StrutsContext(classResolver, typeConverter, memberAccess);
+        context.setRoot(root);
+        context.setTraceEvaluations(false);
+        context.setKeepLastEvaluation(false);
+        return context;
     }
 
     /**

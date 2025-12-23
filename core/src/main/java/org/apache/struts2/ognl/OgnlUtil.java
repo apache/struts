@@ -204,23 +204,26 @@ public class OgnlUtil {
     }
 
     /**
-     * Ensures that the given context is an OgnlContext. If it's already an OgnlContext, returns it as-is.
-     * If it's a plain Map (like HashMap), wraps it in an OgnlContext to ensure compatibility with OGNL 3.4.8+.
+     * Ensures that the given context is a StrutsContext. If it's already a StrutsContext, returns it as-is.
+     * If it's an OgnlContext, wraps it. If it's a plain Map (like HashMap), creates a new StrutsContext.
      *
-     * @param context the context map that may or may not be an OgnlContext
-     * @return an OgnlContext instance
+     * @param context the context map that may or may not be a StrutsContext
+     * @return a StrutsContext instance
      * @since 7.2.0
      */
-    private OgnlContext ensureOgnlContext(Map<String, Object> context) {
+    private StrutsContext ensureStrutsContext(Map<String, Object> context) {
+        if (context instanceof StrutsContext strutsContext) {
+            return strutsContext;
+        }
         if (context instanceof OgnlContext ognlContext) {
-            return ognlContext;
+            return StrutsContext.wrap(ognlContext);
         }
-        // Create a new OgnlContext and copy the Map contents
-        OgnlContext ognlContext = createDefaultContext(null);
+        // Create a new StrutsContext and copy the Map contents
+        StrutsContext strutsContext = createDefaultContext(null);
         if (context != null) {
-            ognlContext.putAll(context);
+            strutsContext.putAll(context);
         }
-        return ognlContext;
+        return strutsContext;
     }
 
     /**
@@ -249,16 +252,16 @@ public class OgnlUtil {
             return;
         }
 
-        OgnlContext ognlContext = ensureOgnlContext(context);
-        Object oldRoot = Ognl.getRoot(ognlContext);
-        Ognl.setRoot(ognlContext, o);
+        StrutsContext strutsContext = ensureStrutsContext(context);
+        Object oldRoot = Ognl.getRoot(strutsContext);
+        Ognl.setRoot(strutsContext, o);
 
         for (Map.Entry<String, ?> entry : props.entrySet()) {
             String expression = entry.getKey();
             internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
         }
 
-        Ognl.setRoot(ognlContext, oldRoot);
+        Ognl.setRoot(strutsContext, oldRoot);
     }
 
     /**
@@ -310,13 +313,13 @@ public class OgnlUtil {
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
 
-        OgnlContext ognlContext = ensureOgnlContext(context);
-        Object oldRoot = Ognl.getRoot(ognlContext);
-        Ognl.setRoot(ognlContext, o);
+        StrutsContext strutsContext = ensureStrutsContext(context);
+        Object oldRoot = Ognl.getRoot(strutsContext);
+        Ognl.setRoot(strutsContext, o);
 
         internalSetProperty(name, value, o, context, throwPropertyExceptions);
 
-        Ognl.setRoot(ognlContext, oldRoot);
+        Ognl.setRoot(strutsContext, oldRoot);
     }
 
     /**
@@ -336,10 +339,11 @@ public class OgnlUtil {
         }
 
         if (root instanceof CompoundRoot compoundRoot) {
+            StrutsContext strutsContext = ensureStrutsContext(context);
             try {
                 for (Object target : compoundRoot) {
-                    if (OgnlRuntime.hasSetProperty((OgnlContext) context, target, property)
-                            || OgnlRuntime.hasGetProperty((OgnlContext) context, target, property)
+                    if (OgnlRuntime.hasSetProperty(strutsContext, target, property)
+                            || OgnlRuntime.hasGetProperty(strutsContext, target, property)
                             || OgnlRuntime.getIndexedPropertyType(target.getClass(), property) != OgnlRuntime.INDEXED_PROPERTY_NONE
                     ) {
                         return target;
@@ -370,36 +374,42 @@ public class OgnlUtil {
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (tree instanceof SimpleNode node) {
-            OgnlContext ognlContext = null;
+            StrutsContext strutsContext = null;
 
-            if (context instanceof OgnlContext oc) {
-                ognlContext = oc;
+            if (context instanceof StrutsContext sc) {
+                strutsContext = sc;
+            } else if (context instanceof OgnlContext oc) {
+                strutsContext = StrutsContext.wrap(oc);
             }
-            return node.isEvalChain(ognlContext) || node.isSequence(ognlContext);
+            return node.isEvalChain(strutsContext) || node.isSequence(strutsContext);
         }
         return false;
     }
 
     private boolean isArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (tree instanceof SimpleNode node) {
-            OgnlContext ognlContext = null;
+            StrutsContext strutsContext = null;
 
-            if (context instanceof OgnlContext oc) {
-                ognlContext = oc;
+            if (context instanceof StrutsContext sc) {
+                strutsContext = sc;
+            } else if (context instanceof OgnlContext oc) {
+                strutsContext = StrutsContext.wrap(oc);
             }
-            return node.isOperation(ognlContext);
+            return node.isOperation(strutsContext);
         }
         return false;
     }
 
     private boolean isSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
         if (tree instanceof SimpleNode node) {
-            OgnlContext ognlContext = null;
+            StrutsContext strutsContext = null;
 
-            if (context instanceof OgnlContext oc) {
-                ognlContext = oc;
+            if (context instanceof StrutsContext sc) {
+                strutsContext = sc;
+            } else if (context instanceof OgnlContext oc) {
+                strutsContext = StrutsContext.wrap(oc);
             }
-            return node.isSimpleMethod(ognlContext) && !node.isChain(ognlContext);
+            return node.isSimpleMethod(strutsContext) && !node.isChain(strutsContext);
         }
         return false;
     }
@@ -425,7 +435,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        Ognl.setValue(tree, (OgnlContext) context, root, value);
+        Ognl.setValue(tree, ensureStrutsContext(context), root, value);
     }
 
     private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
@@ -433,7 +443,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        return (T) Ognl.getValue(tree, (OgnlContext) context, root, resultType);
+        return (T) Ognl.getValue(tree, ensureStrutsContext(context), root, resultType);
     }
 
     private Object toTree(String expr) throws OgnlException {
@@ -722,18 +732,18 @@ public class OgnlUtil {
         }
     }
 
-    protected OgnlContext createDefaultContext(Object root) {
+    protected StrutsContext createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
 
-    protected OgnlContext createDefaultContext(Object root, ClassResolver resolver) {
+    protected StrutsContext createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }
         }
-        return Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
+        return StrutsContext.create(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
     }
 
     @FunctionalInterface

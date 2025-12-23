@@ -37,11 +37,15 @@ public class XWorkTypeConverterWrapper implements TypeConverter {
 
     @Override
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        // Cast context to OgnlContext for OGNL 3.4.8+ compatibility
-        OgnlContext ognlContext = (context instanceof OgnlContext oc) ? oc : null;
-        if (ognlContext == null) {
-            throw new IllegalArgumentException("Context must be an OgnlContext for OGNL 3.4.8+");
+        // Ensure context is a StrutsContext for OGNL 3.4.+ compatibility
+        StrutsContext strutsContext;
+        if (context instanceof StrutsContext sc) {
+            strutsContext = sc;
+        } else if (context instanceof OgnlContext oc) {
+            strutsContext = StrutsContext.wrap(oc);
+        } else {
+            throw new IllegalArgumentException("Context must be an OgnlContext for OGNL 3.4.+");
         }
-        return typeConverter.convertValue(ognlContext, target, member, propertyName, value, toType);
+        return typeConverter.convertValue(strutsContext, target, member, propertyName, value, toType);
     }
 }

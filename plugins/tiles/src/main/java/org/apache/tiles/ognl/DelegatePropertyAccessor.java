@@ -22,8 +22,6 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
-import java.util.Map;
-
 /**
  * Uses a {@link PropertyAccessorDelegateFactory} to delegate the methods to
  * another {@link PropertyAccessor}.
@@ -54,7 +52,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         return factory.getPropertyAccessor((String) name, (T) target).getProperty(context, target, name);
     }
 
@@ -62,7 +60,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         factory.getPropertyAccessor((String) name, (T) target).setProperty(context, target, name, value);
     }
 

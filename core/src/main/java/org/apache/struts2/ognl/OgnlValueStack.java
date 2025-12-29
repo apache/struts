@@ -31,8 +31,6 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
-import ognl.Ognl;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
@@ -121,11 +119,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
-        this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        this.context = StrutsContext.create(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
         this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
-        ((OgnlContext) context).setTraceEvaluations(false);
-        ((OgnlContext) context).setKeepLastEvaluation(false);
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -251,14 +247,14 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         if (e != null && e.getReason() instanceof SecurityException) {
             LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
         }
-    	boolean shouldLog = shouldLogMissingPropertyWarning(e);
-    	String msg = null;
-    	if (throwExceptionOnFailure || shouldLog) {
+        boolean shouldLog = shouldLogMissingPropertyWarning(e);
+        String msg = null;
+        if (throwExceptionOnFailure || shouldLog) {
             msg = ErrorMessageBuilder.create().errorSettingExpressionWithValue(expr, value).build();
         }
         if (shouldLog) {
             LOG.warn(msg, e);
-    	}
+        }
 
         if (throwExceptionOnFailure) {
             throw new StrutsException(msg, e);
@@ -380,7 +376,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected boolean shouldLogMissingPropertyWarning(OgnlException e) {
         return (e instanceof NoSuchPropertyException ||
                 (e instanceof MethodFailedException && e.getReason() instanceof NoSuchMethodException))
-        		&& logMissingProperties;
+                && logMissingProperties;
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {
@@ -507,9 +503,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Override
     public void clearContextValues() {
-        //this is an OGNL ValueStack so the context will be an OgnlContext
-        //it would be better to make context of type OgnlContext
-        ((OgnlContext) context).getValues().clear();
+        //this is an OGNL ValueStack so the context will be a StrutsContext
+        ((StrutsContext) context).getValues().clear();
     }
 
     @Override

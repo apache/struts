@@ -17,3 +17,4 @@ updates:
     ignore:
       - dependency-name: "org.eclipse.jetty:jetty-maven-plugin"
       - dependency-name: "com.github.ben-manes.caffeine:caffeine"
+      - dependency-name: "com.sun.xml.bind:jaxb-impl"

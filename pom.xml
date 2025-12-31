@@ -125,7 +125,7 @@
         <mockito.version>5.21.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <spring.version>6.2.12</spring.version>
+        <spring.version>7.0.2</spring.version>
         <struts-annotations.version>2.0</struts-annotations.version>
         <velocity-tools.version>3.1</velocity-tools.version>
         <weld.version>6.0.3.Final</weld.version>

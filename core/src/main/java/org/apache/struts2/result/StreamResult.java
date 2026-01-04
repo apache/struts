@@ -18,12 +18,13 @@
  */
 package org.apache.struts2.result;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,9 +33,7 @@ import java.io.Serial;
 /**
  * A custom Result type for sending raw data (via an InputStream) directly to the
  * HttpServletResponse. Very useful for allowing users to download content.
- *
  * <b>This result type takes the following parameters:</b>
- *
  * <ul>
  * <li><b>contentType</b> - the stream mime-type as sent to the web browser
  * (default = <code>text/plain</code>).</li>
@@ -225,19 +224,24 @@ public class StreamResult extends StrutsResultSupport {
 
             if (inputStream == null) {
                 String msg = ("Can not find a java.io.InputStream with the name [" + parsedInputName + "] in the invocation stack. " +
-                    "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
+                        "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
 
-
             HttpServletResponse oResponse = invocation.getInvocationContext().getServletResponse();
 
-            LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
-            if (contentCharSet != null && !contentCharSet.isEmpty()) {
-                oResponse.setContentType(conditionalParse(contentType, invocation) + ";charset=" + conditionalParse(contentCharSet, invocation));
+            String parsedContentType = conditionalParse(contentType, invocation);
+            String parsedContentCharSet = conditionalParse(contentCharSet, invocation);
+
+            if (StringUtils.isEmpty(parsedContentCharSet)) {
+                LOG.debug("Set content type to: {} and reset character encoding to null", contentType);
+                oResponse.setContentType(parsedContentType);
+                oResponse.setCharacterEncoding(null);
             } else {
-                oResponse.setContentType(conditionalParse(contentType, invocation));
+                LOG.debug("Set the content type: {};charset={}", contentType, parsedContentCharSet);
+                oResponse.setContentType(parsedContentType);
+                oResponse.setCharacterEncoding(parsedContentCharSet);
             }
 
             LOG.debug("Set the content length: {}", contentLength);
@@ -269,7 +273,7 @@ public class StreamResult extends StrutsResultSupport {
             oOutput = oResponse.getOutputStream();
 
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
-                inputName, contentType, contentLength, contentDisposition, contentCharSet);
+                    inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
             LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];

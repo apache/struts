@@ -148,6 +148,7 @@ Each plugin is a separate Maven module with:
 ### Important Notes
 - **Version**: Currently 6.7.5-SNAPSHOT (release branch: `release/struts-6-7-x`)
 - **Java Compatibility**: Compiled for Java 8, tested through Java 21
+- **Servlet API**: Uses javax.servlet (Java EE), NOT Jakarta EE (jakarta.servlet)
 - **Security**: Always validate inputs and follow OWASP guidelines
 - **Performance**: Leverage built-in caching (OGNL expressions, templates)
 - **Deprecation**: Some legacy XWork components marked for removal

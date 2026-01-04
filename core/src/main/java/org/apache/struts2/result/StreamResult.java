@@ -276,7 +276,7 @@ public class StreamResult extends StrutsResultSupport {
         response.setContentType(parsedContentType);
         if (StringUtils.isEmpty(parsedContentCharSet)) {
             LOG.debug("Set content type to: {} and reset character encoding to null", parsedContentType);
-            response.setCharacterEncoding(null);
+            response.setCharacterEncoding((String) null);
         } else {
             LOG.debug("Set content type: {};charset={}", parsedContentType, parsedContentCharSet);
             response.setCharacterEncoding(parsedContentCharSet);

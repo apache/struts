@@ -21,6 +21,7 @@ package org.apache.struts2.result;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -223,7 +224,7 @@ public class StreamResult extends StrutsResultSupport {
 
             if (inputStream == null) {
                 String msg = ("Can not find a java.io.InputStream with the name [" + parsedInputName + "] in the invocation stack. " +
-                    "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
+                        "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
@@ -231,11 +232,12 @@ public class StreamResult extends StrutsResultSupport {
 
             HttpServletResponse oResponse = invocation.getInvocationContext().getServletResponse();
 
-            LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
-            if (contentCharSet != null && !contentCharSet.equals("")) {
-                oResponse.setContentType(conditionalParse(contentType, invocation) + ";charset=" + conditionalParse(contentCharSet, invocation));
-            } else {
-                oResponse.setContentType(conditionalParse(contentType, invocation));
+            LOG.debug("Set the content type: {};charset={}", contentType, contentCharSet);
+            String parsedContentType = conditionalParse(contentType, invocation);
+            String parsedContentCharSet = conditionalParse(contentCharSet, invocation);
+            oResponse.setContentType(parsedContentType);
+            if (StringUtils.isNotEmpty(parsedContentCharSet)) {
+                oResponse.setCharacterEncoding(parsedContentCharSet);
             }
 
             LOG.debug("Set the content length: {}", contentLength);
@@ -267,7 +269,7 @@ public class StreamResult extends StrutsResultSupport {
             oOutput = oResponse.getOutputStream();
 
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
-                inputName, contentType, contentLength, contentDisposition, contentCharSet);
+                    inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
             LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];

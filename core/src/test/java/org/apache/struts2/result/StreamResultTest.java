@@ -120,6 +120,16 @@ public class StreamResultTest extends StrutsInternalTestCase {
         assertEquals("inline", response.getHeader("Content-disposition"));
     }
 
+    public void testStreamResultWithNullCharSetExpression() throws Exception {
+        result.setParse(true);
+        result.setInputName("streamForImage");
+        result.setContentCharSet("${nullCharSetMethod}");
+
+        result.doExecute("helloworld", mai);
+
+        assertEquals("text/plain", response.getContentType());
+    }
+
     public void testAllowCacheDefault() throws Exception {
         result.setInputName("streamForImage");
 
@@ -309,6 +319,10 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         public String getContentCharSetMethod() {
             return "UTF-8";
+        }
+
+        public String getNullCharSetMethod() {
+            return null;
         }
     }
 

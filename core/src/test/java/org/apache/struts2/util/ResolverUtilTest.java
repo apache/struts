@@ -18,15 +18,15 @@
  */
 package org.apache.struts2.util;
 
-import org.apache.struts2.ObjectFactory;
 import junit.framework.TestCase;
+import org.apache.struts2.ObjectFactory;
 
 import java.net.URL;
 import java.util.Set;
 
 public class ResolverUtilTest extends TestCase {
 
-    public void testSimpleFind() throws Exception {
+    public void testSimpleFind() {
         ResolverUtil<ObjectFactory> resolver = new ResolverUtil<>();
         resolver.findImplementations(ObjectFactory.class, "org");
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
@@ -35,7 +35,7 @@ public class ResolverUtilTest extends TestCase {
         assertTrue(impls.contains(DummyObjectFactory.class));
     }
 
-    public void testMissingSomeFind() throws Exception {
+    public void testMissingSomeFind() {
         ResolverUtil<ObjectFactory> resolver = new ResolverUtil<>();
         resolver.findImplementations(ObjectFactory.class, "org.apache.struts2.util");
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
@@ -44,15 +44,15 @@ public class ResolverUtilTest extends TestCase {
         assertTrue(impls.contains(DummyObjectFactory.class));
     }
 
-    public void testFindNamedResource() throws Exception {
-        ResolverUtil resolver = new ResolverUtil();
-        resolver.findNamedResource("xwork-default.xml", "");
+    public void testFindNamedResource() {
+        ResolverUtil resolver = new ResolverUtil<>();
+        resolver.findNamedResource("struts-tests-default.xml", "");
         Set<URL> impls = resolver.getResources();
 
         assertTrue(impls.size() > 0);
     }
 
-    public void testFindNamedResourceInDir() throws Exception {
+    public void testFindNamedResourceInDir() {
         ResolverUtil resolver = new ResolverUtil();
         resolver.findNamedResource("SimpleAction.properties", "org/apache");
         Set<URL> impls = resolver.getResources();

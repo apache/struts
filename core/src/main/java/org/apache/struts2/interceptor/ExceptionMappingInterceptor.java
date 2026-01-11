@@ -84,8 +84,8 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;xwork&gt;
- *     &lt;package name="default" extends="xwork-default"&gt;
+ * &lt;struts&gt;
+ *     &lt;package name="default" extends="struts-default"&gt;
  *         &lt;global-results&gt;
  *             &lt;result name="error" type="freemarker"&gt;error.ftl&lt;/result&gt;
  *         &lt;/global-results&gt;
@@ -102,7 +102,7 @@ import java.util.Map;
  *             &lt;result name="success" type="freemarker"&gt;test.ftl&lt;/result&gt;
  *         &lt;/action&gt;
  *     &lt;/package&gt;
- * &lt;/xwork&gt;
+ * &lt;/struts&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -113,8 +113,8 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * &lt;xwork&gt;
- *   &lt;package name="something" extends="xwork-default"&gt;
+ * &lt;struts&gt;
+ *   &lt;package name="something" extends="struts-default"&gt;
  *      &lt;interceptors&gt;
  *          &lt;interceptor-stack name="exceptionmappingStack"&gt;
  *              &lt;interceptor-ref name="exception"&gt;
@@ -150,7 +150,7 @@ import java.util.Map;
  *      &lt;/action&gt;
  *
  *   &lt;/package&gt;
- * &lt;/xwork&gt;
+ * &lt;/struts&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
@@ -257,7 +257,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
         }
 
         Level level = Level.getLevel(logLevel);
-        if (level == null)  {
+        if (level == null) {
             throw new IllegalArgumentException("LogLevel [" + logLevel + "] is not supported");
         }
         logger.log(level, e.getMessage(), e);

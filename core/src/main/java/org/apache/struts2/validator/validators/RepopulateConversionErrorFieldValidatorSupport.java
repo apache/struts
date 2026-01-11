@@ -36,7 +36,7 @@ import java.util.Map;
  * a fake parameter map when a conversion error has occurred and the 'repopulateField'
  * property is set to "true".
  * </p>
- *
+ * <p>
  * <!-- START SNIPPET: javadoc -->
  * <p>
  * The capability of auto-repopulating the stack with a fake parameter map when
@@ -52,9 +52,9 @@ import java.util.Map;
  * property set to true, it will, meaning the textfield will have 'one' as its value
  * upon conversion error.
  * </p>
- *
+ * <p>
  * <!-- END SNIPPET: javadoc -->
-
+ *
  *
  * <pre>
  * <!-- START SNIPPET: exampleJspPage -->
@@ -75,11 +75,11 @@ import java.util.Map;
  * <pre>
  * <!-- START SNIPPET: exampleXwork -->
  *
- * &lt;!-- xwork.xml --&gt;
- * &lt;xwork&gt;
- * &lt;include file="xwork-default.xml" /&gt;
+ * &lt;!-- struts.xml --&gt;
+ * &lt;struts&gt;
+ * &lt;include file="struts-default.xml" /&gt;
  * ....
- * &lt;package name="myPackage" extends="xwork-default"&gt;
+ * &lt;package name="myPackage" extends="struts-default"&gt;
  *   ....
  *   &lt;action name="someAction" class="example.MyActionSupport.java"&gt;
  *      &lt;result name="input"&gt;myJspPage.jsp&lt;/result&gt;
@@ -88,7 +88,7 @@ import java.util.Map;
  *   ....
  * &lt;/package&gt;
  * ....
- * &lt;/xwork&gt;
+ * &lt;/struts&gt;
  *
  * <!-- END SNIPPET:exampleXwork -->
  * </pre>

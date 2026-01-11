@@ -57,7 +57,7 @@ public class ActionAutowiringInterceptorTest extends XWorkTestCase {
     }
 
     public void testSetAutowireType() throws Exception {
-        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("struts-tests-default.xml");
         container.inject(prov);
         prov.setThrowExceptionOnDuplicateBeans(false);
         XmlConfigurationProvider c = new StrutsXmlConfigurationProvider("org/apache/struts2/spring/xwork-autowire.xml");

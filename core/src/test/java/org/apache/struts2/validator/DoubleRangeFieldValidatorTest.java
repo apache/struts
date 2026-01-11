@@ -303,7 +303,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-tests-default.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();

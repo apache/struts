@@ -19,3 +19,4 @@ updates:
       - dependency-name: "com.github.ben-manes.caffeine:caffeine"
       - dependency-name: "com.sun.xml.bind:jaxb-impl"
       - dependency-name: "javax.portlet:portlet-api"
+      - dependency-name: "javax.servlet:javax.servlet-api"

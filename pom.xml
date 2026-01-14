@@ -1043,7 +1043,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.5.1</version><!-- the latest version supporting Java 1.8 -->
+                <version>7.11.0</version><!-- the latest version supporting Java 1.8 -->
             </dependency>
 
             <dependency>

@@ -22,3 +22,7 @@ updates:
       - dependency-name: "javax.servlet:javax.servlet-api"
       - dependency-name: "javax.servlet.jsp:jsp-api"
       - dependency-name: "org.mortbay.jetty:jsp-2.1"
+      - dependency-name: "ognl:ognl"
+      - dependency-name: "org.hibernate.validator:hibernate-validator"
+      - dependency-name: "org.testng:testng"
+      - dependency-name: "org.mockito:mockito-core"

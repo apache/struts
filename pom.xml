@@ -892,7 +892,7 @@
             <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
-                <version>1.10.0</version>
+                <version>1.10.1</version>
             </dependency>
 
             <!-- Mocks for unit testing (by Spring) -->

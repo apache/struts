@@ -26,3 +26,6 @@ updates:
       - dependency-name: "org.hibernate.validator:hibernate-validator"
       - dependency-name: "org.testng:testng"
       - dependency-name: "org.mockito:mockito-core"
+      - dependency-name: "opensymphony:sitemesh"
+      - dependency-name: "net.sf.jasperreports:jasperreports"
+      - dependency-name: "javax.enterprise:cdi-api"

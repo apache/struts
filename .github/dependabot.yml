@@ -29,3 +29,6 @@ updates:
       - dependency-name: "opensymphony:sitemesh"
       - dependency-name: "net.sf.jasperreports:jasperreports"
       - dependency-name: "javax.enterprise:cdi-api"
+      - dependency-name: "org.springframework:spring-core"
+      - dependency-name: "org.apache.struts:struts-annotations"
+      - dependency-name: "org.apache.juneau:juneau-marshall"

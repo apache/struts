@@ -62,10 +62,10 @@ public class JuneauXmlHandler implements ContentTypeHandler {
         LOG.debug("Converting an object of {} into string", obj.getClass().getName());
         try {
             serializer
-                .builder()
-                .locale(invocation.getInvocationContext().getLocale())
-                .build()
-                .serialize(obj, stream);
+                    .copy()
+                    .locale(invocation.getInvocationContext().getLocale())
+                    .build()
+                    .serialize(obj, stream);
             return null;
         } catch (SerializeException e) {
             throw new IOException(e);

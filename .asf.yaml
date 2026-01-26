@@ -33,6 +33,11 @@ github:
         # it does not work because our github teams are private/secret, see INFRA-25666
         require_code_owner_reviews: false
         required_approving_review_count: 0
+  pull_requests:
+    # allow auto-merge
+    allow_auto_merge: true
+    # auto-delete head branches after being merged
+    del_branch_on_merge: true
   autolink_jira:
     - WW
   dependabot_alerts:  true

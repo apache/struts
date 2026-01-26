@@ -13,7 +13,6 @@ notifications:
 github:
   description: "Apache Struts is a free, open-source, MVC framework for creating elegant, modern Java web applications"
   homepage: https://struts.apache.org/
-  del_branch_on_merge: true
   protected_branches:
     main:
       # contexts are the names of checks that must pass.

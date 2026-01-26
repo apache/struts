@@ -120,7 +120,7 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        XmlConfigurationProvider provider1 = new StrutsXmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider1 = new StrutsXmlConfigurationProvider("struts-tests-default.xml");
         container.inject(provider1);
         XmlConfigurationProvider provider2 = new StrutsXmlConfigurationProvider("xwork-test-validation.xml");
         container.inject(provider2);

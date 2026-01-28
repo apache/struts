@@ -217,9 +217,7 @@ public class OgnlUtil {
         }
         // Create a new OgnlContext and copy the Map contents
         OgnlContext ognlContext = createDefaultContext(null);
-        if (context != null) {
-            ognlContext.putAll(context);
-        }
+        ognlContext.putAll(context);
         return ognlContext;
     }
 

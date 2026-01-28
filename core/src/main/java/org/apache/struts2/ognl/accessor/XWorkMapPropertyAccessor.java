@@ -24,6 +24,7 @@ import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MapPropertyAccessor;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,7 +63,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         LOG.trace("Entering getProperty ({},{},{})", context, target, name);
 
         ReflectionContextState.updateCurrentPropertyPath(context, name);
@@ -75,7 +76,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
         Object result = null;
 
-        try{
+        try {
             result = super.getProperty(context, target, name);
         } catch (ClassCastException ignored) {
         }
@@ -94,7 +95,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
 
             if (result == null &&
                     Boolean.TRUE.equals(context.get(ReflectionContextState.CREATE_NULL_OBJECTS))
-                    &&  objectTypeDeterminer.shouldCreateIfNew(lastClass,lastProperty,target,null,false)) {
+                    && objectTypeDeterminer.shouldCreateIfNew(lastClass, lastProperty, target, null, false)) {
                 Class valueClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, key);
 
                 try {
@@ -122,28 +123,28 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         LOG.trace("Entering setProperty({},{},{},{})", context, target, name, value);
 
         Object key = getKey(context, name);
         Map map = (Map) target;
         map.put(key, getValue(context, value));
-     }
-
-    private Object getValue(Map context, Object value) {
-         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
-         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
-         if (lastClass == null || lastProperty == null) {
-             return value;
-         }
-         Class elementClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, null);
-         if (elementClass == null) {
-             return value; // nothing is specified, we assume it will be the value passed in.
-         }
-         return xworkConverter.convertValue(context, value, elementClass);
     }
 
-    private Object getKey(Map context, Object name) {
+    private Object getValue(OgnlContext context, Object value) {
+        Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
+        String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
+        if (lastClass == null || lastProperty == null) {
+            return value;
+        }
+        Class elementClass = objectTypeDeterminer.getElementClass(lastClass, lastProperty, null);
+        if (elementClass == null) {
+            return value; // nothing is specified, we assume it will be the value passed in.
+        }
+        return xworkConverter.convertValue(context, value, elementClass);
+    }
+
+    private Object getKey(OgnlContext context, Object name) {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         if (lastClass == null || lastProperty == null) {

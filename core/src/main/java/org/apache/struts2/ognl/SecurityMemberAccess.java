@@ -19,6 +19,7 @@
 package org.apache.struts2.ognl;
 
 import ognl.MemberAccess;
+import ognl.OgnlContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +33,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,7 +108,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public Object setup(Map context, Object target, Member member, String propertyName) {
+    public Object setup(OgnlContext context, Object target, Member member, String propertyName) {
         Object result = null;
 
         if (isAccessible(context, target, member, propertyName)) {
@@ -123,7 +123,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public void restore(Map context, Object target, Member member, String propertyName, Object state) {
+    public void restore(OgnlContext context, Object target, Member member, String propertyName, Object state) {
         if (state == null) {
             return;
         }
@@ -138,7 +138,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+    public boolean isAccessible(OgnlContext context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
         if (member == null) {
@@ -154,7 +154,7 @@ public class SecurityMemberAccess implements MemberAccess {
                     throw new IllegalArgumentException("Target class does not match member!");
                 }
                 target = null; // This information is not useful to us and conflicts with following logic which expects target to be null or an instance containing the member
-            // Standard case: Member should exist on target
+                // Standard case: Member should exist on target
             } else if (!member.getDeclaringClass().isAssignableFrom(target.getClass())) {
                 throw new IllegalArgumentException("Member does not exist on target!");
             }
@@ -426,7 +426,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
     public void useExcludedClasses(String commaDelimitedClasses) {
-       this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
+        this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)

@@ -22,8 +22,6 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
-import java.util.Map;
-
 /**
  * Uses a {@link PropertyAccessor} as a delegate, but passing a nested object as
  * target.
@@ -63,7 +61,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(Map context, Object target, Object name) throws OgnlException {
+    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         return propertyAccessor.getProperty(context, nestedObjectExtractor.getNestedObject((T) target), name);
     }
 
@@ -71,7 +69,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
         propertyAccessor.setProperty(context, nestedObjectExtractor.getNestedObject((T) target), name, value);
     }
 

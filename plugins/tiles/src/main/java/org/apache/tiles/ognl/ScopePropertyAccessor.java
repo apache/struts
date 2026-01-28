@@ -22,8 +22,6 @@ import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 import org.apache.tiles.request.Request;
 
-import java.util.Map;
-
 /**
  * Accesses a scope.
  */
@@ -35,7 +33,7 @@ public class ScopePropertyAccessor implements PropertyAccessor {
     static final int SCOPE_SUFFIX_LENGTH = 5;
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) {
+    public Object getProperty(OgnlContext context, Object target, Object name) {
         Request request = (Request) target;
         String scope = (String) name;
         if (scope.endsWith("Scope")) {
@@ -61,7 +59,7 @@ public class ScopePropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
         // Does nothing.
     }
 

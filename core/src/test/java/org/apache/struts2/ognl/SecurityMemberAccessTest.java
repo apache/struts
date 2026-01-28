@@ -19,6 +19,7 @@
 package org.apache.struts2.ognl;
 
 import ognl.MemberAccess;
+import ognl.OgnlContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.config.ConfigurationException;
@@ -36,14 +37,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -53,15 +53,15 @@ import static org.mockito.Mockito.when;
 
 public class SecurityMemberAccessTest {
 
-    private Map context;
+    private OgnlContext context;
     private FooBar target;
     protected SecurityMemberAccess sma;
     protected ProviderAllowlist mockedProviderAllowlist;
     protected ThreadAllowlist mockedThreadAllowlist;
 
     @Before
-    public void setUp() throws Exception {
-        context = new HashMap<>();
+    public void setUp() {
+        context = ognl.Ognl.createDefaultContext(null);
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
@@ -83,6 +83,7 @@ public class SecurityMemberAccessTest {
         return reflectField(sma, fieldName);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T reflectField(Object instance, String fieldName) throws IllegalAccessException {
         return (T) FieldUtils.readField(instance, fieldName, true);
     }
@@ -685,7 +686,7 @@ public class SecurityMemberAccessTest {
         assertFalse("Access to method of excluded class isn't blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testBlockAccessIfClassIsExcluded_2() throws Exception {
         // given
         sma.useExcludedClasses(ClassLoader.class.getName());
@@ -712,7 +713,7 @@ public class SecurityMemberAccessTest {
         assertTrue("Invalid test! Access to method of non-excluded class is blocked!", actual);
     }
 
-   @Test
+    @Test
     public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
         // given
         sma.useExcludedClasses(Class.class.getName());
@@ -727,7 +728,7 @@ public class SecurityMemberAccessTest {
             assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
             fail("Mismatch between target and member did not cause IllegalArgumentException?");
         } catch (IllegalArgumentException iex) {
-            // Expected result is this exception
+            assertEquals("Member does not exist on target!", iex.getMessage());
         }
     }
 
@@ -1083,7 +1084,7 @@ enum MyValues {
     ONE, TWO, THREE;
 
     public static MyValues[] values(String notUsed) {
-        return new MyValues[] {ONE, TWO, THREE};
+        return new MyValues[]{ONE, TWO, THREE};
     }
 }
 

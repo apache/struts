@@ -23,8 +23,6 @@ import ognl.OgnlException;
 import ognl.PropertyAccessor;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 
@@ -34,14 +32,15 @@ import static org.junit.Assert.assertEquals;
 public class NestedObjectDelegatePropertyAccessorTest {
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#getProperty(Map, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#getProperty(OgnlContext, Object, Object)}.
+     *
      * @throws OgnlException If something goes wrong.
      */
     @Test
     public void testGetProperty() throws OgnlException {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        Map<String, Object> context = createMock(Map.class);
+        OgnlContext context = createMock(OgnlContext.class);
         expect(propertyAccessor.getProperty(context, "nested", "property")).andReturn("value");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 
@@ -52,14 +51,15 @@ public class NestedObjectDelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#setProperty(Map, Object, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#setProperty(OgnlContext, Object, Object, Object)}.
+     *
      * @throws OgnlException If something goes wrong.
      */
     @Test
     public void testSetProperty() throws OgnlException {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        Map<String, Object> context = createMock(Map.class);
+        OgnlContext context = createMock(OgnlContext.class);
         propertyAccessor.setProperty(context, "nested", "property", "value");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 

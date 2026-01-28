@@ -20,20 +20,20 @@ package org.apache.struts2.util;
 
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import jakarta.servlet.jsp.tagext.TagSupport;
+import ognl.OgnlContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
 import java.lang.reflect.Member;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
-    private Map context;
+    private OgnlContext context;
 
     @Override
     public void setUp() throws Exception {
-        context = new HashMap();
+        super.setUp();
+        context = ognl.Ognl.createDefaultContext(null);
     }
 
     public void testJavaxServletPackageAccess() throws Exception {

@@ -33,3 +33,5 @@ updates:
       - dependency-name: "org.apache.struts:struts-annotations"
       - dependency-name: "org.apache.juneau:juneau-marshall"
       - dependency-name: "org.apache.tomcat:tomcat-api"
+      - dependency-name: "org.apache.tomcat:tomcat-juli"
+      - dependency-name: "org.apache.tomcat:tomcat-jasper"

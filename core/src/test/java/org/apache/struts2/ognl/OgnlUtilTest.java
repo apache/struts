@@ -1646,40 +1646,73 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit());
     }
 
-    public void testAllowCustomOgnlMap() throws Exception {
-        String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
-        Object result = ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null);
-        assertNull("System compromised", result);
-
-        // Explicitly disable the flag and verify custom maps are blocked
-        Map<String, String> properties = new HashMap<>();
-        properties.put(StrutsConstants.STRUTS_DISALLOW_CUSTOM_OGNL_MAP, Boolean.FALSE.toString());
-        resetOgnlUtil(properties);
-
-        result = ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null);
-        assertNull("System compromised", result);
-    }
-
     /**
-     * Tests the disallowCustomOgnlMap flag behavior when explicitly enabled.
-     * <p>
-     * Note: Testing the disabled (vulnerable) behavior is not practical because
-     * multiple security layers (excluded packages, excluded classes) would need
-     * to be disabled simultaneously. The existing testCustomOgnlMapBlocked test
-     * verifies the default secure behavior.
-     * </p>
+     * Tests that custom OGNL map implementations are blocked by the
+     * {@code struts.ognl.disallowCustomOgnlMap} flag.
      */
-    public void testDisallowCustomOgnlMap() throws Exception {
+    public void testCustomOgnlMapBlockedByDisallowFlag() throws Exception {
         String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
+        Object root = new Object();
 
-        // Explicitly enable the flag and verify custom maps are blocked
+        // Enable disallowCustomOgnlMap flag - custom maps should be blocked
         Map<String, String> properties = new HashMap<>();
+        properties.put(StrutsConstants.STRUTS_ALLOWLIST_ENABLE, Boolean.FALSE.toString());
         properties.put(StrutsConstants.STRUTS_DISALLOW_CUSTOM_OGNL_MAP, Boolean.TRUE.toString());
         resetOgnlUtil(properties);
 
-        Object result = ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null);
-        assertNull("Custom map should be blocked when flag is explicitly enabled", result);
+        // When blocked, CompoundRootAccessor.classForName() returns null, causing OgnlException
+        assertThrows(OgnlException.class,
+                () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(root), root));
     }
+
+    /**
+     * Tests that custom OGNL map implementations are blocked by the allowlist
+     * even when {@code struts.ognl.disallowCustomOgnlMap=false}.
+     * <p>
+     * The map is created (disallowCustomOgnlMap=false), but method calls on it
+     * are blocked by SecurityMemberAccess because the class is not allowlisted.
+     * </p>
+     */
+    public void testCustomOgnlMapBlockedByAllowlist() throws Exception {
+        String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
+        Object root = new Object();
+
+        // Disable disallowCustomOgnlMap but keep allowlist enabled
+        Map<String, String> properties = new HashMap<>();
+        properties.put(StrutsConstants.STRUTS_ALLOWLIST_ENABLE, Boolean.TRUE.toString());
+        properties.put(StrutsConstants.STRUTS_DISALLOW_CUSTOM_OGNL_MAP, Boolean.FALSE.toString());
+        resetOgnlUtil(properties);
+
+        // Map is created, but allowlist blocks method calls on non-allowlisted classes
+        assertThrows(OgnlException.class,
+                () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(root), root));
+    }
+
+    /**
+     * Tests that custom OGNL map implementations work when security layers are disabled.
+     * <p>
+     * When both {@code struts.allowlist.enable=false} and {@code struts.ognl.disallowCustomOgnlMap=false},
+     * custom map implementations can be instantiated and used in OGNL expressions.
+     * </p>
+     * <p>
+     * WARNING: Disabling these security features is NOT recommended for production use.
+     * This test exists to verify the security flags work correctly.
+     * </p>
+     */
+    public void testCustomOgnlMapAllowedWhenSecurityDisabled() throws Exception {
+        String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
+
+        // Disable Struts security layers
+        Map<String, String> properties = new HashMap<>();
+        properties.put(StrutsConstants.STRUTS_ALLOWLIST_ENABLE, Boolean.FALSE.toString());
+        properties.put(StrutsConstants.STRUTS_DISALLOW_CUSTOM_OGNL_MAP, Boolean.FALSE.toString());
+        resetOgnlUtil(properties);
+
+        // Custom map works when security is disabled
+        Object result = ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(new Object()), new Object());
+        assertEquals("Custom map should work when security is disabled", "System compromised", result);
+    }
+
 
     private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
         return generateOgnlUtilInstanceWithDefaultLRUCacheFactories(25, 25);

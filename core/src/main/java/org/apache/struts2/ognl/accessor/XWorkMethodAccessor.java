@@ -52,8 +52,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
         if (objects.length == 1) {
             try {
-                OgnlContext ogContext = context;
-                if (OgnlRuntime.hasSetProperty(ogContext, object, string)) {
+                if (OgnlRuntime.hasSetProperty(context, object, string)) {
                     PropertyDescriptor descriptor = OgnlRuntime.getPropertyDescriptor(object.getClass(), string);
                     Class propertyType = descriptor.getPropertyType();
                     if ((Collection.class).isAssignableFrom(propertyType)) {
@@ -62,12 +61,12 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
                         //i.e. OgnlUtil should be used initially, OgnlRuntime
                         //thereafter
 
-                        Object propVal = OgnlRuntime.getProperty(ogContext, object, string);
+                        Object propVal = OgnlRuntime.getProperty(context, object, string);
                         //use the Collection property accessor instead of the individual property accessor, because
                         //in the case of Lists otherwise the index property could be used
                         PropertyAccessor accessor = OgnlRuntime.getPropertyAccessor(Collection.class);
-                        ReflectionContextState.setGettingByKeyProperty(ogContext, true);
-                        return accessor.getProperty(ogContext, propVal, objects[0]);
+                        ReflectionContextState.setGettingByKeyProperty(context, true);
+                        return accessor.getProperty(context, propVal, objects[0]);
                     }
                 }
             } catch (Exception oe) {

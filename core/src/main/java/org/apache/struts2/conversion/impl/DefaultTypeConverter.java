@@ -23,7 +23,6 @@ import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.ognl.XWorkTypeConverterWrapper;
 import ognl.OgnlContext;
 
@@ -79,10 +78,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public TypeConverter getTypeConverter( Map<String, Object> context ) {
         ognl.TypeConverter converter = null;
 
-        if (context instanceof StrutsContext strutsContext) {
-            converter = strutsContext.getTypeConverter();
-        } else if (context instanceof OgnlContext ognlContext) {
-            converter = ognlContext.getTypeConverter();
+        if (context instanceof OgnlContext) {
+            converter = ((OgnlContext) context).getTypeConverter();
         }
 
         if (converter != null) {

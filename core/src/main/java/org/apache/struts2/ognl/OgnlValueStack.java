@@ -31,6 +31,8 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
+import ognl.Ognl;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
@@ -119,9 +121,12 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
-        this.context = StrutsContext.create(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        OgnlContext ognlContext = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        this.context = ognlContext;
         this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
+        ognlContext.setTraceEvaluations(false);
+        ognlContext.setKeepLastEvaluation(false);
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -503,8 +508,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Override
     public void clearContextValues() {
-        //this is an OGNL ValueStack so the context will be a StrutsContext
-        ((StrutsContext) context).getValues().clear();
+        //this is an OGNL ValueStack so the context will be an OgnlContext
+        //it would be better to make context of type OgnlContext
+        ((OgnlContext) context).getValues().clear();
     }
 
     @Override

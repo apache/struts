@@ -18,7 +18,9 @@
  */
 package org.apache.struts2.ognl;
 
+import ognl.OgnlContext;
 import org.apache.struts2.util.reflection.ReflectionContextFactory;
+import ognl.Ognl;
 
 /**
  * @deprecated since 6.8.0, to be removed, see {@link ReflectionContextFactory}
@@ -27,8 +29,8 @@ import org.apache.struts2.util.reflection.ReflectionContextFactory;
 public class OgnlReflectionContextFactory implements ReflectionContextFactory {
 
     @Override
-    public StrutsContext createDefaultContext(Object root) {
-        return StrutsContext.create(root, null, null, null);
+    public OgnlContext createDefaultContext(Object root) {
+        return Ognl.createDefaultContext(root);
     }
 
 }

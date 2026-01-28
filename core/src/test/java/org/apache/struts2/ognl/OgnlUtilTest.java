@@ -1650,7 +1650,7 @@ public class OgnlUtilTest extends XWorkTestCase {
      * Tests that custom OGNL map implementations are blocked by the
      * {@code struts.ognl.disallowCustomOgnlMap} flag.
      */
-    public void testCustomOgnlMapBlockedByDisallowFlag() throws Exception {
+    public void testCustomOgnlMapBlockedByDisallowFlag() {
         String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
         Object root = new Object();
 
@@ -1673,7 +1673,7 @@ public class OgnlUtilTest extends XWorkTestCase {
      * are blocked by SecurityMemberAccess because the class is not allowlisted.
      * </p>
      */
-    public void testCustomOgnlMapBlockedByAllowlist() throws Exception {
+    public void testCustomOgnlMapBlockedByAllowlist() {
         String vulnerableExpr = "#@org.test.MyCustomMap@{}.get(\"ye\")";
         Object root = new Object();
 

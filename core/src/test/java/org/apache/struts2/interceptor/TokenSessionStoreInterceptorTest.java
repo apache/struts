@@ -18,10 +18,9 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.TestConfigurationProvider;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
+import org.apache.struts2.action.Action;
 
 /**
  * Unit test for {@link TokenSessionStoreInterceptor}.

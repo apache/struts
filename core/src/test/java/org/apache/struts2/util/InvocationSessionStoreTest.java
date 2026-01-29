@@ -20,11 +20,11 @@ package org.apache.struts2.util;
 
 import com.mockobjects.dynamic.Mock;
 import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.util.ValueStack;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

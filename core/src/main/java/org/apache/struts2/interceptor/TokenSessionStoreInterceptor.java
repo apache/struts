@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.result.Result;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.util.ValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -182,8 +182,8 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(key);
-		String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
-		InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
+        String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
+        InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
 
         return invocation.invoke();
     }

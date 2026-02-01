@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-public class StrutsConversionPropertiesProcessor implements ConversionPropertiesProcessor, EarlyInitializable {
+public class StrutsConversionPropertiesProcessor implements ConversionPropertiesProcessor, EarlyInitializable, UserConversionPropertiesProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsConversionPropertiesProcessor.class);
 
@@ -54,8 +54,27 @@ public class StrutsConversionPropertiesProcessor implements ConversionProperties
 
     @Override
     public void init() {
-        LOG.debug("Processing default conversion properties files");
+        // Early phase: Only process framework defaults (class names only)
+        // User properties are processed later in initUserConversions() when
+        // SpringObjectFactory is available for bean name resolution (WW-4291)
+        LOG.debug("Processing default conversion properties files (early phase)");
         processRequired(STRUTS_DEFAULT_CONVERSION_PROPERTIES);
+    }
+
+    /**
+     * Process user conversion properties. Called during late initialization
+     * when SpringObjectFactory is available for bean name resolution.
+     * <p>
+     * This allows users to reference Spring bean names in struts-conversion.properties
+     * instead of only fully qualified class names.
+     * </p>
+     *
+     * @see <a href="https://issues.apache.org/jira/browse/WW-4291">WW-4291</a>
+     * @since 7.2.0
+     */
+    @Override
+    public void initUserConversions() {
+        LOG.debug("Processing user conversion properties files (late phase)");
         process(STRUTS_CONVERSION_PROPERTIES);
         process(XWORK_CONVERSION_PROPERTIES);
     }
@@ -74,7 +93,7 @@ public class StrutsConversionPropertiesProcessor implements ConversionProperties
             while (resources.hasNext()) {
                 if (XWORK_CONVERSION_PROPERTIES.equals(propsName)) {
                     LOG.warn("Instead of using deprecated {} please use the new file name {}",
-                        XWORK_CONVERSION_PROPERTIES, STRUTS_CONVERSION_PROPERTIES);
+                            XWORK_CONVERSION_PROPERTIES, STRUTS_CONVERSION_PROPERTIES);
                 }
                 URL url = resources.next();
                 Properties props = new Properties();
@@ -82,8 +101,7 @@ public class StrutsConversionPropertiesProcessor implements ConversionProperties
 
                 LOG.debug("Processing conversion file [{}]", propsName);
 
-                for (Object o : props.entrySet()) {
-                    Map.Entry entry = (Map.Entry) o;
+                for (Map.Entry<Object, Object> entry : props.entrySet()) {
                     String key = (String) entry.getKey();
 
                     try {

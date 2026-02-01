@@ -35,7 +35,44 @@ import org.apache.struts2.inject.Scope;
 import java.util.Properties;
 
 /**
- * TODO lukaszlenart: write a JavaDoc
+ * Base implementation of {@link BeanSelectionProvider} that provides bean aliasing functionality.
+ * <p>
+ * This class provides the {@link #alias(Class, String, ContainerBuilder, Properties, Scope)} method
+ * which is used to select and register bean implementations based on configuration properties.
+ * </p>
+ *
+ * <h2>Bean Selection Process</h2>
+ * <p>
+ * The {@code alias} method selects a bean implementation using the following process:
+ * </p>
+ * <ol>
+ *   <li>Read the property value for the given key from the configuration properties</li>
+ *   <li>If no property is set, use {@value #DEFAULT_BEAN_NAME} as the default bean name</li>
+ *   <li>Check if a bean with that name already exists in the container:
+ *       <ul>
+ *         <li>If found, alias it to {@link Container#DEFAULT_NAME} making it the default</li>
+ *         <li>If not found, try to load the property value as a fully qualified class name</li>
+ *       </ul>
+ *   </li>
+ *   <li>If class loading succeeds, register the class as a factory for the interface type</li>
+ *   <li>If class loading fails and the name is not the default, create a delegate factory
+ *       that will resolve the bean through {@link ObjectFactory} at runtime. This allows
+ *       Spring bean names to be used in configuration.</li>
+ * </ol>
+ *
+ * <h2>Usage Example</h2>
+ * <pre>
+ * // In struts.properties or struts.xml:
+ * // struts.objectFactory = spring
+ * // struts.converter.collection = myCustomCollectionConverter
+ *
+ * // In a subclass:
+ * alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
+ * alias(CollectionConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, builder, props);
+ * </pre>
+ *
+ * @see BeanSelectionProvider
+ * @see StrutsBeanSelectionProvider
  */
 public abstract class AbstractBeanSelectionProvider implements BeanSelectionProvider {
 
@@ -78,7 +115,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     LOG.trace("Choosing bean ({}) for ({}) to be loaded from the ObjectFactory", foundName, type.getName());
                     if (DEFAULT_BEAN_NAME.equals(foundName)) {
-                        // Probably an optional bean, will ignore
+                        LOG.trace("No bean registered for type ({}) with default name '{}', skipping as optional", type.getName(), DEFAULT_BEAN_NAME);
                     } else {
                         if (ObjectFactory.class != type) {
                             builder.factory(type, new ObjectFactoryDelegateFactory(foundName, type), scope);
@@ -108,7 +145,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
             try {
                 return objFactory.buildBean(name, null, true);
             } catch (ClassNotFoundException ex) {
-                throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
+                throw new ConfigurationException(String.format("Unable to load bean %s (name = %s)", type.getName(), name));
             }
         }
 

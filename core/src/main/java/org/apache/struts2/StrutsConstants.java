@@ -411,6 +411,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_ANNOTATION_PROCESSOR = "struts.converter.annotation.processor";
     public static final String STRUTS_CONVERTER_CREATOR = "struts.converter.creator";
     public static final String STRUTS_CONVERTER_HOLDER = "struts.converter.holder";
+    public static final String STRUTS_CONVERTER_USER_PROPERTIES_PROVIDER = "struts.converter.userPropertiesProvider";
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 

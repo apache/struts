@@ -55,7 +55,7 @@ public class InvocationSessionStore {
             return null;
         }
 
-        final ActionInvocation savedInvocation = invocationContext.invocation;
+        final ActionInvocation savedInvocation = ActionInvocation.adapt(invocationContext.invocation);
         if (savedInvocation != null) {
             // WW-5026 - Preserve the previous PageContext (even if null) and restore it to the
             // ActionContext after loading the savedInvocation context.  The saved context's PageContext
@@ -72,6 +72,10 @@ public class InvocationSessionStore {
         return savedInvocation;
     }
 
+    public static void storeInvocation(String key, String token, ActionInvocation invocation) {
+        storeInvocation(key, token, (org.apache.struts2.ActionInvocation) invocation);
+    }
+
     /**
      * Stores the DefaultActionInvocation and ActionContext into the Session using the provided key for loading later using
      * {@link #loadInvocation}
@@ -80,7 +84,7 @@ public class InvocationSessionStore {
      * @param token token for check
      * @param invocation the action invocation
      */
-    public static void storeInvocation(String key, String token, ActionInvocation invocation) {
+    public static void storeInvocation(String key, String token, org.apache.struts2.ActionInvocation invocation) {
         InvocationContext invocationContext = new InvocationContext(invocation, token);
         Map<String, Object> invocationMap = getInvocationMap();
         invocationMap.put(key, invocationContext);
@@ -120,11 +124,11 @@ public class InvocationSessionStore {
         private static final long serialVersionUID = -286697666275777888L;
 
         //WW-4873 transient since 2.5.15
-        transient ActionInvocation invocation;
+        transient org.apache.struts2.ActionInvocation invocation;
 
         String token;
 
-        public InvocationContext(ActionInvocation invocation, String token) {
+        public InvocationContext(org.apache.struts2.ActionInvocation invocation, String token) {
             this.invocation = invocation;
             this.token = token;
         }

@@ -257,9 +257,13 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
         }
     }
 
+    protected void doBeforeInvocation(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        doBeforeInvocation(ActionInvocation.adapt(invocation));
+    }
+
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
-        doBeforeInvocation(invocation);
+        doBeforeInvocation((org.apache.struts2.ActionInvocation) invocation);
         return invocation.invoke();
     }
 

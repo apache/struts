@@ -98,8 +98,8 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (applyInterceptor(invocation)) {
-            return doIntercept(invocation);
+        if (applyInterceptor((org.apache.struts2.ActionInvocation) invocation)) {
+            return doIntercept((org.apache.struts2.ActionInvocation) invocation);
         }
         return invocation.invoke();
     }
@@ -114,6 +114,10 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
         return applyMethod;
     }
 
+    protected boolean applyInterceptor(org.apache.struts2.ActionInvocation invocation) {
+        return applyInterceptor(ActionInvocation.adapt(invocation));
+    }
+
     /**
      * Subclasses must override to implement the interceptor logic.
      *
@@ -123,4 +127,7 @@ public abstract class MethodFilterInterceptor extends AbstractInterceptor {
      */
     protected abstract String doIntercept(ActionInvocation invocation) throws Exception;
 
+    protected String doIntercept(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return doIntercept(ActionInvocation.adapt(invocation));
+    }
 }

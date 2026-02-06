@@ -19,6 +19,7 @@
 package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
@@ -44,12 +45,19 @@ public class TagUtils {
         if (stack == null) {
             LOG.warn("No ValueStack in ActionContext!");
             throw new ConfigurationException("Rendering tag out of Action scope, accessing directly JSPs is not recommended! " +
-                "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly");
+                    "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly");
         } else {
             LOG.trace("Adds the current PageContext to ActionContext");
             stack.getActionContext()
                     .withPageContext(pageContext)
                     .with(ATTRIBUTES, new AttributeMap(stack.getContext()));
+        }
+
+        // Check for direct JSP access (stack exists but no action invocation)
+        ActionInvocation ai = ActionContext.getContext().getActionInvocation();
+        if (ai == null || ai.getAction() == null) {
+            LOG.warn("Rendering tag out of Action scope, accessing directly JSPs is not recommended! " +
+                    "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly");
         }
 
         return stack;

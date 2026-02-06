@@ -39,16 +39,16 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         boolean submitUnchecked = Boolean.parseBoolean(Objects.toString(params.get("submitUnchecked"), "false"));
 
         attrs.add("type", "checkbox")
-            .add("name", name)
-            .add("value", fieldValue)
-            .addIfTrue("checked", params.get("nameValue"))
-            .addIfTrue("readonly", params.get("readonly"))
-            .addIfTrue("disabled", disabled)
-            .addIfExists("tabindex", params.get("tabindex"))
-            .addIfExists("id", id)
-            .addIfExists("class", params.get("cssClass"))
-            .addIfExists("style", params.get("cssStyle"))
-            .addIfExists("title", params.get("title"));
+                .add("name", name)
+                .add("value", fieldValue)
+                .addIfTrue("checked", params.get("nameValue"))
+                .addIfTrue("readonly", params.get("readonly"))
+                .addIfTrue("disabled", disabled)
+                .addIfExists("tabindex", params.get("tabindex"))
+                .addIfExists("id", id)
+                .addIfExists("class", params.get("cssClass"))
+                .addIfExists("style", params.get("cssStyle"))
+                .addIfExists("title", params.get("title"));
         start("input", attrs);
         end("input");
 
@@ -56,11 +56,13 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
             //hidden input
             attrs = new Attributes();
 
+            String hiddenPrefix = Objects.toString(params.get("hiddenPrefix"), "__checkbox_");
+
             attrs.add("type", "hidden")
-                .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
-                .add("name", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
-                .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
-                .addIfTrue("disabled", disabled);
+                    .add("id", hiddenPrefix + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                    .add("name", hiddenPrefix + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
+                    .add("value", StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
+                    .addIfTrue("disabled", disabled);
             start("input", attrs);
             end("input");
         }

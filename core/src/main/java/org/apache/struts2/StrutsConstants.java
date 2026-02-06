@@ -702,6 +702,15 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED = "struts.ui.checkbox.submitUnchecked";
 
     /**
+     * The prefix used for hidden checkbox fields to track unchecked values.
+     * Default is "__checkbox_" for backward compatibility.
+     * Set to "struts_checkbox_" to avoid HTML validation warnings about double underscores.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_UI_CHECKBOX_HIDDEN_PREFIX = "struts.ui.checkbox.hiddenPrefix";
+
+    /**
      * See {@link org.apache.struts2.interceptor.exec.ExecutorProvider}
      */
     public static final String STRUTS_EXECUTOR_PROVIDER = "struts.executor.provider";

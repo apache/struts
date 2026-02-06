@@ -114,6 +114,9 @@
           class="org.apache.struts2.conversion.StrutsTypeConverterCreator"/>
     <bean type="org.apache.struts2.conversion.TypeConverterHolder" name="struts"
           class="org.apache.struts2.conversion.StrutsTypeConverterHolder"/>
+    <bean type="org.apache.struts2.conversion.UserConversionPropertiesProvider" name="struts"
+          class="org.apache.struts2.conversion.StrutsConversionPropertiesProcessor"/>
+    <bean class="org.apache.struts2.conversion.UserConversionPropertiesProcessor" scope="singleton"/>
 
     <bean class="org.apache.struts2.conversion.impl.XWorkBasicConverter"/>
 

@@ -106,6 +106,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
+import org.apache.struts2.conversion.UserConversionPropertiesProcessor;
+import org.apache.struts2.conversion.UserConversionPropertiesProvider;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.factory.StrutsResultFactory;
@@ -126,12 +128,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-
 /**
  * DefaultConfiguration
- *
- * @author Jason Carreira
- *         Created Feb 24, 2003 7:38:06 AM
  */
 public class DefaultConfiguration implements Configuration {
 
@@ -225,7 +223,7 @@ public class DefaultConfiguration implements Configuration {
                         name, packageContext.getLocation());
             } else {
                 throw new ConfigurationException("The package name '" + name
-                        + "' at location "+packageContext.getLocation()
+                        + "' at location " + packageContext.getLocation()
                         + " is already been used by another package at location " + check.getLocation(),
                         packageContext);
             }
@@ -258,7 +256,6 @@ public class DefaultConfiguration implements Configuration {
      *
      * @param providers list of ContainerProvider
      * @return list of package providers
-     *
      * @throws ConfigurationException in case of any configuration errors
      */
     @Override
@@ -270,15 +267,14 @@ public class DefaultConfiguration implements Configuration {
         ContainerProperties props = new ContainerProperties();
         ContainerBuilder builder = new ContainerBuilder();
         Container bootstrap = createBootstrapContainer(providers);
-        for (final ContainerProvider containerProvider : providers)
-        {
+        for (final ContainerProvider containerProvider : providers) {
             bootstrap.inject(containerProvider);
             containerProvider.init(this);
             containerProvider.register(builder, props);
         }
         props.setConstants(builder);
 
-        builder.factory(Configuration.class, new Factory<Configuration>() {
+        builder.factory(Configuration.class, new Factory<>() {
             @Override
             public Configuration create(Context context) throws Exception {
                 return DefaultConfiguration.this;
@@ -299,13 +295,16 @@ public class DefaultConfiguration implements Configuration {
             setContext(container);
             objectFactory = container.getInstance(ObjectFactory.class);
 
+            // Trigger late initialization of user conversion properties (WW-4291)
+            // This must happen after full container is built so SpringObjectFactory is available
+            container.getInstance(UserConversionPropertiesProcessor.class);
+
             // Process the configuration providers first
-            for (final ContainerProvider containerProvider : providers)
-            {
+            for (final ContainerProvider containerProvider : providers) {
                 if (containerProvider instanceof PackageProvider) {
                     container.inject(containerProvider);
-                    ((PackageProvider)containerProvider).loadPackages();
-                    packageProviders.add((PackageProvider)containerProvider);
+                    ((PackageProvider) containerProvider).loadPackages();
+                    packageProviders.add((PackageProvider) containerProvider);
                 }
             }
 
@@ -381,6 +380,8 @@ public class DefaultConfiguration implements Configuration {
                 .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
                 .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)
                 .factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON)
+                .factory(UserConversionPropertiesProvider.class, StrutsConversionPropertiesProcessor.class, Scope.SINGLETON)
+                .factory(UserConversionPropertiesProcessor.class, Scope.SINGLETON)
 
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
                 .factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON)
@@ -444,10 +445,9 @@ public class DefaultConfiguration implements Configuration {
 
                 Map<String, ActionConfig> actionConfigs = packageConfig.getAllActionConfigs();
 
-                for (Object o : actionConfigs.keySet()) {
-                    String actionName = (String) o;
-                    ActionConfig baseConfig = actionConfigs.get(actionName);
-                    configs.put(actionName, buildFullActionConfig(packageConfig, baseConfig));
+                for (Map.Entry<String, ActionConfig> entry : actionConfigs.entrySet()) {
+                    ActionConfig baseConfig = entry.getValue();
+                    configs.put(entry.getKey(), buildFullActionConfig(packageConfig, baseConfig));
                 }
 
                 namespaceActionConfigs.put(namespace, configs);
@@ -489,7 +489,6 @@ public class DefaultConfiguration implements Configuration {
      *                       and inheritance
      * @return a full ActionConfig for runtime configuration with all of the inherited and default params
      * @throws org.apache.struts2.config.ConfigurationException
-     *
      */
     private ActionConfig buildFullActionConfig(PackageConfig packageContext, ActionConfig baseConfig) throws ConfigurationException {
         Map<String, String> params = new TreeMap<>(baseConfig.getParams());
@@ -501,7 +500,7 @@ public class DefaultConfiguration implements Configuration {
             results.putAll(packageContext.getAllGlobalResults());
         }
 
-       	results.putAll(baseConfig.getResults());
+        results.putAll(baseConfig.getResults());
 
         setDefaultResults(results, packageContext);
 
@@ -512,7 +511,7 @@ public class DefaultConfiguration implements Configuration {
 
             if (defaultInterceptorRefName != null) {
                 interceptors.addAll(InterceptorBuilder.constructInterceptorReference(new PackageConfig.Builder(packageContext), defaultInterceptorRefName,
-                        new LinkedHashMap<String, String>(), packageContext.getLocation(), objectFactory));
+                        new LinkedHashMap<>(), packageContext.getLocation(), objectFactory));
             }
         }
 
@@ -524,14 +523,14 @@ public class DefaultConfiguration implements Configuration {
         LOG.debug("Using pattern [{}] to match allowed methods when SMI is disabled!", methodRegex);
 
         return new ActionConfig.Builder(baseConfig)
-            .addParams(params)
-            .addResultConfigs(results)
-            .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided
-            .interceptors(interceptors)
-            .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
-            .setDefaultMethodRegex(methodRegex)
-            .addExceptionMappings(packageContext.getAllExceptionMappingConfigs())
-            .build();
+                .addParams(params)
+                .addResultConfigs(results)
+                .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided
+                .interceptors(interceptors)
+                .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
+                .setDefaultMethodRegex(methodRegex)
+                .addExceptionMappings(packageContext.getAllExceptionMappingConfigs())
+                .build();
     }
 
 
@@ -547,8 +546,7 @@ public class DefaultConfiguration implements Configuration {
                                         Map<String, String> namespaceConfigs,
                                         PatternMatcher<int[]> matcher,
                                         boolean appendNamedParameters,
-                                        boolean fallbackToEmptyNamespace)
-        {
+                                        boolean fallbackToEmptyNamespace) {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
             this.fallbackToEmptyNamespace = fallbackToEmptyNamespace;
@@ -631,7 +629,7 @@ public class DefaultConfiguration implements Configuration {
          * @return a Map of namespace - > Map of ActionConfig objects, with the key being the action name
          */
         @Override
-        public Map<String, Map<String, ActionConfig>>  getActionConfigs() {
+        public Map<String, Map<String, ActionConfig>> getActionConfigs() {
             return namespaceActionConfigs;
         }
 
@@ -666,7 +664,7 @@ public class DefaultConfiguration implements Configuration {
 
         public void setConstants(ContainerBuilder builder) {
             for (Object keyobj : keySet()) {
-                String key = (String)keyobj;
+                String key = (String) keyobj;
                 builder.factory(String.class, key, new LocatableConstantFactory<>(getProperty(key), getPropertyLocation(key)));
             }
         }

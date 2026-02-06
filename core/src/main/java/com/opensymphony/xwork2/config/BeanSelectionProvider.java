@@ -19,7 +19,25 @@
 package com.opensymphony.xwork2.config;
 
 /**
- * When implemented allows to alias already existing beans
+ * A {@link ConfigurationProvider} that selects and aliases bean implementations.
+ * <p>
+ * Implementations of this interface are responsible for selecting which bean implementation
+ * to use for a given interface type. The selection is typically based on configuration properties
+ * that specify the bean name or class name.
+ * </p>
+ * <p>
+ * The aliasing mechanism works as follows:
+ * </p>
+ * <ol>
+ *   <li>Look for a bean by the name specified in the configuration property</li>
+ *   <li>If found, alias it to the default name so it becomes the default implementation</li>
+ *   <li>If not found, try to load the value as a class name and register it as a factory</li>
+ *   <li>If class loading fails, delegate to {@link org.apache.struts2.ObjectFactory} at runtime
+ *       (useful for Spring bean names)</li>
+ * </ol>
+ *
+ * @see AbstractBeanSelectionProvider
+ * @see StrutsBeanSelectionProvider
  */
 public interface BeanSelectionProvider extends ConfigurationProvider {
 

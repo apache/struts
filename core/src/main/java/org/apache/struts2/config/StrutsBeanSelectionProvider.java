@@ -65,6 +65,7 @@ import ognl.MethodAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.components.date.DateFormatter;
+import org.apache.struts2.conversion.UserConversionPropertiesProvider;
 import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -88,7 +89,7 @@ import org.apache.struts2.views.util.UrlHelper;
  *
  * <p>
  * The following is a list of the allowed extension points:
- *
+ * <p>
  * <!-- START SNIPPET: extensionPoints -->
  * <table border="1" summary="">
  *   <tr>
@@ -353,7 +354,7 @@ import org.apache.struts2.views.util.UrlHelper;
  *     <td>Provides access to resource bundles used to localise messages (since 2.5.11)</td>
  *   </tr>
  * </table>
- *
+ * <p>
  * <!-- END SNIPPET: extensionPoints -->
  *
  * <p>
@@ -405,6 +406,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(ConversionAnnotationProcessor.class, StrutsConstants.STRUTS_CONVERTER_ANNOTATION_PROCESSOR, builder, props);
         alias(TypeConverterCreator.class, StrutsConstants.STRUTS_CONVERTER_CREATOR, builder, props);
         alias(TypeConverterHolder.class, StrutsConstants.STRUTS_CONVERTER_HOLDER, builder, props);
+        alias(UserConversionPropertiesProvider.class, StrutsConstants.STRUTS_CONVERTER_USER_PROPERTIES_PROVIDER, builder, props);
 
         alias(TextProvider.class, StrutsConstants.STRUTS_TEXT_PROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProviderFactory.class, StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, builder, props, Scope.PROTOTYPE);

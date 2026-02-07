@@ -256,9 +256,15 @@ public final class StrutsConstants {
     public static final String STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE = "struts.objectFactory.spring.autoWire";
 
     /**
-     * Whether the autowire strategy chosen by STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE is always respected.  Defaults
-     * to false, which is the legacy behavior that tries to determine the best strategy for the situation.
+     * Whether the autowire strategy chosen by STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE is always respected.
+     * Defaults to true, which ensures the configured autowire strategy (AUTOWIRE_BY_NAME by default) is
+     * consistently used. This prevents issues where Spring's AUTOWIRE_CONSTRUCTOR strategy could inject
+     * unintended beans (e.g., String beans) into constructors.
+     * <p>
+     * Set to false to restore legacy behavior that mixes injection strategies, but be aware this can
+     * cause issues like WW-3647 where String beans are incorrectly injected into result class constructors.
      *
+     * @see <a href="https://issues.apache.org/jira/browse/WW-3647">WW-3647</a>
      * @since 2.1.3
      */
     public static final String STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT = "struts.objectFactory.spring.autoWire.alwaysRespect";

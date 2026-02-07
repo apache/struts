@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.spring;
 
-import org.apache.struts2.ObjectFactory;
-import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.inject.Inject;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -55,9 +55,10 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     protected int autowireStrategy = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
     private final Map<String, Object> classes = new HashMap<>();
     private boolean useClassCache = true;
-    private boolean alwaysRespectAutowireStrategy = false;
+    private boolean alwaysRespectAutowireStrategy = true;
     /**
      * This is temporary solution, after validating can be removed
+     *
      * @since 2.3.18
      */
     @Deprecated
@@ -66,7 +67,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     public SpringObjectFactory() {
     }
 
-    @Inject(value="applicationContextPath",required=false)
+    @Inject(value = "applicationContextPath", required = false)
     public void setApplicationContextPath(String ctx) {
         if (ctx != null) {
             setApplicationContext(new ClassPathXmlApplicationContext(ctx));
@@ -130,7 +131,6 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      * set the autoWiringFactory appropriately.
      *
      * @param context the application context
-     *
      * @return the bean factory
      */
     protected AutowireCapableBeanFactory findAutoWiringBeanFactory(ApplicationContext context) {
@@ -153,8 +153,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      *
      * @param beanName     The name of the bean to look up in the application context
      * @param extraContext additional context parameters
-     * @return A bean from Spring or the result of calling the overridden
-     *         method.
+     * @return A bean from Spring or the result of calling the overridden method.
      * @throws Exception in case of any errors
      */
     @Override
@@ -174,7 +173,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     * @param clazz class of bean
+     * @param clazz        class of bean
      * @param extraContext additional context parameters
      * @return bean
      * @throws Exception in case of any errors
@@ -212,9 +211,8 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     * @param bean the bean to be autowired
+     * @param bean              the bean to be autowired
      * @param autoWiringFactory the autowiring factory
-     *
      * @return bean
      */
     public Object autoWireBean(Object bean, AutowireCapableBeanFactory autoWiringFactory) {
@@ -235,7 +233,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     public Class getClassInstance(String className) throws ClassNotFoundException {
         Class clazz = null;
         if (useClassCache) {
-            synchronized(classes) {
+            synchronized (classes) {
                 // this cache of classes is needed because Spring sucks at dealing with situations where the
                 // class instance changes
                 clazz = (Class) classes.get(className);
@@ -250,7 +248,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
             }
 
             if (useClassCache) {
-                synchronized(classes) {
+                synchronized (classes) {
                     classes.put(className, clazz);
                 }
             }
@@ -271,7 +269,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     }
 
     /**
-     *  Enable / disable caching of classes loaded by Spring.
+     * Enable / disable caching of classes loaded by Spring.
      *
      * @param useClassCache enable / disable class cache
      */

@@ -16,19 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.test;
+package org.apache.struts2.showcase.proxy;
 
-import org.apache.struts2.ognl.SecurityMemberAccessTest;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Runs the same test suite using a SecurityMemberAccess class that is outside the
- * org.apache.struts2.ognl package.
+ * Simple AOP interceptor that wraps actions in a Spring proxy.
+ * Used to test that Struts correctly handles Spring AOP proxied actions
+ * in action chaining scenarios (WW-5514).
  */
-public class ExternalSecurityMemberAccessTest extends SecurityMemberAccessTest {
+public class LoggingInterceptor implements MethodInterceptor {
+
+    private static final Logger LOG = LogManager.getLogger(LoggingInterceptor.class);
 
     @Override
-    protected void assignNewSmaHelper() {
-        sma = new ExternalSecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
-        sma.setProxyService(proxyService);
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        LOG.debug("Invoking method: {} on target: {}",
+                invocation.getMethod().getName(),
+                invocation.getThis().getClass().getName());
+        return invocation.proceed();
     }
 }

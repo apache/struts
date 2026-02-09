@@ -22,6 +22,8 @@ import org.apache.struts2.ActionProxy;
 import org.apache.struts2.XWorkJUnit4TestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.util.StrutsProxyService;
+import org.apache.struts2.util.ProxyService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.aop.MethodBeforeAdvice;
@@ -43,7 +45,8 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
 
     private OgnlContext context;
     private ActionProxy proxy;
-    private final SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
+    private SecurityMemberAccess sma;
+    private ProxyService proxyService;
 
     private Member proxyObjectProxyMember;
     private Member proxyObjectNonProxyMember;
@@ -58,6 +61,10 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         proxy = actionProxyFactory.createActionProxy(null, "chaintoAOPedTestSubBeanAction", null, context);
         proxyObjectProxyMember = proxy.getAction().getClass().getMethod(PROXY_MEMBER_METHOD);
         proxyObjectNonProxyMember = proxy.getAction().getClass().getMethod(TEST_SUB_BEAN_CLASS_METHOD);
+
+        proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
+        sma = new SecurityMemberAccess(null, null);
+        sma.setProxyService(proxyService);
     }
 
     /**

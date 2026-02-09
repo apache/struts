@@ -24,7 +24,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.test.TestBean2;
+import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.util.Foo;
+import org.apache.struts2.util.ProxyService;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.junit.Before;
@@ -58,6 +60,7 @@ public class SecurityMemberAccessTest {
     protected SecurityMemberAccess sma;
     protected ProviderAllowlist mockedProviderAllowlist;
     protected ThreadAllowlist mockedThreadAllowlist;
+    protected ProxyService proxyService;
 
     @Before
     public void setUp() {
@@ -65,6 +68,7 @@ public class SecurityMemberAccessTest {
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
+        proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         assignNewSma(true);
     }
 
@@ -77,6 +81,7 @@ public class SecurityMemberAccessTest {
 
     protected void assignNewSmaHelper() {
         sma = new SecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
+        sma.setProxyService(proxyService);
     }
 
     private <T> T reflectField(String fieldName) throws IllegalAccessException {

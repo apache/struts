@@ -240,6 +240,10 @@
           class="org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
     <bean type="org.apache.struts2.ognl.BeanInfoCacheFactory" name="struts"
           class="org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.ognl.ProxyCacheFactory" name="struts"
+          class="org.apache.struts2.ognl.StrutsProxyCacheFactory" scope="singleton"/>
+    <bean type="org.apache.struts2.util.ProxyService" name="struts"
+          class="org.apache.struts2.util.StrutsProxyService" scope="singleton"/>
 
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>

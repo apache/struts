@@ -20,83 +20,88 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <!-- START SNIPPET: xworkSample -->
 <struts>
 
     <!-- Some or all of these can be flipped to true for debugging -->
-    <constant name="struts.i18n.reload" value="false" />
-    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
-    <constant name="struts.devMode" value="false" />
-    <constant name="struts.configuration.xml.reload" value="false" />
-    <constant name="struts.custom.i18n.resources" value="globalMessages" />
-    <constant name="struts.action.extension" value="action,," />
+    <constant name="struts.i18n.reload" value="false"/>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.configuration.xml.reload" value="false"/>
+    <constant name="struts.custom.i18n.resources" value="globalMessages"/>
+    <constant name="struts.action.extension" value="action,,"/>
 
-    <constant name="struts.allowlist.enable" value="true" />
-    <constant name="struts.parameters.requireAnnotations" value="true" />
+    <constant name="struts.allowlist.enable" value="true"/>
+    <constant name="struts.parameters.requireAnnotations" value="true"/>
     <constant name="struts.allowlist.packageNames" value="org.apache.struts2.showcase"/>
 
-    <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase" />
-    <constant name="struts.convention.result.path" value="/WEB-INF" />
+    <!-- Enable Spring AOP proxy support for action chaining test (WW-5514) -->
+    <constant name="struts.disallowProxyObjectAccess" value="false"/>
+
+    <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase"/>
+    <constant name="struts.convention.result.path" value="/WEB-INF"/>
 
     <!-- Necessary for Showcase because default includes org.apache.struts2.* -->
-    <constant name="struts.convention.exclude.packages" value="org.apache.struts.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>
+    <constant name="struts.convention.exclude.packages"
+              value="org.apache.struts.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>
 
-    <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager" />
-    <constant name="struts.serve.static" value="true" />
-    <constant name="struts.serve.static.browserCache" value="false" />
+    <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager"/>
+    <constant name="struts.serve.static" value="true"/>
+    <constant name="struts.serve.static.browserCache" value="false"/>
 
-    <constant name="struts.action.excludePattern" value=".*/images/.*\.gif,.*/img/.*\.gif,.*/styles/.*\.css,.*/js/.*\.js,/testServlet/.*"/>
+    <constant name="struts.action.excludePattern"
+              value=".*/images/.*\.gif,.*/img/.*\.gif,.*/styles/.*\.css,.*/js/.*\.js,/testServlet/.*"/>
 
-    <include file="struts-interactive.xml" />
+    <include file="struts-interactive.xml"/>
 
-    <include file="struts-hangman.xml" />
+    <include file="struts-hangman.xml"/>
 
     <include file="struts-tags.xml"/>
 
-    <include file="struts-validation.xml" />
+    <include file="struts-validation.xml"/>
 
-    <include file="struts-actionchaining.xml" />
+    <include file="struts-actionchaining.xml"/>
 
-    <include file="struts-fileupload.xml" />
+    <include file="struts-fileupload.xml"/>
 
-    <include file="struts-person.xml" />
+    <include file="struts-person.xml"/>
 
-    <include file="struts-wait.xml" />
+    <include file="struts-wait.xml"/>
 
-    <include file="struts-token.xml" />
+    <include file="struts-token.xml"/>
 
-    <include file="struts-model-driven.xml" />
+    <include file="struts-model-driven.xml"/>
 
-    <include file="struts-filedownload.xml" />
+    <include file="struts-filedownload.xml"/>
 
-    <include file="struts-conversion.xml" />
+    <include file="struts-conversion.xml"/>
 
-    <include file="struts-freemarker.xml" />
+    <include file="struts-freemarker.xml"/>
 
-    <include file="struts-tiles.xml" />
+    <include file="struts-tiles.xml"/>
 
-    <include file="struts-xslt.xml" />
+    <include file="struts-xslt.xml"/>
 
-    <include file="struts-async.xml" />
+    <include file="struts-async.xml"/>
 
-    <include file="struts-dispatcher.xml" />
+    <include file="struts-dispatcher.xml"/>
 
-    <include file="struts-params-annotation.xml" />
+    <include file="struts-params-annotation.xml"/>
 
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">
-                <interceptor-ref name="checkbox" />
-                <interceptor-ref name="params" />
-                <interceptor-ref name="staticParams" />
-                <interceptor-ref name="defaultStack" />
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
         </interceptors>
 
-        <default-action-ref name="showcase" />
+        <default-action-ref name="showcase"/>
 
         <action name="showcase">
             <result>/WEB-INF/showcase.jsp</result>
@@ -125,7 +130,7 @@
         </action>
         <action name="edit" class="org.apache.struts2.showcase.action.SkillAction">
             <result>/WEB-INF/empmanager/editSkill.jsp</result>
-            <interceptor-ref name="params" />
+            <interceptor-ref name="params"/>
             <interceptor-ref name="basicStack"/>
         </action>
         <action name="save" class="org.apache.struts2.showcase.action.SkillAction" method="save">
@@ -146,9 +151,11 @@
             <interceptor-ref name="basicStack"/>
         </action>
         <action name="edit-*" class="org.apache.struts2.showcase.action.EmployeeAction">
-      		<param name="empId">{1}</param>
+            <param name="empId">{1}</param>
             <result>/WEB-INF/empmanager/editEmployee.jsp</result>
-            <interceptor-ref name="crudStack"><param name="validation.excludeMethods">execute</param></interceptor-ref>
+            <interceptor-ref name="crudStack">
+                <param name="validation.excludeMethods">execute</param>
+            </interceptor-ref>
         </action>
         <action name="save" class="org.apache.struts2.showcase.action.EmployeeAction" method="save">
             <result name="input">/WEB-INF/empmanager/editEmployee.jsp</result>
@@ -168,5 +175,5 @@
 
 </struts>
 
-<!-- END SNIPPET: xworkSample -->
+        <!-- END SNIPPET: xworkSample -->
 

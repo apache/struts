@@ -115,5 +115,25 @@
     <bean id="guessCharacterAction" class="org.apache.struts2.showcase.hangman.GuessCharacterAction" scope="prototype"/>
     <bean id="getUpdatedHangmanAction" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction"
           scope="prototype"/>
+
+
+    <!-- Spring AOP Proxy Configuration for Action Chaining Test (WW-5514) -->
+    <bean id="loggingInterceptor" class="org.apache.struts2.showcase.proxy.LoggingInterceptor"/>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="proxyTargetClass" value="true"/>
+        <property name="beanNames">
+            <list>
+                <value>proxiedActionChain1</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>loggingInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="proxiedActionChain1" class="org.apache.struts2.showcase.actionchaining.ActionChain1" scope="prototype"/>
 </beans>
 

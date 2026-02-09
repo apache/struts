@@ -82,6 +82,8 @@ import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.ProxyCacheFactory;
+import com.opensymphony.xwork2.ognl.StrutsProxyCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
@@ -93,6 +95,7 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.StrutsLocalizedTextProvider;
+import com.opensymphony.xwork2.util.StrutsProxyCacheFactoryBean;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -130,7 +133,7 @@ import java.util.TreeSet;
  * DefaultConfiguration
  *
  * @author Jason Carreira
- *         Created Feb 24, 2003 7:38:06 AM
+ * Created Feb 24, 2003 7:38:06 AM
  */
 public class DefaultConfiguration implements Configuration {
 
@@ -145,6 +148,8 @@ public class DefaultConfiguration implements Configuration {
         constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, 10000);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, 10000);
+        constants.put(StrutsConstants.STRUTS_PROXY_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
+        constants.put(StrutsConstants.STRUTS_PROXY_CACHE_MAXSIZE, 10000);
         constants.put(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE);
         BOOTSTRAP_CONSTANTS = Collections.unmodifiableMap(constants);
     }
@@ -224,7 +229,7 @@ public class DefaultConfiguration implements Configuration {
                         name, packageContext.getLocation());
             } else {
                 throw new ConfigurationException("The package name '" + name
-                        + "' at location "+packageContext.getLocation()
+                        + "' at location " + packageContext.getLocation()
                         + " is already been used by another package at location " + check.getLocation(),
                         packageContext);
             }
@@ -257,7 +262,6 @@ public class DefaultConfiguration implements Configuration {
      *
      * @param providers list of ContainerProvider
      * @return list of package providers
-     *
      * @throws ConfigurationException in case of any configuration errors
      */
     @Override
@@ -269,8 +273,7 @@ public class DefaultConfiguration implements Configuration {
         ContainerProperties props = new ContainerProperties();
         ContainerBuilder builder = new ContainerBuilder();
         Container bootstrap = createBootstrapContainer(providers);
-        for (final ContainerProvider containerProvider : providers)
-        {
+        for (final ContainerProvider containerProvider : providers) {
             bootstrap.inject(containerProvider);
             containerProvider.init(this);
             containerProvider.register(builder, props);
@@ -299,12 +302,11 @@ public class DefaultConfiguration implements Configuration {
             objectFactory = container.getInstance(ObjectFactory.class);
 
             // Process the configuration providers first
-            for (final ContainerProvider containerProvider : providers)
-            {
+            for (final ContainerProvider containerProvider : providers) {
                 if (containerProvider instanceof PackageProvider) {
                     container.inject(containerProvider);
-                    ((PackageProvider)containerProvider).loadPackages();
-                    packageProviders.add((PackageProvider)containerProvider);
+                    ((PackageProvider) containerProvider).loadPackages();
+                    packageProviders.add((PackageProvider) containerProvider);
                 }
             }
 
@@ -393,6 +395,8 @@ public class DefaultConfiguration implements Configuration {
 
                 .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
+                .factory(ProxyCacheFactory.class, StrutsProxyCacheFactory.class, Scope.SINGLETON)
+                .factory(StrutsProxyCacheFactoryBean.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
@@ -500,7 +504,7 @@ public class DefaultConfiguration implements Configuration {
             results.putAll(packageContext.getAllGlobalResults());
         }
 
-       	results.putAll(baseConfig.getResults());
+        results.putAll(baseConfig.getResults());
 
         setDefaultResults(results, packageContext);
 
@@ -523,14 +527,14 @@ public class DefaultConfiguration implements Configuration {
         LOG.debug("Using pattern [{}] to match allowed methods when SMI is disabled!", methodRegex);
 
         return new ActionConfig.Builder(baseConfig)
-            .addParams(params)
-            .addResultConfigs(results)
-            .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided
-            .interceptors(interceptors)
-            .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
-            .setDefaultMethodRegex(methodRegex)
-            .addExceptionMappings(packageContext.getAllExceptionMappingConfigs())
-            .build();
+                .addParams(params)
+                .addResultConfigs(results)
+                .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided
+                .interceptors(interceptors)
+                .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
+                .setDefaultMethodRegex(methodRegex)
+                .addExceptionMappings(packageContext.getAllExceptionMappingConfigs())
+                .build();
     }
 
 
@@ -546,8 +550,7 @@ public class DefaultConfiguration implements Configuration {
                                         Map<String, String> namespaceConfigs,
                                         PatternMatcher<int[]> matcher,
                                         boolean appendNamedParameters,
-                                        boolean fallbackToEmptyNamespace)
-        {
+                                        boolean fallbackToEmptyNamespace) {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
             this.fallbackToEmptyNamespace = fallbackToEmptyNamespace;
@@ -630,7 +633,7 @@ public class DefaultConfiguration implements Configuration {
          * @return a Map of namespace - > Map of ActionConfig objects, with the key being the action name
          */
         @Override
-        public Map<String, Map<String, ActionConfig>>  getActionConfigs() {
+        public Map<String, Map<String, ActionConfig>> getActionConfigs() {
             return namespaceActionConfigs;
         }
 
@@ -664,7 +667,7 @@ public class DefaultConfiguration implements Configuration {
 
         public void setConstants(ContainerBuilder builder) {
             for (Object keyobj : keySet()) {
-                String key = (String)keyobj;
+                String key = (String) keyobj;
                 builder.factory(String.class, key, new LocatableConstantFactory<>(getProperty(key), getPropertyLocation(key)));
             }
         }

@@ -39,8 +39,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     @Serial
     private static final long serialVersionUID = 4678843241638046854L;
 
-    protected HttpSession session;
-    protected Set<Entry<String, Object>> entries;
+    protected volatile HttpSession session;
+    protected volatile Set<Entry<String, Object>> entries;
     protected HttpServletRequest request;
 
 
@@ -62,11 +62,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Invalidate the http session.
      */
     public void invalidate() {
-        if (session == null) {
-            return;
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return;
+            }
             session.invalidate();
             session = null;
             entries = null;
@@ -79,18 +78,16 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public void clear() {
-        if (session == null) {
-            return;
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return;
+            }
             entries = null;
             final Enumeration<String> attributeNamesEnum = session.getAttributeNames();
             while (attributeNamesEnum.hasMoreElements()) {
                 session.removeAttribute(attributeNamesEnum.nextElement());
             }
         }
-
     }
 
     /**
@@ -100,11 +97,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        if (session == null) {
-            return Collections.emptySet();
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return Collections.emptySet();
+            }
             if (entries == null) {
                 entries = new HashSet<>();
 
@@ -123,27 +119,25 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                     });
                 }
             }
+            return entries;
         }
-
-        return entries;
     }
 
     /**
      * Returns the session attribute associated with the given key or <tt>null</tt> if it doesn't exist.
      *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#get(java.lang.Object)} to ensure the
-     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
+     * expected specialized behaviour is performed here (and not the generic ancestor behaviour).
      *
      * @param key the name of the session attribute.
      * @return the session attribute or <tt>null</tt> if it doesn't exist.
      */
     @Override
     public Object get(final Object key) {
-        if (session == null) {
-            return null;
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return null;
+            }
             return session.getAttribute(key != null ? key.toString() : null);
         }
     }
@@ -161,8 +155,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (session == null) {
                 session = request.getSession(true);
             }
-        }
-        synchronized (session.getId().intern()) {
             final Object oldValue = get(key);
             entries = null;
             session.setAttribute(key, value);
@@ -174,22 +166,21 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Removes the specified session attribute.
      *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#remove(java.lang.Object)} to ensure the
-     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
+     * expected specialized behaviour is performed here (and not the generic ancestor behaviour).
      *
      * @param key the name of the attribute to remove.
      * @return the value that was removed or <tt>null</tt> if the value was not found (and hence, not removed).
      */
     @Override
     public Object remove(final Object key) {
-        if (session == null) {
-            return null;
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return null;
+            }
             entries = null;
 
             final String keyAsString = (key != null ? key.toString() : null);
-            final Object value = get(keyAsString);
+            final Object value = session.getAttribute(keyAsString);
             session.removeAttribute(keyAsString);
 
             return value;
@@ -201,18 +192,17 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Checks if the specified session attribute with the given key exists.
      *
      * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#containsKey(java.lang.Object)} to ensure the
-     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
+     * expected specialized behaviour is performed here (and not the generic ancestor behaviour).
      *
      * @param key the name of the session attribute.
      * @return <tt>true</tt> if the session attribute exits or <tt>false</tt> if it doesn't exist.
      */
     @Override
     public boolean containsKey(final Object key) {
-        if (session == null) {
-            return false;
-        }
-
-        synchronized (session.getId().intern()) {
+        synchronized (this) {
+            if (session == null) {
+                return false;
+            }
             final String keyAsString = (key != null ? key.toString() : null);
             return (session.getAttribute(keyAsString) != null);
         }

@@ -135,7 +135,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         LOG.debug("Intercepting invocation to check for valid transaction token.");
-        return handleToken(invocation);
+        return handleToken((org.apache.struts2.ActionInvocation) invocation);
     }
 
     protected String handleToken(ActionInvocation invocation) throws Exception {
@@ -144,22 +144,19 @@ public class TokenInterceptor extends MethodFilterInterceptor {
         HttpSession session = ServletActionContext.getRequest().getSession(true);
         synchronized (session.getId().intern()) {
             if (!TokenHelper.validToken()) {
-                return handleInvalidToken(invocation);
+                return handleInvalidToken((org.apache.struts2.ActionInvocation) invocation);
             }
         }
-        return handleValidToken(invocation);
+        return handleValidToken((org.apache.struts2.ActionInvocation) invocation);
     }
 
-    /**
-     * Determines what to do if an invalid token is provided. If the action implements {@link ValidationAware}
-     *
-     * @param invocation the action invocation where the invalid token failed
-     * @return the return code to indicate should be processed
-     * @throws Exception when any unexpected error occurs.
-     */
+    protected String handleToken(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return handleToken(ActionInvocation.adapt(invocation));
+    }
+
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
-        String errorMessage = getErrorMessage(invocation);
+        String errorMessage = getErrorMessage((org.apache.struts2.ActionInvocation) invocation);
 
         if (action instanceof ValidationAware) {
             ((ValidationAware) action).addActionError(errorMessage);
@@ -170,12 +167,31 @@ public class TokenInterceptor extends MethodFilterInterceptor {
         return INVALID_TOKEN_CODE;
     }
 
+    /**
+     * Determines what to do if an invalid token is provided. If the action implements {@link ValidationAware}
+     *
+     * @param invocation the action invocation where the invalid token failed
+     * @return the return code to indicate should be processed
+     * @throws Exception when any unexpected error occurs.
+     */
+    protected String handleInvalidToken(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return handleInvalidToken(ActionInvocation.adapt(invocation));
+    }
+
     protected String getErrorMessage(ActionInvocation invocation) {
         Object action = invocation.getAction();
         if (action instanceof TextProvider) {
             return ((TextProvider) action).getText(INVALID_TOKEN_MESSAGE_KEY, DEFAULT_ERROR_MESSAGE);
         }
         return textProvider.getText(INVALID_TOKEN_MESSAGE_KEY, DEFAULT_ERROR_MESSAGE);
+    }
+
+    protected String getErrorMessage(org.apache.struts2.ActionInvocation invocation) {
+        return getErrorMessage(ActionInvocation.adapt(invocation));
+    }
+
+    protected String handleValidToken(ActionInvocation invocation) throws Exception {
+        return invocation.invoke();
     }
 
     /**
@@ -186,8 +202,8 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      * @return invocation result
      * @throws Exception when any unexpected error occurs.
      */
-    protected String handleValidToken(ActionInvocation invocation) throws Exception {
-        return invocation.invoke();
+    protected String handleValidToken(org.apache.struts2.ActionInvocation invocation) throws Exception {
+        return handleValidToken(ActionInvocation.adapt(invocation));
     }
 
 }

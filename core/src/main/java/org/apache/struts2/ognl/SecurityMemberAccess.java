@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.ProxyUtil;
+import org.apache.struts2.util.ProxyService;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -76,6 +76,8 @@ public class SecurityMemberAccess implements MemberAccess {
     private final ProviderAllowlist providerAllowlist;
     private final ThreadAllowlist threadAllowlist;
 
+    private ProxyService proxyService;
+
     private boolean allowStaticFieldAccess = true;
 
     private Set<Pattern> excludeProperties = emptySet();
@@ -105,6 +107,11 @@ public class SecurityMemberAccess implements MemberAccess {
     public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist, @Inject ThreadAllowlist threadAllowlist) {
         this.providerAllowlist = providerAllowlist;
         this.threadAllowlist = threadAllowlist;
+    }
+
+    @Inject
+    public void setProxyService(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Override
@@ -214,15 +221,15 @@ public class SecurityMemberAccess implements MemberAccess {
 
         Class<?> targetClass = target != null ? target.getClass() : null;
 
-        if (!disallowProxyObjectAccess && ProxyUtil.isProxy(target)) {
+        if (!disallowProxyObjectAccess && proxyService.isProxy(target)) {
             // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities and Spring proxies to their
             // underlying classes/members. This allows the allowlist capability to continue working and still offer
             // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate
             // entities and Spring proxies. This is preferred to having to disable the allowlist capability entirely.
-            Class<?> newTargetClass = ProxyUtil.ultimateTargetClass(target);
+            Class<?> newTargetClass = proxyService.ultimateTargetClass(target);
             if (newTargetClass != targetClass) {
                 targetClass = newTargetClass;
-                member = ProxyUtil.resolveTargetMember(member, newTargetClass);
+                member = proxyService.resolveTargetMember(member, newTargetClass);
             }
         }
 
@@ -312,14 +319,14 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if proxy object access is allowed
      */
     protected boolean checkProxyObjectAccess(Object target) {
-        return !(disallowProxyObjectAccess && ProxyUtil.isProxy(target));
+        return !(disallowProxyObjectAccess && proxyService.isProxy(target));
     }
 
     /**
      * @return {@code true} if proxy member access is allowed
      */
     protected boolean checkProxyMemberAccess(Object target, Member member) {
-        return !(disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target));
+        return !(disallowProxyMemberAccess && proxyService.isProxyMember(member, target));
     }
 
     /**

@@ -61,6 +61,7 @@ import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.ognl.BeanInfoCacheFactory;
 import org.apache.struts2.ognl.ExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.ognl.ProxyCacheFactory;
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.security.AcceptedPatternsChecker;
@@ -72,6 +73,7 @@ import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 import org.apache.struts2.util.ContentTypeMatcher;
 import org.apache.struts2.util.PatternMatcher;
+import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.util.location.LocatableProperties;
@@ -442,6 +444,8 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
         alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
+        alias(ProxyCacheFactory.class, StrutsConstants.STRUTS_PROXY_CACHE_FACTORY, builder, props, Scope.SINGLETON);
+        alias(ProxyService.class, StrutsConstants.STRUTS_PROXYSERVICE, builder, props, Scope.SINGLETON);
 
         alias(SecurityMemberAccess.class, StrutsConstants.STRUTS_MEMBER_ACCESS, builder, props, Scope.PROTOTYPE);
         alias(OgnlGuard.class, StrutsConstants.STRUTS_OGNL_GUARD, builder, props, Scope.SINGLETON);

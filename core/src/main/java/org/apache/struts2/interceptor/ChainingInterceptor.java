@@ -27,7 +27,7 @@ import org.apache.struts2.inject.Inject;
 import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.CompoundRoot;
-import org.apache.struts2.util.ProxyUtil;
+import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionProvider;
@@ -96,7 +96,7 @@ import java.util.Map;
  * </p>
  * <!-- END SNIPPET: extending -->
  * <u>Example code:</u>
- *
+ * <p>
  * <!-- START SNIPPET: example -->
  * <pre>
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
@@ -113,7 +113,6 @@ import java.util.Map;
  * &lt;/action&gt;
  * </pre>
  * <!-- END SNIPPET: example -->
- *
  *
  * @author mrdon
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
@@ -135,10 +134,16 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     protected Collection<String> includes;
     protected ReflectionProvider reflectionProvider;
+    private ProxyService proxyService;
 
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
+    }
+
+    @Inject
+    public void setProxyService(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_ERRORS, required = false)
@@ -175,8 +180,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
             }
             Object action = invocation.getAction();
             Class<?> editable = null;
-            if (ProxyUtil.isProxy(action)) {
-                editable = ProxyUtil.ultimateTargetClass(action);
+            if (proxyService.isProxy(action)) {
+                editable = proxyService.ultimateTargetClass(action);
             }
             reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
         }
@@ -184,7 +189,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     private Collection<String> prepareExcludes() {
         Collection<String> localExcludes = excludes;
-        if (!copyErrors || !copyMessages ||!copyFieldErrors) {
+        if (!copyErrors || !copyMessages || !copyFieldErrors) {
             if (localExcludes == null) {
                 localExcludes = new HashSet<>();
                 if (!copyErrors) {

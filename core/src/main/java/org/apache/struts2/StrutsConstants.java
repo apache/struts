@@ -523,6 +523,35 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
 
     /**
+     * Specifies the type of cache to use for proxy detection. Valid values defined in
+     * {@link org.apache.struts2.ognl.OgnlCacheFactory.CacheType}.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PROXY_CACHE_TYPE = "struts.proxy.cacheType";
+
+    /**
+     * Specifies the maximum cache size for proxy detection caches.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PROXY_CACHE_MAXSIZE = "struts.proxy.cacheMaxSize";
+
+    /**
+     * The {@link org.apache.struts2.ognl.ProxyCacheFactory} implementation class.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PROXY_CACHE_FACTORY = "struts.proxy.cacheFactory";
+
+    /**
+     * The {@link org.apache.struts2.util.ProxyService} implementation class.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PROXYSERVICE = "struts.proxyService";
+
+    /**
      * Enables evaluation of OGNL expressions
      *
      * @since 6.0.0

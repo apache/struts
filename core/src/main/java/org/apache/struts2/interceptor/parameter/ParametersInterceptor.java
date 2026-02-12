@@ -39,7 +39,7 @@ import org.apache.struts2.security.DefaultAcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 import org.apache.struts2.util.ClearableValueStack;
 import org.apache.struts2.util.MemberAccessValueStack;
-import org.apache.struts2.util.ProxyUtil;
+import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
@@ -95,6 +95,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private ValueStackFactory valueStackFactory;
     private OgnlUtil ognlUtil;
     protected ThreadAllowlist threadAllowlist;
+    private ProxyService proxyService;
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
@@ -113,6 +114,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
         this.threadAllowlist = threadAllowlist;
+    }
+
+    @Inject
+    public void setProxyService(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -516,8 +522,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected Class<?> ultimateClass(Object action) {
-        if (ProxyUtil.isProxy(action)) {
-            return ProxyUtil.ultimateTargetClass(action);
+        if (proxyService.isProxy(action)) {
+            return proxyService.ultimateTargetClass(action);
         }
         return action.getClass();
     }

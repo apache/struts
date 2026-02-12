@@ -39,8 +39,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     @Serial
     private static final long serialVersionUID = 4678843241638046854L;
 
-    protected volatile HttpSession session;
-    protected volatile Set<Entry<String, Object>> entries;
+    protected HttpSession session;
+    protected Set<Entry<String, Object>> entries;
     protected HttpServletRequest request;
 
 
@@ -66,7 +66,11 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (session == null) {
                 return;
             }
-            session.invalidate();
+            try {
+                session.invalidate();
+            } catch (IllegalStateException e) {
+                // Session was already invalidated externally, ignore
+            }
             session = null;
             entries = null;
         }
@@ -83,9 +87,15 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                 return;
             }
             entries = null;
-            final Enumeration<String> attributeNamesEnum = session.getAttributeNames();
-            while (attributeNamesEnum.hasMoreElements()) {
-                session.removeAttribute(attributeNamesEnum.nextElement());
+            try {
+                final Enumeration<String> attributeNamesEnum = session.getAttributeNames();
+                while (attributeNamesEnum.hasMoreElements()) {
+                    session.removeAttribute(attributeNamesEnum.nextElement());
+                }
+            } catch (IllegalStateException e) {
+                // Session was invalidated externally
+                session = null;
+                entries = null;
             }
         }
     }
@@ -103,20 +113,26 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             }
             if (entries == null) {
                 entries = new HashSet<>();
+                try {
+                    final Enumeration<String> enumeration = session.getAttributeNames();
 
-                final Enumeration<String> enumeration = session.getAttributeNames();
+                    while (enumeration.hasMoreElements()) {
+                        final String key = enumeration.nextElement();
+                        final Object value = session.getAttribute(key);
+                        entries.add(new StringObjectEntry(key, value) {
+                            @Override
+                            public Object setValue(final Object obj) {
+                                session.setAttribute(key, obj);
 
-                while (enumeration.hasMoreElements()) {
-                    final String key = enumeration.nextElement();
-                    final Object value = session.getAttribute(key);
-                    entries.add(new StringObjectEntry(key, value) {
-                        @Override
-                        public Object setValue(final Object obj) {
-                            session.setAttribute(key, obj);
-
-                            return value;
-                        }
-                    });
+                                return value;
+                            }
+                        });
+                    }
+                } catch (IllegalStateException e) {
+                    // Session was invalidated externally
+                    session = null;
+                    entries = null;
+                    return Collections.emptySet();
                 }
             }
             return entries;
@@ -138,7 +154,14 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (session == null) {
                 return null;
             }
-            return session.getAttribute(key != null ? key.toString() : null);
+            try {
+                return session.getAttribute(key != null ? key.toString() : null);
+            } catch (IllegalStateException e) {
+                // Session was invalidated externally
+                session = null;
+                entries = null;
+                return null;
+            }
         }
     }
 
@@ -155,9 +178,17 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (session == null) {
                 session = request.getSession(true);
             }
+            // Use get(key) to allow subclasses to override the retrieval behavior
             final Object oldValue = get(key);
             entries = null;
-            session.setAttribute(key, value);
+            try {
+                session.setAttribute(key, value);
+            } catch (IllegalStateException e) {
+                // Session was invalidated externally, create new one
+                session = request.getSession(true);
+                entries = null;
+                session.setAttribute(key, value);
+            }
             return oldValue;
         }
     }
@@ -180,10 +211,16 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             entries = null;
 
             final String keyAsString = (key != null ? key.toString() : null);
-            final Object value = session.getAttribute(keyAsString);
-            session.removeAttribute(keyAsString);
-
-            return value;
+            try {
+                final Object value = session.getAttribute(keyAsString);
+                session.removeAttribute(keyAsString);
+                return value;
+            } catch (IllegalStateException e) {
+                // Session was invalidated externally
+                session = null;
+                entries = null;
+                return null;
+            }
         }
     }
 
@@ -204,7 +241,14 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                 return false;
             }
             final String keyAsString = (key != null ? key.toString() : null);
-            return (session.getAttribute(keyAsString) != null);
+            try {
+                return (session.getAttribute(keyAsString) != null);
+            } catch (IllegalStateException e) {
+                // Session was invalidated externally
+                session = null;
+                entries = null;
+                return false;
+            }
         }
     }
 }

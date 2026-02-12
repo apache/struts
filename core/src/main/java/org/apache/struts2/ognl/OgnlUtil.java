@@ -248,15 +248,17 @@ public class OgnlUtil {
         }
 
         OgnlContext ognlContext = ensureOgnlContext(context);
-        Object oldRoot = Ognl.getRoot(ognlContext);
-        Ognl.setRoot(ognlContext, o);
-
-        for (Map.Entry<String, ?> entry : props.entrySet()) {
-            String expression = entry.getKey();
-            internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
+        try {
+            withRoot(ognlContext, o, () -> {
+                for (Map.Entry<String, ?> entry : props.entrySet()) {
+                    String expression = entry.getKey();
+                    internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
+                }
+            });
+        } catch (OgnlException e) {
+            // Should never happen as internalSetProperty catches OgnlException
+            throw new IllegalStateException("Unexpected OgnlException in setProperties", e);
         }
-
-        Ognl.setRoot(ognlContext, oldRoot);
     }
 
     /**
@@ -307,14 +309,13 @@ public class OgnlUtil {
      *                                problems setting the property
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
-
         OgnlContext ognlContext = ensureOgnlContext(context);
-        Object oldRoot = Ognl.getRoot(ognlContext);
-        Ognl.setRoot(ognlContext, o);
-
-        internalSetProperty(name, value, o, context, throwPropertyExceptions);
-
-        Ognl.setRoot(ognlContext, oldRoot);
+        try {
+            withRoot(ognlContext, o, () -> internalSetProperty(name, value, o, context, throwPropertyExceptions));
+        } catch (OgnlException e) {
+            // Should never happen as internalSetProperty catches OgnlException
+            throw new IllegalStateException("Unexpected OgnlException in setProperty", e);
+        }
     }
 
     /**
@@ -423,15 +424,18 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        Ognl.setValue(tree, (OgnlContext) context, root, value);
+        OgnlContext ognlContext = (OgnlContext) context;
+        withRoot(ognlContext, root, () -> Ognl.setValue(tree, ognlContext, root, value));
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
         Object tree = toTree(expr);
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        return (T) Ognl.getValue(tree, (OgnlContext) context, root, resultType);
+        OgnlContext ognlContext = (OgnlContext) context;
+        return withRoot(ognlContext, root, () -> (T) Ognl.getValue(tree, ognlContext, root, resultType));
     }
 
     private Object toTree(String expr) throws OgnlException {
@@ -737,5 +741,55 @@ public class OgnlUtil {
     @FunctionalInterface
     private interface TreeValidator {
         void validate(Object tree, Map<String, Object> context) throws OgnlException;
+    }
+
+    @FunctionalInterface
+    private interface OgnlAction {
+        void run() throws OgnlException;
+    }
+
+    @FunctionalInterface
+    private interface OgnlSupplier<T> {
+        T get() throws OgnlException;
+    }
+
+    /**
+     * Executes the given action with the specified root set on the OGNL context,
+     * restoring the original root afterwards.
+     *
+     * @param context the OGNL context
+     * @param root    the root object to set during execution
+     * @param action  the action to execute
+     * @throws OgnlException if the action throws an OgnlException
+     */
+    private void withRoot(OgnlContext context, Object root, OgnlAction action) throws OgnlException {
+        Object oldRoot = Ognl.getRoot(context);
+        try {
+            Ognl.setRoot(context, root);
+            action.run();
+        } finally {
+            Ognl.setRoot(context, oldRoot);
+        }
+    }
+
+    /**
+     * Executes the given supplier with the specified root set on the OGNL context,
+     * restoring the original root afterwards.
+     *
+     * @param context  the OGNL context
+     * @param root     the root object to set during execution
+     * @param supplier the supplier to execute
+     * @param <T>      the return type
+     * @return the result of the supplier
+     * @throws OgnlException if the supplier throws an OgnlException
+     */
+    private <T> T withRoot(OgnlContext context, Object root, OgnlSupplier<T> supplier) throws OgnlException {
+        Object oldRoot = Ognl.getRoot(context);
+        try {
+            Ognl.setRoot(context, root);
+            return supplier.get();
+        } finally {
+            Ognl.setRoot(context, oldRoot);
+        }
     }
 }

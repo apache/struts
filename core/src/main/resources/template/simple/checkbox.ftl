@@ -40,7 +40,7 @@
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
 <#if attributes.submitUnchecked!false>
-<input type="hidden" id="__checkbox_${attributes.id}" name="__checkbox_${attributes.name}" value="${attributes.fieldValue}"<#rt/>
+<input type="hidden" id="${attributes.hiddenPrefix}${attributes.id}" name="${attributes.hiddenPrefix}${attributes.name}" value="${attributes.fieldValue}"<#rt/>
 <#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>

@@ -38,171 +38,227 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
     private Map<String, Object> param;
 
     protected void setUp() throws Exception {
-    	super.setUp();
-    	param = new HashMap<>();
+        super.setUp();
+        param = new HashMap<>();
 
-    	interceptor = new CheckboxInterceptor();
-    	ai = new MockActionInvocation();
-    	ai.setInvocationContext(ActionContext.getContext());
+        interceptor = new CheckboxInterceptor();
+        ai = new MockActionInvocation();
+        ai.setInvocationContext(ActionContext.getContext());
     }
 
-	private void prepare(ActionInvocation ai) {
-		ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
-	}
+    private void prepare(ActionInvocation ai) {
+        ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
+    }
 
-	public void testNoParam() throws Exception {
-		prepare(ai);
+    public void testNoParam() throws Exception {
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		assertEquals(0, param.size());
-	}
+        assertEquals(0, param.size());
+    }
 
-	public void testPassthroughOne() throws Exception {
-		param.put("user", "batman");
+    public void testPassthroughOne() throws Exception {
+        param.put("user", "batman");
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		assertEquals(1, ai.getInvocationContext().getParameters().keySet().size());
-	}
+        assertEquals(1, ai.getInvocationContext().getParameters().size());
+    }
 
-	public void testPassthroughTwo() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
+    public void testPassthroughTwo() throws Exception {
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		assertEquals(2, ai.getInvocationContext().getParameters().keySet().size());
-	}
+        assertEquals(2, ai.getInvocationContext().getParameters().size());
+    }
 
-	public void testOneCheckboxTrue() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("superpower", "true");
-		param.put("__checkbox_superpower", "true");
-		assertTrue(param.containsKey("__checkbox_superpower"));
+    public void testOneCheckboxTrue() throws Exception {
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("superpower", "true");
+        param.put("__checkbox_superpower", "true");
+        assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("true", parameters.get("superpower").getValue());
-	}
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertEquals(3, parameters.size()); // should be 3 as __checkbox_ should be removed
+        assertEquals("true", parameters.get("superpower").getValue());
+    }
 
-	public void testOneCheckboxNoValue() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", "false");
-		assertTrue(param.containsKey("__checkbox_superpower"));
+    public void testOneCheckboxNoValue() throws Exception {
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("__checkbox_superpower", "false");
+        assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("false", parameters.get("superpower").getValue());
-	}
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertEquals(3, parameters.size()); // should be 3 as __checkbox_ should be removed
+        assertEquals("false", parameters.get("superpower").getValue());
+    }
 
-	public void testOneCheckboxNoValueDifferentDefault() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", "false");
-		assertTrue(param.containsKey("__checkbox_superpower"));
+    public void testOneCheckboxNoValueDifferentDefault() throws Exception {
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("__checkbox_superpower", "false");
+        assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.setUncheckedValue("off");
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.setUncheckedValue("off");
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("off", parameters.get("superpower").getValue());
-	}
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertEquals(3, parameters.size()); // should be 3 as __checkbox_ should be removed
+        assertEquals("off", parameters.get("superpower").getValue());
+    }
 
     public void testTwoCheckboxNoValue() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", new String[]{"true", "true"});
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("__checkbox_superpower", new String[]{"true", "true"});
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(2, parameters.keySet().size()); // should be 2 as __checkbox_ should be removed
-		assertFalse(parameters.get("superpower").isDefined());
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertEquals(2, parameters.size()); // should be 2 as __checkbox_ should be removed
+        assertFalse(parameters.get("superpower").isDefined());
     }
 
     public void testTwoCheckboxMixed() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", "true");
-		param.put("superpower", "yes");
-		param.put("__checkbox_cool", "no");
-		assertTrue(param.containsKey("__checkbox_superpower"));
-		assertTrue(param.containsKey("__checkbox_cool"));
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("__checkbox_superpower", "true");
+        param.put("superpower", "yes");
+        param.put("__checkbox_cool", "no");
+        assertTrue(param.containsKey("__checkbox_superpower"));
+        assertTrue(param.containsKey("__checkbox_cool"));
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
-		assertEquals("yes", parameters.get("superpower").getValue());
-		assertEquals("false", parameters.get("cool").getValue()); // will use false as default and not 'no'
-	}
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertFalse(parameters.contains("__checkbox_cool"));
+        assertEquals(4, parameters.size()); // should be 4 as __checkbox_ should be removed
+        assertEquals("yes", parameters.get("superpower").getValue());
+        assertEquals("false", parameters.get("cool").getValue()); // will use false as default and not 'no'
+    }
 
-	public void testTwoCheckboxMixedWithDifferentDefault() throws Exception {
-		param.put("user", "batman");
-		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", "true");
-		param.put("superpower", "yes");
-		param.put("__checkbox_cool", "no");
-		assertTrue(param.containsKey("__checkbox_superpower"));
-		assertTrue(param.containsKey("__checkbox_cool"));
+    public void testTwoCheckboxMixedWithDifferentDefault() throws Exception {
+        param.put("user", "batman");
+        param.put("email", "batman@comic.org");
+        param.put("__checkbox_superpower", "true");
+        param.put("superpower", "yes");
+        param.put("__checkbox_cool", "no");
+        assertTrue(param.containsKey("__checkbox_superpower"));
+        assertTrue(param.containsKey("__checkbox_cool"));
 
-		prepare(ai);
+        prepare(ai);
 
-		interceptor.setUncheckedValue("no");
-		interceptor.init();
-		interceptor.intercept(ai);
-		interceptor.destroy();
+        interceptor.setUncheckedValue("no");
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
-		assertEquals("yes", parameters.get("superpower").getValue());
-		assertEquals("no", parameters.get("cool").getValue());
-	}
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("__checkbox_superpower"));
+        assertFalse(parameters.contains("__checkbox_cool"));
+        assertEquals(4, parameters.size()); // should be 4 as __checkbox_ should be removed
+        assertEquals("yes", parameters.get("superpower").getValue());
+        assertEquals("no", parameters.get("cool").getValue());
+    }
+
+    public void testCustomHiddenPrefixChecked() throws Exception {
+        param.put("user", "batman");
+        param.put("struts_checkbox_superpower", "true");
+        param.put("superpower", "yes");
+        assertTrue(param.containsKey("struts_checkbox_superpower"));
+
+        prepare(ai);
+
+        interceptor.setHiddenPrefix("struts_checkbox_");
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
+
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("struts_checkbox_superpower"));
+        assertEquals(2, parameters.size());
+        assertEquals("yes", parameters.get("superpower").getValue());
+    }
+
+    public void testCustomHiddenPrefixUnchecked() throws Exception {
+        param.put("user", "batman");
+        param.put("struts_checkbox_superpower", "true");
+        assertTrue(param.containsKey("struts_checkbox_superpower"));
+
+        prepare(ai);
+
+        interceptor.setHiddenPrefix("struts_checkbox_");
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
+
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        assertFalse(parameters.contains("struts_checkbox_superpower"));
+        assertEquals(2, parameters.size());
+        assertEquals("false", parameters.get("superpower").getValue());
+    }
+
+    public void testCustomHiddenPrefixIgnoresDefaultPrefix() throws Exception {
+        param.put("user", "batman");
+        param.put("__checkbox_superpower", "true");
+        assertTrue(param.containsKey("__checkbox_superpower"));
+
+        prepare(ai);
+
+        interceptor.setHiddenPrefix("struts_checkbox_");
+        interceptor.init();
+        interceptor.intercept(ai);
+        interceptor.destroy();
+
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        // With custom prefix, the default __checkbox_ prefix should be ignored
+        assertTrue(parameters.contains("__checkbox_superpower"));
+        assertEquals(2, parameters.size());
+        assertFalse(parameters.get("superpower").isDefined());
+    }
 
 }

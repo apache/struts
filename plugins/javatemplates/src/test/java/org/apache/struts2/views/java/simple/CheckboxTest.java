@@ -62,7 +62,9 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getAttributes());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz' disabled='disabled'></input>");
+        // Note: The hidden field's value should be the same as fieldValue, not prefixed with __checkbox_
+        // This matches the FreeMarker template behavior in simple/checkbox.ftl
+        String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='xyz' disabled='disabled'></input>");
         assertEquals(expected, output);
     }
 

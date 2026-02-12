@@ -49,17 +49,19 @@ import jakarta.servlet.http.HttpServletResponse;
  * </pre>
  */
 @StrutsTag(
-    name = "checkbox",
-    tldTagClass = "org.apache.struts2.views.jsp.ui.CheckboxTag",
-    description = "Render a checkbox input field",
-    allowDynamicAttributes = true)
+        name = "checkbox",
+        tldTagClass = "org.apache.struts2.views.jsp.ui.CheckboxTag",
+        description = "Render a checkbox input field",
+        allowDynamicAttributes = true)
 public class Checkbox extends UIBean {
 
     private static final String ATTR_SUBMIT_UNCHECKED = "submitUnchecked";
+    private static final String ATTR_HIDDEN_PREFIX = "hiddenPrefix";
 
     public static final String TEMPLATE = "checkbox";
 
     private String submitUncheckedGlobal;
+    private String hiddenPrefixGlobal = "__checkbox_";
 
     protected String fieldValue;
     protected String submitUnchecked;
@@ -87,6 +89,8 @@ public class Checkbox extends UIBean {
         } else {
             addParameter(ATTR_SUBMIT_UNCHECKED, false);
         }
+
+        addParameter(ATTR_HIDDEN_PREFIX, hiddenPrefixGlobal);
     }
 
     @Override
@@ -99,14 +103,19 @@ public class Checkbox extends UIBean {
         this.submitUncheckedGlobal = submitUncheckedGlobal;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_UI_CHECKBOX_HIDDEN_PREFIX, required = false)
+    public void setHiddenPrefixGlobal(String hiddenPrefixGlobal) {
+        this.hiddenPrefixGlobal = hiddenPrefixGlobal;
+    }
+
     @StrutsTagAttribute(description = "The actual HTML value attribute of the checkbox.", defaultValue = "true")
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
     }
 
     @StrutsTagAttribute(description = "If set to true, unchecked elements will be submitted with the form. " +
-        "Since Struts 6.1.1 you can use a constant \"" + StrutsConstants.STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED + "\" to set this attribute globally",
-        type = "Boolean", defaultValue = "false")
+            "Since Struts 6.1.1 you can use a constant \"" + StrutsConstants.STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED + "\" to set this attribute globally",
+            type = "Boolean", defaultValue = "false")
     public void setSubmitUnchecked(String submitUnchecked) {
         this.submitUnchecked = submitUnchecked;
     }

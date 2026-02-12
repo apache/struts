@@ -54,8 +54,6 @@ public class ProxyUtil {
             CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
     private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
             CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
-    private static final OgnlCache<Object, Class<?>> targetClassCache = new DefaultOgnlCacheFactory<Object, Class<?>>(
-            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
 
     /**
      * Determine the ultimate target class of the given instance, traversing
@@ -66,18 +64,16 @@ public class ProxyUtil {
      * object as fallback; never {@code null})
      */
     public static Class<?> ultimateTargetClass(Object candidate) {
-        return targetClassCache.computeIfAbsent(candidate, k -> {
-            Class<?> result = null;
-            if (isSpringAopProxy(k)) {
-                result = springUltimateTargetClass(k);
-            } else if (isHibernateProxy(k)) {
-                result = getHibernateProxyTarget(k).getClass();
-            }
-            if (result == null) {
-                result = k.getClass();
-            }
-            return result;
-        });
+        Class<?> result = null;
+        if (isSpringAopProxy(candidate)) {
+            result = springUltimateTargetClass(candidate);
+        } else if (isHibernateProxy(candidate)) {
+            result = getHibernateProxyTarget(candidate).getClass();
+        }
+        if (result == null) {
+            result = candidate.getClass();
+        }
+        return result;
     }
 
     /**

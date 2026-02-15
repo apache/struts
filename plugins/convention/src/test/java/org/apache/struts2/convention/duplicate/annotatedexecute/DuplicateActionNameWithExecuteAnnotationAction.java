@@ -16,30 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.convention.actions.result;
+package org.apache.struts2.convention.duplicate.annotatedexecute;
 
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Result;
 
 /**
- * <p>
- * This is a test action with multiple results names.
- * </p>
+ * Test action with duplicate @Action names where execute() is annotated.
+ * This is the case that was previously not detected (WW-4421).
  */
-public class ActionLevelResultsNamesAction {
-    @Action(results = {
-            @Result(name = {"error", "input"}, location = "error.jsp"),
-            @Result(name = "success", location = "/WEB-INF/location/namespace/action-success.jsp"),
-            @Result(name = "failure", location = "/WEB-INF/location/namespace/action-failure.jsp")
-    })
+public class DuplicateActionNameWithExecuteAnnotationAction {
+
+    @Action("duplicate")
     public String execute() {
-        return null;
+        return "success";
     }
 
-    @Action(value = "action-level-results-names-noname", results = {
-            @Result(location = "/WEB-INF/location/namespace/action-success.jsp")
-    })
-    public String noname() {
-        return null;
+    @Action("duplicate")
+    public String anotherMethod() {
+        return "success";
     }
 }

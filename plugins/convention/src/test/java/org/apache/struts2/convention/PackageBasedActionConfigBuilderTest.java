@@ -30,6 +30,7 @@ import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.ExceptionMappingConfig;
 import org.apache.struts2.config.entities.InterceptorConfig;
@@ -247,6 +248,103 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         // This should return false (class excluded) instead of throwing ClassNotFoundException
         boolean result = actionClassTest.test(mockClassInfo);
         assertFalse("ClassNotFoundException should be caught and class should be excluded", result);
+    }
+
+    /**
+     * Tests that duplicate @Action name detection works when execute() is annotated with @Action.
+     * Before the fix for WW-4421, the duplicate check was inside a conditional block that was
+     * skipped when execute() had an @Action annotation, allowing duplicate action names silently.
+     *
+     * @see <a href="https://issues.apache.org/jira/browse/WW-4421">WW-4421</a>
+     */
+    public void testDuplicateActionNameWithAnnotatedExecute() {
+        ResultTypeConfig defaultResult = new ResultTypeConfig.Builder("dispatcher",
+                ServletDispatcherResult.class.getName()).defaultResultParam("location").build();
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
+                new ResultTypeConfig[]{defaultResult}, null, null, null, true);
+
+        final DummyContainer mockContainer = new DummyContainer();
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+        configuration.addPackageConfig("struts-default", strutsDefault);
+
+        ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
+
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, of, "false", "struts-default", "false");
+        builder.setActionPackages("org.apache.struts2.convention.duplicate.annotatedexecute");
+        builder.setActionSuffix("Action");
+
+        DefaultFileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        fileManagerFactory.setContainer(ActionContext.getContext().getContainer());
+        fileManagerFactory.setFileManager(new DefaultFileManager());
+        builder.setFileManagerFactory(fileManagerFactory);
+        builder.setProviderAllowlist(new ProviderAllowlist());
+
+        try {
+            builder.buildActionConfigs();
+            fail("Expected ConfigurationException for duplicate action names");
+        } catch (ConfigurationException e) {
+            assertTrue("Exception message should mention duplicate action names",
+                    e.getMessage().contains("two methods with an action name annotation whose value is the same"));
+        }
+    }
+
+    /**
+     * Tests that duplicate @Action name detection works when execute() is NOT annotated with @Action.
+     * This is a regression guard for WW-4421 — this case was already detected before the fix.
+     *
+     * @see <a href="https://issues.apache.org/jira/browse/WW-4421">WW-4421</a>
+     */
+    public void testDuplicateActionNameWithoutAnnotatedExecute() throws Exception {
+        ResultTypeConfig defaultResult = new ResultTypeConfig.Builder("dispatcher",
+                ServletDispatcherResult.class.getName()).defaultResultParam("location").build();
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
+                new ResultTypeConfig[]{defaultResult}, null, null, null, true);
+
+        final DummyContainer mockContainer = new DummyContainer();
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+        configuration.addPackageConfig("struts-default", strutsDefault);
+
+        ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
+
+        mockContainer.setActionNameBuilder(actionNameBuilder);
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, of, "false", "struts-default", "false");
+        builder.setActionPackages("org.apache.struts2.convention.duplicate.unannotatedexecute");
+        builder.setActionSuffix("Action");
+
+        DefaultFileManagerFactory fileManagerFactory = new DefaultFileManagerFactory();
+        fileManagerFactory.setContainer(ActionContext.getContext().getContainer());
+        fileManagerFactory.setFileManager(new DefaultFileManager());
+        builder.setFileManagerFactory(fileManagerFactory);
+        builder.setProviderAllowlist(new ProviderAllowlist());
+
+        try {
+            builder.buildActionConfigs();
+            fail("Expected ConfigurationException for duplicate action names");
+        } catch (ConfigurationException e) {
+            assertTrue("Exception message should mention duplicate action names",
+                    e.getMessage().contains("two methods with an action name annotation whose value is the same"));
+        }
     }
 
     public void testActionPackages() throws MalformedURLException {
@@ -544,7 +642,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         expect(resultMapBuilder.build(GlobalResultAction.class, null, "global-result", globalResultPkg)).andReturn(results);
         expect(resultMapBuilder.build(GlobalResultOverrideAction.class, null, "global-result-override", globalResultPkg)).andReturn(results);
         expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "execute", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
-        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "noname", Action.class), "action-level-results-names", resultPkg)).andReturn(results);
+        expect(resultMapBuilder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "noname", Action.class), "action-level-results-names-noname", resultPkg)).andReturn(results);
 
         /* org.apache.struts2.convention.actions.resultpath */
         expect(resultMapBuilder.build(ClassLevelResultPathAction.class, null, "class-level-result-path", resultPathPkg)).andReturn(results);
@@ -854,11 +952,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.result#struts-default#/result");
         assertNotNull(pkgConfig);
         checkSmiValue(pkgConfig, strutsDefault, isSmiInheritanceEnabled);
-        assertEquals(7, pkgConfig.getActionConfigs().size());
+        assertEquals(8, pkgConfig.getActionConfigs().size());
         verifyActionConfig(pkgConfig, "class-level-result", ClassLevelResultAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "class-level-results", ClassLevelResultsAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action-level-result", ActionLevelResultAction.class, "execute", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action-level-results", ActionLevelResultsAction.class, "execute", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "action-level-results-names-noname", ActionLevelResultsNamesAction.class, "noname", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "inherited-result-extends", InheritedResultExtends.class, "execute", pkgConfig.getName());
 
         /* org.apache.struts2.convention.actions.resultpath */

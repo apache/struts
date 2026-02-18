@@ -215,15 +215,15 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
         if (maxSize != null) {
             LOG.debug("Applies max size: {} to file upload request", maxSize);
-            servletFileUpload.setSizeMax(maxSize);
+            servletFileUpload.setMaxSize(maxSize);
         }
         if (maxFiles != null) {
             LOG.debug("Applies max files number: {} to file upload request", maxFiles);
-            servletFileUpload.setFileCountMax(maxFiles);
+            servletFileUpload.setMaxFileCount(maxFiles);
         }
         if (maxFileSize != null) {
             LOG.debug("Applies max size of single file: {} to file upload request", maxFileSize);
-            servletFileUpload.setFileSizeMax(maxFileSize);
+            servletFileUpload.setMaxFileSize(maxFileSize);
         }
         return servletFileUpload;
     }

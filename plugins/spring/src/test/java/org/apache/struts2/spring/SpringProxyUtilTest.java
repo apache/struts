@@ -25,6 +25,7 @@ import org.apache.struts2.TestSubBean;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.util.ProxyUtil;
 import org.springframework.context.ApplicationContext;
 
@@ -33,6 +34,7 @@ import org.springframework.context.ApplicationContext;
  */
 public class SpringProxyUtilTest extends XWorkTestCase {
     private ApplicationContext appContext;
+    private ProxyService proxyService;
 
     @Override
     public void setUp() throws Exception {
@@ -43,6 +45,7 @@ public class SpringProxyUtilTest extends XWorkTestCase {
         container.inject(provider);
         loadConfigurationProviders(provider);
         appContext = ((SpringObjectFactory) container.getInstance(ObjectFactory.class)).appContext;
+        proxyService = container.getInstance(ProxyService.class);
     }
 
     public void testIsProxy() throws Exception {
@@ -118,6 +121,76 @@ public class SpringProxyUtilTest extends XWorkTestCase {
 
         Object testAspect = appContext.getBean("test-aspect");
         assertFalse(ProxyUtil.isProxyMember(
+            testAspect.getClass().getMethod("setExposeProxy", boolean.class), testAspect));
+    }
+
+    public void testIsProxyWithService() throws Exception {
+        assertFalse(proxyService.isProxy(null));
+
+        Object simpleAction = appContext.getBean("simple-action");
+        assertFalse(proxyService.isProxy(simpleAction));
+
+        Object proxiedAction = appContext.getBean("proxied-action");
+        assertTrue(proxyService.isProxy(proxiedAction));
+
+        Object autoProxiedAction = appContext.getBean("auto-proxied-action");
+        assertTrue(proxyService.isProxy(autoProxiedAction));
+
+        Object pointcuttedTestBean = appContext.getBean("pointcutted-test-bean");
+        assertTrue(proxyService.isProxy(pointcuttedTestBean));
+
+        Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
+        assertTrue(proxyService.isProxy(pointcuttedTestSubBean));
+
+        Object testAspect = appContext.getBean("test-aspect");
+        assertFalse(proxyService.isProxy(testAspect));
+    }
+
+    public void testUltimateTargetClassWithService() throws Exception {
+        Object simpleAction = appContext.getBean("simple-action");
+        assertEquals(SimpleAction.class, proxyService.ultimateTargetClass(simpleAction));
+
+        Object proxiedAction = appContext.getBean("proxied-action");
+        assertEquals(SimpleAction.class, proxyService.ultimateTargetClass(proxiedAction));
+
+        Object autoProxiedAction = appContext.getBean("auto-proxied-action");
+        assertEquals(SimpleAction.class, proxyService.ultimateTargetClass(autoProxiedAction));
+
+        Object pointcuttedTestBean = appContext.getBean("pointcutted-test-bean");
+        assertEquals(TestBean.class, proxyService.ultimateTargetClass(pointcuttedTestBean));
+
+        Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
+        assertEquals(TestSubBean.class, proxyService.ultimateTargetClass(pointcuttedTestSubBean));
+
+        Object testAspect = appContext.getBean("test-aspect");
+        assertEquals(TestAspect.class, proxyService.ultimateTargetClass(testAspect));
+    }
+
+    public void testIsProxyMemberWithService() throws Exception {
+        assertFalse(proxyService.isProxyMember(SimpleAction.class.getField("COMMAND_RETURN_CODE"), null));
+
+        Object simpleAction = appContext.getBean("simple-action");
+        assertFalse(proxyService.isProxyMember(
+            simpleAction.getClass().getMethod("setName", String.class), simpleAction));
+
+        Object proxiedAction = appContext.getBean("proxied-action");
+        assertTrue(proxyService.isProxyMember(
+            proxiedAction.getClass().getMethod("setExposeProxy", boolean.class), proxiedAction));
+
+        Object autoProxiedAction = appContext.getBean("auto-proxied-action");
+        assertTrue(proxyService.isProxyMember(
+            autoProxiedAction.getClass().getMethod("getTargetClass"), autoProxiedAction));
+
+        Object pointcuttedTestBean = appContext.getBean("pointcutted-test-bean");
+        assertTrue(proxyService.isProxyMember(
+            pointcuttedTestBean.getClass().getMethod("getTargetSource"), pointcuttedTestBean));
+
+        Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
+        assertFalse(proxyService.isProxyMember(
+            pointcuttedTestSubBean.getClass().getConstructor(), pointcuttedTestSubBean));
+
+        Object testAspect = appContext.getBean("test-aspect");
+        assertFalse(proxyService.isProxyMember(
             testAspect.getClass().getMethod("setExposeProxy", boolean.class), testAspect));
     }
 }

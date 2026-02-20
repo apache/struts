@@ -49,3 +49,8 @@ test-output
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Cursor + Metals
+.cursor/
+.bloop/
+.metals/

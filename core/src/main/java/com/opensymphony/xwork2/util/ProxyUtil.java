@@ -55,42 +55,23 @@ public class ProxyUtil {
     // Holder for the cache factory (set by container)
     private static volatile ProxyCacheFactory<?, ?> cacheFactory;
 
-    // Lazy-initialized caches
-    private static volatile OgnlCache<Class<?>, Boolean> isProxyCache;
-    private static volatile OgnlCache<Member, Boolean> isProxyMemberCache;
+    // Lazy-initialized caches with reset support
+    private static final LazyRef<OgnlCache<Class<?>, Boolean>> isProxyCache =
+            new LazyRef<>(ProxyUtil::createCache);
+    private static final LazyRef<OgnlCache<Member, Boolean>> isProxyMemberCache =
+            new LazyRef<>(ProxyUtil::createCache);
 
     /**
      * Sets the cache factory. Called by the container during initialization.
+     * Resets existing caches so they are recreated with the new factory.
      *
      * @param factory the cache factory to use for creating proxy caches
-     * @since 6.8.0
+     * @since 6.9.0
      */
     public static void setProxyCacheFactory(ProxyCacheFactory<?, ?> factory) {
         cacheFactory = factory;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static OgnlCache<Class<?>, Boolean> getIsProxyCache() {
-        if (isProxyCache == null) {
-            synchronized (ProxyUtil.class) {
-                if (isProxyCache == null) {
-                    isProxyCache = createCache();
-                }
-            }
-        }
-        return isProxyCache;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static OgnlCache<Member, Boolean> getIsProxyMemberCache() {
-        if (isProxyMemberCache == null) {
-            synchronized (ProxyUtil.class) {
-                if (isProxyMemberCache == null) {
-                    isProxyMemberCache = createCache();
-                }
-            }
-        }
-        return isProxyMemberCache;
+        isProxyCache.reset();
+        isProxyMemberCache.reset();
     }
 
     @SuppressWarnings("unchecked")
@@ -133,14 +114,14 @@ public class ProxyUtil {
     public static boolean isProxy(Object object) {
         if (object == null) return false;
         Class<?> clazz = object.getClass();
-        Boolean flag = getIsProxyCache().get(clazz);
+        Boolean flag = isProxyCache.get().get(clazz);
         if (flag != null) {
             return flag;
         }
 
         boolean isProxy = isSpringAopProxy(object) || isHibernateProxy(object);
 
-        getIsProxyCache().put(clazz, isProxy);
+        isProxyCache.get().put(clazz, isProxy);
         return isProxy;
     }
 
@@ -155,14 +136,14 @@ public class ProxyUtil {
             return false;
         }
 
-        Boolean flag = getIsProxyMemberCache().get(member);
+        Boolean flag = isProxyMemberCache.get().get(member);
         if (flag != null) {
             return flag;
         }
 
         boolean isProxyMember = isSpringProxyMember(member) || isHibernateProxyMember(member);
 
-        getIsProxyMemberCache().put(member, isProxyMember);
+        isProxyMemberCache.get().put(member, isProxyMember);
         return isProxyMember;
     }
 

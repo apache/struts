@@ -30,7 +30,7 @@ import org.apache.struts2.StrutsConstants;
  *
  * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
- * @since 6.8.0
+ * @since 6.9.0
  */
 public class StrutsProxyCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
         implements ProxyCacheFactory<Key, Value> {

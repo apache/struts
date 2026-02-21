@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.ognl.ProxyCacheFactory;
  * This bean is created by the container and receives the configured ProxyCacheFactory
  * via dependency injection, then passes it to the static ProxyUtil class.
  *
- * @since 6.8.0
+ * @since 6.9.0
  */
 public class StrutsProxyCacheFactoryBean {
 

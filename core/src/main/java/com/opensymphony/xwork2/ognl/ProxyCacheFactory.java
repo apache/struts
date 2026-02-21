@@ -24,7 +24,7 @@ package com.opensymphony.xwork2.ognl;
  *
  * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
- * @since 6.8.0
+ * @since 6.9.0
  */
 public interface ProxyCacheFactory<Key, Value> extends OgnlCacheFactory<Key, Value> {
 

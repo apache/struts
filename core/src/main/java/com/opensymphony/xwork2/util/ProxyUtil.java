@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.ognl.DefaultOgnlCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlCache;
 import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
+import com.opensymphony.xwork2.ognl.ProxyCacheFactory;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -41,7 +42,6 @@ import static java.lang.reflect.Modifier.isPublic;
  * <p>
  * Various utility methods dealing with proxies
  * </p>
- *
  */
 public class ProxyUtil {
     private static final String SPRING_ADVISED_CLASS_NAME = "org.springframework.aop.framework.Advised";
@@ -51,15 +51,45 @@ public class ProxyUtil {
     private static final String HIBERNATE_HIBERNATEPROXY_CLASS_NAME = "org.hibernate.proxy.HibernateProxy";
     private static final int CACHE_MAX_SIZE = 10000;
     private static final int CACHE_INITIAL_CAPACITY = 256;
-    private static final OgnlCache<Class<?>, Boolean> isProxyCache = new DefaultOgnlCacheFactory<Class<?>, Boolean>(
-            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
-    private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
-            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+
+    // Holder for the cache factory (set by container)
+    private static volatile ProxyCacheFactory<?, ?> cacheFactory;
+
+    // Lazy-initialized caches with reset support
+    private static final LazyRef<OgnlCache<Class<?>, Boolean>> isProxyCache =
+            new LazyRef<>(ProxyUtil::createCache);
+    private static final LazyRef<OgnlCache<Member, Boolean>> isProxyMemberCache =
+            new LazyRef<>(ProxyUtil::createCache);
+
+    /**
+     * Sets the cache factory. Called by the container during initialization.
+     * Resets existing caches so they are recreated with the new factory.
+     *
+     * @param factory the cache factory to use for creating proxy caches
+     * @since 6.9.0
+     */
+    public static void setProxyCacheFactory(ProxyCacheFactory<?, ?> factory) {
+        cacheFactory = factory;
+        isProxyCache.reset();
+        isProxyMemberCache.reset();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <K, V> OgnlCache<K, V> createCache() {
+        if (cacheFactory != null) {
+            return ((ProxyCacheFactory<K, V>) cacheFactory).buildOgnlCache(
+                    CACHE_MAX_SIZE, CACHE_INITIAL_CAPACITY, 0.75f, cacheFactory.getDefaultCacheType());
+        }
+        // Fallback to BASIC if container hasn't initialized yet
+        return new DefaultOgnlCacheFactory<K, V>(
+                CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.BASIC, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+    }
 
     /**
      * Determine the ultimate target class of the given instance, traversing
      * not only a top-level proxy but any number of nested proxies as well &mdash;
      * as long as possible without side effects.
+     *
      * @param candidate the instance to check (might be a proxy)
      * @return the ultimate target class (or the plain class of the given
      * object as fallback; never {@code null})
@@ -78,24 +108,26 @@ public class ProxyUtil {
 
     /**
      * Check whether the given object is a proxy.
+     *
      * @param object the object to check
      */
     public static boolean isProxy(Object object) {
         if (object == null) return false;
         Class<?> clazz = object.getClass();
-        Boolean flag = isProxyCache.get(clazz);
+        Boolean flag = isProxyCache.get().get(clazz);
         if (flag != null) {
             return flag;
         }
 
         boolean isProxy = isSpringAopProxy(object) || isHibernateProxy(object);
 
-        isProxyCache.put(clazz, isProxy);
+        isProxyCache.get().put(clazz, isProxy);
         return isProxy;
     }
 
     /**
      * Check whether the given member is a proxy member of a proxy object or is a static proxy member.
+     *
      * @param member the member to check
      * @param object the object to check
      */
@@ -104,14 +136,14 @@ public class ProxyUtil {
             return false;
         }
 
-        Boolean flag = isProxyMemberCache.get(member);
+        Boolean flag = isProxyMemberCache.get().get(member);
         if (flag != null) {
             return flag;
         }
 
         boolean isProxyMember = isSpringProxyMember(member) || isHibernateProxyMember(member);
 
-        isProxyMemberCache.put(member, isProxyMember);
+        isProxyMemberCache.get().put(member, isProxyMember);
         return isProxyMember;
     }
 
@@ -147,6 +179,7 @@ public class ProxyUtil {
      * Determine the ultimate target class of the given spring bean instance, traversing
      * not only a top-level spring proxy but any number of nested spring proxies as well &mdash;
      * as long as possible without side effects, that is, just for singleton targets.
+     *
      * @param candidate the instance to check (might be a spring AOP proxy)
      * @return the ultimate target class (or the plain class of the given
      * object as fallback; never {@code null})
@@ -170,6 +203,7 @@ public class ProxyUtil {
 
     /**
      * Check whether the given object is a Spring proxy.
+     *
      * @param object the object to check
      */
     private static boolean isSpringAopProxy(Object object) {
@@ -180,6 +214,7 @@ public class ProxyUtil {
 
     /**
      * Check whether the given member is a member of a spring proxy.
+     *
      * @param member the member to check
      */
     private static boolean isSpringProxyMember(Member member) {
@@ -201,6 +236,7 @@ public class ProxyUtil {
 
     /**
      * Obtain the singleton target object behind the given spring proxy, if any.
+     *
      * @param candidate the (potential) spring proxy to check
      * @return the singleton target object, or {@code null} in any other case
      * (not a spring proxy, not an existing singleton target)
@@ -221,6 +257,7 @@ public class ProxyUtil {
 
     /**
      * Check whether the specified class is a CGLIB-generated class.
+     *
      * @param clazz the class to check
      */
     private static boolean isCglibProxyClass(Class<?> clazz) {
@@ -229,7 +266,8 @@ public class ProxyUtil {
 
     /**
      * Check whether the given class implements an interface with a given class name.
-     * @param clazz the class to check
+     *
+     * @param clazz          the class to check
      * @param ifaceClassName the interface class name to check
      */
     private static boolean implementsInterface(Class<?> clazz, String ifaceClassName) {
@@ -243,7 +281,8 @@ public class ProxyUtil {
 
     /**
      * Check whether the given class has a given member.
-     * @param clazz the class to check
+     *
+     * @param clazz  the class to check
      * @param member the member to check
      */
     private static boolean hasMember(Class<?> clazz, Member member) {

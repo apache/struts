@@ -255,6 +255,9 @@
           class="com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
     <bean type="com.opensymphony.xwork2.ognl.BeanInfoCacheFactory" name="struts"
           class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.ognl.ProxyCacheFactory" name="struts"
+          class="com.opensymphony.xwork2.ognl.StrutsProxyCacheFactory" scope="singleton"/>
+    <bean class="com.opensymphony.xwork2.util.StrutsProxyCacheFactoryBean" scope="singleton"/>
 
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>

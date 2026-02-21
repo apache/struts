@@ -158,7 +158,7 @@
             <id>jakartaee11</id>
             <properties>
                 <jakarta-ee.version>11.0.0-M5</jakarta-ee.version>
-                <spring.version>7.0.4</spring.version>
+                <spring.version>7.0.5</spring.version>
             </properties>
         </profile>
         <profile>

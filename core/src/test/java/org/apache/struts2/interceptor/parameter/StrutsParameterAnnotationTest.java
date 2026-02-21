@@ -30,7 +30,9 @@ import org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
+import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.security.AcceptedPatternsChecker.IsAccepted;
 import org.apache.struts2.security.ExcludedPatternsChecker.IsExcluded;
 import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
@@ -70,6 +72,9 @@ public class StrutsParameterAnnotationTest {
                 new DefaultOgnlBeanInfoCacheFactory<>(String.valueOf(1000), LRU.toString()),
                 new StrutsOgnlGuard());
         parametersInterceptor.setOgnlUtil(ognlUtil);
+
+        var proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
+        parametersInterceptor.setProxyService(proxyService);
 
         NotExcludedAcceptedPatternsChecker checker = mock(NotExcludedAcceptedPatternsChecker.class);
         when(checker.isAccepted(anyString())).thenReturn(IsAccepted.yes(""));

@@ -85,13 +85,17 @@ import org.apache.struts2.ognl.ExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlCacheFactory;
 import org.apache.struts2.ognl.OgnlReflectionProvider;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.ProxyCacheFactory;
+import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.ognl.OgnlValueStackFactory;
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.ognl.accessor.XWorkMethodAccessor;
+import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.util.OgnlTextParser;
 import org.apache.struts2.util.PatternMatcher;
+import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.text.StrutsLocalizedTextProvider;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStack;
@@ -144,6 +148,8 @@ public class DefaultConfiguration implements Configuration {
         constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, 10000);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, 10000);
+        constants.put(StrutsConstants.STRUTS_PROXY_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
+        constants.put(StrutsConstants.STRUTS_PROXY_CACHE_MAXSIZE, 10000);
         constants.put(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE);
         BOOTSTRAP_CONSTANTS = Collections.unmodifiableMap(constants);
     }
@@ -395,6 +401,8 @@ public class DefaultConfiguration implements Configuration {
 
                 .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
+                .factory(ProxyCacheFactory.class, StrutsProxyCacheFactory.class, Scope.SINGLETON)
+                .factory(ProxyService.class, StrutsProxyService.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)

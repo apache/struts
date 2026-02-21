@@ -26,7 +26,7 @@ import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.annotations.JSONParameter;
 import org.apache.struts2.json.bridge.FieldBridge;
 import org.apache.struts2.json.bridge.ParameterizedBridge;
-import org.apache.struts2.util.ProxyUtil;
+import org.apache.struts2.util.ProxyService;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -78,6 +78,12 @@ public class DefaultJSONWriter implements JSONWriter {
     private boolean excludeNullProperties;
     private boolean cacheBeanInfo = true;
     private boolean excludeProxyProperties;
+    private ProxyService proxyService;
+
+    @Inject
+    public void setProxyService(ProxyService proxyService) {
+        this.proxyService = proxyService;
+    }
 
     @Inject(value = JSONConstants.RESULT_EXCLUDE_PROXY_PROPERTIES, required = false)
     public void setExcludeProxyProperties(String excludeProxyProperties) {
@@ -221,7 +227,7 @@ public class DefaultJSONWriter implements JSONWriter {
         BeanInfo info;
 
         try {
-            Class<?> clazz = excludeProxyProperties ? ProxyUtil.ultimateTargetClass(object) : object.getClass();
+            Class<?> clazz = excludeProxyProperties ? proxyService.ultimateTargetClass(object) : object.getClass();
 
             info = ((object == this.root) && this.ignoreHierarchy)
                     ? getBeanInfoIgnoreHierarchy(clazz)

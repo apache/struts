@@ -50,30 +50,26 @@ public class StrutsProxyService implements ProxyService {
 
     private final OgnlCache<Class<?>, Boolean> isProxyCache;
     private final OgnlCache<Member, Boolean> isProxyMemberCache;
-    private final OgnlCache<Object, Class<?>> targetClassCache;
 
     @Inject
     @SuppressWarnings("unchecked")
     public StrutsProxyService(ProxyCacheFactory<?, ?> proxyCacheFactory) {
         this.isProxyCache = (OgnlCache<Class<?>, Boolean>) proxyCacheFactory.buildOgnlCache();
         this.isProxyMemberCache = (OgnlCache<Member, Boolean>) proxyCacheFactory.buildOgnlCache();
-        this.targetClassCache = (OgnlCache<Object, Class<?>>) proxyCacheFactory.buildOgnlCache();
     }
 
     @Override
     public Class<?> ultimateTargetClass(Object candidate) {
-        return targetClassCache.computeIfAbsent(candidate, k -> {
-            Class<?> result = null;
-            if (isSpringAopProxy(k)) {
-                result = springUltimateTargetClass(k);
-            } else if (isHibernateProxy(k)) {
-                result = getHibernateProxyTarget(k).getClass();
-            }
-            if (result == null) {
-                result = k.getClass();
-            }
-            return result;
-        });
+        Class<?> result = null;
+        if (isSpringAopProxy(candidate)) {
+            result = springUltimateTargetClass(candidate);
+        } else if (isHibernateProxy(candidate)) {
+            result = getHibernateProxyTarget(candidate).getClass();
+        }
+        if (result == null) {
+            result = candidate.getClass();
+        }
+        return result;
     }
 
     @Override

@@ -53,9 +53,9 @@ public class ProxyUtil {
     private static final int CACHE_MAX_SIZE = 10000;
     private static final int CACHE_INITIAL_CAPACITY = 256;
     private static final OgnlCache<Class<?>, Boolean> isProxyCache = new DefaultOgnlCacheFactory<Class<?>, Boolean>(
-            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.BASIC, CACHE_INITIAL_CAPACITY).buildOgnlCache();
     private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
-            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.BASIC, CACHE_INITIAL_CAPACITY).buildOgnlCache();
 
     /**
      * Determine the ultimate target class of the given instance, traversing

@@ -117,19 +117,6 @@ public class StrutsProxyServiceTest {
     }
 
     @Test
-    public void ultimateTargetClassCachesResult() {
-        TestService proxy = createSpringProxy(new TestServiceImpl());
-
-        // First call should populate cache
-        Class<?> result1 = proxyService.ultimateTargetClass(proxy);
-        // Second call with same object should use cached result
-        Class<?> result2 = proxyService.ultimateTargetClass(proxy);
-
-        assertThat(result1).isEqualTo(result2);
-        assertThat(result1).isEqualTo(TestServiceImpl.class);
-    }
-
-    @Test
     public void isHibernateProxyWithNull() {
         assertThat(proxyService.isHibernateProxy(null)).isFalse();
     }

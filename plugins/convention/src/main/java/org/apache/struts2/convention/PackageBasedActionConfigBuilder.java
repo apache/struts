@@ -716,42 +716,28 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                 // Verify that the annotations have no errors and also determine if the default action
                 // configuration should still be built or not.
-                Map<String, List<Action>> map = getActionAnnotations(actionClass);
-                Set<String> actionNames = new HashSet<>();
+                Map<String, List<Action>> actionAnnotationsByMethod = getActionAnnotations(actionClass);
                 boolean hasDefaultMethod = ReflectionTools.containsMethod(actionClass, DEFAULT_METHOD);
-                if (!map.containsKey(DEFAULT_METHOD)
-                        && hasDefaultMethod
-                        && actionAnnotation == null && actionsAnnotation == null
-                        && (alwaysMapExecute || map.isEmpty())) {
-                    boolean found = false;
-                    for (List<Action> actions : map.values()) {
-                        for (Action action : actions) {
 
-                            // Check if there are duplicate action names in the annotations.
-                            String actionName = action.value().equals(Action.DEFAULT_VALUE) ? defaultActionName : action.value();
-                            if (actionNames.contains(actionName)) {
-                                throw new ConfigurationException("The action class [" + actionClass +
-                                        "] contains two methods with an action name annotation whose value " +
-                                        "is the same (they both might be empty as well).");
-                            } else {
-                                actionNames.add(actionName);
-                            }
-
-                            // Check this annotation is the default action
-                            if (action.value().equals(Action.DEFAULT_VALUE)) {
-                                found = true;
-                            }
+                // Check for duplicate action names across all annotated methods
+                Set<String> actionNames = new HashSet<>();
+                for (List<Action> actions : actionAnnotationsByMethod.values()) {
+                    for (Action action : actions) {
+                        String actionName = action.value().equals(Action.DEFAULT_VALUE) ? defaultActionName : action.value();
+                        if (!actionNames.add(actionName)) {
+                            throw new ConfigurationException("The action class [" + actionClass +
+                                    "] contains two methods with an action name annotation whose value " +
+                                    "is the same (they both might be empty as well).");
                         }
-                    }
-
-                    // Build the default
-                    if (!found) {
-                        createActionConfig(defaultPackageConfig, actionClass, defaultActionName, DEFAULT_METHOD, null, allowedMethods);
                     }
                 }
 
+                if (shouldMapDefaultExecuteMethod(actionAnnotationsByMethod, hasDefaultMethod, actionAnnotation, actionsAnnotation)) {
+                    createActionConfig(defaultPackageConfig, actionClass, defaultActionName, DEFAULT_METHOD, null, allowedMethods);
+                }
+
                 // Build the actions for the annotations
-                for (Map.Entry<String, List<Action>> entry : map.entrySet()) {
+                for (Map.Entry<String, List<Action>> entry : actionAnnotationsByMethod.entrySet()) {
                     String method = entry.getKey();
                     List<Action> actions = entry.getValue();
                     for (Action action : actions) {
@@ -767,7 +753,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
                 // some actions will not have any @Action or a default method, like the rest actions
                 // where the action mapper is the one that finds the right method at runtime
-                if (map.isEmpty() && mapAllMatches && actionAnnotation == null && actionsAnnotation == null) {
+                if (actionAnnotationsByMethod.isEmpty() && mapAllMatches && actionAnnotation == null && actionsAnnotation == null) {
                     createActionConfig(defaultPackageConfig, actionClass, defaultActionName, null, actionAnnotation, allowedMethods);
                 }
 
@@ -816,6 +802,38 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     protected boolean cannotInstantiate(Class<?> actionClass) {
         return actionClass.isAnnotation() || actionClass.isInterface() || actionClass.isEnum() ||
                 (actionClass.getModifiers() & Modifier.ABSTRACT) != 0 || actionClass.isAnonymousClass();
+    }
+
+    /**
+     * Determines whether the default {@code execute()} method should be automatically mapped as an action.
+     * This is the case when no explicit mapping exists for the default method, the class has an execute method,
+     * there are no class-level @Action/@Actions annotations, and no other method already maps to the default action name.
+     *
+     * @param actionAnnotationsByMethod the map of method names to their @Action annotations
+     * @param hasDefaultMethod          whether the action class has an execute() method
+     * @param classAction               the class-level @Action annotation, or null
+     * @param classActions              the class-level @Actions annotation, or null
+     * @return true if the default execute method should be mapped
+     */
+    protected boolean shouldMapDefaultExecuteMethod(Map<String, List<Action>> actionAnnotationsByMethod, boolean hasDefaultMethod,
+                                                    Action classAction, Actions classActions) {
+        if (actionAnnotationsByMethod.containsKey(DEFAULT_METHOD) || !hasDefaultMethod) {
+            return false;
+        }
+        if (classAction != null || classActions != null) {
+            return false;
+        }
+        if (!alwaysMapExecute && !actionAnnotationsByMethod.isEmpty()) {
+            return false;
+        }
+        for (List<Action> actions : actionAnnotationsByMethod.values()) {
+            for (Action action : actions) {
+                if (action.value().equals(Action.DEFAULT_VALUE)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**

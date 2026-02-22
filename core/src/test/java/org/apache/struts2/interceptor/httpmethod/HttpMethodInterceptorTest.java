@@ -217,6 +217,54 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals(HttpMethod.POST, action.getHttpMethod());
     }
 
+    /**
+     * Simulates a wildcard action like {@code <action name="Wild-*" method="{1}">}
+     * resolving to method "onPostOnly" (annotated with @HttpPost).
+     * With the fix in DefaultActionProxy.resolveMethod(), config-resolved methods
+     * set isMethodSpecified()=true, so the interceptor checks method-level annotations.
+     * A GET request should be rejected because @HttpPost only allows POST.
+     */
+    public void testWildcardResolvedMethodWithPostAnnotationRejectsGet() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        // Simulate wildcard resolution: Wild-onPostOnly -> method="onPostOnly"
+        actionProxy.setMethod("onPostOnly");
+        // After the fix, config-resolved methods have methodSpecified=true
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("get");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then - interceptor checks method-level @HttpPost and rejects GET
+        assertEquals("bad-request", resultName);
+    }
+
+    /**
+     * Counterpart: same wildcard scenario but with POST request — should succeed.
+     */
+    public void testWildcardResolvedMethodWithPostAnnotationAllowsPost() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("onPostOnly");
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("post");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then - interceptor checks method-level @HttpPost and allows POST
+        assertEquals("onPostOnly", resultName);
+    }
+
     private void prepareActionInvocation(Object action) {
         interceptor = new HttpMethodInterceptor();
         invocation = new MockActionInvocation();

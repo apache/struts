@@ -35,6 +35,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -205,7 +206,7 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testRealLocalesInParams() throws Exception {
-        Locale[] locales = new Locale[] { Locale.CANADA_FRENCH };
+        Locale[] locales = new Locale[]{Locale.CANADA_FRENCH};
         assertTrue(locales.getClass().isArray());
         prepare(I18nInterceptor.DEFAULT_PARAMETER, locales);
         interceptor.intercept(mai);
@@ -278,6 +279,69 @@ public class I18nInterceptorTest extends TestCase {
         assertEquals(new Locale("pl"), mai.getInvocationContext().getLocale());
     }
 
+    public void testSupportedLocaleWithRequestLocale() throws Exception {
+        // given - supportedLocale configured + request_locale param with SESSION storage
+        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        interceptor.setSupportedLocale("en,fr");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "fr");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - request_locale wins over Accept-Language
+        assertEquals(new Locale("fr"), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+    }
+
+    public void testSupportedLocaleRejectsUnsupportedRequestLocale() throws Exception {
+        // given - request_locale=es but supportedLocale="en,fr"
+        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        interceptor.setSupportedLocale("en,fr");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "es");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - es rejected, falls back to Accept-Language match (en)
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(new Locale("en"), mai.getInvocationContext().getLocale());
+    }
+
+    public void testSupportedLocaleRevalidatesSessionLocale() throws Exception {
+        // given - session has stored locale "de" but supportedLocale changed to "en,fr"
+        session.put(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE, new Locale("de"));
+        request.setPreferredLocales(Arrays.asList(new Locale("fr")));
+        interceptor.setSupportedLocale("en,fr");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - stored "de" rejected, falls back to Accept-Language match (fr)
+        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+    }
+
+    public void testSupportedLocaleWithCookieStorage() throws Exception {
+        // given - supportedLocale configured + request_cookie_locale param with COOKIE storage
+        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "fr");
+        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        interceptor.setSupportedLocale("en,fr");
+
+        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "fr");
+        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
+        response.addCookie(CookieMatcher.eqCookie(cookie));
+        EasyMock.replay(response);
+
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - request_cookie_locale=fr wins
+        EasyMock.verify(response);
+        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+    }
+
     public void testAcceptLanguageBasedLocaleWithFallbackToDefault() throws Exception {
         // given
         request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("es")));
@@ -308,9 +372,9 @@ public class I18nInterceptorTest extends TestCase {
         session = new HashMap<>();
 
         ac = ActionContext.of()
-            .bind()
-            .withSession(session)
-            .withParameters(HttpParameters.create().build());
+                .bind()
+                .withSession(session)
+                .withParameters(HttpParameters.create().build());
 
         request = new MockHttpServletRequest();
         request.setSession(new MockHttpSession());
@@ -348,8 +412,8 @@ public class I18nInterceptorTest extends TestCase {
         public boolean matches(Object argument) {
             Cookie cookie = ((Cookie) argument);
             return
-                (cookie.getName().equals(expected.getName()) &&
-                 cookie.getValue().equals(expected.getValue()));
+                    (cookie.getName().equals(expected.getName()) &&
+                            cookie.getValue().equals(expected.getValue()));
         }
 
         public static Cookie eqCookie(Cookie ck) {
@@ -359,10 +423,10 @@ public class I18nInterceptorTest extends TestCase {
 
         public void appendTo(StringBuffer buffer) {
             buffer
-                .append("Received")
-                .append(expected.getName())
-                .append("/")
-                .append(expected.getValue());
+                    .append("Received")
+                    .append(expected.getName())
+                    .append("/")
+                    .append(expected.getValue());
         }
     }
 

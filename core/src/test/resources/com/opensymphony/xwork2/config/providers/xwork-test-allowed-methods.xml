@@ -29,7 +29,7 @@
         </action>
 
         <action name="Boring">
-            <allowed-methods> </allowed-methods>
+            <allowed-methods></allowed-methods>
         </action>
 
         <action name="Foo">
@@ -42,6 +42,18 @@
 
         <action name="Baz" method="baz">
             <allowed-methods>foo,bar</allowed-methods>
+        </action>
+
+        <action name="Wild-*" class="org.apache.struts2.HttpMethodsTestAction" method="{1}">
+            <allowed-methods>regex:.*</allowed-methods>
+        </action>
+
+        <action name="ConfigMethod" class="org.apache.struts2.HttpMethodsTestAction" method="onPostOnly">
+            <allowed-methods>regex:.*</allowed-methods>
+        </action>
+
+        <action name="NoMethod" class="org.apache.struts2.HttpMethodsTestAction">
+            <allowed-methods>regex:.*</allowed-methods>
         </action>
     </package>
 

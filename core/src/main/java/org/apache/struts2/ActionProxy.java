@@ -93,9 +93,11 @@ public interface ActionProxy {
     String getMethod();
 
     /**
-     * Gets status of the method value's initialization.
+     * Gets status of the method value's initialization. Returns {@code true} when the method was explicitly provided
+     * (e.g. via URL parameter, wildcard substitution, or action configuration), and {@code false} only when the
+     * framework defaults to {@code "execute"} because no method was specified anywhere.
      *
-     * @return true if the method returned by getMethod() is not a default initializer value.
+     * @return true if the method returned by getMethod() is not the default "execute" fallback.
      */
     boolean isMethodSpecified();
 

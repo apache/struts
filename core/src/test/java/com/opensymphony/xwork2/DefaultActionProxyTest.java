@@ -18,15 +18,14 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.junit.Test;
 
 public class DefaultActionProxyTest extends StrutsInternalTestCase {
 
-    @Test
-    public void testThorwExceptionOnNotAllowedMethod() throws Exception {
+    public void testThrowExceptionOnNotAllowedMethod() {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
         DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "strict", "Default", "notAllowed", true, true);
@@ -35,8 +34,52 @@ public class DefaultActionProxyTest extends StrutsInternalTestCase {
         try {
             dap.prepare();
             fail("Must throw exception!");
-        } catch (Exception e) {
-            assertEquals(e.getMessage(), "Method notAllowed for action Default is not allowed!");
+        } catch (ConfigurationException e) {
+            assertEquals("Method notAllowed for action Default is not allowed!", e.getMessage());
         }
+    }
+
+    public void testMethodSpecifiedWhenPassedExplicitly() {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "", "NoMethod", "onPostOnly", true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method passed explicitly should be marked as specified", dap.isMethodSpecified());
+        assertEquals("onPostOnly", dap.getMethod());
+    }
+
+    public void testMethodSpecifiedWhenResolvedFromConfig() {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "", "ConfigMethod", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method resolved from action config should be marked as specified", dap.isMethodSpecified());
+        assertEquals("onPostOnly", dap.getMethod());
+    }
+
+    public void testMethodNotSpecifiedWhenDefaultingToExecute() {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "", "NoMethod", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertFalse("Method defaulting to execute should not be marked as specified", dap.isMethodSpecified());
+        assertEquals("execute", dap.getMethod());
+    }
+
+    public void testMethodSpecifiedWithWildcardAction() {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "", "Wild-onPostOnly", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method resolved from wildcard should be marked as specified", dap.isMethodSpecified());
+        assertEquals("onPostOnly", dap.getMethod());
     }
 }

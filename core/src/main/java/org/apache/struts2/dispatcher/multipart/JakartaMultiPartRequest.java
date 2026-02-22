@@ -373,10 +373,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     if (item instanceof DiskFileItem) {
                         DiskFileItem diskItem = (DiskFileItem) item;
                         File storeLocation = diskItem.getStoreLocation();
-                        if (storeLocation != null && storeLocation.exists()) {
-                            LOG.debug("Deleting temporary file: [{}]", storeLocation.getName());
-                            if (!storeLocation.delete()) {
-                                LOG.warn("Unable to delete temporary file: [{}]", storeLocation.getName());
+                        if (storeLocation != null) {
+                            if(storeLocation.isFile()) {
+                                LOG.debug("Deleting file: {}", storeLocation.getName());
+                                if (!storeLocation.delete()) {
+                                    LOG.warn("There was a problem attempting to delete file: {}", storeLocation.getName());
+                                }
+                            } else {
+                                LOG.debug("File: {} already deleted", storeLocation.getName());
                             }
                         }
                     }

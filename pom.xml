@@ -111,7 +111,7 @@
 
         <!-- Maven plugin -->
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.9.1</asm.version>

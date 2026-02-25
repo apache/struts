@@ -342,6 +342,60 @@ public class I18nInterceptorTest extends TestCase {
         assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
     }
 
+    public void testSupportedLocaleRejectsUnsupportedRequestCookieLocale() throws Exception {
+        // given - request_cookie_locale=es but supportedLocale="en,fr"
+        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "es");
+        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        interceptor.setSupportedLocale("en,fr");
+
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
+
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - unsupported request_cookie_locale ignored, falls back to Accept-Language match
+        EasyMock.verify(response);
+        assertEquals(new Locale("en"), mai.getInvocationContext().getLocale());
+    }
+
+    public void testSupportedLocaleRevalidatesStoredCookieLocale() throws Exception {
+        // given - cookie has stored "de" but supportedLocale changed to "en,fr"
+        request.setCookies(new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "de"));
+        request.setPreferredLocales(Arrays.asList(new Locale("it")));
+        interceptor.setSupportedLocale("en,fr");
+
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
+
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - stored "de" rejected and fallback locale from invocation context is used
+        EasyMock.verify(response);
+        assertEquals(Locale.US, mai.getInvocationContext().getLocale());
+    }
+
+    public void testRequestOnlyLocalePrecedenceWithSupportedLocale() throws Exception {
+        // given - request_only_locale should win over Accept-Language match
+        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "fr");
+        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        interceptor.setSupportedLocale("en,fr");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - request_only_locale applied and not persisted
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+    }
+
     public void testAcceptLanguageBasedLocaleWithFallbackToDefault() throws Exception {
         // given
         request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("es")));

@@ -168,8 +168,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             this.method = config.getMethodName();
             if (StringUtils.isEmpty(this.method)) {
                 this.method = ActionConfig.DEFAULT_METHOD;
+                methodSpecified = false;
             }
-            methodSpecified = false;
         }
     }
 

@@ -42,7 +42,7 @@ public class XmlConfigurationProviderAllowedMethodsTest extends ConfigurationTes
         Map actionConfigs = pkg.getActionConfigs();
 
         // assertions
-        assertEquals(5, actionConfigs.size());
+        assertEquals(8, actionConfigs.size());
 
         ActionConfig action = (ActionConfig) actionConfigs.get("Default");
         assertEquals(1, action.getAllowedMethods().size());

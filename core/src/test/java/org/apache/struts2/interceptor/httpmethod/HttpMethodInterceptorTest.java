@@ -217,6 +217,43 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals(HttpMethod.POST, action.getHttpMethod());
     }
 
+    public void testWildcardResolvedMethodWithPostAnnotationRejectsGet() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("onPostOnly");
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("GET");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("bad-request", resultName);
+    }
+
+    public void testWildcardResolvedMethodWithPostAnnotationAllowsPost() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("onPostOnly");
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("POST");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("onPostOnly", resultName);
+        assertEquals(HttpMethod.POST, action.getHttpMethod());
+    }
+
     private void prepareActionInvocation(Object action) {
         interceptor = new HttpMethodInterceptor();
         invocation = new MockActionInvocation();

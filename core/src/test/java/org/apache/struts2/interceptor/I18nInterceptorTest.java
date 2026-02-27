@@ -205,7 +205,7 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testRealLocalesInParams() throws Exception {
-        Locale[] locales = new Locale[] { Locale.CANADA_FRENCH };
+        Locale[] locales = new Locale[]{Locale.CANADA_FRENCH};
         assertTrue(locales.getClass().isArray());
         prepare(I18nInterceptor.DEFAULT_PARAMETER, locales);
         interceptor.intercept(mai);
@@ -294,6 +294,66 @@ public class I18nInterceptorTest extends TestCase {
         assertEquals(Locale.US, mai.getInvocationContext().getLocale());
     }
 
+    public void testRequestLocaleWithSupportedLocale() throws Exception {
+        // given
+        interceptor.setSupportedLocale("en,de");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "de");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then
+        Locale german = new Locale("de");
+        assertEquals(german, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(german, mai.getInvocationContext().getLocale());
+    }
+
+    public void testUnsupportedRequestLocaleRejected() throws Exception {
+        // given
+        interceptor.setSupportedLocale("en,de");
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "fr");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - fr is not supported, should fall back to default
+        assertNull("unsupported locale should not be stored", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+    }
+
+    public void testStaleSessionLocaleRejected() throws Exception {
+        // given - session has a stored locale that is no longer supported
+        session.put(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE, Locale.FRENCH);
+        interceptor.setSupportedLocale("en,de");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - stored fr locale should be discarded since it's not in supportedLocale
+        assertFalse("stale session locale should be discarded",
+                Locale.FRENCH.equals(mai.getInvocationContext().getLocale()));
+    }
+
+    public void testCookieRequestLocaleWithSupportedLocale() throws Exception {
+        // given
+        interceptor.setSupportedLocale("en,de");
+        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
+        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "de");
+
+        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "de");
+        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
+        response.addCookie(CookieMatcher.eqCookie(cookie));
+        EasyMock.replay(response);
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+
+        // when
+        interceptor.intercept(mai);
+
+        // then
+        EasyMock.verify(response);
+        Locale german = new Locale("de");
+        assertEquals(german, mai.getInvocationContext().getLocale());
+    }
+
     private void prepare(String key, Serializable value) {
         Map<String, Serializable> params = new HashMap<>();
         params.put(key, value);
@@ -308,9 +368,9 @@ public class I18nInterceptorTest extends TestCase {
         session = new HashMap<>();
 
         ac = ActionContext.of()
-            .bind()
-            .withSession(session)
-            .withParameters(HttpParameters.create().build());
+                .bind()
+                .withSession(session)
+                .withParameters(HttpParameters.create().build());
 
         request = new MockHttpServletRequest();
         request.setSession(new MockHttpSession());
@@ -348,8 +408,8 @@ public class I18nInterceptorTest extends TestCase {
         public boolean matches(Object argument) {
             Cookie cookie = ((Cookie) argument);
             return
-                (cookie.getName().equals(expected.getName()) &&
-                 cookie.getValue().equals(expected.getValue()));
+                    (cookie.getName().equals(expected.getName()) &&
+                            cookie.getValue().equals(expected.getValue()));
         }
 
         public static Cookie eqCookie(Cookie ck) {
@@ -359,10 +419,10 @@ public class I18nInterceptorTest extends TestCase {
 
         public void appendTo(StringBuffer buffer) {
             buffer
-                .append("Received")
-                .append(expected.getName())
-                .append("/")
-                .append(expected.getValue());
+                    .append("Received")
+                    .append(expected.getName())
+                    .append("/")
+                    .append(expected.getValue());
         }
     }
 

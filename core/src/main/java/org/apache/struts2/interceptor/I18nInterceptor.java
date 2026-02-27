@@ -65,7 +65,7 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     private Set<Locale> supportedLocale = Collections.emptySet();
 
-    protected enum Storage { COOKIE, SESSION, REQUEST, ACCEPT_LANGUAGE }
+    protected enum Storage {COOKIE, SESSION, REQUEST, ACCEPT_LANGUAGE}
 
     public void setParameterName(String parameterName) {
         this.parameterName = parameterName;
@@ -103,10 +103,14 @@ public class I18nInterceptor extends AbstractInterceptor {
      */
     public void setSupportedLocale(String supportedLocale) {
         this.supportedLocale = TextParseUtil
-            .commaDelimitedStringToSet(supportedLocale)
-            .stream()
-            .map(Locale::new)
-            .collect(Collectors.toSet());
+                .commaDelimitedStringToSet(supportedLocale)
+                .stream()
+                .map(Locale::new)
+                .collect(Collectors.toSet());
+    }
+
+    protected boolean isLocaleSupported(Locale locale) {
+        return supportedLocale.isEmpty() || supportedLocale.contains(locale);
     }
 
     @Inject
@@ -222,8 +226,11 @@ public class I18nInterceptor extends AbstractInterceptor {
      */
     protected interface LocaleHandler {
         Locale find();
+
         Locale read(ActionInvocation invocation);
+
         Locale store(ActionInvocation invocation, Locale locale);
+
         boolean shouldStore();
     }
 
@@ -241,7 +248,10 @@ public class I18nInterceptor extends AbstractInterceptor {
 
             Parameter requestedLocale = findLocaleParameter(actionInvocation, requestOnlyParameterName);
             if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
+                Locale locale = getLocaleFromParam(requestedLocale.getValue());
+                if (locale != null && isLocaleSupported(locale)) {
+                    return locale;
+                }
             }
 
             return null;
@@ -278,6 +288,11 @@ public class I18nInterceptor extends AbstractInterceptor {
         @Override
         @SuppressWarnings("rawtypes")
         public Locale find() {
+            Locale requestOnlyLocale = super.find();
+            if (requestOnlyLocale != null) {
+                return requestOnlyLocale;
+            }
+
             if (!supportedLocale.isEmpty()) {
                 Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
                 while (locales.hasMoreElements()) {
@@ -287,7 +302,7 @@ public class I18nInterceptor extends AbstractInterceptor {
                     }
                 }
             }
-            return super.find();
+            return null;
         }
 
     }
@@ -300,18 +315,18 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         @Override
         public Locale find() {
-            Locale requestOnlyLocale = super.find();
-
-            if (requestOnlyLocale != null) {
-                LOG.debug("Found locale under request only param, it won't be stored in session!");
-                shouldStore = false;
-                return requestOnlyLocale;
-            }
-
-            LOG.debug("Searching locale in request under parameter {}", parameterName);
             Parameter requestedLocale = findLocaleParameter(actionInvocation, parameterName);
             if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
+                Locale locale = getLocaleFromParam(requestedLocale.getValue());
+                if (locale != null && isLocaleSupported(locale)) {
+                    return locale;
+                }
+            }
+
+            Locale requestOnlyLocale = super.find();
+            if (requestOnlyLocale != null) {
+                shouldStore = false;
+                return requestOnlyLocale;
             }
 
             return null;
@@ -344,7 +359,12 @@ public class I18nInterceptor extends AbstractInterceptor {
                     Object sessionLocale = invocation.getInvocationContext().getSession().get(attributeName);
                     if (sessionLocale instanceof Locale) {
                         locale = (Locale) sessionLocale;
-                        LOG.debug("Applied session locale: {}", locale);
+                        if (!isLocaleSupported(locale)) {
+                            LOG.debug("Stored session locale {} is not supported, discarding", locale);
+                            locale = null;
+                        } else {
+                            LOG.debug("Applied session locale: {}", locale);
+                        }
                     }
                 }
             }
@@ -368,17 +388,18 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         @Override
         public Locale find() {
-            Locale requestOnlySessionLocale = super.find();
-
-            if (requestOnlySessionLocale != null) {
-                shouldStore = false;
-                return requestOnlySessionLocale;
-            }
-
-            LOG.debug("Searching locale in request under parameter {}", requestCookieParameterName);
             Parameter requestedLocale = findLocaleParameter(actionInvocation, requestCookieParameterName);
             if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
+                Locale locale = getLocaleFromParam(requestedLocale.getValue());
+                if (locale != null && isLocaleSupported(locale)) {
+                    return locale;
+                }
+            }
+
+            Locale requestOnlyLocale = super.find();
+            if (requestOnlyLocale != null) {
+                shouldStore = false;
+                return requestOnlyLocale;
             }
 
             return null;
@@ -404,6 +425,10 @@ public class I18nInterceptor extends AbstractInterceptor {
                 for (Cookie cookie : cookies) {
                     if (attributeName.equals(cookie.getName())) {
                         locale = getLocaleFromParam(cookie.getValue());
+                        if (locale != null && !isLocaleSupported(locale)) {
+                            LOG.debug("Stored cookie locale {} is not supported, discarding", locale);
+                            locale = null;
+                        }
                     }
                 }
             }

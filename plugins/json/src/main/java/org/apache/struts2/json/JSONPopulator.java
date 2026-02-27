@@ -32,6 +32,15 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalQuery;
 import java.util.*;
 
 /**
@@ -59,11 +68,10 @@ public class JSONPopulator {
         this.dateFormat = dateFormat;
     }
 
-    @SuppressWarnings("unchecked")
     public void populateObject(Object object, final Map elements) throws IllegalAccessException,
             InvocationTargetException, NoSuchMethodException, IntrospectionException,
             IllegalArgumentException, JSONException, InstantiationException {
-        Class clazz = object.getClass();
+        Class<?> clazz = object.getClass();
 
         BeanInfo info = Introspector.getBeanInfo(clazz);
         PropertyDescriptor[] props = info.getPropertyDescriptors();
@@ -84,12 +92,12 @@ public class JSONPopulator {
 
                     // use only public setters
                     if (Modifier.isPublic(method.getModifiers())) {
-                        Class[] paramTypes = method.getParameterTypes();
+                        Class<?>[] paramTypes = method.getParameterTypes();
                         Type[] genericTypes = method.getGenericParameterTypes();
 
                         if (paramTypes.length == 1) {
                             Object convertedValue = this.convert(paramTypes[0], genericTypes[0], value, method);
-                            method.invoke(object, new Object[] { convertedValue });
+                            method.invoke(object, convertedValue);
                         }
                     }
                 }
@@ -97,8 +105,7 @@ public class JSONPopulator {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public Object convert(Class clazz, Type type, Object value, Method method)
+    public Object convert(Class<?> clazz, Type type, Object value, Method method)
             throws IllegalArgumentException, JSONException, IllegalAccessException,
             InvocationTargetException, InstantiationException, NoSuchMethodException, IntrospectionException {
 
@@ -116,7 +123,7 @@ public class JSONPopulator {
             return convertToArray(clazz, type, value, method);
         else if (value instanceof Map) {
             // nested bean
-            Object convertedValue = clazz.newInstance();
+            Object convertedValue = clazz.getDeclaredConstructor().newInstance();
             this.populateObject(convertedValue, (Map) value);
             return convertedValue;
         } else if (BigDecimal.class.equals(clazz)) {
@@ -127,22 +134,25 @@ public class JSONPopulator {
             throw new JSONException("Incompatible types for property " + method.getName());
     }
 
-    private static boolean isJSONPrimitive(Class clazz) {
+    private static boolean isJSONPrimitive(Class<?> clazz) {
         return clazz.isPrimitive() || clazz.equals(String.class) || clazz.equals(Date.class)
                 || clazz.equals(Boolean.class) || clazz.equals(Byte.class) || clazz.equals(Character.class)
                 || clazz.equals(Double.class) || clazz.equals(Float.class) || clazz.equals(Integer.class)
                 || clazz.equals(Long.class) || clazz.equals(Short.class) || clazz.equals(Locale.class)
-                || clazz.isEnum();
+                || clazz.isEnum()
+                || Calendar.class.isAssignableFrom(clazz)
+                || clazz.equals(LocalDate.class) || clazz.equals(LocalDateTime.class)
+                || clazz.equals(LocalTime.class) || clazz.equals(ZonedDateTime.class)
+                || clazz.equals(OffsetDateTime.class) || clazz.equals(Instant.class);
     }
 
-    @SuppressWarnings("unchecked")
-    private Object convertToArray(Class clazz, Type type, Object value, Method accessor)
+    private Object convertToArray(Class<?> clazz, Type type, Object value, Method accessor)
             throws JSONException, IllegalArgumentException, IllegalAccessException,
             InvocationTargetException, InstantiationException, NoSuchMethodException, IntrospectionException {
         if (value == null)
             return null;
         else if (value instanceof List) {
-            Class arrayType = clazz.getComponentType();
+            Class<?> arrayType = clazz.getComponentType();
             List values = (List) value;
             Object newArray = Array.newInstance(arrayType, values.size());
 
@@ -164,7 +174,7 @@ public class JSONPopulator {
                     } else if (List.class.isAssignableFrom(arrayType)) {
                         newObject = convertToCollection(arrayType, type, listValue, accessor);
                     } else {
-                        newObject = arrayType.newInstance();
+                        newObject = arrayType.getDeclaredConstructor().newInstance();
                         this.populateObject(newObject, (Map) listValue);
                     }
 
@@ -179,16 +189,15 @@ public class JSONPopulator {
     }
 
     @SuppressWarnings("unchecked")
-    private Object convertToCollection(Class clazz, Type type, Object value, Method accessor)
+    private Object convertToCollection(Class<?> clazz, Type type, Object value, Method accessor)
             throws JSONException, IllegalArgumentException, IllegalAccessException,
             InvocationTargetException, InstantiationException, NoSuchMethodException, IntrospectionException {
         if (value == null)
             return null;
         else if (value instanceof List) {
-            Class itemClass = Object.class;
+            Class<?> itemClass = Object.class;
             Type itemType = null;
-            if ((type != null) && (type instanceof ParameterizedType)) {
-                ParameterizedType ptype = (ParameterizedType) type;
+            if (type instanceof ParameterizedType ptype) {
                 itemType = ptype.getActualTypeArguments()[0];
                 if (itemType.getClass().equals(Class.class)) {
                     itemClass = (Class) itemType;
@@ -198,11 +207,8 @@ public class JSONPopulator {
             }
             List values = (List) value;
 
-            Collection newCollection = null;
-            try {
-                newCollection = (Collection) clazz.newInstance();
-            } catch (InstantiationException ex) {
-                // fallback if clazz represents an interface or abstract class
+            Collection newCollection;
+            if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
                 if (SortedSet.class.isAssignableFrom(clazz)) {
                     newCollection = new TreeSet();
                 } else if (Set.class.isAssignableFrom(clazz)) {
@@ -212,6 +218,8 @@ public class JSONPopulator {
                 } else {
                     newCollection = new ArrayList();
                 }
+            } else {
+                newCollection = (Collection) clazz.getDeclaredConstructor().newInstance();
             }
 
             // create an object for each element
@@ -231,7 +239,7 @@ public class JSONPopulator {
                     newCollection.add(newObject);
                 } else if (listValue instanceof Map) {
                     // array of beans
-                    Object newObject = itemClass.newInstance();
+                    Object newObject = itemClass.getDeclaredConstructor().newInstance();
                     this.populateObject(newObject, (Map) listValue);
                     newCollection.add(newObject);
                 } else
@@ -244,16 +252,15 @@ public class JSONPopulator {
     }
 
     @SuppressWarnings("unchecked")
-    private Object convertToMap(Class clazz, Type type, Object value, Method accessor) throws JSONException,
+    private Object convertToMap(Class<?> clazz, Type type, Object value, Method accessor) throws JSONException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException,
             InstantiationException, NoSuchMethodException, IntrospectionException {
         if (value == null)
             return null;
         else if (value instanceof Map) {
-            Class itemClass = Object.class;
+            Class<?> itemClass = Object.class;
             Type itemType = null;
-            if ((type != null) && (type instanceof ParameterizedType)) {
-                ParameterizedType ptype = (ParameterizedType) type;
+            if (type instanceof ParameterizedType ptype) {
                 itemType = ptype.getActualTypeArguments()[1];
                 if (itemType.getClass().equals(Class.class)) {
                     itemClass = (Class) itemType;
@@ -264,11 +271,14 @@ public class JSONPopulator {
             Map values = (Map) value;
 
             Map newMap;
-            try {
-                newMap = (Map) clazz.newInstance();
-            } catch (InstantiationException ex) {
-                // fallback if clazz represents an interface or abstract class
-                newMap = new HashMap();
+            if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+                if (SortedMap.class.isAssignableFrom(clazz)) {
+                    newMap = new TreeMap();
+                } else {
+                    newMap = new HashMap();
+                }
+            } else {
+                newMap = (Map) clazz.getDeclaredConstructor().newInstance();
             }
 
             // create an object for each element
@@ -291,7 +301,7 @@ public class JSONPopulator {
                     newMap.put(key, newObject);
                 } else if (v instanceof Map) {
                     // map of beans
-                    Object newObject = itemClass.newInstance();
+                    Object newObject = itemClass.getDeclaredConstructor().newInstance();
                     this.populateObject(newObject, (Map) v);
                     newMap.put(key, newObject);
                 } else
@@ -305,7 +315,7 @@ public class JSONPopulator {
 
     /**
      * Converts numbers to the desired class, if possible
-     * 
+     *
      * @throws JSONException
      */
     @SuppressWarnings("unchecked")
@@ -361,17 +371,42 @@ public class JSONPopulator {
                 JSON json = method.getAnnotation(JSON.class);
 
                 DateFormat formatter = new SimpleDateFormat(
-                        (json != null) && (json.format().length() > 0) ? json.format() : this.dateFormat);
+                        (json != null) && (!json.format().isEmpty()) ? json.format() : this.dateFormat);
                 return formatter.parse((String) value);
             } catch (ParseException e) {
                 LOG.error("Unable to parse date from: {}", value, e);
                 throw new JSONException("Unable to parse date from: " + value);
             }
+        } else if (Calendar.class.isAssignableFrom(clazz)) {
+            try {
+                JSON json = method.getAnnotation(JSON.class);
+
+                DateFormat formatter = new SimpleDateFormat(
+                        (json != null) && (!json.format().isEmpty()) ? json.format() : this.dateFormat);
+                Date date = formatter.parse((String) value);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                return cal;
+            } catch (ParseException e) {
+                LOG.error("Unable to parse calendar from: {}", value, e);
+                throw new JSONException("Unable to parse calendar from: " + value);
+            }
+        } else if (clazz.equals(LocalDate.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_DATE, LocalDate::from);
+        } else if (clazz.equals(LocalDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from);
+        } else if (clazz.equals(LocalTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_TIME, LocalTime::from);
+        } else if (clazz.equals(ZonedDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_ZONED_DATE_TIME, ZonedDateTime::from);
+        } else if (clazz.equals(OffsetDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_OFFSET_DATE_TIME, OffsetDateTime::from);
+        } else if (clazz.equals(Instant.class)) {
+            return parseInstantFromString(value, method);
         } else if (clazz.isEnum()) {
             String sValue = (String) value;
             return Enum.valueOf(clazz, sValue);
-        } else if (value instanceof String) {
-            String sValue = (String) value;
+        } else if (value instanceof String sValue) {
             if (Boolean.TYPE.equals(clazz))
                 return Boolean.parseBoolean(sValue);
             else if (Boolean.class.equals(clazz))
@@ -402,7 +437,7 @@ public class JSONPopulator {
                 return Double.valueOf(sValue);
             else if (Character.TYPE.equals(clazz) || Character.class.equals(clazz)) {
                 char charValue = 0;
-                if (sValue.length() > 0) {
+                if (!sValue.isEmpty()) {
                     charValue = sValue.charAt(0);
                 }
                 if (Character.TYPE.equals(clazz))
@@ -422,6 +457,40 @@ public class JSONPopulator {
         }
 
         return value;
+    }
+
+    private <T> T parseTemporalFromString(Object value, Method method, DateTimeFormatter defaultFormatter, TemporalQuery<T> query) throws JSONException {
+        try {
+            String sValue = (String) value;
+            JSON json = method.getAnnotation(JSON.class);
+
+            DateTimeFormatter formatter;
+            if (json != null && !json.format().isEmpty()) {
+                formatter = DateTimeFormatter.ofPattern(json.format());
+            } else {
+                formatter = defaultFormatter;
+            }
+            return formatter.parse(sValue, query);
+        } catch (Exception e) {
+            LOG.error("Unable to parse temporal from: {}", value, e);
+            throw new JSONException("Unable to parse temporal from: " + value);
+        }
+    }
+
+    private Instant parseInstantFromString(Object value, Method method) throws JSONException {
+        try {
+            String sValue = (String) value;
+            JSON json = method.getAnnotation(JSON.class);
+
+            if (json != null && !json.format().isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(json.format()).withZone(ZoneOffset.UTC);
+                return Instant.from(formatter.parse(sValue));
+            }
+            return Instant.parse(sValue);
+        } catch (Exception e) {
+            LOG.error("Unable to parse instant from: {}", value, e);
+            throw new JSONException("Unable to parse instant from: " + value);
+        }
     }
 
 }

@@ -46,11 +46,11 @@ public abstract class SessionLocaleHandler extends AbstractStoredLocaleHandler {
 
     @Override
     public Locale find() {
-        Locale locale = findExplicitLocale(LOG, "Requested locale {} is not supported, ignoring");
+        Locale locale = findExplicitLocale();
         if (locale != null) {
             return locale;
         }
-        return findRequestOnlyLocale(LOG, "Found locale under request only param, it won't be stored in session!");
+        return findRequestOnlyLocale();
     }
 
     @Override
@@ -85,13 +85,6 @@ public abstract class SessionLocaleHandler extends AbstractStoredLocaleHandler {
             }
         }
 
-        return normalizeStoredLocale(
-            LOG,
-            locale,
-            "Stored session locale {} is not in supportedLocale, ignoring",
-            "No Locale defined in session, fetching from current request and it won't be stored in session!",
-            "Found stored Locale {} in session, using it!",
-            invocation
-        );
+        return normalizeStoredLocale(locale, invocation);
     }
 }

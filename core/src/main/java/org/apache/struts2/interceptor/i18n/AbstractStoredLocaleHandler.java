@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.i18n;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.dispatcher.Parameter;
@@ -26,6 +27,8 @@ import java.util.Locale;
 import java.util.Set;
 
 public abstract class AbstractStoredLocaleHandler extends AcceptLanguageLocaleHandler {
+
+    private static final Logger LOG = LogManager.getLogger(AbstractStoredLocaleHandler.class);
 
     private final String explicitParameterName;
 
@@ -37,48 +40,41 @@ public abstract class AbstractStoredLocaleHandler extends AcceptLanguageLocaleHa
         this.explicitParameterName = explicitParameterName;
     }
 
-    protected Locale findExplicitLocale(Logger logger, String unsupportedLogPattern) {
-        logger.debug("Searching locale in request under parameter {}", explicitParameterName);
+    protected Locale findExplicitLocale() {
+        LOG.debug("Searching locale in request under parameter {}", explicitParameterName);
         Parameter requestedLocale = findLocaleParameter(actionInvocation, explicitParameterName);
         if (requestedLocale.isDefined()) {
             Locale locale = getLocaleFromParam(requestedLocale.getValue());
             if (locale != null && isLocaleSupported(locale)) {
                 return locale;
             }
-            logger.debug(unsupportedLogPattern, requestedLocale.getValue());
+            LOG.debug("Requested locale {} is not supported, ignoring", requestedLocale.getValue());
         }
         return null;
     }
 
-    protected Locale findRequestOnlyLocale(Logger logger, String requestOnlyFoundLogPattern) {
-        Locale requestOnlyLocale = super.find();
+    protected Locale findRequestOnlyLocale() {
+        Locale requestOnlyLocale = findRequestOnlyParamLocale();
         if (requestOnlyLocale != null) {
-            if (requestOnlyFoundLogPattern != null) {
-                logger.debug(requestOnlyFoundLogPattern);
-            }
-            shouldStore = false;
+            LOG.debug("Found locale under request only param, it won't be stored!");
+            disableStore();
             return requestOnlyLocale;
         }
         return null;
     }
 
-    protected Locale normalizeStoredLocale(Logger logger,
-                                           Locale locale,
-                                           String unsupportedStoredLogPattern,
-                                           String missingStoredLogPattern,
-                                           String foundStoredLogPattern,
-                                           ActionInvocation invocation) {
+    protected Locale normalizeStoredLocale(Locale locale, ActionInvocation invocation) {
         if (locale != null && !isLocaleSupported(locale)) {
-            logger.debug(unsupportedStoredLogPattern, locale);
+            LOG.debug("Stored locale {} is not in supportedLocale, ignoring", locale);
             locale = null;
         }
 
         if (locale == null) {
-            logger.debug(missingStoredLogPattern);
-            shouldStore = false;
+            LOG.debug("No Locale defined in storage, fetching from current request and it won't be stored!");
+            disableStore();
             return super.read(invocation);
         } else {
-            logger.debug(foundStoredLogPattern, locale);
+            LOG.debug("Found stored Locale {}, using it!", locale);
             return locale;
         }
     }

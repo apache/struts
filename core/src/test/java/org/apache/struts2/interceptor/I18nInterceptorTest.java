@@ -101,7 +101,7 @@ public class I18nInterceptorTest extends TestCase {
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale denmark = new Locale("da", "DK");
+        Locale denmark = new Locale.Builder().setLanguage("da").setRegion("DK").build();
         assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
@@ -112,7 +112,7 @@ public class I18nInterceptorTest extends TestCase {
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale denmark = new Locale("da", "DK");
+        Locale denmark = new Locale.Builder().setLanguage("da").setRegion("DK").build();
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, mai.getInvocationContext().getLocale()); // should create a locale object
     }
@@ -123,7 +123,7 @@ public class I18nInterceptorTest extends TestCase {
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale denmark = new Locale("da");
+        Locale denmark = Locale.forLanguageTag("da");
         assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
@@ -174,7 +174,7 @@ public class I18nInterceptorTest extends TestCase {
 
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
 
-        Locale variant = new Locale("ja", "JP", "JP");
+        Locale variant = Locale.forLanguageTag("ja-JP-x-lvariant-JP");
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
@@ -188,7 +188,7 @@ public class I18nInterceptorTest extends TestCase {
         assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
 
-        Locale variant = new Locale("ja", "JP", "JP");
+        Locale variant = Locale.forLanguageTag("ja-JP-x-lvariant-JP");
         Locale locale = mai.getInvocationContext().getLocale();
         assertNotNull(locale); // should be stored here
         assertEquals(variant, locale);
@@ -266,7 +266,7 @@ public class I18nInterceptorTest extends TestCase {
 
     public void testAcceptLanguageBasedLocale() throws Exception {
         // given
-        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("pl")));
+        request.setPreferredLocales(Arrays.asList(Locale.forLanguageTag("da-DK"), Locale.forLanguageTag("pl")));
         interceptor.setLocaleStorage(null);
         interceptor.setSupportedLocale("en,pl");
 
@@ -276,12 +276,12 @@ public class I18nInterceptorTest extends TestCase {
         // then
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
-        assertEquals(new Locale("pl"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.forLanguageTag("pl"), mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleWithRequestLocale() throws Exception {
         // given - supportedLocale configured + request_locale param with SESSION storage
-        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
         interceptor.setSupportedLocale("en,fr");
         prepare(I18nInterceptor.DEFAULT_PARAMETER, "fr");
 
@@ -289,13 +289,13 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.intercept(mai);
 
         // then - request_locale wins over Accept-Language
-        assertEquals(new Locale("fr"), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.FRENCH, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(Locale.FRENCH, mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleRejectsUnsupportedRequestLocale() throws Exception {
         // given - request_locale=es but supportedLocale="en,fr"
-        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
         interceptor.setSupportedLocale("en,fr");
         prepare(I18nInterceptor.DEFAULT_PARAMETER, "es");
 
@@ -304,26 +304,26 @@ public class I18nInterceptorTest extends TestCase {
 
         // then - es rejected, falls back to Accept-Language match (en)
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-        assertEquals(new Locale("en"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.ENGLISH, mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleRevalidatesSessionLocale() throws Exception {
         // given - session has stored locale "de" but supportedLocale changed to "en,fr"
-        session.put(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE, new Locale("de"));
-        request.setPreferredLocales(Arrays.asList(new Locale("fr")));
+        session.put(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE, Locale.GERMAN);
+        request.setPreferredLocales(Arrays.asList(Locale.FRENCH));
         interceptor.setSupportedLocale("en,fr");
 
         // when
         interceptor.intercept(mai);
 
         // then - stored "de" rejected, falls back to Accept-Language match (fr)
-        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.FRENCH, mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleWithCookieStorage() throws Exception {
         // given - supportedLocale configured + request_cookie_locale param with COOKIE storage
         prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "fr");
-        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
         interceptor.setSupportedLocale("en,fr");
 
         final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "fr");
@@ -339,13 +339,13 @@ public class I18nInterceptorTest extends TestCase {
 
         // then - request_cookie_locale=fr wins
         EasyMock.verify(response);
-        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.FRENCH, mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleRejectsUnsupportedRequestCookieLocale() throws Exception {
         // given - request_cookie_locale=es but supportedLocale="en,fr"
         prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "es");
-        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
         interceptor.setSupportedLocale("en,fr");
 
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -359,13 +359,13 @@ public class I18nInterceptorTest extends TestCase {
 
         // then - unsupported request_cookie_locale ignored, falls back to Accept-Language match
         EasyMock.verify(response);
-        assertEquals(new Locale("en"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.ENGLISH, mai.getInvocationContext().getLocale());
     }
 
     public void testSupportedLocaleRevalidatesStoredCookieLocale() throws Exception {
         // given - cookie has stored "de" but supportedLocale changed to "en,fr"
         request.setCookies(new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "de"));
-        request.setPreferredLocales(Arrays.asList(new Locale("it")));
+        request.setPreferredLocales(Arrays.asList(Locale.ITALIAN));
         interceptor.setSupportedLocale("en,fr");
 
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -385,7 +385,7 @@ public class I18nInterceptorTest extends TestCase {
     public void testRequestOnlyLocalePrecedenceWithSupportedLocale() throws Exception {
         // given - request_only_locale should win over Accept-Language match
         prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "fr");
-        request.setPreferredLocales(Arrays.asList(new Locale("en")));
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
         interceptor.setSupportedLocale("en,fr");
 
         // when
@@ -393,12 +393,26 @@ public class I18nInterceptorTest extends TestCase {
 
         // then - request_only_locale applied and not persisted
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-        assertEquals(new Locale("fr"), mai.getInvocationContext().getLocale());
+        assertEquals(Locale.FRENCH, mai.getInvocationContext().getLocale());
+    }
+
+    public void testSupportedLocaleRejectsUnsupportedRequestOnlyLocale() throws Exception {
+        // given - request_only_locale=es but supportedLocale="en,fr"
+        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "es");
+        request.setPreferredLocales(Arrays.asList(Locale.ENGLISH));
+        interceptor.setSupportedLocale("en,fr");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then - es rejected, falls back to stored session locale / invocation context
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+        assertEquals(Locale.ENGLISH, mai.getInvocationContext().getLocale());
     }
 
     public void testAcceptLanguageBasedLocaleWithFallbackToDefault() throws Exception {
         // given
-        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("es")));
+        request.setPreferredLocales(Arrays.asList(Locale.forLanguageTag("da-DK"), Locale.forLanguageTag("es")));
 
         interceptor.setLocaleStorage(null);
         interceptor.setSupportedLocale("en,pl");

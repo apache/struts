@@ -26,7 +26,7 @@ import java.util.Locale;
 public abstract class AbstractLocaleHandler implements LocaleHandler {
 
     protected final ActionInvocation actionInvocation;
-    protected boolean shouldStore = true;
+    private boolean shouldStore = true;
 
     protected AbstractLocaleHandler(ActionInvocation invocation) {
         this.actionInvocation = invocation;
@@ -35,6 +35,10 @@ public abstract class AbstractLocaleHandler implements LocaleHandler {
     @Override
     public boolean shouldStore() {
         return shouldStore;
+    }
+
+    protected void disableStore() {
+        this.shouldStore = false;
     }
 
     protected abstract Locale getLocaleFromParam(String requestedLocale);

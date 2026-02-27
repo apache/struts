@@ -25,6 +25,16 @@ import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.Locale;
 
+/**
+ * Resolves locale from a request-only parameter (not persisted to session or cookie).
+ * <p>
+ * When a matching request parameter is present and the locale is
+ * {@linkplain #isLocaleSupported(Locale) supported}, it is applied to the current
+ * request only; it is never stored for subsequent requests.
+ *
+ * @see AcceptLanguageLocaleHandler
+ * @see AbstractStoredLocaleHandler
+ */
 public abstract class RequestLocaleHandler extends AbstractLocaleHandler {
 
     private static final Logger LOG = LogManager.getLogger(RequestLocaleHandler.class);
@@ -38,11 +48,24 @@ public abstract class RequestLocaleHandler extends AbstractLocaleHandler {
 
     @Override
     public Locale find() {
+        return findRequestOnlyParamLocale();
+    }
+
+    /**
+     * Looks up the locale from the request-only parameter without any additional fallback.
+     * Subclasses that add fallback logic (e.g. Accept-Language) can override {@link #find()}
+     * while stored-locale handlers can call this method directly to skip the fallback.
+     */
+    protected Locale findRequestOnlyParamLocale() {
         LOG.debug("Searching locale in request under parameter {}", requestOnlyParameterName);
 
         Parameter requestedLocale = findLocaleParameter(actionInvocation, requestOnlyParameterName);
         if (requestedLocale.isDefined()) {
-            return getLocaleFromParam(requestedLocale.getValue());
+            Locale locale = getLocaleFromParam(requestedLocale.getValue());
+            if (locale != null && isLocaleSupported(locale)) {
+                return locale;
+            }
+            LOG.debug("Requested locale {} is not supported, ignoring", requestedLocale.getValue());
         }
 
         return null;

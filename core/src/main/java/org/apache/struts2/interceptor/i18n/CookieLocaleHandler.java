@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.interceptor.i18n;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 
@@ -30,8 +28,6 @@ import java.util.Locale;
 import java.util.Set;
 
 public abstract class CookieLocaleHandler extends AbstractStoredLocaleHandler {
-
-    private static final Logger LOG = LogManager.getLogger(CookieLocaleHandler.class);
 
     private final String attributeName;
 
@@ -46,11 +42,11 @@ public abstract class CookieLocaleHandler extends AbstractStoredLocaleHandler {
 
     @Override
     public Locale find() {
-        Locale locale = findExplicitLocale(LOG, "Requested cookie locale {} is not supported, ignoring");
+        Locale locale = findExplicitLocale();
         if (locale != null) {
             return locale;
         }
-        return findRequestOnlyLocale(LOG, null);
+        return findRequestOnlyLocale();
     }
 
     @Override
@@ -77,13 +73,6 @@ public abstract class CookieLocaleHandler extends AbstractStoredLocaleHandler {
             }
         }
 
-        return normalizeStoredLocale(
-            LOG,
-            locale,
-            "Stored cookie locale {} is not in supportedLocale, ignoring",
-            "No Locale defined in cookie, fetching from current request and it won't be stored!",
-            "Found stored Locale {} in cookie, using it!",
-            invocation
-        );
+        return normalizeStoredLocale(locale, invocation);
     }
 }

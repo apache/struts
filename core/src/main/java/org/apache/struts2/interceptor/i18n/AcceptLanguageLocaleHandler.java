@@ -24,6 +24,17 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Resolves locale by first checking the request-only parameter and then falling back
+ * to the browser's {@code Accept-Language} header.
+ * <p>
+ * When a {@code supportedLocale} set is configured, only Accept-Language values present
+ * in that set are accepted. When the set is empty (the default), the first locale
+ * advertised by the browser is returned as-is.
+ *
+ * @see RequestLocaleHandler
+ * @see AbstractStoredLocaleHandler
+ */
 public abstract class AcceptLanguageLocaleHandler extends RequestLocaleHandler {
 
     private final Set<Locale> supportedLocale;
@@ -34,20 +45,32 @@ public abstract class AcceptLanguageLocaleHandler extends RequestLocaleHandler {
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public Locale find() {
-        Locale locale = super.find();
+        Locale locale = findRequestOnlyParamLocale();
         if (locale != null) {
             return locale;
         }
+        return findAcceptLanguageLocale();
+    }
 
+    @Override
+    public Locale read(ActionInvocation invocation) {
         if (!supportedLocale.isEmpty()) {
-            Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
-            while (locales.hasMoreElements()) {
-                Locale acceptLocale = (Locale) locales.nextElement();
-                if (supportedLocale.contains(acceptLocale)) {
-                    return acceptLocale;
-                }
+            Locale locale = findAcceptLanguageLocale();
+            if (locale != null) {
+                return locale;
+            }
+        }
+        return super.read(invocation);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected Locale findAcceptLanguageLocale() {
+        Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
+        while (locales.hasMoreElements()) {
+            Locale acceptLocale = (Locale) locales.nextElement();
+            if (supportedLocale.isEmpty() || supportedLocale.contains(acceptLocale)) {
+                return acceptLocale;
             }
         }
         return null;

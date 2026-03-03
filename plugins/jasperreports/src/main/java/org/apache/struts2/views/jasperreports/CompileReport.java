@@ -39,7 +39,7 @@ public class CompileReport {
                 JasperCompileManager.compileReportToFile(args[i]);
             }
         } catch (JRException e) {
-            e.printStackTrace();
+            System.err.println("Failed to compile JasperReport: " + e.getMessage());
             System.exit(-1);
         }
 

@@ -624,6 +624,9 @@ public class DefaultConfiguration implements Configuration {
                         String defaultActionRef = namespaceConfigs.get(namespace);
                         if (defaultActionRef != null) {
                             config = actions.get(defaultActionRef);
+                            if (config == null) {
+                                config = namespaceActionConfigMatchers.get(namespace).match(defaultActionRef);
+                            }
                         }
                     }
                 }

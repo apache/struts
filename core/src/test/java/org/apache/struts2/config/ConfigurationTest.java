@@ -337,6 +337,38 @@ public class ConfigurationTest extends XWorkTestCase {
     }
 
 
+    public void testDefaultActionRefWithWildcard() {
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        // "unknown-action" doesn't exist in /wildcard-default, so default-action-ref "movie-input" should be used
+        // "movie-input" matches wildcard "movie-*", so it should resolve via wildcard matching
+        ActionConfig config = configuration.getActionConfig("/wildcard-default", "unknown-action");
+
+        assertNotNull("Default action ref should resolve via wildcard matching", config);
+        assertEquals("org.apache.struts2.SimpleAction", config.getClassName());
+        assertEquals("input", config.getMethodName());
+    }
+
+    public void testDefaultActionRefWithExactMatch() {
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        // default-action-ref "home" matches an exact action, so it should resolve without wildcard matching
+        ActionConfig config = configuration.getActionConfig("/exact-default", "unknown-action");
+
+        assertNotNull("Default action ref should resolve via exact match", config);
+        assertEquals("org.apache.struts2.SimpleAction", config.getClassName());
+        assertEquals("execute", config.getMethodName());
+    }
+
+    public void testDefaultActionRefWithWildcardNoMatch() {
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        // default-action-ref "no-match-anywhere" matches neither an exact action nor wildcard "movie-*"
+        ActionConfig config = configuration.getActionConfig("/wildcard-default-nomatch", "unknown-action");
+
+        assertNull("Should return null when default-action-ref matches neither exact nor wildcard", config);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

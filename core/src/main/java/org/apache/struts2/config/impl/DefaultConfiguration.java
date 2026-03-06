@@ -609,29 +609,39 @@ public class DefaultConfiguration implements Configuration {
         }
 
         private ActionConfig findActionConfigInNamespace(String namespace, String name) {
-            ActionConfig config = null;
             if (namespace == null) {
                 namespace = "";
             }
             Map<String, ActionConfig> actions = namespaceActionConfigs.get(namespace);
-            if (actions != null) {
-                config = actions.get(name);
-                // Check wildcards
-                if (config == null) {
-                    config = namespaceActionConfigMatchers.get(namespace).match(name);
-                    // fail over to default action
-                    if (config == null) {
-                        String defaultActionRef = namespaceConfigs.get(namespace);
-                        if (defaultActionRef != null) {
-                            config = actions.get(defaultActionRef);
-                            if (config == null) {
-                                config = namespaceActionConfigMatchers.get(namespace).match(defaultActionRef);
-                            }
-                        }
-                    }
-                }
+            if (actions == null) {
+                return null;
             }
-            return config;
+
+            ActionConfig config = actions.get(name);
+            if (config != null) {
+                return config;
+            }
+
+            config = namespaceActionConfigMatchers.get(namespace).match(name);
+            if (config != null) {
+                return config;
+            }
+
+            return findDefaultActionConfig(namespace, actions);
+        }
+
+        private ActionConfig findDefaultActionConfig(String namespace, Map<String, ActionConfig> actions) {
+            String defaultActionRef = namespaceConfigs.get(namespace);
+            if (defaultActionRef == null) {
+                return null;
+            }
+
+            ActionConfig config = actions.get(defaultActionRef);
+            if (config != null) {
+                return config;
+            }
+
+            return namespaceActionConfigMatchers.get(namespace).match(defaultActionRef);
         }
 
         /**

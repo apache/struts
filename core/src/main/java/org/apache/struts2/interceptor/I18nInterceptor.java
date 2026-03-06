@@ -26,18 +26,11 @@ import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,6 +99,10 @@ public class I18nInterceptor extends AbstractInterceptor {
             .stream()
             .map(Locale::new)
             .collect(Collectors.toSet());
+    }
+
+    protected boolean isLocaleSupported(Locale locale) {
+        return supportedLocale.isEmpty() || supportedLocale.contains(locale);
     }
 
     @Inject
@@ -219,202 +216,167 @@ public class I18nInterceptor extends AbstractInterceptor {
     /**
      * Uses to handle reading/storing Locale from/in different locations
      */
-    protected interface LocaleHandler {
-        Locale find();
-        Locale read(ActionInvocation invocation);
-        Locale store(ActionInvocation invocation, Locale locale);
-        boolean shouldStore();
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected interface LocaleHandler extends org.apache.struts2.interceptor.i18n.LocaleHandler {
     }
 
-    protected class RequestLocaleHandler implements LocaleHandler {
+    /**
+     * @deprecated Since 7.2.0, use the top-level handler classes in {@code org.apache.struts2.interceptor.i18n}.
+     * Scheduled for removal in the next release cycle.
+     */
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected abstract class LocaleHandlerAdapter implements LocaleHandler {
 
-        protected ActionInvocation actionInvocation;
-        protected boolean shouldStore = true;
+        private final org.apache.struts2.interceptor.i18n.LocaleHandler delegate;
 
-        protected RequestLocaleHandler(ActionInvocation invocation) {
-            actionInvocation = invocation;
-        }
-
-        public Locale find() {
-            LOG.debug("Searching locale in request under parameter {}", requestOnlyParameterName);
-
-            Parameter requestedLocale = findLocaleParameter(actionInvocation, requestOnlyParameterName);
-            if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
-            }
-
-            return null;
+        protected LocaleHandlerAdapter(org.apache.struts2.interceptor.i18n.LocaleHandler delegate) {
+            this.delegate = delegate;
         }
 
         @Override
-        public Locale store(ActionInvocation invocation, Locale locale) {
-            return locale;
+        public Locale find() {
+            return delegate.find();
         }
 
         @Override
         public Locale read(ActionInvocation invocation) {
-            LOG.debug("Searching current Invocation context");
-            // no overriding locale definition found, stay with current invocation (=browser) locale
-            Locale locale = invocation.getInvocationContext().getLocale();
-            if (locale != null) {
-                LOG.debug("Applied invocation context locale: {}", locale);
-            }
-            return locale;
+            return delegate.read(invocation);
+        }
+
+        @Override
+        public Locale store(ActionInvocation invocation, Locale locale) {
+            return delegate.store(invocation, locale);
         }
 
         @Override
         public boolean shouldStore() {
-            return shouldStore;
+            return delegate.shouldStore();
         }
     }
 
-    protected class AcceptLanguageLocaleHandler extends RequestLocaleHandler {
+    private org.apache.struts2.interceptor.i18n.RequestLocaleHandler createRequestDelegate(ActionInvocation invocation, String requestOnlyParam) {
+        return new org.apache.struts2.interceptor.i18n.RequestLocaleHandler(invocation, requestOnlyParam) {
+            @Override
+            protected Locale getLocaleFromParam(String requestedLocale) {
+                return I18nInterceptor.this.getLocaleFromParam(requestedLocale);
+            }
 
+            @Override
+            protected Parameter findLocaleParameter(ActionInvocation inv, String paramName) {
+                return I18nInterceptor.this.findLocaleParameter(inv, paramName);
+            }
+
+            @Override
+            protected boolean isLocaleSupported(Locale locale) {
+                return I18nInterceptor.this.isLocaleSupported(locale);
+            }
+        };
+    }
+
+    private org.apache.struts2.interceptor.i18n.AcceptLanguageLocaleHandler createAcceptLanguageDelegate(ActionInvocation invocation) {
+        return new org.apache.struts2.interceptor.i18n.AcceptLanguageLocaleHandler(
+            invocation, requestOnlyParameterName, supportedLocale
+        ) {
+            @Override
+            protected Locale getLocaleFromParam(String requestedLocale) {
+                return I18nInterceptor.this.getLocaleFromParam(requestedLocale);
+            }
+
+            @Override
+            protected Parameter findLocaleParameter(ActionInvocation inv, String paramName) {
+                return I18nInterceptor.this.findLocaleParameter(inv, paramName);
+            }
+
+            @Override
+            protected boolean isLocaleSupported(Locale locale) {
+                return I18nInterceptor.this.isLocaleSupported(locale);
+            }
+        };
+    }
+
+    private org.apache.struts2.interceptor.i18n.SessionLocaleHandler createSessionDelegate(ActionInvocation invocation) {
+        return new org.apache.struts2.interceptor.i18n.SessionLocaleHandler(
+            invocation, requestOnlyParameterName, supportedLocale, parameterName, attributeName
+        ) {
+            @Override
+            protected Locale getLocaleFromParam(String requestedLocale) {
+                return I18nInterceptor.this.getLocaleFromParam(requestedLocale);
+            }
+
+            @Override
+            protected Parameter findLocaleParameter(ActionInvocation inv, String paramName) {
+                return I18nInterceptor.this.findLocaleParameter(inv, paramName);
+            }
+
+            @Override
+            protected boolean isLocaleSupported(Locale locale) {
+                return I18nInterceptor.this.isLocaleSupported(locale);
+            }
+        };
+    }
+
+    private org.apache.struts2.interceptor.i18n.CookieLocaleHandler createCookieDelegate(ActionInvocation invocation) {
+        return new org.apache.struts2.interceptor.i18n.CookieLocaleHandler(
+            invocation, requestOnlyParameterName, supportedLocale, requestCookieParameterName, attributeName
+        ) {
+            @Override
+            protected Locale getLocaleFromParam(String requestedLocale) {
+                return I18nInterceptor.this.getLocaleFromParam(requestedLocale);
+            }
+
+            @Override
+            protected Parameter findLocaleParameter(ActionInvocation inv, String paramName) {
+                return I18nInterceptor.this.findLocaleParameter(inv, paramName);
+            }
+
+            @Override
+            protected boolean isLocaleSupported(Locale locale) {
+                return I18nInterceptor.this.isLocaleSupported(locale);
+            }
+        };
+    }
+
+    /**
+     * @deprecated Since 7.2.0, use {@link org.apache.struts2.interceptor.i18n.RequestLocaleHandler}.
+     * Scheduled for removal in the next release cycle.
+     */
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected class RequestLocaleHandler extends LocaleHandlerAdapter {
+        protected RequestLocaleHandler(ActionInvocation invocation) {
+            super(createRequestDelegate(invocation, requestOnlyParameterName));
+        }
+    }
+
+    /**
+     * @deprecated Since 7.2.0, use {@link org.apache.struts2.interceptor.i18n.AcceptLanguageLocaleHandler}.
+     * Scheduled for removal in the next release cycle.
+     */
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected class AcceptLanguageLocaleHandler extends LocaleHandlerAdapter {
         protected AcceptLanguageLocaleHandler(ActionInvocation invocation) {
-            super(invocation);
+            super(createAcceptLanguageDelegate(invocation));
         }
-
-        @Override
-        @SuppressWarnings("rawtypes")
-        public Locale find() {
-            if (!supportedLocale.isEmpty()) {
-                Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
-                while (locales.hasMoreElements()) {
-                    Locale locale = (Locale) locales.nextElement();
-                    if (supportedLocale.contains(locale)) {
-                        return locale;
-                    }
-                }
-            }
-            return super.find();
-        }
-
     }
 
-    protected class SessionLocaleHandler extends AcceptLanguageLocaleHandler {
-
+    /**
+     * @deprecated Since 7.2.0, use {@link org.apache.struts2.interceptor.i18n.SessionLocaleHandler}.
+     * Scheduled for removal in the next release cycle.
+     */
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected class SessionLocaleHandler extends LocaleHandlerAdapter {
         protected SessionLocaleHandler(ActionInvocation invocation) {
-            super(invocation);
-        }
-
-        @Override
-        public Locale find() {
-            Locale requestOnlyLocale = super.find();
-
-            if (requestOnlyLocale != null) {
-                LOG.debug("Found locale under request only param, it won't be stored in session!");
-                shouldStore = false;
-                return requestOnlyLocale;
-            }
-
-            LOG.debug("Searching locale in request under parameter {}", parameterName);
-            Parameter requestedLocale = findLocaleParameter(actionInvocation, parameterName);
-            if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
-            }
-
-            return null;
-        }
-
-        @Override
-        public Locale store(ActionInvocation invocation, Locale locale) {
-            Map<String, Object> session = invocation.getInvocationContext().getSession();
-
-            if (session != null) {
-                String sessionId = ServletActionContext.getRequest().getSession().getId();
-                synchronized (sessionId.intern()) {
-                    session.put(attributeName, locale);
-                }
-            }
-
-            return locale;
-        }
-
-        @Override
-        public Locale read(ActionInvocation invocation) {
-            Locale locale = null;
-
-            LOG.debug("Checks session for saved locale");
-            HttpSession session = ServletActionContext.getRequest().getSession(false);
-
-            if (session != null) {
-                String sessionId = session.getId();
-                synchronized (sessionId.intern()) {
-                    Object sessionLocale = invocation.getInvocationContext().getSession().get(attributeName);
-                    if (sessionLocale instanceof Locale) {
-                        locale = (Locale) sessionLocale;
-                        LOG.debug("Applied session locale: {}", locale);
-                    }
-                }
-            }
-
-            if (locale == null) {
-                LOG.debug("No Locale defined in session, fetching from current request and it won't be stored in session!");
-                shouldStore = false;
-                locale = super.read(invocation);
-            } else {
-                LOG.debug("Found stored Locale {} in session, using it!", locale);
-            }
-
-            return locale;
+            super(createSessionDelegate(invocation));
         }
     }
 
-    protected class CookieLocaleHandler extends AcceptLanguageLocaleHandler {
+    /**
+     * @deprecated Since 7.2.0, use {@link org.apache.struts2.interceptor.i18n.CookieLocaleHandler}.
+     * Scheduled for removal in the next release cycle.
+     */
+    @Deprecated(forRemoval = true, since = "7.2.0")
+    protected class CookieLocaleHandler extends LocaleHandlerAdapter {
         protected CookieLocaleHandler(ActionInvocation invocation) {
-            super(invocation);
-        }
-
-        @Override
-        public Locale find() {
-            Locale requestOnlySessionLocale = super.find();
-
-            if (requestOnlySessionLocale != null) {
-                shouldStore = false;
-                return requestOnlySessionLocale;
-            }
-
-            LOG.debug("Searching locale in request under parameter {}", requestCookieParameterName);
-            Parameter requestedLocale = findLocaleParameter(actionInvocation, requestCookieParameterName);
-            if (requestedLocale.isDefined()) {
-                return getLocaleFromParam(requestedLocale.getValue());
-            }
-
-            return null;
-        }
-
-        @Override
-        public Locale store(ActionInvocation invocation, Locale locale) {
-            HttpServletResponse response = ServletActionContext.getResponse();
-
-            Cookie cookie = new Cookie(attributeName, locale.toString());
-            cookie.setMaxAge(1209600); // two weeks
-            response.addCookie(cookie);
-
-            return locale;
-        }
-
-        @Override
-        public Locale read(ActionInvocation invocation) {
-            Locale locale = null;
-
-            Cookie[] cookies = ServletActionContext.getRequest().getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (attributeName.equals(cookie.getName())) {
-                        locale = getLocaleFromParam(cookie.getValue());
-                    }
-                }
-            }
-
-            if (locale == null) {
-                LOG.debug("No Locale defined in cookie, fetching from current request and it won't be stored!");
-                shouldStore = false;
-                locale = super.read(invocation);
-            } else {
-                LOG.debug("Found stored Locale {} in cookie, using it!", locale);
-            }
-            return locale;
+            super(createCookieDelegate(invocation));
         }
     }
 

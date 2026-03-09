@@ -32,6 +32,15 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalQuery;
 import java.util.*;
 
 /**
@@ -132,7 +141,11 @@ public class JSONPopulator {
                 || clazz.equals(Boolean.class) || clazz.equals(Byte.class) || clazz.equals(Character.class)
                 || clazz.equals(Double.class) || clazz.equals(Float.class) || clazz.equals(Integer.class)
                 || clazz.equals(Long.class) || clazz.equals(Short.class) || clazz.equals(Locale.class)
-                || clazz.isEnum();
+                || clazz.isEnum()
+                || Calendar.class.isAssignableFrom(clazz)
+                || clazz.equals(LocalDate.class) || clazz.equals(LocalDateTime.class)
+                || clazz.equals(LocalTime.class) || clazz.equals(ZonedDateTime.class)
+                || clazz.equals(OffsetDateTime.class) || clazz.equals(Instant.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -367,6 +380,32 @@ public class JSONPopulator {
                 LOG.error("Unable to parse date from: {}", value, e);
                 throw new JSONException("Unable to parse date from: " + value);
             }
+        } else if (Calendar.class.isAssignableFrom(clazz)) {
+            try {
+                JSON json = method.getAnnotation(JSON.class);
+
+                DateFormat formatter = new SimpleDateFormat(
+                        (json != null) && (json.format().length() > 0) ? json.format() : this.dateFormat);
+                Date date = formatter.parse((String) value);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                return cal;
+            } catch (ParseException e) {
+                LOG.error("Unable to parse calendar from: {}", value, e);
+                throw new JSONException("Unable to parse calendar from: " + value);
+            }
+        } else if (clazz.equals(LocalDate.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_DATE, LocalDate::from);
+        } else if (clazz.equals(LocalDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from);
+        } else if (clazz.equals(LocalTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_LOCAL_TIME, LocalTime::from);
+        } else if (clazz.equals(ZonedDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_ZONED_DATE_TIME, ZonedDateTime::from);
+        } else if (clazz.equals(OffsetDateTime.class)) {
+            return parseTemporalFromString(value, method, DateTimeFormatter.ISO_OFFSET_DATE_TIME, OffsetDateTime::from);
+        } else if (clazz.equals(Instant.class)) {
+            return parseInstantFromString(value, method);
         } else if (clazz.isEnum()) {
             String sValue = (String) value;
             return Enum.valueOf(clazz, sValue);
@@ -422,6 +461,40 @@ public class JSONPopulator {
         }
 
         return value;
+    }
+
+    private <T> T parseTemporalFromString(Object value, Method method, DateTimeFormatter defaultFormatter, TemporalQuery<T> query) throws JSONException {
+        try {
+            String sValue = (String) value;
+            JSON json = method.getAnnotation(JSON.class);
+
+            DateTimeFormatter formatter;
+            if (json != null && json.format().length() > 0) {
+                formatter = DateTimeFormatter.ofPattern(json.format());
+            } else {
+                formatter = defaultFormatter;
+            }
+            return formatter.parse(sValue, query);
+        } catch (Exception e) {
+            LOG.error("Unable to parse temporal from: {}", value, e);
+            throw new JSONException("Unable to parse temporal from: " + value);
+        }
+    }
+
+    private Instant parseInstantFromString(Object value, Method method) throws JSONException {
+        try {
+            String sValue = (String) value;
+            JSON json = method.getAnnotation(JSON.class);
+
+            if (json != null && json.format().length() > 0) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(json.format()).withZone(ZoneOffset.UTC);
+                return Instant.from(formatter.parse(sValue));
+            }
+            return Instant.parse(sValue);
+        } catch (Exception e) {
+            LOG.error("Unable to parse instant from: {}", value, e);
+            throw new JSONException("Unable to parse instant from: " + value);
+        }
     }
 
 }

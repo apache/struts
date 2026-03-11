@@ -33,19 +33,30 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -60,23 +71,22 @@ public class DefaultJSONWriter implements JSONWriter {
 
     private static final Logger LOG = LogManager.getLogger(DefaultJSONWriter.class);
 
-    private static char[] hex = "0123456789ABCDEF".toCharArray();
+    private static final char[] hex = "0123456789ABCDEF".toCharArray();
 
     private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<>();
 
-    private StringBuilder buf = new StringBuilder();
-    private Stack<Object> stack = new Stack<>();
+    private final StringBuilder buf = new StringBuilder();
+    private final Deque<Object> stack = new ArrayDeque<>();
     private boolean ignoreHierarchy = true;
     private Object root;
     private boolean buildExpr = true;
     private String exprStack = "";
     private Collection<Pattern> excludeProperties;
     private Collection<Pattern> includeProperties;
-    private DateFormat formatter;
+    private DateFormat dateFormat;
     private boolean enumAsBean = ENUM_AS_BEAN_DEFAULT;
     private boolean excludeNullProperties;
-    private boolean cacheBeanInfo = true;
     private boolean excludeProxyProperties;
     private ProxyService proxyService;
 
@@ -101,14 +111,10 @@ public class DefaultJSONWriter implements JSONWriter {
     }
 
     /**
-     * @param object
-     *            Object to be serialized into JSON
-     * @param excludeProperties
-     *            Patterns matching properties to ignore
-     * @param includeProperties
-     *            Patterns matching properties to include
-     * @param excludeNullProperties
-     *            enable/disable excluding of null properties
+     * @param object                Object to be serialized into JSON
+     * @param excludeProperties     Patterns matching properties to ignore
+     * @param includeProperties     Patterns matching properties to include
+     * @param excludeNullProperties enable/disable excluding of null properties
      * @return JSON string for object
      * @throws JSONException in case of error during serialize
      */
@@ -134,7 +140,6 @@ public class DefaultJSONWriter implements JSONWriter {
      *
      * @param object Object to be serialized into JSON
      * @param method method
-     *
      * @throws JSONException in case of error during serialize
      */
     protected void value(Object object, Method method) throws JSONException {
@@ -144,7 +149,7 @@ public class DefaultJSONWriter implements JSONWriter {
         }
 
         if (this.stack.contains(object)) {
-            Class clazz = object.getClass();
+            Class<?> clazz = object.getClass();
 
             // cyclic reference
             if (clazz.isPrimitive() || clazz.equals(String.class)) {
@@ -165,8 +170,7 @@ public class DefaultJSONWriter implements JSONWriter {
      *
      * @param object Object to be serialized into JSON
      * @param method method
-     *
-     * @throws JSONException  in case of error during serialize
+     * @throws JSONException in case of error during serialize
      */
     protected void process(Object object, Method method) throws JSONException {
         this.stack.push(object);
@@ -181,20 +185,22 @@ public class DefaultJSONWriter implements JSONWriter {
             this.string(object);
         } else if (object instanceof Character) {
             this.string(object);
-        } else if (object instanceof Map) {
-            this.map((Map) object, method);
+        } else if (object instanceof Map<?, ?> map) {
+            this.map(map, method);
         } else if (object.getClass().isArray()) {
             this.array(object, method);
-        } else if (object instanceof Iterable) {
-            this.array(((Iterable) object).iterator(), method);
+        } else if (object instanceof Iterable<?> iterable) {
+            this.array(iterable.iterator(), method);
         } else if (object instanceof Date) {
             this.date((Date) object, method);
         } else if (object instanceof Calendar) {
             this.date(((Calendar) object).getTime(), method);
+        } else if (object instanceof TemporalAccessor temporalAccessor) {
+            this.temporal(temporalAccessor, method);
         } else if (object instanceof Locale) {
             this.string(object);
-        } else if (object instanceof Enum) {
-            this.enumeration((Enum) object);
+        } else if (object instanceof Enum<?> enumValue) {
+            this.enumeration(enumValue);
         } else {
             processCustom(object, method);
         }
@@ -207,8 +213,7 @@ public class DefaultJSONWriter implements JSONWriter {
      *
      * @param object object
      * @param method method
-     *
-     * @throws JSONException  in case of error during serialize
+     * @throws JSONException in case of error during serialize
      */
     protected void processCustom(Object object, Method method) throws JSONException {
         this.bean(object);
@@ -218,8 +223,7 @@ public class DefaultJSONWriter implements JSONWriter {
      * Instrospect bean and serialize its properties
      *
      * @param object object
-     *
-     * @throws JSONException  in case of error during serialize
+     * @throws JSONException in case of error during serialize
      */
     protected void bean(Object object) throws JSONException {
         this.add("{");
@@ -279,7 +283,7 @@ public class DefaultJSONWriter implements JSONWriter {
             // special-case handling for an Enumeration - include the name() as
             // a property */
             if (object instanceof Enum) {
-                Object value = ((Enum) object).name();
+                Object value = ((Enum<?>) object).name();
                 this.add("_name", value, object.getClass().getMethod("name"), hasData);
             }
         } catch (Exception e) {
@@ -309,11 +313,11 @@ public class DefaultJSONWriter implements JSONWriter {
         return beanInfo;
     }
 
-    protected Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException {
+    protected Object getBridgedValue(Method baseAccessor, Object value) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         JSONFieldBridge fieldBridgeAnn = baseAccessor.getAnnotation(JSONFieldBridge.class);
         if (fieldBridgeAnn != null) {
-            Class impl = fieldBridgeAnn.impl();
-            FieldBridge instance = (FieldBridge) impl.newInstance();
+            Class<?> impl = fieldBridgeAnn.impl();
+            FieldBridge instance = (FieldBridge) impl.getDeclaredConstructor().newInstance();
 
             if (fieldBridgeAnn.params().length > 0 && ParameterizedBridge.class.isAssignableFrom(impl)) {
                 Map<String, String> params = new HashMap<>(fieldBridgeAnn.params().length);
@@ -327,7 +331,7 @@ public class DefaultJSONWriter implements JSONWriter {
         return value;
     }
 
-    protected Method findBaseAccessor(Class clazz, Method accessor) {
+    protected Method findBaseAccessor(Class<?> clazz, Method accessor) {
         Method baseAccessor = null;
         if (clazz.getName().contains("$$EnhancerByCGLIB$$")) {
             try {
@@ -340,23 +344,22 @@ public class DefaultJSONWriter implements JSONWriter {
         } else if (clazz.getName().contains("$$_javassist")) {
             try {
                 baseAccessor = Class.forName(
-                        clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                                clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
                         .getMethod(accessor.getName(), accessor.getParameterTypes());
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
 
-        //in hibernate4.3.7,because javassist3.18.1's class name generate rule is '_$$_jvst'+...
-        } else if(clazz.getName().contains("$$_jvst")){
+            //in hibernate4.3.7,because javassist3.18.1's class name generate rule is '_$$_jvst'+...
+        } else if (clazz.getName().contains("$$_jvst")) {
             try {
                 baseAccessor = Class.forName(
-                        clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
+                                clazz.getName().substring(0, clazz.getName().indexOf("_$$")))
                         .getMethod(accessor.getName(), accessor.getParameterTypes());
             } catch (Exception ex) {
                 LOG.debug(ex.getMessage(), ex);
             }
-        }
-        else {
+        } else {
             return accessor;
         }
         return baseAccessor;
@@ -367,10 +370,9 @@ public class DefaultJSONWriter implements JSONWriter {
      * including all its own properties
      *
      * @param enumeration the enum
-     *
-     * @throws JSONException  in case of error during serialize
+     * @throws JSONException in case of error during serialize
      */
-    protected void enumeration(Enum enumeration) throws JSONException {
+    protected void enumeration(Enum<?> enumeration) throws JSONException {
         if (enumAsBean) {
             this.bean(enumeration);
         } else {
@@ -378,7 +380,7 @@ public class DefaultJSONWriter implements JSONWriter {
         }
     }
 
-    protected boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException, NoSuchFieldException {
+    protected boolean shouldExcludeProperty(PropertyDescriptor prop) throws SecurityException {
         String name = prop.getName();
         return name.equals("class")
                 || name.equals("declaringClass")
@@ -391,7 +393,7 @@ public class DefaultJSONWriter implements JSONWriter {
     }
 
     protected String expandExpr(String property) {
-        if (this.exprStack.length() == 0) {
+        if (this.exprStack.isEmpty()) {
             return property;
         }
         return this.exprStack + "." + property;
@@ -421,7 +423,7 @@ public class DefaultJSONWriter implements JSONWriter {
                     return false;
                 }
             }
-            if (LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Ignoring property because of include rule:  " + expr);
             }
             return true;
@@ -449,15 +451,15 @@ public class DefaultJSONWriter implements JSONWriter {
     /*
      * Add map to buffer
      */
-    protected void map(Map map, Method method) throws JSONException {
+    protected void map(Map<?, ?> map, Method method) throws JSONException {
         this.add("{");
 
-        Iterator it = map.entrySet().iterator();
+        Iterator<?> it = map.entrySet().iterator();
 
         boolean warnedNonString = false; // one report per map
         boolean hasData = false;
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+            Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
             if (excludeNullProperties && entry.getValue() == null) {
                 continue;
             }
@@ -504,18 +506,56 @@ public class DefaultJSONWriter implements JSONWriter {
         JSON json = null;
         if (method != null)
             json = method.getAnnotation(JSON.class);
-        if (this.formatter == null)
-            this.formatter = new SimpleDateFormat(JSONUtil.RFC3339_FORMAT);
+        if (this.dateFormat == null)
+            this.dateFormat = new SimpleDateFormat(JSONUtil.RFC3339_FORMAT);
 
-        DateFormat formatter = (json != null) && (json.format().length() > 0) ? new SimpleDateFormat(json
-                .format()) : this.formatter;
+        DateFormat formatter = (json != null) && (!json.format().isEmpty()) ? new SimpleDateFormat(json
+                .format()) : this.dateFormat;
         this.string(formatter.format(date));
+    }
+
+    /*
+     * Add temporal (java.time) value to buffer
+     */
+    protected void temporal(TemporalAccessor temporal, Method method) {
+        JSON json = null;
+        if (method != null) {
+            json = method.getAnnotation(JSON.class);
+        }
+
+        DateTimeFormatter formatter;
+        if (json != null && !json.format().isEmpty()) {
+            formatter = DateTimeFormatter.ofPattern(json.format());
+            if (temporal instanceof Instant) {
+                formatter = formatter.withZone(ZoneOffset.UTC);
+            }
+        } else {
+            formatter = getDefaultDateTimeFormatter(temporal);
+        }
+        this.string(formatter.format(temporal));
+    }
+
+    private static DateTimeFormatter getDefaultDateTimeFormatter(TemporalAccessor temporal) {
+        if (temporal instanceof LocalDate) {
+            return DateTimeFormatter.ISO_LOCAL_DATE;
+        } else if (temporal instanceof LocalDateTime) {
+            return DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        } else if (temporal instanceof LocalTime) {
+            return DateTimeFormatter.ISO_LOCAL_TIME;
+        } else if (temporal instanceof ZonedDateTime) {
+            return DateTimeFormatter.ISO_ZONED_DATE_TIME;
+        } else if (temporal instanceof OffsetDateTime) {
+            return DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        } else if (temporal instanceof Instant) {
+            return DateTimeFormatter.ISO_INSTANT;
+        }
+        return DateTimeFormatter.ISO_DATE_TIME;
     }
 
     /*
      * Add array to buffer
      */
-    protected void array(Iterator it, Method method) throws JSONException {
+    protected void array(Iterator<?> it, Method method) throws JSONException {
         this.add("[");
 
         boolean hasData = false;
@@ -670,13 +710,13 @@ public class DefaultJSONWriter implements JSONWriter {
     @Override
     public void setDateFormatter(String defaultDateFormat) {
         if (defaultDateFormat != null) {
-            this.formatter = new SimpleDateFormat(defaultDateFormat);
+            this.dateFormat = new SimpleDateFormat(defaultDateFormat);
         }
     }
 
     @Override
     public void setCacheBeanInfo(boolean cacheBeanInfo) {
-    	this.cacheBeanInfo = cacheBeanInfo;
+        // no-op
     }
 
     @Override
@@ -686,7 +726,7 @@ public class DefaultJSONWriter implements JSONWriter {
 
     protected static class JSONAnnotationFinder {
         private boolean serialize = true;
-        private Method accessor;
+        private final Method accessor;
         private String name;
 
         public JSONAnnotationFinder(Method accessor) {
@@ -705,7 +745,7 @@ public class DefaultJSONWriter implements JSONWriter {
         public JSONAnnotationFinder invoke() {
             JSON json = accessor.getAnnotation(JSON.class);
             serialize = json.serialize();
-            if (serialize && json.name().length() > 0) {
+            if (serialize && !json.name().isEmpty()) {
                 name = json.name();
             }
             return this;

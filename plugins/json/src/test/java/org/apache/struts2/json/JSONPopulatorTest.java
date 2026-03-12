@@ -23,8 +23,18 @@ import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import org.apache.struts2.junit.util.TestUtils;
@@ -182,6 +192,123 @@ public class JSONPopulatorTest extends TestCase {
         } catch (JSONException e) {
             // I can't get JUnit to ignore the exception
             // @Test(expected = JSONException.class)
+        }
+    }
+
+    public void testDeserializeLocalDate() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("localDate", "2026-02-27");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(LocalDate.of(2026, 2, 27), bean.getLocalDate());
+    }
+
+    public void testDeserializeLocalDateTime() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("localDateTime", "2026-02-27T12:00:00");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(LocalDateTime.of(2026, 2, 27, 12, 0, 0), bean.getLocalDateTime());
+    }
+
+    public void testDeserializeLocalTime() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("localTime", "12:00:00");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(LocalTime.of(12, 0, 0), bean.getLocalTime());
+    }
+
+    public void testDeserializeZonedDateTime() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("zonedDateTime", "2026-02-27T12:00:00+01:00[Europe/Paris]");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(ZonedDateTime.of(2026, 2, 27, 12, 0, 0, 0, ZoneId.of("Europe/Paris")), bean.getZonedDateTime());
+    }
+
+    public void testDeserializeOffsetDateTime() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("offsetDateTime", "2026-02-27T12:00:00+01:00");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(OffsetDateTime.of(2026, 2, 27, 12, 0, 0, 0, ZoneOffset.ofHours(1)), bean.getOffsetDateTime());
+    }
+
+    public void testDeserializeInstant() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("instant", "2026-02-27T11:00:00Z");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(Instant.parse("2026-02-27T11:00:00Z"), bean.getInstant());
+    }
+
+    public void testDeserializeCalendar() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("calendar", "2012-12-23T10:10:10");
+        populator.populateObject(bean, jsonMap);
+        assertNotNull(bean.getCalendar());
+        Calendar expected = Calendar.getInstance();
+        expected.setTimeZone(TimeZone.getDefault());
+        expected.set(2012, Calendar.DECEMBER, 23, 10, 10, 10);
+        expected.set(Calendar.MILLISECOND, 0);
+        assertEquals(expected.getTimeInMillis() / 1000, bean.getCalendar().getTimeInMillis() / 1000);
+    }
+
+    public void testDeserializeLocalDateWithCustomFormat() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("customFormatDate", "27/02/2026");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(LocalDate.of(2026, 2, 27), bean.getCustomFormatDate());
+    }
+
+    public void testDeserializeInstantWithCustomFormat() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("customFormatInstant", "2026-02-27 11:00:00");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(Instant.parse("2026-02-27T11:00:00Z"), bean.getCustomFormatInstant());
+    }
+
+    public void testDeserializeLocalDateTimeWithCustomFormat() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("customFormatDateTime", "27/02/2026 14:30");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(LocalDateTime.of(2026, 2, 27, 14, 30), bean.getCustomFormatDateTime());
+    }
+
+    public void testDeserializeOffsetDateTimeWithCustomFormat() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("customFormatOffsetDateTime", "27/02/2026 14:30:00+01:00");
+        populator.populateObject(bean, jsonMap);
+        assertEquals(OffsetDateTime.of(2026, 2, 27, 14, 30, 0, 0, ZoneOffset.ofHours(1)), bean.getCustomFormatOffsetDateTime());
+    }
+
+    public void testDeserializeMalformedTemporalThrowsException() throws Exception {
+        JSONPopulator populator = new JSONPopulator();
+        TemporalBean bean = new TemporalBean();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("localDate", "not-a-date");
+        try {
+            populator.populateObject(bean, jsonMap);
+            fail("Should have thrown JSONException");
+        } catch (JSONException e) {
+            // expected
         }
     }
 }

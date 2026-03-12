@@ -338,6 +338,26 @@ public class ConfigurationTest extends XWorkTestCase {
     }
 
 
+    public void testDefaultActionRefWithWildcard() {
+        RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();
+        ActionConfig config = runtimeConfiguration.getActionConfig("/wildcard-default", "unmatchedAction");
+        assertNotNull("Wildcard default action ref should resolve via wildcard matching", config);
+        assertEquals("com.opensymphony.xwork2.SimpleAction", config.getClassName());
+    }
+
+    public void testDefaultActionRefWithExactMatch() {
+        RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();
+        ActionConfig config = runtimeConfiguration.getActionConfig("/exact-default", "unmatchedAction");
+        assertNotNull("Exact default action ref should resolve via exact matching", config);
+        assertEquals("com.opensymphony.xwork2.SimpleAction", config.getClassName());
+    }
+
+    public void testDefaultActionRefWithWildcardNoMatch() {
+        RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();
+        ActionConfig config = runtimeConfiguration.getActionConfig("/wildcard-default-nomatch", "unmatchedAction");
+        assertNull("Default action ref with no matching action should return null", config);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

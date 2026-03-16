@@ -295,5 +295,26 @@
  			<!--  default-class-ref is expected to be inherited -->
         </package>
 
+    <package name="wildcardDefault" extends="default" namespace="/wildcard-default">
+        <default-action-ref name="movie-input" />
+        <action name="movie-*" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="mock">/movie/{1}.jsp</result>
+        </action>
+    </package>
+
+    <package name="exactDefault" extends="default" namespace="/exact-default">
+        <default-action-ref name="home" />
+        <action name="home" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="mock">/home.jsp</result>
+        </action>
+    </package>
+
+    <package name="wildcardDefaultNoMatch" extends="default" namespace="/wildcard-default-nomatch">
+        <default-action-ref name="nonExistentAction" />
+        <action name="movie-*" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="success" type="mock">/movie/{1}.jsp</result>
+        </action>
+    </package>
+
     <include file="includeTest.xml"/>
 </struts>

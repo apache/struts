@@ -323,6 +323,44 @@ public class JSONUtil {
         return deserialize(buffer.toString());
     }
 
+    /**
+     * Deserializes a JSON object from a Reader with configurable limits to prevent DoS attacks.
+     *
+     * @param reader       Reader to read JSON string from
+     * @param maxLength    maximum allowed input length in characters
+     * @param maxElements  maximum allowed number of elements in a single object/array
+     * @param maxDepth     maximum allowed nesting depth
+     * @param maxStringLength maximum allowed string value length
+     * @param maxKeyLength maximum allowed key length
+     * @return deserialized object
+     * @throws JSONException when limits are exceeded or input is malformed
+     */
+    public Object deserializeInput(Reader reader, int maxLength, int maxElements, int maxDepth,
+                                   int maxStringLength, int maxKeyLength) throws JSONException {
+        BufferedReader bufferReader = new BufferedReader(reader);
+        StringBuilder buffer = new StringBuilder();
+        String line;
+
+        try {
+            while ((line = bufferReader.readLine()) != null) {
+                buffer.append(line);
+                if (buffer.length() > maxLength) {
+                    throw new JSONException("JSON input length exceeds maximum allowed length of " + maxLength);
+                }
+            }
+        } catch (IOException e) {
+            throw new JSONException(e);
+        }
+
+        JSONReader jsonReader = new JSONReader();
+        jsonReader.setMaxElements(maxElements);
+        jsonReader.setMaxDepth(maxDepth);
+        jsonReader.setMaxStringLength(maxStringLength);
+        jsonReader.setMaxKeyLength(maxKeyLength);
+
+        return jsonReader.read(buffer.toString());
+    }
+
     public static void writeJSONToResponse(SerializationParams serializationParams) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotBlank(serializationParams.getSerializedJSON()))

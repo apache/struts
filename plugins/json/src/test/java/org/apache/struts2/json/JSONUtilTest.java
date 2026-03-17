@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.json;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,46 @@ public class JSONUtilTest extends TestCase {
         String actual = jsonUtil.serialize(bean, null, new ArrayList<Pattern>(includeProperties), false, false);
 
         assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);
+    }
+
+    public void testDeserializeInputWithinLimits() throws Exception {
+        JSONUtil jsonUtil = new JSONUtil();
+        String json = "{\"name\":\"test\",\"value\":123}";
+        Object result = jsonUtil.deserializeInput(new StringReader(json), 1000, 100, 10, 1000, 100);
+        assertNotNull(result);
+        assertTrue(result instanceof Map);
+        assertEquals("test", ((Map) result).get("name"));
+    }
+
+    public void testDeserializeInputMaxLengthExceeded() throws Exception {
+        JSONUtil jsonUtil = new JSONUtil();
+        String json = "{\"name\":\"test\",\"value\":123}";
+        try {
+            jsonUtil.deserializeInput(new StringReader(json), 10, 100, 10, 1000, 100);
+            fail("Expected JSONException for exceeding max length");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("10"));
+        }
+    }
+
+    public void testDeserializeInputMaxLengthAtBoundaryIsAllowed() throws Exception {
+        JSONUtil jsonUtil = new JSONUtil();
+        String json = "{\"a\":1}";
+        // length is 7, limit is 7 — should pass
+        Object result = jsonUtil.deserializeInput(new StringReader(json), 7, 100, 10, 1000, 100);
+        assertNotNull(result);
+    }
+
+    public void testDeserializeInputPropagatesReaderLimits() throws Exception {
+        JSONUtil jsonUtil = new JSONUtil();
+        // depth 3, but maxDepth is 2
+        String json = "{\"a\":{\"b\":{\"c\":1}}}";
+        try {
+            jsonUtil.deserializeInput(new StringReader(json), 10000, 100, 2, 1000, 100);
+            fail("Expected JSONException for exceeding max depth");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("depth"));
+        }
     }
 
 }

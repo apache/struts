@@ -48,10 +48,37 @@ public class JSONReader {
         escapes.put('t', '\t');
     }
 
+    private static final int DEFAULT_MAX_ELEMENTS = 10000;
+    private static final int DEFAULT_MAX_DEPTH = 64;
+    private static final int DEFAULT_MAX_STRING_LENGTH = 262144;
+    private static final int DEFAULT_MAX_KEY_LENGTH = 512;
+
+    private int maxElements = DEFAULT_MAX_ELEMENTS;
+    private int maxDepth = DEFAULT_MAX_DEPTH;
+    private int maxStringLength = DEFAULT_MAX_STRING_LENGTH;
+    private int maxKeyLength = DEFAULT_MAX_KEY_LENGTH;
+    private int depth;
+
     private CharacterIterator it;
     private char c;
     private Object token;
     private StringBuilder buf = new StringBuilder();
+
+    public void setMaxElements(int maxElements) {
+        this.maxElements = maxElements;
+    }
+
+    public void setMaxDepth(int maxDepth) {
+        this.maxDepth = maxDepth;
+    }
+
+    public void setMaxStringLength(int maxStringLength) {
+        this.maxStringLength = maxStringLength;
+    }
+
+    public void setMaxKeyLength(int maxKeyLength) {
+        this.maxKeyLength = maxKeyLength;
+    }
 
     protected char next() {
         this.c = this.it.next();
@@ -124,29 +151,51 @@ public class JSONReader {
 
     @SuppressWarnings("unchecked")
     protected Map object() throws JSONException {
-        Map ret = new HashMap();
-        Object next = this.read();
-        if (next != OBJECT_END) {
-            String key = (String) next;
-            while (this.token != OBJECT_END) {
-                this.read(); // should be a colon
+        this.depth++;
+        if (this.depth > this.maxDepth) {
+            throw new JSONException("JSON object depth exceeds maximum allowed depth of " + this.maxDepth);
+        }
+        try {
+            Map ret = new HashMap();
+            Object next = this.read();
+            if (next != OBJECT_END) {
+                String key = (String) next;
+                while (this.token != OBJECT_END) {
+                    validateKeyLength(key);
+                    this.read(); // should be a colon
 
-                if (this.token != OBJECT_END) {
-                    ret.put(key, this.read());
+                    if (this.token != OBJECT_END) {
+                        ret.put(key, this.read());
+                        validateElementCount(ret.size());
 
-                    if (this.read() == COMMA) {
-                        Object name = this.read();
+                        if (this.read() == COMMA) {
+                            Object name = this.read();
 
-                        if (name instanceof String) {
-                            key = (String) name;
-                        } else
-                            throw buildInvalidInputException();
+                            if (name instanceof String) {
+                                key = (String) name;
+                            } else
+                                throw buildInvalidInputException();
+                        }
                     }
                 }
             }
-        }
 
-        return ret;
+            return ret;
+        } finally {
+            this.depth--;
+        }
+    }
+
+    private void validateKeyLength(String key) throws JSONException {
+        if (key != null && key.length() > this.maxKeyLength) {
+            throw new JSONException("JSON key length " + key.length() + " exceeds maximum allowed length of " + this.maxKeyLength);
+        }
+    }
+
+    private void validateElementCount(int count) throws JSONException {
+        if (count > this.maxElements) {
+            throw new JSONException("JSON element count exceeds maximum allowed count of " + this.maxElements);
+        }
     }
 
     protected JSONException buildInvalidInputException() {
@@ -156,21 +205,30 @@ public class JSONReader {
     
     @SuppressWarnings("unchecked")
     protected List array() throws JSONException {
-        List ret = new ArrayList();
-        Object value = this.read();
-
-        while (this.token != ARRAY_END) {
-            ret.add(value);
-
-            Object read = this.read();
-            if (read == COMMA) {
-                value = this.read();
-            } else if (read != ARRAY_END) {
-                throw buildInvalidInputException();
-            }
+        this.depth++;
+        if (this.depth > this.maxDepth) {
+            throw new JSONException("JSON array depth exceeds maximum allowed depth of " + this.maxDepth);
         }
+        try {
+            List ret = new ArrayList();
+            Object value = this.read();
 
-        return ret;
+            while (this.token != ARRAY_END) {
+                ret.add(value);
+                validateElementCount(ret.size());
+
+                Object read = this.read();
+                if (read == COMMA) {
+                    value = this.read();
+                } else if (read != ARRAY_END) {
+                    throw buildInvalidInputException();
+                }
+            }
+
+            return ret;
+        } finally {
+            this.depth--;
+        }
     }
 
     protected Object number() throws JSONException {
@@ -215,7 +273,7 @@ public class JSONReader {
         }
     }
 
-    protected Object string(char quote) {
+    protected Object string(char quote) throws JSONException {
         this.buf.setLength(0);
 
         while ((this.c != quote) && (this.c != CharacterIterator.DONE)) {
@@ -233,6 +291,9 @@ public class JSONReader {
                 }
             } else {
                 this.add();
+            }
+            if (this.buf.length() > this.maxStringLength) {
+                throw new JSONException("JSON string length exceeds maximum allowed length of " + this.maxStringLength);
             }
         }
 

@@ -24,11 +24,19 @@
 	"https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts>
-    <bean type="org.apache.struts2.json.JSONWriter" name="struts" class="org.apache.struts2.json.DefaultJSONWriter"
+    <bean type="org.apache.struts2.json.JSONWriter" name="struts" class="org.apache.struts2.json.StrutsJSONWriter"
           scope="prototype"/>
-    <constant name="struts.json.writer" value="struts"/>
-    <!-- TODO: Make DefaultJSONWriter thread-safe to remove "prototype"s -->
+    <bean type="org.apache.struts2.json.JSONReader" name="struts" class="org.apache.struts2.json.StrutsJSONReader"
+          scope="prototype"/>
     <bean class="org.apache.struts2.json.JSONUtil" scope="prototype"/>
+
+    <constant name="struts.json.writer" value="struts"/>
+    <constant name="struts.json.reader" value="struts"/>
+    <constant name="struts.json.maxElements" value="10000"/>
+    <constant name="struts.json.maxDepth" value="64"/>
+    <constant name="struts.json.maxLength" value="2097152"/>
+    <constant name="struts.json.maxStringLength" value="262144"/>
+    <constant name="struts.json.maxKeyLength" value="512"/>
 
     <package name="json-default" extends="struts-default">
 
@@ -54,4 +62,6 @@
         </interceptors>
 
     </package>
+
+    <bean-selection name="jsonBeans" class="org.apache.struts2.json.JSONBeanSelectionProvider"/>
 </struts>

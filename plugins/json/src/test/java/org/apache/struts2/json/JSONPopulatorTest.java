@@ -22,7 +22,6 @@ import org.apache.struts2.junit.util.TestUtils;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
-import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -74,9 +73,8 @@ public class JSONPopulatorTest {
 
     @Test
     public void testPrimitiveBean() throws Exception {
-        StringReader stringReader = new StringReader(TestUtils.readContent(JSONInterceptorTest.class
-                .getResource("json-7.txt")));
-        Object json = JSONUtil.deserialize(stringReader);
+        String text = TestUtils.readContent(JSONInterceptorTest.class.getResource("json-7.txt"));
+        Object json = new StrutsJSONReader().read(text);
         assertNotNull(json);
         assertTrue(json instanceof Map);
         Map<?, ?> jsonMap = (Map<?, ?>) json;
@@ -96,7 +94,7 @@ public class JSONPopulatorTest {
     @Test
     public void testObjectBean() throws Exception {
         String text = TestUtils.readContent(JSONInterceptorTest.class.getResource("json-7.txt"));
-        Object json = JSONUtil.deserialize(text);
+        Object json = new StrutsJSONReader().read(text);
         assertNotNull(json);
         assertTrue(json instanceof Map);
         Map<?, ?> jsonMap = (Map<?, ?>) json;
@@ -162,9 +160,8 @@ public class JSONPopulatorTest {
 
     @Test
     public void testObjectBeanWithStrings() throws Exception {
-        StringReader stringReader = new StringReader(TestUtils.readContent(JSONInterceptorTest.class
-                .getResource("json-8.txt")));
-        Object json = JSONUtil.deserialize(stringReader);
+        String text = TestUtils.readContent(JSONInterceptorTest.class.getResource("json-8.txt"));
+        Object json = new StrutsJSONReader().read(text);
         assertNotNull(json);
         assertTrue(json instanceof Map);
         Map<?, ?> jsonMap = (Map<?, ?>) json;
@@ -187,7 +184,7 @@ public class JSONPopulatorTest {
     @Test
     public void testInfiniteLoop() {
         try {
-            JSONReader reader = new JSONReader();
+            JSONReader reader = new StrutsJSONReader();
             reader.read("[1,\"a]");
             fail("Should have thrown an exception");
         } catch (JSONException e) {
@@ -198,7 +195,7 @@ public class JSONPopulatorTest {
     @Test
     public void testParseBadInput() {
         try {
-            JSONReader reader = new JSONReader();
+            JSONReader reader = new StrutsJSONReader();
             reader.read("[1,\"a\"1]");
             fail("Should have thrown an exception");
         } catch (JSONException e) {

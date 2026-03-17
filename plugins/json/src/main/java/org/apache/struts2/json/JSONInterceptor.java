@@ -71,6 +71,13 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
+    private JSONUtil jsonUtil;
+    private int maxElements = JSONReader.DEFAULT_MAX_ELEMENTS;
+    private int maxDepth = JSONReader.DEFAULT_MAX_DEPTH;
+    private int maxLength = 2_097_152;  // 2MB
+    private int maxStringLength = JSONReader.DEFAULT_MAX_STRING_LENGTH;
+    private int maxKeyLength = JSONReader.DEFAULT_MAX_KEY_LENGTH;
+
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -91,7 +98,8 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         if (jsonContentType.equalsIgnoreCase(requestContentType)) {
             // load JSON object
-            Object obj = JSONUtil.deserialize(request.getReader());
+            applyLimitsToReader();
+            Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
             // JSON array (this.root cannot be null in this case)
             if(obj instanceof List && this.root != null) {
@@ -133,7 +141,8 @@ public class JSONInterceptor extends AbstractInterceptor {
             Object result;
             if (this.enableSMD) {
                 // load JSON object
-                Object obj = JSONUtil.deserialize(request.getReader());
+                applyLimitsToReader();
+                Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
                 if (obj instanceof Map) {
                     Map smd = (Map) obj;
@@ -168,8 +177,6 @@ public class JSONInterceptor extends AbstractInterceptor {
                 result = rpcResponse;
             }
 
-            JSONUtil jsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
-
             String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
                     ignoreHierarchy, excludeNullProperties);
             json = addCallbackIfApplicable(request, json);
@@ -183,6 +190,14 @@ public class JSONInterceptor extends AbstractInterceptor {
         }
 
         return invocation.invoke();
+    }
+
+    private void applyLimitsToReader() {
+        JSONReader reader = jsonUtil.getReader();
+        reader.setMaxElements(maxElements);
+        reader.setMaxDepth(maxDepth);
+        reader.setMaxStringLength(maxStringLength);
+        reader.setMaxKeyLength(maxKeyLength);
     }
 
     protected String readContentType(HttpServletRequest request) {
@@ -563,5 +578,35 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     public void setJsonRpcContentType(String jsonRpcContentType) {
         this.jsonRpcContentType = jsonRpcContentType;
+    }
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)
+    public void setMaxElements(String maxElements) {
+        this.maxElements = Integer.parseInt(maxElements);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_DEPTH, required = false)
+    public void setMaxDepth(String maxDepth) {
+        this.maxDepth = Integer.parseInt(maxDepth);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_LENGTH, required = false)
+    public void setMaxLength(String maxLength) {
+        this.maxLength = Integer.parseInt(maxLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_STRING_LENGTH, required = false)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Integer.parseInt(maxStringLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_KEY_LENGTH, required = false)
+    public void setMaxKeyLength(String maxKeyLength) {
+        this.maxKeyLength = Integer.parseInt(maxKeyLength);
     }
 }

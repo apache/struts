@@ -41,6 +41,15 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.setContent(content.getBytes());
     }
 
+    private JSONInterceptor createInterceptor() {
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        return interceptor;
+    }
+
     public void testBadJSON1() throws Exception {
         tryBadJSON("bad-1.txt");
     }
@@ -70,7 +79,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent(fileName);
         this.request.addHeader("Content-Type", "application/json; charset=UTF-8");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -91,7 +100,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-3.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         SMDActionTest1 action = new SMDActionTest1();
 
         this.invocation.setAction(action);
@@ -110,7 +119,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-14.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -128,7 +137,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-15.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -146,7 +155,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-4.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -170,7 +179,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-9.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -191,7 +200,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-6.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -226,7 +235,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-10.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -251,7 +260,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-7.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -300,7 +309,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         TestAction action = new TestAction();
 
         this.invocation.setAction(action);
@@ -315,7 +324,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         TestAction action = new TestAction();
 
         this.invocation.setAction(action);
@@ -437,7 +446,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("bean");
         TestAction4 action = new TestAction4();
 
@@ -462,7 +471,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("beans");
         TestAction5 action = new TestAction5();
 
@@ -488,7 +497,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("anotherBean.yetAnotherBean.beans");
         TestAction5 action = new TestAction5();
 
@@ -507,6 +516,63 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals(beans.get(0).getCharField(), 's');
         assertEquals(beans.get(0).getDoubleField(), 10.1);
         assertEquals(beans.get(0).getByteField(), 3);
+    }
+
+    public void testMaxLengthExceededThrows() throws Exception {
+        // Body is 27 bytes, set maxLength to 10
+        this.request.setContent("{\"a\":1, \"b\":2, \"c\":\"hello\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxLength("10");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxLength");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains(JSONConstants.JSON_MAX_LENGTH));
+        }
+    }
+
+    public void testMaxDepthEnforcedThroughInterceptor() throws Exception {
+        // Nested 3 levels deep, set maxDepth to 2
+        this.request.setContent("{\"a\":{\"b\":{\"c\":1}}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxDepth("2");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxDepth");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("maximum allowed depth"));
+        }
+    }
+
+    public void testMaxElementsEnforcedThroughInterceptor() throws Exception {
+        // JSON object with 5 keys, set maxElements to 3
+        this.request.setContent("{\"a\":1, \"b\":2, \"c\":3, \"d\":4, \"e\":5}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxElements("3");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxElements");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("maximum allowed elements"));
+        }
     }
 
     @Override

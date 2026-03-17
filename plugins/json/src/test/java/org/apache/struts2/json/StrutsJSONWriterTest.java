@@ -22,6 +22,7 @@ import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.junit.util.TestUtils;
 import org.junit.Test;
 
+import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -43,7 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultJSONWriterTest {
+public class StrutsJSONWriterTest {
 
     @Test
     public void testWrite() throws Exception {
@@ -58,10 +59,10 @@ public class DefaultJSONWriterTest {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-01.txt"), json);
+        TestUtils.assertEquals(StrutsJSONWriter.class.getResource("jsonwriter-write-bean-01.txt"), json);
     }
 
     @Test
@@ -83,11 +84,11 @@ public class DefaultJSONWriterTest {
         m.put("c", "z");
         bean1.setMap(m);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1, null, null, true);
-        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-03.txt"), json);
+        TestUtils.assertEquals(StrutsJSONWriter.class.getResource("jsonwriter-write-bean-03.txt"), json);
     }
 
     private static class BeanWithMap extends Bean {
@@ -114,13 +115,13 @@ public class DefaultJSONWriterTest {
         bean1.setLongField(100);
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
-        bean1.setUrl(new URL("http://www.google.com"));
+        bean1.setUrl(URI.create("https://www.google.com").toURL());
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-02.txt"), json);
+        TestUtils.assertEquals(StrutsJSONWriter.class.getResource("jsonwriter-write-bean-02.txt"), json);
     }
 
     @Test
@@ -139,11 +140,11 @@ public class DefaultJSONWriterTest {
         errors.add("Field is required");
         bean1.setErrors(errors);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-04.txt"), json);
+        TestUtils.assertEquals(StrutsJSONWriter.class.getResource("jsonwriter-write-bean-04.txt"), json);
     }
 
     private static class BeanWithList extends Bean {
@@ -178,7 +179,7 @@ public class DefaultJSONWriterTest {
         SingleDateBean dateBean = new SingleDateBean();
         dateBean.setDate(sdf.parse("2012-12-23 10:10:10 GMT"));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
 
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
@@ -193,7 +194,7 @@ public class DefaultJSONWriterTest {
         SingleDateBean dateBean = new SingleDateBean();
         dateBean.setDate(sdf.parse("2012-12-23 10:10:10 GMT"));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setDateFormatter("MM-dd-yyyy");
         String json = jsonWriter.write(dateBean);
@@ -205,7 +206,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setLocalDate(LocalDate.of(2026, 2, 27));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"localDate\":\"2026-02-27\""));
     }
@@ -215,7 +216,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setLocalDateTime(LocalDateTime.of(2026, 2, 27, 12, 0, 0));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"localDateTime\":\"2026-02-27T12:00:00\""));
     }
@@ -225,7 +226,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setLocalTime(LocalTime.of(12, 0, 0));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"localTime\":\"12:00:00\""));
     }
@@ -235,7 +236,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setZonedDateTime(ZonedDateTime.of(2026, 2, 27, 12, 0, 0, 0, ZoneId.of("Europe/Paris")));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"zonedDateTime\":\"2026-02-27T12:00:00+01:00[Europe\\/Paris]\""));
     }
@@ -245,7 +246,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setOffsetDateTime(OffsetDateTime.of(2026, 2, 27, 12, 0, 0, 0, ZoneOffset.ofHours(1)));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"offsetDateTime\":\"2026-02-27T12:00:00+01:00\""));
     }
@@ -255,7 +256,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setInstant(Instant.parse("2026-02-27T11:00:00Z"));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"instant\":\"2026-02-27T11:00:00Z\""));
     }
@@ -265,7 +266,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setCustomFormatDate(LocalDate.of(2026, 2, 27));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"customFormatDate\":\"27\\/02\\/2026\""));
     }
@@ -275,7 +276,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setCustomFormatDateTime(LocalDateTime.of(2026, 2, 27, 14, 30));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"customFormatDateTime\":\"27\\/02\\/2026 14:30\""));
     }
@@ -284,7 +285,7 @@ public class DefaultJSONWriterTest {
     public void testSerializeNullTemporalField() throws Exception {
         TemporalBean bean = new TemporalBean();
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean, null, null, true);
         assertFalse(json.contains("\"localDate\""));
     }
@@ -294,7 +295,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setCustomFormatInstant(Instant.parse("2026-02-27T11:00:00Z"));
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"customFormatInstant\":\"2026-02-27 11:00:00\""));
     }
@@ -308,7 +309,7 @@ public class DefaultJSONWriterTest {
         TemporalBean bean = new TemporalBean();
         bean.setCalendar(cal);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"calendar\":\"2012-12-23T10:10:10\""));

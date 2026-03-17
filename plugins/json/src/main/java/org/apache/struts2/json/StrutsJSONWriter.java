@@ -67,9 +67,9 @@ import java.util.regex.Pattern;
  * references are detected they will be nulled out.
  * </p>
  */
-public class DefaultJSONWriter implements JSONWriter {
+public class StrutsJSONWriter implements JSONWriter {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultJSONWriter.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsJSONWriter.class);
 
     private static final char[] hex = "0123456789ABCDEF".toCharArray();
 

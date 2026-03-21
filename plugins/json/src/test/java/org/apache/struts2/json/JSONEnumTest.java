@@ -44,11 +44,11 @@ public class JSONEnumTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(false);
         String json = jsonWriter.write(bean1);
 
-        Map result = (Map) JSONUtil.deserialize(json);
+        Map result = (Map) new StrutsJSONReader().read(json);
         assertEquals("str", result.get("stringField"));
         assertEquals(true, result.get("booleanField"));
         assertEquals("s", result.get("charField")); // note: this is a
@@ -86,11 +86,11 @@ public class JSONEnumTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new StrutsJSONWriter();
         jsonWriter.setEnumAsBean(true);
         String json = jsonWriter.write(bean1);
 
-        Map result = (Map) JSONUtil.deserialize(json);
+        Map result = (Map) new StrutsJSONReader().read(json);
         assertEquals("str", result.get("stringField"));
         assertEquals(true, result.get("booleanField"));
         assertEquals("s", result.get("charField")); // note: this is a

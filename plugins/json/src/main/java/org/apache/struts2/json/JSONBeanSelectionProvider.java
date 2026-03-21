@@ -18,25 +18,18 @@
  */
 package org.apache.struts2.json;
 
-/**
- * <p>
- * Deserializes an object from a JSON string.
- * </p>
- */
-public interface JSONReader {
+import org.apache.struts2.config.AbstractBeanSelectionProvider;
+import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Scope;
+import org.apache.struts2.util.location.LocatableProperties;
 
-    int DEFAULT_MAX_ELEMENTS = 10_000;
-    int DEFAULT_MAX_DEPTH = 64;
-    int DEFAULT_MAX_STRING_LENGTH = 262_144;    // 256KB
-    int DEFAULT_MAX_KEY_LENGTH = 512;
+public class JSONBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
-    Object read(String string) throws JSONException;
+    @Override
+    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+        alias(JSONReader.class, JSONConstants.JSON_READER, builder, props, Scope.PROTOTYPE);
+        alias(JSONWriter.class, JSONConstants.JSON_WRITER, builder, props, Scope.PROTOTYPE);
+    }
 
-    void setMaxElements(int maxElements);
-
-    void setMaxDepth(int maxDepth);
-
-    void setMaxStringLength(int maxStringLength);
-
-    void setMaxKeyLength(int maxKeyLength);
 }

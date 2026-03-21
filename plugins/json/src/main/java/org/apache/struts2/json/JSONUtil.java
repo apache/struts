@@ -40,7 +40,6 @@ import java.util.Arrays;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -60,16 +59,21 @@ public class JSONUtil {
 
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
+    private JSONReader reader;
     private JSONWriter writer;
 
-    public void setWriter(JSONWriter writer) {
-        this.writer = writer;
+    @Inject
+    public void setReader(JSONReader reader) {
+        this.reader = reader;
+    }
+
+    public JSONReader getReader() {
+        return reader;
     }
 
     @Inject
-    public void setContainer(Container container) {
-        setWriter(container.getInstance(JSONWriter.class, container.getInstance(String.class,
-                JSONConstants.JSON_WRITER)));
+    public void setWriter(JSONWriter writer) {
+        this.writer = writer;
     }
 
     /**
@@ -285,15 +289,45 @@ public class JSONUtil {
     }
 
     /**
+     * Deserializes an object from JSON using the injected reader with limit enforcement.
+     *
+     * @param reader Reader to read a JSON string from
+     * @param maxLength maximum allowed length of the JSON input
+     * @return deserialized object
+     * @throws JSONException when IOException happens or limits are exceeded
+     */
+    public Object deserializeInput(Reader reader, int maxLength) throws JSONException {
+        BufferedReader bufferReader = new BufferedReader(reader);
+        String line;
+        StringBuilder buffer = new StringBuilder();
+
+        try {
+            while ((line = bufferReader.readLine()) != null) {
+                buffer.append(line);
+                if (buffer.length() > maxLength) {
+                    throw new JSONException("JSON input exceeds maximum allowed length ("
+                            + maxLength + "). Use " + JSONConstants.JSON_MAX_LENGTH + " to increase the limit.");
+                }
+            }
+        } catch (IOException e) {
+            throw new JSONException(e);
+        }
+
+        return this.reader.read(buffer.toString());
+    }
+
+    /**
      * Deserializes a object from JSON
      *
      * @param json
      *            string in JSON
      * @return desrialized object
      * @throws JSONException in case of error during serialize
+     * @deprecated Use instance method {@link #deserializeInput(Reader, int)} with injected JSONUtil instead
      */
+    @Deprecated( forRemoval = true, since = "7.2.0")
     public static Object deserialize(String json) throws JSONException {
-        JSONReader reader = new JSONReader();
+        StrutsJSONReader reader = new StrutsJSONReader();
         return reader.read(json);
     }
 
@@ -305,7 +339,9 @@ public class JSONUtil {
      * @return deserialized object
      * @throws JSONException
      *             when IOException happens
+     * @deprecated Use instance method {@link #deserializeInput(Reader, int)} with injected JSONUtil instead
      */
+    @Deprecated( forRemoval = true, since = "7.2.0")
     public static Object deserialize(Reader reader) throws JSONException {
         // read content
         BufferedReader bufferReader = new BufferedReader(reader);

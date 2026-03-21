@@ -44,10 +44,10 @@ public class JSONUtilTest extends TestCase {
         bean1.setEnumBean(AnEnumBean.Two);
 
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         String json = jsonUtil.serialize(bean1, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
 
-        Map result = (Map) JSONUtil.deserialize(json);
+        Map result = (Map) new StrutsJSONReader().read(json);
         assertEquals("str", result.get("stringField"));
         assertEquals(true, result.get("booleanField"));
         assertEquals("s", result.get("charField")); // note: this is a
@@ -73,7 +73,7 @@ public class JSONUtilTest extends TestCase {
         List<Pattern> includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet("listOfLists,listOfLists\\[\\d+\\]\\[\\d+\\]"), JSONUtil.REGEXP_PATTERN);
 
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         String actual = jsonUtil.serialize(bean, null, new ArrayList<Pattern>(includeProperties), false, false);
 
         assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);

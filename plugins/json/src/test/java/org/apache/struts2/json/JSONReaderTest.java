@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
  * Time: 17.26
  */
 public class JSONReaderTest {
-    private JSONReader reader = new JSONReader();
+    private StrutsJSONReader reader = new StrutsJSONReader();
 
     @Test
     public void testExponentialNumber() throws Exception {

@@ -27,6 +27,11 @@
     <bean type="org.apache.struts2.json.JSONWriter" name="struts" class="org.apache.struts2.json.DefaultJSONWriter"
           scope="prototype"/>
     <constant name="struts.json.writer" value="struts"/>
+    <constant name="struts.json.maxElements" value="10000"/>
+    <constant name="struts.json.maxDepth" value="64"/>
+    <constant name="struts.json.maxLength" value="2097152"/>
+    <constant name="struts.json.maxStringLength" value="262144"/>
+    <constant name="struts.json.maxKeyLength" value="512"/>
     <!-- TODO: Make DefaultJSONWriter thread-safe to remove "prototype"s -->
     <bean class="org.apache.struts2.json.JSONUtil" scope="prototype"/>
 

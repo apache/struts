@@ -71,6 +71,13 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
+    private JSONUtil jsonUtil = new JSONUtil();
+    private int maxElements = 10000;
+    private int maxDepth = 64;
+    private int maxLength = 2097152;
+    private int maxStringLength = 262144;
+    private int maxKeyLength = 512;
+
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -91,7 +98,8 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         if (jsonContentType.equalsIgnoreCase(requestContentType)) {
             // load JSON object
-            Object obj = JSONUtil.deserialize(request.getReader());
+            Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength, maxElements, maxDepth,
+                    maxStringLength, maxKeyLength);
 
             // JSON array (this.root cannot be null in this case)
             if(obj instanceof List && this.root != null) {
@@ -133,7 +141,8 @@ public class JSONInterceptor extends AbstractInterceptor {
             Object result;
             if (this.enableSMD) {
                 // load JSON object
-                Object obj = JSONUtil.deserialize(request.getReader());
+                Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength, maxElements, maxDepth,
+                        maxStringLength, maxKeyLength);
 
                 if (obj instanceof Map) {
                     Map smd = (Map) obj;
@@ -168,9 +177,8 @@ public class JSONInterceptor extends AbstractInterceptor {
                 result = rpcResponse;
             }
 
-            JSONUtil jsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
-
-            String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
+            JSONUtil smdJsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
+            String json = smdJsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
                     ignoreHierarchy, excludeNullProperties);
             json = addCallbackIfApplicable(request, json);
             boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
@@ -421,6 +429,36 @@ public class JSONInterceptor extends AbstractInterceptor {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         setDebug(BooleanUtils.toBoolean(mode));
+    }
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)
+    public void setMaxElements(String maxElements) {
+        this.maxElements = Integer.parseInt(maxElements);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_DEPTH, required = false)
+    public void setMaxDepth(String maxDepth) {
+        this.maxDepth = Integer.parseInt(maxDepth);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_LENGTH, required = false)
+    public void setMaxLength(String maxLength) {
+        this.maxLength = Integer.parseInt(maxLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_STRING_LENGTH, required = false)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Integer.parseInt(maxStringLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_KEY_LENGTH, required = false)
+    public void setMaxKeyLength(String maxKeyLength) {
+        this.maxKeyLength = Integer.parseInt(maxKeyLength);
     }
 
     /**

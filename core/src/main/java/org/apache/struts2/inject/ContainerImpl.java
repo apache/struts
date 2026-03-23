@@ -664,7 +664,6 @@ class ContainerImpl implements Container {
      */
     @Override
     public void destroy() {
-        factories.clear();
         injectors.clear();
         constructors.clear();
         localContext.remove();

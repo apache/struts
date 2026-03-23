@@ -270,7 +270,8 @@ public class DefaultConfiguration implements Configuration {
      */
     @Override
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
-        destroy();
+        packageContexts.clear();
+        loadedFileNames.clear();
         List<PackageProvider> packageProviders = new ArrayList<>();
 
         ContainerProperties props = new ContainerProperties();

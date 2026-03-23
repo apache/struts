@@ -473,10 +473,11 @@ public class Dispatcher {
     protected void destroyObjectFactory() {
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
+            return;
         }
-        if (objectFactory instanceof ObjectFactoryDestroyable) {
+        if (objectFactory instanceof ObjectFactoryDestroyable ofd) {
             try {
-                ((ObjectFactoryDestroyable) objectFactory).destroy();
+                ofd.destroy();
             } catch (Exception e) {
                 LOG.error("Exception occurred while destroying ObjectFactory [{}]", objectFactory.toString(), e);
             }

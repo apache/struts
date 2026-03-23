@@ -1264,5 +1264,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         public void setScopeStrategy(Strategy scopeStrategy) {
         }
 
+        public void destroy() {
+        }
+
     }
 }

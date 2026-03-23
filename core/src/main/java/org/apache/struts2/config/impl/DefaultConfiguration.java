@@ -249,6 +249,10 @@ public class DefaultConfiguration implements Configuration {
     public void destroy() {
         packageContexts.clear();
         loadedFileNames.clear();
+        if (container != null) {
+            container.destroy();
+            container = null;
+        }
     }
 
     @Override
@@ -266,8 +270,7 @@ public class DefaultConfiguration implements Configuration {
      */
     @Override
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
-        packageContexts.clear();
-        loadedFileNames.clear();
+        destroy();
         List<PackageProvider> packageProviders = new ArrayList<>();
 
         ContainerProperties props = new ContainerProperties();

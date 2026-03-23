@@ -56,4 +56,9 @@ public class MockContainer implements Container {
 
     }
 
+    @Override
+    public void destroy() {
+
+    }
+
 }

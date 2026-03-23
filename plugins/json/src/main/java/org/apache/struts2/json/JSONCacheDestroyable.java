@@ -30,6 +30,6 @@ public class JSONCacheDestroyable implements InternalDestroyable {
 
     @Override
     public void destroy() {
-        DefaultJSONWriter.clearBeanInfoCaches();
+        StrutsJSONWriter.clearBeanInfoCaches();
     }
 }

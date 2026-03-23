@@ -184,4 +184,8 @@ class DummyContainer implements Container {
     public void removeScopeStrategy() {
 
     }
+
+    @Override
+    public void destroy() {
+    }
 }

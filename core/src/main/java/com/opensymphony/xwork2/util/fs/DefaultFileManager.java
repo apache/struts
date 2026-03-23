@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.util.fs;
 import com.opensymphony.xwork2.FileManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.InternalDestroyable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 /**
  * Default implementation of {@link FileManager}
  */
-public class DefaultFileManager implements FileManager {
+public class DefaultFileManager implements FileManager, InternalDestroyable {
 
     private static Logger LOG = LogManager.getLogger(DefaultFileManager.class);
 
@@ -42,6 +43,22 @@ public class DefaultFileManager implements FileManager {
 
     protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
     private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<URL>());
+
+    /**
+     * Clears both the files and lazy monitored files caches to prevent classloader leaks on hot redeploy.
+     */
+    public static void clearCache() {
+        files.clear();
+        lazyMonitoredFilesCache.clear();
+    }
+
+    /**
+     * @since 6.9.0
+     */
+    @Override
+    public void destroy() {
+        clearCache();
+    }
 
     protected boolean reloadingConfigs = false;
 

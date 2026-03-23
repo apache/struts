@@ -29,6 +29,8 @@
     <constant name="struts.json.writer" value="struts"/>
     <!-- TODO: Make DefaultJSONWriter thread-safe to remove "prototype"s -->
     <bean class="org.apache.struts2.json.JSONUtil" scope="prototype"/>
+    <bean type="org.apache.struts2.dispatcher.InternalDestroyable" name="jsonCache"
+          class="org.apache.struts2.json.JSONCacheDestroyable"/>
 
     <package name="json-default" extends="struts-default">
 

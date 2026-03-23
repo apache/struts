@@ -77,6 +77,7 @@ public class PrepareOperations {
             } finally {
                 ActionContext.clear();
                 Dispatcher.clearInstance();
+                ContainerHolder.clear();
                 devModeOverride.remove();
             }
         });

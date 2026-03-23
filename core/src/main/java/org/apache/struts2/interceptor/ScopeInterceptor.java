@@ -232,7 +232,21 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return o;
     }
 
-    private static Map<Object, Object> locks = new IdentityHashMap<>();
+    private static final Map<Object, Object> locks = new IdentityHashMap<>();
+
+    /**
+     * Clears the locks map to prevent classloader leaks on hot redeploy.
+     */
+    public static void clearLocks() {
+        synchronized (locks) {
+            locks.clear();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        clearLocks();
+    }
 
     static void lock(Object o, ActionInvocation invocation) throws Exception {
         synchronized (o) {

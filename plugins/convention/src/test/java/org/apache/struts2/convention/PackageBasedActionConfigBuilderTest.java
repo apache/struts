@@ -1265,6 +1265,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         }
 
         public void destroy() {
+            // no-op in test dummy
         }
 
     }

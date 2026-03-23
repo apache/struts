@@ -83,7 +83,8 @@ public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
     }
   }
 
-  static volatile ReferenceQueue<Object> instance = createAndStart();
+  private static final AtomicReference<ReferenceQueue<Object>> instance =
+      new AtomicReference<>(createAndStart());
 
   static FinalizableReferenceQueue createAndStart() {
     FinalizableReferenceQueue queue = new FinalizableReferenceQueue();
@@ -95,7 +96,7 @@ public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
    * Gets instance.
    */
   public static ReferenceQueue<Object> getInstance() {
-    return instance;
+    return instance.get();
   }
 
   /**
@@ -103,10 +104,9 @@ public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
    * memory leaks during hot redeployment.
    */
   public static void stopAndClear() {
-    ReferenceQueue<Object> q = instance;
+    ReferenceQueue<Object> q = instance.getAndSet(null);
     if (q instanceof FinalizableReferenceQueue frq) {
       frq.stop();
     }
-    instance = null;
   }
 }

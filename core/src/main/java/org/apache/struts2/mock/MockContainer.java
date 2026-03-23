@@ -58,7 +58,7 @@ public class MockContainer implements Container {
 
     @Override
     public void destroy() {
-
+        // no-op in mock
     }
 
 }

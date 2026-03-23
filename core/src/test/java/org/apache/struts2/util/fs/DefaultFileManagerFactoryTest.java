@@ -113,6 +113,7 @@ class DummyContainer implements Container {
     }
 
     public void destroy() {
+        // no-op in test dummy
     }
 
 }

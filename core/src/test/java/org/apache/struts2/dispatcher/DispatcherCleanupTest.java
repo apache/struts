@@ -28,6 +28,7 @@ import org.apache.struts2.util.fs.DefaultFileManager;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +124,7 @@ public class DispatcherCleanupTest extends StrutsJUnit4InternalTestCase {
         @SuppressWarnings("unchecked")
         List<URL> lazyCache = (List<URL>) lazyCacheField.get(null);
 
-        lazyCache.add(new URL("file:///test"));
+        lazyCache.add(new URI("file:///test").toURL());
         assertThat(lazyCache).isNotEmpty();
 
         dispatcher.cleanup();
@@ -137,9 +138,13 @@ public class DispatcherCleanupTest extends StrutsJUnit4InternalTestCase {
 
         Dispatcher.addDispatcherListener(new DispatcherListener() {
             @Override
-            public void dispatcherInitialized(Dispatcher du) {}
+            public void dispatcherInitialized(Dispatcher du) {
+                // intentionally empty — test only verifies listener list is cleared
+            }
             @Override
-            public void dispatcherDestroyed(Dispatcher du) {}
+            public void dispatcherDestroyed(Dispatcher du) {
+                // intentionally empty — test only verifies listener list is cleared
+            }
         });
 
         dispatcher.cleanup();

@@ -187,5 +187,6 @@ class DummyContainer implements Container {
 
     @Override
     public void destroy() {
+        // no-op in test mock
     }
 }

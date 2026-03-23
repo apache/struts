@@ -19,6 +19,7 @@
 package org.apache.struts2.util.fs;
 
 import org.apache.struts2.FileManager;
+import org.apache.struts2.dispatcher.InternalDestroyable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +41,7 @@ import static java.util.Objects.requireNonNullElseGet;
 /**
  * Default implementation of {@link FileManager}
  */
-public class DefaultFileManager implements FileManager {
+public class DefaultFileManager implements FileManager, InternalDestroyable {
 
     private static final Logger LOG = LogManager.getLogger(DefaultFileManager.class);
 
@@ -54,6 +55,19 @@ public class DefaultFileManager implements FileManager {
     protected boolean reloadingConfigs = false;
 
     public DefaultFileManager() {
+    }
+
+    public static void clearCache() {
+        files.clear();
+        lazyMonitoredFilesCache.clear();
+    }
+
+    /**
+     * @since 7.1.0
+     */
+    @Override
+    public void destroy() {
+        clearCache();
     }
 
     public void setReloadingConfigs(boolean reloadingConfigs) {

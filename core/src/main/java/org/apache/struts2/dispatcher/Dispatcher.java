@@ -463,8 +463,9 @@ public class Dispatcher {
 
         destroyInternalBeans();
 
-        // Clear container holder when application is unloaded / server shutdown
-        ContainerHolder.clear();
+        // WW-5537: Invalidate all threads' cached Container references to prevent
+        // classloader leaks from idle pool threads retaining stale references after undeploy.
+        ContainerHolder.invalidateAll();
 
         //cleanup action context
         ActionContext.clear();

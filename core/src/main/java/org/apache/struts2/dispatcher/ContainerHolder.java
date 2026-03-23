@@ -21,33 +21,70 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Container;
 
 /**
- * Simple class to hold Container instance to minimise number of attempts
- * to read configuration and build each time a new configuration.
+ * Per-thread cache for the Container instance, minimising repeated reads from
+ * {@link com.opensymphony.xwork2.config.ConfigurationManager}.
  * <p>
- * WW-5537: Changed from ThreadLocal to volatile shared reference to prevent
- * classloader leaks during hot redeployment. ThreadLocal values on idle pool
- * threads are not cleared by {@code ThreadLocal.remove()} on other threads,
- * causing the Container (and its classloader) to be retained after undeploy.
+ * WW-5537: Uses a ThreadLocal for per-request isolation with a volatile generation
+ * counter for cross-thread invalidation during app undeploy. When
+ * {@link #invalidateAll()} is called, all threads see the updated generation on their
+ * next {@link #get()} and return {@code null}, forcing a fresh read from
+ * ConfigurationManager. This prevents classloader leaks caused by idle pool threads
+ * retaining stale Container references after hot redeployment.
  */
 class ContainerHolder {
 
-    private static volatile Container instance;
+    private static final ThreadLocal<CachedContainer> instance = new ThreadLocal<>();
+
+    /**
+     * Incremented on each {@link #invalidateAll()} call. Threads compare their cached
+     * generation against this value to detect staleness.
+     */
+    private static volatile long generation = 0;
 
     public static void store(Container newInstance) {
-        instance = newInstance;
+        instance.set(new CachedContainer(newInstance, generation));
     }
 
     public static Container get() {
-        return instance;
+        CachedContainer cached = instance.get();
+        if (cached == null) {
+            return null;
+        }
+        if (cached.generation != generation) {
+            instance.remove();
+            return null;
+        }
+        return cached.container;
     }
 
     /**
-     * Clears the shared container reference. Safe to call concurrently with
-     * {@link #store(Container)} because {@link Dispatcher#getContainer()} lazily
-     * repopulates the holder from the configuration manager when it finds a null value.
+     * Clears the current thread's cached container reference.
+     * Used for per-request cleanup.
      */
     public static void clear() {
-        instance = null;
+        instance.remove();
     }
 
+    /**
+     * Invalidates all threads' cached container references by advancing the generation
+     * counter. Each thread will detect the stale generation on its next {@link #get()}
+     * call and clear its own ThreadLocal. Also clears the calling thread immediately.
+     * <p>
+     * Used during application undeploy ({@link Dispatcher#cleanup()}) to ensure idle
+     * pool threads do not pin the webapp classloader via retained Container references.
+     */
+    public static void invalidateAll() {
+        generation++;
+        instance.remove();
+    }
+
+    private static class CachedContainer {
+        final Container container;
+        final long generation;
+
+        CachedContainer(Container container, long generation) {
+            this.container = container;
+            this.generation = generation;
+        }
+    }
 }

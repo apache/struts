@@ -24,7 +24,7 @@ import org.apache.struts2.interceptor.ScopeInterceptor;
  * Clears {@link ScopeInterceptor}'s static locks map to prevent classloader
  * leaks on hot redeploy.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class ScopeInterceptorCacheDestroyable implements InternalDestroyable {
 

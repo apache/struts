@@ -28,7 +28,7 @@ import jakarta.servlet.ServletContext;
  * {@code InternalDestroyable} bean: if it implements this subinterface,
  * {@link #destroy(ServletContext)} is called instead of {@link #destroy()}.&lt;/p&gt;
  *
- * @since 7.1.0
+ * @since 7.2.0
  * @see InternalDestroyable
  * @see Dispatcher#cleanup()
  */

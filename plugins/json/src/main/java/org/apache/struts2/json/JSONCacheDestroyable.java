@@ -24,7 +24,7 @@ import org.apache.struts2.dispatcher.InternalDestroyable;
  * WW-5537: Clears JSON plugin's static BeanInfo caches when the Dispatcher is
  * destroyed, preventing classloader leaks during hot redeployment.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class JSONCacheDestroyable implements InternalDestroyable {
 

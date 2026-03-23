@@ -63,7 +63,7 @@ public class DefaultFileManager implements FileManager, InternalDestroyable {
     }
 
     /**
-     * @since 7.1.0
+     * @since 7.2.0
      */
     @Override
     public void destroy() {

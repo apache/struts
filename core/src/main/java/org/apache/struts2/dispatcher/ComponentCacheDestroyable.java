@@ -24,7 +24,7 @@ import org.apache.struts2.components.Component;
  * Clears {@link Component}'s static standard attributes cache to prevent
  * classloader leaks on hot redeploy.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class ComponentCacheDestroyable implements InternalDestroyable {
 

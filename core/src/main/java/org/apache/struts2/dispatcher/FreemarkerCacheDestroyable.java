@@ -31,7 +31,7 @@ import jakarta.servlet.ServletContext;
  * stored in {@link ServletContext} during application undeploy, preventing
  * classloader leaks.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class FreemarkerCacheDestroyable implements ContextAwareDestroyable {
 

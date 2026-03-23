@@ -24,7 +24,7 @@ import org.apache.struts2.inject.util.FinalizableReferenceQueue;
  * Adapter that exposes {@link FinalizableReferenceQueue#stopAndClear()} as an
  * {@link InternalDestroyable} bean.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class FinalizableReferenceQueueDestroyable implements InternalDestroyable {
 

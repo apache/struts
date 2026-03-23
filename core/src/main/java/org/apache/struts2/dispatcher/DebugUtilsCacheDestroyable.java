@@ -24,7 +24,7 @@ import org.apache.struts2.util.DebugUtils;
  * Clears {@link DebugUtils}'s static logged-keys cache to prevent memory leaks
  * during hot redeployment.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class DebugUtilsCacheDestroyable implements InternalDestroyable {
 

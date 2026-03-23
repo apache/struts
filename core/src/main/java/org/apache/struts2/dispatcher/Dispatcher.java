@@ -468,7 +468,7 @@ public class Dispatcher {
     /**
      * Destroys the {@link ObjectFactory} if it implements {@link ObjectFactoryDestroyable}.
      *
-     * @since 7.1.0
+     * @since 7.2.0
      */
     protected void destroyObjectFactory() {
         if (objectFactory == null) {
@@ -488,7 +488,7 @@ public class Dispatcher {
      * Notifies all registered {@link DispatcherListener}s that this dispatcher
      * is being destroyed, then clears the listener list.
      *
-     * @since 7.1.0
+     * @since 7.2.0
      */
     protected void destroyDispatcherListeners() {
         if (!dispatcherListeners.isEmpty()) {
@@ -504,7 +504,7 @@ public class Dispatcher {
     /**
      * Destroys all interceptors registered in the current configuration.
      *
-     * @since 7.1.0
+     * @since 7.2.0
      */
     protected void destroyInterceptors() {
         Set<Interceptor> interceptors = new HashSet<>();
@@ -532,7 +532,7 @@ public class Dispatcher {
      * {@link jakarta.servlet.ServletContext} via
      * {@link ContextAwareDestroyable#destroy(jakarta.servlet.ServletContext)}.</p>
      *
-     * @since 7.1.0
+     * @since 7.2.0
      */
     protected void destroyInternalBeans() {
         if (configurationManager != null && configurationManager.getConfiguration() != null) {

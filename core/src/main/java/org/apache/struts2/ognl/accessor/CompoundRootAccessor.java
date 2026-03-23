@@ -328,7 +328,7 @@ public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
     }
 
     /**
-     * @since 7.1.0
+     * @since 7.2.0
      */
     @Override
     public void destroy() {

@@ -26,7 +26,7 @@ import java.beans.Introspector;
  * Clears OGNL runtime caches and JDK introspection caches that hold
  * {@code Class<?>} references, preventing classloader leaks on hot redeploy.
  *
- * @since 7.1.0
+ * @since 7.2.0
  */
 public class OgnlCacheDestroyable implements InternalDestroyable {
 

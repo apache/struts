@@ -32,7 +32,7 @@ package org.apache.struts2.dispatcher;
  * &lt;p&gt;This is not part of the public user API. For user/plugin lifecycle
  * callbacks, use {@link DispatcherListener} instead.&lt;/p&gt;
  *
- * @since 7.1.0
+ * @since 7.2.0
  * @see Dispatcher#cleanup()
  */
 public interface InternalDestroyable {

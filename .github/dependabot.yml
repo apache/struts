@@ -35,3 +35,4 @@ updates:
       - dependency-name: "org.apache.tomcat:tomcat-api"
       - dependency-name: "org.apache.tomcat:tomcat-juli"
       - dependency-name: "org.apache.tomcat:tomcat-jasper"
+      - dependency-name: "org.apache.rat:apache-rat-plugin"

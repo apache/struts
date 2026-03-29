@@ -263,6 +263,15 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         }
     }
 
+    /**
+     * Clears the locks map to prevent memory leaks during hot redeployment.
+     */
+    public static void clearLocks() {
+        synchronized (locks) {
+            locks.clear();
+        }
+    }
+
     protected void after(ActionInvocation invocation, String result) throws Exception {
         Map<String, Object> session = ActionContext.getContext().getSession();
         if ( session != null) {

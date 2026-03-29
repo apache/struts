@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.ognl.accessor;
 
+import org.apache.struts2.dispatcher.InternalDestroyable;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlValueStack;
 import org.apache.struts2.util.CompoundRoot;
@@ -57,7 +58,7 @@ import static org.apache.commons.lang3.BooleanUtils.toBoolean;
  * @author Rainer Hermanns
  * @version $Revision$
  */
-public class CompoundRootAccessor implements RootAccessor {
+public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
 
     /**
      * Used by OGNl to generate bytecode
@@ -321,6 +322,18 @@ public class CompoundRootAccessor implements RootAccessor {
         return classes;
     }
 
+
+    public static void clearCache() {
+        invalidMethods.clear();
+    }
+
+    /**
+     * @since 7.2.0
+     */
+    @Override
+    public void destroy() {
+        clearCache();
+    }
 
     static class MethodCall {
         Class clazz;

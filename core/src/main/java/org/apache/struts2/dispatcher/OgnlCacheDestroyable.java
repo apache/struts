@@ -16,49 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.mock;
+package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Scope;
+import org.apache.struts2.ognl.OgnlUtil;
 
-import java.util.Set;
+import java.beans.Introspector;
 
 /**
- * Mock implementation to be used in unittests
+ * Clears OGNL runtime caches and JDK introspection caches that hold
+ * {@code Class<?>} references, preventing classloader leaks on hot redeploy.
+ *
+ * @since 7.2.0
  */
-public class MockContainer implements Container {
-
-    public void inject(Object o) {
-
-    }
-
-    public <T> T inject(Class<T> implementation) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type, String name) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type) {
-        return null;
-    }
-
-    public Set<String> getInstanceNames(Class<?> type) {
-        return null;
-    }
-
-    public void setScopeStrategy(Scope.Strategy scopeStrategy) {
-
-    }
-
-    public void removeScopeStrategy() {
-
-    }
+public class OgnlCacheDestroyable implements InternalDestroyable {
 
     @Override
     public void destroy() {
-        // no-op in mock
+        OgnlUtil.clearRuntimeCache();
+        Introspector.flushCaches();
     }
-
 }

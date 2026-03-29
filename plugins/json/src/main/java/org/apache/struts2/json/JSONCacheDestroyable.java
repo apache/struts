@@ -16,49 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.mock;
+package org.apache.struts2.json;
 
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Scope;
-
-import java.util.Set;
+import org.apache.struts2.dispatcher.InternalDestroyable;
 
 /**
- * Mock implementation to be used in unittests
+ * WW-5537: Clears JSON plugin's static BeanInfo caches when the Dispatcher is
+ * destroyed, preventing classloader leaks during hot redeployment.
+ *
+ * @since 7.2.0
  */
-public class MockContainer implements Container {
-
-    public void inject(Object o) {
-
-    }
-
-    public <T> T inject(Class<T> implementation) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type, String name) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type) {
-        return null;
-    }
-
-    public Set<String> getInstanceNames(Class<?> type) {
-        return null;
-    }
-
-    public void setScopeStrategy(Scope.Strategy scopeStrategy) {
-
-    }
-
-    public void removeScopeStrategy() {
-
-    }
+public class JSONCacheDestroyable implements InternalDestroyable {
 
     @Override
     public void destroy() {
-        // no-op in mock
+        StrutsJSONWriter.clearBeanInfoCaches();
     }
-
 }

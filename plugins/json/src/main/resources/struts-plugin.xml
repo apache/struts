@@ -29,6 +29,8 @@
     <bean type="org.apache.struts2.json.JSONReader" name="struts" class="org.apache.struts2.json.StrutsJSONReader"
           scope="prototype"/>
     <bean class="org.apache.struts2.json.JSONUtil" scope="prototype"/>
+    <bean type="org.apache.struts2.dispatcher.InternalDestroyable" name="jsonCache"
+          class="org.apache.struts2.json.JSONCacheDestroyable"/>
 
     <constant name="struts.json.writer" value="struts"/>
     <constant name="struts.json.reader" value="struts"/>

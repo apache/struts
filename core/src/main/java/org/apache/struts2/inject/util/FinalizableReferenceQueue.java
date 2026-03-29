@@ -18,6 +18,7 @@ package org.apache.struts2.inject.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +27,12 @@ import java.util.logging.Logger;
  *
  * @author Bob Lee (crazybob@google.com)
  */
-class FinalizableReferenceQueue extends ReferenceQueue<Object> {
+public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
 
   private static final Logger logger =
       Logger.getLogger(FinalizableReferenceQueue.class.getName());
+
+  private final AtomicReference<Thread> cleanupThread = new AtomicReference<>();
 
   private FinalizableReferenceQueue() {}
 
@@ -49,18 +52,39 @@ class FinalizableReferenceQueue extends ReferenceQueue<Object> {
     Thread thread = new Thread("FinalizableReferenceQueue") {
       @Override
       public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
           try {
             cleanUp(remove());
-          } catch (InterruptedException e) { /* ignore */ }
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            break;
+          }
         }
       }
     };
     thread.setDaemon(true);
     thread.start();
+    cleanupThread.set(thread);
   }
 
-  static ReferenceQueue<Object> instance = createAndStart();
+  /**
+   * Stops the background cleanup thread to prevent classloader memory leaks during hot redeployment.
+   */
+  void stop() {
+    Thread t = cleanupThread.getAndSet(null);
+    if (t != null) {
+      t.interrupt();
+      try {
+        t.join(5000);
+      } catch (InterruptedException ignored) {
+        Thread.currentThread().interrupt();
+      }
+      t.setContextClassLoader(null);
+    }
+  }
+
+  private static final AtomicReference<ReferenceQueue<Object>> instance =
+      new AtomicReference<>(createAndStart());
 
   static FinalizableReferenceQueue createAndStart() {
     FinalizableReferenceQueue queue = new FinalizableReferenceQueue();
@@ -72,6 +96,17 @@ class FinalizableReferenceQueue extends ReferenceQueue<Object> {
    * Gets instance.
    */
   public static ReferenceQueue<Object> getInstance() {
-    return instance;
+    return instance.get();
+  }
+
+  /**
+   * Stops the cleanup thread and clears the instance to prevent classloader
+   * memory leaks during hot redeployment.
+   */
+  public static void stopAndClear() {
+    ReferenceQueue<Object> q = instance.getAndSet(null);
+    if (q instanceof FinalizableReferenceQueue frq) {
+      frq.stop();
+    }
   }
 }

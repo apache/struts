@@ -130,4 +130,13 @@ public interface Container extends Serializable {
    * Removes the scope strategy for the current thread.
    */
   void removeScopeStrategy();
+
+  /**
+   * Releases all internal resources held by this container, including caches,
+   * factory maps, and thread-local state. This allows the webapp classloader
+   * to be garbage collected after hot redeployment.
+   *
+   * @since 7.2.0
+   */
+  void destroy();
 }

@@ -451,7 +451,37 @@ public class Dispatcher {
      * Releases all instances bound to this dispatcher instance.
      */
     public void cleanup() {
-        // clean up ObjectFactory
+        destroyObjectFactory();
+
+        // clean up Dispatcher itself for this thread
+        instance.remove();
+        servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, null);
+
+        destroyDispatcherListeners();
+
+        destroyInterceptors();
+
+        destroyInternalBeans();
+
+        // WW-5537: Invalidate all threads' cached Container references to prevent
+        // classloader leaks from idle pool threads retaining stale references after undeploy.
+        ContainerHolder.invalidateAll();
+
+        //cleanup action context
+        ActionContext.clear();
+
+        // clean up configuration
+        configurationManager.destroyConfiguration();
+        configurationManager = null;
+    }
+
+    /**
+     * Destroys the {@link ObjectFactory} if it implements {@link ObjectFactoryDestroyable}.
+     * Called at the beginning of {@link #cleanup()}.
+     *
+     * @since 6.9.0
+     */
+    protected void destroyObjectFactory() {
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
         }
@@ -459,23 +489,36 @@ public class Dispatcher {
             try {
                 ((ObjectFactoryDestroyable) objectFactory).destroy();
             } catch (Exception e) {
-                // catch any exception that may occur during destroy() and log it
                 LOG.error("Exception occurred while destroying ObjectFactory [{}]", objectFactory.toString(), e);
             }
         }
+    }
 
-        // clean up Dispatcher itself for this thread
-        instance.remove();
-        servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, null);
-
-        // clean up DispatcherListeners
+    /**
+     * Notifies all registered {@link DispatcherListener}s that this dispatcher
+     * is being destroyed, then clears the listener list.
+     *
+     * @since 6.9.0
+     */
+    protected void destroyDispatcherListeners() {
         if (!dispatcherListeners.isEmpty()) {
             for (DispatcherListener l : dispatcherListeners) {
                 l.dispatcherDestroyed(this);
             }
+            // WW-5537: Clear the static listener list to release references that may
+            // pin the webapp classloader after undeploy. Listeners must be re-registered
+            // if a new Dispatcher is created (e.g. on redeploy).
+            dispatcherListeners.clear();
         }
+    }
 
-        // clean up all interceptors by calling their destroy() method
+    /**
+     * Destroys all interceptors registered in the current configuration.
+     * Called during {@link #cleanup()} before {@link #destroyInternalBeans()}.
+     *
+     * @since 6.9.0
+     */
+    protected void destroyInterceptors() {
         Set<Interceptor> interceptors = new HashSet<>();
         Collection<PackageConfig> packageConfigs = configurationManager.getConfiguration().getPackageConfigs().values();
         for (PackageConfig packageConfig : packageConfigs) {
@@ -490,16 +533,38 @@ public class Dispatcher {
         for (Interceptor interceptor : interceptors) {
             interceptor.destroy();
         }
+    }
 
-        // Clear container holder when application is unloaded / server shutdown
-        ContainerHolder.clear();
-
-        //cleanup action context
-        ActionContext.clear();
-
-        // clean up configuration
-        configurationManager.destroyConfiguration();
-        configurationManager = null;
+    /**
+     * Discovers and invokes all {@link InternalDestroyable} beans registered
+     * in the container, clearing static caches and stopping daemon threads
+     * to prevent classloader leaks during hot redeployment (WW-5537).
+     *
+     * <p>Beans implementing {@link ContextAwareDestroyable} receive the
+     * {@link javax.servlet.ServletContext} via
+     * {@link ContextAwareDestroyable#destroy(javax.servlet.ServletContext)}.</p>
+     *
+     * @since 6.9.0
+     */
+    protected void destroyInternalBeans() {
+        if (configurationManager != null && configurationManager.getConfiguration() != null) {
+            Container container = configurationManager.getConfiguration().getContainer();
+            Set<String> destroyableNames = container.getInstanceNames(InternalDestroyable.class);
+            for (String name : destroyableNames) {
+                try {
+                    InternalDestroyable destroyable = container.getInstance(InternalDestroyable.class, name);
+                    if (destroyable instanceof ContextAwareDestroyable) {
+                        ((ContextAwareDestroyable) destroyable).destroy(servletContext);
+                    } else {
+                        destroyable.destroy();
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Error during internal cleanup [{}]", name, e);
+                }
+            }
+        } else {
+            LOG.warn("ConfigurationManager is null during cleanup, InternalDestroyable beans will not be invoked");
+        }
     }
 
     private void init_FileManager() throws ClassNotFoundException {

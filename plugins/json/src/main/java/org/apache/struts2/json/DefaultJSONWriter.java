@@ -74,6 +74,14 @@ public class DefaultJSONWriter implements JSONWriter {
     private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE_IGNORE_HIERARCHY = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Class<?>, BeanInfo> BEAN_INFO_CACHE = new ConcurrentHashMap<>();
 
+    /**
+     * Clears both BeanInfo caches to prevent classloader leaks on hot redeploy.
+     */
+    public static void clearBeanInfoCaches() {
+        BEAN_INFO_CACHE_IGNORE_HIERARCHY.clear();
+        BEAN_INFO_CACHE.clear();
+    }
+
     private final StringBuilder buf = new StringBuilder();
     private Stack<Object> stack = new Stack<>();
     private boolean ignoreHierarchy = true;

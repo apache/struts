@@ -68,6 +68,13 @@ public class Component {
      */
     protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<>();
 
+    /**
+     * Clears the cached standard attributes map to prevent classloader leaks on hot redeploy.
+     */
+    public static void clearStandardAttributesMap() {
+        standardAttributesMap.clear();
+    }
+
     protected boolean devMode = false;
     protected boolean escapeHtmlBody = false;
     protected ValueStack stack;

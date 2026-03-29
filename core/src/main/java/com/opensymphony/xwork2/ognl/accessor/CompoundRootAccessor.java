@@ -33,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.InternalDestroyable;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -53,7 +54,7 @@ import static org.apache.commons.lang3.BooleanUtils.toBoolean;
  * @author Rainer Hermanns
  * @version $Revision$
  */
-public class CompoundRootAccessor implements RootAccessor {
+public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
 
     /**
      * Used by OGNl to generate bytecode
@@ -74,6 +75,22 @@ public class CompoundRootAccessor implements RootAccessor {
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
+
+    /**
+     * Clears the cached invalid methods map to prevent classloader leaks on hot redeploy.
+     */
+    public static void clearCache() {
+        invalidMethods.clear();
+    }
+
+    /**
+     * @since 6.9.0
+     */
+    @Override
+    public void destroy() {
+        clearCache();
+    }
+
     private boolean devMode;
     private boolean disallowCustomOgnlMap;
 

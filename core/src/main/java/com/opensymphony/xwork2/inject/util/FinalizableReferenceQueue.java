@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author Bob Lee (crazybob@google.com)
  */
-class FinalizableReferenceQueue extends ReferenceQueue<Object> {
+public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
 
   private static final Logger logger =
       Logger.getLogger(FinalizableReferenceQueue.class.getName());
@@ -45,22 +45,49 @@ class FinalizableReferenceQueue extends ReferenceQueue<Object> {
     logger.log(Level.SEVERE, "Error cleaning up after reference.", t);
   }
 
+  private volatile Thread drainThread;
+
   void start() {
     Thread thread = new Thread("FinalizableReferenceQueue") {
       @Override
       public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
           try {
             cleanUp(remove());
-          } catch (InterruptedException e) { /* ignore */ }
+          } catch (InterruptedException e) {
+            break;
+          }
         }
       }
     };
     thread.setDaemon(true);
     thread.start();
+    this.drainThread = thread;
   }
 
-  static ReferenceQueue<Object> instance = createAndStart();
+  /**
+   * Stops the background drain thread and releases the singleton instance,
+   * preventing the webapp classloader from being pinned after undeploy.
+   */
+  public static synchronized void stopAndClear() {
+    if (instance instanceof FinalizableReferenceQueue) {
+      FinalizableReferenceQueue queue = (FinalizableReferenceQueue) instance;
+      Thread t = queue.drainThread;
+      if (t != null) {
+        t.interrupt();
+        try {
+          t.join(5000);
+        } catch (InterruptedException ignored) {
+          Thread.currentThread().interrupt();
+        }
+        t.setContextClassLoader(null);
+        queue.drainThread = null;
+      }
+    }
+    instance = null;
+  }
+
+  static volatile ReferenceQueue<Object> instance = createAndStart();
 
   static FinalizableReferenceQueue createAndStart() {
     FinalizableReferenceQueue queue = new FinalizableReferenceQueue();

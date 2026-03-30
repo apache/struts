@@ -49,3 +49,6 @@ test-output/
 
 # Claude Code specific local settings
 .claude/
+.metals/
+.bloop/
+.vscode/

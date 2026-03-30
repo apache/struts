@@ -145,7 +145,7 @@ pipeline {
         }
         stage('Build Source & JavaDoc') {
           when {
-            branch 'release/struts-6-7-x'
+            branch 'release/struts-6-8-x'
           }
           steps {
             dir("local-snapshots-dir/") {
@@ -156,7 +156,7 @@ pipeline {
         }
         stage('Deploy Snapshot') {
           when {
-            branch 'release/struts-6-7-x'
+            branch 'release/struts-6-8-x'
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
@@ -166,7 +166,7 @@ pipeline {
         }
         stage('Upload nightlies') {
           when {
-            branch 'release/struts-6-7-x'
+            branch 'release/struts-6-8-x'
           }
           steps {
             sh './mvnw -B package -DskipTests'

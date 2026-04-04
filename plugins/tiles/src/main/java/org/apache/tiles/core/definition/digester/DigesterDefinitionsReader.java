@@ -35,6 +35,7 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -164,6 +165,8 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             // Disable external DTDs as well
             digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             digester.setXIncludeAware(false);
+            // Enable secure processing to limit entity expansion (prevents Billion Laughs attack)
+            digester.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         } catch (ParserConfigurationException | SAXNotRecognizedException | SAXNotSupportedException e) {
             throw new StrutsException("Unable to disable external XML entity parsing", e);
         }

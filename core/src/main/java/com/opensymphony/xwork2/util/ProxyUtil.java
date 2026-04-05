@@ -52,6 +52,17 @@ public class ProxyUtil {
     private static final int CACHE_MAX_SIZE = 10000;
     private static final int CACHE_INITIAL_CAPACITY = 256;
 
+    private static final boolean HIBERNATE_AVAILABLE = detectHibernate();
+
+    private static boolean detectHibernate() {
+        try {
+            Class.forName("org.hibernate.proxy.HibernateProxy");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     // Holder for the cache factory (set by container)
     private static volatile ProxyCacheFactory<?, ?> cacheFactory;
 
@@ -153,6 +164,7 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isHibernateProxy(Object object) {
+        if (!HIBERNATE_AVAILABLE) return false;
         try {
             return object != null && HibernateProxy.class.isAssignableFrom(object.getClass());
         } catch (NoClassDefFoundError ignored) {
@@ -166,6 +178,7 @@ public class ProxyUtil {
      * @param member the member to check
      */
     public static boolean isHibernateProxyMember(Member member) {
+        if (!HIBERNATE_AVAILABLE) return false;
         try {
             Class<?> clazz = ClassLoaderUtil.loadClass(HIBERNATE_HIBERNATEPROXY_CLASS_NAME, ProxyUtil.class);
             return hasMember(clazz, member);
@@ -303,6 +316,7 @@ public class ProxyUtil {
      * @return the target instance of the given object if it is a Hibernate proxy object, otherwise the given object
      */
     public static Object getHibernateProxyTarget(Object object) {
+        if (!HIBERNATE_AVAILABLE) return object;
         try {
             return Hibernate.unproxy(object);
         } catch (NoClassDefFoundError ignored) {

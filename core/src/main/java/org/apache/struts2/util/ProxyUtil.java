@@ -57,6 +57,17 @@ public class ProxyUtil {
     private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
             CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.BASIC, CACHE_INITIAL_CAPACITY).buildOgnlCache();
 
+    private static final boolean HIBERNATE_AVAILABLE = isHibernateAvailable();
+
+    private static boolean isHibernateAvailable() {
+        try {
+            Class.forName("org.hibernate.proxy.HibernateProxy");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     /**
      * Determine the ultimate target class of the given instance, traversing
      * not only a top-level proxy but any number of nested proxies as well &mdash;
@@ -121,8 +132,9 @@ public class ProxyUtil {
      */
     @Deprecated(since = "7.2")
     public static boolean isHibernateProxy(Object object) {
+        if (!HIBERNATE_AVAILABLE || object == null) return false;
         try {
-            return object != null && HibernateProxy.class.isAssignableFrom(object.getClass());
+            return HibernateProxy.class.isAssignableFrom(object.getClass());
         } catch (LinkageError ignored) {
             return false;
         }
@@ -137,6 +149,7 @@ public class ProxyUtil {
      */
     @Deprecated(since = "7.2")
     public static boolean isHibernateProxyMember(Member member) {
+        if (!HIBERNATE_AVAILABLE) return false;
         try {
             return hasMember(HibernateProxy.class, member);
         } catch (LinkageError ignored) {
@@ -220,6 +233,7 @@ public class ProxyUtil {
      */
     @Deprecated(since = "7.2")
     public static Object getHibernateProxyTarget(Object object) {
+        if (!HIBERNATE_AVAILABLE) return object;
         try {
             return Hibernate.unproxy(object);
         } catch (LinkageError ignored) {

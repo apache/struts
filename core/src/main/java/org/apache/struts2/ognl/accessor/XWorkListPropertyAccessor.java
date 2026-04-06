@@ -26,9 +26,9 @@ import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.ListPropertyAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @author Gabriel Zimmerman
  */
-public class XWorkListPropertyAccessor extends ListPropertyAccessor {
+public class XWorkListPropertyAccessor extends ListPropertyAccessor<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(XWorkListPropertyAccessor.class);
 
@@ -62,7 +62,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     }
 
     @Inject("java.util.Collection")
-    public void setXWorkCollectionPropertyAccessor(PropertyAccessor acc) {
+    public void setXWorkCollectionPropertyAccessor(PropertyAccessor<StrutsContext> acc) {
         this._sAcc = (XWorkCollectionPropertyAccessor) acc;
     }
 
@@ -87,7 +87,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     }
 
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
 
         if (ReflectionContextState.isGettingByKeyProperty(context)
                 || name.equals(XWorkCollectionPropertyAccessor.KEY_PROPERTY_FOR_CREATION)) {
@@ -142,7 +142,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value)
+    public void setProperty(StrutsContext context, Object target, Object name, Object value)
             throws OgnlException {
 
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
@@ -194,7 +194,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
         super.setProperty(context, target, name, realValue);
     }
 
-    private Object getRealValue(OgnlContext context, Object value, Class convertToClass) {
+    private Object getRealValue(StrutsContext context, Object value, Class convertToClass) {
         if (value == null || convertToClass == null) {
             return value;
         }

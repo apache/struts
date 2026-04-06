@@ -18,9 +18,9 @@
  */
 package org.apache.tiles.ognl;
 
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.junit.Test;
 
 import static org.easymock.EasyMock.*;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 public class NestedObjectDelegatePropertyAccessorTest {
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#getProperty(OgnlContext, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#getProperty(StrutsContext, Object, Object)}.
      *
      * @throws OgnlException If something goes wrong.
      */
@@ -40,7 +40,7 @@ public class NestedObjectDelegatePropertyAccessorTest {
     public void testGetProperty() throws OgnlException {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        OgnlContext context = createMock(OgnlContext.class);
+        StrutsContext context = createMock(StrutsContext.class);
         expect(propertyAccessor.getProperty(context, "nested", "property")).andReturn("value");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 
@@ -51,7 +51,7 @@ public class NestedObjectDelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#setProperty(OgnlContext, Object, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#setProperty(StrutsContext, Object, Object, Object)}.
      *
      * @throws OgnlException If something goes wrong.
      */
@@ -59,7 +59,7 @@ public class NestedObjectDelegatePropertyAccessorTest {
     public void testSetProperty() throws OgnlException {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        OgnlContext context = createMock(OgnlContext.class);
+        StrutsContext context = createMock(StrutsContext.class);
         propertyAccessor.setProperty(context, "nested", "property", "value");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 
@@ -70,13 +70,13 @@ public class NestedObjectDelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#getSourceAccessor(OgnlContext, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#getSourceAccessor(StrutsContext, Object, Object)}.
      */
     @Test
     public void testGetSourceAccessor() {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        OgnlContext context = createMock(OgnlContext.class);
+        StrutsContext context = createMock(StrutsContext.class);
         expect(propertyAccessor.getSourceAccessor(context, "nested", "property")).andReturn("method");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 
@@ -87,13 +87,13 @@ public class NestedObjectDelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link NestedObjectDelegatePropertyAccessor#getSourceSetter(OgnlContext, Object, Object)}.
+     * Test method for {@link NestedObjectDelegatePropertyAccessor#getSourceSetter(StrutsContext, Object, Object)}.
      */
     @Test
     public void testGetSourceSetter() {
         NestedObjectExtractor<Integer> nestedObjectExtractor = createMock(NestedObjectExtractor.class);
         PropertyAccessor propertyAccessor = createMock(PropertyAccessor.class);
-        OgnlContext context = createMock(OgnlContext.class);
+        StrutsContext context = createMock(StrutsContext.class);
         expect(propertyAccessor.getSourceSetter(context, "nested", "property")).andReturn("method");
         expect(nestedObjectExtractor.getNestedObject(1)).andReturn("nested");
 

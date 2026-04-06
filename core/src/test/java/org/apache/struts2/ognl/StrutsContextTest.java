@@ -3,7 +3,7 @@ package org.apache.struts2.ognl;
 import ognl.ClassResolver;
 import ognl.MemberAccess;
 import ognl.TypeConverter;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

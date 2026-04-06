@@ -19,9 +19,9 @@
 
 package org.apache.tiles.ognl;
 
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
-import org.apache.struts2.ognl.StrutsContext;
 import org.junit.Test;
 
 import static org.easymock.EasyMock.createMock;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 public class DelegatePropertyAccessorTest {
 
     /**
-     * Test method for {@link DelegatePropertyAccessor#getProperty(StrutsContext, Object, Object)}.
+     * Test method for {@link DelegatePropertyAccessor#getProperty(OgnlContext, Object, Object)}.
      *
      * @throws OgnlException If something goes wrong.
      */
@@ -44,7 +44,7 @@ public class DelegatePropertyAccessorTest {
     public void testGetProperty() throws OgnlException {
         PropertyAccessorDelegateFactory<Integer> factory = createMock(PropertyAccessorDelegateFactory.class);
         PropertyAccessor mockAccessor = createMock(PropertyAccessor.class);
-        StrutsContext context = createMock(StrutsContext.class);
+        OgnlContext context = createMock(OgnlContext.class);
         expect(factory.getPropertyAccessor("property", 1)).andReturn(mockAccessor);
         expect(mockAccessor.getProperty(context, 1, "property")).andReturn("value");
 
@@ -55,7 +55,7 @@ public class DelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link DelegatePropertyAccessor#setProperty(StrutsContext, Object, Object, Object)}.
+     * Test method for {@link DelegatePropertyAccessor#setProperty(OgnlContext, Object, Object, Object)}.
      *
      * @throws OgnlException If something goes wrong.
      */
@@ -63,7 +63,7 @@ public class DelegatePropertyAccessorTest {
     public void testSetProperty() throws OgnlException {
         PropertyAccessorDelegateFactory<Integer> factory = createMock(PropertyAccessorDelegateFactory.class);
         PropertyAccessor mockAccessor = createMock(PropertyAccessor.class);
-        StrutsContext context = createMock(StrutsContext.class);
+        OgnlContext context = createMock(OgnlContext.class);
         expect(factory.getPropertyAccessor("property", 1)).andReturn(mockAccessor);
         mockAccessor.setProperty(context, 1, "property", "value");
 
@@ -74,13 +74,13 @@ public class DelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link DelegatePropertyAccessor#getSourceAccessor(StrutsContext, Object, Object)}.
+     * Test method for {@link DelegatePropertyAccessor#getSourceAccessor(OgnlContext, Object, Object)}.
      */
     @Test
     public void testGetSourceAccessor() {
         PropertyAccessorDelegateFactory<Integer> factory = createMock(PropertyAccessorDelegateFactory.class);
         PropertyAccessor mockAccessor = createMock(PropertyAccessor.class);
-        StrutsContext context = createMock(StrutsContext.class);
+        OgnlContext context = createMock(OgnlContext.class);
         expect(factory.getPropertyAccessor("property", 1)).andReturn(mockAccessor);
         expect(mockAccessor.getSourceAccessor(context, 1, "property")).andReturn("method");
 
@@ -91,13 +91,13 @@ public class DelegatePropertyAccessorTest {
     }
 
     /**
-     * Test method for {@link DelegatePropertyAccessor#getSourceSetter(StrutsContext, Object, Object)}.
+     * Test method for {@link DelegatePropertyAccessor#getSourceSetter(OgnlContext, Object, Object)}.
      */
     @Test
     public void testGetSourceSetter() {
         PropertyAccessorDelegateFactory<Integer> factory = createMock(PropertyAccessorDelegateFactory.class);
         PropertyAccessor mockAccessor = createMock(PropertyAccessor.class);
-        StrutsContext context = createMock(StrutsContext.class);
+        OgnlContext context = createMock(OgnlContext.class);
         expect(factory.getPropertyAccessor("property", 1)).andReturn(mockAccessor);
         expect(mockAccessor.getSourceSetter(context, 1, "property")).andReturn("method");
 

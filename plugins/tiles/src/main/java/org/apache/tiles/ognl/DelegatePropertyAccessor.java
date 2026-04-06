@@ -18,9 +18,9 @@
  */
 package org.apache.tiles.ognl;
 
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Uses a {@link PropertyAccessorDelegateFactory} to delegate the methods to
@@ -29,7 +29,7 @@ import ognl.PropertyAccessor;
  * @param <T> The type of the accessed root object.
  * @since 2.2.0
  */
-public class DelegatePropertyAccessor<T> implements PropertyAccessor {
+public class DelegatePropertyAccessor<T> implements PropertyAccessor<StrutsContext> {
 
     /**
      * The property accessor factory.
@@ -52,7 +52,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         return factory.getPropertyAccessor((String) name, (T) target).getProperty(context, target, name);
     }
 
@@ -60,7 +60,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         factory.getPropertyAccessor((String) name, (T) target).setProperty(context, target, name, value);
     }
 
@@ -68,7 +68,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
+    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
         return factory.getPropertyAccessor((String) index, (T) target).getSourceAccessor(context, target, index);
     }
 
@@ -76,7 +76,7 @@ public class DelegatePropertyAccessor<T> implements PropertyAccessor {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public String getSourceSetter(OgnlContext context, Object target, Object index) {
+    public String getSourceSetter(StrutsContext context, Object target, Object index) {
         return factory.getPropertyAccessor((String) index, (T) target).getSourceSetter(context, target, index);
     }
 }

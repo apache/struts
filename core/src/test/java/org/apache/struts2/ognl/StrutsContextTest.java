@@ -9,10 +9,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("unchecked")
-class StrutsContextTest {
+public class StrutsContextTest {
 
     @Test
-    void shouldCreateContextWithRequiredMemberAccess() {
+    public void shouldCreateContextWithRequiredMemberAccess() {
         MemberAccess<StrutsContext> memberAccess = mock(MemberAccess.class);
         var context = new StrutsContext(memberAccess);
 
@@ -21,7 +21,7 @@ class StrutsContextTest {
     }
 
     @Test
-    void shouldCreateContextWithAllComponents() {
+    public void shouldCreateContextWithAllComponents() {
         MemberAccess<StrutsContext> memberAccess = mock(MemberAccess.class);
         ClassResolver<StrutsContext> classResolver = mock(ClassResolver.class);
         TypeConverter<StrutsContext> typeConverter = mock(TypeConverter.class);
@@ -34,7 +34,7 @@ class StrutsContextTest {
     }
 
     @Test
-    void shouldSupportRootObject() {
+    public void shouldSupportRootObject() {
         MemberAccess<StrutsContext> memberAccess = mock(MemberAccess.class);
         var root = new Object();
         var context = new StrutsContext(memberAccess);
@@ -44,7 +44,7 @@ class StrutsContextTest {
     }
 
     @Test
-    void shouldImplementMapInterface() {
+    public void shouldImplementMapInterface() {
         MemberAccess<StrutsContext> memberAccess = mock(MemberAccess.class);
         var context = new StrutsContext(memberAccess);
 

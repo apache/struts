@@ -18,8 +18,8 @@
  */
 package org.apache.tiles.ognl;
 
+import ognl.OgnlContext;
 import ognl.PropertyAccessor;
-import org.apache.struts2.ognl.StrutsContext;
 import org.apache.tiles.request.Request;
 
 import java.util.Map;
@@ -27,10 +27,11 @@ import java.util.Map;
 /**
  * Accesses attributes in any scope.
  */
-public class AnyScopePropertyAccessor implements PropertyAccessor<StrutsContext> {
+@SuppressWarnings("rawtypes")
+public class AnyScopePropertyAccessor implements PropertyAccessor {
 
     @Override
-    public Object getProperty(StrutsContext context, Object target, Object name) {
+    public Object getProperty(OgnlContext context, Object target, Object name) {
         Request request = (Request) target;
         String attributeName = (String) name;
         for (String scopeName : request.getAvailableScopes()) {
@@ -43,7 +44,7 @@ public class AnyScopePropertyAccessor implements PropertyAccessor<StrutsContext>
     }
 
     @Override
-    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
+    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
         Request request = (Request) target;
         String attributeName = (String) index;
         for (String scopeName : request.getAvailableScopes()) {
@@ -56,7 +57,7 @@ public class AnyScopePropertyAccessor implements PropertyAccessor<StrutsContext>
     }
 
     @Override
-    public String getSourceSetter(StrutsContext context, Object target, Object index) {
+    public String getSourceSetter(OgnlContext context, Object target, Object index) {
         Request request = (Request) target;
         String attributeName = (String) index;
         String[] availableScopes = request.getAvailableScopes().toArray(new String[0]);
@@ -70,7 +71,7 @@ public class AnyScopePropertyAccessor implements PropertyAccessor<StrutsContext>
     }
 
     @Override
-    public void setProperty(StrutsContext context, Object target, Object name, Object value) {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
         Request request = (Request) target;
         String attributeName = (String) name;
         String[] availableScopes = request.getAvailableScopes().toArray(new String[0]);

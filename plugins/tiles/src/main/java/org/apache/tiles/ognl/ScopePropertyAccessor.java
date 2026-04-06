@@ -18,14 +18,15 @@
  */
 package org.apache.tiles.ognl;
 
+import ognl.OgnlContext;
 import ognl.PropertyAccessor;
-import org.apache.struts2.ognl.StrutsContext;
 import org.apache.tiles.request.Request;
 
 /**
  * Accesses a scope.
  */
-public class ScopePropertyAccessor implements PropertyAccessor<StrutsContext> {
+@SuppressWarnings("rawtypes")
+public class ScopePropertyAccessor implements PropertyAccessor {
 
     /**
      * The length of the scope suffix: "Scope".
@@ -33,7 +34,7 @@ public class ScopePropertyAccessor implements PropertyAccessor<StrutsContext> {
     static final int SCOPE_SUFFIX_LENGTH = 5;
 
     @Override
-    public Object getProperty(StrutsContext context, Object target, Object name) {
+    public Object getProperty(OgnlContext context, Object target, Object name) {
         Request request = (Request) target;
         String scope = (String) name;
         if (scope.endsWith("Scope")) {
@@ -44,7 +45,7 @@ public class ScopePropertyAccessor implements PropertyAccessor<StrutsContext> {
     }
 
     @Override
-    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
+    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
         String scope = (String) index;
         if (scope.endsWith("Scope")) {
             String scopeName = scope.substring(0, scope.length() - SCOPE_SUFFIX_LENGTH);
@@ -54,12 +55,12 @@ public class ScopePropertyAccessor implements PropertyAccessor<StrutsContext> {
     }
 
     @Override
-    public String getSourceSetter(StrutsContext context, Object target, Object index) {
+    public String getSourceSetter(OgnlContext context, Object target, Object index) {
         return null;
     }
 
     @Override
-    public void setProperty(StrutsContext context, Object target, Object name, Object value) {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
         // Does nothing.
     }
 

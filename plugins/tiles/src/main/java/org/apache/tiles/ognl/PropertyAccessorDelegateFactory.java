@@ -20,7 +20,6 @@
 package org.apache.tiles.ognl;
 
 import ognl.PropertyAccessor;
-import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Decides a {@link PropertyAccessor} depending on the property name and the
@@ -29,6 +28,7 @@ import org.apache.struts2.ognl.StrutsContext;
  * @param <T> The type of the root object to evaluate.
  * @since 2.2.0
  */
+@SuppressWarnings("rawtypes")
 public interface PropertyAccessorDelegateFactory<T> {
 
     /**
@@ -40,5 +40,5 @@ public interface PropertyAccessorDelegateFactory<T> {
      * @return The appropriate property accessor.
      * @since 2.2.0
      */
-    PropertyAccessor<StrutsContext> getPropertyAccessor(String propertyName, T obj);
+    PropertyAccessor getPropertyAccessor(String propertyName, T obj);
 }

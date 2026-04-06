@@ -378,6 +378,12 @@ public class JSONInterceptor extends AbstractInterceptor {
         this.defaultEncoding = val;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireAnnotations(String requireAnnotations) {
+        boolean required = BooleanUtils.toBoolean(requireAnnotations);
+        this.populator.setRequireAnnotations(required);
+    }
+
     /**
      * @param ignoreHierarchy Ignore properties defined on base classes of the root object.
      */

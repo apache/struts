@@ -20,6 +20,7 @@ package org.apache.struts2.json;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.json.annotations.JSON;
 
 import java.beans.BeanInfo;
@@ -52,12 +53,25 @@ public class JSONPopulator {
     private static final Logger LOG = LogManager.getLogger(JSONPopulator.class);
 
     private String dateFormat = JSONUtil.RFC3339_FORMAT;
+    private boolean requireAnnotations = false;
 
     public JSONPopulator() {
     }
 
     public JSONPopulator(String dateFormat) {
         this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Sets whether @StrutsParameter annotations are required on setter methods
+     * for JSON deserialization. When enabled, only setters annotated with
+     * @StrutsParameter will be populated from JSON input, consistent with
+     * ParametersInterceptor behavior.
+     *
+     * @param requireAnnotations true to enforce annotation requirement
+     */
+    public void setRequireAnnotations(boolean requireAnnotations) {
+        this.requireAnnotations = requireAnnotations;
     }
 
     public String getDateFormat() {
@@ -87,6 +101,14 @@ public class JSONPopulator {
                 if (method != null) {
                     JSON json = method.getAnnotation(JSON.class);
                     if ((json != null) && !json.deserialize()) {
+                        continue;
+                    }
+
+                    // Enforce @StrutsParameter annotation if required, consistent
+                    // with ParametersInterceptor behavior for URL parameters
+                    if (requireAnnotations && method.getAnnotation(StrutsParameter.class) == null) {
+                        LOG.debug("JSON property '{}' rejected: setter [{}] missing @StrutsParameter annotation",
+                                name, method.getName());
                         continue;
                     }
 

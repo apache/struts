@@ -104,7 +104,8 @@ public class PostbackResult extends StrutsResultSupport {
 
         // Render
         PrintWriter pw = new PrintWriter(response.getOutputStream());
-        pw.write("<!DOCTYPE html><html><body><form action=\"" + finalLocation + "\" method=\"POST\">");
+        String safeLocation = encodeHtml(finalLocation);
+        pw.write("<!DOCTYPE html><html><body><form action=\"" + safeLocation + "\" method=\"POST\">");
         writeFormElements(request, pw);
         writePrologueScript(pw);
         pw.write("</html>");
@@ -211,6 +212,19 @@ public class PostbackResult extends StrutsResultSupport {
 
     public final void setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;
+    }
+
+    /**
+     * Encodes special HTML characters to prevent injection in HTML attribute context.
+     */
+    private static String encodeHtml(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("&", "&amp;")
+                     .replace("\"", "&quot;")
+                     .replace("<", "&lt;")
+                     .replace(">", "&gt;");
     }
 
     protected void writeFormElement(PrintWriter pw, String name, String[] values) throws UnsupportedEncodingException {

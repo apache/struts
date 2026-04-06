@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import ognl.OgnlContext;
 import org.apache.struts2.conversion.TypeConverter;
 
 import java.lang.reflect.Member;
@@ -29,19 +28,19 @@ import java.util.Map;
  */
 public class XWorkTypeConverterWrapper implements TypeConverter {
 
-    private final ognl.TypeConverter typeConverter;
+    private final ognl.TypeConverter<StrutsContext> typeConverter;
 
-    public XWorkTypeConverterWrapper(ognl.TypeConverter conv) {
+    public XWorkTypeConverterWrapper(ognl.TypeConverter<StrutsContext> conv) {
         this.typeConverter = conv;
     }
 
     @Override
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        // Cast context to OgnlContext for OGNL 3.4.8+ compatibility
-        OgnlContext ognlContext = (context instanceof OgnlContext oc) ? oc : null;
-        if (ognlContext == null) {
-            throw new IllegalArgumentException("Context must be an OgnlContext for OGNL 3.4.8+");
+        // Cast context to StrutsContext for OGNL 3.5.x compatibility
+        StrutsContext strutsContext = (context instanceof StrutsContext sc) ? sc : null;
+        if (strutsContext == null) {
+            throw new IllegalArgumentException("Context must be a StrutsContext for OGNL 3.5.x+");
         }
-        return typeConverter.convertValue(ognlContext, target, member, propertyName, value, toType);
+        return typeConverter.convertValue(strutsContext, target, member, propertyName, value, toType);
     }
 }

@@ -20,10 +20,10 @@ package org.apache.struts2.ognl.accessor;
 
 import org.apache.struts2.ognl.ObjectProxy;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Is able to access (set/get) properties on a given object.
@@ -33,13 +33,13 @@ import ognl.PropertyAccessor;
  *
  * @author Gabe
  */
-public class ObjectProxyPropertyAccessor implements PropertyAccessor {
+public class ObjectProxyPropertyAccessor implements PropertyAccessor<StrutsContext> {
 
     /**
      * Used by OGNl to generate bytecode
      */
     @Override
-    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
+    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -47,12 +47,13 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
      * Used by OGNl to generate bytecode
      */
     @Override
-    public String getSourceSetter(OgnlContext context, Object target, Object index) {
+    public String getSourceSetter(StrutsContext context, Object target, Object index) {
         return null;
     }
 
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    @SuppressWarnings("unchecked")
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
@@ -61,7 +62,8 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    @SuppressWarnings("unchecked")
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
@@ -75,7 +77,7 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor {
      * @param context
      * @param proxy
      */
-    private void setupContext(OgnlContext context, ObjectProxy proxy) {
+    private void setupContext(StrutsContext context, ObjectProxy proxy) {
         ReflectionContextState.setLastBeanClassAccessed(context, proxy.getLastClassAccessed());
         ReflectionContextState.setLastBeanPropertyAccessed(context, proxy.getLastPropertyAccessed());
     }

@@ -21,9 +21,9 @@ package org.apache.struts2.ognl.accessor;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MethodFailedException;
 import ognl.ObjectMethodAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,12 +38,13 @@ import java.util.Collection;
  * @author Patrick Lightbody
  * @author tmjee
  */
-public class XWorkMethodAccessor extends ObjectMethodAccessor {
+public class XWorkMethodAccessor extends ObjectMethodAccessor<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
     @Override
-    public Object callMethod(OgnlContext context, Object object, String string, Object[] objects) throws MethodFailedException {
+    @SuppressWarnings("unchecked")
+    public Object callMethod(StrutsContext context, Object object, String string, Object[] objects) throws MethodFailedException {
 
         //Collection property accessing
         //this if statement ensures that ognl
@@ -94,7 +95,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-    private Object callMethodWithDebugInfo(OgnlContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {
+    private Object callMethodWithDebugInfo(StrutsContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {
         try {
             return super.callMethod(context, object, methodName, objects);
         } catch (MethodFailedException e) {
@@ -109,7 +110,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
     }
 
     @Override
-    public Object callStaticMethod(OgnlContext context, Class aClass, String string, Object[] objects) throws MethodFailedException {
+    public Object callStaticMethod(StrutsContext context, Class aClass, String string, Object[] objects) throws MethodFailedException {
         boolean e = ReflectionContextState.isDenyMethodExecution(context);
 
         if (!e) {
@@ -119,7 +120,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-    private Object callStaticMethodWithDebugInfo(OgnlContext context, Class aClass, String methodName,
+    private Object callStaticMethodWithDebugInfo(StrutsContext context, Class aClass, String methodName,
                                                  Object[] objects) throws MethodFailedException {
         try {
             return super.callStaticMethod(context, aClass, methodName, objects);

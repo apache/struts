@@ -19,20 +19,20 @@
 package org.apache.struts2.ognl.accessor;
 
 import ognl.ObjectPropertyAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.ognl.StrutsContext;
 
-public class HttpParametersPropertyAccessor extends ObjectPropertyAccessor {
+public class HttpParametersPropertyAccessor extends ObjectPropertyAccessor<StrutsContext> {
 
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object oname) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object oname) throws OgnlException {
         HttpParameters parameters = (HttpParameters) target;
         return parameters.get(String.valueOf(oname)).getObject();
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object oname, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object oname, Object value) throws OgnlException {
         throw new OgnlException("Access to " + target.getClass().getName() + " is read-only!");
     }
 }

@@ -24,8 +24,8 @@ import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MapPropertyAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlException;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +37,7 @@ import java.util.Map;
  *
  * @author Gabriel Zimmerman
  */
-public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
+public class XWorkMapPropertyAccessor extends MapPropertyAccessor<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(XWorkMapPropertyAccessor.class);
 
@@ -63,7 +63,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         LOG.trace("Entering getProperty ({},{},{})", context, target, name);
 
         ReflectionContextState.updateCurrentPropertyPath(context, name);
@@ -123,7 +123,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
     }
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         LOG.trace("Entering setProperty({},{},{},{})", context, target, name, value);
 
         Object key = getKey(context, name);
@@ -131,7 +131,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
         map.put(key, getValue(context, value));
     }
 
-    private Object getValue(OgnlContext context, Object value) {
+    private Object getValue(StrutsContext context, Object value) {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         if (lastClass == null || lastProperty == null) {
@@ -144,7 +144,7 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
         return xworkConverter.convertValue(context, value, elementClass);
     }
 
-    private Object getKey(OgnlContext context, Object name) {
+    private Object getKey(StrutsContext context, Object name) {
         Class lastClass = (Class) context.get(XWorkConverter.LAST_BEAN_CLASS_ACCESSED);
         String lastProperty = (String) context.get(XWorkConverter.LAST_BEAN_PROPERTY_ACCESSED);
         if (lastClass == null || lastProperty == null) {

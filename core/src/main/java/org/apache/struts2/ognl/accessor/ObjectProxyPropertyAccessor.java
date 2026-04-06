@@ -52,22 +52,22 @@ public class ObjectProxyPropertyAccessor implements PropertyAccessor<StrutsConte
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
-        return OgnlRuntime.getPropertyAccessor(proxy.getValue().getClass()).getProperty(context, target, name);
+        return ((PropertyAccessor) OgnlRuntime.getPropertyAccessor(proxy.getValue().getClass())).getProperty(context, target, name);
 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         ObjectProxy proxy = (ObjectProxy) target;
         setupContext(context, proxy);
 
-        OgnlRuntime.getPropertyAccessor(proxy.getValue().getClass()).setProperty(context, target, name, value);
+        ((PropertyAccessor) OgnlRuntime.getPropertyAccessor(proxy.getValue().getClass())).setProperty(context, target, name, value);
     }
 
     /**

@@ -20,6 +20,7 @@
 package org.apache.tiles.ognl;
 
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Decides a {@link PropertyAccessor} depending on the property name and the
@@ -39,5 +40,5 @@ public interface PropertyAccessorDelegateFactory<T> {
      * @return The appropriate property accessor.
      * @since 2.2.0
      */
-    PropertyAccessor getPropertyAccessor(String propertyName, T obj);
+    PropertyAccessor<StrutsContext> getPropertyAccessor(String propertyName, T obj);
 }

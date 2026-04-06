@@ -19,6 +19,7 @@
 package org.apache.tiles.ognl;
 
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.tiles.core.util.CombinedBeanInfo;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
@@ -35,22 +36,22 @@ public class TilesContextPropertyAccessorDelegateFactory implements PropertyAcce
      * The plain object property accessor, to be used directly for
      * {@link Request}.
      */
-    private final PropertyAccessor objectPropertyAccessor;
+    private final PropertyAccessor<StrutsContext> objectPropertyAccessor;
 
     /**
      * The application context property accessor.
      */
-    private final PropertyAccessor applicationContextPropertyAccessor;
+    private final PropertyAccessor<StrutsContext> applicationContextPropertyAccessor;
 
     /**
      * The request scope property accessor.
      */
-    private final PropertyAccessor anyScopePropertyAccessor;
+    private final PropertyAccessor<StrutsContext> anyScopePropertyAccessor;
 
     /**
      * The session scope property accessor.
      */
-    private final PropertyAccessor scopePropertyAccessor;
+    private final PropertyAccessor<StrutsContext> scopePropertyAccessor;
 
     /**
      * The bean info of {@link Request} and
@@ -70,10 +71,10 @@ public class TilesContextPropertyAccessorDelegateFactory implements PropertyAcce
      * @since 2.2.0
      */
     public TilesContextPropertyAccessorDelegateFactory(
-            PropertyAccessor objectPropertyAccessor,
-            PropertyAccessor applicationContextPropertyAccessor,
-            PropertyAccessor anyScopePropertyAccessor,
-            PropertyAccessor scopePropertyAccessor
+            PropertyAccessor<StrutsContext> objectPropertyAccessor,
+            PropertyAccessor<StrutsContext> applicationContextPropertyAccessor,
+            PropertyAccessor<StrutsContext> anyScopePropertyAccessor,
+            PropertyAccessor<StrutsContext> scopePropertyAccessor
     ) {
         beanInfo = new CombinedBeanInfo(Request.class, ApplicationContext.class);
         this.objectPropertyAccessor = objectPropertyAccessor;
@@ -83,8 +84,8 @@ public class TilesContextPropertyAccessorDelegateFactory implements PropertyAcce
     }
 
     /** {@inheritDoc} */
-    public PropertyAccessor getPropertyAccessor(String propertyName, Request request) {
-        PropertyAccessor retValue;
+    public PropertyAccessor<StrutsContext> getPropertyAccessor(String propertyName, Request request) {
+        PropertyAccessor<StrutsContext> retValue;
         if (propertyName.endsWith("Scope")) {
             String scopeName = propertyName.substring(0, propertyName.length() - ScopePropertyAccessor.SCOPE_SUFFIX_LENGTH);
             if (request.getContext(scopeName) != null) {

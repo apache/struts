@@ -18,9 +18,9 @@
  */
 package org.apache.tiles.ognl;
 
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 
 /**
  * Uses a {@link PropertyAccessor} as a delegate, but passing a nested object as
@@ -29,7 +29,7 @@ import ognl.PropertyAccessor;
  * @param <T> The root object type from which the target object will be extracted.
  * @since 2.2.0
  */
-public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor {
+public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor<StrutsContext> {
 
     /**
      * The extractor of the nested object.
@@ -43,7 +43,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      *
      * @since 2.2.0
      */
-    private final PropertyAccessor propertyAccessor;
+    private final PropertyAccessor<StrutsContext> propertyAccessor;
 
     /**
      * Constructor.
@@ -52,7 +52,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * @param propertyAccessor      The delegated property accessor.
      * @since 2.2.0
      */
-    public NestedObjectDelegatePropertyAccessor(NestedObjectExtractor<T> nestedObjectExtractor, PropertyAccessor propertyAccessor) {
+    public NestedObjectDelegatePropertyAccessor(NestedObjectExtractor<T> nestedObjectExtractor, PropertyAccessor<StrutsContext> propertyAccessor) {
         this.nestedObjectExtractor = nestedObjectExtractor;
         this.propertyAccessor = propertyAccessor;
     }
@@ -61,7 +61,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
+    public Object getProperty(StrutsContext context, Object target, Object name) throws OgnlException {
         return propertyAccessor.getProperty(context, nestedObjectExtractor.getNestedObject((T) target), name);
     }
 
@@ -69,7 +69,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         propertyAccessor.setProperty(context, nestedObjectExtractor.getNestedObject((T) target), name, value);
     }
 
@@ -77,7 +77,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public String getSourceAccessor(OgnlContext context, Object target, Object index) {
+    public String getSourceAccessor(StrutsContext context, Object target, Object index) {
         return propertyAccessor.getSourceAccessor(context, nestedObjectExtractor.getNestedObject((T) target), index);
     }
 
@@ -85,7 +85,7 @@ public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public String getSourceSetter(OgnlContext context, Object target, Object index) {
+    public String getSourceSetter(StrutsContext context, Object target, Object index) {
         return propertyAccessor.getSourceSetter(context, nestedObjectExtractor.getNestedObject((T) target), index);
     }
 }

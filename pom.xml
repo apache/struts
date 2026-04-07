@@ -314,6 +314,7 @@
                             <exclude>src/main/webapp/fonts/**/*</exclude>
                             <exclude>thoughts/**/*.md</exclude>
                             <exclude>test-output/**</exclude>
+                            <exclude>docs/**</exclude>
                         </inputExcludes>
                     </configuration>
                 </plugin>

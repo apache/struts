@@ -13,6 +13,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default: 4
     target-branch: "release/struts-6-8-x"
     ignore:
       - dependency-name: "org.eclipse.jetty:jetty-maven-plugin"

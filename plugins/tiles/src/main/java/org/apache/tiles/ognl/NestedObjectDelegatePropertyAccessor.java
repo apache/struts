@@ -29,6 +29,7 @@ import ognl.PropertyAccessor;
  * @param <T> The root object type from which the target object will be extracted.
  * @since 2.2.0
  */
+@SuppressWarnings("rawtypes")
 public class NestedObjectDelegatePropertyAccessor<T> implements PropertyAccessor {
 
     /**

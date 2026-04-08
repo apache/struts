@@ -23,7 +23,6 @@ import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.NullHandler;
 import ognl.Ognl;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.SimpleNode;
@@ -90,12 +89,12 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testCanSetADependentObject() {
         String dogName = "fido";
 
-        OgnlRuntime.setNullHandler(Owner.class, new NullHandler() {
-            public Object nullMethodResult(OgnlContext context, Object o, String s, Object[] objects) {
+        OgnlRuntime.setNullHandler(Owner.class, new NullHandler<StrutsContext>() {
+            public Object nullMethodResult(StrutsContext context, Object o, String s, Object[] objects) {
                 return null;
             }
 
-            public Object nullPropertyValue(OgnlContext context, Object o, Object o1) {
+            public Object nullPropertyValue(StrutsContext context, Object o, Object o1) {
                 String methodName = o1.toString();
                 String getter = "set" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
                 Method[] methods = o.getClass().getDeclaredMethods();
@@ -199,7 +198,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testExpressionIsCachedIrrespectiveOfItsExecutionStatus() {
         Foo foo = new Foo();
-        OgnlContext context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Expression which executes with success
         try {
@@ -223,7 +222,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil.setContainer(container);  // Must be explicitly set as the generated OgnlUtil instance has no container
         ognlUtil.setEnableExpressionCache("true");
         Foo foo = new Foo();
-        OgnlContext context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Expression which executes with success
         try {
@@ -243,7 +242,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testMethodExpressionIsCachedIrrespectiveOfItsExecutionStatus() {
         Foo foo = new Foo();
-        OgnlContext context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
 
         // Method expression which executes with success
         try {
@@ -846,7 +845,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ChainingInterceptor foo = new ChainingInterceptor();
         ChainingInterceptor foo2 = new ChainingInterceptor();
 
-        OgnlContext context = ognlUtil.createDefaultContext(null);
+        StrutsContext context = ognlUtil.createDefaultContext(null);
         SimpleNode expression = (SimpleNode) Ognl.parseExpression("{'a','ruby','b','tom'}");
 
         Ognl.getValue(expression, context, "aksdj");
@@ -903,7 +902,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testBeanMapExpressions() throws OgnlException, NoSuchMethodException {
         Foo foo = new Foo();
 
-        OgnlContext context = ognlUtil.createDefaultContext(foo);
+        StrutsContext context = ognlUtil.createDefaultContext(foo);
         SecurityMemberAccess sma = (SecurityMemberAccess) context.getMemberAccess();
 
         sma.useExcludedPackageNames("org.apache.struts2.ognl");

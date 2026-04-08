@@ -19,7 +19,6 @@
 package org.apache.struts2.ognl;
 
 import ognl.MemberAccess;
-import ognl.OgnlContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +53,7 @@ import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
  * Allows access decisions to be made on the basis of whether a member is static or not.
  * Also blocks or allows access to properties.
  */
-public class SecurityMemberAccess implements MemberAccess {
+public class SecurityMemberAccess implements MemberAccess<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
@@ -115,7 +114,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public Object setup(OgnlContext context, Object target, Member member, String propertyName) {
+    public Object setup(StrutsContext context, Object target, Member member, String propertyName) {
         Object result = null;
 
         if (isAccessible(context, target, member, propertyName)) {
@@ -130,7 +129,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public void restore(OgnlContext context, Object target, Member member, String propertyName, Object state) {
+    public void restore(StrutsContext context, Object target, Member member, String propertyName, Object state) {
         if (state == null) {
             return;
         }
@@ -145,7 +144,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Override
-    public boolean isAccessible(OgnlContext context, Object target, Member member, String propertyName) {
+    public boolean isAccessible(StrutsContext context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
         if (member == null) {

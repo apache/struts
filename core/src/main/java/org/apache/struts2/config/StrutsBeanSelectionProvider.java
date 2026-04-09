@@ -73,6 +73,7 @@ import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 import org.apache.struts2.util.ContentTypeMatcher;
 import org.apache.struts2.util.PatternMatcher;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.util.ProxyService;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStackFactory;
@@ -446,6 +447,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(ProxyCacheFactory.class, StrutsConstants.STRUTS_PROXY_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(ProxyService.class, StrutsConstants.STRUTS_PROXYSERVICE, builder, props, Scope.SINGLETON);
+        alias(ParameterAuthorizer.class, StrutsConstants.STRUTS_PARAMETER_AUTHORIZER, builder, props, Scope.SINGLETON);
 
         alias(SecurityMemberAccess.class, StrutsConstants.STRUTS_MEMBER_ACCESS, builder, props, Scope.PROTOTYPE);
         alias(OgnlGuard.class, StrutsConstants.STRUTS_OGNL_GUARD, builder, props, Scope.SINGLETON);

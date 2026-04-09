@@ -22,6 +22,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
@@ -72,6 +73,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonRpcContentType = "application/json-rpc";
 
     private JSONUtil jsonUtil;
+    private ParameterAuthorizer parameterAuthorizer;
     private int maxElements = JSONReader.DEFAULT_MAX_ELEMENTS;
     private int maxDepth = JSONReader.DEFAULT_MAX_DEPTH;
     private int maxLength = 2_097_152;  // 2MB
@@ -130,6 +132,9 @@ public class JSONInterceptor extends AbstractInterceptor {
 
                 if (rootObject == null) // model overrides action
                     rootObject = invocation.getStack().peek();
+
+                // enforce @StrutsParameter authorization on JSON body keys
+                filterUnauthorizedKeys(json, rootObject, invocation.getAction());
 
                 // populate fields
                 populator.populateObject(rootObject, json);
@@ -198,6 +203,19 @@ public class JSONInterceptor extends AbstractInterceptor {
         reader.setMaxDepth(maxDepth);
         reader.setMaxStringLength(maxStringLength);
         reader.setMaxKeyLength(maxKeyLength);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedKeys(Map json, Object target, Object action) {
+        Iterator<String> it = json.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            if (!parameterAuthorizer.isAuthorized(key, target, action)) {
+                LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
+                        key, target.getClass().getName());
+                it.remove();
+            }
+        }
     }
 
     protected String readContentType(HttpServletRequest request) {
@@ -583,6 +601,11 @@ public class JSONInterceptor extends AbstractInterceptor {
     @Inject
     public void setJsonUtil(JSONUtil jsonUtil) {
         this.jsonUtil = jsonUtil;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
     }
 
     @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)

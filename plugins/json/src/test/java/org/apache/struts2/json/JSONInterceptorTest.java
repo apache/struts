@@ -23,6 +23,7 @@ import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.junit.util.TestUtils;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -47,6 +48,8 @@ public class JSONInterceptorTest extends StrutsTestCase {
         jsonUtil.setReader(new StrutsJSONReader());
         jsonUtil.setWriter(new StrutsJSONWriter());
         interceptor.setJsonUtil(jsonUtil);
+        // Default: allow all parameters (simulates requireAnnotations=false)
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
         return interceptor;
     }
 
@@ -554,6 +557,48 @@ public class JSONInterceptorTest extends StrutsTestCase {
         } catch (JSONException e) {
             assertTrue(e.getMessage().contains("maximum allowed depth"));
         }
+    }
+
+    public void testParameterAuthorizerRejectsUnauthorizedKeys() throws Exception {
+        // JSON body with "foo" and "bar" keys, but authorizer only allows "foo"
+        this.request.setContent("{\"foo\":\"allowed\", \"bar\":\"blocked\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Only authorize "foo", reject "bar"
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> "foo".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // "foo" should be set, "bar" should NOT be set
+        assertEquals("allowed", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testParameterAuthorizerAllowsAllWhenPermissive() throws Exception {
+        // Same JSON body, but authorizer allows all
+        this.request.setContent("{\"foo\":\"value1\", \"bar\":\"value2\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // Both should be set
+        assertEquals("value1", action.getFoo());
+        assertEquals("value2", action.getBar());
     }
 
     public void testMaxElementsEnforcedThroughInterceptor() throws Exception {

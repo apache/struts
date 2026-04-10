@@ -19,7 +19,8 @@ on:
   pull_request:
   push:
     branches:
-      - release/6-8-x
+      - 'support/struts-6-x-x'
+      - 'release/*'
 
 permissions: read-all
 

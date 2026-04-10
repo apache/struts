@@ -207,13 +207,39 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     @SuppressWarnings("rawtypes")
     private void filterUnauthorizedKeys(Map json, Object target, Object action) {
-        Iterator<String> it = json.keySet().iterator();
+        filterUnauthorizedKeysRecursive(json, "", target, action);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedKeysRecursive(Map json, String prefix, Object target, Object action) {
+        Iterator<Map.Entry> it = json.entrySet().iterator();
         while (it.hasNext()) {
-            String key = it.next();
-            if (!parameterAuthorizer.isAuthorized(key, target, action)) {
+            Map.Entry entry = it.next();
+            String key = (String) entry.getKey();
+            String fullPath = prefix.isEmpty() ? key : prefix + "." + key;
+
+            if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
                 LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
-                        key, target.getClass().getName());
+                        fullPath, target.getClass().getName());
                 it.remove();
+                continue;
+            }
+
+            // Recurse into nested Maps (JSON objects) to enforce depth-aware authorization
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                filterUnauthorizedKeysRecursive((Map) value, fullPath, target, action);
+            } else if (value instanceof java.util.List) {
+                filterUnauthorizedList((java.util.List) value, fullPath, target, action);
+            }
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedList(java.util.List list, String prefix, Object target, Object action) {
+        for (Object item : list) {
+            if (item instanceof Map) {
+                filterUnauthorizedKeysRecursive((Map) item, prefix, target, action);
             }
         }
     }

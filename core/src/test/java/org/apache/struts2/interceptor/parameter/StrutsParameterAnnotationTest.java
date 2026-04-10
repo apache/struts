@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
 public class StrutsParameterAnnotationTest {
 
     private ParametersInterceptor parametersInterceptor;
-    private DefaultParameterAuthorizer parameterAuthorizer;
+    private StrutsParameterAuthorizer parameterAuthorizer;
 
     private ThreadAllowlist threadAllowlist;
 
@@ -77,7 +77,7 @@ public class StrutsParameterAnnotationTest {
         var proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         parametersInterceptor.setProxyService(proxyService);
 
-        var parameterAuthorizer = new DefaultParameterAuthorizer();
+        var parameterAuthorizer = new StrutsParameterAuthorizer();
         parameterAuthorizer.setOgnlUtil(ognlUtil);
         parameterAuthorizer.setProxyService(proxyService);
         parameterAuthorizer.setRequireAnnotations(Boolean.TRUE.toString());

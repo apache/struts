@@ -37,6 +37,8 @@ import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Uses the content handler to apply the request body to the action.
@@ -84,19 +86,18 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             InputStreamReader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
 
             if (requireAnnotations) {
-                // Two-phase deserialization: deserialize into a fresh instance, then copy only authorized properties
-                Object freshInstance;
-                try {
-                    freshInstance = target.getClass().getDeclaredConstructor().newInstance();
-                } catch (ReflectiveOperationException e) {
-                    throw new IllegalStateException(
-                            "Cannot create fresh instance of " + target.getClass().getName()
-                            + " for parameter authorization. REST body deserialization requires a public no-arg constructor"
-                            + " when struts.parameters.requireAnnotations is enabled.", e);
+                // Two-phase deserialization: deserialize into a fresh instance, then copy only authorized properties.
+                // This requires a public no-arg constructor on the target class. If absent, fall back to
+                // single-phase deserialization with post-deserialization scrubbing of unauthorized properties.
+                Object freshInstance = createFreshInstance(target.getClass());
+                if (freshInstance != null) {
+                    handler.toObject(invocation, reader, freshInstance);
+                    copyAuthorizedProperties(freshInstance, target, invocation.getAction(), "");
+                } else {
+                    LOG.warn("No no-arg constructor for [{}], using single-phase deserialization with post-scrub", target.getClass().getName());
+                    handler.toObject(invocation, reader, target);
+                    scrubUnauthorizedProperties(target, invocation.getAction());
                 }
-
-                handler.toObject(invocation, reader, freshInstance);
-                copyAuthorizedProperties(freshInstance, target, invocation.getAction());
             } else {
                 // Direct deserialization (backward compat when requireAnnotations is not enabled)
                 handler.toObject(invocation, reader, target);
@@ -105,7 +106,20 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         return invocation.invoke();
     }
 
-    private void copyAuthorizedProperties(Object source, Object target, Object action) throws Exception {
+    private Object createFreshInstance(Class<?> clazz) {
+        try {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+            LOG.debug("Cannot create fresh instance of [{}] via no-arg constructor: {}", clazz.getName(), e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Recursively copies only authorized properties from source to target, enforcing {@code @StrutsParameter}
+     * depth semantics for nested object graphs.
+     */
+    private void copyAuthorizedProperties(Object source, Object target, Object action, String prefix) throws Exception {
         BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass(), Object.class);
         for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
             Method readMethod = pd.getReadMethod();
@@ -114,18 +128,93 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 continue;
             }
 
-            if (!parameterAuthorizer.isAuthorized(pd.getName(), target, action)) {
+            String fullPath = prefix.isEmpty() ? pd.getName() : prefix + "." + pd.getName();
+
+            if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
                 LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
-                        pd.getName(), target.getClass().getName());
+                        fullPath, target.getClass().getName());
                 continue;
             }
 
-            Object value = readMethod.invoke(source);
-            if (value == null) {
-                continue; // Skip null values to avoid overwriting pre-initialized fields on target
+            Object sourceValue = readMethod.invoke(source);
+            if (sourceValue == null) {
+                // Intentionally skip null values: in two-phase deserialization, properties NOT present in the
+                // request body will be null in the fresh instance. Copying null would clear pre-initialized
+                // fields on the target. This is the safer default — an explicit JSON null and a missing field
+                // are indistinguishable after deserialization into a fresh POJO.
+                continue;
             }
-            writeMethod.invoke(target, value);
+
+            // For complex bean types (not primitives, strings, collections, etc.), recurse to enforce
+            // nested authorization. Collections/Maps/arrays are copied as-is since their contents were
+            // already deserialized and the depth check on the parent property covers them.
+            if (isNestedBeanType(sourceValue.getClass())) {
+                Object targetValue = readMethod.invoke(target);
+                if (targetValue == null) {
+                    Object newTarget = createFreshInstance(sourceValue.getClass());
+                    if (newTarget != null) {
+                        writeMethod.invoke(target, newTarget);
+                        targetValue = newTarget;
+                    } else {
+                        // Cannot recurse without a fresh target — copy whole value
+                        writeMethod.invoke(target, sourceValue);
+                        continue;
+                    }
+                }
+                copyAuthorizedProperties(sourceValue, targetValue, action, fullPath);
+            } else {
+                writeMethod.invoke(target, sourceValue);
+            }
         }
+    }
+
+    /**
+     * Fallback for actions without a no-arg constructor: scrub unauthorized properties after direct deserialization.
+     */
+    private void scrubUnauthorizedProperties(Object target, Object action) throws Exception {
+        BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass(), Object.class);
+        for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
+            Method readMethod = pd.getReadMethod();
+            Method writeMethod = pd.getWriteMethod();
+            if (readMethod == null || writeMethod == null) {
+                continue;
+            }
+
+            if (!parameterAuthorizer.isAuthorized(pd.getName(), target, action)) {
+                Object value = readMethod.invoke(target);
+                if (value != null) {
+                    try {
+                        writeMethod.invoke(target, (Object) null);
+                    } catch (IllegalArgumentException e) {
+                        // Primitive type — cannot null, set to default
+                        LOG.debug("Cannot null primitive property [{}], skipping scrub", pd.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Determines whether a class represents a nested bean that should be recursively authorized,
+     * as opposed to simple/leaf types that are copied directly.
+     */
+    private boolean isNestedBeanType(Class<?> clazz) {
+        if (clazz.isPrimitive() || clazz.isEnum() || clazz.isArray()) {
+            return false;
+        }
+        if (clazz.getName().startsWith("java.lang.") || clazz.getName().startsWith("java.math.")) {
+            return false;
+        }
+        if (java.util.Date.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        if (java.time.temporal.Temporal.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        if (Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        return true;
     }
 
 }

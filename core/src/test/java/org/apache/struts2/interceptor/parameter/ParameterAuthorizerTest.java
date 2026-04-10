@@ -34,16 +34,16 @@ import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link DefaultParameterAuthorizer} — verifies that the extracted authorization logic works correctly
+ * Tests for {@link StrutsParameterAuthorizer} — verifies that the extracted authorization logic works correctly
  * without any OGNL ThreadAllowlist side effects.
  */
 public class ParameterAuthorizerTest {
 
-    private DefaultParameterAuthorizer authorizer;
+    private StrutsParameterAuthorizer authorizer;
 
     @Before
     public void setUp() {
-        authorizer = new DefaultParameterAuthorizer();
+        authorizer = new StrutsParameterAuthorizer();
         authorizer.setRequireAnnotations(Boolean.TRUE.toString());
 
         var ognlUtil = new OgnlUtil(
@@ -119,9 +119,19 @@ public class ParameterAuthorizerTest {
     public void modelDriven_targetIsModel_allAuthorized() {
         var action = new ModelAction();
         var model = action.getModel();
-        // target != action → model is exempt
+        // target != action AND action instanceof ModelDriven → model is exempt
         assertThat(authorizer.isAuthorized("anyProperty", model, action)).isTrue();
         assertThat(authorizer.isAuthorized("nested.deep", model, action)).isTrue();
+    }
+
+    @Test
+    public void nonModelDrivenAction_differentTarget_notExempt() {
+        // Regression test: when target != action but action does NOT implement ModelDriven,
+        // the target should NOT be exempt from annotation checks.
+        var action = new SecureAction();
+        var nonActionTarget = new Pojo(); // different object, but action is not ModelDriven
+        // Pojo has no @StrutsParameter annotations, so this should be rejected
+        assertThat(authorizer.isAuthorized("name", nonActionTarget, action)).isFalse();
     }
 
     // --- Transition mode ---

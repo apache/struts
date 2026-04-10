@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor.parameter;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
@@ -54,9 +55,9 @@ import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
  *
  * @since 7.2.0
  */
-public class DefaultParameterAuthorizer implements ParameterAuthorizer {
+public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultParameterAuthorizer.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsParameterAuthorizer.class);
 
     private boolean requireAnnotations = false;
     private boolean requireAnnotationsTransitionMode = false;
@@ -102,9 +103,11 @@ public class DefaultParameterAuthorizer implements ParameterAuthorizer {
 
         long paramDepth = parameterName.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
-        // ModelDriven exemption: when target is the model (target != action), exempt from annotation requirements
-        if (target != action) {
-            LOG.debug("Model driven target detected, exempting from @StrutsParameter annotation requirement");
+        // ModelDriven exemption: only exempt when the action explicitly implements ModelDriven
+        // and the target is its model object. This prevents non-ModelDriven root objects
+        // (e.g. JSONInterceptor's configurable rootObject) from bypassing annotation checks.
+        if (target != action && action instanceof ModelDriven) {
+            LOG.debug("ModelDriven target detected (action implements ModelDriven), exempting from @StrutsParameter annotation requirement");
             return true;
         }
 

@@ -27,7 +27,7 @@ github:
       # contexts are the names of checks that must pass.
       required_status_checks:
         contexts:
-          - "Build and Test (JDK 8)"
+          - "Build and Test (8)"
       required_pull_request_reviews:
         # it does not work because our github teams are private/secret, see INFRA-25666
         require_code_owner_reviews: false
@@ -36,7 +36,7 @@ github:
       # contexts are the names of checks that must pass.
       required_status_checks:
         contexts:
-          - "Build and Test (JDK 8)"
+          - "Build and Test (8)"
       required_pull_request_reviews:
         # it does not work because our github teams are private/secret, see INFRA-25666
         require_code_owner_reviews: false

@@ -18,6 +18,7 @@ name: "CodeQL"
 on:
   push:
     branches:
+      - 'support/struts-6-x-x'
       - 'release/*'
   pull_request:
 

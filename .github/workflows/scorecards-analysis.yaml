@@ -21,8 +21,7 @@ on:
     - cron: "30 1 * * 6"    # Weekly on Saturdays
   push:
     branches:
-      - 'support/struts-6-x-x'
-      - 'release/*'
+      - 'main' # only default branch is supported
 
 permissions: read-all
 

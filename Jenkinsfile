@@ -105,7 +105,7 @@ pipeline {
           when {
             anyOf {
               branch 'main'
-              branch 'release/struts-6-8-x'
+              branch 'support/struts-6-x-x'
             }
           }
           steps {
@@ -119,7 +119,7 @@ pipeline {
           when {
             anyOf {
               branch 'main'
-              branch 'release/struts-6-8-x'
+              branch 'support/struts-6-x-x'
             }
           }
           steps {
@@ -132,7 +132,7 @@ pipeline {
           when {
             anyOf {
               branch 'main'
-              branch 'release/struts-6-8-x'
+              branch 'support/struts-6-x-x'
             }
           }
           steps {

@@ -15,7 +15,7 @@ updates:
       interval: "weekly"
     cooldown:
       default: 4
-    target-branch: "release/struts-6-8-x"
+    target-branch: "support/struts-6-x-x"
     ignore:
       - dependency-name: "org.eclipse.jetty:jetty-maven-plugin"
       - dependency-name: "com.github.ben-manes.caffeine:caffeine"

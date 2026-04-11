@@ -40,8 +40,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -99,16 +97,17 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
             if (requireAnnotations) {
                 // Two-phase deserialization: deserialize into a fresh instance, then copy only authorized properties.
-                // This requires a public no-arg constructor on the target class. If absent, fall back to
-                // single-phase deserialization with post-deserialization scrubbing of unauthorized properties.
+                // Requires a public no-arg constructor on the target class.
+                // If absent, body processing is rejected entirely — a best-effort scrub cannot guarantee
+                // that every nested unauthorized property is nulled out, so the safer choice is to skip.
                 Object freshInstance = createFreshInstance(target.getClass());
                 if (freshInstance != null) {
                     handler.toObject(invocation, reader, freshInstance);
                     copyAuthorizedProperties(freshInstance, target, invocation.getAction(), target, "");
                 } else {
-                    LOG.warn("No no-arg constructor for [{}], using single-phase deserialization with post-scrub", target.getClass().getName());
-                    handler.toObject(invocation, reader, target);
-                    scrubUnauthorizedProperties(target, invocation.getAction());
+                    LOG.warn("REST body rejected: requireAnnotations=true but [{}] has no no-arg constructor; "
+                            + "body deserialization skipped to preserve @StrutsParameter authorization integrity",
+                            target.getClass().getName());
                 }
             } else {
                 // Direct deserialization (backward compat when requireAnnotations is not enabled)
@@ -172,8 +171,12 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                         writeMethod.invoke(target, newTarget);
                         targetValue = newTarget;
                     } else {
-                        // Cannot recurse without a fresh target — copy whole value
-                        writeMethod.invoke(target, sourceValue);
+                        // No no-arg constructor for the nested bean: skip rather than bulk-copy the
+                        // unfiltered source value, which would bypass per-path authorization for every
+                        // property underneath this node.
+                        LOG.warn("REST nested bean [{}] skipped — no no-arg constructor for [{}],"
+                                + " cannot authorize its nested properties",
+                                fullPath, sourceValue.getClass().getName());
                         continue;
                     }
                 }
@@ -302,67 +305,6 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             }
         }
         return result;
-    }
-
-    /**
-     * Fallback for actions without a no-arg constructor: scrub unauthorized properties after direct deserialization.
-     * Recurses into nested beans, collection elements, and map values for full parity with
-     * {@code copyAuthorizedProperties} depth semantics.
-     */
-    private void scrubUnauthorizedProperties(Object target, Object action) throws Exception {
-        // Use an identity-based Set to guard against circular references.
-        // System.identityHashCode is not guaranteed unique; IdentityHashMap uses reference equality (==).
-        scrubUnauthorizedPropertiesRecursive(target, action, target, "",
-                Collections.newSetFromMap(new IdentityHashMap<>()));
-    }
-
-    private void scrubUnauthorizedPropertiesRecursive(
-            Object target, Object action, Object authTarget, String prefix,
-            Set<Object> visited) throws Exception {
-        // Guard against circular references in the object graph (identity equality, not equals())
-        if (!visited.add(target)) {
-            return;
-        }
-        BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass(), Object.class);
-        for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
-            Method readMethod = pd.getReadMethod();
-            Method writeMethod = pd.getWriteMethod();
-            if (readMethod == null || writeMethod == null) {
-                continue;
-            }
-
-            String fullPath = prefix.isEmpty() ? pd.getName() : prefix + "." + pd.getName();
-            Object value = readMethod.invoke(target);
-
-            if (!parameterAuthorizer.isAuthorized(fullPath, authTarget, action)) {
-                if (value != null) {
-                    try {
-                        writeMethod.invoke(target, (Object) null);
-                    } catch (IllegalArgumentException e) {
-                        LOG.debug("Cannot null primitive property [{}], skipping scrub", pd.getName());
-                    }
-                }
-            } else if (value != null) {
-                // Authorized — recurse into complex types to scrub any nested unauthorized fields
-                if (isNestedBeanType(value.getClass())) {
-                    scrubUnauthorizedPropertiesRecursive(value, action, authTarget, fullPath, visited);
-                } else if (value instanceof Collection) {
-                    for (Object element : (Collection<?>) value) {
-                        if (element != null && isNestedBeanType(element.getClass())) {
-                            scrubUnauthorizedPropertiesRecursive(
-                                    element, action, authTarget, fullPath + "[0]", visited);
-                        }
-                    }
-                } else if (value instanceof Map) {
-                    for (Object mapValue : ((Map<?, ?>) value).values()) {
-                        if (mapValue != null && isNestedBeanType(mapValue.getClass())) {
-                            scrubUnauthorizedPropertiesRecursive(
-                                    mapValue, action, authTarget, fullPath + "[0]", visited);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

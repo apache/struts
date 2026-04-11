@@ -36,9 +36,15 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Uses the content handler to apply the request body to the action.
@@ -92,7 +98,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 Object freshInstance = createFreshInstance(target.getClass());
                 if (freshInstance != null) {
                     handler.toObject(invocation, reader, freshInstance);
-                    copyAuthorizedProperties(freshInstance, target, invocation.getAction(), "");
+                    copyAuthorizedProperties(freshInstance, target, invocation.getAction(), target, "");
                 } else {
                     LOG.warn("No no-arg constructor for [{}], using single-phase deserialization with post-scrub", target.getClass().getName());
                     handler.toObject(invocation, reader, target);
@@ -116,10 +122,15 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Recursively copies only authorized properties from source to target, enforcing {@code @StrutsParameter}
-     * depth semantics for nested object graphs.
+     * Recursively copies only authorized properties from {@code source} to {@code target},
+     * enforcing {@code @StrutsParameter} depth semantics for nested object graphs.
+     *
+     * <p>{@code authTarget} is always the root action/model passed unchanged through all levels.
+     * {@code isAuthorized} uses the full dot/bracket path against the root class, so the root
+     * target must be used — not the nested object being visited at the current recursion depth.
      */
-    private void copyAuthorizedProperties(Object source, Object target, Object action, String prefix) throws Exception {
+    private void copyAuthorizedProperties(
+            Object source, Object target, Object action, Object authTarget, String prefix) throws Exception {
         BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass(), Object.class);
         for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
             Method readMethod = pd.getReadMethod();
@@ -130,9 +141,10 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
             String fullPath = prefix.isEmpty() ? pd.getName() : prefix + "." + pd.getName();
 
-            if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
+            // Always check against authTarget (root action/model), never the nested object being traversed
+            if (!parameterAuthorizer.isAuthorized(fullPath, authTarget, action)) {
                 LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
-                        fullPath, target.getClass().getName());
+                        fullPath, authTarget.getClass().getName());
                 continue;
             }
 
@@ -145,10 +157,8 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 continue;
             }
 
-            // For complex bean types (not primitives, strings, collections, etc.), recurse to enforce
-            // nested authorization. Collections/Maps/arrays are copied as-is since their contents were
-            // already deserialized and the depth check on the parent property covers them.
             if (isNestedBeanType(sourceValue.getClass())) {
+                // Complex bean: recurse to authorize nested fields, passing authTarget unchanged
                 Object targetValue = readMethod.invoke(target);
                 if (targetValue == null) {
                     Object newTarget = createFreshInstance(sourceValue.getClass());
@@ -161,7 +171,16 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                         continue;
                     }
                 }
-                copyAuthorizedProperties(sourceValue, targetValue, action, fullPath);
+                copyAuthorizedProperties(sourceValue, targetValue, action, authTarget, fullPath);
+            } else if (sourceValue instanceof Collection) {
+                writeMethod.invoke(target,
+                        deepCopyAuthorizedCollection((Collection<?>) sourceValue, fullPath, authTarget, action));
+            } else if (sourceValue instanceof Map) {
+                writeMethod.invoke(target,
+                        deepCopyAuthorizedMap((Map<?, ?>) sourceValue, fullPath, authTarget, action));
+            } else if (sourceValue.getClass().isArray()) {
+                writeMethod.invoke(target,
+                        deepCopyAuthorizedArray(sourceValue, fullPath, authTarget, action));
             } else {
                 writeMethod.invoke(target, sourceValue);
             }
@@ -169,9 +188,116 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
     }
 
     /**
+     * Authorizes each complex element of a collection using indexed-path semantics ({@code path[0].field}),
+     * matching {@code ParametersInterceptor} depth counting. Scalar elements are copied directly.
+     * Elements whose class has no no-arg constructor are skipped to avoid copying an unfiltered object graph.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Collection deepCopyAuthorizedCollection(
+            Collection<?> source, String collectionPath, Object authTarget, Object action) throws Exception {
+        List result = new ArrayList();
+        for (Object element : source) {
+            if (element != null && isNestedBeanType(element.getClass())) {
+                String elementPath = collectionPath + "[0]";
+                if (!parameterAuthorizer.isAuthorized(elementPath, authTarget, action)) {
+                    LOG.warn("REST collection element [{}] rejected by @StrutsParameter authorization", elementPath);
+                    continue;
+                }
+                Object newElement = createFreshInstance(element.getClass());
+                if (newElement != null) {
+                    copyAuthorizedProperties(element, newElement, action, authTarget, elementPath);
+                    result.add(newElement);
+                } else {
+                    // No no-arg constructor: skip element rather than copy an unfiltered object graph
+                    LOG.warn("REST collection element [{}] skipped — no no-arg constructor for [{}]",
+                            elementPath, element.getClass().getName());
+                }
+            } else {
+                result.add(element);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Authorizes each complex map value using indexed-path semantics ({@code path[0]}),
+     * consistent with OGNL bracket notation depth counting. Scalar values are copied directly.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Map deepCopyAuthorizedMap(
+            Map<?, ?> source, String mapPath, Object authTarget, Object action) throws Exception {
+        Map result = new LinkedHashMap();
+        for (Map.Entry<?, ?> entry : source.entrySet()) {
+            Object value = entry.getValue();
+            if (value != null && isNestedBeanType(value.getClass())) {
+                String valuePath = mapPath + "[0]";
+                if (!parameterAuthorizer.isAuthorized(valuePath, authTarget, action)) {
+                    LOG.warn("REST map value [{}] rejected by @StrutsParameter authorization", valuePath);
+                    continue;
+                }
+                Object newValue = createFreshInstance(value.getClass());
+                if (newValue != null) {
+                    copyAuthorizedProperties(value, newValue, action, authTarget, valuePath);
+                    result.put(entry.getKey(), newValue);
+                } else {
+                    LOG.warn("REST map value [{}] skipped — no no-arg constructor for [{}]",
+                            valuePath, value.getClass().getName());
+                }
+            } else {
+                result.put(entry.getKey(), value);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Authorizes each complex element of an array ({@code Pojo[]}) using indexed-path semantics,
+     * matching {@code ParametersInterceptor} depth counting. Scalar elements are copied directly.
+     */
+    private Object deepCopyAuthorizedArray(
+            Object sourceArray, String arrayPath, Object authTarget, Object action) throws Exception {
+        int length = Array.getLength(sourceArray);
+        Class<?> componentType = sourceArray.getClass().getComponentType();
+        Object result = Array.newInstance(componentType, length);
+        for (int i = 0; i < length; i++) {
+            Object element = Array.get(sourceArray, i);
+            if (element != null && isNestedBeanType(element.getClass())) {
+                String elementPath = arrayPath + "[0]";
+                if (!parameterAuthorizer.isAuthorized(elementPath, authTarget, action)) {
+                    LOG.warn("REST array element [{}] rejected by @StrutsParameter authorization", elementPath);
+                    continue;
+                }
+                Object newElement = createFreshInstance(element.getClass());
+                if (newElement != null) {
+                    copyAuthorizedProperties(element, newElement, action, authTarget, elementPath);
+                    Array.set(result, i, newElement);
+                } else {
+                    LOG.warn("REST array element [{}] skipped — no no-arg constructor for [{}]",
+                            elementPath, element.getClass().getName());
+                }
+            } else {
+                Array.set(result, i, element);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Fallback for actions without a no-arg constructor: scrub unauthorized properties after direct deserialization.
+     * Recurses into nested beans, collection elements, and map values for full parity with
+     * {@code copyAuthorizedProperties} depth semantics.
      */
     private void scrubUnauthorizedProperties(Object target, Object action) throws Exception {
+        scrubUnauthorizedPropertiesRecursive(target, action, target, "", new HashSet<>());
+    }
+
+    private void scrubUnauthorizedPropertiesRecursive(
+            Object target, Object action, Object authTarget, String prefix,
+            Set<Integer> visited) throws Exception {
+        // Guard against circular references in the object graph
+        if (!visited.add(System.identityHashCode(target))) {
+            return;
+        }
         BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass(), Object.class);
         for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
             Method readMethod = pd.getReadMethod();
@@ -180,14 +306,34 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 continue;
             }
 
-            if (!parameterAuthorizer.isAuthorized(pd.getName(), target, action)) {
-                Object value = readMethod.invoke(target);
+            String fullPath = prefix.isEmpty() ? pd.getName() : prefix + "." + pd.getName();
+            Object value = readMethod.invoke(target);
+
+            if (!parameterAuthorizer.isAuthorized(fullPath, authTarget, action)) {
                 if (value != null) {
                     try {
                         writeMethod.invoke(target, (Object) null);
                     } catch (IllegalArgumentException e) {
-                        // Primitive type — cannot null, set to default
                         LOG.debug("Cannot null primitive property [{}], skipping scrub", pd.getName());
+                    }
+                }
+            } else if (value != null) {
+                // Authorized — recurse into complex types to scrub any nested unauthorized fields
+                if (isNestedBeanType(value.getClass())) {
+                    scrubUnauthorizedPropertiesRecursive(value, action, authTarget, fullPath, visited);
+                } else if (value instanceof Collection) {
+                    for (Object element : (Collection<?>) value) {
+                        if (element != null && isNestedBeanType(element.getClass())) {
+                            scrubUnauthorizedPropertiesRecursive(
+                                    element, action, authTarget, fullPath + "[0]", visited);
+                        }
+                    }
+                } else if (value instanceof Map) {
+                    for (Object mapValue : ((Map<?, ?>) value).values()) {
+                        if (mapValue != null && isNestedBeanType(mapValue.getClass())) {
+                            scrubUnauthorizedPropertiesRecursive(
+                                    mapValue, action, authTarget, fullPath + "[0]", visited);
+                        }
                     }
                 }
             }
@@ -196,7 +342,8 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
     /**
      * Determines whether a class represents a nested bean that should be recursively authorized,
-     * as opposed to simple/leaf types that are copied directly.
+     * as opposed to simple/leaf types (primitives, strings, collections, maps, arrays, enums) that
+     * are handled directly.
      */
     private boolean isNestedBeanType(Class<?> clazz) {
         if (clazz.isPrimitive() || clazz.isEnum() || clazz.isArray()) {

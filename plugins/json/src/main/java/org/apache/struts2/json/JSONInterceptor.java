@@ -237,9 +237,15 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     @SuppressWarnings("rawtypes")
     private void filterUnauthorizedList(java.util.List list, String prefix, Object target, Object action) {
+        // Use prefix+"[0]" so that list element properties pick up one extra '[' in their path,
+        // matching the indexed-path semantics of ParametersInterceptor (e.g. "items[0].key" → depth 2).
+        String elementPrefix = prefix + "[0]";
         for (Object item : list) {
             if (item instanceof Map) {
-                filterUnauthorizedKeysRecursive((Map) item, prefix, target, action);
+                filterUnauthorizedKeysRecursive((Map) item, elementPrefix, target, action);
+            } else if (item instanceof java.util.List) {
+                // Handle nested lists (e.g. List<List<Map>>) by recursing with the same elementPrefix
+                filterUnauthorizedList((java.util.List) item, elementPrefix, target, action);
             }
         }
     }

@@ -40,11 +40,17 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Uses the content handler to apply the request body to the action.
@@ -195,7 +201,16 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Collection deepCopyAuthorizedCollection(
             Collection<?> source, String collectionPath, Object authTarget, Object action) throws Exception {
-        List result = new ArrayList();
+        // Preserve the collection type so that writeMethod.invoke does not fail when the setter
+        // parameter is typed as Set, SortedSet, etc. Fall back to ArrayList for unrecognised types.
+        Collection result;
+        if (source instanceof SortedSet) {
+            result = new TreeSet(((SortedSet) source).comparator());
+        } else if (source instanceof Set) {
+            result = new LinkedHashSet();
+        } else {
+            result = new ArrayList();
+        }
         for (Object element : source) {
             if (element != null && isNestedBeanType(element.getClass())) {
                 String elementPath = collectionPath + "[0]";
@@ -226,7 +241,14 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Map deepCopyAuthorizedMap(
             Map<?, ?> source, String mapPath, Object authTarget, Object action) throws Exception {
-        Map result = new LinkedHashMap();
+        // Preserve the map type so that writeMethod.invoke does not fail when the setter
+        // parameter is typed as SortedMap, TreeMap, etc.
+        Map result;
+        if (source instanceof SortedMap) {
+            result = new TreeMap(((SortedMap) source).comparator());
+        } else {
+            result = new LinkedHashMap();
+        }
         for (Map.Entry<?, ?> entry : source.entrySet()) {
             Object value = entry.getValue();
             if (value != null && isNestedBeanType(value.getClass())) {
@@ -288,14 +310,17 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
      * {@code copyAuthorizedProperties} depth semantics.
      */
     private void scrubUnauthorizedProperties(Object target, Object action) throws Exception {
-        scrubUnauthorizedPropertiesRecursive(target, action, target, "", new HashSet<>());
+        // Use an identity-based Set to guard against circular references.
+        // System.identityHashCode is not guaranteed unique; IdentityHashMap uses reference equality (==).
+        scrubUnauthorizedPropertiesRecursive(target, action, target, "",
+                Collections.newSetFromMap(new IdentityHashMap<>()));
     }
 
     private void scrubUnauthorizedPropertiesRecursive(
             Object target, Object action, Object authTarget, String prefix,
-            Set<Integer> visited) throws Exception {
-        // Guard against circular references in the object graph
-        if (!visited.add(System.identityHashCode(target))) {
+            Set<Object> visited) throws Exception {
+        // Guard against circular references in the object graph (identity equality, not equals())
+        if (!visited.add(target)) {
             return;
         }
         BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass(), Object.class);
@@ -349,13 +374,24 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         if (clazz.isPrimitive() || clazz.isEnum() || clazz.isArray()) {
             return false;
         }
+        // Exclude standard library value/leaf types that have no meaningful bean properties to recurse into.
+        // java.lang.*, java.math.* — primitives, String, Number subclasses, etc.
+        // java.util.* leaf types — UUID, Currency, Locale, Date, etc. (NOT Collection/Map which are handled separately)
         if (clazz.getName().startsWith("java.lang.") || clazz.getName().startsWith("java.math.")) {
             return false;
         }
-        if (java.util.Date.class.isAssignableFrom(clazz)) {
+        if (clazz.getName().startsWith("java.util.") && !Collection.class.isAssignableFrom(clazz)
+                && !Map.class.isAssignableFrom(clazz)) {
             return false;
         }
         if (java.time.temporal.Temporal.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+        if (clazz.getName().startsWith("java.time.")) {
+            return false;
+        }
+        if (clazz.getName().startsWith("java.net.") || clazz.getName().startsWith("java.io.")
+                || clazz.getName().startsWith("java.nio.")) {
             return false;
         }
         if (Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz)) {

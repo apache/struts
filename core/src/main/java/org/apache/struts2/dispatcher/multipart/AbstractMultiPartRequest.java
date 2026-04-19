@@ -241,9 +241,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(),
                     STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY, null,
                     new Object[]{fieldName, maxStringLength, fieldValue.length()});
-            if (!errors.contains(localizedMessage)) {
-                errors.add(localizedMessage);
-            }
+            ErrorIfAbsent(localizedMessage);
             return true;
         }
         return false;
@@ -278,15 +276,17 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             }
 
             LocalizedMessage errorMessage = buildErrorMessage(exClass, e.getMessage(), args);
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
-            }
+            ErrorIfAbsent(errorMessage);
         } catch (IOException e) {
             LOG.warn("Unable to parse request", e);
             LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), new Object[]{});
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
-            }
+            ErrorIfAbsent(errorMessage);
+        }
+    }
+
+    private void ErrorIfAbsent(LocalizedMessage errorMessage) {
+        if (!errors.contains(errorMessage)) {
+            errors.add(errorMessage);
         }
     }
 
@@ -449,9 +449,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
                     "Empty files are not allowed",
                     new Object[]{fileName, fieldName}
             );
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
-            }
+            ErrorIfAbsent(errorMessage);
             return true;
         }
         return false;

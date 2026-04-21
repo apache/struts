@@ -26,6 +26,7 @@ permissions: read-all
 env:
   MAVEN_OPTS: -Xmx2048m -Xms1024m
   LANG: en_US.utf8
+  HAVE_SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN != '' }}
 
 jobs:
   sonarcloud:
@@ -41,7 +42,14 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: 'maven'
-      - env:
+      - name: SonarCloud Scan
+        if: ${{ env.HAVE_SONARCLOUD_TOKEN == 'true' }}
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
         run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -DskipAssembly
+      - name: SonarCloud Scan -- SKIPPED
+        if: ${{ env.HAVE_SONARCLOUD_TOKEN != 'true' }}
+        run: |
+          echo "### SonarCloud not configured" >> $GITHUB_STEP_SUMMARY
+          echo "secrets.SONARCLOUD_TOKEN not existing, cannot push coverage checks" >> $GITHUB_STEP_SUMMARY

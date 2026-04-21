@@ -1,0 +1,91 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: OWASP checkup
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+      - 'release/*'
+      - 'support/*'
+  workflow_dispatch:
+  workflow_call:
+
+permissions: read-all
+
+env:
+  MAVEN_OPTS: -Xmx2048m -Xms1024m
+  LANG: en_US.utf8
+
+jobs:
+
+
+  owasp:
+    name: OWASP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Setup Java 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: 'maven'
+
+      - name: Cache NVD Database
+        id: cache-nvd
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: nvd-cache-${{ runner.os }}-owasp-${{ github.run_id }}
+          restore-keys: |
+            nvd-cache-${{ runner.os }}-owasp-
+            nvd-cache-${{ runner.os }}-
+
+      - name: OWASP Dependency check update cache
+        run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-mirror -Pdependency-update-only --no-transfer-progress
+        env:
+          NVD_NIST_APIKEY: ${{ secrets.NVD_NIST_APIKEY}}
+
+      - name: Cache NVD Database
+        uses: actions/cache/save@v6
+        if: ${{ always() }}
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: nvd-cache-${{ runner.os }}-owasp-${{ github.run_id }}
+
+      - name: OWASP check (Without running tests)
+        run: mvn -B org.owasp:dependency-check-maven:aggregate -Pdependency-check -Pjakartaee11 --no-transfer-progress
+
+      - name: Upload Dependency Check reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: dependency-check
+          path: target/dependency-check*
+
+      - name: Add OWASP summary
+        if: always()
+        run: |
+          {
+            echo "## OWASP Dependency Check"
+            echo ""
+            echo "The HTML report has been uploaded as the **dependency-check** artifact."
+            echo "Download it from the Artifacts section of this workflow run."
+          } >> "$GITHUB_STEP_SUMMARY"

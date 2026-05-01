@@ -92,6 +92,8 @@ import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.ognl.accessor.XWorkMethodAccessor;
+import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.util.OgnlTextParser;
 import org.apache.struts2.util.PatternMatcher;
@@ -406,6 +408,7 @@ public class DefaultConfiguration implements Configuration {
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
                 .factory(ProxyCacheFactory.class, StrutsProxyCacheFactory.class, Scope.SINGLETON)
                 .factory(ProxyService.class, StrutsProxyService.class, Scope.SINGLETON)
+                .factory(ParameterAuthorizer.class, StrutsParameterAuthorizer.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)

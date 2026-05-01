@@ -23,6 +23,7 @@ import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.junit.util.TestUtils;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -47,6 +48,8 @@ public class JSONInterceptorTest extends StrutsTestCase {
         jsonUtil.setReader(new StrutsJSONReader());
         jsonUtil.setWriter(new StrutsJSONWriter());
         interceptor.setJsonUtil(jsonUtil);
+        // Default: allow all parameters (simulates requireAnnotations=false)
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
         return interceptor;
     }
 
@@ -556,6 +559,48 @@ public class JSONInterceptorTest extends StrutsTestCase {
         }
     }
 
+    public void testParameterAuthorizerRejectsUnauthorizedKeys() throws Exception {
+        // JSON body with "foo" and "bar" keys, but authorizer only allows "foo"
+        this.request.setContent("{\"foo\":\"allowed\", \"bar\":\"blocked\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Only authorize "foo", reject "bar"
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> "foo".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // "foo" should be set, "bar" should NOT be set
+        assertEquals("allowed", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testParameterAuthorizerAllowsAllWhenPermissive() throws Exception {
+        // Same JSON body, but authorizer allows all
+        this.request.setContent("{\"foo\":\"value1\", \"bar\":\"value2\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // Both should be set
+        assertEquals("value1", action.getFoo());
+        assertEquals("value2", action.getBar());
+    }
+
     public void testMaxElementsEnforcedThroughInterceptor() throws Exception {
         // JSON object with 5 keys, set maxElements to 3
         this.request.setContent("{\"a\":1, \"b\":2, \"c\":3, \"d\":4, \"e\":5}".getBytes());
@@ -573,6 +618,67 @@ public class JSONInterceptorTest extends StrutsTestCase {
         } catch (JSONException e) {
             assertTrue(e.getMessage().contains("maximum allowed elements"));
         }
+    }
+
+    /**
+     * Tests that nested JSON keys are recursively checked by the parameter authorizer.
+     * Regression test for lukaszlenart's review: nested @StrutsParameter(depth=N) enforcement.
+     */
+    public void testNestedJsonKeysRecursivelyFiltered() throws Exception {
+        // JSON body with nested object: {"bean": {"stringField": "test", "intField": 42}}
+        this.request.setContent("{\"bean\": {\"stringField\": \"test\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Authorize "bean" (top-level) and "bean.stringField" (nested) but reject "bean.intField"
+        interceptor.setParameterAuthorizer((parameterName, target, action) ->
+                "bean".equals(parameterName) || "bean.stringField".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // bean should exist with stringField set, but intField should be default (0)
+        assertNotNull(action.getBean());
+        assertEquals("test", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
+    }
+
+    /**
+     * Tests that when root resolves to a non-action object (not ModelDriven),
+     * annotation checks are still enforced.
+     * Regression test for lukaszlenart's review: non-action root bypass.
+     */
+    public void testNonActionRootObjectStillChecked() throws Exception {
+        this.request.setContent("{\"stringField\":\"injected\", \"intField\":99}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setRoot("bean");
+        // Reject all parameters — simulates strict requireAnnotations
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> false);
+        TestAction4 action = new TestAction4();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // Both fields should remain at defaults since authorizer rejected everything
+        Bean bean = action.getBean();
+        assertNotNull(bean);
+        assertNull(bean.getStringField());
+        assertEquals(0, bean.getIntField());
     }
 
     @Override

@@ -32,12 +32,14 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class ContentTypeInterceptorTest extends TestCase {
 
     public void testRequestWithoutEncoding() throws Exception {
         ContentTypeInterceptor interceptor = new ContentTypeInterceptor();
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
 
         ActionSupport action = new ActionSupport();
 
@@ -76,6 +78,7 @@ public class ContentTypeInterceptorTest extends TestCase {
         final Charset charset = StandardCharsets.US_ASCII;
 
         ContentTypeInterceptor interceptor = new ContentTypeInterceptor();
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
 
         ActionSupport action = new ActionSupport();
 
@@ -116,6 +119,7 @@ public class ContentTypeInterceptorTest extends TestCase {
         final Charset charset = StandardCharsets.UTF_8;
 
         ContentTypeInterceptor interceptor = new ContentTypeInterceptor();
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
 
         ActionSupport action = new ActionSupport();
 
@@ -140,6 +144,84 @@ public class ContentTypeInterceptorTest extends TestCase {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setContent(new byte[] {1});
         request.setCharacterEncoding(charset.name());
+
+        ActionContext.of()
+            .withActionMapping(new ActionMapping())
+            .withServletRequest(request)
+            .bind();
+
+        interceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        mockContentTypeHandlerManager.verify();
+        mockActionInvocation.verify();
+        mockContentTypeHandler.verify();
+    }
+
+    public void testRequireAnnotationsEnabled_twoPhaseDeserialization() throws Exception {
+        ContentTypeInterceptor interceptor = new ContentTypeInterceptor();
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> false);
+        interceptor.setRequireAnnotations(Boolean.TRUE.toString());
+
+        ActionSupport action = new ActionSupport();
+
+        Mock mockActionInvocation = new Mock(ActionInvocation.class);
+        Mock mockContentTypeHandler = new Mock(ContentTypeHandler.class);
+        mockContentTypeHandler.expect("toObject", new AnyConstraintMatcher() {
+            public boolean matches(Object[] args) {
+                return true;
+            }
+        });
+        mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
+        mockActionInvocation.expectAndReturn("getAction", action);
+        mockActionInvocation.expectAndReturn("getAction", action);
+        Mock mockContentTypeHandlerManager = new Mock(ContentTypeHandlerManager.class);
+        mockContentTypeHandlerManager.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
+            public boolean matches(Object[] args) {
+                return true;
+            }
+        }, mockContentTypeHandler.proxy());
+        interceptor.setContentTypeHandlerSelector((ContentTypeHandlerManager) mockContentTypeHandlerManager.proxy());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContent(new byte[] {1});
+
+        ActionContext.of()
+            .withActionMapping(new ActionMapping())
+            .withServletRequest(request)
+            .bind();
+
+        interceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        mockContentTypeHandlerManager.verify();
+        mockActionInvocation.verify();
+        mockContentTypeHandler.verify();
+    }
+
+    public void testRequireAnnotationsEnabled_selectiveFilter() throws Exception {
+        ContentTypeInterceptor interceptor = new ContentTypeInterceptor();
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> "name".equals(parameterName));
+        interceptor.setRequireAnnotations(Boolean.TRUE.toString());
+
+        ActionSupport action = new ActionSupport();
+
+        Mock mockActionInvocation = new Mock(ActionInvocation.class);
+        Mock mockContentTypeHandler = new Mock(ContentTypeHandler.class);
+        mockContentTypeHandler.expect("toObject", new AnyConstraintMatcher() {
+            public boolean matches(Object[] args) {
+                return true;
+            }
+        });
+        mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
+        mockActionInvocation.expectAndReturn("getAction", action);
+        mockActionInvocation.expectAndReturn("getAction", action);
+        Mock mockContentTypeHandlerManager = new Mock(ContentTypeHandlerManager.class);
+        mockContentTypeHandlerManager.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
+            public boolean matches(Object[] args) {
+                return true;
+            }
+        }, mockContentTypeHandler.proxy());
+        interceptor.setContentTypeHandlerSelector((ContentTypeHandlerManager) mockContentTypeHandlerManager.proxy());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContent(new byte[] {1});
 
         ActionContext.of()
             .withActionMapping(new ActionMapping())

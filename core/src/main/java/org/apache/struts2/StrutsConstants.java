@@ -552,6 +552,13 @@ public final class StrutsConstants {
     public static final String STRUTS_PROXYSERVICE = "struts.proxyService";
 
     /**
+     * The {@link org.apache.struts2.interceptor.parameter.ParameterAuthorizer} implementation class.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PARAMETER_AUTHORIZER = "struts.parameterAuthorizer";
+
+    /**
      * Enables evaluation of OGNL expressions
      *
      * @since 6.0.0

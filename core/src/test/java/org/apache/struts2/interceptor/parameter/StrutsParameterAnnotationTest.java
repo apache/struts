@@ -56,6 +56,7 @@ import static org.mockito.Mockito.when;
 public class StrutsParameterAnnotationTest {
 
     private ParametersInterceptor parametersInterceptor;
+    private StrutsParameterAuthorizer parameterAuthorizer;
 
     private ThreadAllowlist threadAllowlist;
 
@@ -75,6 +76,13 @@ public class StrutsParameterAnnotationTest {
 
         var proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         parametersInterceptor.setProxyService(proxyService);
+
+        var parameterAuthorizer = new StrutsParameterAuthorizer();
+        parameterAuthorizer.setOgnlUtil(ognlUtil);
+        parameterAuthorizer.setProxyService(proxyService);
+        parameterAuthorizer.setRequireAnnotations(Boolean.TRUE.toString());
+        this.parameterAuthorizer = parameterAuthorizer;
+        parametersInterceptor.setParameterAuthorizer(parameterAuthorizer);
 
         NotExcludedAcceptedPatternsChecker checker = mock(NotExcludedAcceptedPatternsChecker.class);
         when(checker.isAccepted(anyString())).thenReturn(IsAccepted.yes(""));
@@ -360,6 +368,7 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicStrNotAnnotated_transitionMode() {
         parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        parameterAuthorizer.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
         testParameter(new FieldAction(), "publicStrNotAnnotated", true);
     }
 
@@ -369,6 +378,7 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicStrNotAnnotatedMethod_transitionMode() {
         parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        parameterAuthorizer.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
         testParameter(new MethodAction(), "publicStrNotAnnotated", true);
     }
 

@@ -100,6 +100,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
     private Set<Pattern> acceptedValuePatterns = null;
+    private ParameterAuthorizer parameterAuthorizer;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -119,6 +120,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setProxyService(ProxyService proxyService) {
         this.proxyService = proxyService;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -352,6 +358,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * Checks if the Action class member corresponding to a parameter is appropriately annotated with
      * {@link StrutsParameter} and OGNL allowlists any necessary classes.
      * <p>
+     * Authorization is delegated to {@link ParameterAuthorizer}. If authorized, OGNL allowlisting is performed as a
+     * second pass (this is specific to the OGNL-based parameter injection path and not shared with other input channels).
+     * <p>
      * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#NESTING_CHARS} and may also
      * be adversely impacted by the use of custom OGNL property accessors.
      */
@@ -360,23 +369,67 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
+        // Resolve target for ModelDriven: if the ValueStack peek is different from the action, it's the model
+        Object target = action;
+        if (action instanceof ModelDriven<?>) {
+            Object stackTop = ActionContext.getContext().getValueStack().peek();
+            if (!stackTop.equals(action)) {
+                target = stackTop;
+            }
+        }
+
+        // Delegate authorization check to shared ParameterAuthorizer (no OGNL side effects)
+        if (!parameterAuthorizer.isAuthorized(name, target, action)) {
+            return false;
+        }
+
+        // OGNL-specific allowlisting: only needed for nested params (depth >= 1)
         long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
-
-        if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
-            LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement");
-            return true;
+        if (paramDepth >= 1) {
+            performOgnlAllowlisting(name, target, paramDepth);
         }
+        return true;
+    }
 
-        if (requireAnnotationsTransitionMode && paramDepth == 0) {
-            LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement", name);
-            return true;
-        }
-
+    /**
+     * Performs OGNL ThreadAllowlist side effects for an authorized parameter. This is specific to OGNL-based parameter
+     * injection and must NOT be shared with other input channels (JSON, REST).
+     */
+    private void performOgnlAllowlisting(String name, Object target, long paramDepth) {
         int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
         String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
-        return hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
+        BeanInfo beanInfo = getBeanInfo(target);
+        if (beanInfo != null) {
+            Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
+                    .filter(desc -> desc.getName().equals(normalisedRootProperty)).findFirst();
+            if (propDescOpt.isPresent()) {
+                PropertyDescriptor propDesc = propDescOpt.get();
+                Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
+                if (relevantMethod != null && getPermittedInjectionDepth(relevantMethod) >= paramDepth) {
+                    allowlistClass(propDesc.getPropertyType());
+                    if (paramDepth >= 2) {
+                        allowlistReturnTypeIfParameterized(relevantMethod);
+                    }
+                    return;
+                }
+            }
+        }
+
+        // Fallback: check public field
+        Class<?> targetClass = ultimateClass(target);
+        try {
+            Field field = targetClass.getDeclaredField(normalisedRootProperty);
+            if (Modifier.isPublic(field.getModifiers()) && getPermittedInjectionDepth(field) >= paramDepth) {
+                allowlistClass(field.getType());
+                if (paramDepth >= 2) {
+                    allowlistFieldIfParameterized(field);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            // No field to allowlist
+        }
     }
 
     /**

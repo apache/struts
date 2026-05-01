@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.9.0-SNAPSHOT</version>
+        <version>6.9.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-bom</artifactId>
@@ -43,7 +43,7 @@
     </licenses>
 
     <properties>
-        <struts-version.version>6.9.0-SNAPSHOT</struts-version.version>
+        <struts-version.version>6.9.1-SNAPSHOT</struts-version.version>
         <maven.site.skip>true</maven.site.skip>
         <maven.site.deploy.skip>true</maven.site.deploy.skip>
     </properties>
@@ -189,7 +189,7 @@
     </dependencyManagement>
 
   <scm>
-    <tag>STRUTS_6_7_0</tag>
+    <tag>STRUTS_6_9_0</tag>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
     <url>https://github.com/apache/struts/</url>

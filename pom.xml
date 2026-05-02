@@ -125,7 +125,7 @@
         <mockito.version>5.23.0</mockito.version>
         <ognl.version>3.4.11</ognl.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <spring.version>6.2.12</spring.version>
+        <spring.version>7.0.7</spring.version>
         <struts-annotations.version>2.0</struts-annotations.version>
         <velocity-tools.version>3.1</velocity-tools.version>
         <weld.version>6.0.4.Final</weld.version>
@@ -157,8 +157,7 @@
         <profile>
             <id>jakartaee11</id>
             <properties>
-                <jakarta-ee.version>11.0.0-M5</jakarta-ee.version>
-                <spring.version>7.0.5</spring.version>
+                <jakarta-ee.version>11.0.0</jakarta-ee.version>
             </properties>
         </profile>
         <profile>

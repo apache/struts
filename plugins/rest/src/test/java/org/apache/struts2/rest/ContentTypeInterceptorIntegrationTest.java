@@ -23,8 +23,10 @@ import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
 import org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
@@ -53,7 +55,10 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         action = new SecureRestAction();
+        setupInterceptorWithAction(action);
+    }
 
+    private void setupInterceptorWithAction(Object actionInstance) {
         var ognlUtil = new OgnlUtil(
                 new DefaultOgnlExpressionCacheFactory<>("1000", LRU.toString()),
                 new DefaultOgnlBeanInfoCacheFactory<>("1000", LRU.toString()),
@@ -72,8 +77,8 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         mockActionInvocation = new Mock(ActionInvocation.class);
         mockSelector = new Mock(ContentTypeHandlerManager.class);
         // ContentTypeInterceptor calls getAction() twice when requireAnnotations=true
-        mockActionInvocation.expectAndReturn("getAction", action);
-        mockActionInvocation.expectAndReturn("getAction", action);
+        mockActionInvocation.expectAndReturn("getAction", actionInstance);
+        mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockSelector.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
             public boolean matches(Object[] args) { return true; }
@@ -120,15 +125,81 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     }
 
     public void testNestedPropertyRejectedWhenDepthInsufficient() throws Exception {
-        // shallowAddress has @StrutsParameter (depth=0) — its nested fields should NOT be set
+        // shallowAddress has @StrutsParameter on the setter (depth-0 authorized) but the getter
+        // has no depth>=1 annotation. The Jackson path enters shallowAddress (constructed by
+        // Jackson) but skipChildren on each inner property — so the Address is non-null but its
+        // city/zip fields stay null.
         runWithBody("{\"shallowAddress\":{\"city\":\"Warsaw\",\"zip\":\"00-001\"}}");
-        // The top-level shallowAddress reference itself may be created (Jackson behavior)
-        // but its nested city/zip must remain null because depth-1 isn't allowed.
-        if (action.getShallowAddress() != null) {
-            assertNull("nested city should be rejected (depth insufficient)",
-                    action.getShallowAddress().getCity());
-            assertNull("nested zip should be rejected (depth insufficient)",
-                    action.getShallowAddress().getZip());
+        assertNotNull("shallowAddress is depth-0 authorized; Jackson constructs it",
+                action.getShallowAddress());
+        assertNull("nested city must be rejected (depth-1 not authorized)",
+                action.getShallowAddress().getCity());
+        assertNull("nested zip must be rejected (depth-1 not authorized)",
+                action.getShallowAddress().getZip());
+    }
+
+    // --- Tests proving the new Jackson authorization path is in use ---
+
+    public void testJacksonHandlerDoesNotRequireNoArgConstructor() throws Exception {
+        // The legacy two-phase copy required a no-arg constructor on the target. Jackson's
+        // readerForUpdating populates the existing instance directly, so this constraint
+        // is gone — proof that the new AuthorizationAware path is being taken.
+        NoNoArgAction noNoArg = new NoNoArgAction("preserved-pre-deserialization-value");
+        setupInterceptorWithAction(noNoArg);
+        runWithBody("{\"name\":\"alice\"}");
+        assertEquals("alice", noNoArg.getName());
+        assertEquals("pre-existing field must be preserved (no fresh-instance copy)",
+                "preserved-pre-deserialization-value", noNoArg.getRequiredField());
+    }
+
+    public void testRejectedAtParentNeverInstantiatesNestedObject() throws Exception {
+        // Stronger guarantee than the two-phase copy: when the parent property is rejected,
+        // Jackson's skipChildren() discards the entire JSON subtree and the nested object
+        // is never constructed. role-typed fixture: address requires a setter @StrutsParameter
+        // for depth-0 authorization. By giving address a fresh action where address is depth-0
+        // unauthorized, we prove the setter is never called and address stays null.
+        // (We use a custom action where address has no setter annotation.)
+        UnauthorizedNestedAction restrictedAction = new UnauthorizedNestedAction();
+        setupInterceptorWithAction(restrictedAction);
+        runWithBody("{\"unauthorized\":{\"city\":\"Warsaw\"}}");
+        assertNull("unauthorized property must be rejected at parent — Jackson never enters",
+                restrictedAction.getUnauthorized());
+    }
+
+    // --- Test fixtures for new path verification ---
+
+    /**
+     * Action with no public no-arg constructor — would fail the legacy two-phase copy's
+     * createFreshInstance check, but works fine with the Jackson authorization path.
+     */
+    public static class NoNoArgAction extends ActionSupport {
+        private final String requiredField;
+        private String name;
+
+        public NoNoArgAction(String requiredField) {
+            this.requiredField = requiredField;
+        }
+
+        public String getName() { return name; }
+
+        @StrutsParameter
+        public void setName(String name) { this.name = name; }
+
+        public String getRequiredField() { return requiredField; }
+    }
+
+    /**
+     * Action with a property that has NO @StrutsParameter on its setter — depth-0 authorization
+     * fails, so Jackson must never enter this property nor instantiate the nested object.
+     */
+    public static class UnauthorizedNestedAction extends ActionSupport {
+        private SecureRestAction.Address unauthorized;
+
+        public SecureRestAction.Address getUnauthorized() { return unauthorized; }
+
+        // No @StrutsParameter annotation — depth-0 path "unauthorized" is rejected.
+        public void setUnauthorized(SecureRestAction.Address unauthorized) {
+            this.unauthorized = unauthorized;
         }
     }
 }

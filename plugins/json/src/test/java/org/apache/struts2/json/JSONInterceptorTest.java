@@ -583,6 +583,32 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNull(action.getBar());
     }
 
+    public void testNonStringKeysAreSkippedByAuthorizationFilter() throws Exception {
+        // Simulate a custom JSON reader producing a Map with a non-String key.
+        // The authorizer should skip the entry rather than throw ClassCastException.
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
+
+        java.util.Map<Object, Object> mixedKeyMap = new java.util.LinkedHashMap<>();
+        mixedKeyMap.put("validKey", "ok");
+        mixedKeyMap.put(42, "shouldBeSkipped"); // Integer key, not String
+
+        java.lang.reflect.Method method = JSONInterceptor.class.getDeclaredMethod(
+                "filterUnauthorizedKeys", java.util.Map.class, Object.class, Object.class);
+        method.setAccessible(true);
+
+        // Should not throw ClassCastException
+        method.invoke(interceptor, mixedKeyMap, new TestAction(), new TestAction());
+
+        // The non-String key entry should still be present (skipped, not removed)
+        assertTrue("non-String-key entry should remain (skipped, not removed)", mixedKeyMap.containsKey(42));
+        assertTrue("String-key entry should remain", mixedKeyMap.containsKey("validKey"));
+    }
+
     public void testParameterAuthorizerAllowsAllWhenPermissive() throws Exception {
         // Same JSON body, but authorizer allows all
         this.request.setContent("{\"foo\":\"value1\", \"bar\":\"value2\"}".getBytes());

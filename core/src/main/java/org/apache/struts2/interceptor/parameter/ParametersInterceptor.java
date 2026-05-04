@@ -23,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.action.ParameterNameAware;
@@ -369,14 +368,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
-        // Resolve target for ModelDriven: if the ValueStack peek is different from the action, it's the model
-        Object target = action;
-        if (action instanceof ModelDriven<?>) {
-            Object stackTop = ActionContext.getContext().getValueStack().peek();
-            if (!stackTop.equals(action)) {
-                target = stackTop;
-            }
-        }
+        Object target = parameterAuthorizer.resolveTarget(action);
 
         // Delegate authorization check to shared ParameterAuthorizer (no OGNL side effects)
         if (!parameterAuthorizer.isAuthorized(name, target, action)) {

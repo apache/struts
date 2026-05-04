@@ -48,15 +48,21 @@ public interface ParameterAuthorizer {
 
     /**
      * Resolves the target object whose annotations should be checked for authorization.
-     * For {@link org.apache.struts2.ModelDriven} actions, this returns the model from the value stack;
-     * for non-ModelDriven actions, it returns the action itself.
+     * For {@link org.apache.struts2.ModelDriven} actions, the default implementation returns the action itself;
+     * the production implementation ({@link StrutsParameterAuthorizer}) overrides this to return the model from
+     * the value stack.
      *
      * <p>Callers that need both authorization checks AND the resolved target (e.g. for downstream OGNL allowlisting)
      * should call this once and reuse the result.</p>
+     *
+     * <p>This is a {@code default} method to preserve the interface as a functional interface (SAM) for
+     * lambda-based test stubs.</p>
      *
      * @param action the action instance
      * @return the resolved target — either the action or its model
      * @since 7.2.0
      */
-    Object resolveTarget(Object action);
+    default Object resolveTarget(Object action) {
+        return action;
+    }
 }

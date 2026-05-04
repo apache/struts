@@ -45,4 +45,18 @@ public interface ParameterAuthorizer {
      * @return {@code true} if the parameter is authorized for injection, {@code false} otherwise
      */
     boolean isAuthorized(String parameterName, Object target, Object action);
+
+    /**
+     * Resolves the target object whose annotations should be checked for authorization.
+     * For {@link org.apache.struts2.ModelDriven} actions, this returns the model from the value stack;
+     * for non-ModelDriven actions, it returns the action itself.
+     *
+     * <p>Callers that need both authorization checks AND the resolved target (e.g. for downstream OGNL allowlisting)
+     * should call this once and reuse the result.</p>
+     *
+     * @param action the action instance
+     * @return the resolved target — either the action or its model
+     * @since 7.2.0
+     */
+    Object resolveTarget(Object action);
 }

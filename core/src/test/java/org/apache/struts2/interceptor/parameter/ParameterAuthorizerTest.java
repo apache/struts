@@ -18,13 +18,16 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.ModelDriven;
+import org.apache.struts2.StubValueStack;
 import org.apache.struts2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.util.StrutsProxyService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +57,11 @@ public class ParameterAuthorizerTest {
 
         var proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         authorizer.setProxyService(proxyService);
+    }
+
+    @After
+    public void tearDown() {
+        ActionContext.clear();
     }
 
     // --- requireAnnotations=false (backward compat) ---
@@ -180,6 +188,37 @@ public class ParameterAuthorizerTest {
         var action = new SecureAction();
         assertThat(authorizer.isAuthorized("", action, action)).isFalse();
         assertThat(authorizer.isAuthorized(null, action, action)).isFalse();
+    }
+
+    // --- resolveTarget ---
+
+    @Test
+    public void resolveTarget_nonModelDriven_returnsAction() {
+        var action = new SecureAction();
+        assertThat(authorizer.resolveTarget(action)).isSameAs(action);
+    }
+
+    @Test
+    public void resolveTarget_modelDriven_returnsModelFromValueStack() {
+        var action = new ModelAction();
+        var model = action.getModel();
+        var valueStack = new StubValueStack();
+        valueStack.push(model);
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.resolveTarget(action)).isSameAs(model);
+    }
+
+    @Test
+    public void resolveTarget_modelDriven_stackTopEqualsAction_returnsAction() {
+        // Edge case: ModelDriven action where stack top equals the action itself.
+        // No exemption applies — target stays as action.
+        var action = new ModelAction();
+        var valueStack = new StubValueStack();
+        valueStack.push(action);
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.resolveTarget(action)).isSameAs(action);
     }
 
     // --- Inner test classes ---

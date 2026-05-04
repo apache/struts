@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor.parameter;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
@@ -89,6 +90,17 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION, required = false)
     public void setRequireAnnotationsTransitionMode(String transitionMode) {
         this.requireAnnotationsTransitionMode = BooleanUtils.toBoolean(transitionMode);
+    }
+
+    @Override
+    public Object resolveTarget(Object action) {
+        if (action instanceof ModelDriven<?>) {
+            Object stackTop = ActionContext.getContext().getValueStack().peek();
+            if (!stackTop.equals(action)) {
+                return stackTop;
+            }
+        }
+        return action;
     }
 
     @Override

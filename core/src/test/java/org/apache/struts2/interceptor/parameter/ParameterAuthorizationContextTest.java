@@ -103,4 +103,27 @@ public class ParameterAuthorizationContextTest {
         ParameterAuthorizationContext.unbind();
         assertThat(ParameterAuthorizationContext.currentPathPrefix()).isEmpty();
     }
+
+    @Test
+    public void bind_replacesPriorState_doesNotResetPathStack() {
+        Object firstAction = new Object();
+        Object secondAction = new Object();
+        ParameterAuthorizationContext.bind((n, t, a) -> "first".equals(n), firstAction, firstAction);
+        ParameterAuthorizationContext.pushPath("address");
+        // Rebind with a different authorizer
+        ParameterAuthorizationContext.bind((n, t, a) -> "second".equals(n), secondAction, secondAction);
+        // New authorizer in effect
+        assertThat(ParameterAuthorizationContext.isAuthorized("first")).isFalse();
+        assertThat(ParameterAuthorizationContext.isAuthorized("second")).isTrue();
+        // Path stack is preserved across rebind (it's a separate ThreadLocal)
+        assertThat(ParameterAuthorizationContext.currentPathPrefix()).isEqualTo("address");
+    }
+
+    @Test
+    public void unbind_whenNeverBound_isSafeNoOp() {
+        // Should not throw; isActive should remain false
+        ParameterAuthorizationContext.unbind();
+        assertThat(ParameterAuthorizationContext.isActive()).isFalse();
+        assertThat(ParameterAuthorizationContext.currentPathPrefix()).isEmpty();
+    }
 }

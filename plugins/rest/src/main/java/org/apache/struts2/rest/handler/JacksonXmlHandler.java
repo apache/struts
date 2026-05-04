@@ -31,12 +31,17 @@ import java.io.Writer;
 /**
  * Handles XML content using Jackson
  */
-public class JacksonXmlHandler implements ContentTypeHandler {
+public class JacksonXmlHandler implements AuthorizationAwareContentTypeHandler {
 
     private static final Logger LOG = LogManager.getLogger(JacksonXmlHandler.class);
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";
-    private final XmlMapper mapper = new XmlMapper();
+    private final XmlMapper mapper;
+
+    public JacksonXmlHandler() {
+        mapper = new XmlMapper();
+        mapper.registerModule(new org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule());
+    }
 
     @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {

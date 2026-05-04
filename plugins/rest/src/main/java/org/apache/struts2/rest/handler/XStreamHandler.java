@@ -42,8 +42,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Handles XML content
+ * Handles XML content via the XStream library.
+ *
+ * @deprecated since 7.2.0, scheduled for removal in a future major version. XStream has a long
+ *             history of deserialization vulnerabilities and requires per-class allowlist
+ *             maintenance. The default {@code xml} binding in {@code struts-plugin.xml} uses
+ *             {@link JacksonXmlHandler}, which respects {@code @StrutsParameter} authorization
+ *             via the {@link AuthorizationAwareContentTypeHandler} mechanism. Users who have
+ *             explicitly overridden the {@code xml} handler to {@code XStreamHandler} should
+ *             migrate to {@link JacksonXmlHandler}.
  */
+@Deprecated(since = "7.2.0", forRemoval = true)
 public class XStreamHandler implements ContentTypeHandler {
 
     private static final Logger LOG = LogManager.getLogger(XStreamHandler.class);

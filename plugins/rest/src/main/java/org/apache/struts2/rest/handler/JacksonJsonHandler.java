@@ -32,11 +32,12 @@ import java.io.Writer;
 /**
  * Handles JSON content using jackson-lib
  */
-public class JacksonJsonHandler implements ContentTypeHandler {
+public class JacksonJsonHandler implements AuthorizationAwareContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule());
 
     @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {

@@ -296,6 +296,7 @@
                             <exclude>CLAUDE.md</exclude>
                             <exclude>CODEOWNERS</exclude>
                             <exclude>SECURITY.md</exclude>
+                            <exclude>AGENTS.md</exclude>
                             <exclude>**/README.md</exclude>
                             <exclude>src/main/resources/*-LICENSE.txt</exclude>
                             <exclude>src/site/resources/tags/**/*.html</exclude>

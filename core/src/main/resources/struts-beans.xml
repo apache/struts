@@ -248,6 +248,9 @@
     <bean type="org.apache.struts2.interceptor.parameter.ParameterAuthorizer" name="struts"
           class="org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer" scope="singleton"/>
 
+    <bean type="org.apache.struts2.interceptor.parameter.ParameterAllowlister" name="struts"
+          class="org.apache.struts2.interceptor.parameter.OgnlParameterAllowlister" scope="singleton"/>
+
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>
     <bean type="org.apache.struts2.url.QueryStringParser" name="strutsQueryStringParser"

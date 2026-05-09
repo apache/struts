@@ -84,6 +84,12 @@ public class StrutsParameterAnnotationTest {
         this.parameterAuthorizer = parameterAuthorizer;
         parametersInterceptor.setParameterAuthorizer(parameterAuthorizer);
 
+        var parameterAllowlister = new OgnlParameterAllowlister();
+        parameterAllowlister.setOgnlUtil(ognlUtil);
+        parameterAllowlister.setProxyService(proxyService);
+        parameterAllowlister.setThreadAllowlist(threadAllowlist);
+        parametersInterceptor.setParameterAllowlister(parameterAllowlister);
+
         NotExcludedAcceptedPatternsChecker checker = mock(NotExcludedAcceptedPatternsChecker.class);
         when(checker.isAccepted(anyString())).thenReturn(IsAccepted.yes(""));
         when(checker.isExcluded(anyString())).thenReturn(IsExcluded.no(Set.of()));

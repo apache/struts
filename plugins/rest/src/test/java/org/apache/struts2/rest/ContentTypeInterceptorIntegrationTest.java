@@ -81,6 +81,7 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockSelector.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
+            @Override
             public boolean matches(Object[] args) { return true; }
         }, new JacksonJsonHandler());
         interceptor.setContentTypeHandlerSelector((ContentTypeHandlerManager) mockSelector.proxy());

@@ -98,7 +98,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private Set<Pattern> excludedValuePatterns = null;
     private Set<Pattern> acceptedValuePatterns = null;
     private ParameterAuthorizer parameterAuthorizer;
-    private ParameterAllowlister parameterAllowlister;
+    private transient ParameterAllowlister parameterAllowlister;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {

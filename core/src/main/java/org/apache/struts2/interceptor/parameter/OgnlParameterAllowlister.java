@@ -87,34 +87,48 @@ public class OgnlParameterAllowlister implements ParameterAllowlister {
         String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
         String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
-        BeanInfo beanInfo = getBeanInfo(target);
-        if (beanInfo != null) {
-            Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
-                    .filter(desc -> desc.getName().equals(normalisedRootProperty)).findFirst();
-            if (propDescOpt.isPresent()) {
-                PropertyDescriptor propDesc = propDescOpt.get();
-                Method relevantMethod = propDesc.getReadMethod();
-                if (relevantMethod != null && getPermittedInjectionDepth(relevantMethod) >= paramDepth) {
-                    allowlistClass(propDesc.getPropertyType());
-                    if (paramDepth >= 2) {
-                        allowlistParameterizedTypeArg(relevantMethod.getGenericReturnType());
-                    }
-                    return;
-                }
-            }
+        if (allowlistViaPropertyDescriptor(target, normalisedRootProperty, paramDepth)) {
+            return;
         }
+        allowlistViaPublicField(target, normalisedRootProperty, paramDepth);
+    }
 
+    private boolean allowlistViaPropertyDescriptor(Object target, String rootProperty, long paramDepth) {
+        BeanInfo beanInfo = getBeanInfo(target);
+        if (beanInfo == null) {
+            return false;
+        }
+        Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
+        if (propDescOpt.isEmpty()) {
+            return false;
+        }
+        PropertyDescriptor propDesc = propDescOpt.get();
+        Method relevantMethod = propDesc.getReadMethod();
+        if (relevantMethod == null || getPermittedInjectionDepth(relevantMethod) < paramDepth) {
+            return false;
+        }
+        allowlistClass(propDesc.getPropertyType());
+        if (paramDepth >= 2) {
+            allowlistParameterizedTypeArg(relevantMethod.getGenericReturnType());
+        }
+        return true;
+    }
+
+    private void allowlistViaPublicField(Object target, String rootProperty, long paramDepth) {
         Class<?> targetClass = ultimateClass(target);
+        Field field;
         try {
-            Field field = targetClass.getDeclaredField(normalisedRootProperty);
-            if (Modifier.isPublic(field.getModifiers()) && getPermittedInjectionDepth(field) >= paramDepth) {
-                allowlistClass(field.getType());
-                if (paramDepth >= 2) {
-                    allowlistParameterizedTypeArg(field.getGenericType());
-                }
-            }
+            field = targetClass.getDeclaredField(rootProperty);
         } catch (NoSuchFieldException e) {
-            // No public field by that name — nothing to allowlist.
+            return;
+        }
+        if (!Modifier.isPublic(field.getModifiers()) || getPermittedInjectionDepth(field) < paramDepth) {
+            return;
+        }
+        allowlistClass(field.getType());
+        if (paramDepth >= 2) {
+            allowlistParameterizedTypeArg(field.getGenericType());
         }
     }
 

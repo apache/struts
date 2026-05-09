@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
@@ -105,7 +104,6 @@ public class OgnlParameterAllowlisterTest {
     public static class TargetWithAnnotatedNestedBean {
         private NestedBean nested;
         private List<NestedBean> things;
-        private Map<String, NestedBean> mapping;
 
         @StrutsParameter(depth = 1)
         public NestedBean getNested() { return nested; }

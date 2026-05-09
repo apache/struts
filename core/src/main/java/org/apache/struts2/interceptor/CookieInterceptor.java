@@ -197,8 +197,8 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private ExcludedPatternsChecker excludedPatternsChecker;
     private AcceptedPatternsChecker acceptedPatternsChecker;
-    private ParameterAuthorizer parameterAuthorizer;
-    private ParameterAllowlister parameterAllowlister;
+    private transient ParameterAuthorizer parameterAuthorizer;
+    private transient ParameterAllowlister parameterAllowlister;
 
     @Inject
     public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
@@ -351,6 +351,7 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param action      the action instance from {@link ActionInvocation#getAction()}; used for {@code @StrutsParameter} target resolution
      * @since 7.2.0
      */
+    @SuppressWarnings("deprecation") // intentional: delegating to the deprecated 4-arg form is the contract that lets existing subclass overrides participate
     protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map<String, String> cookiesMap, ValueStack stack, Object action) {
         Object target = parameterAuthorizer.resolveTarget(action);
         if (!parameterAuthorizer.isAuthorized(cookieName, target, action)) {

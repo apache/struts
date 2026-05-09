@@ -26,6 +26,8 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.action.CookiesAware;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.parameter.ParameterAllowlister;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 import org.apache.struts2.util.TextParseUtil;
@@ -187,6 +189,8 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private ExcludedPatternsChecker excludedPatternsChecker;
     private AcceptedPatternsChecker acceptedPatternsChecker;
+    private ParameterAuthorizer parameterAuthorizer;
+    private ParameterAllowlister parameterAllowlister;
 
     @Inject
     public void setExcludedPatternsChecker(ExcludedPatternsChecker excludedPatternsChecker) {
@@ -197,6 +201,16 @@ public class CookieInterceptor extends AbstractInterceptor {
     public void setAcceptedPatternsChecker(AcceptedPatternsChecker acceptedPatternsChecker) {
         this.acceptedPatternsChecker = acceptedPatternsChecker;
         this.acceptedPatternsChecker.setAcceptedPatterns(ACCEPTED_PATTERN);
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
+    }
+
+    @Inject
+    public void setParameterAllowlister(ParameterAllowlister parameterAllowlister) {
+        this.parameterAllowlister = parameterAllowlister;
     }
 
     /**
@@ -234,6 +248,8 @@ public class CookieInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         LOG.debug("start interception");
 
+        final Object action = invocation.getAction();
+
         // contains selected cookies
         final Map<String, String> cookiesMap = new LinkedHashMap<>();
 
@@ -248,9 +264,9 @@ public class CookieInterceptor extends AbstractInterceptor {
                 if (isAcceptableName(name)) {
                     if (cookiesNameSet.contains("*")) {
                         LOG.debug("Contains cookie name [*] in configured cookies name set, cookie with name [{}] with value [{}] will be injected", name, value);
-                        populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                        populateCookieValueIntoStack(name, value, cookiesMap, stack, action);
                     } else if (cookiesNameSet.contains(cookie.getName())) {
-                        populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                        populateCookieValueIntoStack(name, value, cookiesMap, stack, action);
                     }
                 } else {
                     LOG.warn("Cookie name [{}] with value [{}] was rejected!", name, value);
@@ -259,7 +275,7 @@ public class CookieInterceptor extends AbstractInterceptor {
         }
 
         // inject the cookiesMap, even if we don't have any cookies
-        injectIntoCookiesAwareAction(invocation.getAction(), cookiesMap);
+        injectIntoCookiesAwareAction(action, cookiesMap);
 
         return invocation.invoke();
     }
@@ -315,6 +331,29 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
+     * Authorizes the cookie against {@link ParameterAuthorizer}, primes OGNL allowlist for any nested path via
+     * {@link ParameterAllowlister}, then delegates to the legacy {@link #populateCookieValueIntoStack(String, String,
+     * Map, ValueStack)} hook so existing subclass overrides continue to participate. Override this method to customize
+     * the authorization behavior itself.
+     *
+     * @param cookieName  cookie name (potentially an OGNL path; {@code ACCEPTED_PATTERN} restricts the character set)
+     * @param cookieValue cookie value
+     * @param cookiesMap  map of cookies populated for {@link org.apache.struts2.action.CookiesAware}
+     * @param stack       current request value stack
+     * @param action      the action instance from {@link ActionInvocation#getAction()}; used for {@code @StrutsParameter} target resolution
+     * @since 7.2.0
+     */
+    protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map<String, String> cookiesMap, ValueStack stack, Object action) {
+        Object target = parameterAuthorizer.resolveTarget(action);
+        if (!parameterAuthorizer.isAuthorized(cookieName, target, action)) {
+            LOG.debug("Cookie [{}] rejected by @StrutsParameter authorization on target [{}]", cookieName, target.getClass().getSimpleName());
+            return;
+        }
+        parameterAllowlister.allowlistAuthorizedPath(cookieName, target);
+        populateCookieValueIntoStack(cookieName, cookieValue, cookiesMap, stack);
+    }
+
+    /**
      * Hook that populate cookie value into value stack (hence the action)
      * if the criteria is satisfied (if the cookie value matches with those configured).
      *
@@ -322,7 +361,12 @@ public class CookieInterceptor extends AbstractInterceptor {
      * @param cookieValue cookie value
      * @param cookiesMap map of cookies
      * @param stack value stack
+     * @deprecated since 7.2.0. Override
+     * {@link #populateCookieValueIntoStack(String, String, Map, ValueStack, Object)} instead so cookie writes are
+     * authorized by {@link ParameterAuthorizer}. The default 5-arg implementation calls this method after the
+     * authorization gate, so existing overrides continue to receive only authorized cookies.
      */
+    @Deprecated(since = "7.2.0")
     protected void populateCookieValueIntoStack(String cookieName, String cookieValue, Map<String, String> cookiesMap, ValueStack stack) {
         if (cookiesValueSet.isEmpty() || cookiesValueSet.contains("*")) {
             // If the interceptor is configured to accept any cookie value

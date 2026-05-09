@@ -79,6 +79,7 @@ public class JuneauXmlHandlerIntegrationTest extends TestCase {
         mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockActionInvocation.matchAndReturn("getInvocationContext", ActionContext.getContext());
         mockSelector.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
+            @Override
             public boolean matches(Object[] args) { return true; }
         }, new JuneauXmlHandler());
         interceptor.setContentTypeHandlerSelector((ContentTypeHandlerManager) mockSelector.proxy());
@@ -132,5 +133,46 @@ public class JuneauXmlHandlerIntegrationTest extends TestCase {
                 action.getShallowAddress().getCity());
         assertNull("nested zip must be rejected (depth-1 not authorized)",
                 action.getShallowAddress().getZip());
+    }
+
+    public void testCollectionOfScalarsCopiedThroughAuthorizedWalk() throws Exception {
+        runWithBody("<object><tags><string>red</string><string>green</string></tags></object>");
+        assertNotNull(action.getTags());
+        assertEquals(2, action.getTags().size());
+        assertEquals("red", action.getTags().get(0));
+        assertEquals("green", action.getTags().get(1));
+    }
+
+    public void testCollectionOfBeansCopiedThroughAuthorizedWalk() throws Exception {
+        runWithBody("<object><addresses>"
+                + "<object><city>Warsaw</city><zip>00-001</zip></object>"
+                + "<object><city>Krakow</city><zip>30-001</zip></object>"
+                + "</addresses></object>");
+        assertNotNull(action.getAddresses());
+        assertEquals(2, action.getAddresses().size());
+        assertEquals("Warsaw", action.getAddresses().get(0).getCity());
+        assertEquals("00-001", action.getAddresses().get(0).getZip());
+        assertEquals("Krakow", action.getAddresses().get(1).getCity());
+    }
+
+    public void testMapOfScalarsCopiedThroughAuthorizedWalk() throws Exception {
+        runWithBody("<object><attributes><color>red</color><size>large</size></attributes></object>");
+        assertNotNull(action.getAttributes());
+        assertEquals("red", action.getAttributes().get("color"));
+        assertEquals("large", action.getAttributes().get("size"));
+    }
+
+    public void testArrayOfScalarsCopiedThroughAuthorizedWalk() throws Exception {
+        runWithBody("<object><aliases><string>al1</string><string>al2</string></aliases></object>");
+        assertNotNull(action.getAliases());
+        assertEquals(2, action.getAliases().length);
+        assertEquals("al1", action.getAliases()[0]);
+        assertEquals("al2", action.getAliases()[1]);
+    }
+
+    public void testEmptyCollectionPreserved() throws Exception {
+        runWithBody("<object><tags></tags></object>");
+        assertNotNull(action.getTags());
+        assertEquals(0, action.getTags().size());
     }
 }

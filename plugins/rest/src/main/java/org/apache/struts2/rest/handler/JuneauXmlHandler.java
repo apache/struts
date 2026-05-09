@@ -240,7 +240,7 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
     @SuppressWarnings("unchecked")
     private static Collection<Object> newCollection(Collection<?> source) {
         try {
-            return (Collection<Object>) source.getClass().getDeclaredConstructor().newInstance();
+            return source.getClass().getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             return new java.util.ArrayList<>();
         }
@@ -249,7 +249,7 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
     @SuppressWarnings("unchecked")
     private static Map<Object, Object> newMap(Map<?, ?> source) {
         try {
-            return (Map<Object, Object>) source.getClass().getDeclaredConstructor().newInstance();
+            return source.getClass().getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             return new java.util.LinkedHashMap<>();
         }

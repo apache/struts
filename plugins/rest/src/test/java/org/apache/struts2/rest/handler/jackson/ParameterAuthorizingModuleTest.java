@@ -19,6 +19,8 @@
 package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import junit.framework.TestCase;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
@@ -106,6 +108,28 @@ public class ParameterAuthorizingModuleTest extends TestCase {
                 ParameterAuthorizationContext.currentPathPrefix());
     }
 
+    public void testBuilderDeserializationNoContextPassThrough() throws Exception {
+        // No bind → AuthorizingSettableBeanProperty.deserializeSetAndReturn falls through
+        // to the delegate without consulting the authorization context.
+        ImmutablePerson p = mapper.readValue("{\"name\":\"alice\",\"role\":\"admin\"}", ImmutablePerson.class);
+        assertEquals("alice", p.name);
+        assertEquals("admin", p.role);
+    }
+
+    public void testBuilderDeserializationAuthorizedTopLevel() throws Exception {
+        bind((path, t, a) -> "name".equals(path), new ImmutablePerson.Builder());
+        ImmutablePerson p = mapper.readValue("{\"name\":\"alice\",\"role\":\"admin\"}", ImmutablePerson.class);
+        assertEquals("alice", p.name);
+        assertNull("unauthorized property must be skipped on builder path", p.role);
+    }
+
+    public void testBuilderDeserializationRejectsAllProperties() throws Exception {
+        bind((path, t, a) -> false, new ImmutablePerson.Builder());
+        ImmutablePerson p = mapper.readValue("{\"name\":\"alice\",\"role\":\"admin\"}", ImmutablePerson.class);
+        assertNull(p.name);
+        assertNull(p.role);
+    }
+
     // --- Fixtures ---
 
     public static class Person {
@@ -120,5 +144,32 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     public static class Address {
         public String city;
         public String zip;
+    }
+
+    /**
+     * Builder-pattern fixture: forces Jackson to use {@code BuilderBasedDeserializer},
+     * which dispatches property deserialization through {@code SettableBeanProperty.deserializeSetAndReturn}
+     * — the alternate code path on {@code AuthorizingSettableBeanProperty} not exercised by
+     * setter-based fixtures like {@link Person}.
+     */
+    @JsonDeserialize(builder = ImmutablePerson.Builder.class)
+    public static final class ImmutablePerson {
+        public final String name;
+        public final String role;
+
+        private ImmutablePerson(Builder b) {
+            this.name = b.name;
+            this.role = b.role;
+        }
+
+        @JsonPOJOBuilder(withPrefix = "set")
+        public static class Builder {
+            private String name;
+            private String role;
+
+            public Builder setName(String n) { this.name = n; return this; }
+            public Builder setRole(String r) { this.role = r; return this; }
+            public ImmutablePerson build() { return new ImmutablePerson(this); }
+        }
     }
 }

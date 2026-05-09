@@ -65,10 +65,8 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
 import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
 import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 
@@ -100,6 +98,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private Set<Pattern> excludedValuePatterns = null;
     private Set<Pattern> acceptedValuePatterns = null;
     private ParameterAuthorizer parameterAuthorizer;
+    private ParameterAllowlister parameterAllowlister;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -124,6 +123,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
         this.parameterAuthorizer = parameterAuthorizer;
+    }
+
+    @Inject
+    public void setParameterAllowlister(ParameterAllowlister parameterAllowlister) {
+        this.parameterAllowlister = parameterAllowlister;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -388,40 +392,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * injection and must NOT be shared with other input channels (JSON, REST).
      */
     private void performOgnlAllowlisting(String name, Object target, long paramDepth) {
-        int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
-        String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
-        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
-
-        BeanInfo beanInfo = getBeanInfo(target);
-        if (beanInfo != null) {
-            Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
-                    .filter(desc -> desc.getName().equals(normalisedRootProperty)).findFirst();
-            if (propDescOpt.isPresent()) {
-                PropertyDescriptor propDesc = propDescOpt.get();
-                Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
-                if (relevantMethod != null && getPermittedInjectionDepth(relevantMethod) >= paramDepth) {
-                    allowlistClass(propDesc.getPropertyType());
-                    if (paramDepth >= 2) {
-                        allowlistReturnTypeIfParameterized(relevantMethod);
-                    }
-                    return;
-                }
-            }
-        }
-
-        // Fallback: check public field
-        Class<?> targetClass = ultimateClass(target);
-        try {
-            Field field = targetClass.getDeclaredField(normalisedRootProperty);
-            if (Modifier.isPublic(field.getModifiers()) && getPermittedInjectionDepth(field) >= paramDepth) {
-                allowlistClass(field.getType());
-                if (paramDepth >= 2) {
-                    allowlistFieldIfParameterized(field);
-                }
-            }
-        } catch (NoSuchFieldException e) {
-            // No field to allowlist
-        }
+        parameterAllowlister.allowlistAuthorizedPath(name, target);
     }
 
     /**

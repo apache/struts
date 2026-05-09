@@ -215,7 +215,14 @@ public class JSONInterceptor extends AbstractInterceptor {
         Iterator<Map.Entry> it = json.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = it.next();
-            String key = (String) entry.getKey();
+            if (!(entry.getKey() instanceof String key)) {
+                // Defensive: a custom JSONReader could produce non-String keys. Skip — we cannot
+                // construct a parameter path for authorization, and JSONPopulator wouldn't bind
+                // these to bean properties anyway.
+                LOG.debug("Skipping JSON entry with non-String key [{}] of type [{}] under prefix [{}]",
+                        entry.getKey(), entry.getKey() == null ? "null" : entry.getKey().getClass().getName(), prefix);
+                continue;
+            }
             String fullPath = prefix.isEmpty() ? key : prefix + "." + key;
 
             if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {

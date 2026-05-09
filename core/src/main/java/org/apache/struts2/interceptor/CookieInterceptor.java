@@ -101,8 +101,16 @@ import java.util.Set;
  *
  * <ul>
  *     <li>
- *         populateCookieValueIntoStack - this method will decide if this cookie value is qualified
- *         to be populated into the value stack (hence into the action itself)
+ *         populateCookieValueIntoStack(name, value, map, stack, action) - the preferred extension point
+ *         since 7.2.0. The default implementation gates the cookie write through
+ *         {@link org.apache.struts2.interceptor.parameter.ParameterAuthorizer} and primes the OGNL allowlist via
+ *         {@link org.apache.struts2.interceptor.parameter.ParameterAllowlister} before delegating to the legacy
+ *         4-arg {@code populateCookieValueIntoStack}. Override here to customize the authorization behavior itself.
+ *     </li>
+ *     <li>
+ *         populateCookieValueIntoStack(name, value, map, stack) - <em>deprecated since 7.2.0</em>. The legacy
+ *         hook that performs the actual {@code stack.setValue}. Existing overrides continue to work and
+ *         automatically receive only authorized cookies via the 5-arg default.
  *     </li>
  *     <li>
  *         injectIntoCookiesAwareAction - this method will inject selected cookies (as a java.util.Map)

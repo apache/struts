@@ -29,7 +29,7 @@ All mail sent to this address that does not relate to security problems in the A
 ```
 
 Note that all networked servers are subject to denial of service attacks, and we cannot promise magic
-workarounds to generic problems (such as a client streaming lots of data to your server, or requesting
+workarounds to generic problems (such as a client streaming lots of data to your server or requesting
 the same URL repeatedly). In general, our philosophy is to avoid any attacks that can cause the server
 to consume resources in a non-linear relationship to the size of inputs.
 
@@ -59,7 +59,7 @@ configuration or application guidance, including but not limited to:
 
 - Config Browser Plugin exposure,
 - direct JSP access,
-- `devMode` is required to exploit the culnerability,
+- `devMode` is required to exploit the vulnerability,
 - `@StrutsParameter` usage and parameter annotation requirements,
 - unsafe setters or getters exposed to request parameters,
 - use of incoming values in localization or forced OGNL evaluation,

@@ -66,7 +66,6 @@ import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
 import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
 import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 
@@ -379,20 +378,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
 
-        // OGNL-specific allowlisting: only needed for nested params (depth >= 1)
-        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
-        if (paramDepth >= 1) {
-            performOgnlAllowlisting(name, target, paramDepth);
-        }
+        parameterAllowlister.primeAllowlistForPath(name, target);
         return true;
-    }
-
-    /**
-     * Performs OGNL ThreadAllowlist side effects for an authorized parameter. This is specific to OGNL-based parameter
-     * injection and must NOT be shared with other input channels (JSON, REST).
-     */
-    private void performOgnlAllowlisting(String name, Object target, long paramDepth) {
-        parameterAllowlister.allowlistAuthorizedPath(name, target);
     }
 
     /**

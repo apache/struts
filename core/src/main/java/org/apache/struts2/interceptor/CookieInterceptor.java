@@ -358,7 +358,7 @@ public class CookieInterceptor extends AbstractInterceptor {
             LOG.debug("Cookie [{}] rejected by @StrutsParameter authorization on target [{}]", cookieName, target.getClass().getSimpleName());
             return;
         }
-        parameterAllowlister.allowlistAuthorizedPath(cookieName, target);
+        parameterAllowlister.primeAllowlistForPath(cookieName, target);
         populateCookieValueIntoStack(cookieName, cookieValue, cookiesMap, stack);
     }
 

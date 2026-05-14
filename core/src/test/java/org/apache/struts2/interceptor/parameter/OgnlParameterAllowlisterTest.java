@@ -62,42 +62,42 @@ public class OgnlParameterAllowlisterTest {
     @Test
     public void depthZero_isNoOp() {
         var target = new TargetWithAnnotatedNestedBean();
-        allowlister.allowlistAuthorizedPath("simple", target);
+        allowlister.primeAllowlistForPath("simple", target);
         assertThat(threadAllowlist.classes).isEmpty();
     }
 
     @Test
     public void nestedProperty_allowlistsPropertyType() {
         var target = new TargetWithAnnotatedNestedBean();
-        allowlister.allowlistAuthorizedPath("nested.field", target);
+        allowlister.primeAllowlistForPath("nested.field", target);
         assertThat(threadAllowlist.classes).contains(NestedBean.class);
     }
 
     @Test
     public void parameterizedReturn_allowlistsTypeArguments() {
         var target = new TargetWithAnnotatedNestedBean();
-        allowlister.allowlistAuthorizedPath("things[0].field", target);
+        allowlister.primeAllowlistForPath("things[0].field", target);
         assertThat(threadAllowlist.classes).contains(List.class, NestedBean.class);
     }
 
     @Test
     public void publicField_isAllowlistedWhenNoGetter() {
         var target = new TargetWithAnnotatedPublicField();
-        allowlister.allowlistAuthorizedPath("publicNested.field", target);
+        allowlister.primeAllowlistForPath("publicNested.field", target);
         assertThat(threadAllowlist.classes).contains(NestedBean.class);
     }
 
     @Test
     public void unmatchedRoot_isNoOp() {
         var target = new TargetWithAnnotatedNestedBean();
-        allowlister.allowlistAuthorizedPath("unknownRoot.field", target);
+        allowlister.primeAllowlistForPath("unknownRoot.field", target);
         assertThat(threadAllowlist.classes).isEmpty();
     }
 
     @Test
     public void unannotatedNested_isNoOp() {
         var target = new TargetWithUnannotatedNested();
-        allowlister.allowlistAuthorizedPath("unannotated.field", target);
+        allowlister.primeAllowlistForPath("unannotated.field", target);
         assertThat(threadAllowlist.classes).isEmpty();
     }
 

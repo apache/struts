@@ -42,11 +42,18 @@ import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING
 import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
 
 /**
- * Default {@link ParameterAllowlister} that primes OGNL {@link ThreadAllowlist} for nested-path writes. Logic is
+ * Default {@link ParameterAllowlister}. Registers the root property's class (and generic type args for {@code depth >= 2})
+ * into the OGNL {@link ThreadAllowlist} so OGNL may introspect and traverse a nested path on the value stack. Logic is
  * extracted verbatim from {@code ParametersInterceptor.performOgnlAllowlisting} so the OGNL parameter and cookie
  * channels share a single implementation.
  *
- * <p>No-ops for depth-0 paths — root-level setters do not need allowlisting.</p>
+ * <p>No-ops when:
+ * <ul>
+ *   <li>{@code paramDepth == 0} — shallow setter; OGNL does not need to traverse</li>
+ *   <li>the root property has no {@code @StrutsParameter} annotation reachable via {@link java.beans.PropertyDescriptor}
+ *       or as a public field (e.g. a {@code ModelDriven} model whose properties are not individually annotated). A
+ *       {@code LOG.debug} surfaces this case so the gap between authorization and OGNL traversal is observable.</li>
+ * </ul>
  *
  * @since 7.2.0
  */
@@ -74,7 +81,7 @@ public class OgnlParameterAllowlister implements ParameterAllowlister {
     }
 
     @Override
-    public void allowlistAuthorizedPath(String parameterName, Object target) {
+    public void primeAllowlistForPath(String parameterName, Object target) {
         if (parameterName == null || parameterName.isEmpty() || target == null) {
             return;
         }
@@ -90,7 +97,14 @@ public class OgnlParameterAllowlister implements ParameterAllowlister {
         if (allowlistViaPropertyDescriptor(target, normalisedRootProperty, paramDepth)) {
             return;
         }
-        allowlistViaPublicField(target, normalisedRootProperty, paramDepth);
+        if (allowlistViaPublicField(target, normalisedRootProperty, paramDepth)) {
+            return;
+        }
+        // Authorization passed but no @StrutsParameter on the root property — e.g. ModelDriven model with no
+        // per-property annotations. OGNL won't be able to walk this nested path; surface the gap in logs.
+        LOG.debug("Parameter [{}] authorized but no @StrutsParameter on root property [{}] of [{}]; "
+                + "OGNL allowlist not primed and nested traversal may be blocked",
+                parameterName, normalisedRootProperty, ultimateClass(target).getSimpleName());
     }
 
     private boolean allowlistViaPropertyDescriptor(Object target, String rootProperty, long paramDepth) {
@@ -115,21 +129,22 @@ public class OgnlParameterAllowlister implements ParameterAllowlister {
         return true;
     }
 
-    private void allowlistViaPublicField(Object target, String rootProperty, long paramDepth) {
+    private boolean allowlistViaPublicField(Object target, String rootProperty, long paramDepth) {
         Class<?> targetClass = ultimateClass(target);
         Field field;
         try {
             field = targetClass.getDeclaredField(rootProperty);
         } catch (NoSuchFieldException e) {
-            return;
+            return false;
         }
         if (!Modifier.isPublic(field.getModifiers()) || getPermittedInjectionDepth(field) < paramDepth) {
-            return;
+            return false;
         }
         allowlistClass(field.getType());
         if (paramDepth >= 2) {
             allowlistParameterizedTypeArg(field.getGenericType());
         }
+        return true;
     }
 
     private void allowlistClass(Class<?> clazz) {

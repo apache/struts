@@ -115,6 +115,8 @@ Do not speculate beyond what can be demonstrated. If severity is uncertain, say 
 - One vulnerability per report.
 - Keep reproduction steps minimal and self-contained.
 - Do not include unrelated findings.
-- Do not publish exploit details publicly before the Struts project has triaged the issue.
+- Do not publish exploit details or proof-of-concept code publicly before the Struts project has triaged the issue. **Pushing a PoC to a public GitHub
+  repository, gist, fork, or branch counts as public disclosure** — even a "test" or throwaway repo. Private repositories are acceptable for sharing a PoC,
+  but access must be granted individually to each PMC member who will triage the report.
 - Do not send ordinary bugs, usage questions, or generic denial-of-service concerns to the private security list.
 - If the issue is not a vulnerability in Apache Struts source code, use the appropriate public support or issue channel instead.

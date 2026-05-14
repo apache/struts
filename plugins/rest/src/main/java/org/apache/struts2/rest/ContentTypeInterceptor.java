@@ -87,34 +87,70 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
         Object target = invocation.getAction();
         if (target instanceof ModelDriven) {
-            target = ((ModelDriven<?>)target).getModel();
+            target = ((ModelDriven<?>) target).getModel();
         }
 
         if (request.getContentLength() > 0) {
-            final String encoding = request.getCharacterEncoding();
-            InputStream is = request.getInputStream();
-            InputStreamReader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
-
-            if (requireAnnotations) {
-                // Two-phase deserialization: deserialize into a fresh instance, then copy only authorized properties.
-                // Requires a public no-arg constructor on the target class.
-                // If absent, body processing is rejected entirely — a best-effort scrub cannot guarantee
-                // that every nested unauthorized property is nulled out, so the safer choice is to skip.
-                Object freshInstance = createFreshInstance(target.getClass());
-                if (freshInstance != null) {
-                    handler.toObject(invocation, reader, freshInstance);
-                    copyAuthorizedProperties(freshInstance, target, invocation.getAction(), target, "");
-                } else {
-                    LOG.warn("REST body rejected: requireAnnotations=true but [{}] has no no-arg constructor; "
-                            + "body deserialization skipped to preserve @StrutsParameter authorization integrity",
-                            target.getClass().getName());
-                }
-            } else {
-                // Direct deserialization (backward compat when requireAnnotations is not enabled)
-                handler.toObject(invocation, reader, target);
-            }
+            applyRequestBody(invocation, handler, target, openBodyReader(request));
         }
         return invocation.invoke();
+    }
+
+    private static InputStreamReader openBodyReader(HttpServletRequest request) throws java.io.IOException {
+        String encoding = request.getCharacterEncoding();
+        InputStream is = request.getInputStream();
+        return encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
+    }
+
+    private void applyRequestBody(ActionInvocation invocation, ContentTypeHandler handler, Object target,
+                                  InputStreamReader reader) throws Exception {
+        if (!requireAnnotations) {
+            // Direct deserialization (backward compat when requireAnnotations is not enabled).
+            handler.toObject(invocation, reader, target);
+            return;
+        }
+        if (handler instanceof org.apache.struts2.rest.handler.AuthorizationAwareContentTypeHandler) {
+            applyWithAuthorizationContext(invocation, handler, target, reader);
+        } else {
+            applyTwoPhaseDeserialize(invocation, handler, target, reader);
+        }
+    }
+
+    /**
+     * Path used for {@link org.apache.struts2.rest.handler.AuthorizationAwareContentTypeHandler}s — the handler
+     * authorizes per-property during deserialization, so we only need to bind {@code ParameterAuthorizationContext}
+     * for the call duration.
+     */
+    private void applyWithAuthorizationContext(ActionInvocation invocation, ContentTypeHandler handler, Object target,
+                                               InputStreamReader reader) throws java.io.IOException {
+        Object action = invocation.getAction();
+        Object resolvedTarget = parameterAuthorizer.resolveTarget(action);
+        org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext.bind(
+                parameterAuthorizer, resolvedTarget, action);
+        try {
+            handler.toObject(invocation, reader, target);
+        } finally {
+            org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext.unbind();
+        }
+    }
+
+    /**
+     * Legacy two-phase deserialization for handlers that don't authorize themselves: deserialize into a fresh
+     * instance, then copy only authorized properties. Requires a public no-arg constructor on the target class —
+     * if absent, body processing is rejected entirely (a best-effort scrub cannot guarantee every nested
+     * unauthorized property is nulled out, so skipping is the safer choice).
+     */
+    private void applyTwoPhaseDeserialize(ActionInvocation invocation, ContentTypeHandler handler, Object target,
+                                          InputStreamReader reader) throws Exception {
+        Object freshInstance = createFreshInstance(target.getClass());
+        if (freshInstance == null) {
+            LOG.warn("REST body rejected: requireAnnotations=true but [{}] has no no-arg constructor; "
+                    + "body deserialization skipped to preserve @StrutsParameter authorization integrity",
+                    target.getClass().getName());
+            return;
+        }
+        handler.toObject(invocation, reader, freshInstance);
+        copyAuthorizedProperties(freshInstance, target, invocation.getAction(), target, "");
     }
 
     private Object createFreshInstance(Class<?> clazz) {

@@ -21,6 +21,9 @@ package org.apache.struts2.rest;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Test fixture for ContentTypeInterceptor integration tests.
  * Has annotated and unannotated properties to exercise authorization filtering.
@@ -31,6 +34,10 @@ public class SecureRestAction extends ActionSupport {
     private String role;
     private Address address;
     private Address shallowAddress;
+    private List<String> tags;
+    private List<Address> addresses;
+    private Map<String, String> attributes;
+    private String[] aliases;
 
     public String getName() { return name; }
 
@@ -56,6 +63,30 @@ public class SecureRestAction extends ActionSupport {
 
     @StrutsParameter
     public void setShallowAddress(Address shallowAddress) { this.shallowAddress = shallowAddress; }
+
+    @StrutsParameter(depth = 1)
+    public List<String> getTags() { return tags; }
+
+    @StrutsParameter
+    public void setTags(List<String> tags) { this.tags = tags; }
+
+    @StrutsParameter(depth = 2)
+    public List<Address> getAddresses() { return addresses; }
+
+    @StrutsParameter
+    public void setAddresses(List<Address> addresses) { this.addresses = addresses; }
+
+    @StrutsParameter(depth = 1)
+    public Map<String, String> getAttributes() { return attributes; }
+
+    @StrutsParameter
+    public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
+
+    @StrutsParameter(depth = 1)
+    public String[] getAliases() { return aliases; }
+
+    @StrutsParameter
+    public void setAliases(String[] aliases) { this.aliases = aliases; }
 
     public static class Address {
         private String city;

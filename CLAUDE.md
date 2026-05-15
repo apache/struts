@@ -63,6 +63,13 @@ protected File createTemporaryFile(String fileName, Path location) {
 }
 ```
 
+## Security Reports & Scans
+
+For any security-related activity — vulnerability scans, security analysis, drafting security reports — **[`SECURITY.md`](SECURITY.md) is the source of truth**.
+Read it first and follow its pre-reporting checks, assessment checklist, and reporting requirements. Reports must be sent privately to
+`security@struts.apache.org`; do not open a public GitHub issue, Jira issue, pull request, or mailing list thread for a suspected vulnerability before private
+triage. [`AGENTS.md`](AGENTS.md) is a shorter LLM-facing wrapper around the same process.
+
 ## Testing
 
 Tests use JUnit 5 with AssertJ assertions and Mockito for mocking. Run with `mvn test -DskipAssembly`.
@@ -72,3 +79,6 @@ Tests use JUnit 5 with AssertJ assertions and Mockito for mocking. Run with `mvn
 - **Title format**: `WW-XXXX Description` (Jira ticket ID required)
 - **Link ticket in description**: `Fixes [WW-XXXX](https://issues.apache.org/jira/browse/WW-XXXX)`
 - **Issue tracker**: https://issues.apache.org/jira/projects/WW
+- **Never submit a PR that fixes a suspected vulnerability.** Before opening a PR, verify the change is not a security patch (OGNL injection, parameter
+  filtering bypass, file upload exploit, auth bypass, RCE, SSRF, path traversal, deserialization, XSS in framework components, etc.). If it is, stop and report
+  it privately to `security@struts.apache.org` — see [`SECURITY.md`](SECURITY.md).

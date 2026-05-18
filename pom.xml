@@ -298,6 +298,7 @@
                             <exclude>SECURITY.md</exclude>
                             <exclude>AGENTS.md</exclude>
                             <exclude>**/README.md</exclude>
+                            <exclude>docs/**/*.md</exclude>
                             <exclude>src/main/resources/*-LICENSE.txt</exclude>
                             <exclude>src/site/resources/tags/**/*.html</exclude>
                             <exclude>src/test/resources/**/*.txt</exclude>

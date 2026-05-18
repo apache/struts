@@ -559,6 +559,14 @@ public final class StrutsConstants {
     public static final String STRUTS_PARAMETER_AUTHORIZER = "struts.parameterAuthorizer";
 
     /**
+     * The {@link org.apache.struts2.interceptor.parameter.ParameterAllowlister} implementation class.
+     * Override to provide a custom allowlister for non-OGNL parameter targets.
+     *
+     * @since 7.2.0
+     */
+    public static final String STRUTS_PARAMETER_ALLOWLISTER = "struts.parameterAllowlister";
+
+    /**
      * Enables evaluation of OGNL expressions
      *
      * @since 6.0.0

@@ -90,7 +90,8 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
                     invocation.getProxy().getMethod(), AllowedHttpMethod.class.getSimpleName(), request.getMethod());
                 return doIntercept(invocation, method);
             }
-        } else if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
+        }
+        if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
             LOG.debug("Action: {} annotated with: {}, checking if request: {} meets allowed methods!",
                 action, AllowedHttpMethod.class.getSimpleName(), request.getMethod());
             return doIntercept(invocation, action.getClass());

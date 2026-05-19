@@ -273,6 +273,51 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         invocation.setProxy(actionProxy);
     }
 
+
+    /**
+     * Regression: wildcard-resolved method with NO method-level annotation on a class
+     * that has a class-level @AllowedHttpMethod(POST) — GET must be rejected.
+     * The WW-5535 fix introduced an if/else-if that made the class-level check
+     * unreachable when isMethodSpecified()=true and the method is unannotated.
+     */
+    public void testWildcardResolvedUnannotatedMethodRespectsClassLevelAnnotation() throws Exception {
+        // given — HttpMethodsTestAction has @AllowedHttpMethod(POST) at class level
+        // execute() inherited from ActionSupport has no method-level HTTP annotation
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true); // simulates wildcard-resolved, not default
+
+        prepareRequest("get");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then — class-level @AllowedHttpMethod(POST) must still be enforced
+        assertEquals("bad-request", resultName);
+    }
+
+    /**
+     * Counterpart: POST on wildcard-resolved unannotated method must succeed
+     * when the class allows POST via class-level annotation.
+     */
+    public void testWildcardResolvedUnannotatedMethodAllowsPostWithClassLevelAnnotation() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true);
+        invocation.setResultCode("success");
+
+        prepareRequest("post");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("success", resultName);
+    }
+
     private void prepareRequest(String httpMethod) {
         MockHttpServletRequest request = new MockHttpServletRequest(httpMethod, "/action");
         ActionContext.getContext().withServletRequest(request);

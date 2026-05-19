@@ -19,12 +19,16 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.HttpMethodsTestAction;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.Map;
 
 public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
@@ -316,6 +320,38 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
         // then
         assertEquals("success", resultName);
+    }
+
+    /**
+     * Integration regression for WW-5535: exercise the full wildcard resolution path through
+     * a real {@link org.apache.struts2.DefaultActionProxy} (not a MockActionProxy).
+     * <p>
+     * Config: {@code <action name="Wild-*" class="HttpMethodsTestAction" method="{1}">} —
+     * URL {@code Wild-execute} resolves to method {@code execute()} inherited from
+     * {@code ActionSupport} (no method-level HTTP annotation). The class carries
+     * {@code @AllowedHttpMethod(POST)}, so GET must be rejected end-to-end.
+     */
+    public void testWildcardResolvedExecuteRejectsGetThroughRealProxy() throws Exception {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(
+            "org/apache/struts2/config/providers/xwork-test-allowed-methods.xml"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/Wild-execute");
+        Map<String, Object> extraContext = ActionContext.of()
+            .withServletRequest(request)
+            .getContextMap();
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "Wild-execute", null, extraContext);
+
+        // sanity: confirms the WW-5535 fix in DefaultActionProxy.resolveMethod() is wired up
+        assertEquals("execute", proxy.getMethod());
+        assertTrue("Wildcard-resolved method must report isMethodSpecified()=true", proxy.isMethodSpecified());
+
+        HttpMethodInterceptor realInterceptor = new HttpMethodInterceptor();
+        String result = realInterceptor.intercept(proxy.getInvocation());
+
+        // class-level @AllowedHttpMethod(POST) must still be enforced even though the resolved
+        // method carries no method-level annotation — this is what #1690 fixed
+        assertEquals("bad-request", result);
     }
 
     private void prepareRequest(String httpMethod) {

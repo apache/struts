@@ -21,6 +21,7 @@ package org.apache.struts2.result;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -101,7 +102,7 @@ public class PostbackResult extends StrutsResultSupport {
 
         // Render
         PrintWriter pw = new PrintWriter(response.getOutputStream());
-        pw.write("<!DOCTYPE html><html><body><form action=\"" + finalLocation + "\" method=\"POST\">");
+        pw.write("<!DOCTYPE html><html><body><form action=\"" + StringEscapeUtils.escapeHtml4(finalLocation) + "\" method=\"POST\">");
         writeFormElements(request, pw);
         writePrologueScript(pw);
         pw.write("</html>");

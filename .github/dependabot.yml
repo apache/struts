@@ -8,13 +8,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 3
     target-branch: "main"
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "weekly"
     cooldown:
-      default: 4
+      default-days: 4
     target-branch: "support/struts-6-x-x"
     ignore:
       - dependency-name: "org.eclipse.jetty:jetty-maven-plugin"

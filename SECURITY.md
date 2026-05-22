@@ -5,11 +5,15 @@
 Please visit the [Releases](https://struts.apache.org/releases.html#prior-releases) page to see full information about each version 
 and what potential vulnerability it can have:
 
-| Version | Supported          |
-|---------|--------------------|
-| 7.x     | :white_check_mark: |
-| 6.7.x   | :white_check_mark: |
-| 2.5.x   | ❌ |
+| Version | Supported |
+|---------|-----------|
+| 7.x     | yes       |
+| 6.x.x   | yes       |
+| 2.5.x   | no        |
+| 2.3.x   | no        |
+| 2.2.x   | no        |
+| 2.1.x   | no        |
+| 2.0.x   | no        |
 
 ## Reporting New Security Issues with the Apache Struts
 

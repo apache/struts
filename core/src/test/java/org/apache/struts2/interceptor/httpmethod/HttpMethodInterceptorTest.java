@@ -19,12 +19,16 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import org.apache.struts2.HttpMethodsTestAction;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.Map;
 
 public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
@@ -252,6 +256,73 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         // then
         assertEquals("onPostOnly", resultName);
         assertEquals(HttpMethod.POST, action.getHttpMethod());
+    }
+
+    /**
+     * Regression for wildcard-resolved methods with no method-level HTTP annotation:
+     * a class-level {@code @AllowedHttpMethod(POST)} must still cause GET to be rejected.
+     * Previously the interceptor's {@code if/else-if} structure made the class-level
+     * branch unreachable when {@code isMethodSpecified()=true} and the resolved method
+     * carried no annotation of its own.
+     */
+    public void testWildcardResolvedUnannotatedMethodRespectsClassLevelAnnotation() throws Exception {
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true);
+
+        prepareRequest("get");
+
+        String resultName = interceptor.intercept(invocation);
+
+        assertEquals("bad-request", resultName);
+    }
+
+    /**
+     * Counterpart to the above: POST against a wildcard-resolved unannotated method must succeed
+     * when the class allows POST via {@code @AllowedHttpMethod(POST)}.
+     */
+    public void testWildcardResolvedUnannotatedMethodAllowsPostWithClassLevelAnnotation() throws Exception {
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true);
+        invocation.setResultCode("success");
+
+        prepareRequest("post");
+
+        String resultName = interceptor.intercept(invocation);
+
+        assertEquals("success", resultName);
+    }
+
+    /**
+     * Exercises the full wildcard resolution path through a real {@link com.opensymphony.xwork2.DefaultActionProxy}.
+     * <p>
+     * Config (from xwork-test-allowed-methods.xml):
+     * {@code <action name="Wild-*" class="HttpMethodsTestAction" method="{1}">}.
+     * URL {@code Wild-execute} resolves to {@code ActionSupport.execute()} — no method-level
+     * HTTP annotation. {@code HttpMethodsTestAction} carries class-level
+     * {@code @AllowedHttpMethod(POST)}, so GET must be rejected end-to-end.
+     */
+    public void testWildcardResolvedExecuteRejectsGetThroughRealProxy() throws Exception {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(
+            "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/Wild-execute");
+        Map<String, Object> extraContext = ActionContext.of()
+            .withServletRequest(request)
+            .getContextMap();
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "Wild-execute", null, extraContext);
+
+        assertEquals("execute", proxy.getMethod());
+        assertTrue("Wildcard-resolved method must report isMethodSpecified()=true", proxy.isMethodSpecified());
+
+        HttpMethodInterceptor realInterceptor = new HttpMethodInterceptor();
+        String result = realInterceptor.intercept(proxy.getInvocation());
+
+        assertEquals("bad-request", result);
     }
 
     private void prepareActionInvocation(Object action) {

@@ -734,6 +734,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CHAINING_COPY_ERRORS = "struts.chaining.copyErrors";
     public static final String STRUTS_CHAINING_COPY_FIELD_ERRORS = "struts.chaining.copyFieldErrors";
     public static final String STRUTS_CHAINING_COPY_MESSAGES = "struts.chaining.copyMessages";
+    public static final String STRUTS_CHAINING_REQUIRE_ANNOTATIONS = "struts.chaining.requireAnnotations";
     public static final String STRUTS_OBJECT_FACTORY_CLASSLOADER = "struts.objectFactory.classloader";
 
     /**

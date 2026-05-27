@@ -33,6 +33,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.url.QueryStringBuilder;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.IOException;
 import java.io.Serial;
 import java.net.MalformedURLException;
@@ -248,7 +250,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 response.setStatus(statusCode);
                 response.setHeader("Location", finalLocation);
                 try {
-                    response.getWriter().write(finalLocation);
+                    response.getWriter().write(StringEscapeUtils.escapeHtml4(finalLocation));
                 } finally {
                     response.getWriter().close();
                 }

@@ -75,6 +75,9 @@ import java.util.Set;
  * <li>struts.chaining.copyErrors - set to true to copy Action Errors</li>
  * <li>struts.chaining.copyFieldErrors - set to true to copy Field Errors</li>
  * <li>struts.chaining.copyMessages - set to true to copy Action Messages</li>
+ * <li>struts.chaining.requireAnnotations - set to true to only copy properties whose target
+ * Action member is annotated with {@code @StrutsParameter} (opt-in, default false). When the
+ * target cannot be introspected, no properties are copied (fail closed).</li>
  * </ul>
  *
  * <p>

@@ -33,6 +33,7 @@ import org.apache.struts2.util.ProxyService;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
+import java.beans.IntrospectionException;
 import java.util.*;
 
 /**
@@ -276,6 +277,27 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.intercept(invocation);
 
         assertFalse("proxied unannotated target property must NOT be copied", target.getManagerApproved());
+    }
+
+    public void testFailsClosedWhenTargetCannotBeIntrospected() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        AnnotatedChainingAction target = new AnnotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        // Introspection failure must fail closed: copy nothing, even for an annotated property.
+        OgnlUtil ognlUtil = Mockito.mock(OgnlUtil.class);
+        Mockito.when(ognlUtil.getBeanInfo(ArgumentMatchers.any(Class.class)))
+                .thenThrow(new IntrospectionException("boom"));
+        interceptor.setOgnlUtil(ognlUtil);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("nothing should be copied when the target cannot be introspected",
+                target.getManagerApproved());
     }
 
     @Override

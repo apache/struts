@@ -242,6 +242,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
                 continue;
             }
             String name = descriptor.getName();
+            // target == action is deliberate: chaining copies onto the action object itself (not a
+            // ModelDriven model), so the authorizer's ModelDriven exemption must not apply here.
             if (!parameterAuthorizer.isAuthorized(name, action, action)) {
                 LOG.warn("Chaining: property [{}] not copied to [{}] because it is not annotated with @StrutsParameter",
                         name, targetClass.getName());

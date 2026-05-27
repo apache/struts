@@ -30,6 +30,8 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.ProxyService;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 import java.util.*;
 
@@ -238,6 +240,42 @@ public class ChainingInterceptorTest extends XWorkTestCase {
 
         assertTrue("when global requireAnnotations is off, enforcement is a no-op",
                 target.getManagerApproved());
+    }
+
+    public void testEnforcementStillFiltersWithIncludesConfigured() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        interceptor.setIncludes("managerApproved");
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("unauthorized property must be excluded even when listed in includes",
+                target.getManagerApproved());
+    }
+
+    public void testEnforcementResolvesProxiedTargetClass() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        ProxyService proxyService = Mockito.mock(ProxyService.class);
+        Mockito.when(proxyService.isProxy(ArgumentMatchers.any())).thenReturn(true);
+        Mockito.when(proxyService.ultimateTargetClass(ArgumentMatchers.any()))
+                .thenReturn((Class) UnannotatedChainingAction.class);
+        interceptor.setProxyService(proxyService);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("proxied unannotated target property must NOT be copied", target.getManagerApproved());
     }
 
     @Override

@@ -24,6 +24,8 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.Unchainable;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
+import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.result.ActionChainResult;
 import org.apache.struts2.result.Result;
 import org.apache.struts2.util.CompoundRoot;
@@ -32,12 +34,16 @@ import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -135,6 +141,9 @@ public class ChainingInterceptor extends AbstractInterceptor {
     protected Collection<String> includes;
     protected ReflectionProvider reflectionProvider;
     private ProxyService proxyService;
+    private boolean requireAnnotations = false;
+    private ParameterAuthorizer parameterAuthorizer;
+    private OgnlUtil ognlUtil;
 
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
@@ -144,6 +153,21 @@ public class ChainingInterceptor extends AbstractInterceptor {
     @Inject
     public void setProxyService(ProxyService proxyService) {
         this.proxyService = proxyService;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
+    }
+
+    @Inject
+    public void setOgnlUtil(OgnlUtil ognlUtil) {
+        this.ognlUtil = ognlUtil;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireAnnotations(String requireAnnotations) {
+        this.requireAnnotations = "true".equalsIgnoreCase(requireAnnotations);
     }
 
     @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_ERRORS, required = false)
@@ -183,7 +207,52 @@ public class ChainingInterceptor extends AbstractInterceptor {
             if (proxyService.isProxy(action)) {
                 editable = proxyService.ultimateTargetClass(action);
             }
-            reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
+            Collection<String> copyExcludes = prepareExcludes();
+            if (requireAnnotations) {
+                Class<?> targetClass = editable != null ? editable : action.getClass();
+                BeanInfo beanInfo = getTargetBeanInfo(targetClass);
+                if (beanInfo == null) {
+                    // Fail closed: cannot prove which properties are annotated, so copy nothing.
+                    LOG.warn("Chaining: unable to introspect target [{}]; skipping property copy " +
+                            "(struts.chaining.requireAnnotations enabled)", targetClass.getName());
+                    continue;
+                }
+                copyExcludes = excludeUnauthorizedProperties(copyExcludes, beanInfo, targetClass, action);
+            }
+            reflectionProvider.copy(object, action, ctxMap, copyExcludes, includes, editable);
+        }
+    }
+
+    /**
+     * Returns the excludes to use for the copy: the base excludes unioned with the names of all
+     * writable target properties that are not authorized by {@code @StrutsParameter}.
+     */
+    private Collection<String> excludeUnauthorizedProperties(Collection<String> baseExcludes,
+                                                             BeanInfo beanInfo, Class<?> targetClass, Object action) {
+        Set<String> merged = new HashSet<>();
+        if (baseExcludes != null) {
+            merged.addAll(baseExcludes);
+        }
+        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+            if (descriptor.getWriteMethod() == null) {
+                continue;
+            }
+            String name = descriptor.getName();
+            if (!parameterAuthorizer.isAuthorized(name, action, action)) {
+                LOG.warn("Chaining: property [{}] not copied to [{}] because it is not annotated with @StrutsParameter",
+                        name, targetClass.getName());
+                merged.add(name);
+            }
+        }
+        return merged;
+    }
+
+    private BeanInfo getTargetBeanInfo(Class<?> targetClass) {
+        try {
+            return ognlUtil.getBeanInfo(targetClass);
+        } catch (IntrospectionException e) {
+            LOG.warn("Error introspecting Action {} for chaining @StrutsParameter enforcement", targetClass, e);
+            return null;
         }
     }
 

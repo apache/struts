@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
@@ -167,7 +168,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     @Inject(value = StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, required = false)
     public void setRequireAnnotations(String requireAnnotations) {
-        this.requireAnnotations = "true".equalsIgnoreCase(requireAnnotations);
+        this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
     }
 
     @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_ERRORS, required = false)
@@ -251,7 +252,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
         try {
             return ognlUtil.getBeanInfo(targetClass);
         } catch (IntrospectionException e) {
-            LOG.warn("Error introspecting Action {} for chaining @StrutsParameter enforcement", targetClass, e);
+            LOG.warn("Chaining: error introspecting target [{}] for @StrutsParameter enforcement", targetClass, e);
             return null;
         }
     }

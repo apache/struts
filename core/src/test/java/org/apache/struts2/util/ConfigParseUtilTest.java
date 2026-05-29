@@ -20,6 +20,7 @@ package org.apache.struts2.util;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import junit.framework.TestCase;
+import org.apache.struts2.config.ConfigurationException;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -84,6 +85,40 @@ public class ConfigParseUtilTest extends TestCase {
         cache.cleanUp();
 
         assertTrue(cache.estimatedSize() <= 50);
+    }
+
+    public void testValidateClassesThrowsForNonExistingClassNameOnEachCall() {
+        String missingClassName = "org.apache.struts2.util.NonExistingClassForValidationTest";
+        Set<String> classNames = Collections.singleton(missingClassName);
+        int[] missingClassLoads = new int[1];
+        ClassLoader loader = new ClassLoader(getClass().getClassLoader()) {
+            @Override
+            public Class<?> loadClass(String name) throws ClassNotFoundException {
+                if (missingClassName.equals(name)) {
+                    missingClassLoads[0]++;
+                    throw new ClassNotFoundException(name);
+                }
+                return super.loadClass(name);
+            }
+
+            @Override
+            public String toString() {
+                return "missing-class-loader";
+            }
+        };
+
+        for (int i = 0; i < 2; i++) {
+            try {
+                ConfigParseUtil.validateClasses(classNames, loader);
+                fail("Expected ConfigurationException for class: " + missingClassName);
+            } catch (ConfigurationException e) {
+                assertTrue(e.getMessage().contains(missingClassName));
+                assertNotNull(e.getCause());
+                assertEquals(ClassNotFoundException.class, e.getCause().getClass());
+            }
+        }
+
+        assertEquals(2, missingClassLoads[0]);
     }
 
     @SuppressWarnings("unchecked")

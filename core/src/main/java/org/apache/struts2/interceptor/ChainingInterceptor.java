@@ -146,8 +146,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
     protected ReflectionProvider reflectionProvider;
     private ProxyService proxyService;
     private boolean requireAnnotations = false;
-    private ParameterAuthorizer parameterAuthorizer;
-    private OgnlUtil ognlUtil;
+    private transient ParameterAuthorizer parameterAuthorizer;
+    private transient OgnlUtil ognlUtil;
 
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
@@ -203,28 +203,30 @@ public class ChainingInterceptor extends AbstractInterceptor {
         List<Object> list = prepareList(root);
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
-            if (!shouldCopy(object)) {
-                continue;
+            if (shouldCopy(object)) {
+                copyObjectToAction(object, invocation.getAction(), ctxMap);
             }
-            Object action = invocation.getAction();
-            Class<?> editable = null;
-            if (proxyService.isProxy(action)) {
-                editable = proxyService.ultimateTargetClass(action);
-            }
-            Collection<String> copyExcludes = prepareExcludes();
-            if (requireAnnotations) {
-                Class<?> targetClass = editable != null ? editable : action.getClass();
-                BeanInfo beanInfo = getTargetBeanInfo(targetClass);
-                if (beanInfo == null) {
-                    // Fail closed: cannot prove which properties are annotated, so copy nothing.
-                    LOG.warn("Chaining: unable to introspect target [{}]; skipping property copy " +
-                            "(struts.chaining.requireAnnotations enabled)", targetClass.getName());
-                    continue;
-                }
-                copyExcludes = excludeUnauthorizedProperties(copyExcludes, beanInfo, targetClass, action);
-            }
-            reflectionProvider.copy(object, action, ctxMap, copyExcludes, includes, editable);
         }
+    }
+
+    private void copyObjectToAction(Object object, Object action, Map<String, Object> ctxMap) {
+        Class<?> editable = null;
+        if (proxyService.isProxy(action)) {
+            editable = proxyService.ultimateTargetClass(action);
+        }
+        Collection<String> copyExcludes = prepareExcludes();
+        if (requireAnnotations) {
+            Class<?> targetClass = editable != null ? editable : action.getClass();
+            BeanInfo beanInfo = getTargetBeanInfo(targetClass);
+            if (beanInfo == null) {
+                // Fail closed: cannot prove which properties are annotated, so copy nothing.
+                LOG.warn("Chaining: unable to introspect target [{}]; skipping property copy " +
+                        "(struts.chaining.requireAnnotations enabled)", targetClass.getName());
+                return;
+            }
+            copyExcludes = excludeUnauthorizedProperties(copyExcludes, beanInfo, targetClass, action);
+        }
+        reflectionProvider.copy(object, action, ctxMap, copyExcludes, includes, editable);
     }
 
     /**

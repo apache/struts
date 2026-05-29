@@ -49,6 +49,17 @@ public class ConfigParseUtilTest extends TestCase {
         assertEquals(1, loader.getStringClassLoads());
     }
 
+    public void testValidateClassesCachesAcrossMultipleRepeatedCallsWithSameClassLoader() {
+        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "loader-one");
+        Set<String> classNames = Collections.singleton(String.class.getName());
+
+        for (int i = 0; i < 10; i++) {
+            ConfigParseUtil.validateClasses(classNames, loader);
+        }
+
+        assertEquals(1, loader.getStringClassLoads());
+    }
+
     public void testValidateClassesSeparatesEntriesAcrossDifferentClassLoaders() {
         CountingClassLoader firstLoader = new CountingClassLoader(getClass().getClassLoader(), "loader-one");
         CountingClassLoader secondLoader = new CountingClassLoader(getClass().getClassLoader(), "loader-two");

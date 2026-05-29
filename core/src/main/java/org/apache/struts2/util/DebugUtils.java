@@ -32,6 +32,13 @@ public final class DebugUtils {
 
     private static final Set<String> IS_LOGGED = ConcurrentHashMap.newKeySet();
 
+    /**
+     * Clears the logged-keys cache to prevent memory leaks during hot redeployment.
+     */
+    public static void clearCache() {
+        IS_LOGGED.clear();
+    }
+
     public static void notifyDeveloperOfError(Logger log, Object action, String message) {
         if (action instanceof TextProvider tp) {
             message = tp.getText("devmode.notification", "Developer Notification:\n{0}", new String[]{message});

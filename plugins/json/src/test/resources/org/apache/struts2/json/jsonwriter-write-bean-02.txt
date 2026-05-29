@@ -12,5 +12,5 @@
     "longField":100,
     "objectField":null,
     "stringField":"str",
-    "url":"http:\/\/www.google.com"
+    "url":"https:\/\/www.google.com"
 }

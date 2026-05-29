@@ -92,6 +92,10 @@ import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.ognl.accessor.XWorkMethodAccessor;
+import org.apache.struts2.interceptor.parameter.OgnlParameterAllowlister;
+import org.apache.struts2.interceptor.parameter.ParameterAllowlister;
+import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.util.OgnlTextParser;
 import org.apache.struts2.util.PatternMatcher;
@@ -249,6 +253,10 @@ public class DefaultConfiguration implements Configuration {
     public void destroy() {
         packageContexts.clear();
         loadedFileNames.clear();
+        if (container != null) {
+            container.destroy();
+            container = null;
+        }
     }
 
     @Override
@@ -266,8 +274,7 @@ public class DefaultConfiguration implements Configuration {
      */
     @Override
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
-        packageContexts.clear();
-        loadedFileNames.clear();
+        destroy();
         List<PackageProvider> packageProviders = new ArrayList<>();
 
         ContainerProperties props = new ContainerProperties();
@@ -403,6 +410,8 @@ public class DefaultConfiguration implements Configuration {
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
                 .factory(ProxyCacheFactory.class, StrutsProxyCacheFactory.class, Scope.SINGLETON)
                 .factory(ProxyService.class, StrutsProxyService.class, Scope.SINGLETON)
+                .factory(ParameterAuthorizer.class, StrutsParameterAuthorizer.class, Scope.SINGLETON)
+                .factory(ParameterAllowlister.class, OgnlParameterAllowlister.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
@@ -609,26 +618,39 @@ public class DefaultConfiguration implements Configuration {
         }
 
         private ActionConfig findActionConfigInNamespace(String namespace, String name) {
-            ActionConfig config = null;
             if (namespace == null) {
                 namespace = "";
             }
             Map<String, ActionConfig> actions = namespaceActionConfigs.get(namespace);
-            if (actions != null) {
-                config = actions.get(name);
-                // Check wildcards
-                if (config == null) {
-                    config = namespaceActionConfigMatchers.get(namespace).match(name);
-                    // fail over to default action
-                    if (config == null) {
-                        String defaultActionRef = namespaceConfigs.get(namespace);
-                        if (defaultActionRef != null) {
-                            config = actions.get(defaultActionRef);
-                        }
-                    }
-                }
+            if (actions == null) {
+                return null;
             }
-            return config;
+
+            ActionConfig config = actions.get(name);
+            if (config != null) {
+                return config;
+            }
+
+            config = namespaceActionConfigMatchers.get(namespace).match(name);
+            if (config != null) {
+                return config;
+            }
+
+            return findDefaultActionConfig(namespace, actions);
+        }
+
+        private ActionConfig findDefaultActionConfig(String namespace, Map<String, ActionConfig> actions) {
+            String defaultActionRef = namespaceConfigs.get(namespace);
+            if (defaultActionRef == null) {
+                return null;
+            }
+
+            ActionConfig config = actions.get(defaultActionRef);
+            if (config != null) {
+                return config;
+            }
+
+            return namespaceActionConfigMatchers.get(namespace).match(defaultActionRef);
         }
 
         /**

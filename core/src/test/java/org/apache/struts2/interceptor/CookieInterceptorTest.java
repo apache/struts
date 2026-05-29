@@ -43,6 +43,15 @@ import static org.easymock.EasyMock.verify;
 
 public class CookieInterceptorTest extends StrutsInternalTestCase {
 
+    /**
+     * These tests construct {@link CookieInterceptor} via {@code new} rather than the DI container, so the
+     * {@code @StrutsParameter} authorization gate added in WW-5627 has no injected services. We supply explicit
+     * pass-through lambdas to mirror the default-config behavior these tests assume ({@code requireAnnotations=false}).
+     */
+    private static void disableAuthorizationGate(CookieInterceptor interceptor) {
+        interceptor.setParameterAuthorizer((name, target, action) -> true);
+        interceptor.setParameterAllowlister((name, target) -> {});
+    }
 
     public void testIntercepDefault() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -68,6 +77,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
 
         interceptor.intercept(invocation);
 
@@ -105,6 +115,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("*");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -147,6 +158,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("cookie1, cookie2, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -188,6 +200,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value, cookie2value, cookie3value");
         interceptor.intercept(invocation);
@@ -230,6 +243,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("*");
         interceptor.intercept(invocation);
@@ -271,6 +285,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("");
         interceptor.intercept(invocation);
@@ -313,6 +328,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         CookieInterceptor interceptor = new CookieInterceptor();
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("cookie1, cookie3");
         interceptor.setCookiesValue("cookie1value");
         interceptor.intercept(invocation);
@@ -395,6 +411,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         excludedPatternsChecker.setAdditionalExcludePatterns(".*(^|\\.|\\[|'|\")class(\\.|\\[|'|\").*");
         interceptor.setExcludedPatternsChecker(excludedPatternsChecker);
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("*");
 
         MockActionInvocation invocation = new MockActionInvocation();
@@ -441,6 +458,7 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         };
         interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
         interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        disableAuthorizationGate(interceptor);
         interceptor.setCookiesName("*");
 
         MockActionInvocation invocation = new MockActionInvocation();

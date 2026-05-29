@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class JuneauXmlHandlerTest extends XWorkTestCase {
 
@@ -92,6 +93,14 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
         assertThat(obj.getParents())
                 .hasSize(2)
                 .containsExactly("Adam", "Ewa");
+    }
+
+    public void testMalformedXmlIsWrappedInIOException() {
+        SimpleBean obj = new SimpleBean();
+        Reader in = new StringReader("<object><name>unterminated");
+
+        assertThatThrownBy(() -> handler.toObject(ai, in, obj))
+                .isInstanceOf(java.io.IOException.class);
     }
 
 }

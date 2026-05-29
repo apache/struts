@@ -71,14 +71,14 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
      * <p>
      * The reason for the builder methods is so that you can use a subclass to create your own DefaultActionProxy instance
      * </p>
-     *
+     * <p>
      * (like a RMIActionProxy).
      *
-     * @param inv the action invocation
-     * @param namespace the namespace
-     * @param actionName the action name
-     * @param methodName the method name
-     * @param executeResult execute result
+     * @param inv            the action invocation
+     * @param namespace      the namespace
+     * @param actionName     the action name
+     * @param methodName     the method name
+     * @param executeResult  execute result
      * @param cleanupContext cleanup context
      */
     protected DefaultActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {
@@ -171,8 +171,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             this.method = config.getMethodName();
             if (StringUtils.isEmpty(this.method)) {
                 this.method = ActionConfig.DEFAULT_METHOD;
+                methodSpecified = false;
             }
-            methodSpecified = false;
         }
     }
 

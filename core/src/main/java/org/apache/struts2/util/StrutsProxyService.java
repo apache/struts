@@ -48,6 +48,17 @@ import static java.lang.reflect.Modifier.isStatic;
  */
 public class StrutsProxyService implements ProxyService {
 
+    private static final boolean HIBERNATE_AVAILABLE = isHibernateAvailable();
+
+    private static boolean isHibernateAvailable() {
+        try {
+            Class.forName("org.hibernate.proxy.HibernateProxy");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     private final OgnlCache<Class<?>, Boolean> isProxyCache;
     private final OgnlCache<Member, Boolean> isProxyMemberCache;
 
@@ -90,8 +101,11 @@ public class StrutsProxyService implements ProxyService {
 
     @Override
     public boolean isHibernateProxy(Object object) {
+        if (!HIBERNATE_AVAILABLE || object == null) {
+            return false;
+        }
         try {
-            return object != null && HibernateProxy.class.isAssignableFrom(object.getClass());
+            return HibernateProxy.class.isAssignableFrom(object.getClass());
         } catch (LinkageError ignored) {
             return false;
         }
@@ -99,6 +113,9 @@ public class StrutsProxyService implements ProxyService {
 
     @Override
     public boolean isHibernateProxyMember(Member member) {
+        if (!HIBERNATE_AVAILABLE) {
+            return false;
+        }
         try {
             return hasMember(HibernateProxy.class, member);
         } catch (LinkageError ignored) {
@@ -108,6 +125,9 @@ public class StrutsProxyService implements ProxyService {
 
     @Override
     public Object getHibernateProxyTarget(Object object) {
+        if (!HIBERNATE_AVAILABLE) {
+            return object;
+        }
         try {
             return Hibernate.unproxy(object);
         } catch (LinkageError ignored) {

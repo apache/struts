@@ -22,6 +22,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
@@ -71,6 +72,14 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
+    private JSONUtil jsonUtil;
+    private ParameterAuthorizer parameterAuthorizer;
+    private int maxElements = JSONReader.DEFAULT_MAX_ELEMENTS;
+    private int maxDepth = JSONReader.DEFAULT_MAX_DEPTH;
+    private int maxLength = 2_097_152;  // 2MB
+    private int maxStringLength = JSONReader.DEFAULT_MAX_STRING_LENGTH;
+    private int maxKeyLength = JSONReader.DEFAULT_MAX_KEY_LENGTH;
+
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -91,7 +100,8 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         if (jsonContentType.equalsIgnoreCase(requestContentType)) {
             // load JSON object
-            Object obj = JSONUtil.deserialize(request.getReader());
+            applyLimitsToReader();
+            Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
             // JSON array (this.root cannot be null in this case)
             if(obj instanceof List && this.root != null) {
@@ -123,6 +133,9 @@ public class JSONInterceptor extends AbstractInterceptor {
                 if (rootObject == null) // model overrides action
                     rootObject = invocation.getStack().peek();
 
+                // enforce @StrutsParameter authorization on JSON body keys
+                filterUnauthorizedKeys(json, rootObject, invocation.getAction());
+
                 // populate fields
                 populator.populateObject(rootObject, json);
             } else {
@@ -133,7 +146,8 @@ public class JSONInterceptor extends AbstractInterceptor {
             Object result;
             if (this.enableSMD) {
                 // load JSON object
-                Object obj = JSONUtil.deserialize(request.getReader());
+                applyLimitsToReader();
+                Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
                 if (obj instanceof Map) {
                     Map smd = (Map) obj;
@@ -168,8 +182,6 @@ public class JSONInterceptor extends AbstractInterceptor {
                 result = rpcResponse;
             }
 
-            JSONUtil jsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
-
             String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
                     ignoreHierarchy, excludeNullProperties);
             json = addCallbackIfApplicable(request, json);
@@ -183,6 +195,66 @@ public class JSONInterceptor extends AbstractInterceptor {
         }
 
         return invocation.invoke();
+    }
+
+    private void applyLimitsToReader() {
+        JSONReader reader = jsonUtil.getReader();
+        reader.setMaxElements(maxElements);
+        reader.setMaxDepth(maxDepth);
+        reader.setMaxStringLength(maxStringLength);
+        reader.setMaxKeyLength(maxKeyLength);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedKeys(Map json, Object target, Object action) {
+        filterUnauthorizedKeysRecursive(json, "", target, action);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedKeysRecursive(Map json, String prefix, Object target, Object action) {
+        Iterator<Map.Entry> it = json.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = it.next();
+            if (!(entry.getKey() instanceof String key)) {
+                // Defensive: a custom JSONReader could produce non-String keys. Skip — we cannot
+                // construct a parameter path for authorization, and JSONPopulator wouldn't bind
+                // these to bean properties anyway.
+                LOG.debug("Skipping JSON entry with non-String key [{}] of type [{}] under prefix [{}]",
+                        entry.getKey(), entry.getKey() == null ? "null" : entry.getKey().getClass().getName(), prefix);
+                continue;
+            }
+            String fullPath = prefix.isEmpty() ? key : prefix + "." + key;
+
+            if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
+                LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
+                        fullPath, target.getClass().getName());
+                it.remove();
+                continue;
+            }
+
+            // Recurse into nested Maps (JSON objects) to enforce depth-aware authorization
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                filterUnauthorizedKeysRecursive((Map) value, fullPath, target, action);
+            } else if (value instanceof java.util.List) {
+                filterUnauthorizedList((java.util.List) value, fullPath, target, action);
+            }
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void filterUnauthorizedList(java.util.List list, String prefix, Object target, Object action) {
+        // Use prefix+"[0]" so that list element properties pick up one extra '[' in their path,
+        // matching the indexed-path semantics of ParametersInterceptor (e.g. "items[0].key" → depth 2).
+        String elementPrefix = prefix + "[0]";
+        for (Object item : list) {
+            if (item instanceof Map) {
+                filterUnauthorizedKeysRecursive((Map) item, elementPrefix, target, action);
+            } else if (item instanceof java.util.List) {
+                // Handle nested lists (e.g. List<List<Map>>) by recursing with the same elementPrefix
+                filterUnauthorizedList((java.util.List) item, elementPrefix, target, action);
+            }
+        }
     }
 
     protected String readContentType(HttpServletRequest request) {
@@ -563,5 +635,40 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     public void setJsonRpcContentType(String jsonRpcContentType) {
         this.jsonRpcContentType = jsonRpcContentType;
+    }
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)
+    public void setMaxElements(String maxElements) {
+        this.maxElements = Integer.parseInt(maxElements);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_DEPTH, required = false)
+    public void setMaxDepth(String maxDepth) {
+        this.maxDepth = Integer.parseInt(maxDepth);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_LENGTH, required = false)
+    public void setMaxLength(String maxLength) {
+        this.maxLength = Integer.parseInt(maxLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_STRING_LENGTH, required = false)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Integer.parseInt(maxStringLength);
+    }
+
+    @Inject(value = JSONConstants.JSON_MAX_KEY_LENGTH, required = false)
+    public void setMaxKeyLength(String maxKeyLength) {
+        this.maxKeyLength = Integer.parseInt(maxKeyLength);
     }
 }

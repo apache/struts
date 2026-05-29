@@ -66,7 +66,7 @@ public class JSONResultTest extends StrutsTestCase {
         map.put("createtime", new Date());
         try {
             JSONUtil jsonUtil = new JSONUtil();
-            jsonUtil.setWriter(new DefaultJSONWriter());
+            jsonUtil.setWriter(new StrutsJSONWriter());
             jsonUtil.serialize(map, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
         } catch (JSONException e) {
             fail(e.getMessage());
@@ -76,14 +76,14 @@ public class JSONResultTest extends StrutsTestCase {
     public void testJSONWriterEndlessLoopOnExludedProperties() throws JSONException {
         Pattern all = Pattern.compile(".*");
 
-        JSONWriter writer = new DefaultJSONWriter();
+        JSONWriter writer = new StrutsJSONWriter();
         writer.write(Arrays.asList("a", "b"), Arrays.asList(all), null, false);
     }
 
     public void testSMDDisabledSMD() throws Exception {
         JSONResult result = new JSONResult();
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         SMDActionTest1 action = new SMDActionTest1();
         stack.push(action);
@@ -102,7 +102,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         SMDActionTest1 action = new SMDActionTest1();
         stack.push(action);
@@ -122,7 +122,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         SMDActionTest2 action = new SMDActionTest2();
         stack.push(action);
@@ -142,7 +142,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setExcludeNullProperties(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
@@ -161,7 +161,7 @@ public class JSONResultTest extends StrutsTestCase {
     public void testNotTraverseOrIncludeProxyInfo() throws Exception {
         JSONResult result = new JSONResult();
         JSONUtil jsonUtil = new JSONUtil();
-        DefaultJSONWriter writer = new DefaultJSONWriter();
+        StrutsJSONWriter writer = new StrutsJSONWriter();
         writer.setProxyService(proxyService);
         jsonUtil.setWriter(writer);
         result.setJsonUtil(jsonUtil);
@@ -195,7 +195,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setWrapPrefix("_prefix_");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
@@ -214,7 +214,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setWrapSuffix("_suffix_");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
@@ -233,7 +233,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setDefaultDateFormat("MM-dd-yyyy");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
@@ -254,7 +254,7 @@ public class JSONResultTest extends StrutsTestCase {
         result.setWrapPrefix("_prefix_");
         result.setWrapSuffix("_suffix_");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
@@ -274,7 +274,7 @@ public class JSONResultTest extends StrutsTestCase {
         result.setExcludeNullProperties(true);
         result.setPrefix(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
@@ -294,7 +294,7 @@ public class JSONResultTest extends StrutsTestCase {
     public void test() throws Exception {
         JSONResult result = new JSONResult();
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         TestAction action = new TestAction();
@@ -380,7 +380,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIgnoreHierarchy(false);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         TestAction3 action = new TestAction3();
@@ -399,7 +399,7 @@ public class JSONResultTest extends StrutsTestCase {
     public void testCommentWrap() throws Exception {
         JSONResult result = new JSONResult();
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         TestAction action = new TestAction();
@@ -481,7 +481,7 @@ public class JSONResultTest extends StrutsTestCase {
 
     private void executeTest2Action(JSONResult result) throws Exception {
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
@@ -526,7 +526,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setCallbackParameter("callback");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         request.addParameter("callback", "exec");
 
@@ -543,7 +543,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setNoCache(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
@@ -557,7 +557,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setContentType("some_super_content");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
@@ -569,7 +569,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setStatusCode(HttpServletResponse.SC_CONTINUE);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
@@ -584,7 +584,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setEnumAsBean(true);
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
@@ -605,7 +605,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("foo");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
@@ -625,7 +625,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("^list\\[\\d+\\]\\.booleanField");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
@@ -652,7 +652,7 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("^set\\[\\d+\\]\\.list\\[\\d+\\]\\.booleanField");
         JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
+        jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);

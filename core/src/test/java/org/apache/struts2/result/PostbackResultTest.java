@@ -145,5 +145,108 @@ public class PostbackResultTest extends StrutsInternalTestCase {
         }
     }
 
+    /**
+     * WW-5623: Verify that HTML special characters in finalLocation are properly
+     * escaped in the rendered form action attribute to prevent XSS.
+     */
+    public void testFormActionHtmlEscaping() throws Exception {
+        ActionContext context = ActionContext.getContext();
+        ValueStack stack = context.getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+
+        // Push an object with a malicious property onto the value stack
+        stack.push(new Object() {
+            public String getTargetUrl() {
+                return "/test\"onmouseover=\"alert(1)";
+            }
+        });
+
+        PostbackResult result = new PostbackResult();
+        result.setLocation("/redirect?url=${targetUrl}");
+        result.setPrependServletContext(false);
+
+        IMocksControl control = createControl();
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+        expect(mockInvocation.getStack()).andReturn(stack).anyTimes();
+
+        control.replay();
+        result.setActionMapper(container.getInstance(ActionMapper.class));
+
+        // Call doExecute directly with a malicious location containing all critical chars
+        result.doExecute("/test\"onmouseover=\"alert(1)\"&param=<script>", mockInvocation);
+
+        String output = res.getContentAsString();
+
+        // The action attribute must contain escaped HTML entities
+        assertTrue("Double quote should be escaped to &quot;",
+                output.contains("action=\"/test&quot;onmouseover=&quot;alert(1)&quot;&amp;param=&lt;script&gt;\""));
+        // Must not contain unescaped double-quote that breaks out of the attribute
+        assertFalse("Raw double-quote must not appear in action value",
+                output.contains("action=\"/test\""));
+
+        control.verify();
+    }
+
+    /**
+     * WW-5623: Verify that each individual HTML special character is properly escaped.
+     */
+    public void testFormActionEscapesAllHtmlSpecialChars() throws Exception {
+        ActionContext context = ActionContext.getContext();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+
+        IMocksControl control = createControl();
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+
+        control.replay();
+
+        PostbackResult result = new PostbackResult();
+        result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.doExecute("/path?a=1&b=2\"<>", mockInvocation);
+
+        String output = res.getContentAsString();
+
+        assertTrue("Ampersand should be escaped", output.contains("&amp;"));
+        assertTrue("Double-quote should be escaped", output.contains("&quot;"));
+        assertTrue("Less-than should be escaped", output.contains("&lt;"));
+        assertTrue("Greater-than should be escaped", output.contains("&gt;"));
+
+        control.verify();
+    }
+
+    /**
+     * WW-5623: Verify that a clean location (no special chars) renders unchanged.
+     */
+    public void testFormActionCleanLocationUnchanged() throws Exception {
+        ActionContext context = ActionContext.getContext();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+
+        IMocksControl control = createControl();
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+
+        control.replay();
+
+        PostbackResult result = new PostbackResult();
+        result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.doExecute("/clean/path/action.do", mockInvocation);
+
+        String output = res.getContentAsString();
+
+        assertTrue("Clean location should render as-is in action attribute",
+                output.contains("action=\"/clean/path/action.do\""));
+
+        control.verify();
+    }
 
 }

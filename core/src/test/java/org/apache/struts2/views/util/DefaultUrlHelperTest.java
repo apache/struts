@@ -393,5 +393,9 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         public void setScopeStrategy(Strategy scopeStrategy) {
             parent.setScopeStrategy(scopeStrategy);
         }
+
+        public void destroy() {
+            parent.destroy();
+        }
     }
 }

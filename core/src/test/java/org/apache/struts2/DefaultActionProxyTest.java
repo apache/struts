@@ -18,25 +18,67 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.mock.MockActionInvocation;
-import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.junit.Test;
+import org.apache.struts2.mock.MockActionInvocation;
 
 public class DefaultActionProxyTest extends StrutsInternalTestCase {
 
-    @Test
-    public void testThorwExceptionOnNotAllowedMethod() throws Exception {
-        final String filename = "org/apache/struts2/config/providers/xwork-test-allowed-methods.xml";
-        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
+    private static final String CONFIG = "org/apache/struts2/config/providers/xwork-test-allowed-methods.xml";
+
+    public void testThrowExceptionOnNotAllowedMethod() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
         DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "strict", "Default", "notAllowed", true, true);
         container.inject(dap);
 
         try {
             dap.prepare();
             fail("Must throw exception!");
-        } catch (Exception e) {
-            assertEquals(e.getMessage(), "Method notAllowed for action Default is not allowed!");
+        } catch (ConfigurationException e) {
+            assertEquals("Method notAllowed for action Default is not allowed!", e.getMessage());
         }
+    }
+
+    public void testMethodSpecifiedWhenPassedExplicitly() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "default", "Default", "input", true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method should be specified when passed as constructor argument", dap.isMethodSpecified());
+        assertEquals("input", dap.getMethod());
+    }
+
+    public void testMethodSpecifiedWhenResolvedFromConfig() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
+        // ConfigMethod action has method="onPostOnly" in XML config, no method passed in constructor
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "default", "ConfigMethod", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method should be specified when resolved from action config", dap.isMethodSpecified());
+        assertEquals("onPostOnly", dap.getMethod());
+    }
+
+    public void testMethodNotSpecifiedWhenDefaultingToExecute() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
+        // NoMethod action has no method in XML config and no method passed in constructor
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "default", "NoMethod", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertFalse("Method should not be specified when defaulting to execute", dap.isMethodSpecified());
+        assertEquals("execute", dap.getMethod());
+    }
+
+    public void testMethodSpecifiedWithWildcardAction() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
+        // Wild-onPostOnly matches Wild-* with method="{1}" -> resolves to "onPostOnly"
+        DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "default", "Wild-onPostOnly", null, true, true);
+        container.inject(dap);
+        dap.prepare();
+
+        assertTrue("Method should be specified when resolved from wildcard config", dap.isMethodSpecified());
+        assertEquals("onPostOnly", dap.getMethod());
     }
 }

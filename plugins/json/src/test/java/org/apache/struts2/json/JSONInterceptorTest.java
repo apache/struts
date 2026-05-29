@@ -23,6 +23,7 @@ import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.junit.util.TestUtils;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -39,6 +40,17 @@ public class JSONInterceptorTest extends StrutsTestCase {
     private void setRequestContent(String fileName) throws Exception {
         String content = TestUtils.readContent(JSONInterceptorTest.class.getResource(fileName));
         this.request.setContent(content.getBytes());
+    }
+
+    private JSONInterceptor createInterceptor() {
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Default: allow all parameters (simulates requireAnnotations=false)
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
+        return interceptor;
     }
 
     public void testBadJSON1() throws Exception {
@@ -70,7 +82,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent(fileName);
         this.request.addHeader("Content-Type", "application/json; charset=UTF-8");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -91,7 +103,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-3.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         SMDActionTest1 action = new SMDActionTest1();
 
         this.invocation.setAction(action);
@@ -110,7 +122,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-14.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -128,7 +140,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-15.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -146,7 +158,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-4.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -170,7 +182,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-9.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -191,7 +203,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-6.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -226,7 +238,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-10.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest2 action = new SMDActionTest2();
 
@@ -251,7 +263,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         setRequestContent("smd-7.txt");
         this.request.addHeader("Content-Type", "application/json-rpc");
 
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setEnableSMD(true);
         SMDActionTest1 action = new SMDActionTest1();
 
@@ -300,7 +312,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         TestAction action = new TestAction();
 
         this.invocation.setAction(action);
@@ -315,7 +327,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         TestAction action = new TestAction();
 
         this.invocation.setAction(action);
@@ -437,7 +449,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("bean");
         TestAction4 action = new TestAction4();
 
@@ -462,7 +474,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("beans");
         TestAction5 action = new TestAction5();
 
@@ -488,7 +500,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         // interceptor
-        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONInterceptor interceptor = createInterceptor();
         interceptor.setRoot("anotherBean.yetAnotherBean.beans");
         TestAction5 action = new TestAction5();
 
@@ -507,6 +519,192 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals(beans.get(0).getCharField(), 's');
         assertEquals(beans.get(0).getDoubleField(), 10.1);
         assertEquals(beans.get(0).getByteField(), 3);
+    }
+
+    public void testMaxLengthExceededThrows() throws Exception {
+        // Body is 27 bytes, set maxLength to 10
+        this.request.setContent("{\"a\":1, \"b\":2, \"c\":\"hello\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxLength("10");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxLength");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains(JSONConstants.JSON_MAX_LENGTH));
+        }
+    }
+
+    public void testMaxDepthEnforcedThroughInterceptor() throws Exception {
+        // Nested 3 levels deep, set maxDepth to 2
+        this.request.setContent("{\"a\":{\"b\":{\"c\":1}}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxDepth("2");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxDepth");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("maximum allowed depth"));
+        }
+    }
+
+    public void testParameterAuthorizerRejectsUnauthorizedKeys() throws Exception {
+        // JSON body with "foo" and "bar" keys, but authorizer only allows "foo"
+        this.request.setContent("{\"foo\":\"allowed\", \"bar\":\"blocked\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Only authorize "foo", reject "bar"
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> "foo".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // "foo" should be set, "bar" should NOT be set
+        assertEquals("allowed", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testNonStringKeysAreSkippedByAuthorizationFilter() throws Exception {
+        // Simulate a custom JSON reader producing a Map with a non-String key.
+        // The authorizer should skip the entry rather than throw ClassCastException.
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
+
+        java.util.Map<Object, Object> mixedKeyMap = new java.util.LinkedHashMap<>();
+        mixedKeyMap.put("validKey", "ok");
+        mixedKeyMap.put(42, "shouldBeSkipped"); // Integer key, not String
+
+        java.lang.reflect.Method method = JSONInterceptor.class.getDeclaredMethod(
+                "filterUnauthorizedKeys", java.util.Map.class, Object.class, Object.class);
+        method.setAccessible(true);
+
+        // Should not throw ClassCastException
+        method.invoke(interceptor, mixedKeyMap, new TestAction(), new TestAction());
+
+        // The non-String key entry should still be present (skipped, not removed)
+        assertTrue("non-String-key entry should remain (skipped, not removed)", mixedKeyMap.containsKey(42));
+        assertTrue("String-key entry should remain", mixedKeyMap.containsKey("validKey"));
+    }
+
+    public void testParameterAuthorizerAllowsAllWhenPermissive() throws Exception {
+        // Same JSON body, but authorizer allows all
+        this.request.setContent("{\"foo\":\"value1\", \"bar\":\"value2\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // Both should be set
+        assertEquals("value1", action.getFoo());
+        assertEquals("value2", action.getBar());
+    }
+
+    public void testMaxElementsEnforcedThroughInterceptor() throws Exception {
+        // JSON object with 5 keys, set maxElements to 3
+        this.request.setContent("{\"a\":1, \"b\":2, \"c\":3, \"d\":4, \"e\":5}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setMaxElements("3");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+
+        try {
+            interceptor.intercept(this.invocation);
+            fail("Should have thrown JSONException for exceeding maxElements");
+        } catch (JSONException e) {
+            assertTrue(e.getMessage().contains("maximum allowed elements"));
+        }
+    }
+
+    /**
+     * Tests that nested JSON keys are recursively checked by the parameter authorizer.
+     * Regression test for lukaszlenart's review: nested @StrutsParameter(depth=N) enforcement.
+     */
+    public void testNestedJsonKeysRecursivelyFiltered() throws Exception {
+        // JSON body with nested object: {"bean": {"stringField": "test", "intField": 42}}
+        this.request.setContent("{\"bean\": {\"stringField\": \"test\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        // Authorize "bean" (top-level) and "bean.stringField" (nested) but reject "bean.intField"
+        interceptor.setParameterAuthorizer((parameterName, target, action) ->
+                "bean".equals(parameterName) || "bean.stringField".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // bean should exist with stringField set, but intField should be default (0)
+        assertNotNull(action.getBean());
+        assertEquals("test", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
+    }
+
+    /**
+     * Tests that when root resolves to a non-action object (not ModelDriven),
+     * annotation checks are still enforced.
+     * Regression test for lukaszlenart's review: non-action root bypass.
+     */
+    public void testNonActionRootObjectStillChecked() throws Exception {
+        this.request.setContent("{\"stringField\":\"injected\", \"intField\":99}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = new JSONInterceptor();
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setReader(new StrutsJSONReader());
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setRoot("bean");
+        // Reject all parameters — simulates strict requireAnnotations
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> false);
+        TestAction4 action = new TestAction4();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        // Both fields should remain at defaults since authorizer rejected everything
+        Bean bean = action.getBean();
+        assertNotNull(bean);
+        assertNull(bean.getStringField());
+        assertEquals(0, bean.getIntField());
     }
 
     @Override

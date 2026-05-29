@@ -112,6 +112,10 @@ class DummyContainer implements Container {
     public void removeScopeStrategy() {
     }
 
+    public void destroy() {
+        // no-op in test dummy
+    }
+
 }
 
 class DummyFileManager implements FileManager {

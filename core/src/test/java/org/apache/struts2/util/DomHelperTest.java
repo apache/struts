@@ -24,17 +24,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 import java.io.StringReader;
+import java.util.Objects;
 
 /**
  * Test cases for {@link DomHelper}.
  */
 public class DomHelperTest extends TestCase {
 
-    private final String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)>]>\n<foo>\n<bar/>\n</foo>\n";
-
     public void testParse() {
+        String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)>]>\n<foo>\n<bar/>\n</foo>\n";
         InputSource in = new InputSource(new StringReader(xml));
         in.setSystemId("foo://bar");
 
@@ -47,6 +48,7 @@ public class DomHelperTest extends TestCase {
     }
 
     public void testGetLocationObject() {
+        String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)>]>\n<foo>\n<bar/>\n</foo>\n";
         InputSource in = new InputSource(new StringReader(xml));
         in.setSystemId("foo://bar");
 
@@ -61,7 +63,7 @@ public class DomHelperTest extends TestCase {
     }
 
     public void testExternalEntities() {
-        String dtdFile = getClass().getResource("/author.dtd").getPath();
+        String dtdFile = Objects.requireNonNull(getClass().getResource("/author.dtd")).getPath();
         String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)><!ENTITY writer SYSTEM \"file://" + dtdFile + "\">]><foo><bar>&writer;</bar></foo>";
         InputSource in = new InputSource(new StringReader(xml));
         in.setSystemId("foo://bar");
@@ -73,5 +75,35 @@ public class DomHelperTest extends TestCase {
         NodeList nl = doc.getElementsByTagName("bar");
         assertEquals(1, nl.getLength());
         assertNull(nl.item(0).getNodeValue());
+    }
+
+    /**
+     * Tests that the parser is protected against Billion Laughs (XML Entity Expansion) attack.
+     * The FEATURE_SECURE_PROCESSING flag and the JDK's built-in entity expansion limit (64K
+     * since JDK 7u45) both cap entity expansion to prevent DoS.
+     * See: <a href="https://en.wikipedia.org/wiki/Billion_laughs_attack">Billion laughs attack</a>
+     */
+    public void testBillionLaughsProtection() {
+        String xml = "<?xml version=\"1.0\"?>" +
+            "<!DOCTYPE root [" +
+            "<!ENTITY lol0 \"lol\">" +
+            "<!ENTITY lol1 \"&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;\">" +
+            "<!ENTITY lol2 \"&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;\">" +
+            "<!ENTITY lol3 \"&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;\">" +
+            "<!ENTITY lol4 \"&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;\">" +
+            "<!ENTITY lol5 \"&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;\">" +
+            "]>" +
+            "<root>&lol5;</root>";
+
+        InputSource in = new InputSource(new StringReader(xml));
+        in.setSystemId("test://billion-laughs");
+
+        try {
+            DomHelper.parse(in);
+            fail("Parser should reject excessive entity expansion");
+        } catch (Exception e) {
+            assertNotNull(e.getCause());
+            assertTrue(e.getCause() instanceof SAXParseException);
+        }
     }
 }

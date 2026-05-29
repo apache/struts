@@ -19,12 +19,16 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.HttpMethodsTestAction;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.Map;
 
 public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
@@ -217,12 +221,137 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals(HttpMethod.POST, action.getHttpMethod());
     }
 
+    /**
+     * Simulates a wildcard action like {@code <action name="Wild-*" method="{1}">}
+     * resolving to method "onPostOnly" (annotated with @HttpPost).
+     * With the fix in DefaultActionProxy.resolveMethod(), config-resolved methods
+     * set isMethodSpecified()=true, so the interceptor checks method-level annotations.
+     * A GET request should be rejected because @HttpPost only allows POST.
+     */
+    public void testWildcardResolvedMethodWithPostAnnotationRejectsGet() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        // Simulate wildcard resolution: Wild-onPostOnly -> method="onPostOnly"
+        actionProxy.setMethod("onPostOnly");
+        // After the fix, config-resolved methods have methodSpecified=true
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("get");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then - interceptor checks method-level @HttpPost and rejects GET
+        assertEquals("bad-request", resultName);
+    }
+
+    /**
+     * Counterpart: same wildcard scenario but with POST request — should succeed.
+     */
+    public void testWildcardResolvedMethodWithPostAnnotationAllowsPost() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("onPostOnly");
+        actionProxy.setMethodSpecified(true);
+
+        invocation.setResultCode("onPostOnly");
+
+        prepareRequest("post");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then - interceptor checks method-level @HttpPost and allows POST
+        assertEquals("onPostOnly", resultName);
+    }
+
     private void prepareActionInvocation(Object action) {
         interceptor = new HttpMethodInterceptor();
         invocation = new MockActionInvocation();
         invocation.setAction(action);
         actionProxy = new MockActionProxy();
         invocation.setProxy(actionProxy);
+    }
+
+
+    /**
+     * Regression: wildcard-resolved method with NO method-level annotation on a class
+     * that has a class-level @AllowedHttpMethod(POST) — GET must be rejected.
+     * The WW-5535 fix introduced an if/else-if that made the class-level check
+     * unreachable when isMethodSpecified()=true and the method is unannotated.
+     */
+    public void testWildcardResolvedUnannotatedMethodRespectsClassLevelAnnotation() throws Exception {
+        // given — HttpMethodsTestAction has @AllowedHttpMethod(POST) at class level
+        // execute() inherited from ActionSupport has no method-level HTTP annotation
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true); // simulates wildcard-resolved, not default
+
+        prepareRequest("get");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then — class-level @AllowedHttpMethod(POST) must still be enforced
+        assertEquals("bad-request", resultName);
+    }
+
+    /**
+     * Counterpart: POST on wildcard-resolved unannotated method must succeed
+     * when the class allows POST via class-level annotation.
+     */
+    public void testWildcardResolvedUnannotatedMethodAllowsPostWithClassLevelAnnotation() throws Exception {
+        // given
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(true);
+        invocation.setResultCode("success");
+
+        prepareRequest("post");
+
+        // when
+        String resultName = interceptor.intercept(invocation);
+
+        // then
+        assertEquals("success", resultName);
+    }
+
+    /**
+     * Integration regression for WW-5535: exercise the full wildcard resolution path through
+     * a real {@link org.apache.struts2.DefaultActionProxy} (not a MockActionProxy).
+     * <p>
+     * Config: {@code <action name="Wild-*" class="HttpMethodsTestAction" method="{1}">} —
+     * URL {@code Wild-execute} resolves to method {@code execute()} inherited from
+     * {@code ActionSupport} (no method-level HTTP annotation). The class carries
+     * {@code @AllowedHttpMethod(POST)}, so GET must be rejected end-to-end.
+     */
+    public void testWildcardResolvedExecuteRejectsGetThroughRealProxy() throws Exception {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(
+            "org/apache/struts2/config/providers/xwork-test-allowed-methods.xml"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/Wild-execute");
+        Map<String, Object> extraContext = ActionContext.of()
+            .withServletRequest(request)
+            .getContextMap();
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "Wild-execute", null, extraContext);
+
+        // sanity: confirms the WW-5535 fix in DefaultActionProxy.resolveMethod() is wired up
+        assertEquals("execute", proxy.getMethod());
+        assertTrue("Wildcard-resolved method must report isMethodSpecified()=true", proxy.isMethodSpecified());
+
+        HttpMethodInterceptor realInterceptor = new HttpMethodInterceptor();
+        String result = realInterceptor.intercept(proxy.getInvocation());
+
+        // class-level @AllowedHttpMethod(POST) must still be enforced even though the resolved
+        // method carries no method-level annotation — this is what #1690 fixed
+        assertEquals("bad-request", result);
     }
 
     private void prepareRequest(String httpMethod) {

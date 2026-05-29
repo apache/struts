@@ -26,9 +26,11 @@ import org.apache.tiles.core.definition.DefinitionsFactoryException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -266,6 +268,27 @@ public class TestDigesterDefinitionsReader {
     @Test
     public void testReadNoSource() {
         assertNull(reader.read(null));
+    }
+
+    /**
+     * Tests that the Digester parser is protected against Billion Laughs (XML Entity Expansion) attack.
+     * FEATURE_SECURE_PROCESSING is enabled in DigesterDefinitionsReader to limit entity expansion.
+     */
+    @Test(expected = DefinitionsFactoryException.class)
+    public void testBillionLaughsProtection() {
+        String xml = "<?xml version=\"1.0\"?>" +
+            "<!DOCTYPE root [" +
+            "<!ENTITY lol0 \"lol\">" +
+            "<!ENTITY lol1 \"&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;&lol0;\">" +
+            "<!ENTITY lol2 \"&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;\">" +
+            "<!ENTITY lol3 \"&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;\">" +
+            "<!ENTITY lol4 \"&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;\">" +
+            "<!ENTITY lol5 \"&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;\">" +
+            "]>" +
+            "<root>&lol5;</root>";
+
+        InputStream source = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        reader.read(source);
     }
 
     /**

@@ -30,7 +30,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +92,11 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
         if (config != null && config.startsWith("file:/")) {
             int pos = config.lastIndexOf(':');
             configLine = Integer.parseInt(config.substring(pos + 1));
-            configLines = read(new URL(config.substring(0, pos)).openStream(), configLine);
+            String fileUrl = config.substring(0, pos);
+            Path configPath = resolveAllowedConfigPath(fileUrl);
+            if (configPath != null) {
+                configLines = read(Files.newInputStream(configPath), configLine);
+            }
         }
         return SUCCESS;
     }
@@ -225,6 +231,29 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             }
         }
         return snippet;
+    }
+
+    /**
+     * Resolves the given file URL to a real path if it points to an XML file within the webapp's
+     * deployment directory, preventing arbitrary file reads via crafted config parameters.
+     *
+     * @return the resolved path if allowed, or null if the path is outside the webapp or not an XML file
+     */
+    private Path resolveAllowedConfigPath(String fileUrl) {
+        try {
+            Path filePath = Path.of(new URI(fileUrl)).toRealPath();
+            String realBasePath = servletContext.getRealPath("/");
+            if (realBasePath == null) {
+                return null;
+            }
+            Path basePath = Path.of(realBasePath).toRealPath();
+            if (filePath.startsWith(basePath) && filePath.toString().endsWith(".xml")) {
+                return filePath;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

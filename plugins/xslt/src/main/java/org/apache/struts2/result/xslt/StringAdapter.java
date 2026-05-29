@@ -18,13 +18,10 @@
  */
 package org.apache.struts2.result.xslt;
 
-import org.apache.struts2.util.DomHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,16 +36,12 @@ import java.util.List;
  *
  * <p>
  * Subclasses may override the getStringValue() method in order to use StringAdapter
- * as a simplified custom XML adapter for Java types.  A subclass can enable XML
- * parsing of the value string via the setParseStringAsXML() method and then
- * override getStringValue() to return a String containing the custom formatted XML.
+ * as a simplified custom XML adapter for Java types.
  * </p>
  */
 public class StringAdapter extends AbstractAdapterElement {
 
     private static final Logger LOG = LogManager.getLogger(StringAdapter.class);
-
-    boolean parseStringAsXML;
 
     public StringAdapter() {
     }
@@ -58,16 +51,11 @@ public class StringAdapter extends AbstractAdapterElement {
     }
 
     /**
-     * <p>
      * Get the object to be adapted as a String value.
-     * </p>
      *
      * <p>
      * This method can be overridden by subclasses that wish to use StringAdapter
-     * as a simplified customizable XML adapter for Java types. A subclass can
-     * enable parsing of the value string as containing XML text via the
-     * setParseStringAsXML() method and then override getStringValue() to return a
-     * String containing the custom formatted XML.
+     * as a simplified customizable XML adapter for Java types.
      * </p>
      *
      * @return the string value
@@ -78,17 +66,8 @@ public class StringAdapter extends AbstractAdapterElement {
 
     @Override
     protected List<Node> buildChildAdapters() {
-        Node node;
-        if (getParseStringAsXML()) {
-            LOG.debug("parsing string as xml: {}", getStringValue());
-            // Parse the String to a DOM, then proxy that as our child
-            node = DomHelper.parse(new InputSource(new StringReader(getStringValue())));
-            node = getAdapterFactory().proxyNode(this, node);
-        } else {
-            LOG.debug("using string as is: {}", getStringValue());
-            // Create a Text node as our child
-            node = new SimpleTextNode(getAdapterFactory(), this, "text", getStringValue());
-        }
+        LOG.debug("using string as is: {}", getStringValue());
+        Node node = new SimpleTextNode(getAdapterFactory(), this, "text", getStringValue());
 
         List<Node> children = new ArrayList<>();
         children.add(node);
@@ -96,26 +75,23 @@ public class StringAdapter extends AbstractAdapterElement {
     }
 
     /**
-     * @return is this StringAdapter to interpret its string values as containing
-     * XML Text?
-     *
-     * @see #setParseStringAsXML(boolean)
+     * @return always returns false
+     * @deprecated This feature has been removed for security reasons (potential XML Entity Expansion attacks).
+     *             This method now always returns false and will be removed in a future version.
      */
+    @Deprecated(forRemoval = true, since = "7.2.0")
     public boolean getParseStringAsXML() {
-        return parseStringAsXML;
+        return false;
     }
 
     /**
-     * When set to true the StringAdapter will interpret its String value
-     * as containing XML text and parse it to a DOM Element.  The new DOM
-     * Element will be a child of this String element. (i.e. wrapped in an
-     * element of the property name specified for this StringAdapter).
-     *
-     * @param parseStringAsXML when set to true the StringAdapter will interpret its String value as containing XML text
-     * @see #getParseStringAsXML()
+     * @param parseStringAsXML ignored
+     * @deprecated This feature has been removed for security reasons (potential XML Entity Expansion attacks).
+     *             This method is now a no-op and will be removed in a future version.
      */
+    @Deprecated(forRemoval = true, since = "7.2.0")
     public void setParseStringAsXML(boolean parseStringAsXML) {
-        this.parseStringAsXML = parseStringAsXML;
+        // no-op - feature removed for security reasons
     }
 
 }

@@ -23,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.action.ParameterNameAware;
@@ -66,10 +65,7 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
-import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
 import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
 import static org.apache.struts2.util.DebugUtils.notifyDeveloperOfError;
 
@@ -100,6 +96,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
     private Set<Pattern> acceptedValuePatterns = null;
+    private ParameterAuthorizer parameterAuthorizer;
+    private transient ParameterAllowlister parameterAllowlister;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -119,6 +117,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setProxyService(ProxyService proxyService) {
         this.proxyService = proxyService;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
+    }
+
+    @Inject
+    public void setParameterAllowlister(ParameterAllowlister parameterAllowlister) {
+        this.parameterAllowlister = parameterAllowlister;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -352,6 +360,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * Checks if the Action class member corresponding to a parameter is appropriately annotated with
      * {@link StrutsParameter} and OGNL allowlists any necessary classes.
      * <p>
+     * Authorization is delegated to {@link ParameterAuthorizer}. If authorized, OGNL allowlisting is performed as a
+     * second pass (this is specific to the OGNL-based parameter injection path and not shared with other input channels).
+     * <p>
      * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#NESTING_CHARS} and may also
      * be adversely impacted by the use of custom OGNL property accessors.
      */
@@ -360,23 +371,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
-        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+        Object target = parameterAuthorizer.resolveTarget(action);
 
-        if (action instanceof ModelDriven<?> && !ActionContext.getContext().getValueStack().peek().equals(action)) {
-            LOG.debug("Model driven Action detected, exempting from @StrutsParameter annotation requirement");
-            return true;
+        // Delegate authorization check to shared ParameterAuthorizer (no OGNL side effects)
+        if (!parameterAuthorizer.isAuthorized(name, target, action)) {
+            return false;
         }
 
-        if (requireAnnotationsTransitionMode && paramDepth == 0) {
-            LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement", name);
-            return true;
-        }
-
-        int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
-        String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
-        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
-
-        return hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
+        parameterAllowlister.primeAllowlistForPath(name, target);
+        return true;
     }
 
     /**

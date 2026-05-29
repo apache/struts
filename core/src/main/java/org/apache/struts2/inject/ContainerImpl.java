@@ -651,6 +651,25 @@ class ContainerImpl implements Container {
         void inject(InternalContext context, Object o);
     }
 
+    /**
+     * Clears all internal caches, factory maps, and ThreadLocals to release
+     * Class references that would otherwise pin the webapp classloader after undeploy.
+     * <p>
+     * The {@code injectors} and {@code constructors} ReferenceCache maps hold
+     * {@code Class<?>} keys and reflection accessor objects ({@code Method},
+     * {@code Constructor}) whose JDK-generated {@code DelegatingClassLoader}
+     * instances retain the webapp classloader as their parent.
+     *
+     * @since 7.2.0
+     */
+    @Override
+    public void destroy() {
+        injectors.clear();
+        constructors.clear();
+        localContext.remove();
+        localScopeStrategy.remove();
+    }
+
     static class MissingDependencyException extends Exception {
         MissingDependencyException(String message) {
             super(message);

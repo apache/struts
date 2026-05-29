@@ -18,11 +18,14 @@
  */
 package org.apache.struts2.util;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.ognl.OgnlUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -33,6 +36,13 @@ import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.strip;
 
 public class ConfigParseUtil {
+    // Size the cache to prevent excessive memory usage in environments with many classloaders and/or large numbers of classes being validated.
+    // While still providing a reasonable caching benefit for common cases (e.g. multiple Struts instances in the same container, or multiple calls to validate the same class across different containers).
+    private static final int MAX_CLASS_CACHE_SIZE = 50;
+
+    private static final Cache<ClassLookupKey, Class<?>> VALIDATED_CLASS_CACHE = Caffeine.newBuilder()
+            .maximumSize(MAX_CLASS_CACHE_SIZE)
+            .build();
 
     private ConfigParseUtil() {
     }
@@ -73,12 +83,65 @@ public class ConfigParseUtil {
         Set<Class<?>> classes = new HashSet<>();
         for (String className : classNames) {
             try {
-                classes.add(validatingClassLoader.loadClass(className));
+                classes.add(loadAndCacheClass(validatingClassLoader, className));
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
         return classes;
+    }
+
+    private static Class<?> loadAndCacheClass(ClassLoader validatingClassLoader, String className) throws ClassNotFoundException {
+        ClassLookupKey lookupKey = new ClassLookupKey(classLoaderName(validatingClassLoader), className);
+
+        try {
+            return VALIDATED_CLASS_CACHE.get(lookupKey, key -> {
+                try {
+                    return validatingClassLoader.loadClass(key.className);
+                } catch (ClassNotFoundException e) {
+                    throw new ClassLookupException(e);
+                }
+            });
+        } catch (ClassLookupException e) {
+            throw (ClassNotFoundException) e.getCause();
+        }
+    }
+
+    private static String classLoaderName(ClassLoader classLoader) {
+        return String.valueOf(classLoader);
+    }
+
+    private static final class ClassLookupKey {
+        private final String classLoaderName;
+        private final String className;
+
+        private ClassLookupKey(String classLoaderName, String className) {
+            this.classLoaderName = classLoaderName;
+            this.className = className;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ClassLookupKey that = (ClassLookupKey) o;
+            return Objects.equals(classLoaderName, that.classLoaderName) && Objects.equals(className, that.className);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(classLoaderName, className);
+        }
+    }
+
+    private static final class ClassLookupException extends RuntimeException {
+        private ClassLookupException(ClassNotFoundException cause) {
+            super(cause);
+        }
     }
 
     public static Set<String> toPackageNamesSet(String newDelimitedPackageNames) throws ConfigurationException {

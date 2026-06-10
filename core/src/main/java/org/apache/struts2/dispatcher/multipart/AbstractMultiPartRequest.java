@@ -19,6 +19,7 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.AbstractFileUpload;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
@@ -32,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.inject.Inject;
 
@@ -59,6 +61,12 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
 
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
+
+    /**
+     * Verified once per JVM: whether the commons-fileupload2 API on the classpath matches what
+     * Struts compiled against. Guards against a mismatched milestone resolving at runtime.
+     */
+    private static volatile boolean fileUploadApiVerified;
 
     /**
      * Defines the internal buffer size used during streaming operations.
@@ -211,6 +219,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     protected JakartaServletDiskFileUpload prepareServletFileUpload(Charset charset, Path saveDir) {
+        ensureFileUploadApiVerified();
         JakartaServletDiskFileUpload servletFileUpload = createJakartaFileUpload(charset, saveDir);
 
         if (maxSize != null) {
@@ -226,6 +235,48 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             servletFileUpload.setMaxFileSize(maxFileSize);
         }
         return servletFileUpload;
+    }
+
+    /**
+     * Verifies once per JVM that the commons-fileupload2 API on the classpath matches what Struts
+     * compiled against, failing fast with an actionable message instead of a deep-stack
+     * {@link NoSuchMethodError} when a mismatched milestone is resolved.
+     */
+    private void ensureFileUploadApiVerified() {
+        if (!fileUploadApiVerified) {
+            verifyFileUploadApi(JakartaServletDiskFileUpload.class);
+            fileUploadApiVerified = true;
+        }
+    }
+
+    /**
+     * Probes {@code uploadClass} for the size-limit setters Struts invokes in
+     * {@link #prepareServletFileUpload}. Package-private for testing.
+     *
+     * @param uploadClass the file upload class to verify
+     * @throws StrutsException if any required method is absent, indicating a binary-incompatible
+     *                         commons-fileupload2 version on the classpath
+     */
+    static void verifyFileUploadApi(Class<?> uploadClass) {
+        for (String method : new String[]{"setMaxSize", "setMaxFileCount", "setMaxFileSize"}) {
+            try {
+                uploadClass.getMethod(method, long.class);
+            } catch (NoSuchMethodException e) {
+                throw new StrutsException(String.format(
+                        "Incompatible Apache Commons FileUpload on the classpath: %s.%s(long) is missing. " +
+                                "Detected commons-fileupload2-core version [%s] and commons-fileupload2-jakarta-servlet6 version [%s]. " +
+                                "Align commons-fileupload2-core with commons-fileupload2-jakarta-servlet6 (use the same release for both).",
+                        uploadClass.getName(), method,
+                        implementationVersion(AbstractFileUpload.class),
+                        implementationVersion(uploadClass)), e);
+            }
+        }
+    }
+
+    private static String implementationVersion(Class<?> clazz) {
+        Package pkg = clazz.getPackage();
+        String version = pkg != null ? pkg.getImplementationVersion() : null;
+        return version != null ? version : "unknown";
     }
 
     protected RequestContext createRequestContext(HttpServletRequest request) {

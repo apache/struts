@@ -242,7 +242,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * compiled against, failing fast with an actionable message instead of a deep-stack
      * {@link NoSuchMethodError} when a mismatched milestone is resolved.
      */
-    private void ensureFileUploadApiVerified() {
+    private static void ensureFileUploadApiVerified() {
         if (!fileUploadApiVerified) {
             verifyFileUploadApi(JakartaServletDiskFileUpload.class);
             fileUploadApiVerified = true;

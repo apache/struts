@@ -27,7 +27,13 @@ import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
+import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.util.ProxyService;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
+import java.beans.IntrospectionException;
 import java.util.*;
 
 /**
@@ -148,6 +154,151 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.intercept(invocation);
     }
 
+
+    private StrutsParameterAuthorizer buildAuthorizer(boolean requireAnnotations, boolean transitionMode) {
+        StrutsParameterAuthorizer authorizer = new StrutsParameterAuthorizer();
+        authorizer.setOgnlUtil(container.getInstance(OgnlUtil.class));
+        authorizer.setProxyService(container.getInstance(ProxyService.class));
+        authorizer.setRequireAnnotations(String.valueOf(requireAnnotations));
+        authorizer.setRequireAnnotationsTransitionMode(String.valueOf(transitionMode));
+        return authorizer;
+    }
+
+    private void enableChainingEnforcement(boolean requireAnnotations, boolean transitionMode) {
+        interceptor.setParameterAuthorizer(buildAuthorizer(requireAnnotations, transitionMode));
+        interceptor.setRequireAnnotations("true");
+    }
+
+    public void testFlagOffCopiesUnannotatedProperty() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        interceptor.intercept(invocation);
+
+        assertTrue("legacy chaining should copy the property when flag is off", target.getManagerApproved());
+    }
+
+    public void testFlagOnSkipsUnannotatedProperty() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("unannotated target property must NOT be copied when enforcement is on",
+                target.getManagerApproved());
+    }
+
+    public void testFlagOnCopiesAnnotatedProperty() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        AnnotatedChainingAction target = new AnnotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertTrue("annotated target property should be copied when enforcement is on",
+                target.getManagerApproved());
+    }
+
+    public void testTransitionModeCopiesNonNestedUnannotatedProperty() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        enableChainingEnforcement(true, true);
+        interceptor.intercept(invocation);
+
+        assertTrue("transition mode should copy depth-0 property without annotation",
+                target.getManagerApproved());
+    }
+
+    public void testRequireAnnotationsFalseIsNoOp() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        interceptor.setParameterAuthorizer(buildAuthorizer(false, false));
+        interceptor.setRequireAnnotations("true");
+        interceptor.intercept(invocation);
+
+        assertTrue("when global requireAnnotations is off, enforcement is a no-op",
+                target.getManagerApproved());
+    }
+
+    public void testEnforcementStillFiltersWithIncludesConfigured() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        interceptor.setIncludes("managerApproved");
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("unauthorized property must be excluded even when listed in includes",
+                target.getManagerApproved());
+    }
+
+    public void testEnforcementResolvesProxiedTargetClass() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        UnannotatedChainingAction target = new UnannotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        ProxyService proxyService = Mockito.mock(ProxyService.class);
+        Mockito.when(proxyService.isProxy(ArgumentMatchers.any())).thenReturn(true);
+        Mockito.when(proxyService.ultimateTargetClass(ArgumentMatchers.any()))
+                .thenReturn((Class) UnannotatedChainingAction.class);
+        interceptor.setProxyService(proxyService);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("proxied unannotated target property must NOT be copied", target.getManagerApproved());
+    }
+
+    public void testFailsClosedWhenTargetCannotBeIntrospected() throws Exception {
+        AnnotatedChainingAction source = new AnnotatedChainingAction();
+        source.setManagerApproved(true);
+        AnnotatedChainingAction target = new AnnotatedChainingAction();
+        mockInvocation.matchAndReturn("getAction", target);
+        stack.push(source);
+        stack.push(target);
+
+        // Introspection failure must fail closed: copy nothing, even for an annotated property.
+        OgnlUtil ognlUtil = Mockito.mock(OgnlUtil.class);
+        Mockito.when(ognlUtil.getBeanInfo(ArgumentMatchers.any(Class.class)))
+                .thenThrow(new IntrospectionException("boom"));
+        interceptor.setOgnlUtil(ognlUtil);
+
+        enableChainingEnforcement(true, false);
+        interceptor.intercept(invocation);
+
+        assertFalse("nothing should be copied when the target cannot be introspected",
+                target.getManagerApproved());
+    }
 
     @Override
     protected void setUp() throws Exception {

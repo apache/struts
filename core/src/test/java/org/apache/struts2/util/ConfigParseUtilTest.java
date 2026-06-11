@@ -73,6 +73,18 @@ public class ConfigParseUtilTest extends TestCase {
         assertEquals(1, secondLoader.getStringClassLoads());
     }
 
+    public void testValidateClassesSeparatesEntriesAcrossDifferentClassLoadersWithSameToString() {
+        CountingClassLoader firstLoader = new CountingClassLoader(getClass().getClassLoader(), "same-loader-name");
+        CountingClassLoader secondLoader = new CountingClassLoader(getClass().getClassLoader(), "same-loader-name");
+        Set<String> classNames = Collections.singleton(String.class.getName());
+
+        ConfigParseUtil.validateClasses(classNames, firstLoader);
+        ConfigParseUtil.validateClasses(classNames, secondLoader);
+
+        assertEquals(1, firstLoader.getStringClassLoads());
+        assertEquals(1, secondLoader.getStringClassLoads());
+    }
+
     public void testValidateClassesCacheIsLimitedTo50Entries() {
         Set<String> classNames = Collections.singleton(String.class.getName());
 
@@ -119,6 +131,46 @@ public class ConfigParseUtilTest extends TestCase {
         }
 
         assertEquals(2, missingClassLoads[0]);
+    }
+
+    public void testValidateClassesLoadsMultipleDifferentClassesPerLoaderOnce() {
+        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "multi-class-loader");
+        Set<String> classNames = new java.util.HashSet<>();
+        classNames.add(String.class.getName());
+        classNames.add(Integer.class.getName());
+        classNames.add(Boolean.class.getName());
+
+        ConfigParseUtil.validateClasses(classNames, loader);
+        ConfigParseUtil.validateClasses(classNames, loader);
+
+        assertEquals(1, loader.getStringClassLoads());
+    }
+
+    public void testValidateClassesNestedCacheIsReusedForSameLoader() {
+        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "reuse-cache-loader");
+        Set<String> classNames = Collections.singleton(String.class.getName());
+
+        ConfigParseUtil.validateClasses(classNames, loader);
+        int firstCallLoadCount = loader.getStringClassLoads();
+
+        ConfigParseUtil.validateClasses(classNames, loader);
+        int secondCallLoadCount = loader.getStringClassLoads();
+
+        assertEquals(1, firstCallLoadCount);
+        assertEquals(1, secondCallLoadCount);
+    }
+
+    public void testValidateClassesEnforcesMaximumCacheSize() {
+        Set<String> classNames = Collections.singleton(String.class.getName());
+        Cache<Object, Object> cache = validatedClassCache();
+
+        for (int i = 0; i < 60; i++) {
+            CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "size-limit-loader-" + i);
+            ConfigParseUtil.validateClasses(classNames, loader);
+        }
+
+        cache.cleanUp();
+        assertTrue("Cache size should not exceed 50 after loading 60 loaders", cache.estimatedSize() <= 50);
     }
 
     @SuppressWarnings("unchecked")

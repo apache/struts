@@ -25,7 +25,6 @@ import org.apache.struts2.ognl.OgnlUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,7 +39,9 @@ public class ConfigParseUtil {
     // While still providing a reasonable caching benefit for common cases (e.g. multiple Struts instances in the same container, or multiple calls to validate the same class across different containers).
     private static final int MAX_CLASS_CACHE_SIZE = 50;
 
-    private static final Cache<ClassLookupKey, Class<?>> VALIDATED_CLASS_CACHE = Caffeine.newBuilder()
+    private static final Cache<ClassLoader, Cache<String, Class<?>>> VALIDATED_CLASS_CACHE = Caffeine.newBuilder()
+            .weakKeys()
+            .weakValues()
             .maximumSize(MAX_CLASS_CACHE_SIZE)
             .build();
 
@@ -92,52 +93,28 @@ public class ConfigParseUtil {
     }
 
     private static Class<?> loadAndCacheClass(ClassLoader validatingClassLoader, String className) throws ClassNotFoundException {
-        ClassLookupKey lookupKey = new ClassLookupKey(classLoaderName(validatingClassLoader), className);
+        Cache<String, Class<?>> classLoaderCache = VALIDATED_CLASS_CACHE.get(validatingClassLoader,
+                key -> Caffeine.newBuilder().weakValues().build());
 
         try {
-            return VALIDATED_CLASS_CACHE.get(lookupKey, key -> {
+            return classLoaderCache.get(className, key -> {
                 try {
-                    return validatingClassLoader.loadClass(key.className);
+                    return validatingClassLoader.loadClass(key);
                 } catch (ClassNotFoundException e) {
                     throw new ClassLookupException(e);
                 }
             });
         } catch (ClassLookupException e) {
+            // The ClassLookupException only serves to wrap the checked ClassNotFoundException thrown by ClassLoader.loadClass.
             throw (ClassNotFoundException) e.getCause();
         }
     }
-
-    private static String classLoaderName(ClassLoader classLoader) {
-        return String.valueOf(classLoader);
-    }
-
-    private static final class ClassLookupKey {
-        private final String classLoaderName;
-        private final String className;
-
-        private ClassLookupKey(String classLoaderName, String className) {
-            this.classLoaderName = classLoaderName;
-            this.className = className;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            ClassLookupKey that = (ClassLookupKey) o;
-            return Objects.equals(classLoaderName, that.classLoaderName) && Objects.equals(className, that.className);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(classLoaderName, className);
-        }
-    }
-
+    
+    /**
+     * This is a wrapper class to allow the checked ClassNotFoundException thrown by ClassLoader.loadClass to be propagated
+     * We should always be able to unwrap this exception without risk of ClassCastException since the only code that can throw it is the mapping function passed to the cache
+     * and it only ever throws this wrapper with a ClassNotFoundException cause.
+     */
     private static final class ClassLookupException extends RuntimeException {
         private ClassLookupException(ClassNotFoundException cause) {
             super(cause);

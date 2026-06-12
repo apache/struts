@@ -37,12 +37,14 @@ import static org.apache.commons.lang3.StringUtils.strip;
 public class ConfigParseUtil {
     // Size the cache to prevent excessive memory usage in environments with many classloaders and/or large numbers of classes being validated.
     // While still providing a reasonable caching benefit for common cases (e.g. multiple Struts instances in the same container, or multiple calls to validate the same class across different containers).
-    private static final int MAX_CLASS_CACHE_SIZE = 50;
+    // The cache is sized to allow for some level of caching across multiple classloaders, while still allowing for a reasonable number of classes to be cached per classloader.
+    private static final int MAX_CLASSLOADER_CACHE_SIZE = 25;
+    // The cache for validated classes is a two-level cache, with the first level keyed by ClassLoader and the second level keyed by class name.
+    private static final int MAX_CLASS_CACHE_PER_LOADER_SIZE = 50;
 
     private static final Cache<ClassLoader, Cache<String, Class<?>>> VALIDATED_CLASS_CACHE = Caffeine.newBuilder()
             .weakKeys()
-            .weakValues()
-            .maximumSize(MAX_CLASS_CACHE_SIZE)
+            .maximumSize(MAX_CLASSLOADER_CACHE_SIZE)
             .build();
 
     private ConfigParseUtil() {
@@ -94,7 +96,7 @@ public class ConfigParseUtil {
 
     private static Class<?> loadAndCacheClass(ClassLoader validatingClassLoader, String className) throws ClassNotFoundException {
         Cache<String, Class<?>> classLoaderCache = VALIDATED_CLASS_CACHE.get(validatingClassLoader,
-                key -> Caffeine.newBuilder().weakValues().build());
+                key -> Caffeine.newBuilder().weakValues().maximumSize(MAX_CLASS_CACHE_PER_LOADER_SIZE).build());
 
         try {
             return classLoaderCache.get(className, key -> {
@@ -109,7 +111,7 @@ public class ConfigParseUtil {
             throw (ClassNotFoundException) e.getCause();
         }
     }
-    
+
     /**
      * This is a wrapper class to allow the checked ClassNotFoundException thrown by ClassLoader.loadClass to be propagated
      * We should always be able to unwrap this exception without risk of ClassCastException since the only code that can throw it is the mapping function passed to the cache

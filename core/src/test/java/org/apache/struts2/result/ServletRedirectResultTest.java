@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 import static jakarta.servlet.http.HttpServletResponse.SC_SEE_OTHER;
 import static org.easymock.EasyMock.createControl;
 import static org.easymock.EasyMock.createMock;
@@ -141,6 +142,33 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
             fail();
         }
         assertEquals("/context/bar/foo.jsp", writer.toString());
+    }
+
+    public void testStatusCode200LocationIsHtmlEscapedInBody() {
+        String maliciousLocation = "/bar/foo.jsp?next=<script>alert(1)</script>&x=1";
+        String expandedLocation = "/context" + maliciousLocation;
+        String expectedBody = "/context/bar/foo.jsp?next=&lt;script&gt;alert(1)&lt;/script&gt;&amp;x=1";
+
+        view.setLocation(maliciousLocation);
+        view.setStatusCode(SC_OK);
+        responseMock.expectAndReturn("encodeRedirectURL", expandedLocation, expandedLocation);
+        responseMock.expect("setStatus", C.args(C.eq(SC_OK)));
+        responseMock.expect("setHeader", C.args(C.eq("Location"), C.eq(expandedLocation)));
+        StringWriter writer = new StringWriter();
+        responseMock.matchAndReturn("getWriter", new PrintWriter(writer));
+
+        try {
+            view.execute(ai);
+            requestMock.verify();
+            responseMock.verify();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+      }
+
+        assertEquals(expectedBody, writer.toString());
+        assertFalse("response body must not contain a raw <script> tag",
+            writer.toString().contains("<script>"));
     }
 
     public void testAbsoluteRedirectAnchor() {

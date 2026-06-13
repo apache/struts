@@ -26,6 +26,7 @@ import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -248,7 +249,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 response.setStatus(statusCode);
                 response.setHeader("Location", finalLocation);
                 try {
-                    response.getWriter().write(finalLocation);
+                    response.getWriter().write(StringEscapeUtils.escapeHtml4(finalLocation));
                 } finally {
                     response.getWriter().close();
                 }

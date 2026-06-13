@@ -119,7 +119,7 @@
         <commons-fileupload2.version>2.0.0-M5</commons-fileupload2.version>
         <freemarker.version>2.3.34</freemarker.version>
         <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
-        <jackson.version>2.21.3</jackson.version>
+        <jackson.version>2.22.0</jackson.version>
         <jakarta-ee.version>10.0.0</jakarta-ee.version>
         <jaxb-impl.version>4.0.8</jaxb-impl.version>
         <log4j2.version>2.26.0</log4j2.version>

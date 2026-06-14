@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +30,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * TokenHelper
@@ -186,9 +188,14 @@ public class TokenHelper {
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
                 LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
-                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
-                        token, sessionToken
+                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the expected session token.", new Object[]{
+                        normalizeSpace(token)
                 }));
+            }
+            Dispatcher dispatcher = Dispatcher.getInstance();
+            if (dispatcher != null && dispatcher.isDevMode()) {
+                LOG.warn("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
+                        normalizeSpace(tokenName), normalizeSpace(token), sessionToken);
             }
 
             return false;

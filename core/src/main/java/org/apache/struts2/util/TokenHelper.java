@@ -29,6 +29,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * TokenHelper
@@ -186,10 +187,10 @@ public class TokenHelper {
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
                 LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
-                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
-                        token, sessionToken
-                }));
-            }
+                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "The provided form token does not match the expected session token.", new Object[0]));
+			}   
+            LOG.debug("Token mismatch for token name [{}]: form token present [{}], session token present [{}]",    
+                    normalizeSpace(tokenName), token != null, sessionToken != null);
 
             return false;
         }

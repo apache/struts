@@ -187,10 +187,14 @@ public class TokenHelper {
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
                 LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
-                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "The provided form token does not match the expected session token.", new Object[0]));
-			}   
-            LOG.debug("Token mismatch for token name [{}]: form token present [{}], session token present [{}]",    
-                    normalizeSpace(tokenName), token != null, sessionToken != null);
+                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the expected session token.", new Object[]{
+                        normalizeSpace(token)
+                }));
+            }
+            if (ActionContext.getContext().isDevMode()) {
+                LOG.warn("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
+                        normalizeSpace(tokenName), normalizeSpace(token), sessionToken);
+            }
 
             return false;
         }

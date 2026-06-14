@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.logging.log4j.LogManager;
@@ -191,8 +192,9 @@ public class TokenHelper {
                         normalizeSpace(token)
                 }));
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
+            Dispatcher dispatcher = Dispatcher.getInstance();
+            if (dispatcher != null && dispatcher.isDevMode()) {
+                LOG.warn("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
                         normalizeSpace(tokenName), normalizeSpace(token), sessionToken);
             }
 

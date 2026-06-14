@@ -20,50 +20,65 @@ package com.opensymphony.xwork2.util;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class ConfigParseUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ConfigParseUtilTest {
+
+    @Before
+    public void setUp() {
         validatedClassCache().invalidateAll();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         validatedClassCache().invalidateAll();
-        super.tearDown();
     }
 
-    public void testValidateClassesCachesByClassLoaderAndClassName() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "loader-one");
-        Set<String> classNames = Collections.singleton(String.class.getName());
+    /**
+     * (a) Single-loader caching: one loader validates several distinct classes; repeating the call
+     * loads each class exactly once. Covers both "repeated calls hit the cache" and "the inner cache
+     * is keyed per class name".
+     */
+    @Test
+    public void testSameLoaderCachesEachDistinctClassOnce() {
+        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "single-loader");
+        Set<String> classNames = new HashSet<>();
+        classNames.add(String.class.getName());
+        classNames.add(Integer.class.getName());
+        classNames.add(Boolean.class.getName());
 
         ConfigParseUtil.validateClasses(classNames, loader);
         ConfigParseUtil.validateClasses(classNames, loader);
 
-        assertEquals(1, loader.getStringClassLoads());
+        assertEquals(1, loader.getLoadCount(String.class.getName()));
+        assertEquals(1, loader.getLoadCount(Integer.class.getName()));
+        assertEquals(1, loader.getLoadCount(Boolean.class.getName()));
     }
 
-    public void testValidateClassesCachesAcrossMultipleRepeatedCallsWithSameClassLoader() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "loader-one");
-        Set<String> classNames = Collections.singleton(String.class.getName());
-
-        for (int i = 0; i < 10; i++) {
-            ConfigParseUtil.validateClasses(classNames, loader);
-        }
-
-        assertEquals(1, loader.getStringClassLoads());
-    }
-
-    public void testValidateClassesSeparatesEntriesAcrossDifferentClassLoaders() {
-        CountingClassLoader firstLoader = new CountingClassLoader(getClass().getClassLoader(), "loader-one");
-        CountingClassLoader secondLoader = new CountingClassLoader(getClass().getClassLoader(), "loader-two");
+    /**
+     * (b) Per-loader isolation: the outer cache is keyed by classloader identity, not by toString().
+     * Two loaders that share the same toString() each load the class once, and re-validating one
+     * loader still hits its own cache.
+     */
+    @Test
+    public void testDifferentLoadersWithSameNameCacheIndependently() {
+        CountingClassLoader firstLoader = new CountingClassLoader(getClass().getClassLoader(), "same-name");
+        CountingClassLoader secondLoader = new CountingClassLoader(getClass().getClassLoader(), "same-name");
         Set<String> classNames = Collections.singleton(String.class.getName());
 
         ConfigParseUtil.validateClasses(classNames, firstLoader);
@@ -71,35 +86,18 @@ public class ConfigParseUtilTest extends TestCase {
 
         assertEquals(1, firstLoader.getStringClassLoads());
         assertEquals(1, secondLoader.getStringClassLoads());
-    }
 
-    public void testValidateClassesSeparatesEntriesAcrossDifferentClassLoadersWithSameToString() {
-        CountingClassLoader firstLoader = new CountingClassLoader(getClass().getClassLoader(), "same-loader-name");
-        CountingClassLoader secondLoader = new CountingClassLoader(getClass().getClassLoader(), "same-loader-name");
-        Set<String> classNames = Collections.singleton(String.class.getName());
-
+        // Re-validating the first loader still hits its own cache.
         ConfigParseUtil.validateClasses(classNames, firstLoader);
-        ConfigParseUtil.validateClasses(classNames, secondLoader);
-
         assertEquals(1, firstLoader.getStringClassLoads());
-        assertEquals(1, secondLoader.getStringClassLoads());
     }
 
-    public void testValidateClassesEnforcesOuterCacheMaximumSize() {
-        Set<String> classNames = Collections.singleton(String.class.getName());
-
-        for (int i = 0; i < 60; i++) {
-            CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "loader-" + i);
-            ConfigParseUtil.validateClasses(classNames, loader);
-        }
-
-        Cache<Object, Object> cache = validatedClassCache();
-        cache.cleanUp();
-
-        assertTrue("Outer cache size should not exceed configured maximum", cache.estimatedSize() <= outerCacheLimit());
-    }
-
-    public void testValidateClassesThrowsForNonExistingClassNameOnEachCall() {
+    /**
+     * Negative case: a missing class throws ConfigurationException (cause ClassNotFoundException) on
+     * every call, and the failure is not cached (each call re-attempts the load).
+     */
+    @Test
+    public void testMissingClassThrowsAndIsNotCached() {
         String missingClassName = "com.opensymphony.xwork2.util.NonExistingClassForValidationTest";
         Set<String> classNames = Collections.singleton(missingClassName);
         int[] missingClassLoads = new int[1];
@@ -133,151 +131,60 @@ public class ConfigParseUtilTest extends TestCase {
         assertEquals(2, missingClassLoads[0]);
     }
 
-    public void testValidateClassesLoadsMultipleDifferentClassesPerLoaderOnce() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "multi-class-loader");
-        Set<String> classNames = new java.util.HashSet<>();
-        classNames.add(String.class.getName());
-        classNames.add(Integer.class.getName());
-        classNames.add(Boolean.class.getName());
-
-        ConfigParseUtil.validateClasses(classNames, loader);
-        ConfigParseUtil.validateClasses(classNames, loader);
-
-        // Verify each class was loaded only once per loader through the cache
-        assertEquals(1, loader.getLoadCount(String.class.getName()));
-        assertEquals(1, loader.getLoadCount(Integer.class.getName()));
-        assertEquals(1, loader.getLoadCount(Boolean.class.getName()));
-    }
-
-    public void testValidateClassesNestedCacheIsReusedForSameLoader() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "reuse-cache-loader");
+    /**
+     * (c) Outer cache bound: registering more classloaders than the maximum keeps the outer cache at
+     * or below its configured size.
+     */
+    @Test
+    public void testOuterCacheBoundedByMaxClassloaders() {
         Set<String> classNames = Collections.singleton(String.class.getName());
 
-        ConfigParseUtil.validateClasses(classNames, loader);
-        int firstCallLoadCount = loader.getStringClassLoads();
-
-        ConfigParseUtil.validateClasses(classNames, loader);
-        int secondCallLoadCount = loader.getStringClassLoads();
-
-        assertEquals(1, firstCallLoadCount);
-        assertEquals(1, secondCallLoadCount);
-    }
-
-    public void testInnerCacheEnforcesMaximumSizePerClassLoader() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "many-classes-loader");
-        Set<String> classNames = new java.util.HashSet<>();
-        
-        // Use real built-in classes that are guaranteed to exist (70+ classes)
-        String[] realClasses = {
-            String.class.getName(), Integer.class.getName(), Long.class.getName(),
-            Double.class.getName(), Float.class.getName(), Boolean.class.getName(),
-            Character.class.getName(), Byte.class.getName(), Short.class.getName(),
-            Object.class.getName(), Class.class.getName(), Thread.class.getName(),
-            Exception.class.getName(), RuntimeException.class.getName(), java.io.File.class.getName(),
-            java.util.ArrayList.class.getName(), java.util.HashMap.class.getName(), 
-            java.util.HashSet.class.getName(), java.util.LinkedList.class.getName(),
-            java.util.TreeMap.class.getName(), java.util.regex.Pattern.class.getName(),
-            java.io.InputStream.class.getName(), java.io.OutputStream.class.getName(),
-            java.io.Reader.class.getName(), java.io.Writer.class.getName(),
-            java.net.URL.class.getName(), java.net.URI.class.getName(),
-            java.nio.file.Path.class.getName(), java.nio.file.Paths.class.getName(),
-            java.nio.file.Files.class.getName(), java.nio.file.StandardOpenOption.class.getName(),
-            java.lang.reflect.Method.class.getName(), java.lang.reflect.Field.class.getName(),
-            java.lang.reflect.Constructor.class.getName(), java.lang.annotation.Annotation.class.getName(),
-            java.util.concurrent.Future.class.getName(), java.util.concurrent.ExecutorService.class.getName(),
-            java.time.LocalDate.class.getName(), java.time.LocalTime.class.getName(),
-            java.time.LocalDateTime.class.getName(), java.time.ZonedDateTime.class.getName(),
-            java.time.Instant.class.getName(), java.time.Duration.class.getName(),
-            java.time.Period.class.getName(), java.util.stream.Stream.class.getName(),
-            java.util.stream.Collectors.class.getName(), java.util.Optional.class.getName(),
-            java.util.function.Function.class.getName(), java.util.function.Predicate.class.getName(),
-            java.util.function.Consumer.class.getName(), java.util.function.Supplier.class.getName(),
-            java.util.function.BiFunction.class.getName(), java.util.function.BiConsumer.class.getName(),
-            java.util.function.BiPredicate.class.getName(), java.lang.StringBuilder.class.getName(),
-            java.lang.StringBuffer.class.getName(), java.util.Collections.class.getName(),
-            java.util.Arrays.class.getName(), java.util.Objects.class.getName(),
-            java.util.UUID.class.getName(), java.util.Locale.class.getName(),
-            java.util.TimeZone.class.getName(), java.util.Calendar.class.getName(),
-            java.util.Date.class.getName(), java.util.GregorianCalendar.class.getName(),
-            java.util.Random.class.getName(), java.util.Scanner.class.getName(),
-            java.util.Formatter.class.getName(), java.util.Properties.class.getName(),
-            java.util.concurrent.ConcurrentHashMap.class.getName(), java.util.concurrent.atomic.AtomicInteger.class.getName(),
-            java.util.concurrent.atomic.AtomicLong.class.getName(), java.util.concurrent.locks.Lock.class.getName(),
-            java.util.concurrent.locks.ReentrantLock.class.getName(), java.lang.Comparable.class.getName(),
-            java.lang.Cloneable.class.getName(), java.io.Serializable.class.getName(),
-            java.nio.ByteBuffer.class.getName(), java.nio.CharBuffer.class.getName(),
-            java.nio.charset.Charset.class.getName(), java.security.MessageDigest.class.getName()
-        };
-        
-        // Add all real classes to the set (should be 72)
-        for (String className : realClasses) {
-            classNames.add(className);
+        for (int i = 0; i < outerCacheLimit() + 10; i++) {
+            CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "loader-" + i);
+            ConfigParseUtil.validateClasses(classNames, loader);
         }
 
-        assertTrue("Test setup requires more class names than inner cache capacity", classNames.size() > innerCacheLimit());
-        
+        Cache<Object, Object> cache = validatedClassCache();
+        cache.cleanUp();
+
+        assertTrue("Outer cache size should not exceed configured maximum",
+                cache.estimatedSize() <= outerCacheLimit());
+    }
+
+    /**
+     * (c) Inner cache bound: validating more class names than the per-loader maximum keeps that
+     * loader's inner cache at or below its configured size. Synthetic names are resolved to a real
+     * class so the count is driven by distinct keys, not by which JDK classes happen to exist.
+     */
+    @Test
+    public void testInnerCacheBoundedByMaxClassesPerLoader() {
+        int limit = innerCacheLimit();
+        ClassLoader loader = new ClassLoader(getClass().getClassLoader()) {
+            @Override
+            public Class<?> loadClass(String name) {
+                // Resolve any synthetic name to a strongly-reachable class so weakValues never evicts it.
+                return Object.class;
+            }
+
+            @Override
+            public String toString() {
+                return "inner-bound-loader";
+            }
+        };
+
+        Set<String> classNames = new LinkedHashSet<>();
+        for (int i = 0; i <= limit + 10; i++) {
+            classNames.add("synthetic.Class" + i);
+        }
+        assertTrue("Test must request more class names than the inner cache capacity",
+                classNames.size() > limit);
+
         ConfigParseUtil.validateClasses(classNames, loader);
 
         Cache<Object, Object> innerCache = innerCacheFor(loader);
         innerCache.cleanUp();
-        assertTrue("Inner cache size should not exceed configured maximum per loader", innerCache.estimatedSize() <= innerCacheLimit());
-    }
-
-    public void testInnerCacheIndependentPerClassLoader() {
-        CountingClassLoader loaderA = new CountingClassLoader(getClass().getClassLoader(), "loader-a");
-        CountingClassLoader loaderB = new CountingClassLoader(getClass().getClassLoader(), "loader-b");
-        
-        Set<String> classNamesA = new java.util.HashSet<>();
-        classNamesA.add(String.class.getName());
-        classNamesA.add(Integer.class.getName());
-        
-        Set<String> classNamesB = new java.util.HashSet<>();
-        classNamesB.add(Boolean.class.getName());
-        classNamesB.add(Double.class.getName());
-        
-        ConfigParseUtil.validateClasses(classNamesA, loaderA);
-        ConfigParseUtil.validateClasses(classNamesB, loaderB);
-        
-        // Validate load counts show independent caching - each loader loaded its own classes once
-        assertEquals(1, loaderA.getLoadCount(String.class.getName()));
-        assertEquals(1, loaderA.getLoadCount(Integer.class.getName()));
-        assertEquals(0, loaderB.getLoadCount(String.class.getName()));
-        assertEquals(1, loaderB.getLoadCount(Boolean.class.getName()));
-        assertEquals(1, loaderB.getLoadCount(Double.class.getName()));
-    }
-
-    public void testInnerCacheReusesCachedClassLookupForSameLoader() {
-        CountingClassLoader loader = new CountingClassLoader(getClass().getClassLoader(), "reload-test-loader");
-        Set<String> classNames = Collections.singleton(String.class.getName());
-        
-        // Load once
-        ConfigParseUtil.validateClasses(classNames, loader);
-        assertEquals(1, loader.getStringClassLoads());
-        
-        // Reload - should use cache
-        ConfigParseUtil.validateClasses(classNames, loader);
-        assertEquals(1, loader.getStringClassLoads());
-    }
-
-    public void testMultipleClassLoadersWithDistinctInnerCaches() {
-        CountingClassLoader loader1 = new CountingClassLoader(getClass().getClassLoader(), "distinct-1");
-        CountingClassLoader loader2 = new CountingClassLoader(getClass().getClassLoader(), "distinct-2");
-        CountingClassLoader loader3 = new CountingClassLoader(getClass().getClassLoader(), "distinct-3");
-        
-        Set<String> classNames = Collections.singleton(String.class.getName());
-        
-        ConfigParseUtil.validateClasses(classNames, loader1);
-        ConfigParseUtil.validateClasses(classNames, loader2);
-        ConfigParseUtil.validateClasses(classNames, loader3);
-        
-        // Each loader should have loaded String once independently
-        assertEquals(1, loader1.getLoadCount(String.class.getName()));
-        assertEquals(1, loader2.getLoadCount(String.class.getName()));
-        assertEquals(1, loader3.getLoadCount(String.class.getName()));
-        
-        // Revalidating with loader1 should still use cache
-        ConfigParseUtil.validateClasses(classNames, loader1);
-        assertEquals(1, loader1.getLoadCount(String.class.getName()));
+        assertTrue("Inner cache size should not exceed configured maximum per loader",
+                innerCache.estimatedSize() <= limit);
     }
 
     @SuppressWarnings("unchecked")
@@ -319,7 +226,7 @@ public class ConfigParseUtilTest extends TestCase {
 
     private static final class CountingClassLoader extends ClassLoader {
         private final String loaderName;
-        private final java.util.Map<String, Integer> loadCounts = new java.util.HashMap<>();
+        private final Map<String, Integer> loadCounts = new HashMap<>();
 
         private CountingClassLoader(ClassLoader parent, String loaderName) {
             super(parent);

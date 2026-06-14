@@ -18,10 +18,10 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -191,8 +191,8 @@ public class TokenHelper {
                         normalizeSpace(token)
                 }));
             }
-            if (ActionContext.getContext().isDevMode()) {
-                LOG.warn("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Token mismatch detail - token name [{}], form token [{}], session token [{}]",
                         normalizeSpace(tokenName), normalizeSpace(token), sessionToken);
             }
 

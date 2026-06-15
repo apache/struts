@@ -167,6 +167,21 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         // then
         assertTrue(manager.config.getWhitespaceStripping());
     }
+
+    // TEMP (WW-5256): documents the pre-fix bug; removed in the same change that removes the devMode coupling.
+    public void testWhitespaceStrippingNotDisabledInDevMode() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        manager.setWhitespaceStripping("true");
+        manager.setDevMode("true");
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertTrue(manager.config.getWhitespaceStripping());
+    }
 }
 
 class DummyFreemarkerManager extends FreemarkerManager {

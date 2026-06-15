@@ -177,7 +177,6 @@ public class FreemarkerManager {
     protected int mruMaxStrongSize;
     protected String templateUpdateDelay;
     protected boolean whitespaceStripping = true;
-    protected boolean devMode;
     protected Map<String, TagLibraryModelProvider> tagLibraries;
 
     private FileManager fileManager;
@@ -211,11 +210,6 @@ public class FreemarkerManager {
     @Inject(value = StrutsConstants.STRUTS_FREEMARKER_WHITESPACE_STRIPPING, required = false)
     public void setWhitespaceStripping(String whitespaceStripping) {
         this.whitespaceStripping = BooleanUtils.toBoolean(whitespaceStripping);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
-    public void setDevMode(String devMode) {
-        this.devMode = BooleanUtils.toBoolean(devMode);
     }
 
     @Inject
@@ -352,9 +346,8 @@ public class FreemarkerManager {
         }
         LOG.debug("Disabled localized lookups");
         configuration.setLocalizedLookup(false);
-        boolean enableWhitespaceStripping = whitespaceStripping && !devMode;
-        LOG.debug("Whitespace stripping: {} (configured: {}, devMode: {})", enableWhitespaceStripping, whitespaceStripping, devMode);
-        configuration.setWhitespaceStripping(enableWhitespaceStripping);
+        LOG.debug("Whitespace stripping: {}", whitespaceStripping);
+        configuration.setWhitespaceStripping(whitespaceStripping);
         LOG.debug("Sets NewBuiltinClassResolver to TemplateClassResolver.SAFER_RESOLVER");
         configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
         LOG.debug("Sets HTML as an output format and escaping policy");

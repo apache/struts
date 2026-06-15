@@ -335,7 +335,6 @@ public final class StrutsConstants {
     /**
      * Controls FreeMarker whitespace stripping during template compilation.
      * When enabled (default), removes indentation and trailing whitespace from lines containing only FTL tags.
-     * Automatically disabled when devMode is enabled.
      *
      * @since 7.2.0
      */

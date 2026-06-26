@@ -13,8 +13,9 @@ Before drafting any report, opening an issue, posting publicly, or reaching a se
    - read the Struts security policy,
    - read the Struts security guidelines,
    - check previously disclosed vulnerabilities and Security Bulletins.
-2. **Assess** the finding against the questions in [`SECURITY.md` § Assessment](SECURITY.md#assessment). If the answers do not still point to a likely new
-   framework vulnerability, stop and explain — do not draft a new report.
+2. **Assess** the finding against the questions in [`SECURITY.md` § Assessment](SECURITY.md#assessment), and route it through the disposition guide in
+   [`THREAT_MODEL.md`](THREAT_MODEL.md) (scope, trust boundaries, in-model security properties, and the known-non-findings list). If the answers do not still
+   point to a likely new framework vulnerability, stop and explain — do not draft a new report.
 3. **Report privately** to `security@struts.apache.org` following [`SECURITY.md` § Private Report Requirements](SECURITY.md#private-report-requirements) and
    [§ Report Quality Rules](SECURITY.md#report-quality-rules).
 

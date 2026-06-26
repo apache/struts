@@ -21,9 +21,10 @@
 - **Project:** Apache Struts (`apache/struts`), `main` @ HEAD (2026-06). Scope: the
   Struts framework in `apache/struts` only (the core MVC framework, its
   interceptors, tags, and the plugins shipped in this repo).
-- **Date:** 2026-06-24. **Author:** ASF Security team, drafted via the
-  threat-model-producer rubric (Scovetta) at the Struts PMC's request (path 3 —
-  chosen by Lukasz Lenart, 2026-06-24).
+- **Date:** 2026-06-24. **Drafted for PMC review** via the threat-model-producer
+  rubric (Scovetta). This is an unratified proposal, not an ASF Security team or
+  PMC position; authorship and sponsorship are settled only once the PMC adopts it
+  (see Status below and §14).
 - **Status:** DRAFT — not yet reviewed by the Struts PMC. Built as a strict
   superset of the existing [`SECURITY.md`](SECURITY.md) and the published
   [Struts security guidance](https://struts.apache.org/security/); every
@@ -127,7 +128,7 @@ links to them and assigns each a triage disposition (§13):
 - **Already-disclosed S2-series vulnerabilities** — a duplicate of an existing
   Security Bulletin/CVE is closed by reference (the
   [`SECURITY.md` "Before Reporting"](SECURITY.md) checks), not re-triaged.
-- **Examples, showcase, and test applications** shipped in the repo. *(inferred.)*
+- **Examples, showcase, and test applications** shipped in the repo. *(inferred — §14 Q-scope.)*
 
 ## §4 Trust boundaries and data flow
 
@@ -198,8 +199,10 @@ default set**, the triage rule needs ratifying: is "a finding that only works wi
 pre-7.0 default, or with a 7.0 hardening knob turned off" `OUT-OF-MODEL:
 non-default-config`, with §10 carrying "deploy current version with defaults"? — §14
 Q-default. The OGNL **Java Security Manager sandbox** (`-Dognl.security.manager`) is a
-separate, opt-in defence that **does not work on JDK 21+** *(documented)* — so the
-model cannot treat it as a relied-upon control on modern JDKs (§14 Q-jsm).
+separate, opt-in defence built on the JDK `SecurityManager`, which has been
+**deprecated for removal since JDK 17 (JEP 411), disabled by default since JDK 18,
+and permanently disabled in JDK 24 (JEP 486)** *(documented — JDK release notes)* —
+so on modern JDKs the model cannot treat it as a relied-upon control (§14 Q-jsm).
 
 ## §6 Assumptions about inputs
 
@@ -229,7 +232,7 @@ defaults is a developer error, not a framework flaw. *(documented.)*
   framework features, or DoS amplification. *(documented — the OGNL lineage is the
   framework's stated central concern.)*
 - **On-path network attacker** — only where the application/operator has not deployed
-  TLS; transport security is the app's, so this is largely out of model (§3). *(inferred.)*
+  TLS; transport security is the app's, so this is largely out of model (§3). *(inferred — §14 Q-env.)*
 - **Out of scope:** the application developer (writes trusted code/config); the
   operator (deploys, sets devMode/plugins); anyone with container/host/JVM control;
   and a developer who disables a default protection or follows a documented
@@ -284,8 +287,9 @@ Struts' security work.)*
   handing OGNL the attacker's string. *(documented.)*
 - **No hard anti-DoS guarantee** beyond the "avoid super-linear in input size"
   philosophy; generic flooding/streaming DoS is the operator's to absorb. *(documented.)*
-- **The OGNL Java Security Manager sandbox is not a relied-upon control on JDK 21+**
-  (it does not function there). *(documented.)*
+- **The OGNL Java Security Manager sandbox is not a relied-upon control on modern
+  JDKs** (the underlying `SecurityManager` is deprecated for removal since JDK 17 and
+  permanently disabled in JDK 24; see §5a). *(documented.)*
 - **Auto-generated error pages do not escape action names** (historical S2-006) — the
   app must define custom error pages; XSS in the default error page is a documented
   hardening item, not a defended property. *(documented.)*
@@ -310,7 +314,7 @@ These are the §3 application-responsibility / non-default-config items viewed a
 Config Browser Plugin; disabling a default OGNL/binding protection "to make something
 work"; exposing unsafe setters to binding; feeding request parameters into forced
 OGNL evaluation or localization; allowing direct `*.jsp` access or raw `${}` EL on
-untrusted values; relying on the OGNL Java Security Manager sandbox on JDK 21+. Each
+untrusted values; relying on the OGNL Java Security Manager sandbox on modern JDKs. Each
 is documented in the [security guidance](https://struts.apache.org/security/); the
 disposition mapping is §11a/§13.
 
@@ -381,6 +385,11 @@ authoritative list; §14 Q12.)*
   of its own** beyond OGNL/parameter-binding injection containment — i.e. authn,
   authz, session security, CSRF token storage, output encoding, and transport are the
   application's. (§9.)
+- **Q-env.** Confirm the servlet container, JVM, JDK, and OS are out of scope — Struts
+  does not patch or harden them, and the operator maintains them. (§3/§5.)
+- **Q-egress.** Confirm Struts opens no sockets and makes no outbound connections of
+  its own, so any network egress (and the SSRF surface it implies) is the
+  application's. (§5/§7.)
 
 **Wave 2 — mechanism confirmations**
 
@@ -389,8 +398,8 @@ authoritative list; §14 Q12.)*
   static-field/proxy/default-package/custom-map disallows, excluded node types) and
   that a bypass of any on a default app is `VALID`. (§8.)
 - **Q-jsm.** Confirm the OGNL Java Security Manager sandbox is **not** a relied-upon
-  control (opt-in, and non-functional on JDK 21+), so a report premised on its absence
-  is not a finding. (§5a/§9.)
+  control (opt-in, and non-functional on modern JDKs — see §5a), so a report premised
+  on its absence is not a finding. (§5a/§9.)
 - **Q-dos.** Where is the line between "generic DoS we don't accept" and "super-linear
   amplification inside framework code we do"? Confirm the §3/§8 wording. (§3.)
 
@@ -424,7 +433,7 @@ sections:
 | Allowlist / excluded classes/packages / expression length (7.0 defaults) | §5a, §8.1 |
 | DMI / Strict Method Invocation | §5a, §8.3 |
 | FetchMetadata / COOP / COEP | §5a, §8.5 |
-| OGNL JSM sandbox (JDK 21+ limitation) | §5a, §9 |
+| OGNL JSM sandbox (modern-JDK limitation) | §5a, §9 |
 | Generic DoS not accepted; non-linear-in-input philosophy | §3, §8, §9 |
 | "Before Reporting" duplicate/known-config checks | §3, §11a, §13 (`DUPLICATE`) |
 | Supported versions (2.x EOL) | §5, §13 (`OUT-OF-MODEL: unsupported-version`) |

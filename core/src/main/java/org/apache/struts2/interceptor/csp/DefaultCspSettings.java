@@ -110,6 +110,10 @@ public class DefaultCspSettings implements CspSettings {
                 .append(format(" 'nonce-%s' ", nonceValue))
                 .append(format("'%s' ", STRICT_DYNAMIC))
                 .append(format("%s %s; ", HTTP, HTTPS))
+                .append(STYLE_SRC)
+                .append(format(" 'nonce-%s' ", nonceValue))
+                .append(format("'%s' ", STRICT_DYNAMIC))
+                .append(format("%s %s; ", HTTP, HTTPS))
                 .append(BASE_URI)
                 .append(format(" '%s'; ", NONE));
 

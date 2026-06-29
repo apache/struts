@@ -1,5 +1,14 @@
 # Security Policy
 
+## Threat Model
+
+A structured threat model for the Apache Struts framework — scope, adversary model,
+the security properties the framework provides vs. leaves to the application, and a
+triage-disposition guide for inbound reports and automated-scanner findings — is
+maintained in [`THREAT_MODEL.md`](THREAT_MODEL.md). It is additive to this policy:
+this `SECURITY.md` and the [security guidance](https://struts.apache.org/security/)
+remain canonical for the reporting process and configuration details.
+
 ## Supported Versions
 
 Please visit the [Releases](https://struts.apache.org/releases.html#prior-releases) page to see full information about each version 

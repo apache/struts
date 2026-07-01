@@ -330,7 +330,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     protected String getContentType(String name) {
         // NOT using the code provided activation.jar to avoid adding yet another dependency
         // this is generally OK, since these are the main files we server up
-        if (name.endsWith(".js")) {
+        if (name.endsWith(".js") || name.endsWith(".mjs")) {
             return "text/javascript";
         } else if (name.endsWith(".css")) {
             return "text/css";
@@ -344,6 +344,22 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             return "image/jpeg";
         } else if (name.endsWith(".png")) {
             return "image/png";
+        } else if (name.endsWith(".svg")) {
+            return "image/svg+xml";
+        } else if (name.endsWith(".ico")) {
+            return "image/x-icon";
+        } else if (name.endsWith(".woff2")) {
+            return "font/woff2";
+        } else if (name.endsWith(".woff")) {
+            return "font/woff";
+        } else if (name.endsWith(".ttf")) {
+            return "font/ttf";
+        } else if (name.endsWith(".otf")) {
+            return "font/otf";
+        } else if (name.endsWith(".eot")) {
+            return "application/vnd.ms-fontobject";
+        } else if (name.endsWith(".json") || name.endsWith(".map")) {
+            return "application/json";
         } else {
             return null;
         }

@@ -70,6 +70,12 @@ public class DefaultWebJarUrlProviderTest {
     }
 
     @Test
+    public void resolveUrlRejectsTraversal() {
+        assertThat(provider.resolveUrl("jquery/../../../etc/passwd", request)).isEmpty();
+        assertThat(provider.resolveUrl("../jquery/jquery.min.js", request)).isEmpty();
+    }
+
+    @Test
     public void allowlistBlocksNonListedWebjar() {
         provider.setAllowlist("bootstrap");
         assertThat(provider.resolveResourcePath("jquery/jquery.min.js")).isEmpty();

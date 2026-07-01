@@ -39,7 +39,7 @@ import java.util.Optional;
  *
  * <b>Examples</b>
  * <pre>
- *   &lt;link rel="stylesheet" href="&lt;s:webjar path="bootstrap/css/bootstrap.min.css"/&gt;"&gt;
+ *   &lt;link rel="stylesheet" href="&lt;s:webjar path="bootstrap/css/bootstrap.min.css" /&gt;" /&gt;
  *   &lt;@s.webjar path="jquery/jquery.min.js"/&gt;
  * </pre>
  */
@@ -80,7 +80,7 @@ public class WebJar extends ContextBean {
                 try {
                     writer.write(url.get());
                 } catch (IOException e) {
-                    LOG.info("Could not write WebJar URL for path '{}'", path, e);
+                    LOG.error("Could not write WebJar URL for path '{}'", path, e);
                 }
             }
         }

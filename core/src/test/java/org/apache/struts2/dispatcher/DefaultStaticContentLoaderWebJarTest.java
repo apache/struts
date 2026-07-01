@@ -18,9 +18,17 @@
  */
 package org.apache.struts2.dispatcher;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DefaultStaticContentLoaderWebJarTest {
 
@@ -53,5 +61,59 @@ public class DefaultStaticContentLoaderWebJarTest {
         assertThat(loader.type("x.css")).isEqualTo("text/css");
         assertThat(loader.type("x.png")).isEqualTo("image/png");
         assertThat(loader.type("x.unknown")).isNull();
+    }
+
+    private DefaultStaticContentLoader newLoader(boolean enabled) {
+        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
+        loader.setServeStaticContent("true");
+        loader.setStaticContentPath("/static");
+        loader.setServeStaticBrowserCache("true");
+        loader.setEncoding("UTF-8");
+        org.apache.struts2.webjars.DefaultWebJarUrlProvider provider =
+            new org.apache.struts2.webjars.DefaultWebJarUrlProvider();
+        provider.setEnabled(String.valueOf(enabled));
+        provider.setAllowlist("");
+        provider.setStaticContentPath("/static");
+        loader.setWebJarUrlProvider(provider);
+        return loader;
+    }
+
+    @Test
+    public void servesKnownWebJarAssetWithContentType() throws Exception {
+        DefaultStaticContentLoader loader = newLoader(true);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ByteArrayOutputStream captured = new ByteArrayOutputStream();
+        when(response.getOutputStream())
+            .thenReturn(new WebJarTestServletOutputStream(captured));
+
+        loader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
+
+        verify(response).setContentType("text/javascript");
+        verify(response, never())
+            .sendError(HttpServletResponse.SC_NOT_FOUND);
+        assertThat(captured.size()).isGreaterThan(0);
+    }
+
+    @Test
+    public void unknownWebJarAssetReturns404() throws Exception {
+        DefaultStaticContentLoader loader = newLoader(true);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        loader.findStaticResource("/static/webjars/nope/nope.js", request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void disabledWebJarsReturns404() throws Exception {
+        DefaultStaticContentLoader loader = newLoader(false);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        loader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

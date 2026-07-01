@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.webjars.WebJarUrlProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 /**
@@ -69,6 +71,8 @@ import java.util.StringTokenizer;
  * </p>
  */
 public class DefaultStaticContentLoader implements StaticContentLoader {
+
+    protected static final String WEBJARS_REQUEST_PREFIX = "/webjars/";
 
     /**
      * Provide a logging instance.
@@ -106,6 +110,13 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     protected String encoding;
 
     protected boolean devMode;
+
+    protected WebJarUrlProvider webJarUrlProvider;
+
+    @Inject
+    public void setWebJarUrlProvider(WebJarUrlProvider webJarUrlProvider) {
+        this.webJarUrlProvider = webJarUrlProvider;
+    }
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -209,6 +220,14 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         String name = cleanupPath(path);
+
+        if (name.startsWith(WEBJARS_REQUEST_PREFIX)) {
+            if (!findWebJarResource(name, path, request, response)) {
+                sendNotFound(response);
+            }
+            return;
+        }
+
         for (String pathPrefix : pathPrefixes) {
             URL resourceUrl = findResource(buildPath(name, pathPrefix));
             if (resourceUrl != null) {
@@ -231,6 +250,32 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             }
         }
 
+        sendNotFound(response);
+    }
+
+    /**
+     * Resolve and serve a WebJar asset requested under {@code <staticContentPath>/webjars/**}.
+     *
+     * @param name    the request path with the static-content prefix stripped, e.g. {@code /webjars/jquery/jquery.min.js}
+     * @param path    the original request path (used for content-type detection)
+     * @return true if the asset was resolved and streamed; false otherwise (caller sends 404)
+     */
+    protected boolean findWebJarResource(String name, String path, HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        String logicalPath = name.substring(WEBJARS_REQUEST_PREFIX.length());
+        Optional<String> resource = webJarUrlProvider.resolveResourcePath(logicalPath);
+        if (resource.isEmpty()) {
+            return false;
+        }
+        URL resourceUrl = findResource(resource.get());
+        if (resourceUrl == null) {
+            return false;
+        }
+        process(resourceUrl.openStream(), path, request, response);
+        return true;
+    }
+
+    protected void sendNotFound(HttpServletResponse response) {
         try {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (IOException e1) {

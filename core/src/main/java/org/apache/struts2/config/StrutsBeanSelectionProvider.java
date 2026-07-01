@@ -84,6 +84,7 @@ import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.validator.ActionValidatorManager;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.webjars.WebJarUrlProvider;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -430,6 +431,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
         alias(ContentTypeMatcher.class, StrutsConstants.STRUTS_CONTENT_TYPE_MATCHER, builder, props);
         alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
+        alias(WebJarUrlProvider.class, StrutsConstants.STRUTS_WEBJARS_URL_PROVIDER, builder, props);
         alias(UnknownHandlerManager.class, StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, builder, props);
         alias(UrlHelper.class, StrutsConstants.STRUTS_URL_HELPER, builder, props);
 

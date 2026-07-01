@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.webjars.WebJarUrlProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 /**
@@ -69,6 +72,8 @@ import java.util.StringTokenizer;
  * </p>
  */
 public class DefaultStaticContentLoader implements StaticContentLoader {
+
+    protected static final String WEBJARS_REQUEST_PREFIX = "/webjars/";
 
     /**
      * Provide a logging instance.
@@ -106,6 +111,13 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     protected String encoding;
 
     protected boolean devMode;
+
+    protected WebJarUrlProvider webJarUrlProvider;
+
+    @Inject
+    public void setWebJarUrlProvider(WebJarUrlProvider webJarUrlProvider) {
+        this.webJarUrlProvider = webJarUrlProvider;
+    }
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -209,6 +221,14 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         String name = cleanupPath(path);
+
+        if (name.startsWith(WEBJARS_REQUEST_PREFIX)) {
+            if (!findWebJarResource(name, path, request, response)) {
+                sendNotFound(response);
+            }
+            return;
+        }
+
         for (String pathPrefix : pathPrefixes) {
             URL resourceUrl = findResource(buildPath(name, pathPrefix));
             if (resourceUrl != null) {
@@ -231,6 +251,32 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             }
         }
 
+        sendNotFound(response);
+    }
+
+    /**
+     * Resolve and serve a WebJar asset requested under {@code <staticContentPath>/webjars/**}.
+     *
+     * @param name    the request path with the static-content prefix stripped, e.g. {@code /webjars/jquery/jquery.min.js}
+     * @param path    the original request path (used for content-type detection)
+     * @return true if the asset was resolved and streamed; false otherwise (caller sends 404)
+     */
+    protected boolean findWebJarResource(String name, String path, HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        String logicalPath = name.substring(WEBJARS_REQUEST_PREFIX.length());
+        Optional<String> resource = webJarUrlProvider.resolveResourcePath(logicalPath);
+        if (resource.isEmpty()) {
+            return false;
+        }
+        URL resourceUrl = findResource(resource.get());
+        if (resourceUrl == null) {
+            return false;
+        }
+        process(resourceUrl.openStream(), path, request, response);
+        return true;
+    }
+
+    protected void sendNotFound(HttpServletResponse response) {
         try {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (IOException e1) {
@@ -322,31 +368,42 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
 
 
     /**
+     * Maps a lower-case file extension to its content type. Not using the code provided by
+     * activation.jar to avoid adding yet another dependency; this covers the files we serve up
+     * (Struts' own static assets plus WebJar assets).
+     */
+    private static final Map<String, String> CONTENT_TYPES = Map.ofEntries(
+        Map.entry("js", "text/javascript"),
+        Map.entry("mjs", "text/javascript"),
+        Map.entry("css", "text/css"),
+        Map.entry("html", "text/html"),
+        Map.entry("txt", "text/plain"),
+        Map.entry("gif", "image/gif"),
+        Map.entry("jpg", "image/jpeg"),
+        Map.entry("jpeg", "image/jpeg"),
+        Map.entry("png", "image/png"),
+        Map.entry("svg", "image/svg+xml"),
+        Map.entry("ico", "image/x-icon"),
+        Map.entry("woff2", "font/woff2"),
+        Map.entry("woff", "font/woff"),
+        Map.entry("ttf", "font/ttf"),
+        Map.entry("otf", "font/otf"),
+        Map.entry("eot", "application/vnd.ms-fontobject"),
+        Map.entry("json", "application/json"),
+        Map.entry("map", "application/json"));
+
+    /**
      * Determine the content type for the resource name.
      *
      * @param name The resource name
-     * @return The mime type
+     * @return The mime type, or {@code null} if the extension is unknown
      */
     protected String getContentType(String name) {
-        // NOT using the code provided activation.jar to avoid adding yet another dependency
-        // this is generally OK, since these are the main files we server up
-        if (name.endsWith(".js")) {
-            return "text/javascript";
-        } else if (name.endsWith(".css")) {
-            return "text/css";
-        } else if (name.endsWith(".html")) {
-            return "text/html";
-        } else if (name.endsWith(".txt")) {
-            return "text/plain";
-        } else if (name.endsWith(".gif")) {
-            return "image/gif";
-        } else if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
-            return "image/jpeg";
-        } else if (name.endsWith(".png")) {
-            return "image/png";
-        } else {
+        int dot = name.lastIndexOf('.');
+        if (dot < 0) {
             return null;
         }
+        return CONTENT_TYPES.get(name.substring(dot + 1));
     }
 
     /**

@@ -58,7 +58,7 @@ public class WebJarTest {
         webJar.start(writer);
         webJar.end(writer, "");
 
-        assertThat(writer.toString()).isEqualTo("/myapp/static/webjars/jquery/3.7.1/jquery.min.js");
+        assertThat(writer).hasToString("/myapp/static/webjars/jquery/3.7.1/jquery.min.js");
     }
 
     @Test

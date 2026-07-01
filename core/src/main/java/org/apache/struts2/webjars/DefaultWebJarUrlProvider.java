@@ -80,11 +80,12 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
 
     @Override
     public Optional<String> resolveResourcePath(String logicalPath) {
-        String[] parts = split(logicalPath);
-        if (parts == null) {
+        Optional<String[]> parts = split(logicalPath);
+        if (parts.isEmpty()) {
             return Optional.empty();
         }
-        String full = locator.fullPath(parts[0], parts[1]);
+        String[] p = parts.get();
+        String full = locator.fullPath(p[0], p[1]);
         if (full == null || !full.startsWith(WebJarVersionLocator.WEBJARS_PATH_PREFIX + "/")) {
             return Optional.empty();
         }
@@ -93,11 +94,12 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
 
     @Override
     public Optional<String> resolveUrl(String logicalPath, HttpServletRequest request) {
-        String[] parts = split(logicalPath);
-        if (parts == null) {
+        Optional<String[]> parts = split(logicalPath);
+        if (parts.isEmpty()) {
             return Optional.empty();
         }
-        String versioned = locator.path(parts[0], parts[1]);
+        String[] p = parts.get();
+        String versioned = locator.path(p[0], p[1]);
         if (versioned == null) {
             return Optional.empty();
         }
@@ -113,34 +115,34 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
     /**
      * Normalize, validate and split a logical path into {webJarName, filePath}.
      *
-     * @return a two-element array, or {@code null} if disabled, blank, single-segment,
-     *         traversal-tainted, or allowlist-blocked
+     * @return the two-element {webJarName, filePath} pair, or {@link Optional#empty()} if disabled,
+     *         blank, single-segment, traversal-tainted, or allowlist-blocked
      */
-    private String[] split(String logicalPath) {
+    private Optional<String[]> split(String logicalPath) {
         if (!enabled || StringUtils.isBlank(logicalPath)) {
-            return null;
+            return Optional.empty();
         }
         String normalized = StringUtils.stripStart(logicalPath, "/");
         if (normalized.contains("\\")) {
-            return null;
+            return Optional.empty();
         }
         for (String segment : normalized.split("/")) {
             if (segment.equals("..") || segment.equals(".")) {
                 LOG.debug("Rejecting WebJar path with traversal segment: {}", logicalPath);
-                return null;
+                return Optional.empty();
             }
         }
         int slash = normalized.indexOf('/');
         if (slash < 1 || slash == normalized.length() - 1) {
-            return null;
+            return Optional.empty();
         }
         String webJarName = normalized.substring(0, slash);
         String filePath = normalized.substring(slash + 1);
         if (!isAllowed(webJarName)) {
             LOG.debug("WebJar '{}' is not on the allowlist", webJarName);
-            return null;
+            return Optional.empty();
         }
-        return new String[]{webJarName, filePath};
+        return Optional.of(new String[]{webJarName, filePath});
     }
 
     private boolean isAllowed(String webJarName) {

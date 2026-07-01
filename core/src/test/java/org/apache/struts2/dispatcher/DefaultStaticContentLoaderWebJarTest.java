@@ -64,30 +64,30 @@ public class DefaultStaticContentLoaderWebJarTest {
     }
 
     private DefaultStaticContentLoader newLoader(boolean enabled) {
-        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
-        loader.setServeStaticContent("true");
-        loader.setStaticContentPath("/static");
-        loader.setServeStaticBrowserCache("true");
-        loader.setEncoding("UTF-8");
+        DefaultStaticContentLoader webJarLoader = new DefaultStaticContentLoader();
+        webJarLoader.setServeStaticContent("true");
+        webJarLoader.setStaticContentPath("/static");
+        webJarLoader.setServeStaticBrowserCache("true");
+        webJarLoader.setEncoding("UTF-8");
         org.apache.struts2.webjars.DefaultWebJarUrlProvider provider =
             new org.apache.struts2.webjars.DefaultWebJarUrlProvider();
         provider.setEnabled(String.valueOf(enabled));
         provider.setAllowlist("");
         provider.setStaticContentPath("/static");
-        loader.setWebJarUrlProvider(provider);
-        return loader;
+        webJarLoader.setWebJarUrlProvider(provider);
+        return webJarLoader;
     }
 
     @Test
     public void servesKnownWebJarAssetWithContentType() throws Exception {
-        DefaultStaticContentLoader loader = newLoader(true);
+        DefaultStaticContentLoader webJarLoader = newLoader(true);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         ByteArrayOutputStream captured = new ByteArrayOutputStream();
         when(response.getOutputStream())
             .thenReturn(new WebJarTestServletOutputStream(captured));
 
-        loader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
+        webJarLoader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
 
         verify(response).setContentType("text/javascript");
         verify(response, never())
@@ -97,22 +97,22 @@ public class DefaultStaticContentLoaderWebJarTest {
 
     @Test
     public void unknownWebJarAssetReturns404() throws Exception {
-        DefaultStaticContentLoader loader = newLoader(true);
+        DefaultStaticContentLoader webJarLoader = newLoader(true);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        loader.findStaticResource("/static/webjars/nope/nope.js", request, response);
+        webJarLoader.findStaticResource("/static/webjars/nope/nope.js", request, response);
 
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
     public void disabledWebJarsReturns404() throws Exception {
-        DefaultStaticContentLoader loader = newLoader(false);
+        DefaultStaticContentLoader webJarLoader = newLoader(false);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        loader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
+        webJarLoader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
 
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }

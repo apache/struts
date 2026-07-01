@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
@@ -367,47 +368,42 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
 
 
     /**
+     * Maps a lower-case file extension to its content type. Not using the code provided by
+     * activation.jar to avoid adding yet another dependency; this covers the files we serve up
+     * (Struts' own static assets plus WebJar assets).
+     */
+    private static final Map<String, String> CONTENT_TYPES = Map.ofEntries(
+        Map.entry("js", "text/javascript"),
+        Map.entry("mjs", "text/javascript"),
+        Map.entry("css", "text/css"),
+        Map.entry("html", "text/html"),
+        Map.entry("txt", "text/plain"),
+        Map.entry("gif", "image/gif"),
+        Map.entry("jpg", "image/jpeg"),
+        Map.entry("jpeg", "image/jpeg"),
+        Map.entry("png", "image/png"),
+        Map.entry("svg", "image/svg+xml"),
+        Map.entry("ico", "image/x-icon"),
+        Map.entry("woff2", "font/woff2"),
+        Map.entry("woff", "font/woff"),
+        Map.entry("ttf", "font/ttf"),
+        Map.entry("otf", "font/otf"),
+        Map.entry("eot", "application/vnd.ms-fontobject"),
+        Map.entry("json", "application/json"),
+        Map.entry("map", "application/json"));
+
+    /**
      * Determine the content type for the resource name.
      *
      * @param name The resource name
-     * @return The mime type
+     * @return The mime type, or {@code null} if the extension is unknown
      */
     protected String getContentType(String name) {
-        // NOT using the code provided activation.jar to avoid adding yet another dependency
-        // this is generally OK, since these are the main files we server up
-        if (name.endsWith(".js") || name.endsWith(".mjs")) {
-            return "text/javascript";
-        } else if (name.endsWith(".css")) {
-            return "text/css";
-        } else if (name.endsWith(".html")) {
-            return "text/html";
-        } else if (name.endsWith(".txt")) {
-            return "text/plain";
-        } else if (name.endsWith(".gif")) {
-            return "image/gif";
-        } else if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
-            return "image/jpeg";
-        } else if (name.endsWith(".png")) {
-            return "image/png";
-        } else if (name.endsWith(".svg")) {
-            return "image/svg+xml";
-        } else if (name.endsWith(".ico")) {
-            return "image/x-icon";
-        } else if (name.endsWith(".woff2")) {
-            return "font/woff2";
-        } else if (name.endsWith(".woff")) {
-            return "font/woff";
-        } else if (name.endsWith(".ttf")) {
-            return "font/ttf";
-        } else if (name.endsWith(".otf")) {
-            return "font/otf";
-        } else if (name.endsWith(".eot")) {
-            return "application/vnd.ms-fontobject";
-        } else if (name.endsWith(".json") || name.endsWith(".map")) {
-            return "application/json";
-        } else {
+        int dot = name.lastIndexOf('.');
+        if (dot < 0) {
             return null;
         }
+        return CONTENT_TYPES.get(name.substring(dot + 1));
     }
 
     /**

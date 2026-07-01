@@ -20,6 +20,7 @@
 - **Fail closed:** unresolved / disabled / allowlist-blocked / traversal → 404 when serving, empty output when building URLs. Never fall through to arbitrary classpath serving.
 - **Package for new provider classes:** `org.apache.struts2.webjars`. Component/tag/model packages are fixed by convention (`components`, `views.jsp`, `views.freemarker.tags`).
 - **Config defaults:** `struts.webjars.enabled=true`, `struts.webjars.allowlist=` (empty = all). Reuse existing `struts.ui.staticContentPath`, `struts.serve.static`, `struts.serve.static.browserCache`.
+- **Test framework (CORRECTION, 2026-07-01):** the `core` module uses **JUnit 4** (`org.junit.Test`, `@Before`) with **AssertJ** and **Mockito** — it has **no** JUnit 5 Jupiter engine on the classpath. The test code blocks in Tasks 3/5/6/7 are written in Jupiter (`org.junit.jupiter.api.*`, `@BeforeEach`, `@Nested`) and MUST be translated to JUnit 4 idioms when implemented: `org.junit.Test` + `@Before`; no `@BeforeEach`/`@Nested`/`@DisplayName`. Keep AssertJ assertions and Mockito verbatim. Task 6's `@Nested Serving` class becomes a separate top-level test class (e.g. `DefaultStaticContentLoaderWebJarServingTest`) or plain methods in the same class. Do NOT add JUnit 5 dependencies — introducing Jupiter to Struts core is a separate ticket, out of scope here.
 
 ## File Structure
 

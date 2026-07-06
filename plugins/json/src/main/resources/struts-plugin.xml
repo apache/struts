@@ -64,6 +64,4 @@
         </interceptors>
 
     </package>
-
-    <bean-selection name="jsonBeans" class="org.apache.struts2.json.JSONBeanSelectionProvider"/>
 </struts>

@@ -53,6 +53,7 @@ public class StrutsModels {
     protected RadioModel radio;
     protected SelectModel select;
     protected SetModel set;
+    protected WebJarModel webjar;
     protected SubmitModel submit;
     protected ResetModel reset;
     protected TextAreaModel textarea;
@@ -337,6 +338,13 @@ public class StrutsModels {
         }
 
         return set;
+    }
+
+    public WebJarModel getWebjar() {
+        if (webjar == null) {
+            webjar = new WebJarModel(stack, req, res);
+        }
+        return webjar;
     }
 
     public PropertyModel getProperty() {

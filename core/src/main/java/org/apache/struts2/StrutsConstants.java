@@ -196,6 +196,16 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
 
     /**
+     * Whether WebJars support is enabled (serving and URL building)
+     */
+    public static final String STRUTS_WEBJARS_ENABLED = "struts.webjars.enabled";
+
+    /**
+     * Optional comma-separated allowlist of WebJar names permitted to be served (empty = all)
+     */
+    public static final String STRUTS_WEBJARS_ALLOWLIST = "struts.webjars.allowlist";
+
+    /**
      * A global flag to enable/disable html body escaping in tags, can be overwritten per tag
      */
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
@@ -433,6 +443,11 @@ public final class StrutsConstants {
      * The {@link org.apache.struts2.dispatcher.StaticContentLoader} implementation class
      */
     public static final String STRUTS_STATIC_CONTENT_LOADER = "struts.staticContentLoader";
+
+    /**
+     * The {@link org.apache.struts2.webjars.WebJarUrlProvider} implementation class
+     */
+    public static final String STRUTS_WEBJARS_URL_PROVIDER = "struts.webjars.urlProvider";
 
     /**
      * The {@link org.apache.struts2.UnknownHandlerManager} implementation class

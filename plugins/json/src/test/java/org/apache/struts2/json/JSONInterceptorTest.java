@@ -831,6 +831,41 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNull(action.getBar());
     }
 
+    public void testExcludePropertiesAppliedToInputWhenEnabled() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setApplyPropertyFiltersToInput(true);
+        interceptor.setExcludeProperties("foo");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("b", action.getBar());
+    }
+
+    public void testExcludePropertiesNotAppliedToInputByDefault() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludeProperties("foo"); // configured, but flag off
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertEquals("b", action.getBar());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

@@ -89,6 +89,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     private int paramNameMaxLength = 100;
     private Set<Pattern> excludedValuePatterns;
     private Set<Pattern> acceptedValuePatterns;
+    private boolean applyPropertyFiltersToInput = false;
 
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -289,6 +290,29 @@ public class JSONInterceptor extends AbstractInterceptor {
         }
         if (action instanceof ParameterNameAware nameAware && !nameAware.acceptableParameterName(fullPath)) {
             LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", fullPath);
+            return false;
+        }
+        if (applyPropertyFiltersToInput && !isAcceptedByPropertyFilters(fullPath)) {
+            LOG.debug("JSON body parameter [{}] rejected by excludeProperties/includeProperties on input", fullPath);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isAcceptedByPropertyFilters(String fullPath) {
+        if (excludeProperties != null) {
+            for (Pattern pattern : excludeProperties) {
+                if (pattern.matcher(fullPath).matches()) {
+                    return false;
+                }
+            }
+        }
+        if (includeProperties != null && !includeProperties.isEmpty()) {
+            for (Pattern pattern : includeProperties) {
+                if (pattern.matcher(fullPath).matches()) {
+                    return true;
+                }
+            }
             return false;
         }
         return true;
@@ -765,6 +789,17 @@ public class JSONInterceptor extends AbstractInterceptor {
      */
     public void setAcceptedValuePatterns(String commaDelim) {
         this.acceptedValuePatterns = compileValuePatterns(commaDelim);
+    }
+
+    /**
+     * When enabled, the interceptor's {@code excludeProperties}/{@code includeProperties} patterns —
+     * otherwise used only for serialization output — also gate which JSON keys are populated on input.
+     * Opt-in; defaults to {@code false} to preserve existing behavior.
+     *
+     * @param applyPropertyFiltersToInput true to apply property filters to deserialization
+     */
+    public void setApplyPropertyFiltersToInput(boolean applyPropertyFiltersToInput) {
+        this.applyPropertyFiltersToInput = applyPropertyFiltersToInput;
     }
 
     private static Set<Pattern> compileValuePatterns(String commaDelim) {

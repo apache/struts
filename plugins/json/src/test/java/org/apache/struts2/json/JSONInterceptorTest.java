@@ -749,6 +749,45 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNull(action.getBar());
     }
 
+    public void testExcludedNamePatternRejectsNestedKey() throws Exception {
+        this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultExcludedPatternsChecker excluded =
+                new org.apache.struts2.security.DefaultExcludedPatternsChecker();
+        excluded.setExcludedPatterns("bean\\.intField");
+        interceptor.setExcludedPatterns(excluded);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getBean());
+        assertEquals("keep", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
+    }
+
+    public void testExcludedValuePatternRejectsListElement() throws Exception {
+        this.request.setContent("{\"list\": [\"good\", \"badvalue\"]}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludedValuePatterns("badvalue");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getList());
+        assertEquals(1, action.getList().size());
+        assertEquals("good", action.getList().get(0));
+    }
+
     public void testParamNameMaxLengthRejectsLongKey() throws Exception {
         this.request.setContent("{\"foo\":\"a\"}".getBytes());
         this.request.addHeader("Content-Type", "application/json");

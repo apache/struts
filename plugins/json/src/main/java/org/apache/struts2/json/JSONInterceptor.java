@@ -144,7 +144,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 if (rootObject == null) // model overrides action
                     rootObject = invocation.getStack().peek();
 
-                // enforce @StrutsParameter authorization on JSON body keys
+                // enforce name/value acceptability (patterns, length, *Aware) and @StrutsParameter authorization on JSON body keys
                 filterUnacceptableKeys(json, rootObject, invocation.getAction());
 
                 // populate fields
@@ -263,6 +263,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 filterUnacceptableKeysRecursive((Map) item, elementPrefix, target, action);
             } else if (item instanceof java.util.List) {
                 filterUnacceptableList((java.util.List) item, elementPrefix, target, action);
+            // Scalar list elements are value-checked only; their parent key already passed name/authorization checks.
             } else if (!isAcceptableValue(elementPrefix, item, action)) {
                 it.remove();
             }

@@ -27,6 +27,7 @@ import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
+import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
@@ -86,6 +87,8 @@ public class JSONInterceptor extends AbstractInterceptor {
     private int maxStringLength = JSONReader.DEFAULT_MAX_STRING_LENGTH;
     private int maxKeyLength = JSONReader.DEFAULT_MAX_KEY_LENGTH;
     private int paramNameMaxLength = 100;
+    private Set<Pattern> excludedValuePatterns;
+    private Set<Pattern> acceptedValuePatterns;
 
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -297,7 +300,42 @@ public class JSONInterceptor extends AbstractInterceptor {
             LOG.debug("JSON body value for parameter [{}] rejected by ParameterValueAware action", fullPath);
             return false;
         }
+        if (stringValue == null || stringValue.isEmpty()) {
+            return true;
+        }
+        if (isValueExcluded(stringValue)) {
+            LOG.warn("JSON body value [{}] for parameter [{}] matches an excluded value pattern; rejected", stringValue, fullPath);
+            return false;
+        }
+        if (!isValueAccepted(stringValue)) {
+            LOG.warn("JSON body value [{}] for parameter [{}] does not match any accepted value pattern; rejected", stringValue, fullPath);
+            return false;
+        }
         return true;
+    }
+
+    private boolean isValueExcluded(String value) {
+        if (excludedValuePatterns == null || excludedValuePatterns.isEmpty()) {
+            return false;
+        }
+        for (Pattern pattern : excludedValuePatterns) {
+            if (pattern.matcher(value).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValueAccepted(String value) {
+        if (acceptedValuePatterns == null || acceptedValuePatterns.isEmpty()) {
+            return true;
+        }
+        for (Pattern pattern : acceptedValuePatterns) {
+            if (pattern.matcher(value).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected String readContentType(HttpServletRequest request) {
@@ -707,6 +745,35 @@ public class JSONInterceptor extends AbstractInterceptor {
      */
     public void setParamNameMaxLength(int paramNameMaxLength) {
         this.paramNameMaxLength = paramNameMaxLength;
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match JSON leaf values
+     * that should be removed. Opt-in: no patterns configured means no value filtering.
+     *
+     * @param commaDelim comma-delimited regular expressions
+     */
+    public void setExcludedValuePatterns(String commaDelim) {
+        this.excludedValuePatterns = compileValuePatterns(commaDelim);
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions; when set, only JSON leaf values
+     * matching one of them are accepted. Opt-in: no patterns configured means no value filtering.
+     *
+     * @param commaDelim comma-delimited regular expressions
+     */
+    public void setAcceptedValuePatterns(String commaDelim) {
+        this.acceptedValuePatterns = compileValuePatterns(commaDelim);
+    }
+
+    private static Set<Pattern> compileValuePatterns(String commaDelim) {
+        Set<String> raw = TextParseUtil.commaDelimitedStringToSet(commaDelim);
+        Set<Pattern> compiled = new HashSet<>(raw.size());
+        for (String pattern : raw) {
+            compiled.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        }
+        return Collections.unmodifiableSet(compiled);
     }
 
     @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)

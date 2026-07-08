@@ -797,6 +797,40 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals("good", action.getBaz());
     }
 
+    public void testExcludedValuePatternRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"badvalue\", \"bar\":\"okvalue\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludedValuePatterns("badvalue");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("okvalue", action.getBar());
+    }
+
+    public void testAcceptedValuePatternRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"allowed\", \"bar\":\"other\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setAcceptedValuePatterns("allowed");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("allowed", action.getFoo());
+        assertNull(action.getBar());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

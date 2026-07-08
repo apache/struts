@@ -83,6 +83,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     private int maxLength = 2_097_152;  // 2MB
     private int maxStringLength = JSONReader.DEFAULT_MAX_STRING_LENGTH;
     private int maxKeyLength = JSONReader.DEFAULT_MAX_KEY_LENGTH;
+    private int paramNameMaxLength = 100;
 
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -258,6 +259,10 @@ public class JSONInterceptor extends AbstractInterceptor {
 
     @SuppressWarnings("rawtypes")
     private boolean isAcceptableKey(String fullPath, Object target, Object action) {
+        if (fullPath.length() > paramNameMaxLength) {
+            LOG.warn("JSON body parameter [{}] is too long, allowed length is [{}]; rejected", fullPath, paramNameMaxLength);
+            return false;
+        }
         if (excludedPatterns != null && excludedPatterns.isExcluded(fullPath).isExcluded()) {
             LOG.warn("JSON body parameter [{}] matches an excluded pattern; rejected", fullPath);
             return false;
@@ -672,6 +677,15 @@ public class JSONInterceptor extends AbstractInterceptor {
     @Inject
     public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
         this.acceptedPatterns = acceptedPatterns;
+    }
+
+    /**
+     * If the dotted JSON key path exceeds the configured maximum length it will not be accepted.
+     *
+     * @param paramNameMaxLength maximum length of a JSON key path
+     */
+    public void setParamNameMaxLength(int paramNameMaxLength) {
+        this.paramNameMaxLength = paramNameMaxLength;
     }
 
     @Inject(value = JSONConstants.JSON_MAX_ELEMENTS, required = false)

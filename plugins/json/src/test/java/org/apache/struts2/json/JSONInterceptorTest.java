@@ -749,6 +749,22 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNull(action.getBar());
     }
 
+    public void testParamNameMaxLengthRejectsLongKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setParamNameMaxLength(2); // "foo" is length 3, over the limit
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

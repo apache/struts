@@ -765,6 +765,38 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNull(action.getFoo());
     }
 
+    public void testParameterNameAwareRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        ParameterAwareTestAction action = new ParameterAwareTestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testParameterValueAwareRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"blocked\", \"baz\":\"good\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        ParameterAwareTestAction action = new ParameterAwareTestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("good", action.getBaz());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

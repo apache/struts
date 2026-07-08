@@ -19,6 +19,8 @@
 package org.apache.struts2.json;
 
 import org.apache.struts2.action.Action;
+import org.apache.struts2.action.ParameterNameAware;
+import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
@@ -239,6 +241,8 @@ public class JSONInterceptor extends AbstractInterceptor {
                 filterUnacceptableKeysRecursive((Map) value, fullPath, target, action);
             } else if (value instanceof java.util.List) {
                 filterUnacceptableList((java.util.List) value, fullPath, target, action);
+            } else if (!isAcceptableValue(fullPath, value, action)) {
+                it.remove();
             }
         }
     }
@@ -248,11 +252,15 @@ public class JSONInterceptor extends AbstractInterceptor {
         // Use prefix+"[0]" so list element properties pick up one extra '[' in their path,
         // matching the indexed-path semantics of ParametersInterceptor (e.g. "items[0].key").
         String elementPrefix = prefix + "[0]";
-        for (Object item : list) {
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            Object item = it.next();
             if (item instanceof Map) {
                 filterUnacceptableKeysRecursive((Map) item, elementPrefix, target, action);
             } else if (item instanceof java.util.List) {
                 filterUnacceptableList((java.util.List) item, elementPrefix, target, action);
+            } else if (!isAcceptableValue(elementPrefix, item, action)) {
+                it.remove();
             }
         }
     }
@@ -274,6 +282,19 @@ public class JSONInterceptor extends AbstractInterceptor {
         if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
             LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     fullPath, target.getClass().getName());
+            return false;
+        }
+        if (action instanceof ParameterNameAware nameAware && !nameAware.acceptableParameterName(fullPath)) {
+            LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", fullPath);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isAcceptableValue(String fullPath, Object value, Object action) {
+        String stringValue = value == null ? null : String.valueOf(value);
+        if (action instanceof ParameterValueAware valueAware && !valueAware.acceptableParameterValue(stringValue)) {
+            LOG.debug("JSON body value for parameter [{}] rejected by ParameterValueAware action", fullPath);
             return false;
         }
         return true;

@@ -50,6 +50,8 @@ public class JSONInterceptorTest extends StrutsTestCase {
         interceptor.setJsonUtil(jsonUtil);
         // Default: allow all parameters (simulates requireAnnotations=false)
         interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
+        interceptor.setExcludedPatterns(new org.apache.struts2.security.DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatterns(new org.apache.struts2.security.DefaultAcceptedPatternsChecker());
         return interceptor;
     }
 
@@ -598,7 +600,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         mixedKeyMap.put(42, "shouldBeSkipped"); // Integer key, not String
 
         java.lang.reflect.Method method = JSONInterceptor.class.getDeclaredMethod(
-                "filterUnauthorizedKeys", java.util.Map.class, Object.class, Object.class);
+                "filterUnacceptableKeys", java.util.Map.class, Object.class, Object.class);
         method.setAccessible(true);
 
         // Should not throw ClassCastException
@@ -705,6 +707,46 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNotNull(bean);
         assertNull(bean.getStringField());
         assertEquals(0, bean.getIntField());
+    }
+
+    public void testExcludedNamePatternRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultExcludedPatternsChecker excluded =
+                new org.apache.struts2.security.DefaultExcludedPatternsChecker();
+        excluded.setExcludedPatterns("bar");
+        interceptor.setExcludedPatterns(excluded);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testAcceptedNamePatternRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
+                new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
+        accepted.setAcceptedPatterns("foo");
+        interceptor.setAcceptedPatterns(accepted);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
     }
 
     @Override

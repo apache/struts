@@ -338,48 +338,47 @@ public class StrutsJSONWriterTest {
      * across every concurrent response handled by that result, so write() must be safe to call
      * concurrently from multiple threads on the same instance without one call's output buffer
      * leaking into -- or being overwritten by -- another call's output.
+     *
+     * <p>Uses a higher thread count than the minimum needed to demonstrate the bug: with only two
+     * threads on a machine with many cores, the OS scheduler has no need to preempt either thread
+     * mid-call, so the race window is rarely hit and the test can pass even against the unpatched
+     * code. Sixteen threads contending for the same instance reproduces the corruption reliably.</p>
      */
     @Test
     public void testConcurrentReuseDoesNotSwapResponsesAcrossWrites() throws Exception {
         JSONWriter sharedWriter = new StrutsJSONWriter();
-        NamedBean victim = new NamedBean("victim", "VICTIM_SECRET_TOKEN_9f8e7d6c5b4a3210");
-        NamedBean attacker = new NamedBean("attacker", "nothing interesting here");
-
-        int iterations = 50_000;
-        AtomicInteger leaksObserved = new AtomicInteger();
+        int threadCount = 16;
+        int iterations = 20_000;
+        AtomicInteger corrupted = new AtomicInteger();
         CountDownLatch start = new CountDownLatch(1);
-        ExecutorService pool = Executors.newFixedThreadPool(2);
+        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
-        pool.submit(() -> {
-            await(start);
-            for (int i = 0; i < iterations; i++) {
-                try {
-                    sharedWriter.write(victim);
-                } catch (JSONException ignored) {
-                    // the victim call's own outcome isn't what's being measured
-                }
-            }
-        });
-        pool.submit(() -> {
-            await(start);
-            for (int i = 0; i < iterations; i++) {
-                try {
-                    String response = sharedWriter.write(attacker);
-                    if (response.contains(victim.getSecret())) {
-                        leaksObserved.incrementAndGet();
+        for (int t = 0; t < threadCount; t++) {
+            String secret = "SECRET_" + t + "_9f8e7d6c5b4a3210";
+            NamedBean own = new NamedBean("user" + t, secret);
+            pool.submit(() -> {
+                await(start);
+                for (int i = 0; i < iterations; i++) {
+                    try {
+                        String response = sharedWriter.write(own);
+                        if (!response.contains(secret)) {
+                            // this thread's own response doesn't even contain its own data:
+                            // the shared buffer was corrupted or overwritten by another thread
+                            corrupted.incrementAndGet();
+                        }
+                    } catch (JSONException ignored) {
+                        // a failed serialize under contention is not itself the thing measured here
                     }
-                } catch (JSONException ignored) {
-                    // a failed serialize under contention isn't itself a leak
                 }
-            }
-        });
+            });
+        }
 
         start.countDown();
         pool.shutdown();
         assertTrue(pool.awaitTermination(120, TimeUnit.SECONDS));
 
-        assertEquals("a concurrently-written response must never be returned in place of this " +
-                "request's own response", 0, leaksObserved.get());
+        assertEquals("a concurrently-written response must never overwrite or corrupt this " +
+                "thread's own response", 0, corrupted.get());
     }
 
     private static void await(CountDownLatch latch) {

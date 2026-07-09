@@ -166,97 +166,69 @@ public class StrutsJSONReaderTest {
      * A single StrutsJSONReader instance is injected once into JSONUtil/JSONInterceptor and reused
      * across every concurrent request handled by that interceptor, so read() must be safe to call
      * concurrently from multiple threads on the same instance without one call's parse state
-     * (cursor, token buffer, depth counter) leaking into another's.
+     * (cursor, token buffer, depth counter) leaking into another's -- both as a maxDepth bypass and
+     * as one request's data appearing inside a different, concurrently-parsed request's result.
+     *
+     * <p>Uses a higher thread count than the minimum needed to demonstrate the bug: with only two
+     * threads on a machine with many cores, the OS scheduler has no need to preempt either thread
+     * mid-call, so the race window is rarely hit and the test can pass even against the unpatched
+     * code. Sixteen threads contending for the same instance reproduces both symptoms reliably.</p>
      */
     @Test
-    public void testConcurrentReuseDoesNotBypassMaxDepth() throws Exception {
+    public void testConcurrentReuseDoesNotBypassMaxDepthOrLeakDataAcrossParses() throws Exception {
         int maxDepth = 5;
         var reader = new StrutsJSONReader();
         reader.setMaxDepth(maxDepth);
 
         String overDepthPayload = nestedObject(maxDepth + 1);
-        String shallowPayload = "{\"a\":1}";
-        int iterations = 20_000;
+        int threadCount = 16;
+        int iterations = 10_000;
         AtomicInteger overDepthAccepted = new AtomicInteger();
+        AtomicInteger crossThreadLeaks = new AtomicInteger();
+        CountDownLatch start = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
 
-        runConcurrently(iterations,
-                () -> {
+        for (int t = 0; t < threadCount; t++) {
+            String marker = "MARKER_" + t + "_9f8e7d6c5b4a3210";
+            String ownPayload = "{\"account\":\"user" + t + "\",\"secret\":\"" + marker + "\"}";
+            pool.submit(() -> {
+                await(start);
+                for (int i = 0; i < iterations; i++) {
+                    try {
+                        Object result = reader.read(ownPayload);
+                        if (!(result instanceof Map) || !marker.equals(((Map<?, ?>) result).get("secret"))) {
+                            // this thread's own parse doesn't even contain its own data: the shared
+                            // cursor/buffer was corrupted or overwritten by another thread
+                            crossThreadLeaks.incrementAndGet();
+                        }
+                    } catch (JSONException ignored) {
+                        // a failed parse under contention is not itself the thing measured here
+                    }
                     try {
                         reader.read(overDepthPayload);
                         overDepthAccepted.incrementAndGet();
                     } catch (JSONException expected) {
                         // must always be rejected: depth is one more than maxDepth
                     }
-                },
-                () -> {
-                    try {
-                        reader.read(shallowPayload);
-                    } catch (JSONException ignored) {
-                        // unrelated to the assertion below
-                    }
-                });
+                }
+            });
+        }
 
-        assertEquals("an over-depth payload must never be accepted, even when the reader instance " +
-                "is shared with concurrent unrelated parses", 0, overDepthAccepted.get());
-    }
-
-    /**
-     * Companion to {@link #testConcurrentReuseDoesNotBypassMaxDepth()}: confirms that concurrent
-     * parses on a shared reader instance never cross-contaminate each other's data, i.e. one
-     * request's parsed result never contains fragments of a different, concurrently-parsed request.
-     */
-    @Test
-    public void testConcurrentReuseDoesNotLeakDataAcrossParses() throws Exception {
-        String secretMarker = "VICTIM_SECRET_TOKEN_9f8e7d6c5b4a3210";
-        var reader = new StrutsJSONReader();
-
-        String victimPayload = "{\"account\":\"victim\",\"secret\":\"" + secretMarker + "\"}";
-        String attackerPayload = "{\"account\":\"attacker\",\"comment\":\"nothing interesting here\"}";
-        int iterations = 50_000;
-        AtomicInteger leaksObserved = new AtomicInteger();
-
-        runConcurrently(iterations,
-                () -> {
-                    try {
-                        Object result = reader.read(attackerPayload);
-                        if (containsFragmentOf(result, secretMarker)) {
-                            leaksObserved.incrementAndGet();
-                        }
-                    } catch (JSONException ignored) {
-                        // a failed parse under contention isn't itself a data leak
-                    }
-                },
-                () -> {
-                    try {
-                        reader.read(victimPayload);
-                    } catch (JSONException ignored) {
-                        // the victim side failing to parse isn't what's under test here
-                    }
-                });
-
-        assertEquals("a concurrently-parsed request's data must never appear inside this request's " +
-                "own parsed result", 0, leaksObserved.get());
-    }
-
-    private static void runConcurrently(int iterationsPerThread, Runnable first, Runnable second) throws InterruptedException {
-        CountDownLatch start = new CountDownLatch(1);
-        ExecutorService pool = Executors.newFixedThreadPool(2);
-        pool.submit(() -> runLoop(start, iterationsPerThread, first));
-        pool.submit(() -> runLoop(start, iterationsPerThread, second));
         start.countDown();
         pool.shutdown();
         assertTrue(pool.awaitTermination(120, TimeUnit.SECONDS));
+
+        assertEquals("an over-depth payload must never be accepted, even when the reader instance " +
+                "is shared with concurrent unrelated parses", 0, overDepthAccepted.get());
+        assertEquals("a concurrently-parsed request's data must never appear in place of this " +
+                "thread's own parsed result", 0, crossThreadLeaks.get());
     }
 
-    private static void runLoop(CountDownLatch start, int iterations, Runnable body) {
+    private static void await(CountDownLatch latch) {
         try {
-            start.await();
+            latch.await();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return;
-        }
-        for (int i = 0; i < iterations; i++) {
-            body.run();
         }
     }
 
@@ -264,27 +236,5 @@ public class StrutsJSONReaderTest {
         StringBuilder sb = new StringBuilder();
         sb.append("{\"a\":".repeat(depth)).append("1").append("}".repeat(depth));
         return sb.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static boolean containsFragmentOf(Object parsed, String needle) {
-        if (parsed instanceof Map) {
-            for (Object value : ((Map<Object, Object>) parsed).values()) {
-                if (containsFragmentOf(value, needle)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        if (!(parsed instanceof String haystack)) {
-            return false;
-        }
-        int fragmentLength = 12;
-        for (int i = 0; i + fragmentLength <= needle.length(); i++) {
-            if (haystack.contains(needle.substring(i, i + fragmentLength))) {
-                return true;
-            }
-        }
-        return false;
     }
 }

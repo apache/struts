@@ -39,6 +39,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -313,6 +318,76 @@ public class StrutsJSONWriterTest {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"calendar\":\"2012-12-23T10:10:10\""));
+    }
+
+    public static class NamedBean {
+        private final String owner;
+        private final String secret;
+
+        public NamedBean(String owner, String secret) {
+            this.owner = owner;
+            this.secret = secret;
+        }
+
+        public String getOwner() { return owner; }
+        public String getSecret() { return secret; }
+    }
+
+    /**
+     * A single StrutsJSONWriter instance is injected once into JSONUtil/JSONResult and reused
+     * across every concurrent response handled by that result, so write() must be safe to call
+     * concurrently from multiple threads on the same instance without one call's output buffer
+     * leaking into -- or being overwritten by -- another call's output.
+     */
+    @Test
+    public void testConcurrentReuseDoesNotSwapResponsesAcrossWrites() throws Exception {
+        JSONWriter sharedWriter = new StrutsJSONWriter();
+        NamedBean victim = new NamedBean("victim", "VICTIM_SECRET_TOKEN_9f8e7d6c5b4a3210");
+        NamedBean attacker = new NamedBean("attacker", "nothing interesting here");
+
+        int iterations = 50_000;
+        AtomicInteger leaksObserved = new AtomicInteger();
+        CountDownLatch start = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        pool.submit(() -> {
+            await(start);
+            for (int i = 0; i < iterations; i++) {
+                try {
+                    sharedWriter.write(victim);
+                } catch (JSONException ignored) {
+                    // the victim call's own outcome isn't what's being measured
+                }
+            }
+        });
+        pool.submit(() -> {
+            await(start);
+            for (int i = 0; i < iterations; i++) {
+                try {
+                    String response = sharedWriter.write(attacker);
+                    if (response.contains(victim.getSecret())) {
+                        leaksObserved.incrementAndGet();
+                    }
+                } catch (JSONException ignored) {
+                    // a failed serialize under contention isn't itself a leak
+                }
+            }
+        });
+
+        start.countDown();
+        pool.shutdown();
+        assertTrue(pool.awaitTermination(120, TimeUnit.SECONDS));
+
+        assertEquals("a concurrently-written response must never be returned in place of this " +
+                "request's own response", 0, leaksObserved.get());
+    }
+
+    private static void await(CountDownLatch latch) {
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }

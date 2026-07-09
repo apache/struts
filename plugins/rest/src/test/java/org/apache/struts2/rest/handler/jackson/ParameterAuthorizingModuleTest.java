@@ -130,6 +130,15 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull(p.role);
     }
 
+    public void testRecordComponentAuthorizedByPath() throws Exception {
+        bind((path, t, a) -> "recordAddress".equals(path) || "recordAddress.city".equals(path), new Person());
+        Person result = mapper.readValue(
+                "{\"recordAddress\":{\"city\":\"Warsaw\",\"secret\":\"admin-only\"}}", Person.class);
+        assertNotNull(result.recordAddress);
+        assertEquals("Warsaw", result.recordAddress.city());
+        assertNull(result.recordAddress.secret());
+    }
+
     // --- Fixtures ---
 
     public static class Person {
@@ -139,11 +148,19 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         public java.util.List<Address> addresses;
         public Address[] addressArray;
         public java.util.Map<String, Address> addressMap;
+        public RecordAddress recordAddress;
     }
 
     public static class Address {
         public String city;
         public String zip;
+    }
+
+    /**
+     * Record fixture: forces Jackson to bind {@code city}/{@code secret} via its creator/constructor
+     * path, the code path {@link AuthorizingSettableBeanProperty#withValueDeserializer} covers.
+     */
+    public record RecordAddress(String city, String secret) {
     }
 
     /**

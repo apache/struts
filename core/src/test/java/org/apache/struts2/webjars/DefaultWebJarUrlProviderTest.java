@@ -76,6 +76,17 @@ public class DefaultWebJarUrlProviderTest {
     }
 
     @Test
+    public void encodedTraversalIsRejected() {
+        assertThat(provider.resolveResourcePath("jquery/%2e%2e/%2e%2e/etc/passwd")).isEmpty();
+        assertThat(provider.resolveResourcePath("jquery/%2E%2E/secret")).isEmpty();
+    }
+
+    @Test
+    public void resolveUrlRejectsEncodedTraversal() {
+        assertThat(provider.resolveUrl("jquery/%2e%2e/%2e%2e/etc/passwd", request)).isEmpty();
+    }
+
+    @Test
     public void allowlistBlocksNonListedWebjar() {
         provider.setAllowlist("bootstrap");
         assertThat(provider.resolveResourcePath("jquery/jquery.min.js")).isEmpty();

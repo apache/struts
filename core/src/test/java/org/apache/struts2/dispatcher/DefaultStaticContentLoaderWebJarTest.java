@@ -116,4 +116,15 @@ public class DefaultStaticContentLoaderWebJarTest {
 
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
+    
+    @Test
+    public void webJarEncodedTraversalReturns404() throws Exception {
+        DefaultStaticContentLoader webJarLoader = newLoader(true);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        webJarLoader.findStaticResource("/static/webjars/jquery/%2e%2e/%2e%2e/etc/passwd", request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
 }

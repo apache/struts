@@ -143,4 +143,29 @@ public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
         defaultStaticContentLoader.setEncoding("UTF-8");
         defaultStaticContentLoader.setStaticContentPath("/static");
     }
+    public void testBuildPathDoesNotDecodePercentEncoding() {
+        String result = defaultStaticContentLoader.buildPath("/%2e%2e/secret", "static/");
+        assertEquals("static/%2e%2e/secret", result);
+    }
+
+    public void testFindStaticResourceRejectsLiteralTraversal() throws Exception {
+        responseMock.sendError(HttpServletResponse.SC_NOT_FOUND);
+        expectLastCall();
+        replay(responseMock);
+        defaultStaticContentLoader.findStaticResource("/static/../../../etc/passwd", requestMock, responseMock);
+    }
+
+    public void testFindStaticResourceRejectsEncodedTraversal() throws Exception {
+        responseMock.sendError(HttpServletResponse.SC_NOT_FOUND);
+        expectLastCall();
+        replay(responseMock);
+        defaultStaticContentLoader.findStaticResource("/static/%2e%2e/%2e%2e/secret", requestMock, responseMock);
+    }
+
+    public void testFindStaticResourceRejectsBackslashPath() throws Exception {
+        responseMock.sendError(HttpServletResponse.SC_NOT_FOUND);
+        expectLastCall();
+        replay(responseMock);
+        defaultStaticContentLoader.findStaticResource("/static/..\\..\\secret", requestMock, responseMock);
+    }
 }

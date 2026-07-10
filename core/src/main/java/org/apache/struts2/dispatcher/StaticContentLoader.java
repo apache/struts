@@ -98,6 +98,26 @@ public interface StaticContentLoader {
                 LOG.debug("\"{}\" has been set to \"{}\"", StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, uiStaticContentPath);
                 return uiStaticContentPath;
             }
+
+        /**
+         * Checks whether the given path contains malformed segments that do not belong in a
+         * normalised resource path, such as dot-dot sequences, backslash separators, or
+         * percent-encoded forms that a well-behaved client would never send for static
+         * resource requests.
+         *
+         * @param path the path to check (must not be null)
+         * @return {@code true} if the path contains a suspicious segment
+         */
+        public static boolean containsMalformedPathSegment(String path) {
+            if (path.contains("..")) {
+                return true;
+            }
+            if (path.contains("\\")) {
+                return true;
+            }
+            // Percent-encoded dot forms that have no place in a normalised static resource path
+            String lower = path.toLowerCase(java.util.Locale.ROOT);
+            return lower.contains("%2e");
         }
     }
 }

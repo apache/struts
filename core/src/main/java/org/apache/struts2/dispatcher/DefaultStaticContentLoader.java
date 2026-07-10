@@ -32,9 +32,7 @@ import org.apache.struts2.webjars.WebJarUrlProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -222,6 +220,12 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         throws IOException {
         String name = cleanupPath(path);
 
+        if (Validator.containsMalformedPathSegment(name)) {
+            LOG.debug("Rejecting static resource request with malformed path segment");
+            sendNotFound(response);
+            return;
+        }
+
         if (name.startsWith(WEBJARS_REQUEST_PREFIX)) {
             if (!findWebJarResource(name, path, request, response)) {
                 sendNotFound(response);
@@ -353,17 +357,12 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @param name          resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
-     * @throws UnsupportedEncodingException If there is a encoding problem
      */
-    protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
-        String resourcePath;
+    protected String buildPath(String name, String packagePrefix) {
         if (packagePrefix.endsWith("/") && name.startsWith("/")) {
-            resourcePath = packagePrefix + name.substring(1);
-        } else {
-            resourcePath = packagePrefix + name;
+            return packagePrefix + name.substring(1);
         }
-
-        return URLDecoder.decode(resourcePath, encoding);
+        return packagePrefix + name;
     }
 
 

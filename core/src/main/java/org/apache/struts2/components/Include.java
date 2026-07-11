@@ -47,7 +47,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 /**
@@ -203,7 +204,7 @@ public class Include extends Component {
         // .. is illegal in an absolute path according to the Servlet Spec and will cause
         // known problems on Orion application servers.
         if (returnValue.contains("..")) {
-            Stack<String> stack = new Stack<>();
+            Deque<String> segments = new ArrayDeque<>();
             StringTokenizer pathParts = new StringTokenizer(returnValue.replace('\\', '/'), "/");
 
             while (pathParts.hasMoreTokens()) {
@@ -211,20 +212,22 @@ public class Include extends Component {
 
                 if (!part.equals(".")) {
                     if (part.equals("..")) {
-                        stack.pop();
+                        if (!segments.isEmpty()) {
+                            segments.pop();
+                        }
                     } else {
-                        stack.push(part);
+                        segments.push(part);
                     }
                 }
             }
 
             StringBuilder flatPathBuffer = new StringBuilder();
 
-            for (int i = 0; i < stack.size(); i++) {
-                flatPathBuffer.append("/").append(stack.elementAt(i));
+            for (String segment : segments) {
+                flatPathBuffer.append("/").append(segment);
             }
 
-            returnValue = flatPathBuffer.toString();
+            returnValue = flatPathBuffer.length() > 0 ? flatPathBuffer.toString() : "/";
         }
 
         return returnValue;

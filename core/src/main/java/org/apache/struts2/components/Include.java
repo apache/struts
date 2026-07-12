@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -223,8 +224,9 @@ public class Include extends Component {
 
             StringBuilder flatPathBuffer = new StringBuilder();
 
-            for (String segment : segments) {
-                flatPathBuffer.append("/").append(segment);
+            Iterator<String> it = segments.descendingIterator();
+            while (it.hasNext()) {
+                flatPathBuffer.append("/").append(it.next());
             }
 
             returnValue = flatPathBuffer.length() > 0 ? flatPathBuffer.toString() : "/";

@@ -27,7 +27,7 @@ import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+import java.util.Locale;
 /**
  * Interface for loading static resources, based on a path. After implementing your own static content loader
  * you must tell the framework how to use it, eg.
@@ -109,15 +109,19 @@ public interface StaticContentLoader {
          * @return {@code true} if the path contains a suspicious segment
          */
         public static boolean containsMalformedPathSegment(String path) {
-            if (path.contains("..")) {
-                return true;
-            }
             if (path.contains("\\")) {
                 return true;
             }
-            // Percent-encoded dot forms that have no place in a normalised static resource path
-            String lower = path.toLowerCase(java.util.Locale.ROOT);
-            return lower.contains("%2e");
+            for (String segment : path.split("/")) {
+                if (segment.equals("..") || segment.equals(".")) {
+                    return true;
+                }
+                // Percent-encoded dot forms that have no place in a normalised static resource path
+                if (segment.toLowerCase(Locale.ROOT).contains("%2e")) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -98,7 +98,7 @@ public interface StaticContentLoader {
                 LOG.debug("\"{}\" has been set to \"{}\"", StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, uiStaticContentPath);
                 return uiStaticContentPath;
             }
-
+       }
         /**
          * Checks whether the given path contains malformed segments that do not belong in a
          * normalised resource path, such as dot-dot sequences, backslash separators, or

@@ -50,6 +50,8 @@ public class JSONInterceptorTest extends StrutsTestCase {
         interceptor.setJsonUtil(jsonUtil);
         // Default: allow all parameters (simulates requireAnnotations=false)
         interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
+        interceptor.setExcludedPatterns(new org.apache.struts2.security.DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatterns(new org.apache.struts2.security.DefaultAcceptedPatternsChecker());
         return interceptor;
     }
 
@@ -598,7 +600,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         mixedKeyMap.put(42, "shouldBeSkipped"); // Integer key, not String
 
         java.lang.reflect.Method method = JSONInterceptor.class.getDeclaredMethod(
-                "filterUnauthorizedKeys", java.util.Map.class, Object.class, Object.class);
+                "filterUnacceptableKeys", java.util.Map.class, Object.class, Object.class);
         method.setAccessible(true);
 
         // Should not throw ClassCastException
@@ -705,6 +707,202 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNotNull(bean);
         assertNull(bean.getStringField());
         assertEquals(0, bean.getIntField());
+    }
+
+    public void testExcludedNamePatternRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultExcludedPatternsChecker excluded =
+                new org.apache.struts2.security.DefaultExcludedPatternsChecker();
+        excluded.setExcludedPatterns("bar");
+        interceptor.setExcludedPatterns(excluded);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testAcceptedNamePatternRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
+                new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
+        accepted.setAcceptedPatterns("foo");
+        interceptor.setAcceptedPatterns(accepted);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testExcludedNamePatternRejectsNestedKey() throws Exception {
+        this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultExcludedPatternsChecker excluded =
+                new org.apache.struts2.security.DefaultExcludedPatternsChecker();
+        excluded.setExcludedPatterns("bean\\.intField");
+        interceptor.setExcludedPatterns(excluded);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getBean());
+        assertEquals("keep", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
+    }
+
+    public void testExcludedValuePatternRejectsListElement() throws Exception {
+        this.request.setContent("{\"list\": [\"good\", \"badvalue\"]}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludedValuePatterns("badvalue");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getList());
+        assertEquals(1, action.getList().size());
+        assertEquals("good", action.getList().get(0));
+    }
+
+    public void testParamNameMaxLengthRejectsLongKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setParamNameMaxLength(2); // "foo" is length 3, over the limit
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+    }
+
+    public void testParameterNameAwareRejectsKey() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        ParameterAwareTestAction action = new ParameterAwareTestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testParameterValueAwareRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"blocked\", \"baz\":\"good\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        ParameterAwareTestAction action = new ParameterAwareTestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("good", action.getBaz());
+    }
+
+    public void testExcludedValuePatternRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"badvalue\", \"bar\":\"okvalue\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludedValuePatterns("badvalue");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("okvalue", action.getBar());
+    }
+
+    public void testAcceptedValuePatternRejectsValue() throws Exception {
+        this.request.setContent("{\"foo\":\"allowed\", \"bar\":\"other\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setAcceptedValuePatterns("allowed");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("allowed", action.getFoo());
+        assertNull(action.getBar());
+    }
+
+    public void testExcludePropertiesAppliedToInputWhenEnabled() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setApplyPropertyFiltersToInput(true);
+        interceptor.setExcludeProperties("foo");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNull(action.getFoo());
+        assertEquals("b", action.getBar());
+    }
+
+    public void testExcludePropertiesNotAppliedToInputByDefault() throws Exception {
+        this.request.setContent("{\"foo\":\"a\", \"bar\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setExcludeProperties("foo"); // configured, but flag off
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertEquals("a", action.getFoo());
+        assertEquals("b", action.getBar());
     }
 
     @Override

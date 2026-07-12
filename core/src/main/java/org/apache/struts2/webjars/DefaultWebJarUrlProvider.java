@@ -126,13 +126,7 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
         if (StaticContentLoader.Validator.containsMalformedPathSegment(normalized)) {
             LOG.debug("Rejecting WebJar path with malformed segment: {}", logicalPath);
             return Optional.empty();
-        }
-        for (String segment : normalized.split("/")) {
-            if (segment.equals(".")) {
-                LOG.debug("Rejecting WebJar path with dot segment: {}", logicalPath);
-                return Optional.empty();
-            }
-        }
+        }        
         int slash = normalized.indexOf('/');
         if (slash < 1 || slash == normalized.length() - 1) {
             return Optional.empty();

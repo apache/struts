@@ -103,11 +103,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      */
     protected final Calendar lastModifiedCal = Calendar.getInstance();
 
-    /**
-     * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     */
-    protected String encoding;
-
     protected boolean devMode;
 
     protected WebJarUrlProvider webJarUrlProvider;
@@ -141,16 +136,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
     public void setServeStaticBrowserCache(String serveStaticBrowserCache) {
         this.serveStaticBrowserCache = BooleanUtils.toBoolean(serveStaticBrowserCache);
-    }
-
-    /**
-     * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     *
-     * @param encoding New setting
-     */
-    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)

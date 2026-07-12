@@ -32,6 +32,7 @@ import org.apache.struts2.webjars.WebJarUrlProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +40,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.StringTokenizer;
 
 /**
@@ -205,11 +205,13 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
         throws IOException {
         String name = cleanupPath(path);
 
-        if (Validator.containsMalformedPathSegment(name)) {
-            LOG.debug("Rejecting static resource request with malformed path segment");
+        Optional<String> canonical = Validator.canonicalisePath(name);
+        if (canonical.isEmpty()) {
+            LOG.debug("Rejecting static resource request: path escapes intended scope");
             sendNotFound(response);
             return;
         }
+        name = "/" + canonical.get();
 
         if (name.startsWith(WEBJARS_REQUEST_PREFIX)) {
             if (!findWebJarResource(name, path, request, response)) {

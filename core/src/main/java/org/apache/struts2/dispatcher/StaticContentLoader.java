@@ -27,7 +27,9 @@ import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Locale;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Optional;
 /**
  * Interface for loading static resources, based on a path. After implementing your own static content loader
  * you must tell the framework how to use it, eg.
@@ -100,28 +102,31 @@ public interface StaticContentLoader {
             }
         }
         /**
-         * Checks whether the given path contains malformed segments that do not belong in a
-         * normalised resource path, such as dot-dot sequences, backslash separators, or
-         * percent-encoded forms that a well-behaved client would never send for static
-         * resource requests.
+         * Normalises a resource path by resolving {@code .} and {@code ..}
+         * segments and converting backslash separators to forward slashes.
          *
-         * @param path the path to check (must not be null)
-         * @return {@code true} if the path contains a suspicious segment
+         * <p>Returns {@link Optional#empty()} if the resolved path would
+         * escape above the root (i.e. more {@code ..} segments than
+         * preceding path components).</p>
+         *
+         * @param path the raw path to normalise (must not be null)
+         * @return the canonical path without leading slash, or empty if
+         *         the path escapes above the root
          */
-        public static boolean containsMalformedPathSegment(String path) {
-            if (path.contains("\\")) {
-                return true;
-            }
-            for (String segment : path.split("/")) {
-                if (segment.equals("..") || segment.equals(".")) {
-                    return true;
+        public static Optional<String> canonicalisePath(String path) {
+            String normalised = path.replace('\\', '/');
+            Deque<String> segments = new ArrayDeque<>();
+            for (String segment : normalised.split("/", -1)) {
+                if ("..".equals(segment)) {
+                    if (segments.isEmpty()) {
+                        return Optional.empty();
+                    }
+                    segments.removeLast();
+                } else if (!".".equals(segment) && !segment.isEmpty()) {
+                    segments.addLast(segment);
                 }
-                // Percent-encoded dot forms that have no place in a normalised static resource path
-                if (segment.toLowerCase(Locale.ROOT).contains("%2e")) {
-                    return true;
-                }
             }
-            return false;
+            return Optional.of(String.join("/", segments));
         }
     }
 }

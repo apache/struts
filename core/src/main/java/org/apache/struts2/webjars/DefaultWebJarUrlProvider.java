@@ -123,10 +123,12 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
             return Optional.empty();
         }
         String normalized = StringUtils.stripStart(logicalPath, "/");
-        if (StaticContentLoader.Validator.containsMalformedPathSegment(normalized)) {
-            LOG.debug("Rejecting WebJar path with malformed segment: {}", logicalPath);
+        Optional<String> canonical = StaticContentLoader.Validator.canonicalisePath(normalized);
+        if (canonical.isEmpty()) {
+            LOG.debug("Rejecting WebJar path that escapes above root: {}", logicalPath);
             return Optional.empty();
-        }        
+        }
+        normalized = canonical.get();
         int slash = normalized.indexOf('/');
         if (slash < 1 || slash == normalized.length() - 1) {
             return Optional.empty();

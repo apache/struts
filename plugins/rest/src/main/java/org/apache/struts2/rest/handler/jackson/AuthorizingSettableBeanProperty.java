@@ -86,6 +86,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
+            ParameterAuthorizationContext.markRedacted();
             p.skipChildren();
             return;
         }
@@ -106,6 +107,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
+            ParameterAuthorizationContext.markRedacted();
             p.skipChildren();
             return instance;
         }

@@ -68,7 +68,6 @@ public class DefaultStaticContentLoaderWebJarTest {
         webJarLoader.setServeStaticContent("true");
         webJarLoader.setStaticContentPath("/static");
         webJarLoader.setServeStaticBrowserCache("true");
-        webJarLoader.setEncoding("UTF-8");
         org.apache.struts2.webjars.DefaultWebJarUrlProvider provider =
             new org.apache.struts2.webjars.DefaultWebJarUrlProvider();
         provider.setEnabled(String.valueOf(enabled));

@@ -818,6 +818,48 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertTrue(action.getList() == null || action.getList().isEmpty());
     }
 
+    public void testExcludedNamePatternAppliesToListElementPath() throws Exception {
+        this.request.setContent("{\"list\": [\"x\", \"y\"]}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultExcludedPatternsChecker excluded =
+                new org.apache.struts2.security.DefaultExcludedPatternsChecker();
+        // Excludes the element path "list[0]" but not the container "list". Scalar list elements are
+        // full leaf binding targets, so the per-node checks (here, excluded patterns) are evaluated
+        // at the element path — mirroring the flat ParametersInterceptor path, which would exclude
+        // "list[0]".
+        excluded.setExcludedPatterns("list\\[0\\]");
+        interceptor.setExcludedPatterns(excluded);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertTrue(action.getList() == null || action.getList().isEmpty());
+    }
+
+    public void testAuthorizationAppliesToListElementPath() throws Exception {
+        this.request.setContent("{\"list\": [\"x\", \"y\"]}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        // Authorize the container "list" but reject the element path "list[0]". Scalar list elements
+        // now pass through @StrutsParameter authorization at their element path, so the elements are
+        // rejected even though the container is authorized.
+        interceptor.setParameterAuthorizer((parameterName, target, action) -> !"list[0]".equals(parameterName));
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertTrue(action.getList() == null || action.getList().isEmpty());
+    }
+
     public void testParameterNameAwareDoesNotRejectIntermediateNode() throws Exception {
         this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
         this.request.addHeader("Content-Type", "application/json");

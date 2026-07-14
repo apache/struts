@@ -270,10 +270,12 @@ public class JSONInterceptor extends AbstractInterceptor {
                 filterUnacceptableKeysRecursive((Map) item, elementPrefix, target, action);
             } else if (item instanceof java.util.List) {
                 filterUnacceptableList((java.util.List) item, elementPrefix, target, action);
-            // Scalar list elements are leaf binding targets: apply the leaf name-allowlist checks at
-            // the element path (e.g. "items[0]") plus value checks. The container key already passed
-            // the per-node checks in the caller.
-            } else if (!isAcceptableLeafName(elementPrefix, action) || !isAcceptableValue(elementPrefix, item, action)) {
+            // Scalar list elements are full leaf binding targets: apply the per-node checks, the leaf
+            // name-allowlist checks and the value checks at the element path (e.g. "items[0]"), so a
+            // scalar element is gated exactly as ParametersInterceptor gates the flat name "items[0]".
+            } else if (!isAcceptableNode(elementPrefix, target, action)
+                    || !isAcceptableLeafName(elementPrefix, action)
+                    || !isAcceptableValue(elementPrefix, item, action)) {
                 it.remove();
             }
         }

@@ -22,6 +22,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
@@ -77,7 +78,7 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
-    private JSONUtil jsonUtil;
+    private Container container;
     private ParameterAuthorizer parameterAuthorizer;
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
@@ -98,6 +99,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         String requestContentType = readContentType(request);
         String requestContentTypeEncoding = readContentTypeEncoding(request);
+        JSONUtil jsonUtil = getJSONUtil();
 
         Object rootObject = null;
         final ValueStack stack = invocation.getStack();
@@ -111,7 +113,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         if (jsonContentType.equalsIgnoreCase(requestContentType)) {
             // load JSON object
-            applyLimitsToReader();
+            applyLimitsToReader(jsonUtil);
             Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
             // JSON array (this.root cannot be null in this case)
@@ -157,7 +159,7 @@ public class JSONInterceptor extends AbstractInterceptor {
             Object result;
             if (this.enableSMD) {
                 // load JSON object
-                applyLimitsToReader();
+                applyLimitsToReader(jsonUtil);
                 Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
                 if (obj instanceof Map) {
@@ -208,7 +210,7 @@ public class JSONInterceptor extends AbstractInterceptor {
         return invocation.invoke();
     }
 
-    private void applyLimitsToReader() {
+    private void applyLimitsToReader(JSONUtil jsonUtil) {
         JSONReader reader = jsonUtil.getReader();
         reader.setMaxElements(maxElements);
         reader.setMaxDepth(maxDepth);
@@ -744,8 +746,12 @@ public class JSONInterceptor extends AbstractInterceptor {
     }
 
     @Inject
-    public void setJsonUtil(JSONUtil jsonUtil) {
-        this.jsonUtil = jsonUtil;
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    protected JSONUtil getJSONUtil() {
+        return container.getInstance(JSONUtil.class);
     }
 
     @Inject

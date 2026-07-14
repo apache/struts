@@ -44,10 +44,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
     private JSONInterceptor createInterceptor() {
         JSONInterceptor interceptor = new JSONInterceptor();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setReader(new StrutsJSONReader());
-        jsonUtil.setWriter(new StrutsJSONWriter());
-        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setContainer(container);
         // Default: allow all parameters (simulates requireAnnotations=false)
         interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
         interceptor.setExcludedPatterns(new org.apache.struts2.security.DefaultExcludedPatternsChecker());
@@ -567,10 +564,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         JSONInterceptor interceptor = new JSONInterceptor();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setReader(new StrutsJSONReader());
-        jsonUtil.setWriter(new StrutsJSONWriter());
-        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setContainer(container);
         // Only authorize "foo", reject "bar"
         interceptor.setParameterAuthorizer((parameterName, target, action) -> "foo".equals(parameterName));
         TestAction action = new TestAction();
@@ -589,10 +583,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         // Simulate a custom JSON reader producing a Map with a non-String key.
         // The authorizer should skip the entry rather than throw ClassCastException.
         JSONInterceptor interceptor = new JSONInterceptor();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setReader(new StrutsJSONReader());
-        jsonUtil.setWriter(new StrutsJSONWriter());
-        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setContainer(container);
         interceptor.setParameterAuthorizer((parameterName, target, action) -> true);
 
         java.util.Map<Object, Object> mixedKeyMap = new java.util.LinkedHashMap<>();
@@ -658,10 +649,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         JSONInterceptor interceptor = new JSONInterceptor();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setReader(new StrutsJSONReader());
-        jsonUtil.setWriter(new StrutsJSONWriter());
-        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setContainer(container);
         // Authorize "bean" (top-level) and "bean.stringField" (nested) but reject "bean.intField"
         interceptor.setParameterAuthorizer((parameterName, target, action) ->
                 "bean".equals(parameterName) || "bean.stringField".equals(parameterName));
@@ -688,10 +676,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request.addHeader("Content-Type", "application/json");
 
         JSONInterceptor interceptor = new JSONInterceptor();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setReader(new StrutsJSONReader());
-        jsonUtil.setWriter(new StrutsJSONWriter());
-        interceptor.setJsonUtil(jsonUtil);
+        interceptor.setContainer(container);
         interceptor.setRoot("bean");
         // Reject all parameters — simulates strict requireAnnotations
         interceptor.setParameterAuthorizer((parameterName, target, action) -> false);
@@ -903,6 +888,18 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
         assertEquals("a", action.getFoo());
         assertEquals("b", action.getBar());
+    }
+
+    public void testObtainsFreshJSONUtilAndReaderPerInvocation() {
+        JSONInterceptor interceptor = new JSONInterceptor();
+        interceptor.setContainer(container); // StrutsTestCase-provided container
+
+        JSONUtil first = interceptor.getJSONUtil();
+        JSONUtil second = interceptor.getJSONUtil();
+
+        assertNotSame("interceptor must obtain a fresh JSONUtil per request", first, second);
+        assertNotSame("each fresh JSONUtil must carry its own reader (no shared parse state)",
+                first.getReader(), second.getReader());
     }
 
     @Override

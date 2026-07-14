@@ -217,6 +217,18 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull(result.items().get("a").secret());
     }
 
+    public void testArrayOfRecordsAsCreatorParam_elementsAuthorizedByIndexedPath() throws Exception {
+        // Array-valued creator param -- exercises the type.isArray() branch of prefixForNested,
+        // rounding out the collection matrix alongside the List/Map cases above.
+        bind((path, t, a) -> "items".equals(path) || "items[0].value".equals(path), new WithArray("", null));
+        WithArray result = mapper.readValue(
+                "{\"label\":\"x\",\"items\":[{\"value\":\"v1\",\"secret\":\"s1\"}]}", WithArray.class);
+        assertNull(result.label());
+        assertEquals(1, result.items().length);
+        assertEquals("v1", result.items()[0].value());
+        assertNull(result.items()[0].secret());
+    }
+
     public void testListOfPlainPojosAsCreatorParam_elementsAuthorizedByIndexedPath() throws Exception {
         // The creator param itself (List<PlainAddr>) is record-bound, but its elements are an
         // ordinary field-based POJO -- exercises the two wrapping mechanisms handing off to each
@@ -368,6 +380,10 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     /** A creator-bound record whose component is a Map of further creator-bound records. */
     public record WithMap(String label, Map<String, Item> items) {
+    }
+
+    /** A creator-bound record whose component is an array of further creator-bound records. */
+    public record WithArray(String label, Item[] items) {
     }
 
     /** A creator-bound record whose component is a List of an ordinary field-based POJO. */

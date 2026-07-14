@@ -62,6 +62,10 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization (creator-bound property)", path);
             ParameterAuthorizationContext.markRedacted();
             p.skipChildren();
+            // Returning null redacts the value. For a primitive creator component this becomes the
+            // type default (0/false) unless FAIL_ON_NULL_FOR_PRIMITIVES is on (then construction
+            // fails and RedactionAwareDeserializer drops the whole object) -- either way the
+            // client-supplied value never lands, which is the point of the redaction.
             return null;
         }
         ParameterAuthorizationContext.pushPath(prefixForNested(path));

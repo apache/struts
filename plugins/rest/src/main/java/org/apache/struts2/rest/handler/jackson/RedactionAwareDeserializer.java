@@ -76,6 +76,10 @@ final class RedactionAwareDeserializer extends DelegatingDeserializer {
                 if (!ParameterAuthorizationContext.wasRedactedInCurrentScope()) {
                     throw e;
                 }
+                // If this object had a property redacted AND also hit an unrelated mapping error,
+                // the two are indistinguishable here, so the unrelated error is folded into
+                // "object dropped". This is deliberately fail-closed: we never expose a
+                // partially-built object, at the cost of a slightly less specific error.
                 LOG.warn("REST body object of type [{}] failed to construct after @StrutsParameter " +
                                 "redaction dropped one of its properties; treating the object as unauthorized: {}",
                         handledType() != null ? handledType().getName() : "?", e.getMessage());

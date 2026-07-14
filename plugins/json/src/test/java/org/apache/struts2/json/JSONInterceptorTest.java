@@ -777,11 +777,11 @@ public class JSONInterceptorTest extends StrutsTestCase {
         JSONInterceptor interceptor = createInterceptor();
         org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
                 new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
-        // Accept the intermediate node "bean" and the nested leaf "bean.stringField", but not
-        // "bean.intField". The intermediate node must itself match an accepted pattern, otherwise
-        // the whole subtree is dropped before the leaf is ever visited (accepted name patterns are
-        // raw full-match regexes with no hierarchy expansion, unlike include patterns).
-        accepted.setAcceptedPatterns("bean(\\.stringField)?");
+        // Leaf-targeting pattern: matches only the nested leaf "bean.stringField", not the
+        // intermediate node "bean". Accepted patterns are evaluated at leaf keys, so the
+        // intermediate node is not gated and the matching leaf still populates while the
+        // non-matching sibling "bean.intField" is dropped.
+        accepted.setAcceptedPatterns("bean\\.stringField");
         interceptor.setAcceptedPatterns(accepted);
         TestAction action = new TestAction();
 
@@ -793,6 +793,48 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNotNull(action.getBean());
         assertEquals("keep", action.getBean().getStringField());
         assertEquals(0, action.getBean().getIntField());
+    }
+
+    public void testAcceptedNamePatternAppliesToListElementPath() throws Exception {
+        this.request.setContent("{\"list\": [\"x\", \"y\"]}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
+                new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
+        // Matches the container name "list" but not the element path "list[0]". Because accepted
+        // patterns are evaluated at the leaf (the scalar element path), the elements are rejected
+        // even though the container name matches — mirroring the flat ParametersInterceptor path,
+        // which would evaluate "list[0]" and reject it.
+        accepted.setAcceptedPatterns("list");
+        interceptor.setAcceptedPatterns(accepted);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertTrue(action.getList() == null || action.getList().isEmpty());
+    }
+
+    public void testParameterNameAwareDoesNotRejectIntermediateNode() throws Exception {
+        this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        // The action's acceptableParameterName rejects the intermediate node "bean" but accepts the
+        // nested leaves. ParameterNameAware is evaluated at leaf keys, so the subtree is not dropped.
+        ParameterAwareTestAction action = new ParameterAwareTestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getBean());
+        assertEquals("keep", action.getBean().getStringField());
+        assertEquals(42, action.getBean().getIntField());
     }
 
     public void testExcludedValuePatternRejectsListElement() throws Exception {

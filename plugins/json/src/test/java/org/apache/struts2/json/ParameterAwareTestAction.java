@@ -26,6 +26,7 @@ public class ParameterAwareTestAction implements ParameterNameAware, ParameterVa
     private String foo;
     private String bar;
     private String baz;
+    private Bean bean;
 
     public String getFoo() {
         return foo;
@@ -51,9 +52,19 @@ public class ParameterAwareTestAction implements ParameterNameAware, ParameterVa
         this.baz = baz;
     }
 
+    public Bean getBean() {
+        return bean;
+    }
+
+    public void setBean(Bean bean) {
+        this.bean = bean;
+    }
+
     @Override
     public boolean acceptableParameterName(String parameterName) {
-        return !"bar".equals(parameterName);
+        // Reject the flat key "bar" and the intermediate node "bean"; nested leaves such as
+        // "bean.stringField" are accepted so tests can assert intermediate nodes are not gated.
+        return !"bar".equals(parameterName) && !"bean".equals(parameterName);
     }
 
     @Override

@@ -99,7 +99,6 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         String requestContentType = readContentType(request);
         String requestContentTypeEncoding = readContentTypeEncoding(request);
-        JSONUtil jsonUtil = getJSONUtil();
 
         Object rootObject = null;
         final ValueStack stack = invocation.getStack();
@@ -113,6 +112,7 @@ public class JSONInterceptor extends AbstractInterceptor {
 
         if (jsonContentType.equalsIgnoreCase(requestContentType)) {
             // load JSON object
+            JSONUtil jsonUtil = getJSONUtil();
             applyLimitsToReader(jsonUtil);
             Object obj = jsonUtil.deserializeInput(request.getReader(), maxLength);
 
@@ -156,6 +156,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 throw new JSONException("Unable to deserialize JSON object from request");
             }
         } else if (jsonRpcContentType.equalsIgnoreCase(requestContentType)) {
+            JSONUtil jsonUtil = getJSONUtil();
             Object result;
             if (this.enableSMD) {
                 // load JSON object

@@ -763,5 +763,4 @@ public class StrutsJSONWriter implements JSONWriter {
             return this;
         }
     }
-
 }

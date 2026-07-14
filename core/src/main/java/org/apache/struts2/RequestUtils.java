@@ -53,6 +53,11 @@ public class RequestUtils {
      * Retrieves the current request servlet path.
      * Deals with differences between servlet specs (2.2 vs 2.3+)
      *
+     * <p>Note: the fallback branch extracts from the raw {@code requestURI}, which may
+     * retain percent-encoded characters. Callers must not apply additional URL decoding
+     * to the returned value because the servlet container has already performed decoding
+     * where applicable.</p>
+     *
      * @param request the request
      * @return the servlet path
      */

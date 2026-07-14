@@ -27,7 +27,9 @@ import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Optional;
 /**
  * Interface for loading static resources, based on a path. After implementing your own static content loader
  * you must tell the framework how to use it, eg.
@@ -98,6 +100,33 @@ public interface StaticContentLoader {
                 LOG.debug("\"{}\" has been set to \"{}\"", StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, uiStaticContentPath);
                 return uiStaticContentPath;
             }
+        }
+        /**
+         * Normalises a resource path by resolving {@code .} and {@code ..}
+         * segments and converting backslash separators to forward slashes.
+         *
+         * <p>Returns {@link Optional#empty()} if the resolved path would
+         * escape above the root (i.e. more {@code ..} segments than
+         * preceding path components).</p>
+         *
+         * @param path the raw path to normalise (must not be null)
+         * @return the canonical path without leading slash, or empty if
+         *         the path escapes above the root
+         */
+        public static Optional<String> canonicalisePath(String path) {
+            String normalised = path.replace('\\', '/');
+            Deque<String> segments = new ArrayDeque<>();
+            for (String segment : normalised.split("/", -1)) {
+                if ("..".equals(segment)) {
+                    if (segments.isEmpty()) {
+                        return Optional.empty();
+                    }
+                    segments.removeLast();
+                } else if (!".".equals(segment) && !segment.isEmpty()) {
+                    segments.addLast(segment);
+                }
+            }
+            return Optional.of(String.join("/", segments));
         }
     }
 }

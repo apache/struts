@@ -39,6 +39,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -313,6 +318,75 @@ public class StrutsJSONWriterTest {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"calendar\":\"2012-12-23T10:10:10\""));
+    }
+
+    public static class NamedBean {
+        private final String owner;
+        private final String secret;
+
+        public NamedBean(String owner, String secret) {
+            this.owner = owner;
+            this.secret = secret;
+        }
+
+        public String getOwner() { return owner; }
+        public String getSecret() { return secret; }
+    }
+
+    /**
+     * A single StrutsJSONWriter instance is injected once into JSONUtil/JSONResult and reused
+     * across every concurrent response handled by that result, so write() must be safe to call
+     * concurrently from multiple threads on the same instance without one call's output buffer
+     * leaking into -- or being overwritten by -- another call's output.
+     *
+     * <p>Uses a higher thread count than the minimum needed to demonstrate the bug: with only two
+     * threads on a machine with many cores, the OS scheduler has no need to preempt either thread
+     * mid-call, so the race window is rarely hit and the test can pass even against the unpatched
+     * code. Sixteen threads contending for the same instance reproduces the corruption reliably.</p>
+     */
+    @Test
+    public void testConcurrentReuseDoesNotSwapResponsesAcrossWrites() throws Exception {
+        JSONWriter sharedWriter = new StrutsJSONWriter();
+        int threadCount = 16;
+        int iterations = 20_000;
+        AtomicInteger corrupted = new AtomicInteger();
+        CountDownLatch start = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
+
+        for (int t = 0; t < threadCount; t++) {
+            String secret = "SECRET_" + t + "_9f8e7d6c5b4a3210";
+            NamedBean own = new NamedBean("user" + t, secret);
+            pool.submit(() -> {
+                await(start);
+                for (int i = 0; i < iterations; i++) {
+                    try {
+                        String response = sharedWriter.write(own);
+                        if (!response.contains(secret)) {
+                            // this thread's own response doesn't even contain its own data:
+                            // the shared buffer was corrupted or overwritten by another thread
+                            corrupted.incrementAndGet();
+                        }
+                    } catch (JSONException ignored) {
+                        // a failed serialize under contention is not itself the thing measured here
+                    }
+                }
+            });
+        }
+
+        start.countDown();
+        pool.shutdown();
+        assertTrue(pool.awaitTermination(120, TimeUnit.SECONDS));
+
+        assertEquals("a concurrently-written response must never overwrite or corrupt this " +
+                "thread's own response", 0, corrupted.get());
+    }
+
+    private static void await(CountDownLatch latch) {
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }

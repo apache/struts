@@ -66,6 +66,14 @@ import java.util.regex.Pattern;
  * Serializes an object into JavaScript Object Notation (JSON). If cyclic
  * references are detected they will be nulled out.
  * </p>
+ *
+ * <p>
+ * A single StrutsJSONWriter instance is shared across all concurrent responses handled by a given
+ * JSONResult/JSONInterceptor (it is injected once, not created per request), so the output buffer,
+ * cycle-detection stack and other per-write state are kept in a {@link ThreadLocal}, not instance
+ * fields -- otherwise two concurrent {@link #write(Object)} calls would corrupt each other's output,
+ * including returning one request's serialized data as another, unrelated request's response.
+ * </p>
  */
 public class StrutsJSONWriter implements JSONWriter {
 
@@ -84,17 +92,22 @@ public class StrutsJSONWriter implements JSONWriter {
         BEAN_INFO_CACHE.clear();
     }
 
-    private final StringBuilder buf = new StringBuilder();
-    private final Deque<Object> stack = new ArrayDeque<>();
+    private static final class WriteState {
+        private final StringBuilder buf = new StringBuilder();
+        private final Deque<Object> stack = new ArrayDeque<>();
+        private Object root;
+        private boolean buildExpr = true;
+        private String exprStack = "";
+        private Collection<Pattern> excludeProperties;
+        private Collection<Pattern> includeProperties;
+        private boolean excludeNullProperties;
+    }
+
+    private static final ThreadLocal<WriteState> WRITE_STATE = new ThreadLocal<>();
+
     private boolean ignoreHierarchy = true;
-    private Object root;
-    private boolean buildExpr = true;
-    private String exprStack = "";
-    private Collection<Pattern> excludeProperties;
-    private Collection<Pattern> includeProperties;
     private DateFormat dateFormat;
     private boolean enumAsBean = ENUM_AS_BEAN_DEFAULT;
-    private boolean excludeNullProperties;
     private boolean excludeProxyProperties;
     private ProxyService proxyService;
 
@@ -129,18 +142,20 @@ public class StrutsJSONWriter implements JSONWriter {
     @Override
     public String write(Object object, Collection<Pattern> excludeProperties,
                         Collection<Pattern> includeProperties, boolean excludeNullProperties) throws JSONException {
-        this.excludeNullProperties = excludeNullProperties;
-        this.buf.setLength(0);
-        this.stack.clear();
-        this.root = object;
-        this.exprStack = "";
-        this.buildExpr = ((excludeProperties != null) && !excludeProperties.isEmpty())
+        WriteState state = new WriteState();
+        state.excludeNullProperties = excludeNullProperties;
+        state.root = object;
+        state.buildExpr = ((excludeProperties != null) && !excludeProperties.isEmpty())
                 || ((includeProperties != null) && !includeProperties.isEmpty());
-        this.excludeProperties = excludeProperties;
-        this.includeProperties = includeProperties;
-        this.value(object, null);
-
-        return this.buf.toString();
+        state.excludeProperties = excludeProperties;
+        state.includeProperties = includeProperties;
+        WRITE_STATE.set(state);
+        try {
+            this.value(object, null);
+            return state.buf.toString();
+        } finally {
+            WRITE_STATE.remove();
+        }
     }
 
     /**
@@ -156,7 +171,7 @@ public class StrutsJSONWriter implements JSONWriter {
             return;
         }
 
-        if (this.stack.contains(object)) {
+        if (WRITE_STATE.get().stack.contains(object)) {
             Class<?> clazz = object.getClass();
 
             // cyclic reference
@@ -181,7 +196,8 @@ public class StrutsJSONWriter implements JSONWriter {
      * @throws JSONException in case of error during serialize
      */
     protected void process(Object object, Method method) throws JSONException {
-        this.stack.push(object);
+        WriteState state = WRITE_STATE.get();
+        state.stack.push(object);
 
         if (object instanceof Class) {
             this.string(object);
@@ -213,7 +229,7 @@ public class StrutsJSONWriter implements JSONWriter {
             processCustom(object, method);
         }
 
-        this.stack.pop();
+        state.stack.pop();
     }
 
     /**
@@ -236,12 +252,13 @@ public class StrutsJSONWriter implements JSONWriter {
     protected void bean(Object object) throws JSONException {
         this.add("{");
 
+        WriteState state = WRITE_STATE.get();
         BeanInfo info;
 
         try {
             Class<?> clazz = excludeProxyProperties ? proxyService.ultimateTargetClass(object) : object.getClass();
 
-            info = ((object == this.root) && this.ignoreHierarchy)
+            info = ((object == state.root) && this.ignoreHierarchy)
                     ? getBeanInfoIgnoreHierarchy(clazz)
                     : getBeanInfo(clazz);
 
@@ -267,7 +284,7 @@ public class StrutsJSONWriter implements JSONWriter {
                         continue;
                     }
                     String expr = null;
-                    if (this.buildExpr) {
+                    if (state.buildExpr) {
                         expr = this.expandExpr(name);
                         if (this.shouldExcludeProperty(expr)) {
                             continue;
@@ -282,7 +299,7 @@ public class StrutsJSONWriter implements JSONWriter {
 
                     boolean propertyPrinted = this.add(name, value, accessor, hasData);
                     hasData = hasData || propertyPrinted;
-                    if (this.buildExpr) {
+                    if (state.buildExpr) {
                         this.setExprStack(expr);
                     }
                 }
@@ -397,25 +414,28 @@ public class StrutsJSONWriter implements JSONWriter {
     }
 
     protected String expandExpr(int i) {
-        return this.exprStack + "[" + i + "]";
+        return WRITE_STATE.get().exprStack + "[" + i + "]";
     }
 
     protected String expandExpr(String property) {
-        if (this.exprStack.isEmpty()) {
+        String exprStack = WRITE_STATE.get().exprStack;
+        if (exprStack.isEmpty()) {
             return property;
         }
-        return this.exprStack + "." + property;
+        return exprStack + "." + property;
     }
 
     protected String setExprStack(String expr) {
-        String s = this.exprStack;
-        this.exprStack = expr;
+        WriteState state = WRITE_STATE.get();
+        String s = state.exprStack;
+        state.exprStack = expr;
         return s;
     }
 
     protected boolean shouldExcludeProperty(String expr) {
-        if (this.excludeProperties != null) {
-            for (Pattern pattern : this.excludeProperties) {
+        WriteState state = WRITE_STATE.get();
+        if (state.excludeProperties != null) {
+            for (Pattern pattern : state.excludeProperties) {
                 if (pattern.matcher(expr).matches()) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Ignoring property because of exclude rule: " + expr);
@@ -425,8 +445,8 @@ public class StrutsJSONWriter implements JSONWriter {
             }
         }
 
-        if (this.includeProperties != null) {
-            for (Pattern pattern : this.includeProperties) {
+        if (state.includeProperties != null) {
+            for (Pattern pattern : state.includeProperties) {
                 if (pattern.matcher(expr).matches()) {
                     return false;
                 }
@@ -443,7 +463,7 @@ public class StrutsJSONWriter implements JSONWriter {
      * Add name/value pair to buffer
      */
     protected boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
-        if (excludeNullProperties && value == null) {
+        if (WRITE_STATE.get().excludeNullProperties && value == null) {
             return false;
         }
         if (hasData) {
@@ -462,24 +482,25 @@ public class StrutsJSONWriter implements JSONWriter {
     protected void map(Map<?, ?> map, Method method) throws JSONException {
         this.add("{");
 
+        WriteState state = WRITE_STATE.get();
         Iterator<?> it = map.entrySet().iterator();
 
         boolean warnedNonString = false; // one report per map
         boolean hasData = false;
         while (it.hasNext()) {
             Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
-            if (excludeNullProperties && entry.getValue() == null) {
+            if (state.excludeNullProperties && entry.getValue() == null) {
                 continue;
             }
 
             Object key = entry.getKey();
             if (key == null) {
-                LOG.error("Cannot build expression for null key in {}", exprStack);
+                LOG.error("Cannot build expression for null key in {}", state.exprStack);
                 continue;
             }
 
             String expr = null;
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 expr = this.expandExpr(key.toString());
                 if (this.shouldExcludeProperty(expr)) {
                     continue;
@@ -499,7 +520,7 @@ public class StrutsJSONWriter implements JSONWriter {
             this.value(key.toString(), method);
             this.add(":");
             this.value(entry.getValue(), method);
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 this.setExprStack(expr);
             }
         }
@@ -566,10 +587,11 @@ public class StrutsJSONWriter implements JSONWriter {
     protected void array(Iterator<?> it, Method method) throws JSONException {
         this.add("[");
 
+        WriteState state = WRITE_STATE.get();
         boolean hasData = false;
         for (int i = 0; it.hasNext(); i++) {
             String expr = null;
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 expr = this.expandExpr(i);
                 if (this.shouldExcludeProperty(expr)) {
                     it.next();
@@ -582,7 +604,7 @@ public class StrutsJSONWriter implements JSONWriter {
             }
             hasData = true;
             this.value(it.next(), method);
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 this.setExprStack(expr);
             }
         }
@@ -596,12 +618,13 @@ public class StrutsJSONWriter implements JSONWriter {
     protected void array(Object object, Method method) throws JSONException {
         this.add("[");
 
+        WriteState state = WRITE_STATE.get();
         int length = Array.getLength(object);
 
         boolean hasData = false;
         for (int i = 0; i < length; ++i) {
             String expr = null;
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 expr = this.expandExpr(i);
                 if (this.shouldExcludeProperty(expr)) {
                     continue;
@@ -613,7 +636,7 @@ public class StrutsJSONWriter implements JSONWriter {
             }
             hasData = true;
             this.value(Array.get(object, i), method);
-            if (this.buildExpr) {
+            if (state.buildExpr) {
                 this.setExprStack(expr);
             }
         }
@@ -669,14 +692,14 @@ public class StrutsJSONWriter implements JSONWriter {
      * Add object to buffer
      */
     protected void add(Object obj) {
-        this.buf.append(obj);
+        WRITE_STATE.get().buf.append(obj);
     }
 
     /*
      * Add char to buffer
      */
     protected void add(char c) {
-        this.buf.append(c);
+        WRITE_STATE.get().buf.append(c);
     }
 
     /**
@@ -759,5 +782,4 @@ public class StrutsJSONWriter implements JSONWriter {
             return this;
         }
     }
-
 }

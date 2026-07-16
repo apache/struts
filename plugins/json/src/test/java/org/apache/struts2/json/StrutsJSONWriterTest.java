@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.json;
 
+import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.junit.util.TestUtils;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -313,6 +315,100 @@ public class StrutsJSONWriterTest {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         String json = jsonWriter.write(bean);
         assertTrue(json.contains("\"calendar\":\"2012-12-23T10:10:10\""));
+    }
+
+    @Test
+    public void testSerializeSimpleRecord() throws Exception {
+        record Person(String name, int age) {}
+        Person r = new Person("Alice", 30);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertEquals("{\"name\":\"Alice\",\"age\":30}", json);
+    }
+
+    @Test
+    public void testSerializeRecordWithNullField() throws Exception {
+        record RecordWithNullField(String name, String optional) {}
+        RecordWithNullField r = new RecordWithNullField("Bob", null);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String withNullJson = jsonWriter.write(r);
+        assertEquals("{\"name\":\"Bob\",\"optional\":null}", withNullJson);
+        String nonNullJson = jsonWriter.write(r, null, null, true);
+        assertEquals("{\"name\":\"Bob\"}", nonNullJson);
+    }
+
+
+    @Test
+    public void testSerializeNestedRecord() throws Exception {
+        record InnerRecord(String label) {}
+        record OuterRecord(String label, InnerRecord inner) {}
+        OuterRecord r = new OuterRecord("outer", new InnerRecord("inner"));
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertEquals("{\"label\":\"outer\",\"inner\":{\"label\":\"inner\"}}", json);
+    }
+
+    @Test
+    public void testSerializeRecordSkipsComponentAnnotatedWithSerializeFalse() throws Exception {
+        record RecordWithAnnotatedComponent(@JSON(serialize = false) String secret, String visible) {}
+        RecordWithAnnotatedComponent r = new RecordWithAnnotatedComponent("topsecret", "hello");
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertFalse("secret component should be excluded", json.contains("secret"));
+        assertTrue(json.contains("\"visible\":\"hello\""));
+    }
+
+    @Test
+    public void testSerializeRecordUsesRenamedComponentFromJsonAnnotation() throws Exception {
+        record RecordWithRenamedComponent(@JSON(name = "fullName") String name, int age) {}
+        RecordWithRenamedComponent r = new RecordWithRenamedComponent("Alice", 30);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertFalse("original key 'name' should not appear", json.contains("\"name\""));
+        assertTrue(json.contains("\"fullName\":\"Alice\""));
+        assertTrue(json.contains("\"age\":30"));
+    }
+
+    @Test
+    public void testSerializeRecordWithListField() throws Exception {
+        record RecordWithList(String title, List<String> tags) {}
+        RecordWithList r = new RecordWithList("news", List.of("java", "records"));
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertEquals("{\"title\":\"news\",\"tags\":[\"java\",\"records\"]}", json);
+    }
+
+    @Test
+    public void testSerializeRecordIncludePropertyFilter() throws Exception {
+        record Person(String name, int age) {}
+        Person r = new Person("Alice", 30);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        List<Pattern> include = List.of(Pattern.compile("name"));
+        String json = jsonWriter.write(r, null, include, false);
+        assertTrue(json.contains("\"name\""));
+        assertFalse(json.contains("\"age\""));
+    }
+
+    @Test
+    public void testSerializeRecordExcludePropertyFilter() throws Exception {
+        record Person(String name, int age) {}
+        Person r = new Person("Alice", 30);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        List<Pattern> exclude = List.of(Pattern.compile("age"));
+        String json = jsonWriter.write(r, exclude, null, false);
+        assertTrue(json.contains("\"name\""));
+        assertFalse(json.contains("\"age\""));
+    }
+
+    @Test
+    public void testSerializeRecordWithFieldBridge() throws Exception {
+        record LinkRecord(@JSONFieldBridge URL homepage, String name) {}
+        URL url = URI.create("https://www.google.com").toURL();
+        LinkRecord r = new LinkRecord(url, "Struts");
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(r);
+        assertTrue(json.contains("\"homepage\":\"https:\\/\\/www.google.com\""));
+        assertTrue(json.contains("\"name\":\"Struts\""));
     }
 
 }

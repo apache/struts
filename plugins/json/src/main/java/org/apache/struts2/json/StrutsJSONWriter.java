@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -158,6 +159,11 @@ public class StrutsJSONWriter implements JSONWriter {
     protected void value(Object object, Method method) throws JSONException {
         if (object == null) {
             this.add("null");
+            return;
+        }
+
+        if (object instanceof Optional<?> optional) {
+            this.value(optional.orElse(null), method);
             return;
         }
 
@@ -502,11 +508,15 @@ public class StrutsJSONWriter implements JSONWriter {
         return false;
     }
 
+    private static boolean isAbsent(Object value) {
+        return value == null || (value instanceof Optional<?> opt && opt.isEmpty());
+    }
+
     /*
      * Add name/value pair to buffer
      */
     protected boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
-        if (excludeNullProperties && value == null) {
+        if (excludeNullProperties && isAbsent(value)) {
             return false;
         }
         if (hasData) {
@@ -531,7 +541,7 @@ public class StrutsJSONWriter implements JSONWriter {
         boolean hasData = false;
         while (it.hasNext()) {
             Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
-            if (excludeNullProperties && entry.getValue() == null) {
+            if (excludeNullProperties && isAbsent(entry.getValue())) {
                 continue;
             }
 

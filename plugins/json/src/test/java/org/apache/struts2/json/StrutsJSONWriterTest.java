@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -409,6 +410,68 @@ public class StrutsJSONWriterTest {
         String json = jsonWriter.write(r);
         assertTrue(json.contains("\"homepage\":\"https:\\/\\/www.google.com\""));
         assertTrue(json.contains("\"name\":\"Struts\""));
+    }
+
+    @Test
+    public void testSerializeOptionalPresent() throws Exception {
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        assertEquals("\"hello\"", jsonWriter.write(Optional.of("hello")));
+    }
+
+    @Test
+    public void testSerializeOptionalEmpty() throws Exception {
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        assertEquals("null", jsonWriter.write(Optional.empty()));
+    }
+
+    class BeanWithOptional {
+        private String field;
+
+        public Optional<String> getField() {
+            return Optional.ofNullable(field);
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+    }
+
+    @Test
+    public void testSerializeBeanWithOptionalWithNull() throws Exception {
+        BeanWithOptional bean = new BeanWithOptional();
+        bean.setField(null);
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(bean);
+        assertTrue(json.contains("\"field\":null"));
+    }
+
+    @Test
+    public void testSerializeBeanWithOptionalWithValue() throws Exception {
+        BeanWithOptional bean = new BeanWithOptional();
+        bean.setField("value");
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(bean);
+        assertTrue(json.contains("\"field\":\"value\""));
+    }
+
+    @Test
+    public void testMapWithOptionalEmptyValueExcludedWhenExcludeNullProperties() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("present", Optional.of("hello"));
+        map.put("absent", Optional.empty());
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(map, null, null, true);
+        assertEquals("{\"present\":\"hello\"}", json);
+    }
+
+    @Test
+    public void testMapWithOptionalEmptyValueIncludedAsNull() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("present", Optional.of("hello"));
+        map.put("absent", Optional.empty());
+        JSONWriter jsonWriter = new StrutsJSONWriter();
+        String json = jsonWriter.write(map, null, null, false);
+        assertEquals("{\"present\":\"hello\",\"absent\":null}", json);
     }
 
 }

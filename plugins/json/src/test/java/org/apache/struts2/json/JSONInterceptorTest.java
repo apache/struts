@@ -755,6 +755,31 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals(0, action.getBean().getIntField());
     }
 
+    public void testAcceptedNamePatternRejectsNestedKey() throws Exception {
+        this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
+                new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
+        // Accept the intermediate node "bean" and the nested leaf "bean.stringField", but not
+        // "bean.intField". The intermediate node must itself match an accepted pattern, otherwise
+        // the whole subtree is dropped before the leaf is ever visited (accepted name patterns are
+        // raw full-match regexes with no hierarchy expansion, unlike include patterns).
+        accepted.setAcceptedPatterns("bean(\\.stringField)?");
+        interceptor.setAcceptedPatterns(accepted);
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getBean());
+        assertEquals("keep", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
+    }
+
     public void testExcludedValuePatternRejectsListElement() throws Exception {
         this.request.setContent("{\"list\": [\"good\", \"badvalue\"]}".getBytes());
         this.request.addHeader("Content-Type", "application/json");
@@ -900,6 +925,28 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertNotSame("interceptor must obtain a fresh JSONUtil per request", first, second);
         assertNotSame("each fresh JSONUtil must carry its own reader (no shared parse state)",
                 first.getReader(), second.getReader());
+    }
+
+    public void testIncludePropertiesAppliedToNestedInputWhenEnabled() throws Exception {
+        this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setApplyPropertyFiltersToInput(true);
+        // Include patterns expand across the hierarchy: "bean.stringField" compiles patterns for
+        // both the intermediate node "bean" and the leaf "bean.stringField", so the nested leaf
+        // populates while the excluded sibling "bean.intField" is dropped.
+        interceptor.setIncludeProperties("bean\\.stringField");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        interceptor.intercept(this.invocation);
+
+        assertNotNull(action.getBean());
+        assertEquals("keep", action.getBean().getStringField());
+        assertEquals(0, action.getBean().getIntField());
     }
 
     @Override

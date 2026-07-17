@@ -39,6 +39,7 @@ public final class ParameterAuthorizationContext {
 
     private static final ThreadLocal<State> STATE = new ThreadLocal<>();
     private static final ThreadLocal<Deque<String>> PATH_STACK = ThreadLocal.withInitial(ArrayDeque::new);
+    private static final ThreadLocal<Deque<RedactionScope>> REDACTION_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 
     private ParameterAuthorizationContext() {
         // utility
@@ -67,6 +68,7 @@ public final class ParameterAuthorizationContext {
     public static void unbind() {
         STATE.remove();
         PATH_STACK.remove();
+        REDACTION_STACK.remove();
     }
 
     /**
@@ -130,6 +132,48 @@ public final class ParameterAuthorizationContext {
         return prefix.isEmpty() ? propertyName : prefix + "." + propertyName;
     }
 
+    /**
+     * Pushes a fresh redaction scope, tracking whether any creator-bound property directly inside
+     * the object about to be constructed was rejected by {@link #isAuthorized}. Callers that
+     * construct a bean via a creator/builder (e.g. a bean-level deserializer wrapper) push a scope
+     * before construction and pop it in a {@code finally} block afterwards.
+     */
+    public static void pushRedactionScope() {
+        REDACTION_STACK.get().push(new RedactionScope());
+    }
+
+    /**
+     * Pops the current redaction scope. Has no effect if the stack is empty.
+     */
+    public static void popRedactionScope() {
+        Deque<RedactionScope> stack = REDACTION_STACK.get();
+        if (!stack.isEmpty()) {
+            stack.pop();
+        }
+    }
+
+    /**
+     * Marks the current redaction scope as having dropped at least one property. Used to
+     * distinguish "this construction failed because we substituted a redacted value" (safe to
+     * treat the whole object as unauthorized) from "this construction failed for an unrelated
+     * reason" (a genuine client error, which must still propagate).
+     */
+    public static void markRedacted() {
+        RedactionScope top = REDACTION_STACK.get().peek();
+        if (top != null) {
+            top.redacted = true;
+        }
+    }
+
+    /**
+     * @return {@code true} if {@link #markRedacted()} was called since the current redaction scope
+     * was pushed.
+     */
+    public static boolean wasRedactedInCurrentScope() {
+        RedactionScope top = REDACTION_STACK.get().peek();
+        return top != null && top.redacted;
+    }
+
     private static final class State {
         final ParameterAuthorizer authorizer;
         final Object target;
@@ -140,5 +184,9 @@ public final class ParameterAuthorizationContext {
             this.target = target;
             this.action = action;
         }
+    }
+
+    private static final class RedactionScope {
+        boolean redacted;
     }
 }

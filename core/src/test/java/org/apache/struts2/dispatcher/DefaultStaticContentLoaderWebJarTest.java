@@ -68,7 +68,6 @@ public class DefaultStaticContentLoaderWebJarTest {
         webJarLoader.setServeStaticContent("true");
         webJarLoader.setStaticContentPath("/static");
         webJarLoader.setServeStaticBrowserCache("true");
-        webJarLoader.setEncoding("UTF-8");
         org.apache.struts2.webjars.DefaultWebJarUrlProvider provider =
             new org.apache.struts2.webjars.DefaultWebJarUrlProvider();
         provider.setEnabled(String.valueOf(enabled));
@@ -113,6 +112,17 @@ public class DefaultStaticContentLoaderWebJarTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         webJarLoader.findStaticResource("/static/webjars/jquery/jquery.min.js", request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+    
+    @Test
+    public void webJarEncodedTraversalReturns404() throws Exception {
+        DefaultStaticContentLoader webJarLoader = newLoader(true);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        webJarLoader.findStaticResource("/static/webjars/jquery/%2e%2e/%2e%2e/etc/passwd", request, response);
 
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }

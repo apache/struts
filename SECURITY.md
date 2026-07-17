@@ -52,6 +52,28 @@ The mailing address is: [security@struts.apache.org](mailto:security@struts.apac
 
 [The Apache Security Team](http://www.apache.org/security/)
 
+## Do not disclose through a pull request, commit, or issue
+
+**A fix is a disclosure.** Opening a public pull request, pushing a commit, branch, or
+fork, or filing a public Jira/GitHub issue that **fixes, describes, or hints at** a
+suspected vulnerability reveals where the weakness is — often with a working roadmap to
+exploit it — before a fixed release exists. This holds even if you never attach a
+proof-of-concept, and even if you believe the impact is low or you are "just hardening"
+the code.
+
+If you have found, or suspect you have found, a security problem:
+
+- **Do not** open a public PR, commit, branch, fork, Jira issue, or mailing-list thread
+  for it.
+- **Do** email [security@struts.apache.org](mailto:security@struts.apache.org) first and
+  wait for the PMC to triage it and agree how the fix will be handled — the fix is
+  typically prepared privately and landed alongside the advisory and release.
+
+If you notice a possible security issue while working on an unrelated bug or PR, stop and
+email the private list before pushing the change. **When in doubt, treat it as
+security-sensitive and email the list** — a private report that turns out to be a
+non-issue costs far less than a public change that turns out to be exploitable.
+
 ## Before Reporting
 
 Before sending a vulnerability report, run through the following checks. They exist to prevent duplicate reports, public disclosure of untriaged issues,
@@ -128,8 +150,9 @@ Do not speculate beyond what can be demonstrated. If severity is uncertain, say 
 - One vulnerability per report.
 - Keep reproduction steps minimal and self-contained.
 - Do not include unrelated findings.
-- Do not publish exploit details or proof-of-concept code publicly before the Struts project has triaged the issue. **Pushing a PoC to a public GitHub
-  repository, gist, fork, or branch counts as public disclosure** — even a "test" or throwaway repo. Private repositories are acceptable for sharing a PoC,
-  but access must be granted individually to each PMC member who will triage the report.
+- Do not publish exploit details or proof-of-concept code publicly before the Struts project has triaged the issue. **A fix, patch, or hardening change is a
+  public disclosure in the same way a PoC is** — see [Do not disclose through a pull request, commit, or issue](#do-not-disclose-through-a-pull-request-commit-or-issue).
+  **Pushing a PoC to a public GitHub repository, gist, fork, or branch counts as public disclosure** — even a "test" or throwaway repo. Private repositories
+  are acceptable for sharing a PoC, but access must be granted individually to each PMC member who will triage the report.
 - Do not send ordinary bugs, usage questions, or generic denial-of-service concerns to the private security list.
 - If the issue is not a vulnerability in Apache Struts source code, use the appropriate public support or issue channel instead.

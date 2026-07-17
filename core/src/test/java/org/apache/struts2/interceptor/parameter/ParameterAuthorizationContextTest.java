@@ -126,4 +126,47 @@ public class ParameterAuthorizationContextTest {
         assertThat(ParameterAuthorizationContext.isActive()).isFalse();
         assertThat(ParameterAuthorizationContext.currentPathPrefix()).isEmpty();
     }
+
+    @Test
+    public void redactionScope_notRedactedByDefault() {
+        ParameterAuthorizationContext.pushRedactionScope();
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isFalse();
+    }
+
+    @Test
+    public void markRedacted_marksCurrentScopeOnly() {
+        ParameterAuthorizationContext.markRedacted(); // no scope pushed yet -- must be a safe no-op
+        ParameterAuthorizationContext.pushRedactionScope();
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isFalse();
+        ParameterAuthorizationContext.markRedacted();
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isTrue();
+    }
+
+    @Test
+    public void redactionScope_nestedScopesAreIndependent() {
+        ParameterAuthorizationContext.pushRedactionScope(); // outer
+        ParameterAuthorizationContext.pushRedactionScope(); // inner
+        ParameterAuthorizationContext.markRedacted(); // marks inner only
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isTrue();
+        ParameterAuthorizationContext.popRedactionScope(); // back to outer
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope())
+                .as("marking the inner scope must not leak into the outer scope")
+                .isFalse();
+    }
+
+    @Test
+    public void popRedactionScope_onEmptyStack_isSafeNoOp() {
+        ParameterAuthorizationContext.popRedactionScope();
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isFalse();
+    }
+
+    @Test
+    public void unbind_clearsRedactionStack() {
+        ParameterAuthorizationContext.pushRedactionScope();
+        ParameterAuthorizationContext.markRedacted();
+        ParameterAuthorizationContext.unbind();
+        // A fresh scope after unbind must not inherit the pre-unbind redaction state.
+        ParameterAuthorizationContext.pushRedactionScope();
+        assertThat(ParameterAuthorizationContext.wasRedactedInCurrentScope()).isFalse();
+    }
 }

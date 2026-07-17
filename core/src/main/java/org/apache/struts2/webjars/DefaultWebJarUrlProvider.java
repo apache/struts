@@ -123,15 +123,12 @@ public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
             return Optional.empty();
         }
         String normalized = StringUtils.stripStart(logicalPath, "/");
-        if (normalized.contains("\\")) {
+        Optional<String> canonical = StaticContentLoader.Validator.canonicalisePath(normalized);
+        if (canonical.isEmpty()) {
+            LOG.debug("Rejecting WebJar path that escapes above root: {}", logicalPath);
             return Optional.empty();
         }
-        for (String segment : normalized.split("/")) {
-            if (segment.equals("..") || segment.equals(".")) {
-                LOG.debug("Rejecting WebJar path with traversal segment: {}", logicalPath);
-                return Optional.empty();
-            }
-        }
+        normalized = canonical.get();
         int slash = normalized.indexOf('/');
         if (slash < 1 || slash == normalized.length() - 1) {
             return Optional.empty();

@@ -220,6 +220,18 @@ public class IncludeTagTest extends AbstractTagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testGetContextRelativePathExcessDotDot() {
+        // Excess ".." segments beyond root should be silently clamped, not throw EmptyStackException
+        String result = Include.getContextRelativePath(request, "/../../../other/resource.jsp");
+        assertEquals("/other/resource.jsp", result);
+    }
+
+    public void testGetContextRelativePathAllDotDot() {
+        // All segments are ".." - should resolve to root
+        String result = Include.getContextRelativePath(request, "/a/../../..");
+        assertEquals("/", result);
+    }
+
     public void testIncludeSetUseResponseEncodingTrue() throws Exception {
         // TODO: If possible in future mock-test an actual content-includes with various encodings
         //   while setting the response encoding to match.  Doesn't appear to be possible

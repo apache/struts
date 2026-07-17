@@ -32,16 +32,14 @@ import org.apache.struts2.webjars.WebJarUrlProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.StringTokenizer;
 
 /**
@@ -105,11 +103,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      */
     protected final Calendar lastModifiedCal = Calendar.getInstance();
 
-    /**
-     * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     */
-    protected String encoding;
-
     protected boolean devMode;
 
     protected WebJarUrlProvider webJarUrlProvider;
@@ -143,16 +136,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
     public void setServeStaticBrowserCache(String serveStaticBrowserCache) {
         this.serveStaticBrowserCache = BooleanUtils.toBoolean(serveStaticBrowserCache);
-    }
-
-    /**
-     * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     *
-     * @param encoding New setting
-     */
-    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -221,6 +204,14 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         String name = cleanupPath(path);
+
+        Optional<String> canonical = Validator.canonicalisePath(name);
+        if (canonical.isEmpty()) {
+            LOG.debug("Rejecting static resource request: path escapes intended scope");
+            sendNotFound(response);
+            return;
+        }
+        name = "/" + canonical.get();
 
         if (name.startsWith(WEBJARS_REQUEST_PREFIX)) {
             if (!findWebJarResource(name, path, request, response)) {
@@ -353,17 +344,12 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * @param name          resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
-     * @throws UnsupportedEncodingException If there is a encoding problem
      */
-    protected String buildPath(String name, String packagePrefix) throws UnsupportedEncodingException {
-        String resourcePath;
+    protected String buildPath(String name, String packagePrefix) {
         if (packagePrefix.endsWith("/") && name.startsWith("/")) {
-            resourcePath = packagePrefix + name.substring(1);
-        } else {
-            resourcePath = packagePrefix + name;
+            return packagePrefix + name.substring(1);
         }
-
-        return URLDecoder.decode(resourcePath, encoding);
+        return packagePrefix + name;
     }
 
 

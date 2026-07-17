@@ -106,8 +106,6 @@ public class StaticContentLoaderTest extends TestCase {
         hostConfigMock.expectAndReturn("getInitParameter", C.args(C.eq("packages")), null);
         hostConfigMock.expectAndReturn("getInitParameter", C.args(C.eq("loggerFactory")), null);
 
-        contentLoader.setEncoding("utf-8");
-
         contentLoader.setHostConfig((HostConfig) hostConfigMock.proxy());
     }
 

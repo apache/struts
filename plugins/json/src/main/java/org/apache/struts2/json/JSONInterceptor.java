@@ -230,7 +230,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 // Defensive: a custom JSONReader could produce non-String keys. Skip — we cannot
                 // construct a parameter path for filtering, and JSONPopulator wouldn't bind these anyway.
                 LOG.debug("Skipping JSON entry with non-String key [{}] of type [{}] under prefix [{}]",
-                        entry.getKey(), entry.getKey() == null ? "null" : entry.getKey().getClass().getName(), prefix);
+                        entry.getKey(), keyTypeName(entry.getKey()), prefix);
                 continue;
             }
             String fullPath = prefix.isEmpty() ? key : prefix + "." + key;
@@ -256,6 +256,10 @@ public class JSONInterceptor extends AbstractInterceptor {
                 it.remove();
             }
         }
+    }
+
+    private static String keyTypeName(Object key) {
+        return key == null ? "null" : key.getClass().getName();
     }
 
     @SuppressWarnings("rawtypes")

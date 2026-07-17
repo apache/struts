@@ -927,6 +927,20 @@ public class JSONInterceptorTest extends StrutsTestCase {
                 first.getReader(), second.getReader());
     }
 
+    /**
+     * StrutsJSONWriter keeps per-serialization state in plain instance fields and is not
+     * thread-safe, so the response-side protection from WW-5644 now relies entirely on the writer
+     * bean being prototype-scoped (a fresh writer per request/result). Guard that scope directly:
+     * if it were ever switched to singleton, cross-request response state would leak again.
+     */
+    public void testObtainsFreshWriterPerAcquisition() {
+        JSONWriter first = container.getInstance(JSONWriter.class);
+        JSONWriter second = container.getInstance(JSONWriter.class);
+
+        assertNotSame("JSONWriter bean must be prototype-scoped so serialize state is never shared across responses",
+                first, second);
+    }
+
     public void testIncludePropertiesAppliedToNestedInputWhenEnabled() throws Exception {
         this.request.setContent("{\"bean\": {\"stringField\": \"keep\", \"intField\": 42}}".getBytes());
         this.request.addHeader("Content-Type", "application/json");

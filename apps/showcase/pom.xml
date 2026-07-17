@@ -172,6 +172,19 @@
             <artifactId>groovy-jsr223</artifactId>
             <version>3.0.25</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>bootstrap-icons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${webjars-jquery-showcase.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

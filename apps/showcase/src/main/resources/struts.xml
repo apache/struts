@@ -37,6 +37,7 @@
     <constant name="struts.allowlist.enable" value="true"/>
     <constant name="struts.parameters.requireAnnotations" value="true"/>
     <constant name="struts.allowlist.packageNames" value="org.apache.struts2.showcase"/>
+    <constant name="struts.webjars.allowlist" value="jquery,bootstrap,bootstrap-icons"/>
 
     <!-- Enable Spring AOP proxy support for action chaining test (WW-5514) -->
     <constant name="struts.disallowProxyObjectAccess" value="false"/>

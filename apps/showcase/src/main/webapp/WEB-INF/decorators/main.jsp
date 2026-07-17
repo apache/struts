@@ -61,20 +61,20 @@
 
     <title><sitemesh:write property="title"/></title>
 
-    <s:url var="bootstrapCss" value='/styles/bootstrap.css' encode='false' includeParams='none'/>
-    <s:link href="%{bootstrapCss}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" type="text/css" media="all" href="<s:webjar path='bootstrap/css/bootstrap.min.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<s:webjar path='bootstrap-icons/font/bootstrap-icons.min.css'/>"/>
     <s:url var="mainCss" value='/styles/main.css' encode='false' includeParams='none'/>
     <s:link href="%{mainCss}" rel="stylesheet" type="text/css" media="all"/>
 
-    <s:url var="jqueryJs" value='/js/jquery-2.1.4.min.js' encode='false' includeParams='none'/>
-    <s:script src="%{jqueryJs}"/>
-    <s:url var="bootstrapJs" value='/js/bootstrap.min.js' encode='false' includeParams='none'/>
-    <s:script src="%{bootstrapJs}"/>
+    <script src="<s:webjar path='jquery/jquery.min.js'/>"></script>
+    <script src="<s:webjar path='bootstrap/js/bootstrap.bundle.min.js'/>"></script>
     <s:script>
         $(function () {
-            var alerts = $('ul.alert').wrap('<div />');
-            alerts.prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
-            alerts.alert();
+            $('ul.alert').each(function () {
+                var wrapper = $('<div class="alert alert-dismissible" />');
+                $(this).before(wrapper);
+                wrapper.append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>').append(this);
+            });
         });
     </s:script>
 

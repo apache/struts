@@ -23,8 +23,7 @@
 <s:compress>
 <html lang="en">
 <head>
-    <s:url var="bootstrapCss" value="/styles/bootstrap.css" encode="false" includeParams="none"/>
-    <s:link theme="html5" href="%{bootstrapCss}"/>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap/css/bootstrap.min.css'/>"/>
     <s:url var="mainCss" value="/styles/main.css" encode="false" includeParams="none"/>
     <s:link theme="html5" href="%{mainCss}" />
     <s:head theme="html5"/>

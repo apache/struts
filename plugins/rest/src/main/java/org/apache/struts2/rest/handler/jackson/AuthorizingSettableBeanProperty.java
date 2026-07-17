@@ -21,6 +21,8 @@ package org.apache.struts2.rest.handler.jackson;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,6 +60,22 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         return new AuthorizingSettableBeanProperty(d);
     }
 
+    /**
+     * Creator-bound properties (records, {@code @JsonCreator} constructors) never reach
+     * {@link #deserializeAndSet}/{@link #deserializeSetAndReturn}: Jackson calls the {@code final}
+     * {@code SettableBeanProperty#deserialize} directly, through this property's own value deserializer.
+     * Wrap that deserializer with {@link AuthorizingValueDeserializer}, scoped to {@link CreatorProperty}
+     * so ordinary setter/field/builder properties -- already authorized below -- aren't double-checked.
+     */
+    @Override
+    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        JsonDeserializer<?> effective = deser;
+        if (delegate instanceof CreatorProperty && !(deser instanceof AuthorizingValueDeserializer)) {
+            effective = new AuthorizingValueDeserializer(deser, getName());
+        }
+        return _with(delegate.withValueDeserializer(effective));
+    }
+
     @Override
     public void deserializeAndSet(JsonParser p, DeserializationContext ctxt, Object instance) throws IOException {
         if (!ParameterAuthorizationContext.isActive()) {
@@ -68,6 +86,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
+            ParameterAuthorizationContext.markRedacted();
             p.skipChildren();
             return;
         }
@@ -88,6 +107,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
+            ParameterAuthorizationContext.markRedacted();
             p.skipChildren();
             return instance;
         }

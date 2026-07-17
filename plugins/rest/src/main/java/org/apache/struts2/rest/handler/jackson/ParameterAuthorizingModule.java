@@ -20,6 +20,7 @@ package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
@@ -58,6 +59,16 @@ public class ParameterAuthorizingModule extends SimpleModule {
                     builder.addOrReplaceProperty(new AuthorizingSettableBeanProperty(original), true);
                 }
                 return builder;
+            }
+
+            @Override
+            public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config,
+                                                           BeanDescription beanDesc,
+                                                           JsonDeserializer<?> deserializer) {
+                if (deserializer instanceof RedactionAwareDeserializer) {
+                    return deserializer; // idempotent; protect against double-registration
+                }
+                return new RedactionAwareDeserializer(deserializer);
             }
         });
     }

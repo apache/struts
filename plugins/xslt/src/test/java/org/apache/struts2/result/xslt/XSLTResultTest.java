@@ -31,13 +31,21 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
+import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Unit test for {@link XSLTResult}.
@@ -167,6 +175,146 @@ public class XSLTResultTest extends StrutsTestCase {
         TestCase.assertTrue(out.contains("<validators>"));
     }
 
+    public void testConcurrentGetTemplatesCompilesOnce() throws Exception {
+        final AtomicInteger compileCount = new AtomicInteger(0);
+        final CountDownLatch compileStarted = new CountDownLatch(1);
+        final CountDownLatch releaseCompile = new CountDownLatch(1);
+
+        result = new XSLTResult() {
+            protected TransformerFactory createTransformerFactory() {
+                final TransformerFactory delegate = super.createTransformerFactory();
+                return new TransformerFactory() {
+                    public Transformer newTransformer(Source source) throws TransformerConfigurationException {
+                        return delegate.newTransformer(source);
+                    }
+
+                    public Transformer newTransformer() throws TransformerConfigurationException {
+                        return delegate.newTransformer();
+                    }
+
+                    public Templates newTemplates(Source source) throws TransformerConfigurationException {
+                        compileCount.incrementAndGet();
+                        compileStarted.countDown();
+                        try {
+                            releaseCompile.await();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        return delegate.newTemplates(source);
+                    }
+
+                    public Source getAssociatedStylesheet(Source source, String media, String title, String charset) throws TransformerConfigurationException {
+                        return delegate.getAssociatedStylesheet(source, media, title, charset);
+                    }
+
+                    public void setURIResolver(URIResolver resolver) {
+                        delegate.setURIResolver(resolver);
+                    }
+
+                    public URIResolver getURIResolver() {
+                        return delegate.getURIResolver();
+                    }
+
+                    public void setFeature(String name, boolean value) throws TransformerConfigurationException {
+                        delegate.setFeature(name, value);
+                    }
+
+                    public boolean getFeature(String name) {
+                        return delegate.getFeature(name);
+                    }
+
+                    public void setAttribute(String name, Object value) {
+                        delegate.setAttribute(name, value);
+                    }
+
+                    public Object getAttribute(String name) {
+                        return delegate.getAttribute(name);
+                    }
+
+                    public void setErrorListener(ErrorListener listener) {
+                        delegate.setErrorListener(listener);
+                    }
+
+                    public ErrorListener getErrorListener() {
+                        return delegate.getErrorListener();
+                    }
+                };
+            }
+        };
+
+        final String path = "XSLTResultTestDedup.xsl";
+        final ActionContext context = ActionContext.getContext();
+        final Templates[] compiled = new Templates[2];
+        final Exception[] errors = new Exception[2];
+
+        Thread first = new Thread(() -> {
+            ActionContext.bind(context);
+            try {
+                compiled[0] = result.getTemplates(path);
+            } catch (Exception e) {
+                errors[0] = e;
+            } finally {
+                ActionContext.clear();
+            }
+        });
+        first.start();
+
+        TestCase.assertTrue("First thread should have started compiling",
+                compileStarted.await(5, TimeUnit.SECONDS));
+
+        Thread second = new Thread(() -> {
+            ActionContext.bind(context);
+            try {
+                compiled[1] = result.getTemplates(path);
+            } catch (Exception e) {
+                errors[1] = e;
+            } finally {
+                ActionContext.clear();
+            }
+        });
+        second.start();
+
+        // Give the second thread time to reach the synchronized block and park on
+        // the lock held by the first thread, so it hits the concurrent-miss race
+        // rather than a plain cache hit.
+        Thread.sleep(200);
+
+        releaseCompile.countDown();
+
+        first.join(5000);
+        second.join(5000);
+
+        TestCase.assertNull(errors[0]);
+        TestCase.assertNull(errors[1]);
+        TestCase.assertEquals("Templates should be compiled exactly once despite the concurrent miss",
+                1, compileCount.get());
+        TestCase.assertSame("Both callers should observe the same cached Templates instance",
+                compiled[0], compiled[1]);
+    }
+
+    public void testNoCacheDoesNotPollutePersistentCache() throws Exception {
+        final String path = "XSLTResultTestNoCachePollution.xsl";
+
+        // First, a normal (cached) compile populates the shared static cache.
+        result.setNoCache("false");
+        Templates cached = result.getTemplates(path);
+        TestCase.assertNotNull(cached);
+
+        // A noCache=true caller must still get a fresh compile...
+        result.setNoCache("true");
+        Templates fresh = result.getTemplates(path);
+        TestCase.assertNotNull(fresh);
+        TestCase.assertNotSame("noCache=true should always recompile rather than reuse the cache",
+                cached, fresh);
+
+        // ...but must NOT overwrite the shared cache entry other, cached callers rely on.
+        XSLTResult cachedCaller = new XSLTResult();
+        cachedCaller.setNoCache("false");
+        Templates stillCached = cachedCaller.getTemplates(path);
+        TestCase.assertSame("A noCache=true call must not pollute the shared cache for cached callers",
+                cached, stillCached);
+    }
+   
     public void testTransform4WithBadDocumentInclude() {
         result = new XSLTResult(){
             protected URIResolver getURIResolver() {

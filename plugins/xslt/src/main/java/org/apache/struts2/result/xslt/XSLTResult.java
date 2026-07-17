@@ -294,7 +294,9 @@ public class XSLTResult implements Result {
                     factory.setURIResolver(getURIResolver());
                     factory.setErrorListener(buildErrorListener());
                     templates = factory.newTemplates(new StreamSource(resource.openStream()));
-                    templatesCache.put(path, templates);
+                    if (!noCache) {
+                        templatesCache.put(path, templates);
+                    }
                 }
             }
         }

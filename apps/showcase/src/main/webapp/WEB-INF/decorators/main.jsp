@@ -97,7 +97,7 @@
 
 <body id="page-home">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
 
         <div class="navbar-header">
@@ -268,11 +268,11 @@
                         <ul class="dropdown-menu">
                             <s:url var="help" action="help" namespace="/" includeContext="false" />
                             <li><s:a value="%{help}" cssClass="dropdown-item">Help</s:a></li>
-                            <li><a href="http://struts.apache.org/mail.html" class="dropdown-item"><i class="icon-share"></i> User Mailing
+                            <li><a href="http://struts.apache.org/mail.html" class="dropdown-item"><i class="bi bi-share"></i> User Mailing
                                 List</a></li>
-                            <li><a href="http://struts.apache.org" class="dropdown-item"><i class="icon-share"></i> Struts2 Website</a>
+                            <li><a href="http://struts.apache.org" class="dropdown-item"><i class="bi bi-share"></i> Struts2 Website</a>
                             </li>
-                            <li><a href="http://struts.apache.org/docs/home.html" class="dropdown-item"><i class="icon-share"></i>
+                            <li><a href="http://struts.apache.org/docs/home.html" class="dropdown-item"><i class="bi bi-share"></i>
                                 Documentation</a></li>
                         </ul>
                     </li>

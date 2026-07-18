@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
     <h1>The process is complete</h1>
 </div>
 
@@ -34,7 +34,7 @@
     <div class="row">
         <div class="col-md-12" style="text-align: center;">
 
-            <div class="panel">We have processed your request.</div>
+            <div class="card">We have processed your request.</div>
 
             <s:url var="back" value="/wait/index"/>
             Click here to <s:a href="%{back}" cssClass="btn btn-primary">return</s:a>

@@ -26,7 +26,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
     <h1>Execute and Wait Examples - Wait</h1>
 </div>
 
@@ -35,7 +35,7 @@
     <div class="row">
         <div class="col-md-12" style="text-align: center;">
 
-            <p class="well">
+            <p class="bg-light border rounded p-3">
                 We are processing your request. Please wait.
             </p>
 
@@ -43,7 +43,7 @@
                 <div class="bar progress-bar progress-bar-success" style="width: 50%;"></div>
             </div>
 
-            <div class="panel">
+            <div class="card">
                 You can click this link to <a href="<s:url includeParams="all"/>">refresh</a>.
             </div>
         </div>

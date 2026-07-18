@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
 	<h1>Token Examples - Example 1</h1>
 </div>
 

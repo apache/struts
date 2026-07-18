@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
 	<h1>Token Examples - Transfer is Done</h1>
 </div>
 

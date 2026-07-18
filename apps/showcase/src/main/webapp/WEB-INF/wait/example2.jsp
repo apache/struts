@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
 	<h1>Execute and Wait Examples - Example 2</h1>
 </div>
 

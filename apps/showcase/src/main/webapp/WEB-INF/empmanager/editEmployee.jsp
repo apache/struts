@@ -31,7 +31,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div>
 	<h1><s:property value="#title"/></h1>
 </div>
 

@@ -24,7 +24,7 @@
 	<title>Struts2 Showcase - CRUD Example</title>
 </head>
 <body>
-<div class="page-header">
+<div>
 	<h1>Available Employees</h1>
 </div>
 

@@ -49,16 +49,16 @@
             </div>
             <table class="table table-striped">
                 <tr>
-                    <td class="span3">ID</td>
-                    <td class="span9"><s:property value="id"/></td>
+                    <td class="col-3">ID</td>
+                    <td class="col-9"><s:property value="id"/></td>
                 </tr>
                 <tr>
-                    <td class="span3">Client</td>
-                    <td class="span9"><s:property value="clientName"/></td>
+                    <td class="col-3">Client</td>
+                    <td class="col-9"><s:property value="clientName"/></td>
                 </tr>
                 <tr>
-                    <td class="span3">Amount</td>
-                    <td class="span9"><s:property value="amount"/></td>
+                    <td class="col-3">Amount</td>
+                    <td class="col-9"><s:property value="amount"/></td>
                 </tr>
             </table>
 	        <a href="${pageContext.request.contextPath}/orders" class="btn btn-info">

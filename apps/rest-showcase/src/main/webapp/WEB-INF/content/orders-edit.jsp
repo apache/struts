@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-4">
+                    <div class="offset-sm-2 col-sm-4">
                         <s:submit cssClass="btn btn-primary"/>
                     </div>
                 </div>

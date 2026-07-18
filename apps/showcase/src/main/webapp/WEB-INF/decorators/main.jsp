@@ -112,7 +112,7 @@
 
         <div class="collapse navbar-collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-                    <li><s:a value="%{home}"><i class="bi bi-house"></i> Home</s:a></li>
+                    <li class="nav-item"><s:a value="%{home}" cssClass="nav-link"><i class="bi bi-house"></i> Home</s:a></li>
                     <li class="dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-gear"></i> Configuration</a>
@@ -259,7 +259,7 @@
                     </li>
                 </ul>
 
-                <ul class="nav navbar-nav float-end">
+                <ul class="nav navbar-nav ms-auto">
                     <li class="dropdown last">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-question-circle"></i> Help</a>

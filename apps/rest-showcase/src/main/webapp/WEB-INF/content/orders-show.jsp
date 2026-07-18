@@ -29,7 +29,8 @@
     <title>Orders</title>
     <!-- Using a standard HTML link tag with JSP EL to get the contextPath may be simpler, but this is an equivalent for s:link -->
     <s:set var="pageContextPath"><%=((HttpServletRequest)request).getContextPath()%></s:set>
-    <s:link href="%{#pageContextPath}/css/bootstrap.min.css" rel="stylesheet"></s:link>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap/css/bootstrap.min.css'/>"/>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap-icons/font/bootstrap-icons.min.css'/>"/>
     <s:link href="%{#pageContextPath}/css/app.css" rel="stylesheet"></s:link>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

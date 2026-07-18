@@ -30,7 +30,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
     <h1>File Upload Successful</h1>
     <p class="lead">Your file was validated and uploaded successfully</p>
 </div>
@@ -42,50 +42,50 @@
                 <strong>Success!</strong> Your file passed all validation checks.
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Upload Details</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Upload Details</h3>
                 </div>
-                <div class="panel-body">
-                    <dl class="dl-horizontal">
-                        <dt>Upload Type:</dt>
-                        <dd><s:property value="uploadType == 'image' ? 'Image' : 'Document'"/></dd>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Upload Type:</dt>
+                        <dd class="col-sm-9"><s:property value="uploadType == 'image' ? 'Image' : 'Document'"/></dd>
 
-                        <dt>Content Type:</dt>
-                        <dd><code><s:property value="contentType"/></code></dd>
+                        <dt class="col-sm-3">Content Type:</dt>
+                        <dd class="col-sm-9"><code><s:property value="contentType"/></code></dd>
 
-                        <dt>File Name:</dt>
-                        <dd><s:property value="fileName"/></dd>
+                        <dt class="col-sm-3">File Name:</dt>
+                        <dd class="col-sm-9"><s:property value="fileName"/></dd>
 
-                        <dt>Original Name:</dt>
-                        <dd><s:property value="originalName"/></dd>
+                        <dt class="col-sm-3">Original Name:</dt>
+                        <dd class="col-sm-9"><s:property value="originalName"/></dd>
 
-                        <dt>File Size:</dt>
-                        <dd><s:property value="uploadSize"/> bytes</dd>
+                        <dt class="col-sm-3">File Size:</dt>
+                        <dd class="col-sm-9"><s:property value="uploadSize"/> bytes</dd>
 
-                        <dt>Input Name:</dt>
-                        <dd><s:property value="inputName"/></dd>
+                        <dt class="col-sm-3">Input Name:</dt>
+                        <dd class="col-sm-9"><s:property value="inputName"/></dd>
 
-                        <dt>File Object:</dt>
-                        <dd><code><s:property value="uploadedFile"/></code></dd>
+                        <dt class="col-sm-3">File Object:</dt>
+                        <dd class="col-sm-9"><code><s:property value="uploadedFile"/></code></dd>
                     </dl>
                 </div>
             </div>
 
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Validation Rules Applied</h3>
+            <div class="card border-info">
+                <div class="card-header text-bg-info">
+                    <h3 class="card-title">Validation Rules Applied</h3>
                 </div>
-                <div class="panel-body">
-                    <dl class="dl-horizontal">
-                        <dt>Allowed MIME Types:</dt>
-                        <dd><code><s:property value="uploadConfig.allowedMimeTypes"/></code></dd>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Allowed MIME Types:</dt>
+                        <dd class="col-sm-9"><code><s:property value="uploadConfig.allowedMimeTypes"/></code></dd>
 
-                        <dt>Allowed Extensions:</dt>
-                        <dd><code><s:property value="uploadConfig.allowedExtensions"/></code></dd>
+                        <dt class="col-sm-3">Allowed Extensions:</dt>
+                        <dd class="col-sm-9"><code><s:property value="uploadConfig.allowedExtensions"/></code></dd>
 
-                        <dt>Maximum Size:</dt>
-                        <dd><s:property value="uploadConfig.maxFileSizeFormatted"/></dd>
+                        <dt class="col-sm-3">Maximum Size:</dt>
+                        <dd class="col-sm-9"><s:property value="uploadConfig.maxFileSizeFormatted"/></dd>
                     </dl>
                     <p class="text-muted">
                         <small>
@@ -98,7 +98,7 @@
 
             <div class="btn-group">
                 <s:a action="dynamicUpload" cssClass="btn btn-primary">
-                    <i class="glyphicon glyphicon-upload"></i> Upload Another File
+                    <i class="bi bi-upload"></i> Upload Another File
                 </s:a>
             </div>
         </div>

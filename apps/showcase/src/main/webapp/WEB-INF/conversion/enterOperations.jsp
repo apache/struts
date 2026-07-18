@@ -24,7 +24,7 @@
 	<title>Struts2 Showcase - Conversion - Tiger 5 Enum</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Conversion - Tiger 5 Enum</h1>
 </div>
 

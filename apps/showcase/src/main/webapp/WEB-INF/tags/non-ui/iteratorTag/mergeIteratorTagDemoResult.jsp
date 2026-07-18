@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div>
 	<h1>Non Ui Tag - MergeIterator Tag</h1>
 </div>
 
@@ -45,7 +45,7 @@
 		    </s:iterator>
 
 			<s:url var="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" />
-			<s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+			<s:a href="%{#url}" cssClass="btn btn-info"><i class="bi bi-arrow-left"></i> Back To Input</s:a>
 		</div>
 	</div>
 </div>

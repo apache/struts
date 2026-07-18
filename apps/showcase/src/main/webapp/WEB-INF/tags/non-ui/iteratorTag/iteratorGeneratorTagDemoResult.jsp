@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div>
 	<h1>Non Ui Tag - Iterator Generator Tag Demo</h1>
 </div>
 
@@ -41,7 +41,7 @@
 
 
         <s:url var="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" />
-        <s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+        <s:a href="%{#url}" cssClass="btn btn-info"><i class="bi bi-arrow-left"></i> Back To Input</s:a>
         </div>
     </div>
 </div>

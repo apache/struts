@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div>
 	<h1>UI Tags Example</h1>
 </div>
 

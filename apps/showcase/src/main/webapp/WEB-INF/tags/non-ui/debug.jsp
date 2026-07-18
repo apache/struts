@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
 	<h1>Debug Tag Usage</h1>
 </div>
 

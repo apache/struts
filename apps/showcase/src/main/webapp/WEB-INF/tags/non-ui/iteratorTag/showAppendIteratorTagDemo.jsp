@@ -25,7 +25,7 @@
     <s:head/>
 </head>
 <body>
-<div class="page-header">
+<div>
     <h1>Non Ui Tag - AppendIterator Tag Demo</h1>
 </div>
 

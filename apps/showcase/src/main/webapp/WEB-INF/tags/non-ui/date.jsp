@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div>
 	<h1>Non UI Tags Example - Date</h1>
 </div>
 

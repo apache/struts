@@ -27,7 +27,7 @@
 
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Store Errors Across Request Example</h1>
 </div>
 

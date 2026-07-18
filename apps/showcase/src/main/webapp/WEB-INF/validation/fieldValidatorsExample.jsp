@@ -34,7 +34,7 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
     <h1>Field Validation Examples</h1>
 </div>
 

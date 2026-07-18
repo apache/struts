@@ -115,8 +115,7 @@
                     <li><s:a value="%{home}"><i class="bi bi-house"></i> Home</s:a></li>
                     <li class="dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear"></i> Configuration
-                            <b class="caret"></b></a>
+                            <i class="bi bi-gear"></i> Configuration</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:a action="actionChain1!input" namespace="/actionchaining"
                                      includeParams="none" cssClass="dropdown-item">Action Chaining</s:a></li>
@@ -128,7 +127,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Non UI Tags<b class="caret"></b></a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Non UI Tags</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:url var="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/>
                                 <s:a href="%{url}" cssClass="dropdown-item">Action Tag</s:a></li>
@@ -156,7 +155,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">UI Tags<b class="caret"></b></a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">UI Tags</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:url var="url" namespace="/tags/ui" action="example" method="input"/>
                                 <s:a href="%{url}" cssClass="dropdown-item">UI Example</s:a></li>
@@ -177,8 +176,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-file-earmark"></i> File
-                            <b class="caret"></b></a>
+                            <i class="bi bi-file-earmark"></i> File</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:a namespace="/filedownload" action="index" cssClass="dropdown-item">File Download</s:a></li>
                             <li>
@@ -201,7 +199,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Validation<b class="caret"></b></a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Validation</a>
                         <ul class="dropdown-menu" role="menu">
                             <s:url var="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
                             <s:url var="quizClient" namespace="/validation" action="quizClient" method="input"/>
@@ -227,7 +225,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Examples<b class="caret"></b></a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Examples</a>
                         <ul class="dropdown-menu" role="menu">
                             <li class="dropdown-submenu">
                             <li>
@@ -246,7 +244,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Integration<b class="caret"></b></a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Integration</a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <s:url var="url" action="customFreemarkerManagerDemo" namespace="/freemarker"/>
@@ -264,7 +262,7 @@
                 <ul class="nav navbar-nav float-end">
                     <li class="dropdown last">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-question-circle"></i> Help<b class="caret"></b></a>
+                            <i class="bi bi-question-circle"></i> Help</a>
                         <ul class="dropdown-menu">
                             <s:url var="help" action="help" namespace="/" includeContext="false" />
                             <li><s:a value="%{help}" cssClass="dropdown-item">Help</s:a></li>

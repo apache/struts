@@ -45,7 +45,7 @@
     <div class="row">
         <div class="col-md-12">
 
-	        <div class="page-header">
+	        <div class="border-bottom pb-2">
 		        <h1>New Order</h1>
 	        </div>
 
@@ -77,7 +77,7 @@
                 </div>
             </s:form>
 	        <a href="${pageContext.request.contextPath}/orders" class="btn btn-info">
-		        <span class="glyphicon glyphicon-arrow-left"></apan> Back to Orders
+		        <i class="bi bi-arrow-left"></i> Back to Orders
 	        </a>
         </div><!--/col-md-12--->
     </div><!--/row-->

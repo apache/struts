@@ -33,8 +33,8 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<s:actionerror cssClass="alert alert-error"/>
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 		    <s:form action="submitSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" method="POST">
 		        <s:textfield label="Iterator value (comma separated)" name="iteratorValue" />

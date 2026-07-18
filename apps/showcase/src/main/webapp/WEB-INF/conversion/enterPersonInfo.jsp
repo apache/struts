@@ -43,8 +43,8 @@
 
 			<p/>
 
-			<s:actionerror cssClass="alert alert-error"/>
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 			<s:form action="submitPersonInfo" namespace="/conversion" method="post">
 			    <%--

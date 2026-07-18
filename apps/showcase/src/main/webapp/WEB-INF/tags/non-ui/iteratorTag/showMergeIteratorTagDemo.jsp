@@ -33,8 +33,8 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<s:actionerror cssClass="alert alert-error"/>
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 		    <s:form action="submitMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" method="POST">
 		        <s:textfield label="Iterator 1 Value (Comma Separated)" name="iteratorValue1" />

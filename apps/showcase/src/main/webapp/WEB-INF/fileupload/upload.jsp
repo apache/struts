@@ -32,8 +32,8 @@
     <div class="container-fluid">
 	    <div class="row">
 		    <div class="col-md-12">
-			    <s:actionerror cssClass="alert alert-error"/>
-				<s:fielderror cssClass="alert alert-error"/>
+			    <s:actionerror cssClass="alert alert-danger"/>
+				<s:fielderror cssClass="alert alert-danger"/>
 			    <s:form action="doUpload" method="POST" enctype="multipart/form-data">
 			        <s:file name="upload" label="File"/>
 			        <s:textfield name="caption" label="Caption"/>

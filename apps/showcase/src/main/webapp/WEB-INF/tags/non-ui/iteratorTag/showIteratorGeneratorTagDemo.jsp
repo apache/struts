@@ -33,8 +33,8 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<s:actionerror cssClass="alert alert-error"/>
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 			<s:form action="submitGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" method="POST">
 		        <s:textfield label="Value" name="value" />

@@ -44,7 +44,7 @@
 
 			<!-- START SNIPPET: visitorValidatorsExample -->
 
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 			<s:form method="POST" action="submitVisitorValidatorsExamples" namespace="/validation">
 				<s:textfield name="user.name" label="User Name"/>

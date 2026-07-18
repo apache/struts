@@ -40,25 +40,21 @@
 			</ul>
 		</div>
 		<div class="col-md-9">
-			<@s.actionerror cssClass="alert alert-error"/>
+			<@s.actionerror cssClass="alert alert-danger"/>
 			<@s.actionmessage cssClass="alert alert-info"/>
-			<@s.fielderror  cssClass="alert alert-error"/>
+			<@s.fielderror  cssClass="alert alert-danger"/>
 
 			<@s.form action="new-person" theme="simple">
 				<legend>Create a new Person</legend>
-				<div class="control-group">
-					<label class="col-form-label" for="name">First Name<span class="required">*</span></label>
-					<div class="controls">
-						<@s.textfield id="name" name="person.name" placeholder="First Name"/>
-					</div>
+				<div class="mb-3">
+					<label class="form-label" for="name">First Name<span class="required">*</span></label>
+					<@s.textfield id="name" name="person.name" placeholder="First Name" cssClass="form-control"/>
 				</div>
-				<div class="control-group">
-					<label class="col-form-label" for="lastName">Last Name<span class="required">*</span></label>
-					<div class="controls">
-						<@s.textfield id="lastName" name="person.lastName" placeholder="Last Name"/>
-					</div>
+				<div class="mb-3">
+					<label class="form-label" for="lastName">Last Name<span class="required">*</span></label>
+					<@s.textfield id="lastName" name="person.lastName" placeholder="Last Name" cssClass="form-control"/>
 				</div>
-			    <div class="form-actions">
+			    <div class="mb-3">
 				    <@s.submit value="Create person" cssClass="btn btn-primary"/>
 			    </div>
 			</@s.form>

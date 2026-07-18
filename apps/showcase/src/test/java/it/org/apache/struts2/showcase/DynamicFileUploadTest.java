@@ -43,7 +43,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadValidDocument() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -72,7 +72,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadValidImage() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -108,7 +108,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadDocumentRejectsImage() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -138,7 +138,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadImageRejectsDocument() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -167,7 +167,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadDocumentExceedsMaxSize() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -192,7 +192,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadImageExceedsMaxSize() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
             final HtmlForm form = page.getForms().get(0);
 
@@ -217,7 +217,7 @@ public class DynamicFileUploadTest {
 
     @Test
     public void testDynamicUploadSwitchBetweenModes() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/dynamicUpload.action");
 
             // Verify initial state shows document mode by default

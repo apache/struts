@@ -32,7 +32,7 @@ import org.junit.Test;
 public class FileDownloadTest {
     @Test
     public void testImage() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download.action");
 
             URL url = new URL(
@@ -44,7 +44,7 @@ public class FileDownloadTest {
 
     @Test
     public void testZip() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download2.action");
 
             URL url = new URL(

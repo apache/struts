@@ -30,7 +30,7 @@ import org.junit.Test;
 public class ConversionTest {
     @Test
     public void testList() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterPersonsInfo.action");
 
@@ -58,7 +58,7 @@ public class ConversionTest {
 
     @Test
     public void testSet() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterAddressesInfo.action");
 
@@ -80,7 +80,7 @@ public class ConversionTest {
 
     @Test
     public void testEnum() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterOperationEnumInfo.action");
 

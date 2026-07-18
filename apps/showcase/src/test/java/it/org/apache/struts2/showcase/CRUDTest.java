@@ -31,7 +31,7 @@ import org.junit.Test;
 public class CRUDTest {
     @Test
     public void testCreate() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/skill/edit.action");
 
             final HtmlForm form = page.getForms().get(0);

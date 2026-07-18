@@ -28,7 +28,7 @@ import org.junit.Test;
 public class ActionTagExampleTest {
     @Test
     public void test() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/tags/ui/actionTagExample!input.action");
 
             final String pageAsText = page.asNormalizedText();

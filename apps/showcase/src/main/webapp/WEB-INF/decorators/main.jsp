@@ -67,7 +67,7 @@
     <s:link href="%{mainCss}" rel="stylesheet" type="text/css" media="all"/>
 
     <script src="<s:webjar path='jquery/jquery.min.js'/>"></script>
-    <script src="<s:webjar path='bootstrap/js/bootstrap.bundle.min.js'/>"></script>
+    <script defer src="<s:webjar path='bootstrap/js/bootstrap.bundle.min.js'/>"></script>
     <s:script>
         $(function () {
             $('ul.alert').each(function () {

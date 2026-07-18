@@ -37,7 +37,7 @@ public class StrutsParametersTest {
 
     @Before
     public void setUp() throws Exception {
-        webClient = new WebClient();
+        webClient = ParameterUtils.createWebClient();
     }
 
     @After

@@ -20,6 +20,8 @@
  */
 package it.org.apache.struts2.showcase;
 
+import org.htmlunit.WebClient;
+
 public class ParameterUtils {
 
     public static String getBaseUrl() {
@@ -28,5 +30,17 @@ public class ParameterUtils {
             port = "8090";
         }
         return "http://localhost:"+port+"/struts2-showcase";
+    }
+
+    /**
+     * Creates a {@link WebClient} for the showcase integration tests. HtmlUnit's JavaScript
+     * engine cannot parse Bootstrap 5's ES6 syntax (the {@code bootstrap.bundle.min.js} served
+     * by the page decorator uses {@code class}), so script errors are not thrown; these tests
+     * assert server-rendered output rather than Bootstrap's client-side behaviour.
+     */
+    public static WebClient createWebClient() {
+        WebClient webClient = new WebClient();
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+        return webClient;
     }
 }

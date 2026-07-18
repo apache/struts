@@ -30,7 +30,7 @@ public class ForwardTest {
 
     @Test
     public void testServletForwardingToAction() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             // Struts excluded URL, as defined by struts.action.excludePattern
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/testServlet/forward");
 

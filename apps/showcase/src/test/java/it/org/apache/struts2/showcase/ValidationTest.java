@@ -30,7 +30,7 @@ import org.junit.Test;
 public class ValidationTest {
     @Test
     public void testFieldValidators() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/validation/showFieldValidatorsExamples.action");
 

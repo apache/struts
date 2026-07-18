@@ -27,7 +27,7 @@ public class StaticContentTest {
 
     @Test
     public void testInvalidResources1() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             try {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/struts..");
                 Assert.fail("Previous request should have failed");
@@ -40,7 +40,7 @@ public class StaticContentTest {
 
     @Test
     public void testInvalidResources2() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             try {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/static/..%252f");
                 Assert.fail("Previous request should have failed");

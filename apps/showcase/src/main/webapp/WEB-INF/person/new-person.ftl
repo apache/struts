@@ -23,7 +23,7 @@
 	<title>Struts2 Showcase - Person Manager Example - New Person</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>New Person</h1>
 </div>
 
@@ -44,16 +44,16 @@
 			<@s.actionmessage cssClass="alert alert-info"/>
 			<@s.fielderror  cssClass="alert alert-error"/>
 
-			<@s.form action="new-person" theme="simple" cssClass="form-horizontal">
+			<@s.form action="new-person" theme="simple">
 				<legend>Create a new Person</legend>
 				<div class="control-group">
-					<label class="control-label" for="name">First Name<span class="required">*</span></label>
+					<label class="col-form-label" for="name">First Name<span class="required">*</span></label>
 					<div class="controls">
 						<@s.textfield id="name" name="person.name" placeholder="First Name"/>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="lastName">Last Name<span class="required">*</span></label>
+					<label class="col-form-label" for="lastName">Last Name<span class="required">*</span></label>
 					<div class="controls">
 						<@s.textfield id="lastName" name="person.lastName" placeholder="Last Name"/>
 					</div>

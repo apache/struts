@@ -23,7 +23,7 @@
 	<title>Struts2 Showcase - Non UI Tags - Action Prefix (Freemarker)</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non Ui Tag - Action Prefix (Freemarker)</h1>
 </div>
 

@@ -23,7 +23,7 @@
 	<title>Struts2 Showcase - Non UI Tags - Action Prefix (Freemarker)</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non Ui Tag - Action Prefix (Freemarker)</h1>
 </div>
 
@@ -35,7 +35,7 @@
 
 			<p>The text you've enter is ${text!''}<p/>
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
+			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="bi bi-arrow-left"></i> Back</@s.a>
 		</div>
 	</div>
 </div>

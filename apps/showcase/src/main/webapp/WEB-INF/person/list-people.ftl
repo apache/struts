@@ -23,7 +23,7 @@
 	<title>Struts2 Showcase - Person Manager Example - All People</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>All People</h1>
 </div>
 
@@ -43,7 +43,7 @@
 
 			<p>There are ${peopleCount} people...</p>
 
-			<table class="table table-striped table-bordered table-hover table-condensed">
+			<table class="table table-striped table-bordered table-hover table-sm">
 				<tr>
 					<th>ID</th>
 					<th>Name</th>

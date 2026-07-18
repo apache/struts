@@ -51,16 +51,16 @@
 
             <s:actionmessage cssClass="alert alert-danger"/>
 
-            <s:form method="post" action="%{#request.contextPath}/orders/%{id}" cssClass="form-horizontal" theme="simple">
+            <s:form method="post" action="%{#request.contextPath}/orders/%{id}" theme="simple">
                 <s:hidden name="_method" value="put" />
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="id">ID</label>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="id">ID</label>
                     <div class="col-sm-4">
                         <s:textfield id="id" name="id" disabled="true" cssClass="form-control"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="clientName">Client</label>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="clientName">Client</label>
                     <div class="col-sm-4">
                         <s:textfield id="clientName" name="clientName" cssClass="form-control"/>
                     </div>
@@ -68,8 +68,8 @@
                         <s:fielderror fieldName="clientName" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="amount">Amount</label>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="amount">Amount</label>
                     <div class="col-sm-4">
                         <s:textfield id="amount" name="amount" cssClass="form-control" />
                     </div>
@@ -77,7 +77,7 @@
                         <s:fielderror fieldName="amount" />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="row mb-3">
                     <div class="offset-sm-2 col-sm-4">
                         <s:submit cssClass="btn btn-primary"/>
                     </div>

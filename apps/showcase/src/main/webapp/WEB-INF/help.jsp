@@ -39,13 +39,13 @@
 				<div class="alert alert-info">
 					Use this mailing list if you encounter problems while developing and using with Struts.
 				</div>
-				<a href="http://struts.apache.org/mail.html" class="btn btn-large btn-info"><i class="bi bi-share"></i> User List</a>
+				<a href="http://struts.apache.org/mail.html" class="btn btn-lg btn-info"><i class="bi bi-share"></i> User List</a>
 			</div>
 			<div class="col-md-4" style="text-align: center;">
 				<div class="alert alert-info">
 					The Struts 2 website.
 				</div>
-				<a href="http://struts.apache.org" class="btn btn-large btn-info"><i class="bi bi-share"></i> Struts 2</a>
+				<a href="http://struts.apache.org" class="btn btn-lg btn-info"><i class="bi bi-share"></i> Struts 2</a>
 		</div>
 	</div>
 </body>

@@ -42,7 +42,7 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<table class="table table-striped table-bordered table-hover table-condensed">
+			<table class="table table-striped table-bordered table-hover table-sm">
                 <tr>
                     <td>User Name:</td>
                     <td><s:property value="user.name" /></td>

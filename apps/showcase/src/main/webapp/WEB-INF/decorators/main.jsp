@@ -113,7 +113,7 @@
         <div class="collapse navbar-collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
                     <li class="nav-item"><s:a value="%{home}" cssClass="nav-link"><i class="bi bi-house"></i> Home</s:a></li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-gear"></i> Configuration</a>
                         <ul class="dropdown-menu" role="menu">
@@ -126,7 +126,7 @@
                             <li><s:a value="/person/index.html" cssClass="dropdown-item">Person Manager ( by Conventions )</s:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Non UI Tags</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:url var="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/>
@@ -154,7 +154,7 @@
                                 <s:a href="%{#url}" cssClass="dropdown-item">If Tag (Freemarker)</s:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">UI Tags</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><s:url var="url" namespace="/tags/ui" action="example" method="input"/>
@@ -174,7 +174,7 @@
                                 <s:a href="%{#url}" cssClass="dropdown-item">Html 5 theme</s:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-file-earmark"></i> File</a>
                         <ul class="dropdown-menu" role="menu">
@@ -198,7 +198,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Validation</a>
                         <ul class="dropdown-menu" role="menu">
                             <s:url var="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
@@ -224,7 +224,7 @@
                             <li><s:a href="%{ajaxFormSubmitUrl}" cssClass="dropdown-item">AJAX Form Submit</s:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Examples</a>
                         <ul class="dropdown-menu" role="menu">
                             <li class="dropdown-submenu">
@@ -243,7 +243,7 @@
                             <li><s:a value="/dispatcher/forward.action" cssClass="dropdown-item">Dispatcher result - forward</s:a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Integration</a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
@@ -260,7 +260,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav ms-auto">
-                    <li class="dropdown last">
+                    <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-question-circle"></i> Help</a>
                         <ul class="dropdown-menu">

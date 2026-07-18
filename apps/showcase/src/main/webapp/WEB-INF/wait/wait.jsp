@@ -39,8 +39,8 @@
                 We are processing your request. Please wait.
             </p>
 
-            <div class="progress progress-striped active">
-                <div class="bar progress-bar progress-bar-success" style="width: 50%;"></div>
+            <div class="progress" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 50%;"></div>
             </div>
 
             <div class="card">

@@ -34,7 +34,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="hero-unit">
+            <div class="p-5 mb-4 bg-light rounded-3">
                 <h1>Html 5 tags demo</h1>
                 <p>All the tags on this page are from <i>html5</i> theme. <s:a theme="html5" action="showcase" namespace="/">Back</s:a> to main Showcase App page</p>
             </div>
@@ -44,7 +44,7 @@
     <!-- Section 1: Link Components -->
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h2>Link Components</h2>
             </div>
         </div>
@@ -61,7 +61,7 @@
     <!-- Section 2: Error & Message Components -->
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h2>Error &amp; Message Components</h2>
             </div>
         </div>
@@ -94,7 +94,7 @@
     <!-- Section 3: Form Components -->
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h2>Form Components</h2>
             </div>
         </div>
@@ -211,7 +211,7 @@
     <!-- Section 4: Advanced Selection Components -->
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h2>Advanced Selection Components</h2>
             </div>
         </div>
@@ -228,7 +228,7 @@
     <!-- Section 5: Utility & Display Components -->
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h2>Utility &amp; Display Components</h2>
             </div>
         </div>

@@ -25,7 +25,7 @@
 </head>
 
 <body>
-	<div class="page-header">
+	<div class="border-bottom pb-2 mb-3">
 		<h1>File Download Example</h1>
 	</div>
 

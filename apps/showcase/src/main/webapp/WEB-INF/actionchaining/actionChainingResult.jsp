@@ -25,7 +25,7 @@
     <title>Struts2 Showcase - Action Chaining Result</title>
 </head>
 <body>
-    <div class="page-header">
+    <div class="border-bottom pb-2 mb-3">
 	    <h1>Action Chaining Result:</h1>
     </div>
 

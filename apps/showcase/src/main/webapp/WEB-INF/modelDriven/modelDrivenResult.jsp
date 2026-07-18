@@ -34,7 +34,7 @@
 
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Model Driven Example - Result</h1>
 </div>
 

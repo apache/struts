@@ -45,7 +45,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 /**
@@ -68,11 +68,7 @@ public class XSLTResult implements Result {
     /**
      * Cache of all templates.
      */
-    private static final Map<String, Templates> templatesCache;
-
-    static {
-        templatesCache = new HashMap<>();
-    }
+    private static final Map<String, Templates> templatesCache = new ConcurrentHashMap<>();
 
     // Configurable Parameters
 
@@ -283,19 +279,25 @@ public class XSLTResult implements Result {
 
         if (noCache || (templates == null)) {
             synchronized (templatesCache) {
-                URL resource = ServletActionContext.getServletContext().getResource(path);
+                // Re-check after acquiring lock to avoid redundant compilation
+                templates = templatesCache.get(path);
+                if (noCache || (templates == null)) {
+                    URL resource = ServletActionContext.getServletContext().getResource(path);
 
-                if (resource == null) {
-                    throw new TransformerException("Stylesheet " + path + " not found in resources.");
+                    if (resource == null) {
+                        throw new TransformerException("Stylesheet " + path + " not found in resources.");
+                    }
+
+                    LOG.debug("Preparing XSLT stylesheet templates: {}", path);
+
+                    TransformerFactory factory = createTransformerFactory();
+                    factory.setURIResolver(getURIResolver());
+                    factory.setErrorListener(buildErrorListener());
+                    templates = factory.newTemplates(new StreamSource(resource.openStream()));
+                    if (!noCache) {
+                        templatesCache.put(path, templates);
+                    }
                 }
-
-                LOG.debug("Preparing XSLT stylesheet templates: {}", path);
-
-                TransformerFactory factory = createTransformerFactory();
-                factory.setURIResolver(getURIResolver());
-                factory.setErrorListener(buildErrorListener());
-                templates = factory.newTemplates(new StreamSource(resource.openStream()));
-                templatesCache.put(path, templates);
             }
         }
 

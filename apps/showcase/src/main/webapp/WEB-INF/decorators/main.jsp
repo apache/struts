@@ -106,15 +106,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
 
-        <div class="navbar-header">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <s:url var="home" action="showcase" namespace="/" includeContext="false" />
-            <s:a value="%{home}" cssClass="navbar-brand">
-                Struts2 Showcase
-            </s:a>
-        </div>
+        <s:url var="home" action="showcase" namespace="/" includeContext="false" />
+        <s:a value="%{home}" cssClass="navbar-brand">
+            Struts2 Showcase
+        </s:a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
@@ -233,7 +231,6 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Examples</a>
                         <ul class="dropdown-menu" role="menu">
-                            <li class="dropdown-submenu">
                             <li>
                                 <s:url var="url" namespace="/hangman" action="hangmanNonAjax"/>
                                 <s:a href="%{url}" cssClass="dropdown-item">Hangman</s:a>

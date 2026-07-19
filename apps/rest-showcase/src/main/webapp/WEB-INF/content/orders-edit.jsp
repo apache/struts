@@ -82,7 +82,6 @@
                         <s:submit cssClass="btn btn-primary"/>
                     </div>
                 </div>
-                <table>
             </s:form>
 	        <a href="${pageContext.request.contextPath}/orders" class="btn btn-info">
 		        <i class="bi bi-arrow-left"></i> Back to Orders

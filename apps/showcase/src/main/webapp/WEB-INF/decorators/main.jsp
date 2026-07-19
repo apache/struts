@@ -71,9 +71,15 @@
     <s:script>
         $(function () {
             $('ul.alert').each(function () {
-                var wrapper = $('<div class="alert alert-dismissible" />');
-                $(this).before(wrapper);
-                wrapper.append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>').append(this);
+                var ul = $(this);
+                // Move the alert* classes (base + variant, e.g. alert-danger) onto a
+                // dismissible wrapper so it becomes the single alert container, then
+                // strip them from the <ul> to avoid a nested, uncoloured alert box.
+                var alertClasses = (ul.attr('class').match(/\balert\S*/g) || []).join(' ');
+                ul.removeClass(alertClasses);
+                var wrapper = $('<div class="alert-dismissible" />').addClass(alertClasses);
+                ul.before(wrapper);
+                wrapper.append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>').append(ul);
             });
         });
     </s:script>

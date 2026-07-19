@@ -30,12 +30,9 @@ import java.util.Map;
  * Deserializes an object from a JSON string with configurable limits
  * to prevent denial-of-service attacks via malicious payloads.
  * </p>
- *
  * <p>
- * A single StrutsJSONReader instance is shared across all concurrent requests handled by a given
- * JSONInterceptor (it is injected once, not created per request), so the cursor, token buffer and
- * nesting depth of an in-progress parse are kept in a {@link ThreadLocal}, not instance fields --
- * otherwise two concurrent {@link #read(String)} calls would corrupt each other's parse state.
+ * This reader keeps per-parse state in instance fields and is <strong>not thread-safe</strong>;
+ * obtain a fresh instance per parse (the container serves it as a prototype bean). See WW-5650.
  * </p>
  */
 public class StrutsJSONReader implements JSONReader {
@@ -54,20 +51,16 @@ public class StrutsJSONReader implements JSONReader {
             't', '\t'
     );
 
-    private static final class ParseState {
-        private CharacterIterator it;
-        private char c;
-        private Object token;
-        private final StringBuilder buf = new StringBuilder();
-        private int depth;
-    }
-
-    private static final ThreadLocal<ParseState> PARSE_STATE = new ThreadLocal<>();
+    private CharacterIterator it;
+    private char c;
+    private Object token;
+    private final StringBuilder buf = new StringBuilder();
 
     private int maxElements = DEFAULT_MAX_ELEMENTS;
     private int maxDepth = DEFAULT_MAX_DEPTH;
     private int maxStringLength = DEFAULT_MAX_STRING_LENGTH;
     private int maxKeyLength = DEFAULT_MAX_KEY_LENGTH;
+    private int depth;
 
     @Override
     public void setMaxElements(int maxElements) {
@@ -90,99 +83,92 @@ public class StrutsJSONReader implements JSONReader {
     }
 
     protected char next() {
-        ParseState state = PARSE_STATE.get();
-        state.c = state.it.next();
+        this.c = this.it.next();
 
-        return state.c;
+        return this.c;
     }
 
     protected void skipWhiteSpace() {
-        while (Character.isWhitespace(PARSE_STATE.get().c)) {
+        while (Character.isWhitespace(this.c)) {
             this.next();
         }
     }
 
     @Override
     public Object read(String string) throws JSONException {
-        ParseState state = new ParseState();
-        state.it = new StringCharacterIterator(string);
-        state.c = state.it.first();
-        PARSE_STATE.set(state);
-        try {
-            return this.read();
-        } finally {
-            PARSE_STATE.remove();
-        }
+        this.it = new StringCharacterIterator(string);
+        this.c = this.it.first();
+        this.depth = 0;
+
+        return this.read();
     }
 
     protected Object read() throws JSONException {
-        ParseState state = PARSE_STATE.get();
         Object ret;
 
         this.skipWhiteSpace();
 
-        if (state.c == '"') {
+        if (this.c == '"') {
             this.next();
             ret = this.string('"');
-        } else if (state.c == '\'') {
+        } else if (this.c == '\'') {
             this.next();
             ret = this.string('\'');
-        } else if (state.c == '[') {
+        } else if (this.c == '[') {
             this.next();
             ret = this.array();
-        } else if (state.c == ']') {
+        } else if (this.c == ']') {
             ret = ARRAY_END;
             this.next();
-        } else if (state.c == ',') {
+        } else if (this.c == ',') {
             ret = COMMA;
             this.next();
-        } else if (state.c == '{') {
+        } else if (this.c == '{') {
             this.next();
             ret = this.object();
-        } else if (state.c == '}') {
+        } else if (this.c == '}') {
             ret = OBJECT_END;
             this.next();
-        } else if (state.c == ':') {
+        } else if (this.c == ':') {
             ret = COLON;
             this.next();
-        } else if ((state.c == 't') && (this.next() == 'r') && (this.next() == 'u') && (this.next() == 'e')) {
+        } else if ((this.c == 't') && (this.next() == 'r') && (this.next() == 'u') && (this.next() == 'e')) {
             ret = Boolean.TRUE;
             this.next();
-        } else if ((state.c == 'f') && (this.next() == 'a') && (this.next() == 'l') && (this.next() == 's')
+        } else if ((this.c == 'f') && (this.next() == 'a') && (this.next() == 'l') && (this.next() == 's')
                 && (this.next() == 'e')) {
             ret = Boolean.FALSE;
             this.next();
-        } else if ((state.c == 'n') && (this.next() == 'u') && (this.next() == 'l') && (this.next() == 'l')) {
+        } else if ((this.c == 'n') && (this.next() == 'u') && (this.next() == 'l') && (this.next() == 'l')) {
             ret = null;
             this.next();
-        } else if (Character.isDigit(state.c) || (state.c == '-')) {
+        } else if (Character.isDigit(this.c) || (this.c == '-')) {
             ret = this.number();
         } else {
             throw buildInvalidInputException();
         }
 
-        state.token = ret;
+        this.token = ret;
 
         return ret;
     }
 
     protected Map<String, Object> object() throws JSONException {
-        ParseState state = PARSE_STATE.get();
-        if (state.depth >= this.maxDepth) {
+        if (this.depth >= this.maxDepth) {
             throw new JSONException("JSON object nesting exceeds maximum allowed depth ("
                     + this.maxDepth + "). Use " + JSONConstants.JSON_MAX_DEPTH + " to increase the limit.");
         }
-        state.depth++;
+        this.depth++;
         try {
             Map<String, Object> ret = new HashMap<>();
             Object next = this.read();
             if (next != OBJECT_END) {
                 String key = (String) next;
                 validateKeyLength(key);
-                while (state.token != OBJECT_END) {
+                while (this.token != OBJECT_END) {
                     this.read(); // should be a colon
 
-                    if (state.token != OBJECT_END) {
+                    if (this.token != OBJECT_END) {
                         if (ret.size() >= this.maxElements) {
                             throw new JSONException("JSON object exceeds maximum allowed elements ("
                                     + this.maxElements + "). Use " + JSONConstants.JSON_MAX_ELEMENTS + " to increase the limit.");
@@ -205,7 +191,7 @@ public class StrutsJSONReader implements JSONReader {
 
             return ret;
         } finally {
-            state.depth--;
+            this.depth--;
         }
     }
 
@@ -217,22 +203,21 @@ public class StrutsJSONReader implements JSONReader {
     }
 
     protected JSONException buildInvalidInputException() {
-        return new JSONException("Input string is not well formed JSON (invalid char " + PARSE_STATE.get().c + ")");
+        return new JSONException("Input string is not well formed JSON (invalid char " + this.c + ")");
     }
 
 
     protected List<Object> array() throws JSONException {
-        ParseState state = PARSE_STATE.get();
-        if (state.depth >= this.maxDepth) {
+        if (this.depth >= this.maxDepth) {
             throw new JSONException("JSON array nesting exceeds maximum allowed depth ("
                     + this.maxDepth + "). Use " + JSONConstants.JSON_MAX_DEPTH + " to increase the limit.");
         }
-        state.depth++;
+        this.depth++;
         try {
             List<Object> ret = new ArrayList<>();
             Object value = this.read();
 
-            while (state.token != ARRAY_END) {
+            while (this.token != ARRAY_END) {
                 if (ret.size() >= this.maxElements) {
                     throw new JSONException("JSON array exceeds maximum allowed elements ("
                             + this.maxElements + "). Use " + JSONConstants.JSON_MAX_ELEMENTS + " to increase the limit.");
@@ -249,32 +234,31 @@ public class StrutsJSONReader implements JSONReader {
 
             return ret;
         } finally {
-            state.depth--;
+            this.depth--;
         }
     }
 
     protected Object number() throws JSONException {
-        ParseState state = PARSE_STATE.get();
-        state.buf.setLength(0);
+        this.buf.setLength(0);
         boolean toDouble = false;
 
-        if (state.c == '-') {
+        if (this.c == '-') {
             this.add();
         }
 
         this.addDigits();
 
-        if (state.c == '.') {
+        if (this.c == '.') {
             toDouble = true;
             this.add();
             this.addDigits();
         }
 
-        if ((state.c == 'e') || (state.c == 'E')) {
+        if ((this.c == 'e') || (this.c == 'E')) {
             toDouble = true;
             this.add();
 
-            if ((state.c == '+') || (state.c == '-')) {
+            if ((this.c == '+') || (this.c == '-')) {
                 this.add();
             }
 
@@ -283,13 +267,13 @@ public class StrutsJSONReader implements JSONReader {
 
         if (toDouble) {
             try {
-                return Double.parseDouble(state.buf.toString());
+                return Double.parseDouble(this.buf.toString());
             } catch (NumberFormatException e) {
                 throw buildInvalidInputException();
             }
         } else {
             try {
-                return Long.parseLong(state.buf.toString());
+                return Long.parseLong(this.buf.toString());
             } catch (NumberFormatException e) {
                 throw buildInvalidInputException();
             }
@@ -297,17 +281,16 @@ public class StrutsJSONReader implements JSONReader {
     }
 
     protected Object string(char quote) throws JSONException {
-        ParseState state = PARSE_STATE.get();
-        state.buf.setLength(0);
+        this.buf.setLength(0);
 
-        while ((state.c != quote) && (state.c != CharacterIterator.DONE)) {
-            if (state.c == '\\') {
+        while ((this.c != quote) && (this.c != CharacterIterator.DONE)) {
+            if (this.c == '\\') {
                 this.next();
 
-                if (state.c == 'u') {
+                if (this.c == 'u') {
                     this.add(this.unicode());
                 } else {
-                    Character value = escapes.get(state.c);
+                    Character value = escapes.get(this.c);
 
                     if (value != null) {
                         this.add(value);
@@ -316,7 +299,7 @@ public class StrutsJSONReader implements JSONReader {
             } else {
                 this.add();
             }
-            if (state.buf.length() > this.maxStringLength) {
+            if (this.buf.length() > this.maxStringLength) {
                 throw new JSONException("JSON string exceeds maximum allowed length ("
                         + this.maxStringLength + "). Use " + JSONConstants.JSON_MAX_STRING_LENGTH + " to increase the limit.");
             }
@@ -324,33 +307,32 @@ public class StrutsJSONReader implements JSONReader {
 
         this.next();
 
-        return state.buf.toString();
+        return this.buf.toString();
     }
 
     protected void add(char cc) {
-        PARSE_STATE.get().buf.append(cc);
+        this.buf.append(cc);
         this.next();
     }
 
     protected void add() {
-        this.add(PARSE_STATE.get().c);
+        this.add(this.c);
     }
 
     protected void addDigits() {
-        while (Character.isDigit(PARSE_STATE.get().c)) {
+        while (Character.isDigit(this.c)) {
             this.add();
         }
     }
 
     protected char unicode() {
-        ParseState state = PARSE_STATE.get();
         int value = 0;
 
         for (int i = 0; i < 4; ++i) {
             value = switch (this.next()) {
-                case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> (value << 4) + (state.c - '0');
-                case 'a', 'b', 'c', 'd', 'e', 'f' -> (value << 4) + (state.c - 'W');
-                case 'A', 'B', 'C', 'D', 'E', 'F' -> (value << 4) + (state.c - '7');
+                case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> (value << 4) + (this.c - '0');
+                case 'a', 'b', 'c', 'd', 'e', 'f' -> (value << 4) + (this.c - 'W');
+                case 'A', 'B', 'C', 'D', 'E', 'F' -> (value << 4) + (this.c - '7');
                 default -> value;
             };
         }

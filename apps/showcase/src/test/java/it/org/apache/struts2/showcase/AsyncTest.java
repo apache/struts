@@ -41,9 +41,13 @@ public class AsyncTest {
             final HtmlSubmitInput button = form.getInputByValue("Send");
             final HtmlPage page2 = button.click();
 
-            Thread.sleep(4000);
-
             final DomElement msgs = page2.getElementById("msgs");
+
+            // The message is delivered asynchronously via a server-push long-poll; poll for the
+            // result rather than relying on a single fixed delay (slower/newer JVMs need more time).
+            for (int i = 0; i < 30 && !"hello".equals(msgs.asNormalizedText()); i++) {
+                webClient.waitForBackgroundJavaScript(1000);
+            }
 
             Assert.assertEquals("hello", msgs.asNormalizedText());
         }

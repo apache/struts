@@ -103,7 +103,7 @@
 
 <body id="page-home">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+<nav class="navbar navbar-expand-lg bg-light fixed-top" data-bs-theme="light">
     <div class="container-fluid">
 
         <s:url var="home" action="showcase" namespace="/" includeContext="false" />

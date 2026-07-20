@@ -36,10 +36,10 @@
 		<div class="row">
 			<div class="col-md-12">
 
-				<div class="hero-unit">
+				<div class="p-5 mb-4 bg-light rounded-3">
 					<h1>Welcome!</h1>
 					<p>The Struts Showcase demonstrates a variety of use cases and tag usages. Essentially, the application exercises various framework features in isolation. The Showcase is not meant as a "best practices" example.</p>
-					<p>For more "by example" solutions, see the <a href="https://github.com/apache/struts-examples" class="btn btn-primary btn-large">Struts Examples &raquo;</a> pages.</p>
+					<p>For more "by example" solutions, see the <a href="https://github.com/apache/struts-examples" class="btn btn-primary btn-lg">Struts Examples &raquo;</a> pages.</p>
 				</div>
 
 			</div>

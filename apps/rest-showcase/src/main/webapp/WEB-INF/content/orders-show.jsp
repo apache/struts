@@ -29,7 +29,8 @@
     <title>Orders</title>
     <!-- Using a standard HTML link tag with JSP EL to get the contextPath may be simpler, but this is an equivalent for s:link -->
     <s:set var="pageContextPath"><%=((HttpServletRequest)request).getContextPath()%></s:set>
-    <s:link href="%{#pageContextPath}/css/bootstrap.min.css" rel="stylesheet"></s:link>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap/css/bootstrap.min.css'/>"/>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap-icons/font/bootstrap-icons.min.css'/>"/>
     <s:link href="%{#pageContextPath}/css/app.css" rel="stylesheet"></s:link>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -43,25 +44,25 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
+            <div class="border-bottom pb-2 mb-3">
                 <h1>Order ${id}</h1>
             </div>
             <table class="table table-striped">
                 <tr>
-                    <td class="span3">ID</td>
-                    <td class="span9"><s:property value="id"/></td>
+                    <td class="col-3">ID</td>
+                    <td class="col-9"><s:property value="id"/></td>
                 </tr>
                 <tr>
-                    <td class="span3">Client</td>
-                    <td class="span9"><s:property value="clientName"/></td>
+                    <td class="col-3">Client</td>
+                    <td class="col-9"><s:property value="clientName"/></td>
                 </tr>
                 <tr>
-                    <td class="span3">Amount</td>
-                    <td class="span9"><s:property value="amount"/></td>
+                    <td class="col-3">Amount</td>
+                    <td class="col-9"><s:property value="amount"/></td>
                 </tr>
             </table>
 	        <a href="${pageContext.request.contextPath}/orders" class="btn btn-info">
-		        <span class="glyphicon glyphicon-arrow-left"></span> Back to Orders
+		        <i class="bi bi-arrow-left"></i> Back to Orders
 	        </a>
         </div><!--/col-md-12--->
     </div><!--/row-->

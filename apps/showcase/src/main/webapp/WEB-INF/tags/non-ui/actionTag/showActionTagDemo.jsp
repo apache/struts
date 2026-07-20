@@ -25,7 +25,7 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non-Ui Tag - Action Tag</h1>
 </div>
 
@@ -33,13 +33,13 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<div class="well">
+			<div class="bg-light border rounded p-3">
 				<h2> This is Not - Included by the Action Tag</h2>
 			</div>
 
 
 			<!-- lets include the first page many times -->
-			<div class="well">
+			<div class="bg-light border rounded p-3">
 				<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
@@ -47,7 +47,7 @@
 
 
 			<!-- lets include the second page many times -->
-			<div class="well">
+			<div class="bg-light border rounded p-3">
 				<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
@@ -55,7 +55,7 @@
 
 
 			<!--  lets include the third page many time -->
-			<div class="well">
+			<div class="bg-light border rounded p-3">
 				<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
 				<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />

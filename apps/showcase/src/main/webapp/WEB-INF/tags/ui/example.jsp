@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>UI Tags Example</h1>
 </div>
 
@@ -33,9 +33,9 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<s:actionerror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
 			<s:actionmessage cssClass="alert alert-info"/>
-			<s:fielderror  cssClass="alert alert-error"/>
+			<s:fielderror  cssClass="alert alert-danger"/>
 
 
 			<s:form action="exampleSubmit" enctype="multipart/form-data" method="POST" javascriptTooltip="true">

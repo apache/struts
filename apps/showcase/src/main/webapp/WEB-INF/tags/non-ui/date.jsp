@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non UI Tags Example - Date</h1>
 </div>
 
@@ -35,7 +35,7 @@
 
 			<s:action var="myDate" name="date" namespace="/" executeResult="false" />
 
-			<table class="table table-striped table-bordered table-hover table-condensed">
+			<table class="table table-striped table-bordered table-hover table-sm">
 			    <tr>
 			        <th>Name</th>
 			        <th>Format</th>

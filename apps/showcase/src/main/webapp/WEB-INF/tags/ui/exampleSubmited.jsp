@@ -25,14 +25,14 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>UI Tags Example - Example Submited</h1>
 </div>
 
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<table class="table table-striped table-bordered table-hover table-condensed">
+			<table class="table table-striped table-bordered table-hover table-sm">
 			    <s:label label="Name" name="name" />
 			    <s:label label="Birthday" name="birthday" />
 			    <tr>

@@ -42,7 +42,7 @@ public class Html5TagExampleTest {
      */
     @Test
     public void testHtml5PageLoad() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setJavaScriptEnabled(false);
 
@@ -69,7 +69,7 @@ public class Html5TagExampleTest {
      */
     @Test
     public void testHtml5ErrorDisplay() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setJavaScriptEnabled(false);
 
@@ -103,7 +103,7 @@ public class Html5TagExampleTest {
      */
     @Test
     public void testHtml5CleanMarkup() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setJavaScriptEnabled(false);
 
@@ -133,7 +133,7 @@ public class Html5TagExampleTest {
      */
     @Test
     public void testHtml5AnchorTag() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             webClient.getOptions().setJavaScriptEnabled(false);
 
             final HtmlPage page = webClient.getPage(
@@ -162,7 +162,7 @@ public class Html5TagExampleTest {
      */
     @Test
     public void testHtml5Namespace() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
 
             final HtmlPage page = webClient.getPage(

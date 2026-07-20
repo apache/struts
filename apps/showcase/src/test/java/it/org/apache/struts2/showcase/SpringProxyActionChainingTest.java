@@ -48,7 +48,7 @@ public class SpringProxyActionChainingTest {
      */
     @Test
     public void testProxiedActionChaining() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(
                     ParameterUtils.getBaseUrl() + "/actionchaining/proxiedActionChain1!input"
             );

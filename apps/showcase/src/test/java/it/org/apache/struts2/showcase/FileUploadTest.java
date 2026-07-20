@@ -36,7 +36,7 @@ public class FileUploadTest {
 
     @Test
     public void testSimpleFileUpload() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
             final HtmlForm form = page.getFormByName("doUpload");
             HtmlInput captionInput = form.getInputByName("caption");
@@ -67,7 +67,7 @@ public class FileUploadTest {
 
     @Test
     public void testUploadOverMaxSize() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
             final HtmlForm form = page.getFormByName("doUpload");
             HtmlInput captionInput = form.getInputByName("caption");

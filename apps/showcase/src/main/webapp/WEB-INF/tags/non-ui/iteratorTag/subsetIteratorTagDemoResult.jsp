@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non Ui Tag - SubsetTag Demo</h1>
 </div>
 
@@ -42,7 +42,7 @@
 		    </s:subset>
 
 			<s:url var="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" />
-			<s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+			<s:a href="%{#url}" cssClass="btn btn-info"><i class="bi bi-arrow-left"></i> Back To Input</s:a>
 		</div>
 	</div>
 </div>

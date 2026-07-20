@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>UI Tags - Action Tag</h1>
 </div>
 
@@ -34,7 +34,7 @@
 		<div class="col-md-12">
 			  <b>Example 1:</b>
 			  This example calls an action and includes the output on the page
-			  <p id="example1" class="well">
+			  <p id="example1" class="bg-light border rounded p-3">
 			    <s:action namespace="/tags/ui" name="actionTagExample" executeResult="true"/>
 			  </p>
 		</div>

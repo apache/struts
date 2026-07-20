@@ -31,6 +31,7 @@
     <constant name="struts.convention.default.parent.package" value="rest-showcase"/>
 
     <constant name="struts.convention.package.locators" value="example"/>
+    <constant name="struts.webjars.allowlist" value="bootstrap,bootstrap-icons"/>
 
 <!-- Uncomment the lines below to use Jackson XML bindings instead of the XStream library to handle XML serialisations -->
 <!--

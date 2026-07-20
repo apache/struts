@@ -25,7 +25,7 @@
     <s:head/>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
     <h1>Non Ui Tag - AppendIterator Tag Demo</h1>
 </div>
 
@@ -33,8 +33,8 @@
     <div class="row">
 	    <div class="col-md-12">
 
-		    <s:actionerror cssClass="alert alert-error"/>
-		    <s:fielderror cssClass="alert alert-error"/>
+		    <s:actionerror cssClass="alert alert-danger"/>
+		    <s:fielderror cssClass="alert alert-danger"/>
 
 		    <s:form action="submitAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag" method="POST">
 		        <s:textfield label="iterator 1 values (comma separated)" name="iteratorValue1" />

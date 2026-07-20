@@ -34,7 +34,7 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Visitor Validators Example</h1>
 </div>
 
@@ -44,7 +44,7 @@
 
 			<!-- START SNIPPET: visitorValidatorsExample -->
 
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 			<s:form method="POST" action="submitVisitorValidatorsExamples" namespace="/validation">
 				<s:textfield name="user.name" label="User Name"/>

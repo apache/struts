@@ -18,34 +18,44 @@
  */
 package it.org.apache.struts2.showcase;
 
-import org.htmlunit.WebClient;
-import org.htmlunit.html.DomElement;
-import org.htmlunit.html.HtmlForm;
-import org.htmlunit.html.HtmlPage;
-import org.htmlunit.html.HtmlSubmitInput;
-import org.htmlunit.html.HtmlTextInput;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+/**
+ * Exercises the {@code async} plugin's server-push chat endpoints directly over HTTP. This verifies
+ * the Servlet 3 asynchronous processing path (a {@code Callable} action that blocks until a message
+ * is available) without driving a browser, so it does not depend on client-side JavaScript.
+ */
 public class AsyncTest {
+
     @Test
     public void testChatRoom() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/async/index.html");
+        final HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+        final String baseUrl = ParameterUtils.getBaseUrl();
 
-            final HtmlForm form = page.getForms().get(0);
+        // Post a chat message; it is appended to the shared room.
+        final HttpResponse<String> send = client.send(
+                HttpRequest.newBuilder(URI.create(baseUrl + "/async/sendMessage?message=hello"))
+                        .timeout(Duration.ofSeconds(10)).GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        Assert.assertEquals(200, send.statusCode());
 
-            final HtmlTextInput textField = form.getInputByName("msg");
-            textField.type("hello");
-
-            final HtmlSubmitInput button = form.getInputByValue("Send");
-            final HtmlPage page2 = button.click();
-
-            Thread.sleep(4000);
-
-            final DomElement msgs = page2.getElementById("msgs");
-
-            Assert.assertEquals("hello", msgs.asNormalizedText());
-        }
+        // The async (server-push) endpoint returns the new messages as JSON once available. Since the
+        // message was already sent, the blocking Callable returns immediately.
+        final HttpResponse<String> receive = client.send(
+                HttpRequest.newBuilder(URI.create(baseUrl + "/async/receiveNewMessages?lastIndex=0"))
+                        .timeout(Duration.ofSeconds(30)).GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        Assert.assertEquals(200, receive.statusCode());
+        Assert.assertTrue("Expected 'hello' in response but got: " + receive.body(),
+                receive.body().contains("hello"));
     }
 }

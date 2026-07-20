@@ -29,7 +29,8 @@
     <title>Orders</title>
     <!-- Using a standard HTML link tag with JSP EL to get the contextPath may be simpler, but this is an equivalent for s:link -->
     <s:set var="pageContextPath"><%=((HttpServletRequest)request).getContextPath()%></s:set>
-    <s:link href="%{#pageContextPath}/css/bootstrap.min.css" rel="stylesheet"></s:link>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap/css/bootstrap.min.css'/>"/>
+    <link rel="stylesheet" href="<s:webjar path='bootstrap-icons/font/bootstrap-icons.min.css'/>"/>
     <s:link href="%{#pageContextPath}/css/app.css" rel="stylesheet"></s:link>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -44,7 +45,7 @@
     <div class="row">
         <div class="col-md-12">
 
-	        <div class="page-header">
+	        <div class="border-bottom pb-2 mb-3">
 	            <h1>Orders</h1>
 		    </div>
             <s:actionmessage cssClass="alert alert-danger"/>
@@ -62,15 +63,15 @@
                     <td><s:property value="amount"/></td>
                     <td>
                         <div class="btn-group">
-                            <a href="orders/${id}" class="btn btn-default"><span class="glyphicon glyphicon-eye-open"></span> View</a>
-                            <a href="orders/${id}/edit" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edit</a>
-                            <a href="orders/${id}/deleteConfirm" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+                            <a href="orders/${id}" class="btn btn-secondary"><i class="bi bi-eye"></i> View</a>
+                            <a href="orders/${id}/edit" class="btn btn-secondary"><i class="bi bi-pencil"></i> Edit</a>
+                            <a href="orders/${id}/deleteConfirm" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</a>
                         </div>
                    </td>
                 </tr>
                 </s:iterator>
             </table>
-            <a href="orders/new" class="btn btn-primary"><span class="glyphicon glyphicon-file"></span> Create a new order</a>
+            <a href="orders/new" class="btn btn-primary"><i class="bi bi-file-earmark"></i> Create a new order</a>
         </div><!--/col-md-12--->
     </div><!--/row-->
 </div><!--/container-->

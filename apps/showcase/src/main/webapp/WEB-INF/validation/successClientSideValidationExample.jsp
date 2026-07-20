@@ -33,7 +33,7 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Success !</h1>
 </div>
 
@@ -41,7 +41,7 @@
 	<div class="row">
 		<div class="col-md-12">
 
-        <table class="table table-striped table-bordered table-hover table-condensed">
+        <table class="table table-striped table-bordered table-hover table-sm">
             <tr>
                 <td>Required Validator Field:</td>
                 <td><s:property value="requiredValidatorField" /></td>

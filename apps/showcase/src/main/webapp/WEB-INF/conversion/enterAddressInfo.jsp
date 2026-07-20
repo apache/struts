@@ -24,7 +24,7 @@
 	<title>Struts2 Showcase - Conversion - Populate into Struts action class a Set of Address.java Object</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Conversion - Populate into Struts action class a Set of Address.java Object</h1>
 </div>
 

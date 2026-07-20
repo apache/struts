@@ -28,7 +28,7 @@ import org.junit.Test;
 public class ComponentTagExampleTest {
     @Test
     public void test() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/tags/ui/componentTagExample.action");
 

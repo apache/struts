@@ -25,7 +25,7 @@
 </head>
 
 <body>
-	<div class="page-header">
+	<div class="border-bottom pb-2 mb-3">
 		<h1>File Download Example</h1>
 	</div>
 
@@ -39,7 +39,7 @@
 			    </div>
 
 			    <s:url var="url" action="download"/>
-                            <s:a href="%{url}" cssClass="btn btn-large btn-info"><i class="icon-picture"></i> Download image file.</s:a>
+                            <s:a href="%{url}" cssClass="btn btn-lg btn-info"><i class="bi bi-image"></i> Download image file.</s:a>
 		    </div>
 		    <div class="col-md-6" style="text-align: center;">
 			    <div class="alert alert-info">
@@ -47,7 +47,7 @@
 			    </div>
 
 			    <s:url var="url" action="download2"/>
-                            <s:a href="%{url}" cssClass="btn btn-large btn-info"><i class="icon-download-alt"></i> Download ZIP file.</s:a>
+                            <s:a href="%{url}" cssClass="btn btn-lg btn-info"><i class="bi bi-download"></i> Download ZIP file.</s:a>
 		    </div>
 	    </div>
     </div>

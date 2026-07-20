@@ -28,7 +28,7 @@ public class DispatcherResultTest {
 
     @Test
     public void testDispatchingToJSP() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/dispatcher/dispatch.action");
 
             DomElement div = page.getElementById("dispatcher-result");
@@ -38,7 +38,7 @@ public class DispatcherResultTest {
 
     @Test
     public void testDispatchingToAction() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/dispatcher/forward.action");
 
             DomElement div = page.getElementById("dispatcher-result");

@@ -27,7 +27,7 @@
 
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Ok !</h1>
 </div>
 
@@ -36,8 +36,8 @@
 		<div class="col-md-12">
 
 			<s:actionmessage cssClass="alert alert-info"/>
-			<s:actionerror cssClass="alert alert-error"/>
-			<s:fielderror cssClass="alert alert-error"/>
+			<s:actionerror cssClass="alert alert-danger"/>
+			<s:fielderror cssClass="alert alert-danger"/>
 
 			<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
 			<s:a href="%{#id}">Try Again</s:a>

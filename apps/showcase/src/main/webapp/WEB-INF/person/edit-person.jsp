@@ -24,7 +24,7 @@
 	<title>Struts2 Showcase - Person Manager Example</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Person Manager Example</h1>
 </div>
 
@@ -43,7 +43,7 @@
 		<div class="col-md-9">
 			<s:form action="edit-person" theme="simple" validate="false">
 
-				<table class="table table-striped table-bordered table-hover table-condensed">
+				<table class="table table-striped table-bordered table-hover table-sm">
 					<tr>
 						<th>ID</th>
 						<th>First Name</th>

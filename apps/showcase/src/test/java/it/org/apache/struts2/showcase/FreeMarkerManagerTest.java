@@ -29,7 +29,7 @@ import org.junit.Test;
 public class FreeMarkerManagerTest {
     @Test
     public void testCustomManager() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/freemarker/customFreemarkerManagerDemo.action");
 
@@ -45,7 +45,7 @@ public class FreeMarkerManagerTest {
 
     @Test
     public void testTags() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/freemarker/standardTags.action");
 
             final DomElement date = page.getElementById("test_name");

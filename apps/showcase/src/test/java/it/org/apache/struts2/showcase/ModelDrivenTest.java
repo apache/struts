@@ -34,7 +34,7 @@ public class ModelDrivenTest {
 
     @Before
     public void setUp() throws Exception {
-        webClient = new WebClient();
+        webClient = ParameterUtils.createWebClient();
     }
 
     @After

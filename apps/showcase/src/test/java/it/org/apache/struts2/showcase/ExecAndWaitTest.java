@@ -31,7 +31,7 @@ import org.junit.Test;
 public class ExecAndWaitTest {
     @Test
     public void testNodelay() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/wait/example1.action");
 
             final HtmlForm form = page.getForms().get(0);

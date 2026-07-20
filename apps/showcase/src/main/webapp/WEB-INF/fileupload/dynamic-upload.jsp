@@ -26,7 +26,7 @@
 </head>
 
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
     <h1>Dynamic File Upload Validation</h1>
     <p class="lead">Demonstrates WithLazyParams for runtime validation rules</p>
 </div>
@@ -73,14 +73,14 @@
                 <s:file name="upload" label="Select File" cssClass="form-control"/>
 
                 <s:submit value="Upload File" cssClass="btn btn-primary"/>
-                <s:submit value="Refresh Rules" action="dynamicUpload" cssClass="btn btn-default"/>
+                <s:submit value="Refresh Rules" action="dynamicUpload" cssClass="btn btn-secondary"/>
             </s:form>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <div class="well">
+            <div class="bg-light border rounded p-3">
                 <h4>How It Works</h4>
                 <p>In <code>struts.xml</code>, the interceptor parameters use expressions:</p>
                 <pre>&lt;interceptor-ref name="actionFileUpload"&gt;

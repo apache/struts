@@ -34,7 +34,7 @@ import org.junit.Test;
 public class UITagExampleTest {
     @Test
     public void testInputForm() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
+        try (final WebClient webClient = ParameterUtils.createWebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/tags/ui/example!input.action");
 
             final HtmlForm form = page.getFormByName("exampleSubmit");

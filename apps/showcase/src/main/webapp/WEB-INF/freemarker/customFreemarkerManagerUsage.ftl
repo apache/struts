@@ -24,7 +24,7 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Custom Freemarker Manager Usage</h1>
 </div>
 

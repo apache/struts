@@ -24,7 +24,7 @@
 	<title>Struts2 Showcase - CRUD Example</title>
 </head>
 <body>
-<div class="page-header">
+<div class="border-bottom pb-2 mb-3">
 	<h1>Available Employees</h1>
 </div>
 
@@ -40,7 +40,7 @@
 		</div>
 		<div class="col-md-9">
 
-				<table class="table table-striped table-bordered table-hover table-condensed">
+				<table class="table table-striped table-bordered table-hover table-sm">
 					<tr>
 						<th>Id</th>
 						<th>First Name</th>

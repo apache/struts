@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div>
+<div class="border-bottom pb-2 mb-3">
 	<h1>Token Examples - Example 1</h1>
 </div>
 

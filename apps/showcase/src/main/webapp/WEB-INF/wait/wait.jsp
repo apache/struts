@@ -26,7 +26,7 @@
 </head>
 
 <body>
-<div>
+<div class="border-bottom pb-2 mb-3">
     <h1>Execute and Wait Examples - Wait</h1>
 </div>
 

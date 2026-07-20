@@ -32,7 +32,7 @@
 	<title>Struts2 Showcase - CRUD Example - <s:property value="#title"/></title>
 </head>
 <body>
-<div>
+<div class="border-bottom pb-2 mb-3">
 	<h1><s:property value="#title"/></h1>
 </div>
 

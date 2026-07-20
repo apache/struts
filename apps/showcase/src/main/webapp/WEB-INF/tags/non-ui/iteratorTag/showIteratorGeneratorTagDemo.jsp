@@ -25,7 +25,7 @@
 	<s:head/>
 </head>
 <body>
-<div>
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non Ui Tag - Iterator Generator Tag Demo</h1>
 </div>
 

@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div>
+<div class="border-bottom pb-2 mb-3">
 	<h1>Non UI Tags Example - Date</h1>
 </div>
 

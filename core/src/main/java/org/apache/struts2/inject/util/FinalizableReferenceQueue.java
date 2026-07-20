@@ -19,8 +19,8 @@ package org.apache.struts2.inject.util;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Starts a background thread that cleans up after reclaimed referents.
@@ -29,8 +29,7 @@ import java.util.logging.Logger;
  */
 public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
 
-  private static final Logger logger =
-      Logger.getLogger(FinalizableReferenceQueue.class.getName());
+  private static final Logger LOG = LogManager.getLogger(FinalizableReferenceQueue.class);
 
   private final AtomicReference<Thread> cleanupThread = new AtomicReference<>();
 
@@ -45,7 +44,7 @@ public class FinalizableReferenceQueue extends ReferenceQueue<Object> {
   }
 
   void deliverBadNews(Throwable t) {
-    logger.log(Level.SEVERE, "Error cleaning up after reference.", t);
+    LOG.error("Error cleaning up after reference.", t);
   }
 
   void start() {

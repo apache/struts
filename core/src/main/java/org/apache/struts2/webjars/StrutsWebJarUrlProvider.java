@@ -37,9 +37,9 @@ import java.util.Set;
  * Default {@link WebJarUrlProvider} backed by a singleton {@link WebJarVersionLocator}
  * (from {@code webjars-locator-lite}). Thread-safe.
  */
-public class DefaultWebJarUrlProvider implements WebJarUrlProvider {
+public class StrutsWebJarUrlProvider implements WebJarUrlProvider {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultWebJarUrlProvider.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsWebJarUrlProvider.class);
 
     private static final String WEBJARS_URL_SEGMENT = "/webjars/";
 

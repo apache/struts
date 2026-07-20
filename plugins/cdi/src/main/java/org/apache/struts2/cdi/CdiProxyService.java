@@ -95,9 +95,6 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private Class<?> weldUltimateTargetClass(Object candidate) {
-        if (!weldAvailable) {
-            return candidate.getClass();
-        }
         try {
             Object instance = ((WeldClientProxy) candidate).getMetadata().getContextualInstance();
             return instance != null ? instance.getClass() : candidate.getClass();

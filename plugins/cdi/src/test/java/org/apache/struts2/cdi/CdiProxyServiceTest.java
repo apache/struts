@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.cdi;
 
+import jakarta.enterprise.inject.spi.Bean;
 import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.util.ProxyService;
 import org.jboss.weld.bootstrap.api.helpers.RegistrySingletonProvider;
@@ -114,8 +115,46 @@ public class CdiProxyServiceTest {
         assertThat(noWeld.isProxyMember(getMetadata, proxy)).isFalse();
     }
 
+    @Test
+    public void ultimateTargetClassFallsBackToProxyClassWhenContextualInstanceIsNull() {
+        // Contract: a null contextual instance from Weld's Metadata must fall back to the proxy's own class, not NPE or return null
+        NullContextualInstanceProxy stub = new NullContextualInstanceProxy();
+        assertThat(proxyService.ultimateTargetClass(stub)).isEqualTo(stub.getClass());
+    }
+
+    @Test
+    public void ultimateTargetClassFallsBackToProxyClassWhenUnwrappingThrowsLinkageError() {
+        // Contract: a LinkageError while unwrapping the proxy must fall back to the proxy's own class rather than propagate
+        LinkageErrorProxy stub = new LinkageErrorProxy();
+        assertThat(proxyService.ultimateTargetClass(stub)).isEqualTo(stub.getClass());
+    }
+
     private static class SomeHolder {
         @SuppressWarnings("unused")
         private String value;
+    }
+
+    private static class NullContextualInstanceProxy implements WeldClientProxy {
+        @Override
+        public Metadata getMetadata() {
+            return new Metadata() {
+                @Override
+                public Bean<?> getBean() {
+                    return null;
+                }
+
+                @Override
+                public Object getContextualInstance() {
+                    return null;
+                }
+            };
+        }
+    }
+
+    private static class LinkageErrorProxy implements WeldClientProxy {
+        @Override
+        public Metadata getMetadata() {
+            throw new NoClassDefFoundError("simulated missing Weld class");
+        }
     }
 }

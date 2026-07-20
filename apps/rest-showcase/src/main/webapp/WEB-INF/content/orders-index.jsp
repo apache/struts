@@ -45,7 +45,7 @@
     <div class="row">
         <div class="col-md-12">
 
-	        <div class="border-bottom pb-2">
+	        <div class="border-bottom pb-2 mb-3">
 	            <h1>Orders</h1>
 		    </div>
             <s:actionmessage cssClass="alert alert-danger"/>

@@ -26,14 +26,14 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tiles.velocity.TilesVelocityException;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.Renderable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Renderable that provides a default implementation of Renderable#toString()
@@ -74,7 +74,7 @@ public abstract class AbstractDefaultToStringRenderable implements Renderable {
     /**
      * The logging object.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * Constructor.

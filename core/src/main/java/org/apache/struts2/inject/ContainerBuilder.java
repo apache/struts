@@ -16,14 +16,12 @@
 
 package org.apache.struts2.inject;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Builds a dependency injection {@link Container}. The combination of
@@ -34,7 +32,6 @@ import java.util.logging.Logger;
  *
  * <ul>
  *   <li>Injects the current {@link Container}.
- *   <li>Injects the {@link Logger} for the injected member's declaring class.
  * </ul>
  *
  * @author crazybob@google.com (Bob Lee)
@@ -60,29 +57,12 @@ public final class ContainerBuilder {
                 }
             };
 
-    private static final InternalFactory<Logger> LOGGER_FACTORY =
-            new InternalFactory<>() {
-                public Logger create(InternalContext context) {
-                    Member member = context.getExternalContext().getMember();
-                    return member == null ? Logger.getAnonymousLogger()
-                            : Logger.getLogger(member.getDeclaringClass().getName());
-                }
-
-                @Override
-                public Class<? extends Logger> type() {
-                    return Logger.class;
-                }
-            };
-
     /**
      * Constructs a new builder.
      */
     public ContainerBuilder() {
         // In the current container as the default Container implementation.
         factories.put(Key.newInstance(Container.class, Container.DEFAULT_NAME), CONTAINER_FACTORY);
-
-        // Inject the logger for the injected member's declaring class.
-        factories.put(Key.newInstance(Logger.class, Container.DEFAULT_NAME), LOGGER_FACTORY);
     }
 
     /**

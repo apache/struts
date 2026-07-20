@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-api</artifactId>
-            <version>6.0.Final</version>
+            <version>${weld-api.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -78,5 +78,7 @@
 
     <properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- weld-api has its own version line, distinct from ${weld.version} (weld-core/weld-se) -->
+        <weld-api.version>6.0.Final</weld-api.version>
     </properties>
 </project>

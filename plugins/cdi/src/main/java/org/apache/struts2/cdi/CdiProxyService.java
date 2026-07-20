@@ -39,6 +39,17 @@ import static java.lang.reflect.Modifier.isStatic;
  */
 public class CdiProxyService extends StrutsProxyService {
 
+    private static final boolean WELD_AVAILABLE = isWeldAvailable();
+
+    private static boolean isWeldAvailable() {
+        try {
+            Class.forName("org.jboss.weld.proxy.WeldClientProxy");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     @Inject
     public CdiProxyService(ProxyCacheFactory<?, ?> proxyCacheFactory) {
         super(proxyCacheFactory);
@@ -63,7 +74,7 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private boolean isWeldProxy(Object object) {
-        if (object == null) {
+        if (!WELD_AVAILABLE || object == null) {
             return false;
         }
         try {
@@ -74,6 +85,9 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private Class<?> weldUltimateTargetClass(Object candidate) {
+        if (!WELD_AVAILABLE) {
+            return candidate.getClass();
+        }
         try {
             Object instance = ((WeldClientProxy) candidate).getMetadata().getContextualInstance();
             return instance != null ? instance.getClass() : candidate.getClass();
@@ -83,6 +97,9 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private boolean isWeldProxyMember(Member member, Object object) {
+        if (!WELD_AVAILABLE) {
+            return false;
+        }
         if (!isStatic(member.getModifiers()) && !isWeldProxy(object)) {
             return false;
         }

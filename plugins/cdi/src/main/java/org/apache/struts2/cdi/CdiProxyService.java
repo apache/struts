@@ -27,13 +27,15 @@ import org.jboss.weld.proxy.WeldClientProxy;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import static java.lang.reflect.Modifier.isStatic;
+
 /**
  * CDI-aware {@link org.apache.struts2.util.ProxyService}. Extends the default
  * {@link StrutsProxyService} (Spring + Hibernate detection) with recognition of
  * Weld client proxies, so {@code SecurityMemberAccess} can resolve the real
  * target class of a normal-scoped CDI bean before evaluating the OGNL allowlist.
  *
- * @see WW-5604
+ * @see <a href="https://issues.apache.org/jira/browse/WW-5604">WW-5604</a>
  */
 public class CdiProxyService extends StrutsProxyService {
 
@@ -49,7 +51,7 @@ public class CdiProxyService extends StrutsProxyService {
 
     @Override
     public boolean isProxyMember(Member member, Object object) {
-        return super.isProxyMember(member, object) || isWeldProxyMember(member);
+        return super.isProxyMember(member, object) || isWeldProxyMember(member, object);
     }
 
     @Override
@@ -80,7 +82,10 @@ public class CdiProxyService extends StrutsProxyService {
         }
     }
 
-    private boolean isWeldProxyMember(Member member) {
+    private boolean isWeldProxyMember(Member member, Object object) {
+        if (!isStatic(member.getModifiers()) && !isWeldProxy(object)) {
+            return false;
+        }
         try {
             if (member instanceof Method method) {
                 return MethodUtils.getMatchingMethod(WeldClientProxy.class, member.getName(), method.getParameterTypes()) != null;

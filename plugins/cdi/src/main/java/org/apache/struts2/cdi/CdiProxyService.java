@@ -50,9 +50,19 @@ public class CdiProxyService extends StrutsProxyService {
         }
     }
 
+    private final boolean weldAvailable;
+
     @Inject
     public CdiProxyService(ProxyCacheFactory<?, ?> proxyCacheFactory) {
+        this(proxyCacheFactory, WELD_AVAILABLE);
+    }
+
+    /**
+     * Package-private constructor so tests can exercise the Weld-absent fallback.
+     */
+    CdiProxyService(ProxyCacheFactory<?, ?> proxyCacheFactory, boolean weldAvailable) {
         super(proxyCacheFactory);
+        this.weldAvailable = weldAvailable;
     }
 
     @Override
@@ -74,7 +84,7 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private boolean isWeldProxy(Object object) {
-        if (!WELD_AVAILABLE || object == null) {
+        if (!weldAvailable || object == null) {
             return false;
         }
         try {
@@ -85,7 +95,7 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private Class<?> weldUltimateTargetClass(Object candidate) {
-        if (!WELD_AVAILABLE) {
+        if (!weldAvailable) {
             return candidate.getClass();
         }
         try {
@@ -97,7 +107,7 @@ public class CdiProxyService extends StrutsProxyService {
     }
 
     private boolean isWeldProxyMember(Member member, Object object) {
-        if (!WELD_AVAILABLE) {
+        if (!weldAvailable) {
             return false;
         }
         if (!isStatic(member.getModifiers()) && !isWeldProxy(object)) {

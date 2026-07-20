@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,5 +85,37 @@ public class CdiProxyServiceTest {
         Object plain = new Object();
         assertThat(proxyService.isProxy(plain)).isFalse();
         assertThat(proxyService.ultimateTargetClass(plain)).isEqualTo(Object.class);
+    }
+
+    @Test
+    public void nullIsNotProxy() {
+        assertThat(proxyService.isProxy(null)).isFalse();
+    }
+
+    @Test
+    public void memberOfNonProxyObjectIsNotProxyMember() throws Exception {
+        Method getHello = ProxiedFooService.class.getMethod("getHello");
+        assertThat(proxyService.isProxyMember(getHello, new Object())).isFalse();
+    }
+
+    @Test
+    public void nonMethodMemberIsNotProxyMember() throws Exception {
+        Field field = SomeHolder.class.getDeclaredField("value");
+        assertThat(proxyService.isProxyMember(field, proxy)).isFalse();
+    }
+
+    @Test
+    public void withoutWeldFallsBackToBaseBehaviour() throws Exception {
+        ProxyService noWeld = new CdiProxyService(new StrutsProxyCacheFactory<>("1000", "basic"), false);
+        Method getMetadata = proxy.getClass().getMethod("getMetadata");
+
+        assertThat(noWeld.isProxy(proxy)).isFalse();
+        assertThat(noWeld.ultimateTargetClass(proxy)).isEqualTo(proxy.getClass());
+        assertThat(noWeld.isProxyMember(getMetadata, proxy)).isFalse();
+    }
+
+    private static class SomeHolder {
+        @SuppressWarnings("unused")
+        private String value;
     }
 }

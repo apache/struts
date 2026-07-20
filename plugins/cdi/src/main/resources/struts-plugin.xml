@@ -30,4 +30,7 @@
     <!--  Make the CDI object factory the automatic default -->
     <constant name="struts.objectFactory" value="cdi" />
 
+    <bean type="org.apache.struts2.util.ProxyService" name="cdi" class="org.apache.struts2.cdi.CdiProxyService" />
+    <constant name="struts.proxyService" value="cdi" />
+
 </struts>

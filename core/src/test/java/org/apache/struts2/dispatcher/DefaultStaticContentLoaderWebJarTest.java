@@ -68,8 +68,8 @@ public class DefaultStaticContentLoaderWebJarTest {
         webJarLoader.setServeStaticContent("true");
         webJarLoader.setStaticContentPath("/static");
         webJarLoader.setServeStaticBrowserCache("true");
-        org.apache.struts2.webjars.DefaultWebJarUrlProvider provider =
-            new org.apache.struts2.webjars.DefaultWebJarUrlProvider();
+        org.apache.struts2.webjars.StrutsWebJarUrlProvider provider =
+            new org.apache.struts2.webjars.StrutsWebJarUrlProvider();
         provider.setEnabled(String.valueOf(enabled));
         provider.setAllowlist("");
         provider.setStaticContentPath("/static");

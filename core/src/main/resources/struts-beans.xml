@@ -208,7 +208,7 @@
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
           class="org.apache.struts2.dispatcher.DefaultStaticContentLoader" name="struts"/>
     <bean type="org.apache.struts2.webjars.WebJarUrlProvider"
-          class="org.apache.struts2.webjars.DefaultWebJarUrlProvider" name="struts"/>
+          class="org.apache.struts2.webjars.StrutsWebJarUrlProvider" name="struts"/>
     <bean type="org.apache.struts2.UnknownHandlerManager"
           class="org.apache.struts2.DefaultUnknownHandlerManager" name="struts"/>
 

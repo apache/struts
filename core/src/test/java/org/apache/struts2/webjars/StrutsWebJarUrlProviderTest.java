@@ -26,14 +26,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DefaultWebJarUrlProviderTest {
+public class StrutsWebJarUrlProviderTest {
 
-    private DefaultWebJarUrlProvider provider;
+    private StrutsWebJarUrlProvider provider;
     private HttpServletRequest request;
 
     @Before
     public void setUp() {
-        provider = new DefaultWebJarUrlProvider();
+        provider = new StrutsWebJarUrlProvider();
         provider.setEnabled("true");
         provider.setAllowlist("");
         provider.setStaticContentPath("/static");

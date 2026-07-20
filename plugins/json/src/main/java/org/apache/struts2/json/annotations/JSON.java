@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /*
  * Annotation used to customize serialization
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.RECORD_COMPONENT})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JSON {
     String name() default "";

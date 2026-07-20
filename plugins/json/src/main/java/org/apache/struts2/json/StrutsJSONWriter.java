@@ -35,6 +35,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -57,6 +58,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -160,6 +162,11 @@ public class StrutsJSONWriter implements JSONWriter {
             return;
         }
 
+        if (object instanceof Optional<?> optional) {
+            this.value(optional.orElse(null), method);
+            return;
+        }
+
         if (this.stack.contains(object)) {
             Class<?> clazz = object.getClass();
 
@@ -213,6 +220,8 @@ public class StrutsJSONWriter implements JSONWriter {
             this.string(object);
         } else if (object instanceof Enum<?> enumValue) {
             this.enumeration(enumValue);
+        } else if (object.getClass().isRecord()) {
+            this.record(object);
         } else {
             processCustom(object, method);
         }
@@ -297,6 +306,62 @@ public class StrutsJSONWriter implements JSONWriter {
             if (object instanceof Enum) {
                 Object value = ((Enum<?>) object).name();
                 this.add("_name", value, object.getClass().getMethod("name"), hasData);
+            }
+        } catch (Exception e) {
+            throw new JSONException(e);
+        }
+
+        this.add("}");
+    }
+
+    /**
+     * Serialize a Java record by iterating its record components.
+     *
+     * @param object the record instance
+     * @throws JSONException in case of error during serialize
+     */
+    protected void record(Object object) throws JSONException {
+        this.add("{");
+
+        try {
+            boolean hasData = false;
+
+            for (RecordComponent component : object.getClass().getRecordComponents()) {
+                String name = component.getName();
+                Method accessor = component.getAccessor();
+
+                if (accessor.isAnnotationPresent(JSON.class)) {
+                    JSONAnnotationFinder jsonFinder = new JSONAnnotationFinder(accessor).invoke();
+
+                    if (!jsonFinder.shouldSerialize()) {
+                        continue;
+                    }
+
+                    if (jsonFinder.getName() != null) {
+                        name = jsonFinder.getName();
+                    }
+                }
+
+                String expr = null;
+
+                if (this.buildExpr) {
+                    expr = this.expandExpr(name);
+                    if (this.shouldExcludeProperty(expr)) continue;
+                    expr = this.setExprStack(expr);
+                }
+
+                Object value = accessor.invoke(object);
+
+                if (accessor.isAnnotationPresent(JSONFieldBridge.class)) {
+                    value = getBridgedValue(accessor, value);
+                }
+
+                boolean propertyPrinted = this.add(name, value, accessor, hasData);
+                hasData = hasData || propertyPrinted;
+
+                if (this.buildExpr) {
+                    this.setExprStack(expr);
+                }
             }
         } catch (Exception e) {
             throw new JSONException(e);
@@ -443,11 +508,15 @@ public class StrutsJSONWriter implements JSONWriter {
         return false;
     }
 
+    private static boolean isAbsent(Object value) {
+        return value == null || (value instanceof Optional<?> opt && opt.isEmpty());
+    }
+
     /*
      * Add name/value pair to buffer
      */
     protected boolean add(String name, Object value, Method method, boolean hasData) throws JSONException {
-        if (excludeNullProperties && value == null) {
+        if (excludeNullProperties && isAbsent(value)) {
             return false;
         }
         if (hasData) {
@@ -472,7 +541,7 @@ public class StrutsJSONWriter implements JSONWriter {
         boolean hasData = false;
         while (it.hasNext()) {
             Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
-            if (excludeNullProperties && entry.getValue() == null) {
+            if (excludeNullProperties && isAbsent(entry.getValue())) {
                 continue;
             }
 

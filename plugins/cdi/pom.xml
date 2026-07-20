@@ -41,6 +41,13 @@
 
         <dependency>
             <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <version>6.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-impl</artifactId>
             <version>${weld.version}</version>
             <scope>test</scope>

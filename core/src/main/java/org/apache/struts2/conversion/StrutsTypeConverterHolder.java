@@ -18,14 +18,19 @@
  */
 package org.apache.struts2.conversion;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation of {@link TypeConverterHolder}
  */
 public class StrutsTypeConverterHolder implements TypeConverterHolder {
+
+    private static final Logger LOG = LogManager.getLogger(StrutsTypeConverterHolder.class);
 
     /**
      * Record class and its type converter mapping.
@@ -34,7 +39,7 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      * - TypeConverter - instance of TypeConverter
      * </pre>
      */
-    private final HashMap<String, TypeConverter> defaultMappings = new HashMap<>();  // non-action (eg. returned value)
+    private final Map<String, TypeConverter> defaultMappings = new ConcurrentHashMap<>();  // non-action (eg. returned value)
 
     /**
      * Target class conversion Mappings.
@@ -55,23 +60,30 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      *                    Element_property=foo.bar.MyObject
      * </pre>
      */
-    private final HashMap<Class, Map<String, Object>> mappings = new HashMap<>(); // action
+    private final Map<Class, Map<String, Object>> mappings = new ConcurrentHashMap<>(); // action
 
     /**
      * Unavailable target class conversion mappings, serves as a simple cache.
      */
-    private final HashSet<Class> noMapping = new HashSet<>(); // action
+    private final Set<Class> noMapping = ConcurrentHashMap.newKeySet(); // action
 
     /**
      * Record classes that doesn't have conversion mapping defined.
      * <pre>
      * - String -&gt; classname as String
      * </pre>
+     *
+     * @deprecated since 7.3.0, this field is an implementation detail and will be made private.
      */
-    protected HashSet<String> unknownMappings = new HashSet<>();     // non-action (eg. returned value)
+    @Deprecated
+    protected final Set<String> unknownMappings = ConcurrentHashMap.newKeySet();     // non-action (eg. returned value)
 
     @Override
     public void addDefaultMapping(String className, TypeConverter typeConverter) {
+        if (typeConverter == null) {
+            LOG.warn("Ignoring null TypeConverter registered for class [{}]", className);
+            return;
+        }
         defaultMappings.put(className, typeConverter);
         unknownMappings.remove(className);
     }

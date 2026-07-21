@@ -233,17 +233,24 @@ public class JSONInterceptor extends AbstractInterceptor {
                 // Defensive: a custom JSONReader could produce non-String keys. Skip — we cannot
                 // construct a parameter path for filtering, and JSONPopulator wouldn't bind these anyway.
                 LOG.debug("Skipping JSON entry with non-String key [{}] of type [{}] under prefix [{}]",
-                        entry.getKey(), entry.getKey() == null ? "null" : entry.getKey().getClass().getName(), prefix);
+                        entry.getKey(), keyTypeName(entry.getKey()), prefix);
                 continue;
             }
             String fullPath = prefix.isEmpty() ? key : prefix + "." + key;
 
-            if (!isAcceptableKey(fullPath, target, action)) {
+            Object value = entry.getValue();
+            boolean leaf = !(value instanceof Map) && !(value instanceof java.util.List);
+
+            // Per-node checks (length, excluded patterns, @StrutsParameter authorization, property
+            // filters) apply to every node. Name-allowlist checks (accepted patterns,
+            // ParameterNameAware) apply only at leaf keys, so an intermediate node is never gated by
+            // a pattern written for a leaf path — mirroring ParametersInterceptor, which only ever
+            // evaluates complete leaf names.
+            if (!isAcceptableNode(fullPath, target, action) || (leaf && !isAcceptableLeafName(fullPath, action))) {
                 it.remove();
                 continue;
             }
 
-            Object value = entry.getValue();
             if (value instanceof Map) {
                 filterUnacceptableKeysRecursive((Map) value, fullPath, target, action);
             } else if (value instanceof java.util.List) {
@@ -252,6 +259,10 @@ public class JSONInterceptor extends AbstractInterceptor {
                 it.remove();
             }
         }
+    }
+
+    private static String keyTypeName(Object key) {
+        return key == null ? "null" : key.getClass().getName();
     }
 
     @SuppressWarnings("rawtypes")
@@ -266,15 +277,25 @@ public class JSONInterceptor extends AbstractInterceptor {
                 filterUnacceptableKeysRecursive((Map) item, elementPrefix, target, action);
             } else if (item instanceof java.util.List) {
                 filterUnacceptableList((java.util.List) item, elementPrefix, target, action);
-            // Scalar list elements are value-checked only; their parent key already passed name/authorization checks.
-            } else if (!isAcceptableValue(elementPrefix, item, action)) {
+            // Scalar list elements are full leaf binding targets: apply the per-node checks, the leaf
+            // name-allowlist checks and the value checks at the element path (e.g. "items[0]"), so a
+            // scalar element is gated exactly as ParametersInterceptor gates the flat name "items[0]".
+            } else if (!isAcceptableNode(elementPrefix, target, action)
+                    || !isAcceptableLeafName(elementPrefix, action)
+                    || !isAcceptableValue(elementPrefix, item, action)) {
                 it.remove();
             }
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    private boolean isAcceptableKey(String fullPath, Object target, Object action) {
+    /**
+     * Checks applied to every node of the JSON tree (both intermediate objects/arrays and leaves):
+     * key length, excluded name patterns, {@code @StrutsParameter} authorization, and — when
+     * enabled — the interceptor's own property filters. Excluded patterns are prefix-safe and
+     * authorization is intentionally hierarchical (a parent must be authorized for a child to be
+     * reachable), so these are correct to evaluate at intermediate nodes.
+     */
+    private boolean isAcceptableNode(String fullPath, Object target, Object action) {
         if (fullPath.length() > paramNameMaxLength) {
             LOG.warn("JSON body parameter [{}] is too long, allowed length is [{}]; rejected", fullPath, paramNameMaxLength);
             return false;
@@ -283,21 +304,33 @@ public class JSONInterceptor extends AbstractInterceptor {
             LOG.warn("JSON body parameter [{}] matches an excluded pattern; rejected", fullPath);
             return false;
         }
-        if (acceptedPatterns != null && !acceptedPatterns.isAccepted(fullPath).isAccepted()) {
-            LOG.warn("JSON body parameter [{}] does not match any accepted pattern; rejected", fullPath);
-            return false;
-        }
         if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
             LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     fullPath, target.getClass().getName());
             return false;
         }
-        if (action instanceof ParameterNameAware nameAware && !nameAware.acceptableParameterName(fullPath)) {
-            LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", fullPath);
-            return false;
-        }
         if (applyPropertyFiltersToInput && !isAcceptedByPropertyFilters(fullPath)) {
             LOG.debug("JSON body parameter [{}] rejected by excludeProperties/includeProperties on input", fullPath);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Name-allowlist checks applied only at leaf keys (scalar values, including scalar array
+     * elements): accepted name patterns and the {@link ParameterNameAware} action callback. These
+     * are deliberately not applied to intermediate nodes: their patterns/decisions target the full
+     * dotted binding path, and gating an intermediate node against a leaf-specific rule would drop
+     * the whole subtree before the leaf is ever evaluated. This matches ParametersInterceptor, which
+     * only ever evaluates complete leaf names.
+     */
+    private boolean isAcceptableLeafName(String fullPath, Object action) {
+        if (acceptedPatterns != null && !acceptedPatterns.isAccepted(fullPath).isAccepted()) {
+            LOG.warn("JSON body parameter [{}] does not match any accepted pattern; rejected", fullPath);
+            return false;
+        }
+        if (action instanceof ParameterNameAware nameAware && !nameAware.acceptableParameterName(fullPath)) {
+            LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", fullPath);
             return false;
         }
         return true;

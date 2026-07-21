@@ -26,7 +26,9 @@ import ognl.OgnlException;
 
 /**
  * @author Gabe
+ * @deprecated since 7.3.0, this accessor is no longer used by the framework and will be removed in a future version.
  */
+@Deprecated(since = "7.3.0", forRemoval = true)
 public class XWorkObjectPropertyAccessor extends ObjectPropertyAccessor {
     @Override
     public Object getProperty(OgnlContext context, Object target, Object oname) throws OgnlException {

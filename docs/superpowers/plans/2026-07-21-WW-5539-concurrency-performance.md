@@ -727,6 +727,27 @@ That is, delete this block entirely:
         }
 ```
 
+Now make `conditionalReload` store the rebuilt mapping, which `buildConverterMapping` no longer does. Without this, reload mode returns fresh data but never caches it, rebuilding from disk on every single request. Replace `conditionalReload` (lines 580-591) with:
+
+```java
+    @SuppressWarnings("deprecation")
+    private Map<String, Object> conditionalReload(Class clazz, Map<String, Object> oldValues) throws Exception {
+        Map<String, Object> mapping = oldValues;
+
+        if (reloadingConfigs) {
+            URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
+            if (fileManager.fileNeedsReloading(fileUrl)) {
+                mapping = buildConverterMapping(clazz);
+                // addMapping is deprecated but remains the correct primitive here:
+                // computeMappingIfAbsent cannot express an unconditional overwrite.
+                converterHolder.addMapping(clazz, mapping);
+            }
+        }
+
+        return mapping;
+    }
+```
+
 Update the method's Javadoc to record the behaviour change, since it is `protected` and visible to subclasses:
 
 ```java
@@ -1165,4 +1186,4 @@ Follow `~/.claude/pr_guideline.md`.
 
 **Concurrency tests prove presence, not absence.** A green run on a strongly-ordered x86 machine is weak evidence. The primary correctness argument is the reasoning about the data structures; the tests are a backstop. Do not add sleeps or retry loops to make a flaky assertion pass — if one is flaky, the design reasoning is wrong and needs revisiting.
 
-**`conditionalReload` stays outside the compute** in `getConverter`. It only does work when `struts.configuration.xml.reload` is enabled and it must run on cache *hits* — that is its entire purpose.
+**`conditionalReload` stays outside the compute** in `getConverter`. It only does work when `struts.configuration.xml.reload` is enabled and it must run on cache *hits* — that is its entire purpose. It stores its own rebuild via the deprecated `addMapping`, because `computeMappingIfAbsent` cannot express an unconditional overwrite. That deprecated call is deliberate and carries a comment saying so; do not "clean it up".

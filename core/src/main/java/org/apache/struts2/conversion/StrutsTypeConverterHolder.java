@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,9 +66,12 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     private final Map<Class, Map<String, Object>> mappings = new ConcurrentHashMap<>(); // action
 
     /**
-     * Unavailable target class conversion mappings, serves as a simple cache.
+     * Marker stored in {@link #mappings} for classes known to have no conversion mapping, so that
+     * negative results are cached in the same atomic operation as positive ones. Deliberately a
+     * distinct instance rather than {@link Collections#emptyMap()}, whose shared singleton could
+     * collide with an empty mapping supplied by a caller.
      */
-    private final Set<Class> noMapping = ConcurrentHashMap.newKeySet(); // action
+    private static final Map<String, Object> NO_MAPPING = Collections.unmodifiableMap(new HashMap<>());
 
     /**
      * Record classes that doesn't have conversion mapping defined.
@@ -103,7 +107,8 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     @Override
     @Deprecated
     public Map<String, Object> getMapping(Class clazz) {
-        return mappings.get(clazz);
+        Map<String, Object> mapping = mappings.get(clazz);
+        return mapping == NO_MAPPING ? null : mapping;
     }
 
     @Override
@@ -115,28 +120,20 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     @Override
     @Deprecated
     public boolean containsNoMapping(Class clazz) {
-        return noMapping.contains(clazz);
-    }
-
-    @Override
-    public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
-        if (noMapping.contains(clazz)) {
-            return Collections.emptyMap();
-        }
-        Map<String, Object> mapping = mappings.computeIfAbsent(clazz, c -> {
-            Map<String, Object> built = builder.apply(c);
-            return (built == null || built.isEmpty()) ? null : built;
-        });
-        if (mapping == null) {
-            noMapping.add(clazz);
-            return Collections.emptyMap();
-        }
-        return mapping;
+        return mappings.get(clazz) == NO_MAPPING;
     }
 
     @Override
     public void addNoMapping(Class clazz) {
-        noMapping.add(clazz);
+        mappings.put(clazz, NO_MAPPING);
+    }
+
+    @Override
+    public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
+        return mappings.computeIfAbsent(clazz, c -> {
+            Map<String, Object> built = builder.apply(c);
+            return (built == null || built.isEmpty()) ? NO_MAPPING : built;
+        });
     }
 
     @Override

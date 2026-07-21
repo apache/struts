@@ -222,4 +222,31 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
 
         assertThat(builds.get()).as("mapping must be built exactly once").isEqualTo(1);
     }
+
+    public void testComputeMappingIfAbsentBuildsOnceUnderConcurrencyForUnmappedClass() throws Exception {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        AtomicInteger builds = new AtomicInteger();
+        ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Future<Map<String, Object>>> futures = new ArrayList<>();
+
+        for (int t = 0; t < THREADS; t++) {
+            futures.add(pool.submit(() -> {
+                start.await();
+                return holder.computeMappingIfAbsent(String.class, clazz -> {
+                    builds.incrementAndGet();
+                    return Collections.emptyMap();
+                });
+            }));
+        }
+
+        start.countDown();
+        for (Future<Map<String, Object>> future : futures) {
+            assertThat(future.get(60, TimeUnit.SECONDS)).isEmpty();
+        }
+        pool.shutdown();
+
+        assertThat(builds.get()).as("unmapped class must be built exactly once").isEqualTo(1);
+        assertThat(holder.containsNoMapping(String.class)).isTrue();
+    }
 }

@@ -97,7 +97,7 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
         tpl.process(model, out);
 
         // then
-        assertEquals(Configuration.VERSION_2_3_33, configuration.getIncompatibleImprovements());
+        assertEquals(Configuration.VERSION_2_3_34, configuration.getIncompatibleImprovements());
         assertEquals("<input type=\"text\" onclick=\"this.alert('It&#39;s an error message')\"/>", out.toString());
     }
 

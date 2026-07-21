@@ -76,7 +76,7 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
         }
     }
 
-    public void testConcurrentNoMappingAndUnknownMappingRegistrationLosesNothing() throws Exception {
+    public void testConcurrentUnknownMappingRegistrationLosesNothing() throws Exception {
         StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
         ExecutorService pool = Executors.newFixedThreadPool(THREADS);
         CountDownLatch start = new CountDownLatch(1);

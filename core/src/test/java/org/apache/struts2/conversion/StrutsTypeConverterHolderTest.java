@@ -21,12 +21,16 @@ package org.apache.struts2.conversion;
 import org.apache.struts2.XWorkTestCase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -129,5 +133,93 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
 
         assertThat(holder.containsUnknownMapping("stub.Later")).isFalse();
         assertThat(holder.getDefaultMapping("stub.Later")).isNotNull();
+    }
+
+    public void testComputeMappingIfAbsentBuildsOnceAndCaches() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        AtomicInteger builds = new AtomicInteger();
+
+        Map<String, Object> first = holder.computeMappingIfAbsent(String.class, clazz -> {
+            builds.incrementAndGet();
+            Map<String, Object> built = new HashMap<>();
+            built.put("someProperty", "someConverter");
+            return built;
+        });
+        Map<String, Object> second = holder.computeMappingIfAbsent(String.class, clazz -> {
+            builds.incrementAndGet();
+            return new HashMap<>();
+        });
+
+        assertThat(builds.get()).isEqualTo(1);
+        assertThat(first).containsEntry("someProperty", "someConverter");
+        assertThat(second).isSameAs(first);
+    }
+
+    public void testComputeMappingIfAbsentNegativeCachesEmptyResult() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        AtomicInteger builds = new AtomicInteger();
+
+        Map<String, Object> first = holder.computeMappingIfAbsent(String.class, clazz -> {
+            builds.incrementAndGet();
+            return Collections.emptyMap();
+        });
+        Map<String, Object> second = holder.computeMappingIfAbsent(String.class, clazz -> {
+            builds.incrementAndGet();
+            return Collections.emptyMap();
+        });
+
+        assertThat(first).isEmpty();
+        assertThat(second).isEmpty();
+        assertThat(builds.get()).as("empty result must be negative cached").isEqualTo(1);
+        assertThat(holder.containsNoMapping(String.class)).isTrue();
+    }
+
+    public void testComputeMappingIfAbsentNegativeCachesNullResult() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+
+        Map<String, Object> result = holder.computeMappingIfAbsent(String.class, clazz -> null);
+
+        assertThat(result).isNotNull().isEmpty();
+        assertThat(holder.containsNoMapping(String.class)).isTrue();
+    }
+
+    public void testComputeMappingIfAbsentShortCircuitsOnKnownNoMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        holder.addNoMapping(String.class);
+
+        Map<String, Object> result = holder.computeMappingIfAbsent(String.class, clazz -> {
+            throw new AssertionError("builder must not run for a negative-cached class");
+        });
+
+        assertThat(result).isNotNull().isEmpty();
+    }
+
+    public void testComputeMappingIfAbsentBuildsOnceUnderConcurrency() throws Exception {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        AtomicInteger builds = new AtomicInteger();
+        ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Future<Map<String, Object>>> futures = new ArrayList<>();
+
+        for (int t = 0; t < THREADS; t++) {
+            futures.add(pool.submit(() -> {
+                start.await();
+                return holder.computeMappingIfAbsent(String.class, clazz -> {
+                    builds.incrementAndGet();
+                    Map<String, Object> built = new HashMap<>();
+                    built.put("someProperty", "someConverter");
+                    return built;
+                });
+            }));
+        }
+
+        start.countDown();
+        Map<String, Object> expected = futures.get(0).get(60, TimeUnit.SECONDS);
+        for (Future<Map<String, Object>> future : futures) {
+            assertThat(future.get(60, TimeUnit.SECONDS)).isSameAs(expected);
+        }
+        pool.shutdown();
+
+        assertThat(builds.get()).as("mapping must be built exactly once").isEqualTo(1);
     }
 }

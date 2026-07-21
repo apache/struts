@@ -21,9 +21,11 @@ package org.apache.struts2.conversion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Default implementation of {@link TypeConverterHolder}
@@ -99,18 +101,37 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     }
 
     @Override
+    @Deprecated
     public Map<String, Object> getMapping(Class clazz) {
         return mappings.get(clazz);
     }
 
     @Override
+    @Deprecated
     public void addMapping(Class clazz, Map<String, Object> mapping) {
         mappings.put(clazz, mapping);
     }
 
     @Override
+    @Deprecated
     public boolean containsNoMapping(Class clazz) {
         return noMapping.contains(clazz);
+    }
+
+    @Override
+    public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
+        if (noMapping.contains(clazz)) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> mapping = mappings.computeIfAbsent(clazz, c -> {
+            Map<String, Object> built = builder.apply(c);
+            return (built == null || built.isEmpty()) ? null : built;
+        });
+        if (mapping == null) {
+            noMapping.add(clazz);
+            return Collections.emptyMap();
+        }
+        return mapping;
     }
 
     @Override

@@ -18,7 +18,9 @@
  */
 package org.apache.struts2.conversion;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Holds all mappings related to {@link TypeConverter}s
@@ -54,7 +56,10 @@ public interface TypeConverterHolder {
      *
      * @param clazz class to convert to/from
      * @return {@link TypeConverter} for given class
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which resolves
+     * and caches the mapping atomically instead of requiring a check-then-act at the call site.
      */
+    @Deprecated
     Map<String, Object> getMapping(Class clazz);
 
     /**
@@ -62,7 +67,10 @@ public interface TypeConverterHolder {
      *
      * @param clazz   class to convert to/from
      * @param mapping property converters
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which stores
+     * the built mapping itself.
      */
+    @Deprecated
     void addMapping(Class clazz, Map<String, Object> mapping);
 
     /**
@@ -70,7 +78,10 @@ public interface TypeConverterHolder {
      *
      * @param clazz class to convert to/from
      * @return true if mapping couldn't be found
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which returns
+     * an empty map for classes known to have no mapping.
      */
+    @Deprecated
     boolean containsNoMapping(Class clazz);
 
     /**
@@ -96,5 +107,40 @@ public interface TypeConverterHolder {
      * @param className name of the class to mark there is no converter for it
      */
     void addUnknownMapping(String className);
+
+    /**
+     * Returns the property-converter mapping for the given class, building and caching it on first
+     * use. Never returns {@code null}: a class known to have no mapping yields
+     * {@link Collections#emptyMap()}.
+     *
+     * <p>If the builder returns {@code null} or an empty map, the class is recorded in the negative
+     * cache so the builder is not invoked for it again.</p>
+     *
+     * <p>Implementations are expected to make this atomic so that the builder runs at most once per
+     * class. The default implementation is a non-atomic check-then-act using the deprecated
+     * primitives, preserving pre-7.3.0 behaviour for third-party holders that do not override it.</p>
+     *
+     * @param clazz   class to convert to/from
+     * @param builder builds the property-converter mapping for the class when it is not yet cached
+     * @return the mapping for the class, or an empty map if it has none
+     * @since 7.3.0
+     */
+    @SuppressWarnings("deprecation")
+    default Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
+        if (containsNoMapping(clazz)) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> mapping = getMapping(clazz);
+        if (mapping != null) {
+            return mapping;
+        }
+        mapping = builder.apply(clazz);
+        if (mapping == null || mapping.isEmpty()) {
+            addNoMapping(clazz);
+            return Collections.emptyMap();
+        }
+        addMapping(clazz, mapping);
+        return mapping;
+    }
 
 }

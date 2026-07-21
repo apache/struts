@@ -27,6 +27,8 @@ import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.test.DataAware2;
 import org.apache.struts2.test.SimpleAction3;
 import org.apache.struts2.test.User;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.validator.validators.DateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.ExpressionValidator;
@@ -43,6 +45,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -373,6 +380,43 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         e = i.next();
         assertEquals(e.getKey(), "passwordHint");
         assertEquals((e.getValue()).get(0), "password hint is required");
+    }
+
+    public void testConcurrentGetValidatorsReturnsConsistentResults() throws Exception {
+        final int threads = 16;
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Future<Integer>> futures = new ArrayList<>();
+
+        int expectedCount = actionValidatorManager.getValidators(SimpleAction.class, alias).size();
+        // ActionContext is a plain (non-inheritable) ThreadLocal, so each pool thread needs its
+        // own context bound - with its own ValueStack - before it can call getValidators(),
+        // mirroring what XWorkTestCaseHelper does for the main test thread.
+        ValueStackFactory valueStackFactory = container.getInstance(ValueStackFactory.class);
+
+        for (int t = 0; t < threads; t++) {
+            futures.add(pool.submit(() -> {
+                ValueStack stack = valueStackFactory.createValueStack();
+                stack.getActionContext().withContainer(container).withValueStack(stack).bind();
+                start.await();
+                return actionValidatorManager.getValidators(SimpleAction.class, alias).size();
+            }));
+        }
+
+        start.countDown();
+        for (Future<Integer> future : futures) {
+            assertThat(future.get(60, TimeUnit.SECONDS)).isEqualTo(expectedCount);
+        }
+        pool.shutdown();
+    }
+
+    public void testCachedValidatorConfigsAreUnmodifiable() {
+        actionValidatorManager.getValidators(SimpleAction.class, alias);
+
+        List<ValidatorConfig> cached = actionValidatorManager.validatorCache.values().iterator().next();
+
+        assertThatThrownBy(() -> cached.add(null))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
 }

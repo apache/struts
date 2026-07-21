@@ -35,13 +35,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static java.util.Collections.synchronizedMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -67,8 +65,8 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      */
     protected static final String VALIDATION_CONFIG_SUFFIX = "-validation.xml";
 
-    protected final Map<String, List<ValidatorConfig>> validatorCache = synchronizedMap(new HashMap<>());
-    protected final Map<String, List<ValidatorConfig>> validatorFileCache = synchronizedMap(new HashMap<>());
+    protected final Map<String, List<ValidatorConfig>> validatorCache = new ConcurrentHashMap<>();
+    protected final Map<String, List<ValidatorConfig>> validatorFileCache = new ConcurrentHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
 
     protected ValidatorFactory validatorFactory;
@@ -137,17 +135,19 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Override
-    public synchronized List<Validator> getValidators(Class<?> clazz, String context, String method) {
+    public List<Validator> getValidators(Class<?> clazz, String context, String method) {
         String validatorKey = buildValidatorKey(clazz, context);
 
-        if (!validatorCache.containsKey(validatorKey)) {
-            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
+        List<ValidatorConfig> configs = validatorCache.get(validatorKey);
+        if (configs == null) {
+            configs = validatorCache.computeIfAbsent(validatorKey,
+                    key -> buildValidatorConfigs(clazz, context, false, null));
         } else if (reloadingConfigs) {
-            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
+            configs = buildValidatorConfigs(clazz, context, true, null);
+            validatorCache.put(validatorKey, configs);
         }
 
         ValueStack stack = ActionContext.getContext().getValueStack();
-        List<ValidatorConfig> configs = validatorCache.get(validatorKey);
         List<Validator> validators = new ArrayList<>();
         for (ValidatorConfig config : configs) {
             if (method == null || method.equals(config.getParams().get("methodName"))) {
@@ -158,7 +158,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Override
-    public synchronized List<Validator> getValidators(Class<?> clazz, String context) {
+    public List<Validator> getValidators(Class<?> clazz, String context) {
         return getValidators(clazz, context, null);
     }
 
@@ -314,7 +314,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         }
         checked.add(clazz.getName());
 
-        return validatorConfigs;
+        return Collections.unmodifiableList(validatorConfigs);
     }
 
     protected List<ValidatorConfig> buildAliasValidatorConfigs(Class<?> aClass, String context, boolean checkFile) {
@@ -328,22 +328,35 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     protected List<ValidatorConfig> loadFile(String fileName, Class<?> clazz, boolean checkFile) {
-        List<ValidatorConfig> retList = Collections.emptyList();
-
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
 
-        if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
-            try (InputStream is = fileManager.loadFile(fileUrl)) {
-                if (is != null) {
-                    retList = new ArrayList<>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));
-                }
-            } catch (IOException e) {
-                LOG.error("Caught exception while closing file {}", fileName, e);
-            }
+        if (checkFile && fileManager.fileNeedsReloading(fileUrl)) {
+            List<ValidatorConfig> reloaded = parseValidatorConfigs(fileUrl, fileName);
+            validatorFileCache.put(fileName, reloaded);
+            return reloaded;
+        }
 
-            validatorFileCache.put(fileName, retList);
-        } else {
-            retList = validatorFileCache.get(fileName);
+        return validatorFileCache.computeIfAbsent(fileName, key -> parseValidatorConfigs(fileUrl, fileName));
+    }
+
+    /**
+     * Parses the validator configs from the given file, returning an unmodifiable list. Returns an
+     * empty list when the file does not exist or cannot be read.
+     *
+     * @param fileUrl  URL of the validation config file, may be null
+     * @param fileName name of the validation config file, used for logging and parser context
+     * @return an unmodifiable list of validator configs, never null
+     */
+    protected List<ValidatorConfig> parseValidatorConfigs(URL fileUrl, String fileName) {
+        List<ValidatorConfig> retList = Collections.emptyList();
+
+        try (InputStream is = fileManager.loadFile(fileUrl)) {
+            if (is != null) {
+                retList = Collections.unmodifiableList(
+                        new ArrayList<>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName)));
+            }
+        } catch (IOException e) {
+            LOG.error("Caught exception while closing file {}", fileName, e);
         }
 
         return retList;

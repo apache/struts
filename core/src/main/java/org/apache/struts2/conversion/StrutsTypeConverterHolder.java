@@ -123,6 +123,8 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      *
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
      */
+    // Implementing the deprecated interface primitives is mandatory until they are removed.
+    @SuppressWarnings("removal")
     @Override
     @Deprecated(since = "7.3.0", forRemoval = true)
     public Map<String, Object> getMapping(Class clazz) {
@@ -133,6 +135,7 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     /**
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
      */
+    @SuppressWarnings("removal")
     @Override
     @Deprecated(since = "7.3.0", forRemoval = true)
     public void addMapping(Class clazz, Map<String, Object> mapping) {
@@ -142,6 +145,7 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
     /**
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
      */
+    @SuppressWarnings("removal")
     @Override
     @Deprecated(since = "7.3.0", forRemoval = true)
     public boolean containsNoMapping(Class clazz) {

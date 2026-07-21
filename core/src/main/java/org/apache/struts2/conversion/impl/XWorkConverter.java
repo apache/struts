@@ -582,7 +582,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         return mapping;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     private Map<String, Object> conditionalReload(Class clazz, Map<String, Object> oldValues) throws Exception {
         Map<String, Object> mapping = oldValues;
 

@@ -37,7 +37,6 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
 import org.apache.struts2.conversion.TypeConverter;
-import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 
 import java.io.IOException;

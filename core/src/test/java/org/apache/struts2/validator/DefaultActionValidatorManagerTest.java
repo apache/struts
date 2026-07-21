@@ -388,7 +388,9 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         CountDownLatch start = new CountDownLatch(1);
         List<Future<Integer>> futures = new ArrayList<>();
 
-        int expectedCount = actionValidatorManager.getValidators(SimpleAction.class, alias).size();
+        // actionValidatorManager is freshly injected in setUp(), so validatorCache is cold here -
+        // all 16 threads below race the first build for this key, which is the interesting
+        // contention this test exists to cover.
         // ActionContext is a plain (non-inheritable) ThreadLocal, so each pool thread needs its
         // own context bound - with its own ValueStack - before it can call getValidators(),
         // mirroring what XWorkTestCaseHelper does for the main test thread.
@@ -404,10 +406,13 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         }
 
         start.countDown();
+        int firstSize = futures.get(0).get(60, TimeUnit.SECONDS);
+        assertThat(firstSize).isGreaterThan(0);
         for (Future<Integer> future : futures) {
-            assertThat(future.get(60, TimeUnit.SECONDS)).isEqualTo(expectedCount);
+            assertThat(future.get(60, TimeUnit.SECONDS)).isEqualTo(firstSize);
         }
         pool.shutdown();
+        assertThat(pool.awaitTermination(60, TimeUnit.SECONDS)).isTrue();
     }
 
     public void testCachedValidatorConfigsAreUnmodifiable() {

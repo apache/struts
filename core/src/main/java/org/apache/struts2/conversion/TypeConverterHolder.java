@@ -85,7 +85,9 @@ public interface TypeConverterHolder {
     boolean containsNoMapping(Class clazz);
 
     /**
-     * Adds no mapping flag for give class
+     * Adds no mapping flag for give class. Flagging a class as having no mapping may replace
+     * any mapping previously cached for it; callers should treat this flag as authoritative
+     * over a previously cached mapping.
      *
      * @param clazz class to register missing converter
      */

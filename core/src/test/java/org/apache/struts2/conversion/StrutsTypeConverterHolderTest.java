@@ -185,7 +185,9 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
 
         assertThat(holder.containsNoMapping(String.class)).isTrue();
         assertThat(holder.getMapping(String.class)).isNull();
-        assertThat(holder.computeMappingIfAbsent(String.class, clazz -> real)).isEmpty();
+        assertThat(holder.computeMappingIfAbsent(String.class, clazz -> {
+            throw new AssertionError("builder must not run when no mapping is set");
+        })).isNotNull().isEmpty();
     }
 
     public void testComputeMappingIfAbsentNegativeCachesNullResult() {

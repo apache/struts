@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,19 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+package org.apache.struts2.cdi;
 
-<struts>
+import jakarta.enterprise.context.ApplicationScoped;
 
-    <bean type="org.apache.struts2.ObjectFactory" name="cdi" class="org.apache.struts2.cdi.CdiObjectFactory" />
+/**
+ * A normal-scoped CDI bean. Weld serves it through a client proxy that
+ * implements {@link org.jboss.weld.proxy.WeldClientProxy}.
+ */
+@ApplicationScoped
+public class ProxiedFooService {
 
-    <!--  Make the CDI object factory the automatic default -->
-    <constant name="struts.objectFactory" value="cdi" />
-
-    <bean type="org.apache.struts2.util.ProxyService" name="cdi" class="org.apache.struts2.cdi.CdiProxyService" />
-    <constant name="struts.proxyService" value="cdi" />
-
-</struts>
+    public String getHello() {
+        return "Hello";
+    }
+}

@@ -121,9 +121,13 @@ public interface TypeConverterHolder {
      * <p>If the builder returns {@code null} or an empty map, the class is recorded in the negative
      * cache so the builder is not invoked for it again.</p>
      *
-     * <p>Implementations are expected to make this atomic so that the builder runs at most once per
-     * class. The default implementation is a non-atomic check-then-act using the deprecated
-     * primitives, preserving pre-7.3.0 behaviour for third-party holders that do not override it.</p>
+     * <p>Implementations only guarantee that all callers converge on the same cached mapping
+     * instance for a given class - not that the builder runs at most once. Under concurrent first
+     * access, the builder may be invoked more than once (each on a different thread, for the same
+     * class); only one of the resulting mappings is retained and returned to every caller. The
+     * builder must therefore be idempotent and free of side effects on the holder itself. The
+     * default implementation is a non-atomic check-then-act using the deprecated primitives,
+     * preserving pre-7.3.0 behaviour for third-party holders that do not override it.</p>
      *
      * @param clazz   class to convert to/from
      * @param builder builds the property-converter mapping for the class when it is not yet cached

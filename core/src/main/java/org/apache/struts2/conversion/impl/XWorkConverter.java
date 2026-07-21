@@ -590,9 +590,13 @@ public class XWorkConverter extends DefaultTypeConverter {
             URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
             if (fileManager.fileNeedsReloading(fileUrl)) {
                 mapping = buildConverterMapping(clazz);
-                // addMapping is deprecated but remains the correct primitive here:
-                // computeMappingIfAbsent cannot express an unconditional overwrite.
-                converterHolder.addMapping(clazz, mapping);
+                if (mapping.isEmpty()) {
+                    converterHolder.addNoMapping(clazz);
+                } else {
+                    // addMapping is deprecated but remains the correct primitive here:
+                    // computeMappingIfAbsent cannot express an unconditional overwrite.
+                    converterHolder.addMapping(clazz, mapping);
+                }
             }
         }
 

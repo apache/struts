@@ -95,12 +95,16 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
 
     @Override
     public void addDefaultMapping(String className, TypeConverter typeConverter) {
-        unknownMappingsInternal.remove(className);
         if (typeConverter == null) {
             LOG.warn("Ignoring null TypeConverter registered for class [{}]", className);
             return;
         }
+        // Order is load-bearing: registering the converter before clearing the unknown flag means a
+        // concurrent XWorkConverter.lookup can never observe (unknown=false, default=false) for this
+        // class - a state that would otherwise send it down the lookupSuper() path and let it
+        // overwrite the more specific converter being registered here with a broader one.
         defaultMappings.put(className, typeConverter);
+        unknownMappingsInternal.remove(className);
     }
 
     @Override
@@ -149,10 +153,22 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
 
     @Override
     public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
-        return mappings.computeIfAbsent(clazz, c -> {
-            Map<String, Object> built = builder.apply(c);
-            return (built == null || built.isEmpty()) ? NO_MAPPING : built;
-        });
+        // Deliberately not implemented with mappings.computeIfAbsent(...): that would run the builder
+        // while holding the ConcurrentHashMap's internal bin lock. The builder reaches
+        // ObjectFactory.buildConverter(...), which instantiates (and, under SpringObjectFactory,
+        // autowires) an arbitrary user-supplied TypeConverter - constructors, @PostConstruct,
+        // afterPropertiesSet. Running that under a bin lock risks IllegalStateException("Recursive
+        // update") or a self-deadlock if any of it re-enters conversion. Instead the builder runs
+        // outside any lock, at the cost of allowing it to run more than once under first-access
+        // contention; putIfAbsent ensures every caller still converges on the same cached instance.
+        Map<String, Object> existing = mappings.get(clazz);
+        if (existing != null) {
+            return existing;
+        }
+        Map<String, Object> built = builder.apply(clazz);
+        Map<String, Object> value = (built == null || built.isEmpty()) ? NO_MAPPING : built;
+        Map<String, Object> previous = mappings.putIfAbsent(clazz, value);
+        return previous != null ? previous : value;
     }
 
     @Override

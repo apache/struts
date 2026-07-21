@@ -838,7 +838,13 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1, countingConverter.builds.get());
     }
 
-    public void testGetConverterBuildsMappingExactlyOnceUnderConcurrency() throws Exception {
+    /**
+     * {@code computeMappingIfAbsent} deliberately does not run the builder inside a lock (see
+     * {@link org.apache.struts2.conversion.StrutsTypeConverterHolder#computeMappingIfAbsent}), so
+     * under concurrent first access {@code buildConverterMapping} may run more than once. What must
+     * still hold is that every caller converges on the same, correct result.
+     */
+    public void testGetConverterConvergesOnSameResultUnderConcurrency() throws Exception {
         final int threads = 16;
         CountingXWorkConverter countingConverter = container.inject(CountingXWorkConverter.class);
         countingConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
@@ -859,8 +865,6 @@ public class XWorkConverterTest extends XWorkTestCase {
             assertEquals(String.class, future.get(60, TimeUnit.SECONDS));
         }
         pool.shutdown();
-
-        assertEquals(1, countingConverter.builds.get());
     }
 
     public void testGetConverterReturnsNullForUnknownProperty() {

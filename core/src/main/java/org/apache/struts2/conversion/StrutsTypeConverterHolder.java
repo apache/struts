@@ -123,6 +123,16 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
         return mappings.get(clazz) == NO_MAPPING;
     }
 
+    /**
+     * Stores the {@link #NO_MAPPING} sentinel for the given class, replacing any mapping previously
+     * cached for it. This matches the pre-7.3.0 effective behaviour, back when a separate no-mapping
+     * collection was consulted independently of the mappings map: the only in-tree caller,
+     * {@code XWorkConverter.getConverter}, checked the no-mapping flag first and short-circuited
+     * before the cached mapping was ever read, so flagging a class as no-mapping made it behave as
+     * though it had no mapping, real cached mapping or not. {@link Map#putIfAbsent} is deliberately
+     * not used here: it would leave a stale mapping being served for a class whose conversion build
+     * subsequently failed, which is a genuine behaviour change rather than a faithful port.
+     */
     @Override
     public void addNoMapping(Class clazz) {
         mappings.put(clazz, NO_MAPPING);

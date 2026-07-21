@@ -110,8 +110,7 @@ public interface TypeConverterHolder {
 
     /**
      * Returns the property-converter mapping for the given class, building and caching it on first
-     * use. Never returns {@code null}: a class known to have no mapping yields
-     * {@link Collections#emptyMap()}.
+     * use. Never returns {@code null}: a class known to have no mapping yields an empty map.
      *
      * <p>If the builder returns {@code null} or an empty map, the class is recorded in the negative
      * cache so the builder is not invoked for it again.</p>

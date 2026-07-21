@@ -172,6 +172,20 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
         assertThat(second).isEmpty();
         assertThat(builds.get()).as("empty result must be negative cached").isEqualTo(1);
         assertThat(holder.containsNoMapping(String.class)).isTrue();
+        assertThat(holder.getMapping(String.class)).isNull();
+    }
+
+    public void testAddNoMappingOverridesPreviouslyCachedMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        Map<String, Object> real = new HashMap<>();
+        real.put("someProperty", "someConverter");
+        holder.addMapping(String.class, real);
+
+        holder.addNoMapping(String.class);
+
+        assertThat(holder.containsNoMapping(String.class)).isTrue();
+        assertThat(holder.getMapping(String.class)).isNull();
+        assertThat(holder.computeMappingIfAbsent(String.class, clazz -> real)).isEmpty();
     }
 
     public void testComputeMappingIfAbsentNegativeCachesNullResult() {

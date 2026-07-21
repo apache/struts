@@ -19,6 +19,7 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.FileManager;
 import org.apache.struts2.ModelDrivenAction;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.text.StubTextProvider;
@@ -40,6 +41,8 @@ import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -879,6 +882,174 @@ public class XWorkConverterTest extends XWorkTestCase {
         freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
 
         assertNull(freshConverter.getConverter(User.class, null));
+    }
+
+    /**
+     * Minimal {@link FileManager} whose {@code fileNeedsReloading} answer is fixed at construction,
+     * so {@code conditionalReload}'s branches can be driven deterministically without depending on
+     * real file timestamps or the shared, statically-cached {@link org.apache.struts2.util.fs.DefaultFileManager}.
+     * {@code loadFile} is never exercised through this seam: {@code XWorkConverter.fileManager} is
+     * only ever read by {@code conditionalReload}'s {@code fileNeedsReloading} call - actual property
+     * file parsing goes through {@link org.apache.struts2.conversion.impl.DefaultConversionFileProcessor}'s
+     * own, separately-injected {@link FileManager}.
+     */
+    private static class StubFileManager implements FileManager {
+        private final boolean needsReloading;
+
+        StubFileManager(boolean needsReloading) {
+            this.needsReloading = needsReloading;
+        }
+
+        @Override
+        public void setReloadingConfigs(boolean reloadingConfigs) {
+        }
+
+        @Override
+        public boolean fileNeedsReloading(String fileName) {
+            return needsReloading;
+        }
+
+        @Override
+        public boolean fileNeedsReloading(URL fileUrl) {
+            return needsReloading;
+        }
+
+        @Override
+        public InputStream loadFile(URL fileUrl) {
+            throw new UnsupportedOperationException("not exercised via XWorkConverter.fileManager");
+        }
+
+        @Override
+        public void monitorFile(URL fileUrl) {
+        }
+
+        @Override
+        public URL normalizeToFileProtocol(URL url) {
+            return url;
+        }
+
+        @Override
+        public boolean support() {
+            return true;
+        }
+
+        @Override
+        public boolean internal() {
+            return true;
+        }
+
+        @Override
+        public Collection<? extends URL> getAllPhysicalUrls(URL url) {
+            return List.of(url);
+        }
+    }
+
+    private static void setFileManager(XWorkConverter converter, FileManager fileManager) throws Exception {
+        Field field = XWorkConverter.class.getDeclaredField("fileManager");
+        field.setAccessible(true);
+        field.set(converter, fileManager);
+    }
+
+    /**
+     * Covers {@code conditionalReload}'s {@code reloadingConfigs == true} branch where the rebuilt
+     * mapping is real (non-empty), so it is stored via {@code addMapping}. {@code User} has a real
+     * {@code User-conversion.properties} on the test classpath (see {@code Collection_list} used
+     * elsewhere in this file), so {@code buildConverterMapping} legitimately returns a non-empty
+     * mapping both for the initial cache population and for the forced reload.
+     */
+    public void testConditionalReloadRebuildsRealMappingAndStoresItViaAddMapping() throws Exception {
+        CountingXWorkConverter countingConverter = container.inject(CountingXWorkConverter.class);
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        countingConverter.setTypeConverterHolder(holder);
+        countingConverter.setReloadingConfigs("true");
+        setFileManager(countingConverter, new StubFileManager(true));
+
+        Object converterForList = countingConverter.getConverter(User.class, "Collection_list");
+
+        assertEquals(String.class, converterForList);
+        assertEquals("buildConverterMapping must run once for the initial cache miss and once more "
+                        + "for the forced reload",
+                2, countingConverter.builds.get());
+        assertFalse("the reload found a real mapping, so the class must not be negative-cached",
+                holder.containsNoMapping(User.class));
+    }
+
+    /**
+     * Toggles between a real and an empty mapping across successive {@code buildConverterMapping}
+     * calls, so the forced reload in {@code conditionalReload} can be made to observe an empty
+     * rebuild independently of any real property file's contents.
+     */
+    public static class ToggleXWorkConverter extends XWorkConverter {
+        final AtomicInteger calls = new AtomicInteger();
+
+        public ToggleXWorkConverter() {
+            super();
+        }
+
+        @Override
+        protected Map<String, Object> buildConverterMapping(Class clazz) {
+            if (calls.incrementAndGet() == 1) {
+                Map<String, Object> real = new HashMap<>();
+                real.put("someProperty", "someConverter");
+                return real;
+            }
+            return Collections.emptyMap();
+        }
+    }
+
+    /**
+     * Covers {@code conditionalReload}'s {@code reloadingConfigs == true} branch where the rebuilt
+     * mapping is empty, so it is routed to {@code addNoMapping} instead of {@code addMapping}.
+     */
+    public void testConditionalReloadRebuildsEmptyMappingAndStoresItViaAddNoMapping() throws Exception {
+        ToggleXWorkConverter toggleConverter = container.inject(ToggleXWorkConverter.class);
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        toggleConverter.setTypeConverterHolder(holder);
+        toggleConverter.setReloadingConfigs("true");
+        setFileManager(toggleConverter, new StubFileManager(true));
+
+        Object converter = toggleConverter.getConverter(User.class, "someProperty");
+
+        assertNull("the reload rebuilt an empty mapping, so no converter can be found", converter);
+        assertEquals("buildConverterMapping must run once for the initial cache miss (real mapping) "
+                        + "and once more for the forced reload (empty mapping)",
+                2, toggleConverter.calls.get());
+        assertTrue("an empty rebuild must negative-cache the class", holder.containsNoMapping(User.class));
+    }
+
+    /**
+     * A {@code buildConverterMapping} that always fails with a checked exception, to drive
+     * {@code buildConverterMappingUnchecked}'s wrapping of it as an unchecked
+     * {@code IllegalStateException}, and {@code getConverter}'s {@code catch (Throwable)}
+     * negative-caching of the failure.
+     */
+    public static class ThrowingXWorkConverter extends XWorkConverter {
+        final AtomicInteger attempts = new AtomicInteger();
+
+        public ThrowingXWorkConverter() {
+            super();
+        }
+
+        @Override
+        protected Map<String, Object> buildConverterMapping(Class clazz) throws Exception {
+            attempts.incrementAndGet();
+            throw new Exception("simulated checked failure building converter mapping for " + clazz);
+        }
+    }
+
+    public void testGetConverterNegativeCachesOnBuildFailure() {
+        ThrowingXWorkConverter throwingConverter = container.inject(ThrowingXWorkConverter.class);
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        throwingConverter.setTypeConverterHolder(holder);
+
+        Object first = throwingConverter.getConverter(User.class, "Collection_list");
+        assertNull(first);
+        assertTrue("a build failure must negative-cache the class", holder.containsNoMapping(User.class));
+
+        Object second = throwingConverter.getConverter(User.class, "Collection_list");
+        assertNull(second);
+        assertEquals("the negative cache must prevent a second build attempt",
+                1, throwingConverter.attempts.get());
     }
 
     public static class Foo1 {

@@ -329,6 +329,22 @@ public class StrutsTypeConverterHolderTest extends XWorkTestCase {
         assertThat(holder.getMapping(String.class)).isNull();
     }
 
+    /**
+     * Covers the branches of {@code getMapping} and {@code containsNoMapping} that are not the
+     * {@link StrutsTypeConverterHolder#NO_MAPPING} sentinel: a class with a real cached mapping
+     * must get that mapping back (not {@code null}), and must not be reported as having no mapping.
+     */
+    public void testGetMappingAndContainsNoMappingReflectRealMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        Map<String, Object> real = new HashMap<>();
+        real.put("someProperty", "someConverter");
+
+        holder.addMapping(String.class, real);
+
+        assertThat(holder.getMapping(String.class)).isSameAs(real);
+        assertThat(holder.containsNoMapping(String.class)).isFalse();
+    }
+
     public void testAddNoMappingOverridesPreviouslyCachedMapping() {
         StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
         Map<String, Object> real = new HashMap<>();

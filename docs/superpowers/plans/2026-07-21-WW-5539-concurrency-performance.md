@@ -503,25 +503,45 @@ import java.util.function.Function;
 
 Add the override after `getMapping`, and mark the three implementing methods `@Deprecated` to match the interface:
 
+Negative results are stored as a sentinel in the same map, so `computeIfAbsent` deduplicates the builder on **both** paths. This matters because the no-mapping case is the *common* one — an ordinary action class has no `-conversion.properties` and no `@Conversion` annotations, yet `buildConverterMapping` still walks its whole hierarchy doing classpath lookups and reflection. Returning `null` from the mapping function would store nothing, letting every concurrent caller re-run that walk: the exact thundering herd this method exists to prevent.
+
+Add the sentinel. It MUST be a distinct instance, not `Collections.emptyMap()`, whose shared JDK singleton could collide with an empty map a caller passed to `addMapping`:
+
+```java
+    private static final Map<String, Object> NO_MAPPING = Collections.unmodifiableMap(new HashMap<>());
+```
+
+Delete the `noMapping` field — the sentinel replaces it. Then:
+
 ```java
     @Override
+    @Deprecated
+    public Map<String, Object> getMapping(Class clazz) {
+        Map<String, Object> mapping = mappings.get(clazz);
+        return mapping == NO_MAPPING ? null : mapping;
+    }
+
+    @Override
+    @Deprecated
+    public boolean containsNoMapping(Class clazz) {
+        return mappings.get(clazz) == NO_MAPPING;
+    }
+
+    @Override
+    public void addNoMapping(Class clazz) {
+        mappings.put(clazz, NO_MAPPING);
+    }
+
+    @Override
     public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
-        if (noMapping.contains(clazz)) {
-            return Collections.emptyMap();
-        }
-        Map<String, Object> mapping = mappings.computeIfAbsent(clazz, c -> {
+        return mappings.computeIfAbsent(clazz, c -> {
             Map<String, Object> built = builder.apply(c);
-            return (built == null || built.isEmpty()) ? null : built;
+            return (built == null || built.isEmpty()) ? NO_MAPPING : built;
         });
-        if (mapping == null) {
-            noMapping.add(clazz);
-            return Collections.emptyMap();
-        }
-        return mapping;
     }
 ```
 
-Returning `null` from a `computeIfAbsent` mapping function stores nothing and yields `null`, so the negative case falls out naturally and `getMapping()` keeps its "null when absent" meaning.
+`getMapping` and `containsNoMapping` translate the sentinel, so both keep their existing contracts — `getMapping` still returns `null` for an absent *or* negative-cached class.
 
 Add `@Deprecated` to the `getMapping`, `addMapping` and `containsNoMapping` overrides in this class so they do not emit "overrides deprecated method" noise.
 

@@ -37,6 +37,8 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
 import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.conversion.TypeConverterHolder;
+import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,6 +49,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -802,6 +810,72 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         // then
         assertEquals(converted, Arrays.asList(1, 2, 3));
+    }
+
+    public static class CountingXWorkConverter extends XWorkConverter {
+        final AtomicInteger builds = new AtomicInteger();
+
+        public CountingXWorkConverter() {
+            super();
+        }
+
+        @Override
+        protected Map<String, Object> buildConverterMapping(Class clazz) throws Exception {
+            builds.incrementAndGet();
+            return super.buildConverterMapping(clazz);
+        }
+    }
+
+    public void testGetConverterBuildsMappingExactlyOncePerClass() throws Exception {
+        CountingXWorkConverter countingConverter = container.inject(CountingXWorkConverter.class);
+        // a cold, dedicated holder so other tests' cached mappings cannot mask the behaviour
+        countingConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        Object first = countingConverter.getConverter(User.class, "Collection_list");
+        Object second = countingConverter.getConverter(User.class, "Collection_list");
+
+        assertEquals(String.class, first);
+        assertEquals(String.class, second);
+        assertEquals(1, countingConverter.builds.get());
+    }
+
+    public void testGetConverterBuildsMappingExactlyOnceUnderConcurrency() throws Exception {
+        final int threads = 16;
+        CountingXWorkConverter countingConverter = container.inject(CountingXWorkConverter.class);
+        countingConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Future<Object>> futures = new ArrayList<>();
+
+        for (int t = 0; t < threads; t++) {
+            futures.add(pool.submit(() -> {
+                start.await();
+                return countingConverter.getConverter(User.class, "Collection_list");
+            }));
+        }
+
+        start.countDown();
+        for (Future<Object> future : futures) {
+            assertEquals(String.class, future.get(60, TimeUnit.SECONDS));
+        }
+        pool.shutdown();
+
+        assertEquals(1, countingConverter.builds.get());
+    }
+
+    public void testGetConverterReturnsNullForUnknownProperty() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertNull(freshConverter.getConverter(User.class, "noSuchPropertyAnywhere"));
+    }
+
+    public void testGetConverterReturnsNullForNullProperty() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertNull(freshConverter.getConverter(User.class, null));
     }
 
     public static class Foo1 {

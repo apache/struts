@@ -828,7 +828,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         }
     }
 
-    public void testGetConverterBuildsMappingExactlyOncePerClass() throws Exception {
+    public void testGetConverterBuildsMappingExactlyOncePerClass() {
         CountingXWorkConverter countingConverter = container.inject(CountingXWorkConverter.class);
         // a cold, dedicated holder so other tests' cached mappings cannot mask the behaviour
         countingConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
@@ -902,6 +902,8 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         @Override
         public void setReloadingConfigs(boolean reloadingConfigs) {
+            // intentionally empty: this stub only controls fileNeedsReloading for the reload
+            // tests, and nothing in conditionalReload reads back the reloading-configs flag
         }
 
         @Override
@@ -921,6 +923,8 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         @Override
         public void monitorFile(URL fileUrl) {
+            // intentionally empty: this stub only controls fileNeedsReloading for the reload
+            // tests, and nothing in conditionalReload depends on file monitoring being registered
         }
 
         @Override
@@ -1008,9 +1012,9 @@ public class XWorkConverterTest extends XWorkTestCase {
         toggleConverter.setReloadingConfigs("true");
         setFileManager(toggleConverter, new StubFileManager(true));
 
-        Object converter = toggleConverter.getConverter(User.class, "someProperty");
+        Object resolvedConverter = toggleConverter.getConverter(User.class, "someProperty");
 
-        assertNull("the reload rebuilt an empty mapping, so no converter can be found", converter);
+        assertNull("the reload rebuilt an empty mapping, so no converter can be found", resolvedConverter);
         assertEquals("buildConverterMapping must run once for the initial cache miss (real mapping) "
                         + "and once more for the forced reload (empty mapping)",
                 2, toggleConverter.calls.get());

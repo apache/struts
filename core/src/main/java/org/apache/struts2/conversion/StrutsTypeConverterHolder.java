@@ -84,7 +84,7 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      * for binary compatibility with subclasses compiled against earlier versions, and will be
      * removed in a future release.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     protected HashSet<String> unknownMappings = new HashSet<>();
 
     /**
@@ -117,21 +117,33 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
         return defaultMappings.get(className);
     }
 
+    /**
+     * Returns {@code null} if {@code clazz} has been flagged as having no mapping via
+     * {@link #addNoMapping(Class)}, even if a real mapping was previously stored for it.
+     *
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     public Map<String, Object> getMapping(Class clazz) {
         Map<String, Object> mapping = mappings.get(clazz);
         return mapping == NO_MAPPING ? null : mapping;
     }
 
+    /**
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     public void addMapping(Class clazz, Map<String, Object> mapping) {
         mappings.put(clazz, mapping);
     }
 
+    /**
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     public boolean containsNoMapping(Class clazz) {
         return mappings.get(clazz) == NO_MAPPING;
     }

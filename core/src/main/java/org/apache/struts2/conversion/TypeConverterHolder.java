@@ -63,7 +63,7 @@ public interface TypeConverterHolder {
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which resolves
      * and caches the mapping atomically instead of requiring a check-then-act at the call site.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     Map<String, Object> getMapping(Class clazz);
 
     /**
@@ -74,7 +74,7 @@ public interface TypeConverterHolder {
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which stores
      * the built mapping itself.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     void addMapping(Class clazz, Map<String, Object> mapping);
 
     /**
@@ -85,7 +85,7 @@ public interface TypeConverterHolder {
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which returns
      * an empty map for classes known to have no mapping.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     boolean containsNoMapping(Class clazz);
 
     /**

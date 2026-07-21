@@ -23,8 +23,7 @@ on:
       - 'develop'
       - 'release/*'
       - 'support/*'
-  workflow_dispatch:
-  workflow_call:
+  workflow_dispatch: #Allow manual triggers
 
 permissions: read-all
 
@@ -38,6 +37,8 @@ jobs:
   owasp:
     name: OWASP
     runs-on: ubuntu-latest
+    env:
+      HAVE_NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -58,10 +59,15 @@ jobs:
             nvd-cache-${{ runner.os }}-owasp-
             nvd-cache-${{ runner.os }}-
 
-      - name: OWASP Dependency check update cache
-        run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-mirror -Pdependency-update-only --no-transfer-progress
+      - name: OWASP Dependency check update cache via NIST_NVD_API_KEY
+        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'true' }}
+        run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-api -Pdependency-update-only --no-transfer-progress
         env:
-          NVD_NIST_APIKEY: ${{ secrets.NVD_NIST_APIKEY}}
+          NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY}}
+
+      - name: OWASP Dependency check update cache via Mirror
+        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'false' }}
+        run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-mirror -Pdependency-update-only --no-transfer-progress
 
       - name: Cache NVD Database
         uses: actions/cache/save@v6

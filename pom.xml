@@ -208,11 +208,11 @@
             </build>
         </profile>
         <profile>
-        <!-- -DNVD_NIST_APIKEY=${yourkey} so that owasp runs via api -->
+        <!-- -DNIST_NVD_API_KEY=${yourkey} so that owasp runs via api -->
         <id>owasp-nvd-api</id>
         <activation>
             <property>
-                <name>NVD_NIST_APIKEY</name>
+                <name>NIST_NVD_API_KEY</name>
             </property>
         </activation>
         <build>
@@ -225,7 +225,7 @@
                         <suppressionFiles>owasp-suppressions.xml</suppressionFiles>
                         <failBuildOnCVSS>0</failBuildOnCVSS>
                         <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                        <nvdApiKey>${NVD_NIST_APIKEY}</nvdApiKey>
+                        <nvdApiKey>${NIST_NVD_API_KEY}</nvdApiKey>
                         <skip>${owasp.skip}</skip>
                     </configuration>
                 </plugin>

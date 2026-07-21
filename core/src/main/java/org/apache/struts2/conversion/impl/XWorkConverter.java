@@ -419,7 +419,9 @@ public class XWorkConverter extends DefaultTypeConverter {
         }
         try {
             Map<String, Object> mapping = converterHolder.computeMappingIfAbsent(clazz, this::buildConverterMappingUnchecked);
-            mapping = conditionalReload(clazz, mapping);
+            if (!mapping.isEmpty()) {
+                mapping = conditionalReload(clazz, mapping);
+            }
 
             Object converter = mapping.get(property);
             if (converter == null && LOG.isDebugEnabled()) {

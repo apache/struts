@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,19 +80,27 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
      * - String -&gt; classname as String
      * </pre>
      *
-     * @deprecated since 7.3.0, this field is an implementation detail and will be made private.
+     * @deprecated since 7.3.0, unused - superseded by internal concurrent storage. Retained only
+     * for binary compatibility with subclasses compiled against earlier versions, and will be
+     * removed in a future release.
      */
     @Deprecated
-    protected final Set<String> unknownMappings = ConcurrentHashMap.newKeySet();     // non-action (eg. returned value)
+    protected HashSet<String> unknownMappings = new HashSet<>();
+
+    /**
+     * Actual storage for classes with no registered converter. Concurrent, so that lock-free
+     * readers in {@code XWorkConverter.lookup} cannot race writers.
+     */
+    private final Set<String> unknownMappingsInternal = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addDefaultMapping(String className, TypeConverter typeConverter) {
+        unknownMappingsInternal.remove(className);
         if (typeConverter == null) {
             LOG.warn("Ignoring null TypeConverter registered for class [{}]", className);
             return;
         }
         defaultMappings.put(className, typeConverter);
-        unknownMappings.remove(className);
     }
 
     @Override
@@ -148,12 +157,12 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
 
     @Override
     public boolean containsUnknownMapping(String className) {
-        return unknownMappings.contains(className);
+        return unknownMappingsInternal.contains(className);
     }
 
     @Override
     public void addUnknownMapping(String className) {
-        unknownMappings.add(className);
+        unknownMappingsInternal.add(className);
     }
 
 }

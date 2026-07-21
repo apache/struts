@@ -283,7 +283,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         if (checked == null) {
             checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
-            return validatorConfigs;
+            return Collections.emptyList();
         }
 
         if (clazz.isInterface()) {

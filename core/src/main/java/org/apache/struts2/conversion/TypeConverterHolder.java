@@ -54,6 +54,10 @@ public interface TypeConverterHolder {
     /**
      * Target class conversion Mappings.
      *
+     * <p>Returns {@code null} if the class has been flagged as having no mapping via
+     * {@link #addNoMapping(Class)}, even if a real mapping was previously stored for it with
+     * {@link #addMapping(Class, Map)}.</p>
+     *
      * @param clazz class to convert to/from
      * @return {@link TypeConverter} for given class
      * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which resolves

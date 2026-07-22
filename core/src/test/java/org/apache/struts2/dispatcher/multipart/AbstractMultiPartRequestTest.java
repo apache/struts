@@ -207,8 +207,6 @@ abstract class AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1", "file2");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
-            assertThat(file.isFile())
-                    .isTrue();
             assertThat(file.getOriginalName())
                     .isEqualTo("test1.csv");
             assertThat(file.getContentType())
@@ -220,10 +218,10 @@ abstract class AbstractMultiPartRequestTest {
                     .exists()
                     .content()
                     .isEqualTo("1,2,3,4");
-        });
-        assertThat(multiPart.getFile("file2")).allSatisfy(file -> {
             assertThat(file.isFile())
                     .isTrue();
+        });
+        assertThat(multiPart.getFile("file2")).allSatisfy(file -> {
             assertThat(file.getOriginalName())
                     .isEqualTo("test2.csv");
             assertThat(file.getInputName())
@@ -233,6 +231,8 @@ abstract class AbstractMultiPartRequestTest {
                     .exists()
                     .content()
                     .isEqualTo("5,6,7,8");
+            assertThat(file.isFile())
+                    .isTrue();
         });
     }
 
@@ -258,8 +258,6 @@ abstract class AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1", "file2");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
-            assertThat(file.isFile())
-                    .isTrue();
             assertThat(file.getOriginalName())
                     .isEqualTo("test1.csv");
             assertThat(file.getContentType())
@@ -270,10 +268,10 @@ abstract class AbstractMultiPartRequestTest {
                     .exists()
                     .content()
                     .isEqualTo("1,2,3,4");
-        });
-        assertThat(multiPart.getFile("file2")).allSatisfy(file -> {
             assertThat(file.isFile())
                     .isTrue();
+        });
+        assertThat(multiPart.getFile("file2")).allSatisfy(file -> {
             assertThat(file.getOriginalName())
                     .isEqualTo("test2.csv");
             assertThat(file.getContentType())
@@ -285,6 +283,8 @@ abstract class AbstractMultiPartRequestTest {
                     .exists()
                     .content()
                     .isEqualTo("5,6,7,8");
+            assertThat(file.isFile())
+                    .isTrue();
         });
 
         List<UploadedFile> uploadedFiles = new ArrayList<>();
@@ -431,8 +431,6 @@ abstract class AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
-            assertThat(file.isFile())
-                    .isTrue();
             assertThat(file.getOriginalName())
                     .isEqualTo("test1.csv");
             assertThat(file.getContentType())
@@ -442,6 +440,8 @@ abstract class AbstractMultiPartRequestTest {
                     .exists()
                     .content()
                     .isEqualTo("Ł,Ś,Ż,Ó");
+            assertThat(file.isFile())
+                    .isTrue();
         });
     }
 

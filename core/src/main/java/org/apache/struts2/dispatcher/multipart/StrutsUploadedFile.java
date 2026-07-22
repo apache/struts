@@ -19,6 +19,9 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class StrutsUploadedFile implements UploadedFile {
 
@@ -62,6 +65,11 @@ public class StrutsUploadedFile implements UploadedFile {
     @Override
     public File getContent() {
         return file;
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return new FileInputStream(file);
     }
 
     @Override

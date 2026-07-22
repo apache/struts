@@ -18,6 +18,11 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 
 /**
@@ -73,5 +78,25 @@ public interface UploadedFile extends Serializable {
      * @since 6.7.0
      */
     String getInputName();
+
+    /**
+     * Streams the uploaded content without forcing it to disk. Implementations backed by
+     * in-memory bytes can return the bytes directly; file-backed implementations stream the
+     * file. The default reads whatever {@link #getContent()} exposes.
+     *
+     * @return an input stream over the uploaded content
+     * @throws IOException if the content cannot be read
+     * @since 7.3.0
+     */
+    default InputStream getInputStream() throws IOException {
+        Object content = getContent();
+        if (content instanceof File file) {
+            return new FileInputStream(file);
+        }
+        if (content instanceof byte[] bytes) {
+            return new ByteArrayInputStream(bytes);
+        }
+        throw new IOException("No content stream available for " + getName());
+    }
 
 }

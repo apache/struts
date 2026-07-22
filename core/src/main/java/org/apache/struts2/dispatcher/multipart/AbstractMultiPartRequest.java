@@ -240,7 +240,14 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             servletFileUpload.setMaxSize(maxSize);
         }
         if (maxFiles != null && maxFiles >= 0 && maxParameterCount != null && maxParameterCount >= 0) {
-            long maxParts = maxFiles + maxParameterCount;
+            // Clamp on overflow: a wrapped-negative sum would silently disable the backstop
+            // (commons-fileupload2 treats a negative count as "unlimited").
+            long maxParts;
+            try {
+                maxParts = Math.addExact(maxFiles, maxParameterCount);
+            } catch (ArithmeticException overflow) {
+                maxParts = Long.MAX_VALUE;
+            }
             LOG.debug("Applies total parts backstop: {} to file upload request", maxParts);
             servletFileUpload.setMaxFileCount(maxParts);
         }

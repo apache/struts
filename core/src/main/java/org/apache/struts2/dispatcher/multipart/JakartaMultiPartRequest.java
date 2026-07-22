@@ -132,9 +132,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 }
                 processNormalFormField(item, charset);
             } else {
-                // Process file upload fields (only count parts that carry an actual file)
+                // Process file upload fields (only count parts that would actually be accepted:
+                // a real filename AND a non-null field name, matching JakartaStreamMultiPartRequest
+                // so both parsers enforce maxFiles identically on malformed parts).
                 LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
-                if (item.getName() != null && !item.getName().trim().isEmpty()) {
+                if (item.getName() != null && !item.getName().trim().isEmpty() && item.getFieldName() != null) {
                     enforceMaxFiles(fileCount, item.getName());
                     fileCount++;
                 }

@@ -216,14 +216,63 @@ public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestT
         // when - set max files to 1
         multiPart.setMaxFiles("1");
         multiPart.parse(mockRequest, tempDir);
-        
-        // then - should have only 1 file and errors for others
-        assertThat(multiPart.uploadedFiles).hasSize(1);
+
+        // then - fail-closed: no partial files, one error
+        assertThat(multiPart.uploadedFiles).isEmpty();
         assertThat(multiPart.getErrors())
-                .isNotEmpty()
-                .allSatisfy(error -> 
-                    assertThat(error.getTextKey()).isEqualTo("struts.messages.upload.error.FileUploadFileCountLimitException")
-                );
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+    }
+
+    @Test
+    public void streamManyFormFieldsWithFewFilesAreAccepted() throws IOException {
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            content.append(formField("field" + i, "value" + i));
+        }
+        content.append(formFile("file1", "test1.csv", "1,2,3,4"));
+        content.append(endline).append("--").append(boundary).append("--");
+        mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("1");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
+                .asInstanceOf(InstanceOfAssertFactories.LIST).containsOnly("file1");
+    }
+
+    @Test
+    public void streamMultipleFilesUnderOneFieldNameAreCounted() throws IOException {
+        String content = formFile("file", "a.csv", "1") +
+                formFile("file", "b.csv", "2") +
+                formFile("file", "c.csv", "3") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("2");
+        multiPart.parse(mockRequest, tempDir);
+
+        // Field-name counting bug would keep all 3 under one key; files-only counting rejects.
+        assertThat(multiPart.uploadedFiles).isEmpty();
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+    }
+
+    @Test
+    public void streamExceedsMaxParameterCountIsFailClosed() throws IOException {
+        String content = formField("field1", "a") +
+                formField("field2", "b") +
+                formField("field3", "c") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxParameterCount("2");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadParameterCountLimitException");
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().isEmpty();
     }
 
     @Test

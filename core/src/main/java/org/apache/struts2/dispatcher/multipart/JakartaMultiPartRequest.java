@@ -115,18 +115,31 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
         RequestContext requestContext = createRequestContext(request);
         
-        for (DiskFileItem item : servletFileUpload.parseRequest(requestContext)) {
-            // Track all DiskFileItem instances for cleanup - this is critical for security
-            // as it ensures temporary files are properly cleaned up even if processing fails
-            diskFileItems.add(item);
-
-            LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
+        int fileCount = 0;
+        int parameterCount = 0;
+        // parseRequest() fully materializes every part (spilling large ones to disk) before we
+        // iterate, so register them all for cleanup up front - otherwise a fail-closed breach
+        // mid-loop would leak the temp files of every part after the breaching one.
+        List<DiskFileItem> items = servletFileUpload.parseRequest(requestContext);
+        diskFileItems.addAll(items);
+        for (DiskFileItem item : items) {
             if (item.isFormField()) {
+                LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
                 // Process regular form fields (text inputs, checkboxes, etc.)
+                if (item.getFieldName() != null) {
+                    enforceMaxParameterCount(parameterCount, item.getFieldName());
+                    parameterCount++;
+                }
                 processNormalFormField(item, charset);
             } else {
-                // Process file upload fields
+                // Process file upload fields (only count parts that would actually be accepted:
+                // a real filename AND a non-null field name, matching JakartaStreamMultiPartRequest
+                // so both parsers enforce maxFiles identically on malformed parts).
                 LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
+                if (item.getName() != null && !item.getName().trim().isEmpty() && item.getFieldName() != null) {
+                    enforceMaxFiles(fileCount, item.getName());
+                    fileCount++;
+                }
                 processFileField(item, saveDir);
             }
         }

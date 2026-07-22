@@ -423,6 +423,74 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
     }
 
     @Test
+    public void manyFormFieldsWithFewFilesAreAccepted() throws IOException {
+        // Regression for WW-5474: maxFiles must not count form fields.
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            content.append(formField("field" + i, "value" + i));
+        }
+        content.append(formFile("file1", "test1.csv", "1,2,3,4"));
+        content.append(formFile("file2", "test2.csv", "5,6,7,8"));
+        content.append(endline).append("--").append(boundary).append("--");
+        mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("2"); // only 2 files, but 10 fields present
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
+                .asInstanceOf(InstanceOfAssertFactories.LIST).containsOnly("file1", "file2");
+    }
+
+    @Test
+    public void exceedsMaxFilesIsFailClosed() throws IOException {
+        String content = formField("param1", "value1") +
+                formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file2", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("1");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().isEmpty();
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().isEmpty();
+    }
+
+    @Test
+    public void exceedsMaxParameterCountIsFailClosed() throws IOException {
+        String content = formField("field1", "a") +
+                formField("field2", "b") +
+                formField("field3", "c") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxParameterCount("2");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadParameterCountLimitException");
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().isEmpty();
+    }
+
+    @Test
+    public void multipleFilesUnderOneFieldNameAreCounted() throws IOException {
+        String content = formFile("file", "a.csv", "1") +
+                formFile("file", "b.csv", "2") +
+                formFile("file", "c.csv", "3") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("2"); // 3 files share one field name -> still 3 files
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+    }
+
+    @Test
     public void processFileFieldHandlesEmptyFileName() throws IOException {
         String content = 
             endline + "--" + boundary + endline +
@@ -451,6 +519,75 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.FILE)
                 .content()
                 .isEqualTo("valid file content");
+    }
+
+    @Test
+    public void unlimitedMaxFilesIsNotClampedByTotalPartsBackstop() throws IOException {
+        // Regression for WW-5474: maxFiles=-1 (unlimited) combined with a finite
+        // maxParameterCount must not compute a finite total-parts backstop
+        // (maxFiles + maxParameterCount) and pass it to commons-fileupload2's
+        // setMaxFileCount, which counts ALL parts. Before the fix, -1 + 256 = 255
+        // wrongly rejected a 300-file/0-field upload at part 256.
+        int fileCount = 300;
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < fileCount; i++) {
+            content.append(formFile("file" + i, "test" + i + ".csv", "1,2,3,4"));
+        }
+        content.append(endline).append("--").append(boundary).append("--");
+        mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxSize("-1"); // isolate: don't let the size backstop interfere
+        multiPart.setMaxFiles("-1"); // unlimited files
+        multiPart.setMaxParameterCount("256"); // finite, but must not clamp file count
+
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().hasSize(fileCount);
+    }
+
+    @Test
+    public void trailingDiskFileItemsAreCleanedUpAfterFailClosedBreach() throws IOException {
+        // Regression for WW-5474: parseRequest() fully materializes every part - spilling
+        // large ones to disk - before processUpload() ever starts iterating. If items were
+        // only registered for cleanup as the loop reached them, a fail-closed breach mid-loop
+        // (e.g. enforceMaxFiles throwing) would leak the temp files of every part positioned
+        // after the breaching one, since cleanUp()/cleanUpDiskFileItems() never learns about them.
+        // Use a fresh, empty saveDir so the leftover-file assertion isn't polluted by other tests.
+        File freshSaveDir = Files.createTempDirectory("struts-ww5474-leak-test").toFile();
+        try {
+            StringBuilder content = new StringBuilder();
+            for (int i = 1; i <= 5; i++) {
+                content.append(formFile("file" + i, "test" + i + ".csv", "1,2,3,4"));
+            }
+            content.append(endline).append("--").append(boundary).append("--");
+            mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+            // force every part to spill to disk instead of staying in-memory
+            multiPart.setBufferSize("1");
+            multiPart.setMaxFiles("2"); // breach occurs at file3, leaving file4/file5 as trailing parts
+            multiPart.parse(mockRequest, freshSaveDir.getAbsolutePath());
+
+            // then - fail-closed: breach reported, no files exposed
+            assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                    .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+            assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().isEmpty();
+
+            // when - cleanup runs
+            multiPart.cleanUp();
+
+            // then - no leftover temp files remain, including the trailing parts after the breach
+            File[] leftover = freshSaveDir.listFiles((dir, name) -> name.startsWith("upload_") && name.endsWith(".tmp"));
+            assertThat(leftover).isNullOrEmpty();
+        } finally {
+            File[] remaining = freshSaveDir.listFiles();
+            if (remaining != null) {
+                for (File f : remaining) {
+                    f.delete();
+                }
+            }
+            freshSaveDir.delete();
+        }
     }
 
 }

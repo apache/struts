@@ -112,7 +112,9 @@
         <!-- Maven plugin -->
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
-        
+        <dependencycheck.version>12.2.2</dependencycheck.version>
+        <owasp.skip>false</owasp.skip>
+
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.10.1</asm.version>
         <byte-buddy.version>1.18.11</byte-buddy.version>
@@ -125,7 +127,7 @@
         <log4j2.version>2.26.1</log4j2.version>
         <mockito.version>5.23.0</mockito.version>
         <ognl.version>3.4.11</ognl.version>
-        <spring.version>6.2.12</spring.version>
+        <spring.version>6.2.19</spring.version>
         <struts-annotations.version>2.0</struts-annotations.version>
         <velocity-tools.version>3.1</velocity-tools.version>
         <webjars-bootstrap.version>5.3.7</webjars-bootstrap.version>
@@ -162,8 +164,8 @@
         <profile>
             <id>jakartaee11</id>
             <properties>
-                <jakarta-ee.version>11.0.0-M5</jakarta-ee.version>
-                <spring.version>7.0.5</spring.version>
+                <jakarta-ee.version>11.0.0</jakarta-ee.version>
+                <spring.version>7.0.8</spring.version>
             </properties>
         </profile>
         <profile>
@@ -173,14 +175,80 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependencycheck.version}</version>
                         <executions>
                             <execution>
-                                <phase>verify</phase>
+                                <phase>initialize</phase>
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dependency-update-only</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependencycheck.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>update-only</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+        <!-- -DNIST_NVD_API_KEY=${yourkey} so that owasp runs via api -->
+        <id>owasp-nvd-api</id>
+        <activation>
+            <property>
+                <name>NIST_NVD_API_KEY</name>
+            </property>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependencycheck.version}</version>
+                    <configuration>
+                        <suppressionFiles>owasp-suppressions.xml</suppressionFiles>
+                        <failBuildOnCVSS>0</failBuildOnCVSS>
+                        <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                        <nvdApiKey>${NIST_NVD_API_KEY}</nvdApiKey>
+                        <skip>${owasp.skip}</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+
+        <profile>
+            <!-- -Powasp-nvd-mirror so that owasp runs via mirror -->
+            <id>owasp-nvd-mirror</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependencycheck.version}</version>
+                        <configuration>
+                            <suppressionFiles>owasp-suppressions.xml</suppressionFiles>
+                            <failBuildOnCVSS>0</failBuildOnCVSS>
+                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                            <nvdDatafeedUrl>https://dependency-check.github.io/DependencyCheck_Builder/nvd_cache/nvdcve-{0}.json.gz</nvdDatafeedUrl>
+                            <skip>${owasp.skip}</skip>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

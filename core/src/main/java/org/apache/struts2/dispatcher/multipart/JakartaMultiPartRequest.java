@@ -115,6 +115,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
         RequestContext requestContext = createRequestContext(request);
         
+        int fileCount = 0;
+        int parameterCount = 0;
         for (DiskFileItem item : servletFileUpload.parseRequest(requestContext)) {
             // Track all DiskFileItem instances for cleanup - this is critical for security
             // as it ensures temporary files are properly cleaned up even if processing fails
@@ -123,10 +125,18 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
                 // Process regular form fields (text inputs, checkboxes, etc.)
+                if (item.getFieldName() != null) {
+                    enforceMaxParameterCount(parameterCount, item.getFieldName());
+                    parameterCount++;
+                }
                 processNormalFormField(item, charset);
             } else {
-                // Process file upload fields
+                // Process file upload fields (only count parts that carry an actual file)
                 LOG.debug(() -> "Processing a file: " + normalizeSpace(item.getFieldName()));
+                if (item.getName() != null && !item.getName().trim().isEmpty()) {
+                    enforceMaxFiles(fileCount, item.getName());
+                    fileCount++;
+                }
                 processFileField(item, saveDir);
             }
         }

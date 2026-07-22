@@ -423,6 +423,74 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
     }
 
     @Test
+    public void manyFormFieldsWithFewFilesAreAccepted() throws IOException {
+        // Regression for WW-5474: maxFiles must not count form fields.
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            content.append(formField("field" + i, "value" + i));
+        }
+        content.append(formFile("file1", "test1.csv", "1,2,3,4"));
+        content.append(formFile("file2", "test2.csv", "5,6,7,8"));
+        content.append(endline).append("--").append(boundary).append("--");
+        mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("2"); // only 2 files, but 10 fields present
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
+                .asInstanceOf(InstanceOfAssertFactories.LIST).containsOnly("file1", "file2");
+    }
+
+    @Test
+    public void exceedsMaxFilesIsFailClosed() throws IOException {
+        String content = formField("param1", "value1") +
+                formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file2", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("1");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().isEmpty();
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().isEmpty();
+    }
+
+    @Test
+    public void exceedsMaxParameterCountIsFailClosed() throws IOException {
+        String content = formField("field1", "a") +
+                formField("field2", "b") +
+                formField("field3", "c") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxParameterCount("2");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadParameterCountLimitException");
+        assertThat(multiPart.getParameterNames().asIterator()).toIterable().isEmpty();
+    }
+
+    @Test
+    public void multipleFilesUnderOneFieldNameAreCounted() throws IOException {
+        String content = formFile("file", "a.csv", "1") +
+                formFile("file", "b.csv", "2") +
+                formFile("file", "c.csv", "3") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxFiles("2"); // 3 files share one field name -> still 3 files
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+    }
+
+    @Test
     public void processFileFieldHandlesEmptyFileName() throws IOException {
         String content = 
             endline + "--" + boundary + endline +

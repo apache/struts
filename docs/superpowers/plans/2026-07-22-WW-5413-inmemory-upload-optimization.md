@@ -807,3 +807,21 @@ Expected: PASS. Pay attention to `UploadedFileConverter`-related tests (legacy `
 ## Notes on the spec's error-handling trade-off (§4)
 
 The spec deliberately accepts that a materialization **write failure** now surfaces as an unchecked `StrutsException` during consumption (via `getContent()`/`getAbsolutePath()`), rather than as a parse-time `LocalizedMessage`. This is why the old `temporaryFileCreationFailureAddsError` test is removed rather than rewritten: the parse-time graceful-degradation path for in-memory items no longer exists. No new test asserts the exception, since it only fires on genuine filesystem failures in the save directory.
+
+---
+
+## Task 5: Non-materializing interceptor validation (added after whole-branch review)
+
+The whole-branch review found `AbstractFileUploadInterceptor.acceptFile()` calls `file.getContent() == null` first, materializing every in-memory upload during validation on the standard `fileUpload`/`actionFileUpload` path — defeating the optimization for the common consumer.
+
+**Files:** `UploadedFile.java`, `StrutsInMemoryUploadedFile.java`, `AbstractFileUploadInterceptor.java`, `ActionFileUploadInterceptorTest.java`.
+
+Steps: add `default boolean isMissing()` (= `getContent() == null`) to `UploadedFile`; override in `StrutsInMemoryUploadedFile` to `return false` (non-materializing); change the `acceptFile()` guard to `file == null || file.isMissing()` and delete the dead `getContent() == null` block; add JUnit3-style (`public void testXxx`) interceptor tests asserting `isFile()==false` after accept and after reject. Preserve `testAcceptFileWithNoContent` (null-content test-double rejected via the interface default). Commit: `WW-5413 perf(core): avoid materializing in-memory uploads during interceptor validation`.
+
+## Task 6: Polish (from whole-branch review)
+
+**Files:** `StrutsInMemoryUploadedFile.java`, `StrutsInMemoryUploadedFileTest.java`, `UploadedFileTest.java`.
+
+Steps: in `materialize()`, `Files.deleteIfExists(targetFile.toPath())` (with `addSuppressed`) before rethrowing `StrutsException`, so a partial write on failure isn't leaked; add a class Javadoc note on the clustered-deployment serialization limitation; add direct unit tests for `isMissing()` (the override is non-materializing; the interface default reflects `getContent()`). Commit: `WW-5413 chore(core): clean up partial materialization and cover isMissing()`.
+
+> Note left out of scope deliberately: the now-unused `STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY` constant in `AbstractFileUploadInterceptor` is a `public static final` and was left in place to avoid an API break. The vestigial `throws IOException` on `JakartaMultiPartRequest.processFileField` was also left in place — removing it could break a subclass that catches `IOException` from `super.processFileField(...)`.

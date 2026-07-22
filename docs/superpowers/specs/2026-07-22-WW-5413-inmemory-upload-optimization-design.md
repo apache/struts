@@ -51,7 +51,7 @@ A second `UploadedFile` implementation beside `StrutsUploadedFile` — each clas
 - metadata: `contentType`, `originalName`, `inputName`
 - `transient File materializedFile` — populated lazily, cached
 
-`byte[]` + `Path` keep the object `Serializable` (a `DiskFileItem` reference would not).
+The object must stay `Serializable` (a `DiskFileItem` reference would not be). **Implementation note:** rather than a `Path saveDir` + `String name` (a concrete `Path` such as `sun.nio.fs.UnixPath` is *not* guaranteed `Serializable`), the shipped code stores a single pre-computed `java.io.File targetFile` (which *is* `Serializable`) plus a `serialVersionUID`; `materializedFile` is `volatile transient`.
 
 | Method | Behavior | Touches disk? |
 |---|---|---|
@@ -67,6 +67,12 @@ A second `UploadedFile` implementation beside `StrutsUploadedFile` — each clas
 `materialize()` is `synchronized`, writes the bytes once to the pre-chosen path in `saveDir`, and caches the resulting `File`. The temp file is created with the project's secure UUID-named pattern (`upload_<uuid>.tmp`); the naming logic is shared with / extracted alongside `AbstractMultiPartRequest.createTemporaryFile` to avoid divergence.
 
 **Net effect:** rejected uploads, size/type checks (`length()`), and `getInputStream()` consumers **never write**; legacy `File`/`getContent()` consumers write exactly once — same as today, but deferred.
+
+### 3a. Non-materializing interceptor validation (added after whole-branch review)
+
+The net-effect claim above is only real if the framework's own consumers don't force materialization during validation. They did: `AbstractFileUploadInterceptor.acceptFile()` — run for every uploaded file on the standard `fileUpload`/`actionFileUpload` path — called `file.getContent() == null` as its first (failed-upload) guard, which materialized every small in-memory upload before any size/type check. `acceptFile()` only validates metadata; it never needs the bytes.
+
+Fix: add `default boolean isMissing()` to `UploadedFile` (default = `getContent() == null`, so third-party impls and the "no content = failed upload" contract are preserved), override it in `StrutsInMemoryUploadedFile` to return `false` (answered from the in-memory byte array, no materialization), change the `acceptFile()` guard to `file == null || file.isMissing()`, and delete the now-dead second `getContent() == null` block. Result: the `UploadedFilesAware` flow validates and hands files to the action without ever writing a small upload to disk; only a consumer that explicitly asks for a `File` (the legacy `File`-typed action property via `UploadedFileConverter`, which genuinely needs one) triggers the write.
 
 ### 3. `JakartaMultiPartRequest.processFileField` + cleanup simplification
 
@@ -121,6 +127,10 @@ Tests follow the existing multipart test base (core tests are JUnit4 / `XWorkTes
 
 ## Out of scope
 
-- Migrating existing consumers (showcase actions, converter) onto `getInputStream()` — they continue using `getContent()`.
+- Migrating showcase actions / `UploadedFileConverter` onto `getInputStream()` — they continue using `getContent()`. (The upload **interceptor** validation path *was* brought in scope and made non-materializing — see §3a — because it defeated the optimization for the common consumer.)
 - Changing the disk-spill threshold or `JakartaStreamMultiPartRequest` streaming strategy.
 - Any change to `getContent()`'s runtime type (must remain `File`).
+
+## Known limitation
+
+`StrutsInMemoryUploadedFile.targetFile` is an absolute path resolved on the originating node. If an un-materialized instance is serialized (e.g. session replication) and deserialized on another node, a later `getContent()` materializes to that originating node's path, which may not exist there. Consumers that need content to survive cross-node replication should read via `getInputStream()` (never touches disk). Documented on the class Javadoc.

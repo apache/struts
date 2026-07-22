@@ -546,4 +546,48 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().hasSize(fileCount);
     }
 
+    @Test
+    public void trailingDiskFileItemsAreCleanedUpAfterFailClosedBreach() throws IOException {
+        // Regression for WW-5474: parseRequest() fully materializes every part - spilling
+        // large ones to disk - before processUpload() ever starts iterating. If items were
+        // only registered for cleanup as the loop reached them, a fail-closed breach mid-loop
+        // (e.g. enforceMaxFiles throwing) would leak the temp files of every part positioned
+        // after the breaching one, since cleanUp()/cleanUpDiskFileItems() never learns about them.
+        // Use a fresh, empty saveDir so the leftover-file assertion isn't polluted by other tests.
+        File freshSaveDir = Files.createTempDirectory("struts-ww5474-leak-test").toFile();
+        try {
+            StringBuilder content = new StringBuilder();
+            for (int i = 1; i <= 5; i++) {
+                content.append(formFile("file" + i, "test" + i + ".csv", "1,2,3,4"));
+            }
+            content.append(endline).append("--").append(boundary).append("--");
+            mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+            // force every part to spill to disk instead of staying in-memory
+            multiPart.setBufferSize("1");
+            multiPart.setMaxFiles("2"); // breach occurs at file3, leaving file4/file5 as trailing parts
+            multiPart.parse(mockRequest, freshSaveDir.getAbsolutePath());
+
+            // then - fail-closed: breach reported, no files exposed
+            assertThat(multiPart.getErrors()).map(LocalizedMessage::getTextKey)
+                    .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
+            assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().isEmpty();
+
+            // when - cleanup runs
+            multiPart.cleanUp();
+
+            // then - no leftover temp files remain, including the trailing parts after the breach
+            File[] leftover = freshSaveDir.listFiles((dir, name) -> name.startsWith("upload_") && name.endsWith(".tmp"));
+            assertThat(leftover).isNullOrEmpty();
+        } finally {
+            File[] remaining = freshSaveDir.listFiles();
+            if (remaining != null) {
+                for (File f : remaining) {
+                    f.delete();
+                }
+            }
+            freshSaveDir.delete();
+        }
+    }
+
 }

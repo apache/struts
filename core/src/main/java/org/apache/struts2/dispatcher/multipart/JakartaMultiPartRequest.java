@@ -117,11 +117,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         
         int fileCount = 0;
         int parameterCount = 0;
-        for (DiskFileItem item : servletFileUpload.parseRequest(requestContext)) {
-            // Track all DiskFileItem instances for cleanup - this is critical for security
-            // as it ensures temporary files are properly cleaned up even if processing fails
-            diskFileItems.add(item);
-
+        // parseRequest() fully materializes every part (spilling large ones to disk) before we
+        // iterate, so register them all for cleanup up front - otherwise a fail-closed breach
+        // mid-loop would leak the temp files of every part after the breaching one.
+        List<DiskFileItem> items = servletFileUpload.parseRequest(requestContext);
+        diskFileItems.addAll(items);
+        for (DiskFileItem item : items) {
             LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
                 // Process regular form fields (text inputs, checkboxes, etc.)

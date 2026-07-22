@@ -61,13 +61,15 @@ jobs:
             nvd-cache-${{ runner.os }}-
 
       - name: OWASP Dependency check update cache via NIST_NVD_API_KEY
+        id: nvd-api-update
         if: ${{ env.HAVE_NIST_NVD_API_KEY == 'true' }}
+        continue-on-error: true
         run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-api -Pdependency-update-only --no-transfer-progress
         env:
           NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY}}
 
       - name: OWASP Dependency check update cache via Mirror
-        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'false' }}
+        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'false' || steps.nvd-api-update.outcome == 'failure' }}
         run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-mirror -Pdependency-update-only --no-transfer-progress
 
       - name: Cache NVD Database

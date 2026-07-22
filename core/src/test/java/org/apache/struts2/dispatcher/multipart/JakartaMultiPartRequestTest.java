@@ -23,7 +23,9 @@ import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
@@ -247,7 +249,7 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
     @Test
     public void processFileFieldHandlesEmptyFileName() throws IOException {
-        String content = 
+        String content =
             endline + "--" + boundary + endline +
             "Content-Disposition: form-data; name=\"emptyfile\"; filename=\"\"" + endline +
             "Content-Type: text/plain" + endline +
@@ -259,12 +261,12 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
             endline +
             "valid file content" +
             endline + "--" + boundary + "--";
-        
+
         mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
+
         // when
         multiPart.parse(mockRequest, tempDir);
-        
+
         // then - should only process the file with valid filename
         assertThat(multiPart.getErrors()).isEmpty();
         assertThat(multiPart.uploadedFiles).hasSize(1);
@@ -274,6 +276,37 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.FILE)
                 .content()
                 .isEqualTo("valid file content");
+    }
+
+    @Test
+    public void inMemoryUploadIsNotWrittenToDiskUntilContentRequested() throws IOException {
+        // given - a small file that Commons FileUpload keeps in memory
+        String content = formFile("file1", "test1.csv", "a,b,c,d") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        multiPart.parse(mockRequest, tempDir);
+
+        UploadedFile file = multiPart.getFile("file1")[0];
+
+        // then - nothing written to disk right after parse
+        assertThat(file.isFile()).isFalse();
+
+        // and - content is readable via the stream path without materializing
+        try (InputStream in = file.getInputStream()) {
+            assertThat(new String(in.readAllBytes(), StandardCharsets.UTF_8)).isEqualTo("a,b,c,d");
+        }
+        assertThat(file.isFile()).isFalse();
+
+        // and - getContent() materializes a real file on demand
+        File materialized = (File) file.getContent();
+        assertThat(materialized).exists().hasContent("a,b,c,d");
+        assertThat(file.isFile()).isTrue();
+
+        // and - cleanUp removes the materialized file
+        multiPart.cleanUp();
+        assertThat(materialized).doesNotExist();
     }
 
 }

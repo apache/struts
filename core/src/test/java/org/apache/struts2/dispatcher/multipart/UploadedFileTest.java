@@ -20,11 +20,14 @@ package org.apache.struts2.dispatcher.multipart;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UploadedFileTest {
 
@@ -45,6 +48,25 @@ public class UploadedFileTest {
         try (InputStream in = file.getInputStream()) {
             assertThat(new String(in.readAllBytes(), UTF_8)).isEqualTo("abc");
         }
+    }
+
+    @Test
+    public void defaultGetInputStreamReadsFileContent() throws IOException {
+        File f = File.createTempFile("upload_", ".tmp");
+        try {
+            Files.writeString(f.toPath(), "hi");
+            try (InputStream in = uploadedFileReturning(f).getInputStream()) {
+                assertThat(new String(in.readAllBytes(), UTF_8)).isEqualTo("hi");
+            }
+        } finally {
+            assertThat(f.delete()).isTrue();
+        }
+    }
+
+    @Test
+    public void defaultGetInputStreamThrowsWhenNoContent() {
+        assertThatThrownBy(uploadedFileReturning(null)::getInputStream)
+                .isInstanceOf(IOException.class);
     }
 
     @Test

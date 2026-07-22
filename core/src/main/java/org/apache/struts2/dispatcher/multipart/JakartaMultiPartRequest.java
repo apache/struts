@@ -182,8 +182,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      * </ol>
      *
      * @param item the disk file item representing the uploaded file
-     * @throws IOException if an error occurs reading the in-memory item's content
+     * @throws IOException never thrown by this implementation (in-memory content is materialized
+     *                     lazily elsewhere); the clause is retained on the signature deliberately for
+     *                     source compatibility with subclasses that override this method or catch it
+     *                     from {@code super.processFileField(...)}
      */
+    // NOTE: `throws IOException` is intentionally retained for subclass source compatibility - do not remove.
     protected void processFileField(DiskFileItem item, String saveDir) throws IOException {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {

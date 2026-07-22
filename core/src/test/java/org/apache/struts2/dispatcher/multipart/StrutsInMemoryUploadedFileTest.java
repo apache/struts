@@ -32,8 +32,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 
+import org.apache.struts2.StrutsException;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StrutsInMemoryUploadedFileTest {
 
@@ -66,6 +69,24 @@ public class StrutsInMemoryUploadedFileTest {
 
         assertThat(file.isFile()).isFalse();
         assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+    }
+
+    @Test
+    public void getContentThrowsStrutsExceptionAndLeavesNoFileWhenWriteFails() {
+        // save directory does not exist -> Files.write in materialize() fails
+        Path missingDir = tempFolder.getRoot().toPath().resolve("no-such-dir");
+        UploadedFile file = StrutsInMemoryUploadedFile.Builder
+                .create("x".getBytes(UTF_8), missingDir)
+                .withOriginalName("orig.txt")
+                .withContentType("text/plain")
+                .withInputName("file")
+                .build();
+
+        assertThatThrownBy(file::getContent).isInstanceOf(StrutsException.class);
+
+        assertThat(file.isFile()).isFalse();                      // not marked materialized
+        assertThat(missingDir.toFile()).doesNotExist();           // no partial file left behind
+        assertThat(tempFolder.getRoot().listFiles()).isEmpty();   // nothing leaked into the save root
     }
 
     @Test

@@ -137,11 +137,13 @@ live external callers in `StrutsConversionPropertiesProcessor` and
 
 Removal of the deprecated methods is tracked separately by the project lead.
 
-**The `protected HashSet<String> unknownMappings` field** is retyped to `Set<String>`,
-made `final`, backed by `ConcurrentHashMap.newKeySet()`, and marked `@Deprecated`.
-Retyping is a source-compatibility break for any subclass that assigns it or calls a
-`HashSet`-specific method. The risk is judged negligible, but it is a break and is
-recorded here deliberately rather than left implicit.
+**The `protected HashSet<String> unknownMappings` field** keeps its original
+`protected HashSet<String>` declaration, marked `@Deprecated(forRemoval = true)` and left
+unused. Retyping it — the original plan — would have changed the field descriptor and thrown
+`NoSuchFieldError` at runtime for any subclass compiled against an earlier version, a binary
+break not permitted in a minor release. The live storage moves to a new `private` concurrent
+set (`unknownMappingsInternal`, backed by `ConcurrentHashMap.newKeySet()`); the deprecated
+field is retained solely for binary compatibility until its removal ticket lands.
 
 ### 2. `XWorkConverter`
 

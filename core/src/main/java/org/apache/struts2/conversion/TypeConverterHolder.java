@@ -59,9 +59,9 @@ public interface TypeConverterHolder {
      * {@link #addMapping(Class, Map)}.</p>
      *
      * @param clazz class to convert to/from
-     * @return {@link TypeConverter} for given class
-     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which resolves
-     * and caches the mapping atomically instead of requiring a check-then-act at the call site.
+     * @return the property-converter mapping for the given class, or {@code null} if none
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)}, which resolves
+     * and caches the mapping in one call instead of requiring a check-then-act at the call site.
      */
     @Deprecated(since = "7.3.0", forRemoval = true)
     Map<String, Object> getMapping(Class clazz);

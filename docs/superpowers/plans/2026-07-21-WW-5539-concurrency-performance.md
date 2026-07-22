@@ -34,7 +34,7 @@ This is the correctness fix. The holder is a container singleton whose plain `Ha
 
 **Interfaces:**
 - Consumes: nothing from earlier tasks.
-- Produces: `StrutsTypeConverterHolder` with thread-safe internals and a `public StrutsTypeConverterHolder()` no-arg constructor (already implicit). Field `protected final Set<String> unknownMappings`. Behaviour change: `addDefaultMapping(className, null)` is now ignored rather than storing a null value.
+- Produces: `StrutsTypeConverterHolder` with thread-safe internals and a `public StrutsTypeConverterHolder()` no-arg constructor (already implicit). The original `protected HashSet<String> unknownMappings` field is retained (deprecated, unused) for binary compatibility, with live storage in a new `private` concurrent set. Behaviour change: `addDefaultMapping(className, null)` is now ignored rather than storing a null value.
 
 - [ ] **Step 1: Write the failing concurrency test**
 
@@ -534,12 +534,18 @@ Delete the `noMapping` field — the sentinel replaces it. Then:
 
     @Override
     public Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
-        return mappings.computeIfAbsent(clazz, c -> {
-            Map<String, Object> built = builder.apply(c);
-            return (built == null || built.isEmpty()) ? NO_MAPPING : built;
-        });
+        Map<String, Object> existing = mappings.get(clazz);
+        if (existing != null) {
+            return existing;
+        }
+        Map<String, Object> built = builder.apply(clazz);
+        Map<String, Object> value = (built == null || built.isEmpty()) ? NO_MAPPING : built;
+        Map<String, Object> previous = mappings.putIfAbsent(clazz, value);
+        return previous != null ? previous : value;
     }
 ```
+
+The builder deliberately runs **outside** `ConcurrentHashMap.computeIfAbsent`, via `get` → build → `putIfAbsent`. The builder instantiates arbitrary user-supplied `TypeConverter` classes (Spring-autowired under `SpringObjectFactory`), and running that under a CHM bin lock risks `IllegalStateException: Recursive update` or a self-deadlock if any of it re-enters conversion. The trade is that concurrent first access may build more than once; every caller still converges on the single stored mapping, and the build is idempotent.
 
 `getMapping` and `containsNoMapping` translate the sentinel, so both keep their existing contracts — `getMapping` still returns `null` for an absent *or* negative-cached class.
 

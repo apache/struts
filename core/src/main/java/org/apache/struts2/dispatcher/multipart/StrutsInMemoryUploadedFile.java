@@ -40,6 +40,12 @@ import java.util.UUID;
  * temporary file uses the secure {@code upload_<uuid>.tmp} naming and ignores the user-supplied
  * original filename.</p>
  *
+ * <p><strong>Clustered deployments:</strong> the target temporary path is resolved on the node that
+ * created this instance. If an un-materialized instance is serialized (for example, session
+ * replication) and deserialized on another node, a later {@link #getContent()} materializes to that
+ * originating node's path, which may not exist on the new node. Read via {@link #getInputStream()},
+ * which never touches disk, when content must survive cross-node replication.</p>
+ *
  * @since 7.3.0
  */
 public class StrutsInMemoryUploadedFile implements UploadedFile {
@@ -71,6 +77,11 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
             try {
                 Files.write(targetFile.toPath(), content);
             } catch (IOException e) {
+                try {
+                    Files.deleteIfExists(targetFile.toPath());
+                } catch (IOException suppressed) {
+                    e.addSuppressed(suppressed);
+                }
                 throw new StrutsException("Could not materialize in-memory uploaded file: " + targetFile.getName(), e);
             }
             materializedFile = targetFile;

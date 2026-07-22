@@ -146,6 +146,15 @@ public class StrutsInMemoryUploadedFileTest {
     }
 
     @Test
+    public void isMissingIsFalseWithoutMaterializing() {
+        UploadedFile file = build("x".getBytes(UTF_8));
+
+        assertThat(file.isMissing()).isFalse();
+        assertThat(file.isFile()).isFalse();                 // did not materialize
+        assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+    }
+
+    @Test
     public void isSerializableWhenNotMaterialized() throws IOException, ClassNotFoundException {
         UploadedFile file = build("payload".getBytes(UTF_8));
 

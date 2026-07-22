@@ -46,4 +46,24 @@ public class UploadedFileTest {
             assertThat(new String(in.readAllBytes(), UTF_8)).isEqualTo("abc");
         }
     }
+
+    @Test
+    public void defaultIsMissingReflectsContent() {
+        assertThat(uploadedFileReturning("abc".getBytes(UTF_8)).isMissing()).isFalse();
+        assertThat(uploadedFileReturning(null).isMissing()).isTrue();
+    }
+
+    private static UploadedFile uploadedFileReturning(Object content) {
+        return new UploadedFile() {
+            public Long length() { return 0L; }
+            public String getName() { return "x"; }
+            public String getOriginalName() { return "x"; }
+            public boolean isFile() { return false; }
+            public boolean delete() { return true; }
+            public String getAbsolutePath() { return null; }
+            public Object getContent() { return content; }
+            public String getContentType() { return "text/plain"; }
+            public String getInputName() { return "file"; }
+        };
+    }
 }

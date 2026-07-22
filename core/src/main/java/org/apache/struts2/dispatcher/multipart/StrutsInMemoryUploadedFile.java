@@ -85,6 +85,11 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
     }
 
     @Override
+    public boolean isMissing() {
+        return false;
+    }
+
+    @Override
     public Long length() {
         return (long) content.length;
     }

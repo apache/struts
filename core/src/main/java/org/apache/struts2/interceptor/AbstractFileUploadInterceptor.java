@@ -114,8 +114,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             validation = validationAware;
         }
 
-        // If it's null the upload failed
-        if (file == null || file.getContent() == null) {
+        // If it's missing the upload failed
+        if (file == null || file.isMissing()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
@@ -124,11 +124,6 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{originalFilename});
-            errorMessages.add(errMsg);
-            LOG.warn(errMsg);
-        }
         if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)

@@ -99,4 +99,17 @@ public interface UploadedFile extends Serializable {
         throw new IOException("No content stream available for " + getName());
     }
 
+    /**
+     * Indicates whether this upload has no content available (for example, the upload failed).
+     * Implementations that hold their content in memory should override this to answer WITHOUT
+     * materializing the content to disk. The default reports missing when {@link #getContent()}
+     * is {@code null}.
+     *
+     * @return true if there is no content backing this upload
+     * @since 7.3.0
+     */
+    default boolean isMissing() {
+        return getContent() == null;
+    }
+
 }

@@ -322,7 +322,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      */
     protected void enforceMaxFiles(int currentFileCount, String fileName) throws FileUploadFileCountLimitException {
         if (maxFiles != null && maxFiles >= 0 && currentFileCount >= maxFiles) {
-            LOG.debug("Cannot accept another file: {} as it would exceed max files: {}", normalizeSpace(fileName), maxFiles);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot accept another file: {} as it would exceed max files: {}", normalizeSpace(fileName), maxFiles);
+            }
             throw new FileUploadFileCountLimitException(
                     String.format("Request exceeds allowed number of files, permitted: %s", maxFiles),
                     maxFiles, currentFileCount + 1L);
@@ -339,7 +341,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      */
     protected void enforceMaxParameterCount(int currentParameterCount, String fieldName) throws FileUploadParameterCountLimitException {
         if (maxParameterCount != null && maxParameterCount >= 0 && currentParameterCount >= maxParameterCount) {
-            LOG.debug("Cannot accept another parameter: {} as it would exceed max parameter count: {}", normalizeSpace(fieldName), maxParameterCount);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot accept another parameter: {} as it would exceed max parameter count: {}", normalizeSpace(fieldName), maxParameterCount);
+            }
             throw new FileUploadParameterCountLimitException(
                     String.format("Request exceeds allowed number of parameters, permitted: %s", maxParameterCount),
                     maxParameterCount, currentParameterCount + 1L);

@@ -521,4 +521,29 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
                 .isEqualTo("valid file content");
     }
 
+    @Test
+    public void unlimitedMaxFilesIsNotClampedByTotalPartsBackstop() throws IOException {
+        // Regression for WW-5474: maxFiles=-1 (unlimited) combined with a finite
+        // maxParameterCount must not compute a finite total-parts backstop
+        // (maxFiles + maxParameterCount) and pass it to commons-fileupload2's
+        // setMaxFileCount, which counts ALL parts. Before the fix, -1 + 256 = 255
+        // wrongly rejected a 300-file/0-field upload at part 256.
+        int fileCount = 300;
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < fileCount; i++) {
+            content.append(formFile("file" + i, "test" + i + ".csv", "1,2,3,4"));
+        }
+        content.append(endline).append("--").append(boundary).append("--");
+        mockRequest.setContent(content.toString().getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxSize("-1"); // isolate: don't let the size backstop interfere
+        multiPart.setMaxFiles("-1"); // unlimited files
+        multiPart.setMaxParameterCount("256"); // finite, but must not clamp file count
+
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable().hasSize(fileCount);
+    }
+
 }

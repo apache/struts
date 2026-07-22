@@ -239,7 +239,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             LOG.debug("Applies max size: {} to file upload request", maxSize);
             servletFileUpload.setMaxSize(maxSize);
         }
-        if (maxFiles != null && maxParameterCount != null) {
+        if (maxFiles != null && maxFiles >= 0 && maxParameterCount != null && maxParameterCount >= 0) {
             long maxParts = maxFiles + maxParameterCount;
             LOG.debug("Applies total parts backstop: {} to file upload request", maxParts);
             servletFileUpload.setMaxFileCount(maxParts);

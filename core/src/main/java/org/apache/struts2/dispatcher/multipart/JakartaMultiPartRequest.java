@@ -123,8 +123,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         List<DiskFileItem> items = servletFileUpload.parseRequest(requestContext);
         diskFileItems.addAll(items);
         for (DiskFileItem item : items) {
-            LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
             if (item.isFormField()) {
+                LOG.debug(() -> "Processing a form field: " + normalizeSpace(item.getFieldName()));
                 // Process regular form fields (text inputs, checkboxes, etc.)
                 if (item.getFieldName() != null) {
                     enforceMaxParameterCount(parameterCount, item.getFieldName());

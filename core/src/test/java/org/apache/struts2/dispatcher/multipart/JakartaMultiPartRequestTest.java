@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;

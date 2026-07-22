@@ -26,8 +26,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -60,11 +63,12 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
     private final String originalName;
     private final String inputName;
 
-    private volatile transient File materializedFile;
+    private transient volatile File materializedFile;
 
     private StrutsInMemoryUploadedFile(byte[] content, Path saveDir, String contentType,
                                        String originalName, String inputName) {
-        this.content = content;
+        // Defensive copy: the instance owns its bytes so callers cannot mutate content after construction.
+        this.content = Objects.requireNonNull(content, "content").clone();
         String name = "upload_" + UUID.randomUUID().toString().replace("-", "_") + ".tmp";
         this.targetFile = saveDir.resolve(name).toFile();
         this.contentType = contentType;
@@ -75,8 +79,14 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
     private synchronized File materialize() {
         if (materializedFile == null) {
             try {
-                Files.write(targetFile.toPath(), content);
+                // CREATE_NEW fails closed if the target already exists, so we never overwrite or
+                // follow a pre-planted file/symlink in the upload directory.
+                Files.write(targetFile.toPath(), content, StandardOpenOption.CREATE_NEW);
+            } catch (FileAlreadyExistsException e) {
+                // A file already occupies the target path; do not touch it (possible planted file/symlink).
+                throw new StrutsException("Refusing to overwrite existing file while materializing in-memory uploaded file: " + targetFile.getName(), e);
             } catch (IOException e) {
+                // Remove a partial file this call may have created before rethrowing.
                 try {
                     Files.deleteIfExists(targetFile.toPath());
                 } catch (IOException suppressed) {
@@ -119,10 +129,15 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
     @Override
     public boolean delete() {
         File f = materializedFile;
-        if (f != null) {
-            return f.delete();
+        if (f == null) {
+            return true;
         }
-        return true;
+        try {
+            return Files.deleteIfExists(f.toPath());
+        } catch (IOException e) {
+            LOG.warn("Could not delete materialized in-memory uploaded file: {}", f.getAbsolutePath(), e);
+            return false;
+        }
     }
 
     @Override

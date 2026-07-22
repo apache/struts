@@ -68,7 +68,7 @@ public class StrutsInMemoryUploadedFileTest {
         }
 
         assertThat(file.isFile()).isFalse();
-        assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+        assertThat(tempFolder.getRoot()).isEmptyDirectory();
     }
 
     @Test
@@ -86,7 +86,23 @@ public class StrutsInMemoryUploadedFileTest {
 
         assertThat(file.isFile()).isFalse();                      // not marked materialized
         assertThat(missingDir.toFile()).doesNotExist();           // no partial file left behind
-        assertThat(tempFolder.getRoot().listFiles()).isEmpty();   // nothing leaked into the save root
+        assertThat(tempFolder.getRoot()).isEmptyDirectory();   // nothing leaked into the save root
+    }
+
+    @Test
+    public void getContentFailsClosedWhenTargetAlreadyExists() throws IOException {
+        UploadedFile file = build("x".getBytes(UTF_8));
+
+        // Pre-plant a file at the exact target name (simulates a collision or planted file/symlink).
+        File planted = new File(tempFolder.getRoot(), file.getName());
+        java.nio.file.Files.writeString(planted.toPath(), "pre-existing");
+
+        assertThatThrownBy(file::getContent).isInstanceOf(StrutsException.class);
+
+        // The pre-existing file must be neither overwritten nor deleted.
+        assertThat(planted).exists();
+        assertThat(java.nio.file.Files.readString(planted.toPath())).isEqualTo("pre-existing");
+        assertThat(file.isFile()).isFalse();
     }
 
     @Test
@@ -131,7 +147,7 @@ public class StrutsInMemoryUploadedFileTest {
         assertThat(file.getName()).startsWith("upload_").endsWith(".tmp");
 
         assertThat(file.isFile()).isFalse();
-        assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+        assertThat(tempFolder.getRoot()).isEmptyDirectory();
     }
 
     @Test
@@ -149,7 +165,7 @@ public class StrutsInMemoryUploadedFileTest {
         UploadedFile file = build("x".getBytes(UTF_8));
 
         assertThat(file.delete()).isTrue();
-        assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+        assertThat(tempFolder.getRoot()).isEmptyDirectory();
     }
 
     @Test
@@ -172,7 +188,7 @@ public class StrutsInMemoryUploadedFileTest {
 
         assertThat(file.isMissing()).isFalse();
         assertThat(file.isFile()).isFalse();                 // did not materialize
-        assertThat(tempFolder.getRoot().listFiles()).isEmpty();
+        assertThat(tempFolder.getRoot()).isEmptyDirectory();
     }
 
     @Test

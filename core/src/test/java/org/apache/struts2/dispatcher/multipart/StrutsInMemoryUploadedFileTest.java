@@ -23,9 +23,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -139,5 +143,29 @@ public class StrutsInMemoryUploadedFileTest {
         assertThat(file.getName()).startsWith("upload_").endsWith(".tmp");
         assertThat(file.getName()).doesNotContain("..").doesNotContain("/").doesNotContain("\\");
         assertThat(new File(saveDir.toFile(), file.getName())).exists();
+    }
+
+    @Test
+    public void isSerializableWhenNotMaterialized() throws IOException, ClassNotFoundException {
+        UploadedFile file = build("payload".getBytes(UTF_8));
+
+        byte[] bytes;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(file);
+            bytes = bos.toByteArray();
+        }
+
+        UploadedFile restored;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+            restored = (UploadedFile) ois.readObject();
+        }
+
+        assertThat(restored.length()).isEqualTo(7L);
+        assertThat(restored.getContentType()).isEqualTo("text/plain");
+        assertThat(restored.getName()).startsWith("upload_").endsWith(".tmp");
+        try (InputStream in = restored.getInputStream()) {
+            assertThat(new String(in.readAllBytes(), UTF_8)).isEqualTo("payload");
+        }
     }
 }

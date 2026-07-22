@@ -44,37 +44,37 @@ import java.util.UUID;
  */
 public class StrutsInMemoryUploadedFile implements UploadedFile {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOG = LogManager.getLogger(StrutsInMemoryUploadedFile.class);
 
     private final byte[] content;
-    private final Path saveDir;
-    private final String name;
+    private final File targetFile;
     private final String contentType;
     private final String originalName;
     private final String inputName;
 
-    private transient File materializedFile;
+    private volatile transient File materializedFile;
 
     private StrutsInMemoryUploadedFile(byte[] content, Path saveDir, String contentType,
                                        String originalName, String inputName) {
         this.content = content;
-        this.saveDir = saveDir;
+        String name = "upload_" + UUID.randomUUID().toString().replace("-", "_") + ".tmp";
+        this.targetFile = saveDir.resolve(name).toFile();
         this.contentType = contentType;
         this.originalName = originalName;
         this.inputName = inputName;
-        this.name = "upload_" + UUID.randomUUID().toString().replace("-", "_") + ".tmp";
     }
 
     private synchronized File materialize() {
         if (materializedFile == null) {
-            File target = saveDir.resolve(name).toFile();
             try {
-                Files.write(target.toPath(), content);
+                Files.write(targetFile.toPath(), content);
             } catch (IOException e) {
-                throw new StrutsException("Could not materialize in-memory uploaded file: " + name, e);
+                throw new StrutsException("Could not materialize in-memory uploaded file: " + targetFile.getName(), e);
             }
-            materializedFile = target;
-            LOG.debug("Materialized in-memory uploaded item to {}", target.getAbsolutePath());
+            materializedFile = targetFile;
+            LOG.debug("Materialized in-memory uploaded item to {}", targetFile.getAbsolutePath());
         }
         return materializedFile;
     }
@@ -91,18 +91,20 @@ public class StrutsInMemoryUploadedFile implements UploadedFile {
 
     @Override
     public String getName() {
-        return name;
+        return targetFile.getName();
     }
 
     @Override
     public boolean isFile() {
-        return materializedFile != null && materializedFile.isFile();
+        File f = materializedFile;
+        return f != null && f.isFile();
     }
 
     @Override
     public boolean delete() {
-        if (materializedFile != null) {
-            return materializedFile.delete();
+        File f = materializedFile;
+        if (f != null) {
+            return f.delete();
         }
         return true;
     }

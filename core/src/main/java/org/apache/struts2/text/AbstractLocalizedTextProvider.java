@@ -508,8 +508,44 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * @return the message from the named resource bundle.
+     * Resolves the raw (untranslated, unformatted) message pattern for a key within a single bundle.
+     * Returns {@code null} when the bundle or key is absent. This is the cacheable unit relied upon by
+     * the hierarchy-resolution caches; translation and formatting are applied separately by
+     * {@link #formatMessage(String, Locale, ValueStack, Object[])}.
      */
+    private String getRawMessage(String bundleName, Locale locale, String key) {
+        ResourceBundle bundle = findResourceBundle(bundleName, locale);
+        if (bundle == null) {
+            return null;
+        }
+        try {
+            return bundle.getString(key);
+        } catch (MissingResourceException e) {
+            LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
+            return null;
+        }
+    }
+
+    /**
+     * Applies value stack variable translation (when a stack is available) and {@link MessageFormat}
+     * argument substitution to a raw message pattern. Mirrors the rendering previously performed inline
+     * by {@link #getMessage(String, Locale, String, ValueStack, Object[])}.
+     */
+    protected String formatMessage(String rawPattern, Locale locale, ValueStack valueStack, Object[] args) {
+        String message = (valueStack != null)
+                ? TextParseUtil.translateVariables(rawPattern, valueStack)
+                : rawPattern;
+        MessageFormat mf = buildMessageFormat(message, locale);
+        return formatWithNullDetection(mf, args);
+    }
+
+    /**
+     * @return the message from the named resource bundle.
+     * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+     * ({@link #formatMessage(String, Locale, ValueStack, Object[])} over a raw lookup). Retained for
+     * backward compatibility with descendant classes.
+     */
+    @Deprecated
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
         ResourceBundle bundle = findResourceBundle(bundleName, locale);
         if (bundle == null) {
@@ -519,12 +555,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             reloadBundles(valueStack.getContext());
         }
         try {
-            String message = bundle.getString(key);
-            if (valueStack != null) {
-                message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
-            }
-            MessageFormat mf = buildMessageFormat(message, locale);
-            return formatWithNullDetection(mf, args);
+            String rawPattern = bundle.getString(key);
+            return formatMessage(rawPattern, locale, valueStack, args);
         } catch (MissingResourceException e) {
             LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
             return null;
@@ -532,13 +564,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
-     * before going up hierarchy.
-     *
-     * @return the message
+     * Raw-pattern twin of {@link #findMessage}. Walks class, implemented interfaces, then up the
+     * hierarchy, returning the first raw message pattern found (via {@link #getRawMessage}) without
+     * translation or formatting. Used by the cached class-hierarchy resolver.
      */
-    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
-                                 ValueStack valueStack) {
+    private String findMessageRaw(Class<?> clazz, String key, String indexedKey, Locale locale, Set<String> checked) {
         if (checked == null) {
             checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
@@ -546,15 +576,12 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // look in properties of this class
-        String msg = getMessage(clazz.getName(), locale, key, valueStack, args);
-
+        String msg = getRawMessage(clazz.getName(), locale, key);
         if (msg != null) {
             return msg;
         }
-
         if (indexedKey != null) {
-            msg = getMessage(clazz.getName(), locale, indexedKey, valueStack, args);
-
+            msg = getRawMessage(clazz.getName(), locale, indexedKey);
             if (msg != null) {
                 return msg;
             }
@@ -562,17 +589,13 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
         // look in properties of implemented interfaces
         Class<?>[] interfaces = clazz.getInterfaces();
-
         for (Class<?> anInterface : interfaces) {
-            msg = getMessage(anInterface.getName(), locale, key, valueStack, args);
-
+            msg = getRawMessage(anInterface.getName(), locale, key);
             if (msg != null) {
                 return msg;
             }
-
             if (indexedKey != null) {
-                msg = getMessage(anInterface.getName(), locale, indexedKey, valueStack, args);
-
+                msg = getRawMessage(anInterface.getName(), locale, indexedKey);
                 if (msg != null) {
                     return msg;
                 }
@@ -582,21 +605,42 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         // traverse up hierarchy
         if (clazz.isInterface()) {
             interfaces = clazz.getInterfaces();
-
             for (Class<?> anInterface : interfaces) {
-                msg = findMessage(anInterface, key, indexedKey, locale, args, checked, valueStack);
-
+                msg = findMessageRaw(anInterface, key, indexedKey, locale, checked);
                 if (msg != null) {
                     return msg;
                 }
             }
         } else {
             if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
-                return findMessage(clazz.getSuperclass(), key, indexedKey, locale, args, checked, valueStack);
+                return findMessageRaw(clazz.getSuperclass(), key, indexedKey, locale, checked);
             }
         }
 
         return null;
+    }
+
+    /**
+     * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
+     * before going up hierarchy.
+     *
+     * @return the message
+     * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+     * ({@link #findMessageRaw} + {@link #formatMessage(String, Locale, ValueStack, Object[])}). Retained
+     * for backward compatibility with descendant classes. Note: unlike the pre-7.3.0 implementation, a
+     * candidate whose formatted value is the literal {@code "null"} no longer causes the search to
+     * continue deeper in the same hierarchy; this affects only the pathological case of the same key
+     * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
+     * The bundle-reload check is now triggered once on entry (when reload mode is enabled) rather than
+     * lazily per bundle probe, preserving the reload side effect that the previous getMessage-per-probe
+     * walk provided.
+     */
+    @Deprecated
+    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                                 ValueStack valueStack) {
+        reloadBundles(valueStack != null ? valueStack.getContext() : null);
+        String rawPattern = findMessageRaw(clazz, key, indexedKey, locale, checked);
+        return rawPattern != null ? formatMessage(rawPattern, locale, valueStack, args) : null;
     }
 
     protected String extractIndexedName(String textKey) {

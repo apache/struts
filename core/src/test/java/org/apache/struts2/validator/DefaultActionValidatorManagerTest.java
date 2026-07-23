@@ -25,6 +25,7 @@ import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.ValidationOrderAction;
+import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.conversion.impl.ConversionData;
@@ -40,6 +41,7 @@ import org.apache.struts2.validator.validators.LongRangeFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.ShortRangeFieldValidator;
+import org.apache.struts2.validator.validators.VisitorFieldValidator;
 import org.apache.struts2.StrutsException;
 import org.assertj.core.api.Assertions;
 import org.easymock.EasyMock;
@@ -405,9 +407,37 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
         List<String> ageErrors = action.getFieldErrors().get("age");
         assertNotNull(ageErrors);
-        // required is skipped; the conversion validator itself still runs
+        // the conversion validator itself still runs and its custom message survives...
         assertEquals(1, ageErrors.size());
         assertEquals("Age must be a valid number", ageErrors.get(0));
+        // ...while the required validator on the same field is skipped, not merely absent
+        assertFalse(ageErrors.contains("Age is required"));
+    }
+
+    public void testConversionError_nestedFieldValidatorsSkippedWhenEnabled() throws Exception {
+        // A nested/visitor-validated field is keyed by its full (prefixed) name, e.g. "bean.zip".
+        // The skip guard must match on that full field name, exempting only the conversion validator.
+        actionValidatorManager.setSkipValidatorsOnConversionError("true");
+
+        // The bean supplies the field values; a separate ValidationAware collects the errors,
+        // exactly as the visitor validator wires things up when it recurses into a nested bean.
+        ConversionErrorSkipBean bean = new ConversionErrorSkipBean();
+        ValidationAware sink = new ValidationAwareSupport();
+        ValidatorContext parent = new DelegatingValidatorContext(sink, actionValidatorManager.textProviderFactory);
+        VisitorFieldValidator.AppendingValidatorContext nested =
+                new VisitorFieldValidator.AppendingValidatorContext(parent, parent, "bean", "");
+
+        ActionContext.getContext().getConversionErrors()
+                .put("bean.zip", new ConversionData(new String[]{"one"}, Integer.class));
+
+        actionValidatorManager.validate(bean, null, nested);
+
+        List<String> zipErrors = sink.getFieldErrors().get("bean.zip");
+        assertNotNull(zipErrors);
+        // required is skipped on the prefixed field; the conversion validator still runs
+        assertEquals(1, zipErrors.size());
+        assertEquals("Zip must be a valid number", zipErrors.get(0));
+        assertFalse(zipErrors.contains("Zip is required"));
     }
 
     public void testConversionError_unrelatedFieldStillValidatedWhenEnabled() throws Exception {

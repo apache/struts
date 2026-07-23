@@ -65,6 +65,11 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             LOG.debug("Key is null, short-circuit to default message");
             return defaultMessage;
         }
+
+        // Trigger bundle reload (and cache invalidation) once, before any cached hierarchy lookup,
+        // so that in reload/devMode the hierarchy caches are cleared before they are read.
+        reloadBundles(valueStack != null ? valueStack.getContext() : null);
+
         String indexedTextName = extractIndexedName(textKey);
 
         // Allow for and track an early lookup for the message in the default resource bundles first, before searching the class hierarchy.
@@ -81,11 +86,14 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             }
         }
 
-        // search up class hierarchy
-        String msg = findMessage(startClazz, textKey, indexedTextName, locale, args, null, valueStack);
-
-        if (msg != null) {
-            return msg;
+        // search up class hierarchy (cached raw resolution; format per call)
+        String classHierarchyRaw = resolveClassHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+        String msg = null;
+        if (!isNotFound(classHierarchyRaw)) {
+            msg = formatMessage(classHierarchyRaw, locale, valueStack, args);
+            if (msg != null) {
+                return msg;
+            }
         }
 
         if (ModelDriven.class.isAssignableFrom(startClazz)) {
@@ -99,9 +107,12 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
                 if (action instanceof ModelDriven) {
                     Object model = ((ModelDriven<?>) action).getModel();
                     if (model != null) {
-                        msg = findMessage(model.getClass(), textKey, indexedTextName, locale, args, null, valueStack);
-                        if (msg != null) {
-                            return msg;
+                        String modelRaw = resolveClassHierarchyRaw(model.getClass(), textKey, indexedTextName, locale);
+                        if (!isNotFound(modelRaw)) {
+                            msg = formatMessage(modelRaw, locale, valueStack, args);
+                            if (msg != null) {
+                                return msg;
+                            }
                         }
                     }
                 }

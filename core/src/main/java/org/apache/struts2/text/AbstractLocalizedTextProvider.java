@@ -56,6 +56,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private static final String TOMCAT_WEBAPP_CLASSLOADER = "org.apache.catalina.loader.WebappClassLoader";
     private static final String TOMCAT_WEBAPP_CLASSLOADER_BASE = "org.apache.catalina.loader.WebappClassLoaderBase";
     private static final String RELOADED = "org.apache.struts2.util.LocalizedTextProvider.reloaded";
+    private static final String NOT_FOUND = new String("__STRUTS_TEXT_NOT_FOUND__"); // unique identity sentinel; compared with ==
 
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
@@ -66,6 +67,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
     private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<TextCacheKey, String> classHierarchyCache = new ConcurrentHashMap<>();
 
     @Override
     public void addDefaultResourceBundle(String bundleName) {
@@ -88,6 +90,15 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     protected ClassLoader getCurrentThreadContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    private int currentLoaderHashCode() {
+        return getCurrentThreadContextClassLoader().hashCode();
+    }
+
+    /** Test-support accessor: current number of cached class-hierarchy resolutions. */
+    protected int classHierarchyCacheSize() {
+        return classHierarchyCache.size();
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -187,6 +198,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     protected void clearBundle(final String bundleName, Locale locale) {
         final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
         final ResourceBundle removedBundle = bundlesMap.remove(key);
+        classHierarchyCache.clear();
         LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, removedBundle != null);
     }
 
@@ -204,6 +216,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      */
     protected void clearMissingBundlesCache() {
         missingBundles.clear();
+        classHierarchyCache.clear();
         LOG.debug("Cleared the missing bundles cache.");
     }
 
@@ -222,6 +235,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                 }
                 if (!reloaded) {
                     bundlesMap.clear();
+                    classHierarchyCache.clear();
                     clearResourceBundleClassloaderCaches();
 
                     // now, for the true and utter hack, if we're running in tomcat, clear
@@ -621,6 +635,29 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
+     * Cached resolution of the class/interface/superclass hierarchy for a key. Returns the raw pattern
+     * found, or {@link #NOT_FOUND} when the key is absent from the entire hierarchy. Keyed on the
+     * context classloader hash + class name + key + locale, so no {@link Class} reference is retained.
+     * Uses get + putIfAbsent (never computeIfAbsent) because the child-property path recurses into findText.
+     */
+    protected String resolveClassHierarchyRaw(Class<?> clazz, String textKey, String indexedKey, Locale locale) {
+        TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), clazz.getName(), textKey, locale);
+        String cached = classHierarchyCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        String raw = findMessageRaw(clazz, textKey, indexedKey, locale, null);
+        String toStore = (raw != null) ? raw : NOT_FOUND;
+        classHierarchyCache.putIfAbsent(cacheKey, toStore);
+        return toStore;
+    }
+
+    /** @return true when a cached raw-resolution result represents "not found". */
+    protected boolean isNotFound(String cachedRawResult) {
+        return cachedRawResult == NOT_FOUND;
+    }
+
+    /**
      * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
      * before going up hierarchy.
      *
@@ -697,6 +734,40 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         @Override
         public int hashCode() {
             int result = pattern != null ? pattern.hashCode() : 0;
+            result = 31 * result + (locale != null ? locale.hashCode() : 0);
+            return result;
+        }
+    }
+
+    static class TextCacheKey {
+        private final int classLoaderHash;
+        private final String className;
+        private final String textKey;
+        private final Locale locale;
+
+        TextCacheKey(int classLoaderHash, String className, String textKey, Locale locale) {
+            this.classLoaderHash = classLoaderHash;
+            this.className = className;
+            this.textKey = textKey;
+            this.locale = locale;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TextCacheKey that = (TextCacheKey) o;
+            return classLoaderHash == that.classLoaderHash
+                    && Objects.equals(className, that.className)
+                    && Objects.equals(textKey, that.textKey)
+                    && Objects.equals(locale, that.locale);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = classLoaderHash;
+            result = 31 * result + (className != null ? className.hashCode() : 0);
+            result = 31 * result + (textKey != null ? textKey.hashCode() : 0);
             result = 31 * result + (locale != null ? locale.hashCode() : 0);
             return result;
         }

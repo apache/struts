@@ -582,6 +582,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         String y = provider.findText(CacheFixture.class, "cache.withparam", Locale.ENGLISH, null, new Object[]{"Y"}, valueStack);
         assertEquals("Value with param X", x);
         assertEquals("Value with param Y", y);
+        assertEquals("Raw pattern should be cached once, not per format ?", 1, provider.classHierarchyCacheSize());
     }
 
     public void testOgnlTranslationIsPerCall() {
@@ -597,6 +598,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         assertEquals("Hello World", world);
         assertEquals("Hello Mars", mars);
+        assertEquals("Raw pattern should be cached once across value stacks ?", 1, provider.classHierarchyCacheSize());
     }
 
     public void testNullFormattingFallsThroughToDefault() {
@@ -661,6 +663,21 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         provider.callReloadBundlesForceReload();
         assertEquals("Reload did not clear package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+    }
+
+    public void testClearBundleAndClearMissingCacheEmptyPackageHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not populated ?", 1, provider.packageHierarchyCacheSize());
+        provider.callClearBundleWithLocale("org/apache/struts2/test/package", Locale.getDefault());
+        assertEquals("clearBundle did not empty package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not repopulated ?", 1, provider.packageHierarchyCacheSize());
+        provider.callClearMissingBundlesCache();
+        assertEquals("clearMissingBundlesCache did not empty package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
     }
 
     public void testDeprecatedFindMessageStillDelegates() {

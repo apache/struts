@@ -65,6 +65,17 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             LOG.debug("Key is null, short-circuit to default message");
             return defaultMessage;
         }
+
+        // Trigger bundle reload (and cache invalidation) once, before any cached hierarchy lookup,
+        // so that in reload/devMode the hierarchy caches are cleared before they are read. With no
+        // value stack, fall back to the ActionContext-based overload so the RELOADED flag is still
+        // tracked and the caches can warm on that path too.
+        if (valueStack != null) {
+            reloadBundles(valueStack.getContext());
+        } else {
+            reloadBundles();
+        }
+
         String indexedTextName = extractIndexedName(textKey);
 
         // Allow for and track an early lookup for the message in the default resource bundles first, before searching the class hierarchy.
@@ -81,11 +92,14 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             }
         }
 
-        // search up class hierarchy
-        String msg = findMessage(startClazz, textKey, indexedTextName, locale, args, null, valueStack);
-
-        if (msg != null) {
-            return msg;
+        // search up class hierarchy (cached raw resolution; format per call)
+        String classHierarchyRaw = resolveClassHierarchyRaw(startClazz, textKey, locale);
+        String msg = null;
+        if (!isNotFound(classHierarchyRaw)) {
+            msg = formatMessage(classHierarchyRaw, locale, valueStack, args);
+            if (msg != null) {
+                return msg;
+            }
         }
 
         if (ModelDriven.class.isAssignableFrom(startClazz)) {
@@ -99,37 +113,24 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
                 if (action instanceof ModelDriven) {
                     Object model = ((ModelDriven<?>) action).getModel();
                     if (model != null) {
-                        msg = findMessage(model.getClass(), textKey, indexedTextName, locale, args, null, valueStack);
-                        if (msg != null) {
-                            return msg;
+                        String modelRaw = resolveClassHierarchyRaw(model.getClass(), textKey, locale);
+                        if (!isNotFound(modelRaw)) {
+                            msg = formatMessage(modelRaw, locale, valueStack, args);
+                            if (msg != null) {
+                                return msg;
+                            }
                         }
                     }
                 }
             }
         }
 
-        // nothing still? alright, search the package hierarchy now
-        for (Class<?> clazz = startClazz;
-             (clazz != null) && !clazz.equals(Object.class);
-             clazz = clazz.getSuperclass()) {
-
-            String basePackageName = clazz.getName();
-            while (basePackageName.lastIndexOf('.') != -1) {
-                basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
-                String packageName = basePackageName + ".package";
-                msg = getMessage(packageName, locale, textKey, valueStack, args);
-
-                if (msg != null) {
-                    return msg;
-                }
-
-                if (indexedTextName != null) {
-                    msg = getMessage(packageName, locale, indexedTextName, valueStack, args);
-
-                    if (msg != null) {
-                        return msg;
-                    }
-                }
+        // search the package hierarchy (cached raw resolution; format per call)
+        String packageRaw = resolvePackageHierarchyRaw(startClazz, textKey, locale);
+        if (!isNotFound(packageRaw)) {
+            msg = formatMessage(packageRaw, locale, valueStack, args);
+            if (msg != null) {
+                return msg;
             }
         }
 

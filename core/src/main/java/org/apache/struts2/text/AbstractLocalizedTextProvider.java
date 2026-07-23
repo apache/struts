@@ -56,6 +56,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private static final String TOMCAT_WEBAPP_CLASSLOADER = "org.apache.catalina.loader.WebappClassLoader";
     private static final String TOMCAT_WEBAPP_CLASSLOADER_BASE = "org.apache.catalina.loader.WebappClassLoaderBase";
     private static final String RELOADED = "org.apache.struts2.util.LocalizedTextProvider.reloaded";
+    @SuppressWarnings("java:S2129") // deliberate: a non-interned instance is required for an identity (==) sentinel
+    private static final String NOT_FOUND = new String("__STRUTS_TEXT_NOT_FOUND__"); // unique identity sentinel; compared with ==
 
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
@@ -66,6 +68,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
     private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<TextCacheKey, String> classHierarchyCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<TextCacheKey, String> packageHierarchyCache = new ConcurrentHashMap<>();
 
     @Override
     public void addDefaultResourceBundle(String bundleName) {
@@ -88,6 +92,22 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     protected ClassLoader getCurrentThreadContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    private int currentLoaderHashCode() {
+        // Identity-based on purpose: a custom ClassLoader overriding hashCode() must not be able to
+        // collapse (or collide) the per-classloader cache partitions.
+        return System.identityHashCode(getCurrentThreadContextClassLoader());
+    }
+
+    /** Test-support accessor: current number of cached class-hierarchy resolutions. */
+    protected int classHierarchyCacheSize() {
+        return classHierarchyCache.size();
+    }
+
+    /** Test-support accessor: current number of cached package-hierarchy resolutions. */
+    protected int packageHierarchyCacheSize() {
+        return packageHierarchyCache.size();
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -187,6 +207,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     protected void clearBundle(final String bundleName, Locale locale) {
         final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
         final ResourceBundle removedBundle = bundlesMap.remove(key);
+        classHierarchyCache.clear();
+        packageHierarchyCache.clear();
         LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, removedBundle != null);
     }
 
@@ -204,6 +226,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      */
     protected void clearMissingBundlesCache() {
         missingBundles.clear();
+        classHierarchyCache.clear();
+        packageHierarchyCache.clear();
         LOG.debug("Cleared the missing bundles cache.");
     }
 
@@ -222,6 +246,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                 }
                 if (!reloaded) {
                     bundlesMap.clear();
+                    classHierarchyCache.clear();
+                    packageHierarchyCache.clear();
                     clearResourceBundleClassloaderCaches();
 
                     // now, for the true and utter hack, if we're running in tomcat, clear
@@ -508,8 +534,47 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * @return the message from the named resource bundle.
+     * Resolves the raw (untranslated, unformatted) message pattern for a key within a single bundle.
+     * Returns {@code null} when the bundle or key is absent. This is the cacheable unit relied upon by
+     * the hierarchy-resolution caches; translation and formatting are applied separately by
+     * {@link #formatMessage(String, Locale, ValueStack, Object[])}.
      */
+    private String getRawMessage(String bundleName, Locale locale, String key) {
+        ResourceBundle bundle = findResourceBundle(bundleName, locale);
+        if (bundle == null) {
+            return null;
+        }
+        try {
+            return bundle.getString(key);
+        } catch (MissingResourceException e) {
+            LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
+            return null;
+        }
+    }
+
+    /**
+     * Applies value stack variable translation (when a stack is available) and {@link MessageFormat}
+     * argument substitution to a raw message pattern. Mirrors the rendering previously performed inline
+     * by {@link #getMessage(String, Locale, String, ValueStack, Object[])}.
+     */
+    protected String formatMessage(String rawPattern, Locale locale, ValueStack valueStack, Object[] args) {
+        String message = (valueStack != null)
+                ? TextParseUtil.translateVariables(rawPattern, valueStack)
+                : rawPattern;
+        MessageFormat mf = buildMessageFormat(message, locale);
+        return formatWithNullDetection(mf, args);
+    }
+
+    /**
+     * @return the message from the named resource bundle.
+     * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+     * ({@link #formatMessage(String, Locale, ValueStack, Object[])} over a raw lookup). Retained for
+     * backward compatibility with descendant classes that call it directly. <strong>No longer invoked
+     * by {@code findText}</strong>: overriding this method does not affect framework message lookup
+     * anymore; override {@link #formatMessage(String, Locale, ValueStack, Object[])} to customize
+     * rendering instead.
+     */
+    @Deprecated(since = "7.3.0", forRemoval = true)
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
         ResourceBundle bundle = findResourceBundle(bundleName, locale);
         if (bundle == null) {
@@ -519,12 +584,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             reloadBundles(valueStack.getContext());
         }
         try {
-            String message = bundle.getString(key);
-            if (valueStack != null) {
-                message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
-            }
-            MessageFormat mf = buildMessageFormat(message, locale);
-            return formatWithNullDetection(mf, args);
+            String rawPattern = bundle.getString(key);
+            return formatMessage(rawPattern, locale, valueStack, args);
         } catch (MissingResourceException e) {
             LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
             return null;
@@ -532,13 +593,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
-     * before going up hierarchy.
-     *
-     * @return the message
+     * Raw-pattern twin of {@link #findMessage}. Walks class, implemented interfaces, then up the
+     * hierarchy, returning the first raw message pattern found (via {@link #getRawMessage}) without
+     * translation or formatting. Used by the cached class-hierarchy resolver.
      */
-    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
-                                 ValueStack valueStack) {
+    private String findMessageRaw(Class<?> clazz, String key, String indexedKey, Locale locale, Set<String> checked) {
         if (checked == null) {
             checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
@@ -546,57 +605,142 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // look in properties of this class
-        String msg = getMessage(clazz.getName(), locale, key, valueStack, args);
-
+        String msg = getRawMessageWithAlternate(clazz.getName(), locale, key, indexedKey);
         if (msg != null) {
             return msg;
         }
 
-        if (indexedKey != null) {
-            msg = getMessage(clazz.getName(), locale, indexedKey, valueStack, args);
-
-            if (msg != null) {
-                return msg;
-            }
-        }
-
         // look in properties of implemented interfaces
-        Class<?>[] interfaces = clazz.getInterfaces();
-
-        for (Class<?> anInterface : interfaces) {
-            msg = getMessage(anInterface.getName(), locale, key, valueStack, args);
-
+        for (Class<?> anInterface : clazz.getInterfaces()) {
+            msg = getRawMessageWithAlternate(anInterface.getName(), locale, key, indexedKey);
             if (msg != null) {
                 return msg;
-            }
-
-            if (indexedKey != null) {
-                msg = getMessage(anInterface.getName(), locale, indexedKey, valueStack, args);
-
-                if (msg != null) {
-                    return msg;
-                }
             }
         }
 
         // traverse up hierarchy
         if (clazz.isInterface()) {
-            interfaces = clazz.getInterfaces();
-
-            for (Class<?> anInterface : interfaces) {
-                msg = findMessage(anInterface, key, indexedKey, locale, args, checked, valueStack);
-
+            for (Class<?> anInterface : clazz.getInterfaces()) {
+                msg = findMessageRaw(anInterface, key, indexedKey, locale, checked);
                 if (msg != null) {
                     return msg;
                 }
             }
-        } else {
-            if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
-                return findMessage(clazz.getSuperclass(), key, indexedKey, locale, args, checked, valueStack);
-            }
+        } else if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
+            return findMessageRaw(clazz.getSuperclass(), key, indexedKey, locale, checked);
         }
 
         return null;
+    }
+
+    /**
+     * Resolves the raw message pattern for a key within a single bundle, falling back to the
+     * indexed (general-form) key when the primary key is absent.
+     */
+    private String getRawMessageWithAlternate(String bundleName, Locale locale, String key, String indexedKey) {
+        String msg = getRawMessage(bundleName, locale, key);
+        if (msg == null && indexedKey != null) {
+            msg = getRawMessage(bundleName, locale, indexedKey);
+        }
+        return msg;
+    }
+
+    /**
+     * Cached resolution of the class/interface/superclass hierarchy for a key. Returns the raw pattern
+     * found, or {@link #NOT_FOUND} when the key is absent from the entire hierarchy. Keyed on the
+     * context classloader hash + class name + key + locale, so no {@link Class} reference is retained.
+     * Uses get + putIfAbsent (never computeIfAbsent) because the child-property path recurses into findText.
+     */
+    String resolveClassHierarchyRaw(Class<?> clazz, String textKey, Locale locale) {
+        TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), clazz.getName(), textKey, locale);
+        String cached = classHierarchyCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        // Derived here (miss-only) rather than accepted as a parameter, so the cache key trivially
+        // covers every input that influences the resolution result.
+        String raw = findMessageRaw(clazz, textKey, extractIndexedName(textKey), locale, null);
+        String toStore = (raw != null) ? raw : NOT_FOUND;
+        classHierarchyCache.putIfAbsent(cacheKey, toStore);
+        return toStore;
+    }
+
+    /** @return true when a cached raw-resolution result represents "not found". */
+    @SuppressWarnings("java:S4973") // deliberate identity comparison against the non-interned NOT_FOUND sentinel
+    protected boolean isNotFound(String cachedRawResult) {
+        return cachedRawResult == NOT_FOUND;
+    }
+
+    /**
+     * Raw-pattern walk of the {@code *.package} bundles up the class hierarchy of {@code startClazz}.
+     * Returns the first raw pattern found (via {@link #getRawMessage}) for the key or its indexed form,
+     * or {@code null} when none match.
+     */
+    private String findPackageMessageRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
+        for (Class<?> clazz = startClazz;
+             (clazz != null) && !clazz.equals(Object.class);
+             clazz = clazz.getSuperclass()) {
+
+            String basePackageName = clazz.getName();
+            while (basePackageName.lastIndexOf('.') != -1) {
+                basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
+                String packageName = basePackageName + ".package";
+                String msg = getRawMessageWithAlternate(packageName, locale, textKey, indexedTextName);
+                if (msg != null) {
+                    return msg;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cached resolution of the {@code *.package} hierarchy for a key. Returns the raw pattern found, or
+     * {@link #NOT_FOUND} when absent. Same keying and get + putIfAbsent discipline as
+     * {@link #resolveClassHierarchyRaw}.
+     */
+    String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, Locale locale) {
+        TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), startClazz.getName(), textKey, locale);
+        String cached = packageHierarchyCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        // Derived here (miss-only) rather than accepted as a parameter, so the cache key trivially
+        // covers every input that influences the resolution result.
+        String raw = findPackageMessageRaw(startClazz, textKey, extractIndexedName(textKey), locale);
+        String toStore = (raw != null) ? raw : NOT_FOUND;
+        packageHierarchyCache.putIfAbsent(cacheKey, toStore);
+        return toStore;
+    }
+
+    /**
+     * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
+     * before going up hierarchy.
+     *
+     * @return the message
+     * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+     * ({@link #findMessageRaw} + {@link #formatMessage(String, Locale, ValueStack, Object[])}). Retained
+     * for backward compatibility with descendant classes that call it directly. <strong>No longer
+     * invoked by {@code findText}</strong>: overriding this method does not affect framework message
+     * lookup anymore; override {@link #formatMessage(String, Locale, ValueStack, Object[])} to
+     * customize rendering instead. Note: unlike the pre-7.3.0 implementation, a
+     * candidate whose formatted value is the literal {@code "null"} no longer causes the search to
+     * continue deeper in the same hierarchy; this affects only the pathological case of the same key
+     * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
+     * The bundle-reload check is now triggered once on entry (when reload mode is enabled) rather than
+     * lazily per bundle probe, preserving the reload side effect that the previous getMessage-per-probe
+     * walk provided.
+     */
+    @Deprecated(since = "7.3.0", forRemoval = true)
+    protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                                 ValueStack valueStack) {
+        if (valueStack != null) {
+            reloadBundles(valueStack.getContext());
+        } else {
+            reloadBundles();
+        }
+        String rawPattern = findMessageRaw(clazz, key, indexedKey, locale, checked);
+        return rawPattern != null ? formatMessage(rawPattern, locale, valueStack, args) : null;
     }
 
     protected String extractIndexedName(String textKey) {
@@ -653,6 +797,40 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         @Override
         public int hashCode() {
             int result = pattern != null ? pattern.hashCode() : 0;
+            result = 31 * result + (locale != null ? locale.hashCode() : 0);
+            return result;
+        }
+    }
+
+    static class TextCacheKey {
+        private final int classLoaderHash;
+        private final String className;
+        private final String textKey;
+        private final Locale locale;
+
+        TextCacheKey(int classLoaderHash, String className, String textKey, Locale locale) {
+            this.classLoaderHash = classLoaderHash;
+            this.className = className;
+            this.textKey = textKey;
+            this.locale = locale;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TextCacheKey that = (TextCacheKey) o;
+            return classLoaderHash == that.classLoaderHash
+                    && Objects.equals(className, that.className)
+                    && Objects.equals(textKey, that.textKey)
+                    && Objects.equals(locale, that.locale);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = classLoaderHash;
+            result = 31 * result + (className != null ? className.hashCode() : 0);
+            result = 31 * result + (textKey != null ? textKey.hashCode() : 0);
             result = 31 * result + (locale != null ? locale.hashCode() : 0);
             return result;
         }

@@ -57,12 +57,24 @@ In `core/pom.xml`, add a `maven-jar-plugin` execution:
         <goal>test-jar</goal>
     </goals>
     <configuration>
+        <archive combine.self="override"/>
         <includes>
             <include>org/apache/struts2/mock/**</include>
         </includes>
     </configuration>
 </execution>
 ```
+
+The `<archive combine.self="override"/>` resets the `<archive><manifestFile>` configuration
+inherited from the root pom, which points at the OSGi manifest generated for the main jar;
+without it the test-jar would carry the main bundle's manifest.
+
+**Dev-build caveat:** when the reactor runs without packaging (`mvn test -DskipAssembly`),
+Maven resolves the test-jar dependency to core's whole `target/test-classes` directory —
+the includes filter applies only to the packaged jar. Plugin test classpaths then also see
+core's other test classes and test resources (`struts.xml`, `struts.properties`). This is
+verified empirically during implementation; packaged builds (`mvn package`/`install`) always
+use the filtered jar.
 
 The includes filter is essential: it keeps core's other test classes and test resources
 (`struts.xml` variants, test properties) off plugin test classpaths, where they would

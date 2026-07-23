@@ -605,48 +605,44 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
 
         // look in properties of this class
-        String msg = getRawMessage(clazz.getName(), locale, key);
+        String msg = getRawMessageWithAlternate(clazz.getName(), locale, key, indexedKey);
         if (msg != null) {
             return msg;
         }
-        if (indexedKey != null) {
-            msg = getRawMessage(clazz.getName(), locale, indexedKey);
-            if (msg != null) {
-                return msg;
-            }
-        }
 
         // look in properties of implemented interfaces
-        Class<?>[] interfaces = clazz.getInterfaces();
-        for (Class<?> anInterface : interfaces) {
-            msg = getRawMessage(anInterface.getName(), locale, key);
+        for (Class<?> anInterface : clazz.getInterfaces()) {
+            msg = getRawMessageWithAlternate(anInterface.getName(), locale, key, indexedKey);
             if (msg != null) {
                 return msg;
-            }
-            if (indexedKey != null) {
-                msg = getRawMessage(anInterface.getName(), locale, indexedKey);
-                if (msg != null) {
-                    return msg;
-                }
             }
         }
 
         // traverse up hierarchy
         if (clazz.isInterface()) {
-            interfaces = clazz.getInterfaces();
-            for (Class<?> anInterface : interfaces) {
+            for (Class<?> anInterface : clazz.getInterfaces()) {
                 msg = findMessageRaw(anInterface, key, indexedKey, locale, checked);
                 if (msg != null) {
                     return msg;
                 }
             }
-        } else {
-            if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
-                return findMessageRaw(clazz.getSuperclass(), key, indexedKey, locale, checked);
-            }
+        } else if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
+            return findMessageRaw(clazz.getSuperclass(), key, indexedKey, locale, checked);
         }
 
         return null;
+    }
+
+    /**
+     * Resolves the raw message pattern for a key within a single bundle, falling back to the
+     * indexed (general-form) key when the primary key is absent.
+     */
+    private String getRawMessageWithAlternate(String bundleName, Locale locale, String key, String indexedKey) {
+        String msg = getRawMessage(bundleName, locale, key);
+        if (msg == null && indexedKey != null) {
+            msg = getRawMessage(bundleName, locale, indexedKey);
+        }
+        return msg;
     }
 
     /**
@@ -670,6 +666,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /** @return true when a cached raw-resolution result represents "not found". */
+    @SuppressWarnings("java:S4973") // deliberate identity comparison against the non-interned NOT_FOUND sentinel
     protected boolean isNotFound(String cachedRawResult) {
         return cachedRawResult == NOT_FOUND;
     }
@@ -688,15 +685,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             while (basePackageName.lastIndexOf('.') != -1) {
                 basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
                 String packageName = basePackageName + ".package";
-                String msg = getRawMessage(packageName, locale, textKey);
+                String msg = getRawMessageWithAlternate(packageName, locale, textKey, indexedTextName);
                 if (msg != null) {
                     return msg;
-                }
-                if (indexedTextName != null) {
-                    msg = getRawMessage(packageName, locale, indexedTextName);
-                    if (msg != null) {
-                        return msg;
-                    }
                 }
             }
         }

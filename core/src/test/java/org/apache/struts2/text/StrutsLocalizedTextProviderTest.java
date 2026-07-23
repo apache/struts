@@ -818,14 +818,17 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
             return reloadedObject instanceof Boolean && (Boolean) reloadedObject;
         }
 
+        @Override
         public int classHierarchyCacheSize() {
             return super.classHierarchyCacheSize();
         }
 
+        @Override
         public int packageHierarchyCacheSize() {
             return super.packageHierarchyCacheSize();
         }
 
+        @SuppressWarnings("removal") // deliberately exercises the deprecated delegator
         public String callFindMessage(Class<?> clazz, String key, Locale locale, ValueStack valueStack) {
             return super.findMessage(clazz, key, null, locale, null, null, valueStack);
         }

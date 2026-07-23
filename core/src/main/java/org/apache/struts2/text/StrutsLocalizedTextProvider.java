@@ -119,28 +119,12 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
             }
         }
 
-        // nothing still? alright, search the package hierarchy now
-        for (Class<?> clazz = startClazz;
-             (clazz != null) && !clazz.equals(Object.class);
-             clazz = clazz.getSuperclass()) {
-
-            String basePackageName = clazz.getName();
-            while (basePackageName.lastIndexOf('.') != -1) {
-                basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
-                String packageName = basePackageName + ".package";
-                msg = getMessage(packageName, locale, textKey, valueStack, args);
-
-                if (msg != null) {
-                    return msg;
-                }
-
-                if (indexedTextName != null) {
-                    msg = getMessage(packageName, locale, indexedTextName, valueStack, args);
-
-                    if (msg != null) {
-                        return msg;
-                    }
-                }
+        // search the package hierarchy (cached raw resolution; format per call)
+        String packageRaw = resolvePackageHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+        if (!isNotFound(packageRaw)) {
+            msg = formatMessage(packageRaw, locale, valueStack, args);
+            if (msg != null) {
+                return msg;
             }
         }
 

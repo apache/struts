@@ -68,6 +68,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<TextCacheKey, String> classHierarchyCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<TextCacheKey, String> packageHierarchyCache = new ConcurrentHashMap<>();
 
     @Override
     public void addDefaultResourceBundle(String bundleName) {
@@ -99,6 +100,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     /** Test-support accessor: current number of cached class-hierarchy resolutions. */
     protected int classHierarchyCacheSize() {
         return classHierarchyCache.size();
+    }
+
+    /** Test-support accessor: current number of cached package-hierarchy resolutions. */
+    protected int packageHierarchyCacheSize() {
+        return packageHierarchyCache.size();
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -199,6 +205,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
         final ResourceBundle removedBundle = bundlesMap.remove(key);
         classHierarchyCache.clear();
+        packageHierarchyCache.clear();
         LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, removedBundle != null);
     }
 
@@ -217,6 +224,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     protected void clearMissingBundlesCache() {
         missingBundles.clear();
         classHierarchyCache.clear();
+        packageHierarchyCache.clear();
         LOG.debug("Cleared the missing bundles cache.");
     }
 
@@ -236,6 +244,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                 if (!reloaded) {
                     bundlesMap.clear();
                     classHierarchyCache.clear();
+                    packageHierarchyCache.clear();
                     clearResourceBundleClassloaderCaches();
 
                     // now, for the true and utter hack, if we're running in tomcat, clear
@@ -655,6 +664,52 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     /** @return true when a cached raw-resolution result represents "not found". */
     protected boolean isNotFound(String cachedRawResult) {
         return cachedRawResult == NOT_FOUND;
+    }
+
+    /**
+     * Raw-pattern walk of the {@code *.package} bundles up the class hierarchy of {@code startClazz}.
+     * Returns the first raw pattern found (via {@link #getRawMessage}) for the key or its indexed form,
+     * or {@code null} when none match.
+     */
+    private String findPackageMessageRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
+        for (Class<?> clazz = startClazz;
+             (clazz != null) && !clazz.equals(Object.class);
+             clazz = clazz.getSuperclass()) {
+
+            String basePackageName = clazz.getName();
+            while (basePackageName.lastIndexOf('.') != -1) {
+                basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
+                String packageName = basePackageName + ".package";
+                String msg = getRawMessage(packageName, locale, textKey);
+                if (msg != null) {
+                    return msg;
+                }
+                if (indexedTextName != null) {
+                    msg = getRawMessage(packageName, locale, indexedTextName);
+                    if (msg != null) {
+                        return msg;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cached resolution of the {@code *.package} hierarchy for a key. Returns the raw pattern found, or
+     * {@link #NOT_FOUND} when absent. Same keying and get + putIfAbsent discipline as
+     * {@link #resolveClassHierarchyRaw}.
+     */
+    protected String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
+        TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), startClazz.getName(), textKey, locale);
+        String cached = packageHierarchyCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        String raw = findPackageMessageRaw(startClazz, textKey, indexedTextName, locale);
+        String toStore = (raw != null) ? raw : NOT_FOUND;
+        packageHierarchyCache.putIfAbsent(cacheKey, toStore);
+        return toStore;
     }
 
     /**

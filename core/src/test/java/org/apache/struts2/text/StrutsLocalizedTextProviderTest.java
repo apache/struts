@@ -637,6 +637,32 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("clearMissingBundlesCache did not empty class hierarchy cache ?", 0, provider.classHierarchyCacheSize());
     }
 
+    public void testPackageHierarchyCacheReusesFoundPattern() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // ModelDrivenAction2 lives in a package that provides "package.properties" = "It works!".
+        assertEquals("Package cache not empty before lookup ?", 0, provider.packageHierarchyCacheSize());
+        String first = provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("It works!", first);
+        assertEquals("Package cache not populated after found lookup ?", 1, provider.packageHierarchyCacheSize());
+
+        String second = provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Second package lookup differs ?", first, second);
+        assertEquals("Package cache grew on repeat ?", 1, provider.packageHierarchyCacheSize());
+    }
+
+    public void testReloadClearsPackageHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not populated ?", 1, provider.packageHierarchyCacheSize());
+
+        provider.callReloadBundlesForceReload();
+        assertEquals("Reload did not clear package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+    }
+
     public void testDeprecatedFindMessageStillDelegates() {
         // findMessage leaves findText's hot path in this task; this locks the deprecated delegator.
         TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
@@ -718,6 +744,10 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         public int classHierarchyCacheSize() {
             return super.classHierarchyCacheSize();
+        }
+
+        public int packageHierarchyCacheSize() {
+            return super.packageHierarchyCacheSize();
         }
 
         public String callFindMessage(Class<?> clazz, String key, Locale locale, ValueStack valueStack) {

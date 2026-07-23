@@ -18,11 +18,17 @@
  */
 package org.apache.struts2.validator;
 
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.ValidationOrderAction;
+import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.test.DataAware2;
 import org.apache.struts2.test.SimpleAction3;
@@ -35,8 +41,10 @@ import org.apache.struts2.validator.validators.LongRangeFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.ShortRangeFieldValidator;
+import org.apache.struts2.validator.validators.VisitorFieldValidator;
 import org.apache.struts2.StrutsException;
 import org.assertj.core.api.Assertions;
+import org.easymock.EasyMock;
 import org.xml.sax.SAXParseException;
 
 import java.util.ArrayList;
@@ -373,6 +381,118 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         e = i.next();
         assertEquals(e.getKey(), "passwordHint");
         assertEquals((e.getValue()).get(0), "password hint is required");
+    }
+
+    public void testConversionError_bothErrorsWhenFlagDisabledByDefault() throws Exception {
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+
+        actionValidatorManager.validate(action, null);
+
+        List<String> ageErrors = action.getFieldErrors().get("age");
+        assertNotNull(ageErrors);
+        assertEquals(2, ageErrors.size()); // conversion + required, current behavior
+        assertTrue(ageErrors.contains("Age must be a valid number"));
+        assertTrue(ageErrors.contains("Age is required"));
+    }
+
+    public void testConversionError_fieldValidatorsSkippedWhenEnabled() throws Exception {
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+        actionValidatorManager.setSkipValidatorsOnConversionError("true");
+
+        actionValidatorManager.validate(action, null);
+
+        List<String> ageErrors = action.getFieldErrors().get("age");
+        assertNotNull(ageErrors);
+        // the conversion validator itself still runs and its custom message survives...
+        assertEquals(1, ageErrors.size());
+        assertEquals("Age must be a valid number", ageErrors.get(0));
+        // ...while the required validator on the same field is skipped, not merely absent
+        assertFalse(ageErrors.contains("Age is required"));
+    }
+
+    public void testConversionError_nestedFieldValidatorsSkippedWhenEnabled() throws Exception {
+        // A nested/visitor-validated field is keyed by its full (prefixed) name, e.g. "bean.zip".
+        // The skip guard must match on that full field name, exempting only the conversion validator.
+        actionValidatorManager.setSkipValidatorsOnConversionError("true");
+
+        // The bean supplies the field values; a separate ValidationAware collects the errors,
+        // exactly as the visitor validator wires things up when it recurses into a nested bean.
+        ConversionErrorSkipBean bean = new ConversionErrorSkipBean();
+        ValidationAware sink = new ValidationAwareSupport();
+        ValidatorContext parent = new DelegatingValidatorContext(sink, actionValidatorManager.textProviderFactory);
+        VisitorFieldValidator.AppendingValidatorContext nested =
+                new VisitorFieldValidator.AppendingValidatorContext(parent, parent, "bean", "");
+
+        ActionContext.getContext().getConversionErrors()
+                .put("bean.zip", new ConversionData(new String[]{"one"}, Integer.class));
+
+        actionValidatorManager.validate(bean, null, nested);
+
+        List<String> zipErrors = sink.getFieldErrors().get("bean.zip");
+        assertNotNull(zipErrors);
+        // required is skipped on the prefixed field; the conversion validator still runs
+        assertEquals(1, zipErrors.size());
+        assertEquals("Zip must be a valid number", zipErrors.get(0));
+        assertFalse(zipErrors.contains("Zip is required"));
+    }
+
+    public void testConversionError_unrelatedFieldStillValidatedWhenEnabled() throws Exception {
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+        actionValidatorManager.setSkipValidatorsOnConversionError("true");
+
+        actionValidatorManager.validate(action, null);
+
+        List<String> nameErrors = action.getFieldErrors().get("name");
+        assertNotNull(nameErrors); // "name" has no conversion error, still validated
+        assertEquals(1, nameErrors.size());
+        assertEquals("Name is required", nameErrors.get(0));
+    }
+
+    public void testConversionError_actionLevelValidatorUnaffectedWhenEnabled() throws Exception {
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+        actionValidatorManager.setSkipValidatorsOnConversionError("true");
+
+        actionValidatorManager.validate(action, null);
+
+        assertTrue(action.hasActionErrors());
+        assertTrue(action.getActionErrors().contains("Action level always fails"));
+    }
+
+    public void testConversionError_skipFiresForAnnotationManager() throws Exception {
+        // AnnotationActionValidatorManager.buildValidatorKey() needs an ActionInvocation/ActionProxy
+        // on the ActionContext to resolve the package name/config for the validator cache key.
+        ActionConfig config = new ActionConfig.Builder("packageName", "name", "").build();
+        ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
+        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
+        EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
+        EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
+        EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
+        EasyMock.replay(invocation);
+        EasyMock.replay(proxy);
+        ActionContext.getContext().withActionInvocation(invocation);
+
+        AnnotationActionValidatorManager annMgr = container.inject(AnnotationActionValidatorManager.class);
+        annMgr.setSkipValidatorsOnConversionError("true");
+
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+
+        annMgr.validate(action, null);
+
+        List<String> ageErrors = action.getFieldErrors().get("age");
+        assertNotNull(ageErrors);
+        // required is skipped; the conversion validator itself still runs
+        assertEquals(1, ageErrors.size());
+        assertEquals("Age must be a valid number", ageErrors.get(0));
     }
 
 }

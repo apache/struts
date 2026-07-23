@@ -93,7 +93,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // search up class hierarchy (cached raw resolution; format per call)
-        String classHierarchyRaw = resolveClassHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+        String classHierarchyRaw = resolveClassHierarchyRaw(startClazz, textKey, locale);
         String msg = null;
         if (!isNotFound(classHierarchyRaw)) {
             msg = formatMessage(classHierarchyRaw, locale, valueStack, args);
@@ -113,7 +113,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
                 if (action instanceof ModelDriven) {
                     Object model = ((ModelDriven<?>) action).getModel();
                     if (model != null) {
-                        String modelRaw = resolveClassHierarchyRaw(model.getClass(), textKey, indexedTextName, locale);
+                        String modelRaw = resolveClassHierarchyRaw(model.getClass(), textKey, locale);
                         if (!isNotFound(modelRaw)) {
                             msg = formatMessage(modelRaw, locale, valueStack, args);
                             if (msg != null) {
@@ -126,7 +126,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // search the package hierarchy (cached raw resolution; format per call)
-        String packageRaw = resolvePackageHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+        String packageRaw = resolvePackageHierarchyRaw(startClazz, textKey, locale);
         if (!isNotFound(packageRaw)) {
             msg = formatMessage(packageRaw, locale, valueStack, args);
             if (msg != null) {

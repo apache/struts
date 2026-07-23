@@ -95,7 +95,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     private int currentLoaderHashCode() {
-        return getCurrentThreadContextClassLoader().hashCode();
+        // Identity-based on purpose: a custom ClassLoader overriding hashCode() must not be able to
+        // collapse (or collide) the per-classloader cache partitions.
+        return System.identityHashCode(getCurrentThreadContextClassLoader());
     }
 
     /** Test-support accessor: current number of cached class-hierarchy resolutions. */
@@ -653,13 +655,15 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * context classloader hash + class name + key + locale, so no {@link Class} reference is retained.
      * Uses get + putIfAbsent (never computeIfAbsent) because the child-property path recurses into findText.
      */
-    String resolveClassHierarchyRaw(Class<?> clazz, String textKey, String indexedKey, Locale locale) {
+    String resolveClassHierarchyRaw(Class<?> clazz, String textKey, Locale locale) {
         TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), clazz.getName(), textKey, locale);
         String cached = classHierarchyCache.get(cacheKey);
         if (cached != null) {
             return cached;
         }
-        String raw = findMessageRaw(clazz, textKey, indexedKey, locale, null);
+        // Derived here (miss-only) rather than accepted as a parameter, so the cache key trivially
+        // covers every input that influences the resolution result.
+        String raw = findMessageRaw(clazz, textKey, extractIndexedName(textKey), locale, null);
         String toStore = (raw != null) ? raw : NOT_FOUND;
         classHierarchyCache.putIfAbsent(cacheKey, toStore);
         return toStore;
@@ -704,13 +708,15 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * {@link #NOT_FOUND} when absent. Same keying and get + putIfAbsent discipline as
      * {@link #resolveClassHierarchyRaw}.
      */
-    String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
+    String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, Locale locale) {
         TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), startClazz.getName(), textKey, locale);
         String cached = packageHierarchyCache.get(cacheKey);
         if (cached != null) {
             return cached;
         }
-        String raw = findPackageMessageRaw(startClazz, textKey, indexedTextName, locale);
+        // Derived here (miss-only) rather than accepted as a parameter, so the cache key trivially
+        // covers every input that influences the resolution result.
+        String raw = findPackageMessageRaw(startClazz, textKey, extractIndexedName(textKey), locale);
         String toStore = (raw != null) ? raw : NOT_FOUND;
         packageHierarchyCache.putIfAbsent(cacheKey, toStore);
         return toStore;

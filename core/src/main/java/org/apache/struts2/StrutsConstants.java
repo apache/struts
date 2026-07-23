@@ -419,6 +419,9 @@ public final class StrutsConstants {
      */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 
+    /** @see org.apache.struts2.validator.DefaultActionValidatorManager */
+    public static final String STRUTS_VALIDATORS_SKIP_VALIDATORS_ON_CONVERSION_ERROR = "struts.validators.skipValidatorsOnConversionError";
+
     /**
      * The {@link org.apache.struts2.util.ValueStackFactory} implementation class
      */

@@ -25,6 +25,7 @@ import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.validators.ConversionErrorFieldValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -75,6 +76,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     protected ValidatorFileParser validatorFileParser;
     protected FileManager fileManager;
     protected boolean reloadingConfigs;
+    protected boolean skipValidatorsOnConversionError;
     protected TextProviderFactory textProviderFactory;
 
     @Inject
@@ -95,6 +97,11 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_VALIDATORS_SKIP_VALIDATORS_ON_CONVERSION_ERROR, required = false)
+    public void setSkipValidatorsOnConversionError(String skipValidatorsOnConversionError) {
+        this.skipValidatorsOnConversionError = Boolean.parseBoolean(skipValidatorsOnConversionError);
     }
 
     @Inject
@@ -181,6 +188,13 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
 
                 if ((shortcircuitedFields != null) && shortcircuitedFields.contains(fullFieldName)) {
                     LOG.debug("Short-circuited, skipping");
+                    continue;
+                }
+
+                if (skipValidatorsOnConversionError
+                        && !(validator instanceof ConversionErrorFieldValidator)
+                        && ActionContext.getContext().getConversionErrors().containsKey(fullFieldName)) {
+                    LOG.debug("Skipping validator {} for field {} due to a conversion error", validator, fullFieldName);
                     continue;
                 }
             }

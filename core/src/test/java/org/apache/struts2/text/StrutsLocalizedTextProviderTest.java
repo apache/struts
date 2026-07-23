@@ -689,6 +689,65 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertNull(provider.callFindMessage(CacheFixture.class, "cache.missing", Locale.ENGLISH, valueStack));
     }
 
+    public void testModelDrivenTierUsesClassHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+
+        ModelDrivenAction2 action = new ModelDrivenAction2();
+        Mock mockActionInvocation = new Mock(ActionInvocation.class);
+        mockActionInvocation.matchAndReturn("getAction", action);
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // "invalid.count" resolves only via the model's hierarchy (TestBean2 -> TestBean.properties),
+        // not via the action class hierarchy, so it exercises the ModelDriven tier.
+        String first = provider.findText(ModelDrivenAction2.class, "invalid.count", Locale.ENGLISH, null, null, valueStack);
+        assertNotNull("Model-tier lookup found nothing ?", first);
+        assertTrue("Model-tier lookup did not resolve via the TestBean bundle ?", first.startsWith("TestBean model:"));
+        // Two entries: a miss for the action class hierarchy plus a hit for the model class hierarchy.
+        assertEquals("Class-hierarchy cache should hold action miss + model hit ?", 2, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(ModelDrivenAction2.class, "invalid.count", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Warm model-tier lookup differs from cold ?", first, second);
+        assertEquals("Cache grew on repeated model-tier lookup ?", 2, provider.classHierarchyCacheSize());
+    }
+
+    public void testLocaleIsPartOfCacheKey() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        String english = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        String german = provider.findText(CacheFixture.class, "cache.static", Locale.GERMAN, null, null, valueStack);
+        assertEquals("Static cached value", english);
+        assertEquals("Statischer Wert", german);
+        assertEquals("Each locale should have its own cache entry ?", 2, provider.classHierarchyCacheSize());
+
+        assertEquals("Warm English lookup differs ?", english,
+                provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack));
+        assertEquals("Warm German lookup differs ?", german,
+                provider.findText(CacheFixture.class, "cache.static", Locale.GERMAN, null, null, valueStack));
+        assertEquals("Cache grew on warm per-locale lookups ?", 2, provider.classHierarchyCacheSize());
+    }
+
+    public void testIndexedKeyResolvesThroughCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // "cache.indexed[20]" falls back to the general form "cache.indexed[*]" during raw resolution.
+        String first = provider.findText(CacheFixture.class, "cache.indexed[20]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Indexed cached value", first);
+        assertEquals("Indexed lookup not cached ?", 1, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(CacheFixture.class, "cache.indexed[20]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Warm indexed lookup differs from cold ?", first, second);
+        assertEquals("Cache grew on warm indexed lookup ?", 1, provider.classHierarchyCacheSize());
+
+        // A different index is a distinct cache key (the cache is keyed on the full textKey),
+        // resolving to the same general form.
+        String other = provider.findText(CacheFixture.class, "cache.indexed[7]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Indexed cached value", other);
+        assertEquals("A different index should create its own cache entry ?", 2, provider.classHierarchyCacheSize());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

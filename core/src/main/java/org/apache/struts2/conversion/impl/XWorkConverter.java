@@ -412,34 +412,43 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     protected Object getConverter(Class clazz, String property) {
-        LOG.debug("Retrieving convert for class [{}] and property [{}]", clazz, property);
+        LOG.debug("Retrieving converter for class [{}] and property [{}]", clazz, property);
 
-        synchronized (clazz) {
-            if ((property != null) && !converterHolder.containsNoMapping(clazz)) {
-                try {
-                    Map<String, Object> mapping = converterHolder.getMapping(clazz);
+        if (property == null) {
+            return null;
+        }
+        try {
+            Map<String, Object> mapping = converterHolder.computeMappingIfAbsent(clazz, this::buildConverterMappingUnchecked);
+            if (!mapping.isEmpty()) {
+                mapping = conditionalReload(clazz, mapping);
+            }
 
-                    if (mapping == null) {
-                        mapping = buildConverterMapping(clazz);
-                    } else {
-                        mapping = conditionalReload(clazz, mapping);
-                    }
-
-                    Object converter = mapping.get(property);
-                    if (converter == null && LOG.isDebugEnabled()) {
-                        LOG.debug("Converter is null for property [{}]. Mapping size [{}]:", property, mapping.size());
-                        for (Map.Entry<String, Object> entry : mapping.entrySet()) {
-                            LOG.debug("{}:{}", entry.getKey(), entry.getValue());
-                        }
-                    }
-                    return converter;
-                } catch (Throwable t) {
-                    LOG.debug("Got exception trying to resolve convert for class [{}] and property [{}]", clazz, property, t);
-                    converterHolder.addNoMapping(clazz);
+            Object converter = mapping.get(property);
+            if (converter == null && LOG.isDebugEnabled()) {
+                LOG.debug("Converter is null for property [{}]. Mapping size [{}]:", property, mapping.size());
+                for (Map.Entry<String, Object> entry : mapping.entrySet()) {
+                    LOG.debug("{}:{}", entry.getKey(), entry.getValue());
                 }
             }
+            return converter;
+        } catch (Throwable t) {
+            LOG.debug("Got exception trying to resolve converter for class [{}] and property [{}]", clazz, property, t);
+            converterHolder.addNoMapping(clazz);
+            return null;
         }
-        return null;
+    }
+
+    /**
+     * Adapts {@link #buildConverterMapping(Class)} to {@link java.util.function.Function} by
+     * rethrowing its checked exception unchecked. The caller's {@code catch (Throwable)} still
+     * negative-caches the class, so behaviour is unchanged.
+     */
+    private Map<String, Object> buildConverterMappingUnchecked(Class clazz) {
+        try {
+            return buildConverterMapping(clazz);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not build converter mapping for " + clazz, e);
+        }
     }
 
     protected void handleConversionException(Map<String, Object> context, String property, Object value, Object object, Class toClass) {
@@ -463,11 +472,11 @@ public class XWorkConverter extends DefaultTypeConverter {
         }
     }
 
-    public synchronized void registerConverter(String className, TypeConverter converter) {
+    public void registerConverter(String className, TypeConverter converter) {
         converterHolder.addDefaultMapping(className, converter);
     }
 
-    public synchronized void registerConverterNotFound(String className) {
+    public void registerConverterNotFound(String className) {
         converterHolder.addUnknownMapping(className);
     }
 
@@ -547,6 +556,8 @@ public class XWorkConverter extends DefaultTypeConverter {
      * @param clazz the class to look for converter mappings for
      * @return the converter mappings
      * @throws Exception in case of any errors
+     * @since 7.3.0 this method no longer stores the built mapping in the {@link TypeConverterHolder};
+     * storage is owned by {@link TypeConverterHolder#computeMappingIfAbsent(Class, java.util.function.Function)}.
      */
     protected Map<String, Object> buildConverterMapping(Class clazz) throws Exception {
         Map<String, Object> mapping = new HashMap<>();
@@ -568,15 +579,10 @@ public class XWorkConverter extends DefaultTypeConverter {
             curClazz = curClazz.getSuperclass();
         }
 
-        if (!mapping.isEmpty()) {
-            converterHolder.addMapping(clazz, mapping);
-        } else {
-            converterHolder.addNoMapping(clazz);
-        }
-
         return mapping;
     }
 
+    @SuppressWarnings({"deprecation", "removal"})
     private Map<String, Object> conditionalReload(Class clazz, Map<String, Object> oldValues) throws Exception {
         Map<String, Object> mapping = oldValues;
 
@@ -584,6 +590,13 @@ public class XWorkConverter extends DefaultTypeConverter {
             URL fileUrl = ClassLoaderUtil.getResource(buildConverterFilename(clazz), clazz);
             if (fileManager.fileNeedsReloading(fileUrl)) {
                 mapping = buildConverterMapping(clazz);
+                if (mapping.isEmpty()) {
+                    converterHolder.addNoMapping(clazz);
+                } else {
+                    // addMapping is deprecated but remains the correct primitive here:
+                    // computeMappingIfAbsent cannot express an unconditional overwrite.
+                    converterHolder.addMapping(clazz, mapping);
+                }
             }
         }
 

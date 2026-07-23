@@ -36,10 +36,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -52,7 +52,7 @@ import java.util.zip.ZipInputStream;
  */
 public class DefaultValidatorFactory implements ValidatorFactory, Initializable {
 
-    protected Map<String, String> validators = new HashMap<>();
+    protected Map<String, String> validators = new ConcurrentHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
     protected ObjectFactory objectFactory;
     protected ValidatorFileParser validatorFileParser;

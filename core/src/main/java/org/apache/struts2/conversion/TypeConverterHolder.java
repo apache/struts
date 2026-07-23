@@ -18,7 +18,9 @@
  */
 package org.apache.struts2.conversion;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Holds all mappings related to {@link TypeConverter}s
@@ -52,9 +54,16 @@ public interface TypeConverterHolder {
     /**
      * Target class conversion Mappings.
      *
+     * <p>Returns {@code null} if the class has been flagged as having no mapping via
+     * {@link #addNoMapping(Class)}, even if a real mapping was previously stored for it with
+     * {@link #addMapping(Class, Map)}.</p>
+     *
      * @param clazz class to convert to/from
-     * @return {@link TypeConverter} for given class
+     * @return the property-converter mapping for the given class, or {@code null} if none
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)}, which resolves
+     * and caches the mapping in one call instead of requiring a check-then-act at the call site.
      */
+    @Deprecated(since = "7.3.0", forRemoval = true)
     Map<String, Object> getMapping(Class clazz);
 
     /**
@@ -62,7 +71,10 @@ public interface TypeConverterHolder {
      *
      * @param clazz   class to convert to/from
      * @param mapping property converters
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which stores
+     * the built mapping itself.
      */
+    @Deprecated(since = "7.3.0", forRemoval = true)
     void addMapping(Class clazz, Map<String, Object> mapping);
 
     /**
@@ -70,11 +82,16 @@ public interface TypeConverterHolder {
      *
      * @param clazz class to convert to/from
      * @return true if mapping couldn't be found
+     * @deprecated since 7.3.0, use {@link #computeMappingIfAbsent(Class, Function)} which returns
+     * an empty map for classes known to have no mapping.
      */
+    @Deprecated(since = "7.3.0", forRemoval = true)
     boolean containsNoMapping(Class clazz);
 
     /**
-     * Adds no mapping flag for give class
+     * Adds no mapping flag for give class. Flagging a class as having no mapping may replace
+     * any mapping previously cached for it; callers should treat this flag as authoritative
+     * over a previously cached mapping.
      *
      * @param clazz class to register missing converter
      */
@@ -96,5 +113,43 @@ public interface TypeConverterHolder {
      * @param className name of the class to mark there is no converter for it
      */
     void addUnknownMapping(String className);
+
+    /**
+     * Returns the property-converter mapping for the given class, building and caching it on first
+     * use. Never returns {@code null}: a class known to have no mapping yields an empty map.
+     *
+     * <p>If the builder returns {@code null} or an empty map, the class is recorded in the negative
+     * cache so the builder is not invoked for it again.</p>
+     *
+     * <p>Implementations only guarantee that all callers converge on the same cached mapping
+     * instance for a given class - not that the builder runs at most once. Under concurrent first
+     * access, the builder may be invoked more than once (each on a different thread, for the same
+     * class); only one of the resulting mappings is retained and returned to every caller. The
+     * builder must therefore be idempotent and free of side effects on the holder itself. The
+     * default implementation is a non-atomic check-then-act using the deprecated primitives,
+     * preserving pre-7.3.0 behaviour for third-party holders that do not override it.</p>
+     *
+     * @param clazz   class to convert to/from
+     * @param builder builds the property-converter mapping for the class when it is not yet cached
+     * @return the mapping for the class, or an empty map if it has none
+     * @since 7.3.0
+     */
+    @SuppressWarnings("deprecation")
+    default Map<String, Object> computeMappingIfAbsent(Class clazz, Function<Class, Map<String, Object>> builder) {
+        if (containsNoMapping(clazz)) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> mapping = getMapping(clazz);
+        if (mapping != null) {
+            return mapping;
+        }
+        mapping = builder.apply(clazz);
+        if (mapping == null || mapping.isEmpty()) {
+            addNoMapping(clazz);
+            return Collections.emptyMap();
+        }
+        addMapping(clazz, mapping);
+        return mapping;
+    }
 
 }

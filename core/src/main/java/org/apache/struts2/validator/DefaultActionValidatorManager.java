@@ -99,6 +99,13 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
+    /**
+     * When set to {@code true}, a field's remaining validators are skipped once that field has a
+     * type-conversion error. The field's own {@link ConversionErrorFieldValidator} still runs (so its
+     * message is still shown), and action-level validators are unaffected. Defaults to {@code false}.
+     *
+     * @param skipValidatorsOnConversionError whether to skip a field's remaining validators when it has a conversion error.
+     */
     @Inject(value = StrutsConstants.STRUTS_VALIDATORS_SKIP_VALIDATORS_ON_CONVERSION_ERROR, required = false)
     public void setSkipValidatorsOnConversionError(String skipValidatorsOnConversionError) {
         this.skipValidatorsOnConversionError = Boolean.parseBoolean(skipValidatorsOnConversionError);

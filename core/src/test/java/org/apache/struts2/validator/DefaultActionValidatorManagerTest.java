@@ -19,11 +19,14 @@
 package org.apache.struts2.validator;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ActionProxy;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.ValidationOrderAction;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.conversion.impl.ConversionData;
 import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.test.DataAware2;
@@ -39,6 +42,7 @@ import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.ShortRangeFieldValidator;
 import org.apache.struts2.StrutsException;
 import org.assertj.core.api.Assertions;
+import org.easymock.EasyMock;
 import org.xml.sax.SAXParseException;
 
 import java.util.ArrayList;
@@ -430,6 +434,35 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
         assertTrue(action.hasActionErrors());
         assertTrue(action.getActionErrors().contains("Action level always fails"));
+    }
+
+    public void testConversionError_skipFiresForAnnotationManager() throws Exception {
+        // AnnotationActionValidatorManager.buildValidatorKey() needs an ActionInvocation/ActionProxy
+        // on the ActionContext to resolve the package name/config for the validator cache key.
+        ActionConfig config = new ActionConfig.Builder("packageName", "name", "").build();
+        ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
+        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
+        EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
+        EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
+        EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
+        EasyMock.replay(invocation);
+        EasyMock.replay(proxy);
+        ActionContext.getContext().withActionInvocation(invocation);
+
+        AnnotationActionValidatorManager annMgr = container.inject(AnnotationActionValidatorManager.class);
+        annMgr.setSkipValidatorsOnConversionError("true");
+
+        ConversionErrorSkipAction action = new ConversionErrorSkipAction();
+        ActionContext.getContext().getConversionErrors()
+                .put("age", new ConversionData(new String[]{"one"}, Integer.class));
+
+        annMgr.validate(action, null);
+
+        List<String> ageErrors = action.getFieldErrors().get("age");
+        assertNotNull(ageErrors);
+        // required is skipped; the conversion validator itself still runs
+        assertEquals(1, ageErrors.size());
+        assertEquals("Age must be a valid number", ageErrors.get(0));
     }
 
 }

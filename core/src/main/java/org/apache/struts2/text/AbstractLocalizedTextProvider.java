@@ -568,7 +568,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * ({@link #formatMessage(String, Locale, ValueStack, Object[])} over a raw lookup). Retained for
      * backward compatibility with descendant classes.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
         ResourceBundle bundle = findResourceBundle(bundleName, locale);
         if (bundle == null) {
@@ -727,7 +727,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * lazily per bundle probe, preserving the reload side effect that the previous getMessage-per-probe
      * walk provided.
      */
-    @Deprecated
+    @Deprecated(since = "7.3.0", forRemoval = true)
     protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
                                  ValueStack valueStack) {
         reloadBundles(valueStack != null ? valueStack.getContext() : null);

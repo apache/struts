@@ -1,7 +1,6 @@
-# Follow-up ticket draft — replace null-overloaded control flow in LocalizedTextProvider with an explicit result type
+# WW-5655 — replace null-overloaded control flow in LocalizedTextProvider with an explicit result type
 
-> Ready to file at https://issues.apache.org/jira/projects/WW. Not yet filed — do **not** reference a
-> `WW-XXXX` id in source until this exists (per the no-placeholder-TODO convention).
+> Filed as [WW-5655](https://issues.apache.org/jira/browse/WW-5655).
 
 ## Type / Component
 Improvement (code quality / maintainability) — Core.

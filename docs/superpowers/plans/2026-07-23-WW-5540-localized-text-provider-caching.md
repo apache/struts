@@ -187,14 +187,20 @@ Replace the entire body of the existing `findMessage` (currently at `AbstractLoc
  * candidate whose formatted value is the literal {@code "null"} no longer causes the search to
  * continue deeper in the same hierarchy; this affects only the pathological case of the same key
  * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
+ * The bundle-reload check is now triggered once on entry (when reload mode is enabled) rather than
+ * lazily per bundle probe, preserving the reload side effect that the previous {@code getMessage}-per-probe
+ * walk provided.
  */
 @Deprecated
 protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
                              ValueStack valueStack) {
+    reloadBundles(valueStack != null ? valueStack.getContext() : null);
     String rawPattern = findMessageRaw(clazz, key, indexedKey, locale, checked);
     return rawPattern != null ? formatMessage(rawPattern, locale, valueStack, args) : null;
 }
 ```
+
+(The reload-on-entry preserves the side effect that the old `getMessage`-per-probe walk carried, so both the deprecated external-caller path and the Task-1 intermediate state — where `findText` still calls `findMessage` — keep triggering reload. The final cached path added in Task 2 relies instead on the reload hoisted to the top of `findText`.)
 
 - [ ] **Step 4: Compile**
 

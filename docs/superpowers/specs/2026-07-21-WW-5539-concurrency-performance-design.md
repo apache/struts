@@ -55,8 +55,8 @@ Two alternatives were considered and rejected:
 
 - **Striped per-key locking** (interning a lock object per class). Preserves
   exactly-once computation everywhere, but adds a lock-object cache that itself needs
-  eviction reasoning, still blocks readers behind writers, and duplicates the
-  classloader-pinning problem in a second map. `computeIfAbsent` provides the same
+  eviction reasoning, still blocks readers behind writers, and spreads the same
+  `Class`-keyed cache across a second map. `computeIfAbsent` provides the same
   guarantee where it matters, for free.
 - **Copy-on-write immutable snapshots.** Fastest possible reads, but `mappings` is keyed
   by every action class in the application, so each cold miss copies the whole map:
@@ -307,10 +307,14 @@ the converter caches warm fast, and the validator lock is the coarser of the two
 
 ## Out of scope
 
-1. **Classloader pinning.** `mappings` and `noMapping` hold strong `Class` references in a
-   container singleton, keeping webapp classloaders alive across hot redeploy. A separate
-   Jira issue: it is a lifetime/correctness issue rather than a locking one, and fixing it
-   changes cache semantics.
+1. **Clearing the caches on cleanup (defense-in-depth).** `mappings` and the negative cache hold
+   strong references to application `Class` objects. This does **not** independently pin the webapp
+   classloader — the holder is a container-scoped singleton with no static, thread, or otherwise
+   external reference, so it is reachable only through the container and is collected together with it.
+   The classloader's survival is governed by whatever retains the *container*, which is out of scope
+   here and handled by the WW-5537 cleanup work. As a tidiness measure, clearing these caches during
+   `Dispatcher.cleanup()` (via `InternalDestroyable`) is folded into WW-5537 as Task 5b; it is not a
+   leak fix.
 2. **The `FIXME lukaszlenart` in `TypeConverterHolder`** about merging `unknownMappings`
    into `noMapping` — a semantic consolidation, unrelated to locking.
 3. **Removal of the deprecated methods** — tracked by the project lead for a later release.

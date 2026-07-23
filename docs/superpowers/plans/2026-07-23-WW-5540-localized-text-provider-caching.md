@@ -36,8 +36,11 @@ Extract the "find the raw pattern" and "render a pattern" steps from `getMessage
   - `private String getRawMessage(String bundleName, Locale locale, String key)` → raw pattern or `null`.
   - `protected String formatMessage(String rawPattern, Locale locale, ValueStack valueStack, Object[] args)` → translated+formatted string (or `null` via null-detection).
   - `private String findMessageRaw(Class<?> clazz, String key, String indexedKey, Locale locale, Set<String> checked)` → first raw pattern found walking class/interface/superclass, or `null`.
+- Deprecates (retained as legacy `protected` extension points, superseded by the raw path):
+  - `getMessage(...)` — now `@Deprecated`, delegates its formatting to `formatMessage` (behavior identical).
+  - `findMessage(...)` — now `@Deprecated`, delegates to `findMessageRaw` + `formatMessage`.
 
-- [ ] **Step 1: Add `getRawMessage` and `formatMessage`, and re-express `getMessage` via them**
+- [ ] **Step 1: Add `getRawMessage` and `formatMessage`, and re-express `getMessage` via them (deprecating it)**
 
 In `AbstractLocalizedTextProvider`, add these two methods (place them just above the existing `getMessage`):
 
@@ -75,9 +78,16 @@ protected String formatMessage(String rawPattern, Locale locale, ValueStack valu
 }
 ```
 
-Then replace the body of the existing `getMessage` (currently at `AbstractLocalizedTextProvider.java:513-532`) with:
+Then replace the body of the existing `getMessage` (currently at `AbstractLocalizedTextProvider.java:513-532`) with the version below, and mark it `@Deprecated` (it is superseded internally by the raw-resolution path and retained only as a legacy extension point):
 
 ```java
+/**
+ * @return the message from the named resource bundle.
+ * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+ * ({@link #formatMessage(String, Locale, ValueStack, Object[])} over a raw lookup). Retained for
+ * backward compatibility with descendant classes.
+ */
+@Deprecated
 protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
     ResourceBundle bundle = findResourceBundle(bundleName, locale);
     if (bundle == null) {
@@ -96,7 +106,7 @@ protected String getMessage(String bundleName, Locale locale, String key, ValueS
 }
 ```
 
-(This keeps `getMessage`'s order — `findResourceBundle` → `reloadBundles` → `getString` — identical; only the trailing translate/format is now delegated to `formatMessage`.)
+(This keeps `getMessage`'s order — `findResourceBundle` → `reloadBundles` → `getString` — identical; only the trailing translate/format is now delegated to `formatMessage`, so behavior is unchanged.)
 
 - [ ] **Step 2: Add `findMessageRaw`**
 
@@ -161,27 +171,51 @@ private String findMessageRaw(Class<?> clazz, String key, String indexedKey, Loc
 }
 ```
 
-Leave the existing `findMessage` and the existing `getMessage` callers untouched otherwise.
+- [ ] **Step 3: Replace `findMessage`'s body with delegation and deprecate it**
 
-- [ ] **Step 3: Compile**
+Replace the entire body of the existing `findMessage` (currently at `AbstractLocalizedTextProvider.java:540-600`) with a thin delegation to `findMessageRaw` + `formatMessage`, and mark it `@Deprecated`. This removes the duplicated traversal (the walk now lives only in `findMessageRaw`):
+
+```java
+/**
+ * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
+ * before going up hierarchy.
+ *
+ * @return the message
+ * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
+ * ({@link #findMessageRaw} + {@link #formatMessage(String, Locale, ValueStack, Object[])}). Retained
+ * for backward compatibility with descendant classes. Note: unlike the pre-7.3.0 implementation, a
+ * candidate whose formatted value is the literal {@code "null"} no longer causes the search to
+ * continue deeper in the same hierarchy; this affects only the pathological case of the same key
+ * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
+ */
+@Deprecated
+protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                             ValueStack valueStack) {
+    String rawPattern = findMessageRaw(clazz, key, indexedKey, locale, checked);
+    return rawPattern != null ? formatMessage(rawPattern, locale, valueStack, args) : null;
+}
+```
+
+- [ ] **Step 4: Compile**
 
 Run: `mvn -q test-compile -DskipAssembly -pl core`
 Expected: BUILD SUCCESS (new methods compile; `getRawMessage`/`findMessageRaw` may be flagged unused by the IDE but not by the compiler).
 
-- [ ] **Step 4: Run the full regression suite for this class**
+- [ ] **Step 5: Run the full regression suite for this class**
 
 Run: `mvn test -DskipAssembly -pl core -Dtest=StrutsLocalizedTextProviderTest`
-Expected: PASS — all existing tests green (proves the `getMessage`/`formatMessage` refactor is behavior-preserving).
+Expected: PASS — all existing tests green. `getMessage` is behavior-identical; `findMessage` is behavior-identical for all single-definition keys (the only tests here), so the suite proves the split. (`findMessage`'s deprecated delegation differs from before only in the pathological multi-level null-format case, which no existing test exercises.)
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
 git add core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java
 git commit -m "WW-5540 refactor(core): split raw message resolution from formatting
 
-Add getRawMessage/formatMessage and a raw twin findMessageRaw, and
-re-express getMessage in terms of them. Pure refactor, no behavior
-change; groundwork for the hierarchy-traversal caches.
+Add getRawMessage/formatMessage and a raw twin findMessageRaw. Re-express
+getMessage via formatMessage and make findMessage delegate to
+findMessageRaw + formatMessage; deprecate both as legacy extension points
+superseded by the raw-resolution path. Groundwork for the traversal caches.
 
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 ```
@@ -271,6 +305,10 @@ In `StrutsLocalizedTextProviderTest.java`, inside the nested `TestStrutsLocalize
 ```java
 public int classHierarchyCacheSize() {
     return super.classHierarchyCacheSize();
+}
+
+public String callFindMessage(Class<?> clazz, String key, Locale locale, ValueStack valueStack) {
+    return super.findMessage(clazz, key, null, locale, null, null, valueStack);
 }
 ```
 
@@ -367,6 +405,15 @@ public void testClearBundleAndClearMissingCacheEmptyClassHierarchyCache() {
     assertEquals("Cache not repopulated ?", 1, provider.classHierarchyCacheSize());
     provider.callClearMissingBundlesCache();
     assertEquals("clearMissingBundlesCache did not empty class hierarchy cache ?", 0, provider.classHierarchyCacheSize());
+}
+
+public void testDeprecatedFindMessageStillDelegates() {
+    // findMessage leaves findText's hot path in this task; this locks the deprecated delegator.
+    TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+    ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+    assertEquals("Static cached value", provider.callFindMessage(CacheFixture.class, "cache.static", Locale.ENGLISH, valueStack));
+    assertNull(provider.callFindMessage(CacheFixture.class, "cache.missing", Locale.ENGLISH, valueStack));
 }
 ```
 
@@ -563,8 +610,8 @@ Leave the package loop (lines 111-134), child-property block, and default-messag
 Run: `mvn -q test-compile -DskipAssembly -pl core`
 Expected: BUILD SUCCESS.
 
-Run: `mvn test -DskipAssembly -pl core -Dtest=StrutsLocalizedTextProviderTest#testClassHierarchyCacheReusesFoundPattern+testClassHierarchyCacheStoresMisses+testFormattingIsPerCallNotCached+testOgnlTranslationIsPerCall+testNullFormattingFallsThroughToDefault+testReloadClearsClassHierarchyCache+testClearBundleAndClearMissingCacheEmptyClassHierarchyCache`
-Expected: PASS (7 tests green).
+Run: `mvn test -DskipAssembly -pl core -Dtest=StrutsLocalizedTextProviderTest#testClassHierarchyCacheReusesFoundPattern+testClassHierarchyCacheStoresMisses+testFormattingIsPerCallNotCached+testOgnlTranslationIsPerCall+testNullFormattingFallsThroughToDefault+testReloadClearsClassHierarchyCache+testClearBundleAndClearMissingCacheEmptyClassHierarchyCache+testDeprecatedFindMessageStillDelegates`
+Expected: PASS (8 tests green).
 
 - [ ] **Step 11: Run the full class to confirm no regression**
 

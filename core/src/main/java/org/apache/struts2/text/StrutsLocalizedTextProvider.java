@@ -67,8 +67,14 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // Trigger bundle reload (and cache invalidation) once, before any cached hierarchy lookup,
-        // so that in reload/devMode the hierarchy caches are cleared before they are read.
-        reloadBundles(valueStack != null ? valueStack.getContext() : null);
+        // so that in reload/devMode the hierarchy caches are cleared before they are read. With no
+        // value stack, fall back to the ActionContext-based overload so the RELOADED flag is still
+        // tracked and the caches can warm on that path too.
+        if (valueStack != null) {
+            reloadBundles(valueStack.getContext());
+        } else {
+            reloadBundles();
+        }
 
         String indexedTextName = extractIndexedName(textKey);
 

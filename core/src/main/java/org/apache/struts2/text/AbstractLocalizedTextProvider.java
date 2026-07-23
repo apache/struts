@@ -56,6 +56,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private static final String TOMCAT_WEBAPP_CLASSLOADER = "org.apache.catalina.loader.WebappClassLoader";
     private static final String TOMCAT_WEBAPP_CLASSLOADER_BASE = "org.apache.catalina.loader.WebappClassLoaderBase";
     private static final String RELOADED = "org.apache.struts2.util.LocalizedTextProvider.reloaded";
+    @SuppressWarnings("java:S2129") // deliberate: a non-interned instance is required for an identity (==) sentinel
     private static final String NOT_FOUND = new String("__STRUTS_TEXT_NOT_FOUND__"); // unique identity sentinel; compared with ==
 
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
@@ -566,7 +567,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @return the message from the named resource bundle.
      * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
      * ({@link #formatMessage(String, Locale, ValueStack, Object[])} over a raw lookup). Retained for
-     * backward compatibility with descendant classes.
+     * backward compatibility with descendant classes that call it directly. <strong>No longer invoked
+     * by {@code findText}</strong>: overriding this method does not affect framework message lookup
+     * anymore; override {@link #formatMessage(String, Locale, ValueStack, Object[])} to customize
+     * rendering instead.
      */
     @Deprecated(since = "7.3.0", forRemoval = true)
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
@@ -649,7 +653,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * context classloader hash + class name + key + locale, so no {@link Class} reference is retained.
      * Uses get + putIfAbsent (never computeIfAbsent) because the child-property path recurses into findText.
      */
-    protected String resolveClassHierarchyRaw(Class<?> clazz, String textKey, String indexedKey, Locale locale) {
+    String resolveClassHierarchyRaw(Class<?> clazz, String textKey, String indexedKey, Locale locale) {
         TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), clazz.getName(), textKey, locale);
         String cached = classHierarchyCache.get(cacheKey);
         if (cached != null) {
@@ -700,7 +704,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * {@link #NOT_FOUND} when absent. Same keying and get + putIfAbsent discipline as
      * {@link #resolveClassHierarchyRaw}.
      */
-    protected String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
+    String resolvePackageHierarchyRaw(Class<?> startClazz, String textKey, String indexedTextName, Locale locale) {
         TextCacheKey cacheKey = new TextCacheKey(currentLoaderHashCode(), startClazz.getName(), textKey, locale);
         String cached = packageHierarchyCache.get(cacheKey);
         if (cached != null) {
@@ -719,7 +723,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @return the message
      * @deprecated since 7.3.0 — superseded by the internal raw-resolution + caching path
      * ({@link #findMessageRaw} + {@link #formatMessage(String, Locale, ValueStack, Object[])}). Retained
-     * for backward compatibility with descendant classes. Note: unlike the pre-7.3.0 implementation, a
+     * for backward compatibility with descendant classes that call it directly. <strong>No longer
+     * invoked by {@code findText}</strong>: overriding this method does not affect framework message
+     * lookup anymore; override {@link #formatMessage(String, Locale, ValueStack, Object[])} to
+     * customize rendering instead. Note: unlike the pre-7.3.0 implementation, a
      * candidate whose formatted value is the literal {@code "null"} no longer causes the search to
      * continue deeper in the same hierarchy; this affects only the pathological case of the same key
      * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
@@ -730,7 +737,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     @Deprecated(since = "7.3.0", forRemoval = true)
     protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
                                  ValueStack valueStack) {
-        reloadBundles(valueStack != null ? valueStack.getContext() : null);
+        if (valueStack != null) {
+            reloadBundles(valueStack.getContext());
+        } else {
+            reloadBundles();
+        }
         String rawPattern = findMessageRaw(clazz, key, indexedKey, locale, checked);
         return rawPattern != null ? formatMessage(rawPattern, locale, valueStack, args) : null;
     }

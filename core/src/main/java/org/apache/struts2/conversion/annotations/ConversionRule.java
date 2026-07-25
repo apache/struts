@@ -35,6 +35,11 @@ public enum ConversionRule {
      * {@link DefaultObjectTypeDeterminer}. {@code PROPERTY} and {@code MAP} have no prefix of their
      * own: map and collection metadata is read through the {@code Key_} and {@code Element_} keys.
      *
+     * <p>{@code COLLECTION} deliberately derives {@code Collection_}, the deprecated spelling that
+     * {@link DefaultObjectTypeDeterminer} still falls back to (and logs an INFO about) for
+     * compatibility with existing annotations. Prefer {@link #ELEMENT}, whose {@code Element_}
+     * prefix is the current form.</p>
+     *
      * @return the mapping key prefix, never null; an empty string when the rule has none
      * @since 7.3.0
      */

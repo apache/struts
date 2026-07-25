@@ -145,7 +145,7 @@ import java.lang.annotation.Target;
  *       this.keyValues = keyValues;
  *   }
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converterClass = XWorkBasicConverter.class)
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date", converterClass = XWorkBasicConverter.class)
  *   public String execute() throws Exception {
  *       return SUCCESS;
  *   }
@@ -185,7 +185,7 @@ public @interface TypeConversion {
 
     /**
      * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, COLLECTION (deprecated) or a MAP.
-     * Note: Collection and Map conversion rules can be determined via org.apache.struts2.util.DefaultObjectTypeDeterminer.
+     * Note: Collection and Map conversion rules can be determined via org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer.
      *
      * @see DefaultObjectTypeDeterminer
      *

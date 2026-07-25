@@ -592,6 +592,10 @@ public class XWorkConverter extends DefaultTypeConverter {
             // class, so a misconfigured annotation is reported exactly once instead of once per
             // subclass. This gates logging only - the derivation/registration pipeline in
             // registerAnnotatedMember still runs on every visit, which first-writer-wins relies on.
+            // Note buildConverterMapping only visits each class' direct interfaces, never
+            // super-interfaces, so for "class C implements B" where "interface B extends A" and A
+            // declares the annotated method, no visited level ever satisfies declaringClass == clazz
+            // and a misconfigured annotation there logs nothing at all. Registration is unaffected.
             boolean logSkips = method.getDeclaringClass() == clazz;
             for (Annotation annotation : method.getAnnotations()) {
                 if (annotation instanceof TypeConversion tc) {
@@ -662,16 +666,16 @@ public class XWorkConverter extends DefaultTypeConverter {
         }
         if (mapping.containsKey(key)) {
             if (logSkips) {
-                LOG.debug("Skipping @TypeConversion on [{}#{}]: key [{}] is already mapped by a higher precedence source",
+                LOG.debug("Skipping @TypeConversion on [{}#{}]: key [{}] is already mapped, either by a higher " +
+                                "precedence source or by this same annotation seen at a lower level of the hierarchy",
                         member.getDeclaringClass().getName(), member.getName(), key);
             }
             return;
         }
-        LOG.debug("TypeConversion [{}/{}] on [{}] resolved to key [{}]",
-                tc.converter(), tc.converterClass(), member.getName(), key);
+        LOG.debug("TypeConversion [{}/{}] on [{}#{}] resolved to key [{}]",
+                tc.converter(), tc.converterClass(), member.getDeclaringClass().getName(), member.getName(), key);
         annotationProcessor.process(mapping, tc, key);
     }
-
 
     /**
      * Looks for converter mappings for the specified class, traversing up its class hierarchy and interfaces and adding

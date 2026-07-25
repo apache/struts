@@ -133,7 +133,21 @@ It skips `static` and synthetic fields, which also makes the interface case a no
 (`getDeclaredFields()` on an interface returns its constants). A field's own name is the property
 name; no getter/setter parsing is involved.
 
-### 4. Error handling
+### 4. Interaction with the 7.3.0 mapping cache
+
+`addConverterMapping` runs inside the builder that `XWorkConverter.buildConverterMapping` hands to
+`TypeConverterHolder.computeMappingIfAbsent` (WW-5539). That builder deliberately executes **outside**
+any lock — `StrutsTypeConverterHolder.java:171-188` documents why: it instantiates, and under
+`SpringObjectFactory` autowires, arbitrary user-supplied `TypeConverter`s, so running it under a
+`ConcurrentHashMap` bin lock would risk `IllegalStateException("Recursive update")` or self-deadlock
+if any of that re-enters conversion.
+
+The new field pass instantiates converters exactly as the existing method pass does, so it inherits
+that safety and adds no new hazard. The one consequence to respect: under first-access contention the
+builder may run more than once for the same class, so every pass must stay free of side effects
+outside the `mapping` map it is handed.
+
+### 5. Error handling
 
 | Situation | Today | After |
 |---|---|---|

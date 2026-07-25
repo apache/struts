@@ -78,17 +78,20 @@ An exhaustive `switch` over the enum means a future rule cannot silently miss a 
 ### 2. One key resolver in `XWorkConverter`
 
 ```java
-static String resolveKey(TypeConversion tc, String name) {
+static String resolveKey(ConversionType type, ConversionRule rule, String name) {
     if (name == null || name.isEmpty()) {
         return null;                        // caller skips the entry and logs WARN
     }
-    if (tc.type() == ConversionType.APPLICATION) {
+    if (type == ConversionType.APPLICATION) {
         return name;                        // key is a class name, never prefixed
     }
-    String prefix = tc.rule().prefix();
+    String prefix = rule.prefix();
     return name.startsWith(prefix) ? name : prefix + name;
 }
 ```
+
+It takes the two annotation attributes rather than the `TypeConversion` instance so it can be unit
+tested directly — annotation instances are awkward to construct in a test.
 
 All three annotation passes route both explicit keys and derived property names through this
 function, so the three call sites cannot drift apart.

@@ -584,25 +584,33 @@ public class XWorkConverter extends DefaultTypeConverter {
      */
     private void processMethodAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Method method : clazz.getMethods()) {
+            // clazz.getMethods() returns inherited public methods too, and buildConverterMapping
+            // calls this method once per class in the hierarchy, so a single annotation declared
+            // on a base class method is visited once per subclass level: for C extends B extends A,
+            // an annotation on a method declared in A is seen three times, all with the same
+            // method.getDeclaringClass(). Only log a WARN on the pass whose clazz is that declaring
+            // class, so a misconfigured annotation is reported exactly once instead of once per
+            // subclass. This gates logging only - the derivation/registration logic below still runs
+            // on every visit, which first-writer-wins relies on.
+            boolean logIfSkipped = method.getDeclaringClass() == clazz;
             for (Annotation annotation : method.getAnnotations()) {
                 if (!(annotation instanceof TypeConversion tc)) {
                     continue;
                 }
                 if (isApplicationScopedWithoutKey(tc)) {
-                    // method.getDeclaringClass(), not clazz: getMethods() returns inherited methods
-                    // too (see the resolveKey-null branch below for the same reasoning).
-                    LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
-                            method.getDeclaringClass().getName(), method.getName());
+                    if (logIfSkipped) {
+                        LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
+                                method.getDeclaringClass().getName(), method.getName());
+                    }
                     continue;
                 }
                 String name = StringUtils.isEmpty(tc.key()) ? AnnotationUtils.resolvePropertyName(method) : tc.key();
                 String key = resolveKey(tc.type(), tc.rule(), name);
                 if (key == null) {
-                    // method.getDeclaringClass(), not clazz: getMethods() returns inherited methods too,
-                    // so an annotation on one superclass method can otherwise log once per subclass in
-                    // the hierarchy, each naming a different, misleading class.
-                    LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived from the method",
-                            method.getDeclaringClass().getName(), method.getName());
+                    if (logIfSkipped) {
+                        LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived from the method",
+                                method.getDeclaringClass().getName(), method.getName());
+                    }
                     continue;
                 }
                 if (mapping.containsKey(key)) {

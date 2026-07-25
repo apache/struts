@@ -49,6 +49,7 @@ import org.apache.struts2.util.CollidingKeyConversionAction;
 import org.apache.struts2.util.EmptyKeyConversionAction;
 import org.apache.struts2.util.ExplicitKeyConversionAction;
 import org.apache.struts2.util.FieldConversionAction;
+import org.apache.struts2.util.InheritedMethodConversionSubAction;
 import org.apache.struts2.util.MyBean;
 import org.apache.struts2.util.MyBeanAction;
 
@@ -931,6 +932,20 @@ public class XWorkConverterTest extends XWorkTestCase {
         freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
 
         assertEquals(Long.class, freshConverter.getConverter(FieldConversionAction.class, "Key_contestedMap"));
+    }
+
+    /**
+     * {@code processMethodAnnotations} gates its WARN logging to the hierarchy level whose {@code
+     * clazz} matches {@code method.getDeclaringClass()}, so a misconfigured annotation on an
+     * inherited method logs once instead of once per subclass. This asserts that gate is
+     * logging-only: an inherited, correctly-configured method annotation must still resolve and
+     * register on every visit, proven here through a subclass that overrides nothing.
+     */
+    public void testInheritedMethodAnnotationStillRegistersThroughASubclass() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(InheritedMethodConversionSubAction.class, "CreateIfNull_inheritedList"));
     }
 
     /**

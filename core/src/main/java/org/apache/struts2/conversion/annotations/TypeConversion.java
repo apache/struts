@@ -69,8 +69,8 @@ import java.lang.annotation.Target;
  * <td>no</td>
  * <td>The annotated property/field name</td>
  * <td>The property name the rule applies to. The matching prefix for the given rule
- * (<code>Key_</code>, <code>Element_</code>, <code>KeyProperty_</code>, <code>CreateIfNull_</code>)
- * is prepended automatically unless the key already carries it. Required on TYPE level annotations,
+ * (<code>Key_</code>, <code>Element_</code>, <code>KeyProperty_</code>, <code>CreateIfNull_</code>, or the deprecated
+ * <code>Collection_</code>) is prepended automatically unless the key already carries it. Required on TYPE level annotations,
  * where there is no member name to derive it from.</td>
  * </tr>
  * <tr>

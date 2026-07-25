@@ -218,6 +218,7 @@ Verification-only task; nothing to commit if the suite passes.
 
 ## Self-Review Notes
 
+- **Test scope note:** Tasks 1-2 verify the fix at the `buildValidatorKey` unit level (distinct cache keys per context), a deterministic proxy for spec test #1. End-to-end "both visitor validators actually execute" is covered by the existing `VisitorFieldValidatorTest` / `VisitorFieldValidatorModelTest` suites (run as regression in Task 2 Step 4), not by a new integration test here.
 - **Spec coverage:** Root-cause narrowing → Task 2. Reproduction test (distinct cache entries per context for visited objects, spec test #1) → Task 1 Step 2. WW-2996 regression guard (spec test #2) → Task 1 Step 3. Non-wildcard visitor + `DefaultActionValidatorManager` unchanged (spec test #3) → Task 2 Step 4. Null-action guard (spec edge case) → `action != null` in Task 2 Step 1. Self-visiting wildcard limitation is intentionally not exercised (accepted known limitation per spec).
 - **Placeholder scan:** none.
 - **Type consistency:** `installInvocation(String, Object)`, `buildValidatorKey(Class, String)`, and `configName`/`wildcard`/`validatingActionClass` locals are consistent across tasks.

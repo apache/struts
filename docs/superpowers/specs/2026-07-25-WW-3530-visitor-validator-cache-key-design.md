@@ -93,8 +93,12 @@ protected String buildValidatorKey(Class clazz, String context) {
 The only difference: when `clazz` is **not** the action class (a visited object
 under a visitor validator), the key now includes `context` even if the current
 action is a wildcard. `basic` and `additional` therefore get distinct cache
-entries and both run. The wildcard-action caching path (WW-2996) is untouched,
-because it now fires only when `clazz == action.getClass()`.
+entries and both run. The wildcard-action caching path (WW-2996) is untouched
+**for the action's own class**, because the `configName|method` branch now fires
+only when `clazz == action.getClass()` — the request-validation hot path
+(`ValidationInterceptor` → `getValidators(action.getClass(), …)`) is fully
+preserved. See the default-context visitor note below for the one subpath where
+keying moves from stable to volatile.
 
 ## Scope, edge cases, non-goals
 
@@ -107,6 +111,19 @@ because it now fires only when `clazz == action.getClass()`.
   because `clazz == action.getClass()` takes the wildcard branch. Accepted known
   limitation — extremely contrived, and resolving it would require reintroducing
   the volatile-vs-stable-context ambiguity this fix avoids. Documented, not fixed.
+- **Default-context visitor under a wildcard action** (visitor validator with no
+  explicit `context` param): `VisitorFieldValidator` (`VisitorFieldValidator.java:141`)
+  defaults `visitorContext` to the *resolved* action name when `context == null`.
+  Under a wildcard action that name is volatile (per URL). Before this change the
+  visited object keyed on the stable `configName|method`; after it, keying on
+  `context` (= the volatile action name) creates one cache entry per resolved name
+  for that visited class — WW-2996-style cache growth. This is a **caching-efficiency**
+  regression only (correct validators still load; the growth is bounded by the
+  number of resolved wildcard names, narrower than the original WW-2996 leak), and
+  it disappears the moment the visitor validator declares an explicit `context`.
+  Accepted for this change; folded into the same follow-up ticket as the render-path
+  item (a clean fix needs the rejected "Approach C" — an explicit visitor signal
+  through the manager API).
 - **`<s:form>` client-side JS-validation render path** (`Form.getValidators`,
   `Form.java:295`): this path resolves `actionClass` by *name* (via
   `ServletUrlRenderer`), not from the live action instance. When the form targets

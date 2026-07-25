@@ -498,10 +498,16 @@ public class XWorkConverter extends DefaultTypeConverter {
         String converterFilename = buildConverterFilename(clazz);
         fileProcessor.process(mapping, clazz, converterFilename);
 
-        // Process annotations
-        Annotation[] annotations = clazz.getAnnotations();
+        processClassLevelAnnotations(mapping, clazz);
+        processMethodAnnotations(mapping, clazz);
+    }
 
-        for (Annotation annotation : annotations) {
+    /**
+     * Registers the {@link TypeConversion} entries declared by a class level {@link Conversion}
+     * annotation.
+     */
+    private void processClassLevelAnnotations(Map<String, Object> mapping, Class clazz) {
+        for (Annotation annotation : clazz.getAnnotations()) {
             if (annotation instanceof Conversion conversion) {
                 for (TypeConversion tc : conversion.conversions()) {
                     if (mapping.containsKey(tc.key())) {
@@ -518,11 +524,14 @@ public class XWorkConverter extends DefaultTypeConverter {
                 }
             }
         }
+    }
 
-        // Process annotated methods
+    /**
+     * Registers {@link TypeConversion} annotations found on the class' methods.
+     */
+    private void processMethodAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Method method : clazz.getMethods()) {
-            annotations = method.getAnnotations();
-            for (Annotation annotation : annotations) {
+            for (Annotation annotation : method.getAnnotations()) {
                 if (annotation instanceof TypeConversion tc) {
                     String key = tc.key();
                     // Default to the property name with prefix

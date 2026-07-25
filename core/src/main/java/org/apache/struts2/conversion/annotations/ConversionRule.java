@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.conversion.annotations;
 
+import org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer;
+
 /**
  * <code>ConversionRule</code>
  *
@@ -27,6 +29,25 @@ package org.apache.struts2.conversion.annotations;
 public enum ConversionRule {
 
     PROPERTY, COLLECTION, MAP, KEY, KEY_PROPERTY, ELEMENT, CREATE_IF_NULL;
+
+    /**
+     * The prefix a conversion mapping key carries for this rule, as read back by
+     * {@link DefaultObjectTypeDeterminer}. {@code PROPERTY} and {@code MAP} have no prefix of their
+     * own: map and collection metadata is read through the {@code Key_} and {@code Element_} keys.
+     *
+     * @return the mapping key prefix, never null; an empty string when the rule has none
+     * @since 7.3.0
+     */
+    public String prefix() {
+        return switch (this) {
+            case COLLECTION -> DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX;
+            case CREATE_IF_NULL -> DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX;
+            case ELEMENT -> DefaultObjectTypeDeterminer.ELEMENT_PREFIX;
+            case KEY -> DefaultObjectTypeDeterminer.KEY_PREFIX;
+            case KEY_PROPERTY -> DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX;
+            case PROPERTY, MAP -> "";
+        };
+    }
 
     @Override
     public String toString() {

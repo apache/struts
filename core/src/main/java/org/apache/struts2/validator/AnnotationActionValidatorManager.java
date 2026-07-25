@@ -23,6 +23,8 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ import java.util.List;
  * @author jepjep
  */
 public class AnnotationActionValidatorManager extends DefaultActionValidatorManager {
+
+    private static final Logger LOG = LogManager.getLogger(AnnotationActionValidatorManager.class);
 
     @Override
     protected String buildValidatorKey(Class clazz, String context) {
@@ -69,7 +73,11 @@ public class AnnotationActionValidatorManager extends DefaultActionValidatorMana
         } else {
             sb.append(context);
         }
-        return sb.toString();
+
+        String validatorKey = sb.toString();
+        LOG.debug("Built validator key [{}] for class [{}] and context [{}]: validatingActionClass={}, wildcard={}, action config [{}]",
+                validatorKey, clazz.getName(), context, validatingActionClass, wildcard, configName);
+        return validatorKey;
     }
 
     @Override

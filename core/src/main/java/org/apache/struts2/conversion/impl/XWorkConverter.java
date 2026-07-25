@@ -492,8 +492,12 @@ public class XWorkConverter extends DefaultTypeConverter {
 
     /**
      * Resolves the conversion mapping key for an annotation: the given name carrying the
-     * {@link ConversionRule}'s prefix. A name that already starts with that prefix is returned
-     * unchanged, so annotations that spell the prefix out keep working.
+     * {@link ConversionRule}'s prefix. A name that already starts with <em>any</em> known rule's
+     * prefix is returned unchanged, not only the prefix of the declared rule, so annotations that
+     * spell the prefix out keep working. This matters because {@link ConversionRule#COLLECTION} and
+     * {@link ConversionRule#ELEMENT} are interchangeable in both {@link DefaultConversionAnnotationProcessor}
+     * and {@link DefaultObjectTypeDeterminer}: a key such as {@code Element_users} declared with
+     * {@code rule = COLLECTION} must not become {@code Collection_Element_users}.
      *
      * @param type the annotation's {@link ConversionType}; APPLICATION keys are class names and are never prefixed
      * @param rule the annotation's {@link ConversionRule}
@@ -509,7 +513,16 @@ public class XWorkConverter extends DefaultTypeConverter {
             return name;
         }
         String prefix = rule.prefix();
-        return name.startsWith(prefix) ? name : prefix + name;
+        if (name.startsWith(prefix)) {
+            return name;
+        }
+        for (ConversionRule other : ConversionRule.values()) {
+            String otherPrefix = other.prefix();
+            if (!otherPrefix.isEmpty() && name.startsWith(otherPrefix)) {
+                return name;   // already carries a rule prefix; leave it exactly as written
+            }
+        }
+        return prefix + name;
     }
 
     /**
@@ -567,8 +580,11 @@ public class XWorkConverter extends DefaultTypeConverter {
                 String name = StringUtils.isEmpty(tc.key()) ? AnnotationUtils.resolvePropertyName(method) : tc.key();
                 String key = resolveKey(tc.type(), tc.rule(), name);
                 if (key == null) {
+                    // method.getDeclaringClass(), not clazz: getMethods() returns inherited methods too,
+                    // so an annotation on one superclass method can otherwise log once per subclass in
+                    // the hierarchy, each naming a different, misleading class.
                     LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived from the method",
-                            clazz.getName(), method.getName());
+                            method.getDeclaringClass().getName(), method.getName());
                     continue;
                 }
                 if (mapping.containsKey(key)) {
@@ -586,6 +602,12 @@ public class XWorkConverter extends DefaultTypeConverter {
      * fields are read: {@link #buildConverterMapping(Class)} already walks the class hierarchy and
      * calls this method once per class. Static and synthetic fields are skipped, which also makes
      * this a no-op for interfaces.
+     *
+     * <p>The stated precedence "class &gt; method &gt; field" is per-class, not per-hierarchy-level:
+     * {@link #processMethodAnnotations(Map, Class)} sees {@link Class#getMethods()}, which includes
+     * inherited public methods, so a superclass's annotated setter claims its key before this pass
+     * ever looks at a subclass's field for that same class. A subclass field annotation only wins
+     * when no method anywhere in the hierarchy already claimed its key.</p>
      */
     private void processFieldAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Field field : clazz.getDeclaredFields()) {

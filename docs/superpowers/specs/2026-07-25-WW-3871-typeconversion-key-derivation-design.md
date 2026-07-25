@@ -86,7 +86,16 @@ static String resolveKey(ConversionType type, ConversionRule rule, String name) 
         return name;                        // key is a class name, never prefixed
     }
     String prefix = rule.prefix();
-    return name.startsWith(prefix) ? name : prefix + name;
+    if (name.startsWith(prefix)) {
+        return name;
+    }
+    for (ConversionRule other : ConversionRule.values()) {
+        String otherPrefix = other.prefix();
+        if (!otherPrefix.isEmpty() && name.startsWith(otherPrefix)) {
+            return name;   // already carries a rule prefix; leave it exactly as written
+        }
+    }
+    return prefix + name;
 }
 ```
 
@@ -101,11 +110,16 @@ function, so the three call sites cannot drift apart.
 `@TypeConversion(type = APPLICATION, key = "java.util.Date", rule = ELEMENT)` would register
 `Element_java.util.Date` into the global converter map, which nothing reads.
 
-**`name.startsWith(prefix)`** is the backward-compatibility guarantee: an already-prefixed key is
-returned untouched, so `key = "KeyProperty_annotatedBeanMap"` and `key = "annotatedBeanMap"` both
-resolve to `KeyProperty_annotatedBeanMap` under `rule = KEY_PROPERTY`. It misfires only for a
-property literally named `KeyProperty_foo` (or another prefix), which is legal Java but effectively
-nonexistent; such a property gets exactly today's behaviour.
+**The "already prefixed" guard checks every rule's prefix, not just the declared rule's.** An
+already-prefixed key is returned untouched, so `key = "KeyProperty_annotatedBeanMap"` and
+`key = "annotatedBeanMap"` both resolve to `KeyProperty_annotatedBeanMap` under `rule = KEY_PROPERTY`.
+Checking only the declared rule's prefix is not enough: `COLLECTION` and `ELEMENT` are interchangeable
+in both `DefaultConversionAnnotationProcessor` (same branch handles both) and
+`DefaultObjectTypeDeterminer.getElementClass` (reads `Element_<prop>`, falls back to the deprecated
+`Collection_<prop>`), so `key = "Element_users", rule = COLLECTION` must not become
+`Collection_Element_users`. Matching against every rule's prefix keeps that crossover working. It
+misfires only for a property literally named `KeyProperty_foo` (or another prefix), which is legal
+Java but effectively nonexistent; such a property gets exactly today's behaviour.
 
 ### 3. Field-level support
 

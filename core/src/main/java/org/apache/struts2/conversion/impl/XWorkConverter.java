@@ -42,8 +42,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -524,6 +526,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         processClassLevelAnnotations(mapping, clazz);
         processMethodAnnotations(mapping, clazz);
+        processFieldAnnotations(mapping, clazz);
     }
 
     /**
@@ -573,6 +576,41 @@ public class XWorkConverter extends DefaultTypeConverter {
                 }
                 LOG.debug("TypeConversion [{}/{}] on method [{}] resolved to key [{}]",
                         tc.converter(), tc.converterClass(), method.getName(), key);
+                annotationProcessor.process(mapping, tc, key);
+            }
+        }
+    }
+
+    /**
+     * Registers {@link TypeConversion} annotations found on the class' own fields. Only declared
+     * fields are read: {@link #buildConverterMapping(Class)} already walks the class hierarchy and
+     * calls this method once per class. Static and synthetic fields are skipped, which also makes
+     * this a no-op for interfaces.
+     */
+    private void processFieldAnnotations(Map<String, Object> mapping, Class clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                continue;
+            }
+            for (Annotation annotation : field.getAnnotations()) {
+                if (!(annotation instanceof TypeConversion tc)) {
+                    continue;
+                }
+                String name = StringUtils.isEmpty(tc.key()) ? field.getName() : tc.key();
+                String key = resolveKey(tc.type(), tc.rule(), name);
+                if (key == null) {
+                    // defensive: a field always has a name, so this is unreachable in practice
+                    LOG.warn("Ignoring @TypeConversion on field [{}#{}]: the key could not be resolved",
+                            clazz.getName(), field.getName());
+                    continue;
+                }
+                if (mapping.containsKey(key)) {
+                    LOG.debug("Skipping @TypeConversion on field [{}#{}]: key [{}] is already mapped by a higher precedence source",
+                            clazz.getName(), field.getName(), key);
+                    continue;
+                }
+                LOG.debug("TypeConversion [{}/{}] on field [{}] resolved to key [{}]",
+                        tc.converter(), tc.converterClass(), field.getName(), key);
                 annotationProcessor.process(mapping, tc, key);
             }
         }

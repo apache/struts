@@ -44,6 +44,7 @@ import org.apache.struts2.conversion.annotations.ConversionType;
 import org.apache.struts2.util.BareKeyConversionAction;
 import org.apache.struts2.util.CollidingKeyConversionAction;
 import org.apache.struts2.util.ExplicitKeyConversionAction;
+import org.apache.struts2.util.FieldConversionAction;
 import org.apache.struts2.util.MyBean;
 import org.apache.struts2.util.MyBeanAction;
 
@@ -894,6 +895,20 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_fromProperties"));
         // the entry after the collision used to be dropped by `break`
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_afterTheCollision"));
+    }
+
+    public void testFieldLevelAnnotationDerivesKeyFromTheFieldName() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(FieldConversionAction.class, "CreateIfNull_fieldOnlyList"));
+    }
+
+    public void testMethodAnnotationWinsOverFieldAnnotation() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals(Long.class, freshConverter.getConverter(FieldConversionAction.class, "Key_contestedMap"));
     }
 
     public static class CountingXWorkConverter extends XWorkConverter {

@@ -150,7 +150,7 @@ import java.lang.annotation.Target;
  * @author Rainer Hermanns
  * @version $Id$
  */
-@Target({ ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TypeConversion {
 

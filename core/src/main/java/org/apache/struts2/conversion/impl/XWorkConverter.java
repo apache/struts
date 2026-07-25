@@ -588,37 +588,15 @@ public class XWorkConverter extends DefaultTypeConverter {
             // calls this method once per class in the hierarchy, so a single annotation declared
             // on a base class method is visited once per subclass level: for C extends B extends A,
             // an annotation on a method declared in A is seen three times, all with the same
-            // method.getDeclaringClass(). Only log a WARN on the pass whose clazz is that declaring
+            // method.getDeclaringClass(). Only log skips on the pass whose clazz is that declaring
             // class, so a misconfigured annotation is reported exactly once instead of once per
-            // subclass. This gates logging only - the derivation/registration logic below still runs
-            // on every visit, which first-writer-wins relies on.
-            boolean logIfSkipped = method.getDeclaringClass() == clazz;
+            // subclass. This gates logging only - the derivation/registration pipeline in
+            // registerAnnotatedMember still runs on every visit, which first-writer-wins relies on.
+            boolean logSkips = method.getDeclaringClass() == clazz;
             for (Annotation annotation : method.getAnnotations()) {
-                if (!(annotation instanceof TypeConversion tc)) {
-                    continue;
+                if (annotation instanceof TypeConversion tc) {
+                    registerAnnotatedMember(mapping, tc, method, AnnotationUtils.resolvePropertyName(method), logSkips);
                 }
-                if (isApplicationScopedWithoutKey(tc)) {
-                    if (logIfSkipped) {
-                        LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
-                                method.getDeclaringClass().getName(), method.getName());
-                    }
-                    continue;
-                }
-                String name = StringUtils.isEmpty(tc.key()) ? AnnotationUtils.resolvePropertyName(method) : tc.key();
-                String key = resolveKey(tc.type(), tc.rule(), name);
-                if (key == null) {
-                    if (logIfSkipped) {
-                        LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived from the method",
-                                method.getDeclaringClass().getName(), method.getName());
-                    }
-                    continue;
-                }
-                if (mapping.containsKey(key)) {
-                    continue;
-                }
-                LOG.debug("TypeConversion [{}/{}] on method [{}] resolved to key [{}]",
-                        tc.converter(), tc.converterClass(), method.getName(), key);
-                annotationProcessor.process(mapping, tc, key);
             }
         }
     }
@@ -641,32 +619,57 @@ public class XWorkConverter extends DefaultTypeConverter {
                 continue;
             }
             for (Annotation annotation : field.getAnnotations()) {
-                if (!(annotation instanceof TypeConversion tc)) {
-                    continue;
+                if (annotation instanceof TypeConversion tc) {
+                    // getDeclaredFields() is visited once per class, never revisited from a
+                    // subclass level, so there is no multi-visit noise to gate against here.
+                    registerAnnotatedMember(mapping, tc, field, field.getName(), true);
                 }
-                if (isApplicationScopedWithoutKey(tc)) {
-                    LOG.warn("Ignoring @TypeConversion on field [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
-                            clazz.getName(), field.getName());
-                    continue;
-                }
-                String name = StringUtils.isEmpty(tc.key()) ? field.getName() : tc.key();
-                String key = resolveKey(tc.type(), tc.rule(), name);
-                if (key == null) {
-                    // defensive: a field always has a name, so this is unreachable in practice
-                    LOG.warn("Ignoring @TypeConversion on field [{}#{}]: the key could not be resolved",
-                            clazz.getName(), field.getName());
-                    continue;
-                }
-                if (mapping.containsKey(key)) {
-                    LOG.debug("Skipping @TypeConversion on field [{}#{}]: key [{}] is already mapped by a higher precedence source",
-                            clazz.getName(), field.getName(), key);
-                    continue;
-                }
-                LOG.debug("TypeConversion [{}/{}] on field [{}] resolved to key [{}]",
-                        tc.converter(), tc.converterClass(), field.getName(), key);
-                annotationProcessor.process(mapping, tc, key);
             }
         }
+    }
+
+    /**
+     * Shared pipeline for a single {@link TypeConversion} annotation found by {@link
+     * #processMethodAnnotations(Map, Class)} or {@link #processFieldAnnotations(Map, Class)}: skip
+     * APPLICATION-scoped annotations with no explicit key, derive the name, resolve it to a mapping
+     * key, and register it unless something already claimed that key.
+     *
+     * @param mapping      the map being built for the current class
+     * @param tc           the annotation to register
+     * @param member       the annotated {@link Method} or {@link Field}; used only for its name and
+     *                     declaring class, both needed for logging
+     * @param fallbackName the name to use when {@code tc.key()} is empty - a resolved property name
+     *                     for a method, or the field's own name for a field
+     * @param logSkips     whether to log skipped entries; see {@link #processMethodAnnotations(Map, Class)}
+     *                     for why a method pass gates this and a field pass does not
+     */
+    private void registerAnnotatedMember(Map<String, Object> mapping, TypeConversion tc, Member member, String fallbackName, boolean logSkips) {
+        if (isApplicationScopedWithoutKey(tc)) {
+            if (logSkips) {
+                LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
+                        member.getDeclaringClass().getName(), member.getName());
+            }
+            return;
+        }
+        String name = StringUtils.isEmpty(tc.key()) ? fallbackName : tc.key();
+        String key = resolveKey(tc.type(), tc.rule(), name);
+        if (key == null) {
+            if (logSkips) {
+                LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived",
+                        member.getDeclaringClass().getName(), member.getName());
+            }
+            return;
+        }
+        if (mapping.containsKey(key)) {
+            if (logSkips) {
+                LOG.debug("Skipping @TypeConversion on [{}#{}]: key [{}] is already mapped by a higher precedence source",
+                        member.getDeclaringClass().getName(), member.getName(), key);
+            }
+            return;
+        }
+        LOG.debug("TypeConversion [{}/{}] on [{}] resolved to key [{}]",
+                tc.converter(), tc.converterClass(), member.getName(), key);
+        annotationProcessor.process(mapping, tc, key);
     }
 
 

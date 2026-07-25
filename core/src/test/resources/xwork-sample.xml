@@ -131,6 +131,12 @@
             <result name="success" type="mock"/>
         </action>
 
+        <action name="MyBeanBareKey" class="org.apache.struts2.util.MyBeanBareKeyAction">
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="mock"/>
+        </action>
+
         <action name="TestInterceptorParam" class="org.apache.struts2.SimpleAction">
             <interceptor-ref name="test">
                 <param name="expectedFoo">expectedFoo</param>

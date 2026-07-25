@@ -48,13 +48,21 @@ public class AnnotationActionValidatorManager extends DefaultActionValidatorMana
             sb.append(config.getPackageName());
             sb.append("/");
         }
+
+        Object action = invocation.getAction();
+        boolean validatingActionClass = action != null && clazz.equals(action.getClass());
+        String configName = config.getName();
+        boolean wildcard = configName.contains(ActionConfig.WILDCARD)
+                || (configName.contains("{") && configName.contains("}"));
+
         // WW-2996: key needs to use the name of the action from the config file, instead of the url,
         // so wildcard actions will have the same validator
         // WW-3753: Using the config name instead of the context only for wildcard actions to keep the flexibility
         // provided by the original design (such as mapping different contexts to the same action and method if desired)
         // WW-4536: Using NamedVariablePatternMatcher allows defines actions with patterns enclosed with '{}'
-        String configName = config.getName();
-        if (configName.contains(ActionConfig.WILDCARD) || (configName.contains("{") && configName.contains("}"))) {
+        // WW-3530: the config-name substitution only makes sense for the action's own class; a visited object
+        // (visitor validator) carries a stable, explicit context that must remain part of the key
+        if (validatingActionClass && wildcard) {
             sb.append(configName);
             sb.append("|");
             sb.append(proxy.getMethod());

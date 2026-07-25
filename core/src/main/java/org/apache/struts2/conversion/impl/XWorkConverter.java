@@ -532,20 +532,22 @@ public class XWorkConverter extends DefaultTypeConverter {
      */
     private void processClassLevelAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Annotation annotation : clazz.getAnnotations()) {
-            if (annotation instanceof Conversion conversion) {
-                for (TypeConversion tc : conversion.conversions()) {
-                    if (mapping.containsKey(tc.key())) {
-                        break;
-                    }
-                    if (LOG.isDebugEnabled()) {
-                        if (StringUtils.isEmpty(tc.key())) {
-                            LOG.debug("WARNING! key of @TypeConversion [{}/{}] applied to [{}] is empty!", tc.converter(), tc.converterClass(), clazz.getName());
-                        } else {
-                            LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), tc.key());
-                        }
-                    }
-                    annotationProcessor.process(mapping, tc, tc.key());
+            if (!(annotation instanceof Conversion conversion)) {
+                continue;
+            }
+            for (TypeConversion tc : conversion.conversions()) {
+                String key = resolveKey(tc.type(), tc.rule(), tc.key());
+                if (key == null) {
+                    LOG.warn("Ignoring @TypeConversion [{}/{}] declared on [{}]: no key was given and a class level annotation has no property name to derive one from",
+                            tc.converter(), tc.converterClass(), clazz.getName());
+                    continue;
                 }
+                if (mapping.containsKey(key)) {
+                    continue;
+                }
+                LOG.debug("TypeConversion [{}/{}] declared on [{}] resolved to key [{}]",
+                        tc.converter(), tc.converterClass(), clazz.getName(), key);
+                annotationProcessor.process(mapping, tc, key);
             }
         }
     }

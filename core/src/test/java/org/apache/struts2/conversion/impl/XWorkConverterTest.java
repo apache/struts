@@ -41,7 +41,11 @@ import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.conversion.annotations.ConversionRule;
 import org.apache.struts2.conversion.annotations.ConversionType;
+import org.apache.struts2.util.BareKeyConversionAction;
+import org.apache.struts2.util.CollidingKeyConversionAction;
 import org.apache.struts2.util.ExplicitKeyConversionAction;
+import org.apache.struts2.util.MyBean;
+import org.apache.struts2.util.MyBeanAction;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -858,6 +862,38 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         assertEquals("true", freshConverter.getConverter(ExplicitKeyConversionAction.class, "CreateIfNull_bareList"));
         assertNull(freshConverter.getConverter(ExplicitKeyConversionAction.class, "bareList"));
+    }
+
+    public void testClassLevelBareKeysGetTheRulePrefix() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("id", freshConverter.getConverter(BareKeyConversionAction.class, "KeyProperty_annotatedBeanMap"));
+        assertEquals(MyBean.class, freshConverter.getConverter(BareKeyConversionAction.class, "Element_annotatedBeanMap"));
+        assertEquals("id", freshConverter.getConverter(BareKeyConversionAction.class, "KeyProperty_annotatedBeanList"));
+        assertEquals(MyBean.class, freshConverter.getConverter(BareKeyConversionAction.class, "Element_annotatedBeanList"));
+    }
+
+    public void testClassLevelBareKeysMatchTheSpelledOutForm() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        for (String key : new String[]{"KeyProperty_annotatedBeanMap", "Element_annotatedBeanMap",
+                "KeyProperty_annotatedBeanList", "Element_annotatedBeanList"}) {
+            assertEquals("mismatch for " + key,
+                    freshConverter.getConverter(MyBeanAction.class, key),
+                    freshConverter.getConverter(BareKeyConversionAction.class, key));
+        }
+    }
+
+    public void testClassLevelEntriesAfterAKeyCollisionAreStillRegistered() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        // supplied by the -conversion.properties file, so the annotation must not overwrite it
+        assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_fromProperties"));
+        // the entry after the collision used to be dropped by `break`
+        assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_afterTheCollision"));
     }
 
     public static class CountingXWorkConverter extends XWorkConverter {

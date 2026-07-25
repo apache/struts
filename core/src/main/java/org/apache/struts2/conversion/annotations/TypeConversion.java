@@ -51,6 +51,13 @@ import java.lang.annotation.Target;
  * <p>The TypeConversion annotation can be applied at field and method level.</p>
  * <!-- END SNIPPET: usage -->
  *
+ * <p>The {@code org.apache.struts2.util} package also has dedicated field annotations - {@code @Key},
+ * {@code @Element}, {@code @KeyProperty} and {@code @CreateIfNull} - that {@link
+ * org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer} consults, on the field then its
+ * setter then its getter, <em>before</em> falling back to the converter mapping this annotation
+ * populates. If both a dedicated annotation and an equivalent {@code @TypeConversion} are declared
+ * for the same property, the dedicated annotation wins silently.</p>
+ *
  * <p><u>Annotation parameters:</u></p>
  *
  * <!-- START SNIPPET: parameters -->
@@ -166,6 +173,12 @@ public @interface TypeConversion {
      * <p>The prefix matching the declared {@link ConversionRule} is prepended automatically, so
      * {@code @TypeConversion(key = "users", rule = ConversionRule.CREATE_IF_NULL, value = "true")}
      * and {@code @TypeConversion(key = "CreateIfNull_users", ...)} are equivalent.</p>
+     *
+     * <p>On a field, the default is the <em>field</em> name, not the JavaBean property name. If a
+     * field's name does not match the property it backs (for example a field {@code _users} exposed
+     * as property {@code users}), give an explicit {@code key} of {@code "users"} - a derived key of
+     * {@code CreateIfNull__users} is never looked up, since conversion metadata is read by property
+     * name, not field name.</p>
      *
      * @return key
      * @since 7.3.0 the rule prefix is derived; previously the full key had to be spelled out

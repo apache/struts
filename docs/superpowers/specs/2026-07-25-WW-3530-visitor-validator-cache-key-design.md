@@ -107,6 +107,20 @@ because it now fires only when `clazz == action.getClass()`.
   because `clazz == action.getClass()` takes the wildcard branch. Accepted known
   limitation — extremely contrived, and resolving it would require reintroducing
   the volatile-vs-stable-context ambiguity this fix avoids. Documented, not fixed.
+- **`<s:form>` client-side JS-validation render path** (`Form.getValidators`,
+  `Form.java:295`): this path resolves `actionClass` by *name* (via
+  `ServletUrlRenderer`), not from the live action instance. When the form targets
+  a different action than the one executing, or the live action is a Spring/CGLIB
+  proxy, `clazz.equals(action.getClass())` is false for the action's own top-level
+  lookup, so the key falls to `context` (= action name) instead of
+  `configName|method`. Effect is **caching efficiency only** — extra cache entries
+  per resolved action name on this render path; the correct validators still load,
+  because `buildValidatorConfigs` receives `context` directly, independent of the
+  key. The request-validation hot path (`ValidationInterceptor`) is unaffected:
+  there `clazz` is the live action instance's own class, so WW-2996 caching is
+  fully preserved. Accepted for this change; a follow-up ticket should refine the
+  discriminator for the render path (a robust fix needs an explicit visitor signal
+  threaded through the manager API — the rejected "Approach C").
 - **Non-goal:** no change to the `ActionValidatorManager` interface, to
   `VisitorFieldValidator`, or to `DefaultActionValidatorManager`.
 

@@ -92,9 +92,48 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         super.tearDown();
     }
 
+    private void installInvocation(String configName, Object action) {
+        ActionConfig config = new ActionConfig.Builder("packageName", configName, "").build();
+        ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
+        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
+
+        EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
+        EasyMock.expect(invocation.getAction()).andReturn(action).anyTimes();
+        EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
+        EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
+
+        EasyMock.replay(invocation, proxy);
+        ActionContext.getContext().withActionInvocation(invocation);
+    }
+
     public void testBuildValidatorKey() {
         String validatorKey = annotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class, "name");
         assertEquals(SimpleAnnotationAction.class.getName() + "/packageName/name", validatorKey);
+    }
+
+    public void testBuildValidatorKeyKeepsContextForVisitedClassUnderWildcardAction() {
+        // Action is wildcard-mapped; the validated class is a visited model object
+        // (not the action class), so its explicit, stable context must be preserved.
+        installInvocation("*", new SimpleAnnotationAction());
+
+        String basicKey = annotationActionValidatorManager.buildValidatorKey(AnnotatedTestBean.class, "basic");
+        String additionalKey = annotationActionValidatorManager.buildValidatorKey(AnnotatedTestBean.class, "additional");
+
+        assertEquals(AnnotatedTestBean.class.getName() + "/packageName/basic", basicKey);
+        assertEquals(AnnotatedTestBean.class.getName() + "/packageName/additional", additionalKey);
+        assertFalse("visited-object keys must differ per context", basicKey.equals(additionalKey));
+    }
+
+    public void testBuildValidatorKeyIgnoresContextForActionClassUnderWildcardAction() {
+        installInvocation("*", new SimpleAnnotationAction());
+
+        String key1 = annotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class, "foo");
+        String key2 = annotationActionValidatorManager.buildValidatorKey(SimpleAnnotationAction.class, "bar");
+
+        // WW-2996: a wildcard action's own validators share one cache entry across
+        // all resolved names, so the volatile context must NOT be part of the key.
+        assertEquals(key1, key2);
+        assertEquals(SimpleAnnotationAction.class.getName() + "/packageName/*|execute", key1);
     }
 
     public void testBuildsValidatorsForAlias() {

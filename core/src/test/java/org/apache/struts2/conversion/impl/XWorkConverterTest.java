@@ -37,10 +37,13 @@ import org.apache.struts2.util.FurColor;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
+import org.apache.struts2.conversion.ConversionAnnotationProcessor;
 import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.conversion.annotations.ConversionRule;
 import org.apache.struts2.conversion.annotations.ConversionType;
+import org.apache.struts2.util.ApplicationScopedWithoutKeyConversionAction;
 import org.apache.struts2.util.BareKeyConversionAction;
 import org.apache.struts2.util.CollidingKeyConversionAction;
 import org.apache.struts2.util.EmptyKeyConversionAction;
@@ -928,6 +931,48 @@ public class XWorkConverterTest extends XWorkTestCase {
         freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
 
         assertEquals(Long.class, freshConverter.getConverter(FieldConversionAction.class, "Key_contestedMap"));
+    }
+
+    /**
+     * Wires a fresh {@link StrutsTypeConverterHolder} into both {@code freshConverter} and its
+     * {@link ConversionAnnotationProcessor}. The two are injected as independent singletons: an
+     * {@code APPLICATION}-scoped {@link TypeConversion} is registered by the annotation processor
+     * calling {@code TypeConverterHolder.addDefaultMapping} directly (bypassing the {@code mapping}
+     * map {@code XWorkConverter} caches per-class), so swapping only {@code XWorkConverter}'s own
+     * holder - as the other {@code freshConverter.setTypeConverterHolder(...)} tests in this file do
+     * for class/method/field mappings - would silently observe the shared container-wide holder
+     * instead of the one the test controls.
+     */
+    private XWorkConverter freshConverterWithIsolatedHolder(TypeConverterHolder holder) {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        DefaultConversionAnnotationProcessor freshProcessor = container.inject(DefaultConversionAnnotationProcessor.class);
+        freshProcessor.setTypeConverterHolder(holder);
+        freshConverter.setConversionAnnotationProcessor(freshProcessor);
+        freshConverter.setTypeConverterHolder(holder);
+        return freshConverter;
+    }
+
+    public void testApplicationScopedMethodWithoutKeyRegistersNoDefaultMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        XWorkConverter freshConverter = freshConverterWithIsolatedHolder(holder);
+
+        // forces the mapping to be built; the property itself does not need to resolve to anything
+        freshConverter.getConverter(ApplicationScopedWithoutKeyConversionAction.class, "anything");
+
+        assertFalse("a method-level APPLICATION conversion with no key must not register a default "
+                        + "mapping under the derived member name, which lookup(String,boolean)/lookup(Class) never read",
+                holder.containsDefaultMapping("applicationScopedMethod"));
+    }
+
+    public void testApplicationScopedFieldWithoutKeyRegistersNoDefaultMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        XWorkConverter freshConverter = freshConverterWithIsolatedHolder(holder);
+
+        freshConverter.getConverter(ApplicationScopedWithoutKeyConversionAction.class, "anything");
+
+        assertFalse("a field-level APPLICATION conversion with no key must not register a default "
+                        + "mapping under the derived member name, which lookup(String,boolean)/lookup(Class) never read",
+                holder.containsDefaultMapping("applicationScopedField"));
     }
 
     public static class CountingXWorkConverter extends XWorkConverter {

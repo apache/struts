@@ -526,6 +526,17 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     /**
+     * True when a {@link TypeConversion} is APPLICATION-scoped but carries no explicit key.
+     * APPLICATION entries are stored in the global default converter map, which {@link
+     * #lookup(String, boolean)} and {@link #lookup(Class)} only ever read by <em>class name</em>.
+     * A member name derived from a method or field can never be looked up there, so such an entry
+     * must be skipped rather than registered under a key nothing can reach.
+     */
+    private static boolean isApplicationScopedWithoutKey(TypeConversion tc) {
+        return tc.type() == ConversionType.APPLICATION && StringUtils.isEmpty(tc.key());
+    }
+
+    /**
      * Looks for converter mappings for the specified class and adds it to an existing map.  Only new converters are
      * added.  If a converter is defined on a key that already exists, the converter is ignored.
      *
@@ -577,6 +588,13 @@ public class XWorkConverter extends DefaultTypeConverter {
                 if (!(annotation instanceof TypeConversion tc)) {
                     continue;
                 }
+                if (isApplicationScopedWithoutKey(tc)) {
+                    // method.getDeclaringClass(), not clazz: getMethods() returns inherited methods
+                    // too (see the resolveKey-null branch below for the same reasoning).
+                    LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
+                            method.getDeclaringClass().getName(), method.getName());
+                    continue;
+                }
                 String name = StringUtils.isEmpty(tc.key()) ? AnnotationUtils.resolvePropertyName(method) : tc.key();
                 String key = resolveKey(tc.type(), tc.rule(), name);
                 if (key == null) {
@@ -616,6 +634,11 @@ public class XWorkConverter extends DefaultTypeConverter {
             }
             for (Annotation annotation : field.getAnnotations()) {
                 if (!(annotation instanceof TypeConversion tc)) {
+                    continue;
+                }
+                if (isApplicationScopedWithoutKey(tc)) {
+                    LOG.warn("Ignoring @TypeConversion on field [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
+                            clazz.getName(), field.getName());
                     continue;
                 }
                 String name = StringUtils.isEmpty(tc.key()) ? field.getName() : tc.key();

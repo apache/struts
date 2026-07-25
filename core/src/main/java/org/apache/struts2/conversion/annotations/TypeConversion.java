@@ -48,7 +48,7 @@ import java.lang.annotation.Target;
  * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p>The TypeConversion annotation can be applied at property and method level.</p>
+ * <p>The TypeConversion annotation can be applied at field and method level.</p>
  * <!-- END SNIPPET: usage -->
  *
  * <p><u>Annotation parameters:</u></p>
@@ -67,8 +67,11 @@ import java.lang.annotation.Target;
  * <tr>
  * <td>key</td>
  * <td>no</td>
- * <td>The annotated property/key name</td>
- * <td>The optional property name mostly used within TYPE level annotations.</td>
+ * <td>The annotated property/field name</td>
+ * <td>The property name the rule applies to. The matching prefix for the given rule
+ * (<code>Key_</code>, <code>Element_</code>, <code>KeyProperty_</code>, <code>CreateIfNull_</code>)
+ * is prepended automatically unless the key already carries it. Required on TYPE level annotations,
+ * where there is no member name to derive it from.</td>
  * </tr>
  * <tr>
  * <td>type</td>
@@ -129,6 +132,9 @@ import java.lang.annotation.Target;
  *       this.convertDouble = convertDouble;
  *   }
  *
+ *   &#64;TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "true")
+ *   private List users = null;
+ *
  *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
  *   public void setUsers( List users ) {
  *       this.users = users;
@@ -155,10 +161,15 @@ import java.lang.annotation.Target;
 public @interface TypeConversion {
 
     /**
-     * The optional key name used within TYPE level annotations.
-     * Defaults to the property name.
+     * The property name this conversion applies to. Optional on fields and methods, where it
+     * defaults to the property name; required on TYPE level annotations.
+     *
+     * <p>The prefix matching the declared {@link ConversionRule} is prepended automatically, so
+     * {@code @TypeConversion(key = "users", rule = ConversionRule.CREATE_IF_NULL, value = "true")}
+     * and {@code @TypeConversion(key = "CreateIfNull_users", ...)} are equivalent.</p>
      *
      * @return key
+     * @since 7.3.0 the rule prefix is derived; previously the full key had to be spelled out
      */
     String key() default "";
 

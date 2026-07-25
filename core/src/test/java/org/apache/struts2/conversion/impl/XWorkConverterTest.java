@@ -43,6 +43,7 @@ import org.apache.struts2.conversion.annotations.ConversionRule;
 import org.apache.struts2.conversion.annotations.ConversionType;
 import org.apache.struts2.util.BareKeyConversionAction;
 import org.apache.struts2.util.CollidingKeyConversionAction;
+import org.apache.struts2.util.EmptyKeyConversionAction;
 import org.apache.struts2.util.ExplicitKeyConversionAction;
 import org.apache.struts2.util.FieldConversionAction;
 import org.apache.struts2.util.MyBean;
@@ -836,6 +837,14 @@ public class XWorkConverterTest extends XWorkTestCase {
                 XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "KeyProperty_annotatedBeanMap"));
         assertEquals("Key_beanMap",
                 XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY, "Key_beanMap"));
+
+        // COLLECTION and ELEMENT are interchangeable in DefaultConversionAnnotationProcessor and
+        // DefaultObjectTypeDeterminer, so a key already carrying either prefix must be left alone
+        // regardless of which of the two rules is declared.
+        assertEquals("Element_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.COLLECTION, "Element_users"));
+        assertEquals("Collection_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.ELEMENT, "Collection_users"));
     }
 
     public void testResolveKeyDoesNotPrefixPropertyOrMapRules() {
@@ -895,6 +904,16 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_fromProperties"));
         // the entry after the collision used to be dropped by `break`
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_afterTheCollision"));
+    }
+
+    public void testClassLevelEmptyKeyRegistersNoMapping() throws Exception {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        Map<String, Object> mapping = freshConverter.buildConverterMapping(EmptyKeyConversionAction.class);
+
+        assertFalse("an empty class-level key must not register a \"\" mapping", mapping.containsKey(""));
+        assertTrue("no mapping should have been registered at all", mapping.isEmpty());
     }
 
     public void testFieldLevelAnnotationDerivesKeyFromTheFieldName() {

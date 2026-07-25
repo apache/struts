@@ -143,6 +143,9 @@ public class MyBeanActionTest extends XWorkTestCase {
         assertEquals(MyBean.class, action.getAnnotatedBeanList().get(0).getClass());
         assertEquals("This is the bla bean by annotation",
                 proxy.getInvocation().getStack().findValue("annotatedBeanList.get(0).name"));
+        // KeyProperty_annotatedBeanList (value = "id"): the index used to address the list,
+        // 1234567890, is bound onto the created bean's own "id" property.
+        assertEquals(Long.valueOf(1234567890L), ((MyBean) action.getAnnotatedBeanList().get(0)).getId());
 
         // Key_annotatedBeanMap makes the key a Long, Element_annotatedBeanMap makes the value a MyBean
         assertTrue(action.getAnnotatedBeanMap().containsKey(1234567891L));

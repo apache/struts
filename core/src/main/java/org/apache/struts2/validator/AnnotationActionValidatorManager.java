@@ -63,7 +63,7 @@ public class AnnotationActionValidatorManager extends DefaultActionValidatorMana
         // so wildcard actions will have the same validator
         // WW-3753: Using the config name instead of the context only for wildcard actions to keep the flexibility
         // provided by the original design (such as mapping different contexts to the same action and method if desired)
-        // WW-4536: Using NamedVariablePatternMatcher allows defines actions with patterns enclosed with '{}'
+        // WW-4536: Using NamedVariablePatternMatcher allows defining actions with patterns enclosed with '{}'
         // WW-3530: the config-name substitution only makes sense for the action's own class; a visited object
         // (visitor validator) carries a stable, explicit context that must remain part of the key
         if (validatingActionClass && wildcard) {

@@ -47,6 +47,8 @@ import org.easymock.EasyMock;
 
 import java.util.List;
 
+import static org.junit.Assert.assertNotEquals;
+
 
 
 /**
@@ -121,7 +123,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
 
         assertEquals(AnnotatedTestBean.class.getName() + "/packageName/basic", basicKey);
         assertEquals(AnnotatedTestBean.class.getName() + "/packageName/additional", additionalKey);
-        assertFalse("visited-object keys must differ per context", basicKey.equals(additionalKey));
+        assertNotEquals("visited-object keys must differ per context", additionalKey, basicKey);
     }
 
     public void testBuildValidatorKeyIgnoresContextForActionClassUnderWildcardAction() {

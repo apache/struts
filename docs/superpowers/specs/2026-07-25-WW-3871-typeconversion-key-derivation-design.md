@@ -110,6 +110,16 @@ function, so the three call sites cannot drift apart.
 `@TypeConversion(type = APPLICATION, key = "java.util.Date", rule = ELEMENT)` would register
 `Element_java.util.Date` into the global converter map, which nothing reads.
 
+`APPLICATION`-scoped entries are stored in the global default converter map, which is keyed by
+**class name** (`DefaultConversionAnnotationProcessor` calls `converterHolder.addDefaultMapping(key,
+converter)`, and the only readers, `XWorkConverter.lookup(String, boolean)` and `lookup(Class)`, both
+key off a class name). A method or field annotation has no class name to offer, only a member name,
+so `resolveKey` cannot derive one: `processMethodAnnotations` and `processFieldAnnotations` skip an
+`APPLICATION`-typed entry with an empty `key` before deriving a name, logging a WARN that names the
+declaring class and the member. The class-level pass needs no equivalent guard - `key` is required
+there for an unrelated reason (no member to derive a property name from at all), and an empty key is
+already skipped by the existing null-from-`resolveKey` path.
+
 **The "already prefixed" guard checks every rule's prefix, not just the declared rule's.** An
 already-prefixed key is returned untouched, so `key = "KeyProperty_annotatedBeanMap"` and
 `key = "annotatedBeanMap"` both resolve to `KeyProperty_annotatedBeanMap` under `rule = KEY_PROPERTY`.

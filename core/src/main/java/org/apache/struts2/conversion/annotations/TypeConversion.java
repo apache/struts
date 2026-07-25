@@ -118,11 +118,10 @@ import java.lang.annotation.Target;
  *   private String convertInt;
  *
  *   private String convertDouble;
- *   private List users = null;
  *
  *   private HashMap keyValues = null;
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION)
+ *   &#64;TypeConversion()
  *   public void setConvertInt( String convertInt ) {
  *       this.convertInt = convertInt;
  *   }

@@ -937,9 +937,12 @@ public class XWorkConverterTest extends XWorkTestCase {
     /**
      * {@code processMethodAnnotations} gates its WARN logging to the hierarchy level whose {@code
      * clazz} matches {@code method.getDeclaringClass()}, so a misconfigured annotation on an
-     * inherited method logs once instead of once per subclass. This asserts that gate is
-     * logging-only: an inherited, correctly-configured method annotation must still resolve and
-     * register on every visit, proven here through a subclass that overrides nothing.
+     * inherited method logs once instead of once per subclass. Gating logging alone is only safe
+     * because registration still happens at the subclass level - before that subclass's own field
+     * pass runs - as documented on {@code XWorkConverter#processFieldAnnotations}. {@link
+     * InheritedMethodConversionSubAction} declares a contesting field annotation for the same
+     * property the inherited setter claims; this asserts the inherited method annotation still wins,
+     * which would break if registration were mistakenly gated along with logging.
      */
     public void testInheritedMethodAnnotationStillRegistersThroughASubclass() {
         XWorkConverter freshConverter = container.inject(XWorkConverter.class);

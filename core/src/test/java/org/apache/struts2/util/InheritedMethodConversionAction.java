@@ -29,8 +29,9 @@ import java.util.List;
  * InheritedMethodConversionSubAction} inherits without overriding. {@code Class#getMethods()} on the
  * subclass still returns this method, so
  * {@link org.apache.struts2.conversion.impl.XWorkConverter#buildConverterMapping} visits it once per
- * class in the hierarchy - used to assert the derivation/registration still happens on every visit
- * even though the corresponding WARN logging is gated to fire once.
+ * class in the hierarchy, registering it at the subclass level before that subclass's own field pass
+ * runs - used together with {@link InheritedMethodConversionSubAction}'s contesting field annotation
+ * to assert that precedence, independent of how many times the (gated) WARN logging fires.
  */
 public class InheritedMethodConversionAction {
 

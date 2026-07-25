@@ -18,10 +18,24 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.conversion.annotations.ConversionRule;
+import org.apache.struts2.conversion.annotations.TypeConversion;
+
+import java.util.List;
+
 /**
- * Extends {@link InheritedMethodConversionAction} without overriding anything, so {@code
+ * Extends {@link InheritedMethodConversionAction} without overriding its annotated setter, so {@code
  * XWorkConverter.buildConverterMapping}'s walk up the hierarchy - this class, then its parent, then
  * stopping at {@code Object} - visits the inherited annotated setter once per class it processes.
+ *
+ * <p>Declares its own {@code inheritedList} field, annotated with a contesting {@code
+ * CREATE_IF_NULL} value, for the same property the inherited setter already claims. This is used to
+ * assert that the inherited method annotation - registered at this subclass level, before this
+ * class's own field pass ever runs - keeps winning over the field annotation declared here, per the
+ * precedence documented on {@code XWorkConverter#processFieldAnnotations}.</p>
  */
 public class InheritedMethodConversionSubAction extends InheritedMethodConversionAction {
+
+    @TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "false")
+    private List inheritedList;
 }

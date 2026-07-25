@@ -39,6 +39,9 @@ import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.conversion.annotations.ConversionRule;
+import org.apache.struts2.conversion.annotations.ConversionType;
+import org.apache.struts2.util.ExplicitKeyConversionAction;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -812,6 +815,49 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         // then
         assertEquals(converted, Arrays.asList(1, 2, 3));
+    }
+
+    public void testResolveKeyPrependsTheRulePrefix() {
+        assertEquals("KeyProperty_annotatedBeanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "annotatedBeanMap"));
+        assertEquals("Element_annotatedBeanList",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.ELEMENT, "annotatedBeanList"));
+        assertEquals("CreateIfNull_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.CREATE_IF_NULL, "users"));
+    }
+
+    public void testResolveKeyLeavesAnAlreadyPrefixedKeyAlone() {
+        assertEquals("KeyProperty_annotatedBeanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "KeyProperty_annotatedBeanMap"));
+        assertEquals("Key_beanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY, "Key_beanMap"));
+    }
+
+    public void testResolveKeyDoesNotPrefixPropertyOrMapRules() {
+        assertEquals("someProperty",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.PROPERTY, "someProperty"));
+        assertEquals("keyValues",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.MAP, "keyValues"));
+    }
+
+    public void testResolveKeyNeverPrefixesApplicationScopedKeys() {
+        assertEquals("java.util.Date",
+                XWorkConverter.resolveKey(ConversionType.APPLICATION, ConversionRule.PROPERTY, "java.util.Date"));
+        assertEquals("java.util.Date",
+                XWorkConverter.resolveKey(ConversionType.APPLICATION, ConversionRule.ELEMENT, "java.util.Date"));
+    }
+
+    public void testResolveKeyReturnsNullWhenNoNameIsAvailable() {
+        assertNull(XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.PROPERTY, null));
+        assertNull(XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY, ""));
+    }
+
+    public void testExplicitMethodKeyGetsTheRulePrefix() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(ExplicitKeyConversionAction.class, "CreateIfNull_bareList"));
+        assertNull(freshConverter.getConverter(ExplicitKeyConversionAction.class, "bareList"));
     }
 
     public static class CountingXWorkConverter extends XWorkConverter {

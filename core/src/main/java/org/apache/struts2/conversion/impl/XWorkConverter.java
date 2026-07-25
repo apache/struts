@@ -27,6 +27,8 @@ import org.apache.struts2.conversion.ConversionFileProcessor;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.annotations.Conversion;
+import org.apache.struts2.conversion.annotations.ConversionRule;
+import org.apache.struts2.conversion.annotations.ConversionType;
 import org.apache.struts2.conversion.annotations.TypeConversion;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.AnnotationUtils;
@@ -487,6 +489,28 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     /**
+     * Resolves the conversion mapping key for an annotation: the given name carrying the
+     * {@link ConversionRule}'s prefix. A name that already starts with that prefix is returned
+     * unchanged, so annotations that spell the prefix out keep working.
+     *
+     * @param type the annotation's {@link ConversionType}; APPLICATION keys are class names and are never prefixed
+     * @param rule the annotation's {@link ConversionRule}
+     * @param name an explicit key or a property name derived from a method or field
+     * @return the mapping key, or null when no name is available and the entry must be skipped
+     * @since 7.3.0
+     */
+    static String resolveKey(ConversionType type, ConversionRule rule, String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        if (type == ConversionType.APPLICATION) {
+            return name;
+        }
+        String prefix = rule.prefix();
+        return name.startsWith(prefix) ? name : prefix + name;
+    }
+
+    /**
      * Looks for converter mappings for the specified class and adds it to an existing map.  Only new converters are
      * added.  If a converter is defined on a key that already exists, the converter is ignored.
      *
@@ -532,26 +556,22 @@ public class XWorkConverter extends DefaultTypeConverter {
     private void processMethodAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Method method : clazz.getMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
-                if (annotation instanceof TypeConversion tc) {
-                    String key = tc.key();
-                    // Default to the property name with prefix
-                    if (StringUtils.isEmpty(key)) {
-                        key = AnnotationUtils.resolvePropertyName(method);
-                        key = switch (tc.rule()) {
-                            case COLLECTION -> DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
-                            case CREATE_IF_NULL -> DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
-                            case ELEMENT -> DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
-                            case KEY -> DefaultObjectTypeDeterminer.KEY_PREFIX + key;
-                            case KEY_PROPERTY -> DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
-                            default -> key;
-                        };
-                        LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
-                    }
-                    if (mapping.containsKey(key)) {
-                        break;
-                    }
-                    annotationProcessor.process(mapping, tc, key);
+                if (!(annotation instanceof TypeConversion tc)) {
+                    continue;
                 }
+                String name = StringUtils.isEmpty(tc.key()) ? AnnotationUtils.resolvePropertyName(method) : tc.key();
+                String key = resolveKey(tc.type(), tc.rule(), name);
+                if (key == null) {
+                    LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived from the method",
+                            clazz.getName(), method.getName());
+                    continue;
+                }
+                if (mapping.containsKey(key)) {
+                    continue;
+                }
+                LOG.debug("TypeConversion [{}/{}] on method [{}] resolved to key [{}]",
+                        tc.converter(), tc.converterClass(), method.getName(), key);
+                annotationProcessor.process(mapping, tc, key);
             }
         }
     }

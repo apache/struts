@@ -24,6 +24,7 @@ import org.apache.struts2.util.location.Location;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -514,6 +515,17 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
 
         public Builder addActionConfig(String name, ActionConfig action) {
             target.actionConfigs.put(name, action);
+            return this;
+        }
+
+        public Builder reorderActionConfigs(Comparator<String> byActionName) {
+            List<Map.Entry<String, ActionConfig>> entries = new ArrayList<>(target.actionConfigs.entrySet());
+            entries.sort(Map.Entry.comparingByKey(byActionName));
+            Map<String, ActionConfig> reordered = new LinkedHashMap<>();
+            for (Map.Entry<String, ActionConfig> entry : entries) {
+                reordered.put(entry.getKey(), entry.getValue());
+            }
+            target.actionConfigs = reordered;
             return this;
         }
 

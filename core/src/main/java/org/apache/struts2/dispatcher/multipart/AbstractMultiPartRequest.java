@@ -94,6 +94,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected Long maxFiles;
 
     /**
+     * Specifies the maximum number of non-file form fields (parameters) in one request.
+     */
+    protected Long maxParameterCount;
+
+    /**
      * Specifies the maximum length of a string parameter in a multipart request.
      */
     protected Long maxStringLength;
@@ -158,6 +163,14 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_FILES)
     public void setMaxFiles(String maxFiles) {
         this.maxFiles = Long.parseLong(maxFiles);
+    }
+
+    /**
+     * @param maxParameterCount Injects the Struts maximum number of non-file form fields.
+     */
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_PARAMETER_COUNT)
+    public void setMaxParameterCount(String maxParameterCount) {
+        this.maxParameterCount = Long.parseLong(maxParameterCount);
     }
 
     /**
@@ -226,9 +239,17 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             LOG.debug("Applies max size: {} to file upload request", maxSize);
             servletFileUpload.setMaxSize(maxSize);
         }
-        if (maxFiles != null) {
-            LOG.debug("Applies max files number: {} to file upload request", maxFiles);
-            servletFileUpload.setMaxFileCount(maxFiles);
+        if (maxFiles != null && maxFiles >= 0 && maxParameterCount != null && maxParameterCount >= 0) {
+            // Clamp on overflow: a wrapped-negative sum would silently disable the backstop
+            // (commons-fileupload2 treats a negative count as "unlimited").
+            long maxParts;
+            try {
+                maxParts = Math.addExact(maxFiles, maxParameterCount);
+            } catch (ArithmeticException overflow) {
+                maxParts = Long.MAX_VALUE;
+            }
+            LOG.debug("Applies total parts backstop: {} to file upload request", maxParts);
+            servletFileUpload.setMaxFileCount(maxParts);
         }
         if (maxFileSize != null) {
             LOG.debug("Applies max size of single file: {} to file upload request", maxFileSize);
@@ -299,6 +320,44 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     /**
+     * Fail-closed guard: throws when accepting another file would exceed {@link #maxFiles}.
+     * A negative {@link #maxFiles} means "no limit", matching commons-fileupload2's own
+     * {@code fileCountMax = -1} convention (see {@code AbstractFileUpload.setFileCountMax}).
+     *
+     * @param currentFileCount number of files already accepted in this request
+     * @param fileName         name of the file being considered (for logging)
+     */
+    protected void enforceMaxFiles(int currentFileCount, String fileName) throws FileUploadFileCountLimitException {
+        if (maxFiles != null && maxFiles >= 0 && currentFileCount >= maxFiles) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot accept another file: {} as it would exceed max files: {}", normalizeSpace(fileName), maxFiles);
+            }
+            throw new FileUploadFileCountLimitException(
+                    String.format("Request exceeds allowed number of files, permitted: %s", maxFiles),
+                    maxFiles, currentFileCount + 1L);
+        }
+    }
+
+    /**
+     * Fail-closed guard: throws when accepting another form field would exceed {@link #maxParameterCount}.
+     * A negative {@link #maxParameterCount} means "no limit", matching the same convention as
+     * {@link #maxFiles}.
+     *
+     * @param currentParameterCount number of form fields already accepted in this request
+     * @param fieldName             name of the field being considered (for logging)
+     */
+    protected void enforceMaxParameterCount(int currentParameterCount, String fieldName) throws FileUploadParameterCountLimitException {
+        if (maxParameterCount != null && maxParameterCount >= 0 && currentParameterCount >= maxParameterCount) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot accept another parameter: {} as it would exceed max parameter count: {}", normalizeSpace(fieldName), maxParameterCount);
+            }
+            throw new FileUploadParameterCountLimitException(
+                    String.format("Request exceeds allowed number of parameters, permitted: %s", maxParameterCount),
+                    maxParameterCount, currentParameterCount + 1L);
+        }
+    }
+
+    /**
      * Processes the upload.
      *
      * @param request the servlet request
@@ -324,10 +383,14 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             } else if (e instanceof FileUploadContentTypeException ex) {
                 exClass = ex.getClass();
                 args = new Object[]{ex.getContentType()};
+            } else if (e instanceof FileUploadParameterCountLimitException ex) {
+                exClass = ex.getClass();
+                args = new Object[]{ex.getPermitted(), ex.getActual()};
             }
 
             LocalizedMessage errorMessage = buildErrorMessage(exClass, e.getMessage(), args);
             addErrorIfAbsent(errorMessage);
+            clearCollectedData();
         } catch (IOException e) {
             LOG.warn("Unable to parse request", e);
             LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), new Object[]{});
@@ -339,6 +402,23 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         if (!errors.contains(errorMessage)) {
             errors.add(errorMessage);
         }
+    }
+
+    /**
+     * Fail-closed: discards everything collected so far so a rejected request exposes
+     * no partial parameters or files to the action. Deletes partial upload files first
+     * to avoid leaking temporary files.
+     */
+    private void clearCollectedData() {
+        for (List<UploadedFile> files : uploadedFiles.values()) {
+            for (UploadedFile file : files) {
+                if (file.isFile() && !file.delete()) {
+                    LOG.warn("Could not delete partial upload file: {}", file.getName());
+                }
+            }
+        }
+        uploadedFiles.clear();
+        parameters.clear();
     }
 
     /**

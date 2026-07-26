@@ -48,6 +48,13 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_ERROR_UPLOADING_KEY = "struts.messages.error.uploading";
     public static final String STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY = "struts.messages.error.file.too.large";
     public static final String STRUTS_MESSAGES_INVALID_FILE_KEY = "struts.messages.invalid.file";
+    /**
+     * @deprecated since 7.3.0, no longer used. The unreachable content-type null-check in
+     * {@code acceptFile()} that referenced this key was removed as part of the in-memory upload
+     * optimization (WW-5413); there is no replacement. This constant will be removed in a future
+     * version.
+     */
+    @Deprecated(since = "7.3.0", forRemoval = true)
     public static final String STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY = "struts.messages.invalid.content.type";
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
@@ -114,8 +121,8 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             validation = validationAware;
         }
 
-        // If it's null the upload failed
-        if (file == null || file.getContent() == null) {
+        // If it's missing the upload failed
+        if (file == null || file.isMissing()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
@@ -124,11 +131,6 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{originalFilename});
-            errorMessages.add(errMsg);
-            LOG.warn(errMsg);
-        }
         if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)

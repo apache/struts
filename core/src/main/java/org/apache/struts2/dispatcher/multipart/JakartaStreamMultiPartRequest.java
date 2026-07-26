@@ -20,7 +20,6 @@ package org.apache.struts2.dispatcher.multipart;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileItemInput;
-import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.logging.log4j.LogManager;
@@ -54,6 +53,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
 
+    private int fileCount;
+    private int parameterCount;
+
     /**
      * Processes the upload.
      *
@@ -64,6 +66,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
         Charset charset = readCharsetEncoding(request);
         Path location = Path.of(saveDir);
+        fileCount = 0;
+        parameterCount = 0;
 
         JakartaServletDiskFileUpload servletFileUpload =
                 prepareServletFileUpload(charset, location);
@@ -130,6 +134,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
+        enforceMaxParameterCount(parameterCount, fieldName);
+        parameterCount++;
+
         String fieldValue = readStream(fileItemInput.getInputStream());
         if (exceedsMaxStringLength(fieldName, fieldValue)) {
             return;
@@ -146,26 +153,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         return uploadedFiles.values().stream()
                 .map(files -> files.stream().map(UploadedFile::length).reduce(0L, Long::sum))
                 .reduce(0L, Long::sum);
-    }
-
-    private boolean exceedsMaxFiles(FileItemInput fileItemInput) {
-        if (maxFiles != null && maxFiles == uploadedFiles.size()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Cannot accept another file: {} as it will exceed max files: {}",
-                        normalizeSpace(fileItemInput.getName()), maxFiles);
-            }
-            LocalizedMessage errorMessage = buildErrorMessage(
-                    FileUploadFileCountLimitException.class,
-                    String.format("File %s exceeds allowed maximum number of files %s",
-                            fileItemInput.getName(), maxFiles),
-                    new Object[]{maxFiles, uploadedFiles.size()}
-            );
-            if (!errors.contains(errorMessage)) {
-                errors.add(errorMessage);
-            }
-            return true;
-        }
-        return false;
     }
 
     private void exceedsMaxSizeOfFiles(FileItemInput fileItemInput, File file, Long currentFilesSize) {
@@ -226,9 +213,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        if (exceedsMaxFiles(fileItemInput)) {
-            return;
-        }
+        enforceMaxFiles(fileCount, fileItemInput.getName());
+        fileCount++;
 
         File file = createTemporaryFile(fileItemInput.getName(), location);
         streamFileToDisk(fileItemInput, file);

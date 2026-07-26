@@ -1,0 +1,263 @@
+# WW-5540: Add caching to AbstractLocalizedTextProvider
+
+- **Jira:** [WW-5540](https://issues.apache.org/jira/browse/WW-5540) — Improvement (Minor)
+- **Fix version:** 7.3.0
+- **Component:** Core
+- **Affected classes:** `org.apache.struts2.text.AbstractLocalizedTextProvider`, `org.apache.struts2.text.StrutsLocalizedTextProvider`
+
+## Problem
+
+`StrutsLocalizedTextProvider.findText(Class, textKey, locale, defaultMessage, args, valueStack)`
+runs a full **class → interface → superclass → `*.package` hierarchy traversal on every
+call**, plus an optional child-property recursion. This method is on the hottest path in the
+framework: it backs every UI tag label and every validation message rendered during a request.
+
+Three caches already exist in `AbstractLocalizedTextProvider`:
+
+- `bundlesMap` — resolved `ResourceBundle` by `(classloader, bundle, locale)`
+- `messageFormats` — `MessageFormat` by `(pattern, locale)`
+- `missingBundles` — negative cache for missing *bundles*
+
+None of them caches the **outcome of the hierarchy traversal** keyed on
+`(classloader, class, textKey, locale)`. Missing keys are especially costly: they walk the
+entire class hierarchy *and* the entire package hierarchy, each iteration performing a bundle
+lookup and (for a miss) triggering a swallowed `MissingResourceException`. This work repeats
+identically on every request.
+
+## Goal
+
+Cache the result of the traversal so repeated lookups for the same `(class, key, locale)`
+collapse to a single map lookup, for both found and not-found keys — **without changing any
+observable behavior** (lookup order, dynamic-message evaluation, argument formatting,
+devMode/reload semantics).
+
+## Non-goals
+
+- No caching of the final rendered string (would break OGNL/`${...}` and per-call `args`).
+- No new `StrutsConstant` toggle (consistent with the other, un-toggled caches).
+- No bounded/LRU eviction — the caches remain unbounded `ConcurrentHashMap`s, matching
+  `bundlesMap` / `missingBundles`. See *Known limitation* below.
+- No JMH microbenchmark added to the repo.
+
+## Core invariant
+
+The return value of `findText` is **not** a pure function of `(class, key, locale)`:
+
+- The raw message may contain `${...}` OGNL expressions, evaluated per call via
+  `TextParseUtil.translateVariables(pattern, valueStack)`.
+- `MessageFormat` is applied with per-call `args`.
+- The `defaultMessage`, the `ModelDriven` model instance, and the child-property recursion
+  all depend on runtime `ActionContext` / `ValueStack` state.
+
+Therefore **only the raw resolved pattern (or a `NOT_FOUND` marker) is cached.** Translation
+and formatting always run per call.
+
+### `formatWithNullDetection` fall-through
+
+`formatWithNullDetection` returns `null` when a message formats to the literal string `"null"`,
+and the current `findText` treats that as "not found in this tier" and **keeps searching** the
+remaining tiers (ModelDriven → package → default). Because formatting depends on per-call `args`
+/ ValueStack, the raw pattern the hierarchy "resolves to" is not a pure function of
+`(class, key, locale)` in that case (e.g. a `"{0}"` pattern with a `null` argument formats to
+`"null"`).
+
+**Decision:** keep positive + negative caching, and preserve the fall-through: after a positive
+cache hit, `findText` formats the cached raw pattern and, **only if the formatted result is
+non-null, returns it** — otherwise it falls through to the next tier exactly as today. This makes
+the common case (shallow match formats to `null`, fall through to package/default) behave
+identically.
+
+**Documented residual difference:** if the *same* key is defined at multiple levels of a single
+class hierarchy and the shallowest match formats to `"null"` for the given args while a deeper
+match would format to a real value, the current code returns the deeper match, whereas the cached
+path returns the shallow `null` and falls through past the deeper match. This requires the same
+key redefined within one hierarchy with the shallow value formatting to exactly `"null"` — treated
+as pathological and accepted.
+
+## Design (Approach B — hierarchy-result cache)
+
+### 1. Raw / format split
+
+Add a private helper to `AbstractLocalizedTextProvider` that renders a raw pattern exactly as
+`getMessage` does inline today:
+
+```java
+private String formatMessage(String rawPattern, Locale locale, ValueStack valueStack, Object[] args) {
+    String message = (valueStack != null)
+        ? TextParseUtil.translateVariables(rawPattern, valueStack)
+        : rawPattern;
+    MessageFormat mf = buildMessageFormat(message, locale);   // already cached via messageFormats
+    return formatWithNullDetection(mf, args);
+}
+```
+
+Add a raw resolver that does only lookup, no rendering:
+
+```java
+private String getRawMessage(String bundleName, Locale locale, String key) {
+    ResourceBundle bundle = findResourceBundle(bundleName, locale);   // already cached via bundlesMap
+    if (bundle == null) return null;
+    try {
+        return bundle.getString(key);
+    } catch (MissingResourceException e) {
+        LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
+        return null;
+    }
+}
+```
+
+`getMessage(bundleName, locale, key, valueStack, args)` keeps its current signature and
+behavior, re-expressed as `getRawMessage(...)` followed by `formatMessage(...)` so every
+existing caller is byte-for-byte equivalent.
+
+### 2. Two caches
+
+```java
+private final ConcurrentMap<TextCacheKey, String> classHierarchyCache   = new ConcurrentHashMap<>();
+private final ConcurrentMap<TextCacheKey, String> packageHierarchyCache = new ConcurrentHashMap<>();
+
+private static final String NOT_FOUND = new String("__STRUTS_TEXT_NOT_FOUND__"); // identity sentinel
+```
+
+- Values are either the raw pattern or the shared `NOT_FOUND` sentinel (a distinct `String`
+  instance compared by `==`). A sentinel is required because `ConcurrentHashMap` forbids null
+  values.
+- `TextCacheKey` is a small static class modelled on the existing `MessageFormatKey`, holding
+  **`int classLoaderHash`, `String className`, `String textKey`, `Locale locale`** with
+  `equals`/`hashCode`.
+- The key stores the **class name (String), not the `Class` object**, so the cache never pins
+  a `Class`/classloader (consistent with recent classloader-leak remediation). `classLoaderHash`
+  uses `getCurrentThreadContextClassLoader().hashCode()`, matching the keying scheme already
+  used by `bundlesMap` / `missingBundles` / `classLoaderMap`.
+
+### 3. Cached resolution methods
+
+```java
+private String resolveClassHierarchyRaw(Class<?> clazz, String textKey, String indexedKey, Locale locale) {
+    TextCacheKey key = new TextCacheKey(loaderHash(), clazz.getName(), textKey, locale);
+    String cached = classHierarchyCache.get(key);
+    if (cached != null) return cached;                     // hit: pattern or NOT_FOUND
+    String raw = findMessageRaw(clazz, textKey, indexedKey, locale, null);
+    String toStore = (raw != null) ? raw : NOT_FOUND;
+    classHierarchyCache.putIfAbsent(key, toStore);
+    return toStore;
+}
+```
+
+- `resolvePackageHierarchyRaw(...)` mirrors this around the `*.package` loop.
+- `findMessageRaw` is the raw twin of `findMessage`: walks class → interfaces → superclass,
+  tries `textKey` then `indexedKey` per class/interface, returns the raw pattern via
+  `getRawMessage` (no translate/format/args). The internal recursion stays uncached; only the
+  top-level entry per `(class, key, locale)` is cached.
+- Uses **`get` + `putIfAbsent`, not `computeIfAbsent`** — the child-property path recurses back
+  into `findText`, and a nested `computeIfAbsent` on the same map during its own mapping
+  function is unsafe.
+
+### 4. `findText` flow (StrutsLocalizedTextProvider)
+
+Order is **identical to the current implementation**; only the traversal steps become cached:
+
+```
+if (textKey == null) return defaultMessage;
+indexedTextName = extractIndexedName(textKey);
+
+if (searchDefaultBundlesFirst) { ... unchanged early lookup ... }
+
+// class/interface/superclass hierarchy — CACHED
+raw = resolveClassHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+if (raw != NOT_FOUND) { msg = formatMessage(raw, locale, valueStack, args); if (msg != null) return msg; }
+
+// ModelDriven model hierarchy — CACHED (reuses classHierarchyCache)
+if (ModelDriven.class.isAssignableFrom(startClazz)) {
+    ... resolve model ...
+    raw = resolveClassHierarchyRaw(model.getClass(), textKey, indexedTextName, locale);
+    if (raw != NOT_FOUND) { msg = formatMessage(raw, locale, valueStack, args); if (msg != null) return msg; }
+}
+
+// *.package hierarchy — CACHED
+raw = resolvePackageHierarchyRaw(startClazz, textKey, indexedTextName, locale);
+if (raw != NOT_FOUND) { msg = formatMessage(raw, locale, valueStack, args); if (msg != null) return msg; }
+
+// child-property recursion — UNCACHED (valueStack-dependent) — unchanged
+// default message — unchanged
+```
+
+Keeping `classHierarchyCache` and `packageHierarchyCache` separate preserves the exact
+ordering (class → ModelDriven → package → child-property → default). The `ModelDriven` model
+lookup reuses the class-hierarchy cache for free.
+
+## Cache invalidation
+
+The two new caches are cleared at every site that already clears the bundle caches:
+
+1. **`reloadBundles(context)`** — inside the guarded block that calls `bundlesMap.clear()`,
+   also `classHierarchyCache.clear()` and `packageHierarchyCache.clear()`. This preserves
+   devMode / `struts.i18n.reload=true` semantics: the caches are wiped once per request
+   (guarded by the `RELOADED` context flag), so edited properties are always seen. In
+   production (`reloadBundles=false`) the caches persist — the intended win. When `findText`
+   is called with a null ValueStack, the hoisted reload now passes a null context; in
+   reload/devMode this triggers an eager cache/bundle clear that the previous per-probe path
+   skipped for null-stack lookups — strictly more eager (never staler), and inert in
+   production where reload is disabled.
+2. **`clearBundle(bundleName, locale)`** — clear both new caches fully (a cached pattern may
+   originate from the cleared bundle; rare admin operation, full clear acceptable).
+3. **`clearMissingBundlesCache()`** — clear both new caches fully, honoring its documented
+   intent that previously-missing lookups may now resolve (our `NOT_FOUND` entries are
+   analogous to the missing-bundle cache).
+
+**Not invalidated by `addDefaultResourceBundle`:** the two caches only ever hold class-named
+and `*.package` bundle results. Default bundles are consulted solely in the uncached
+`getDefaultMessage` path, so adding a default bundle cannot stale these caches.
+
+## Correctness invariants preserved
+
+- **Dynamic `${...}` messages** — raw pattern cached; `translateVariables` runs per call against
+  the live `ValueStack`, so different stacks yield different outputs.
+- **Parameterized messages** — `MessageFormat.format(args)` runs per call.
+- **`defaultMessage`, child-property, `ModelDriven` model resolution** — runtime-dependent,
+  never cached at the result level.
+- **Lookup order** — unchanged.
+- **No classloader pinning** — keys hold class names, not `Class` objects.
+
+## Testing
+
+Tests live in `core/src/test/java/org/apache/struts2/text/StrutsLocalizedTextProviderTest.java`,
+which extends `XWorkTestCase` — **JUnit 3/4 style: `testXxx()` methods with plain `assert*`
+(junit.framework), no `@Test`, no AssertJ.** (A `@Test`-annotated method here would silently
+never run.)
+
+1. **Found key, repeated lookup** — same message on both calls; second served from cache.
+2. **Missing key, repeated lookup** — default/null on both; cached as `NOT_FOUND` (verified
+   indirectly: after caching a miss, adding the property + `reloadBundles` makes it resolve).
+3. **Dynamic `${...}` message after a cache hit** — same `(class, key, locale)` rendered against
+   two different `ValueStack`s yields two different results.
+4. **Parameterized message** — different `args` across calls format correctly.
+5. **`reloadBundles` invalidation** — with reload enabled, a changed bundle value is picked up
+   on the next request.
+6. **`clearBundle` / `clearMissingBundlesCache`** — both drop cached entries.
+7. **`ModelDriven` path** — model-class messages still resolve, reusing the class-hierarchy cache.
+8. **Package-hierarchy resolution** — a `*.package` key resolves, caches, and the class-before-package
+   order is unchanged.
+9. **Regression** — the existing `StrutsLocalizedTextProviderTest` suite and related
+   localized-text tests stay green.
+
+## Known limitation
+
+Per decision during design, the new caches are **unbounded** `ConcurrentHashMap`s, matching the
+existing `bundlesMap` / `missingBundles`. Because `getText`-style tags can accept dynamic /
+user-influenced keys, an unbounded `(class, key, locale)` key space is a theoretical
+memory-exhaustion vector. This is consistent with the pre-existing exposure of the other caches
+and is accepted here for consistency and simplicity; bounding all localized-text caches could be
+revisited as a separate, cross-cutting change.
+
+## Files touched
+
+- `core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java`
+  — `formatMessage`, `getRawMessage`, `findMessageRaw`, `resolveClassHierarchyRaw`,
+  `resolvePackageHierarchyRaw`, `TextCacheKey`, `NOT_FOUND`, the two cache maps, and
+  invalidation hooks in `reloadBundles` / `clearBundle` / `clearMissingBundlesCache`;
+  `getMessage` re-expressed via `getRawMessage` + `formatMessage`.
+- `core/src/main/java/org/apache/struts2/text/StrutsLocalizedTextProvider.java`
+  — `findText(Class, ...)` rewired to the cached resolvers.
+- `core/src/test/java/org/apache/struts2/text/StrutsLocalizedTextProviderTest.java`
+  — new tests.

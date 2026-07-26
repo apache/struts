@@ -227,6 +227,11 @@ public final class StrutsConstants {
     public static final String STRUTS_MULTIPART_MAX_FILES = "struts.multipart.maxFiles";
 
     /**
+     * The maximum number of non-file form fields (parameters) allowed in a multipart request.
+     */
+    public static final String STRUTS_MULTIPART_MAX_PARAMETER_COUNT = "struts.multipart.maxParameterCount";
+
+    /**
      * The maximum length of a string parameter in a multipart request.
      */
     public static final String STRUTS_MULTIPART_MAX_STRING_LENGTH = "struts.multipart.maxStringLength";

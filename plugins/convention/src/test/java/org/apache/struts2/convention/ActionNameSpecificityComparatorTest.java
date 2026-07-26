@@ -68,4 +68,10 @@ public class ActionNameSpecificityComparatorTest {
         shuffled.sort(comparator);
         assertEquals(expected, shuffled);
     }
+
+    @Test
+    public void naturalOrderBreaksTiesForEquallySpecificPatterns() {
+        // equal on wildcard count, literal chars, and ** count -> alphabetical tiebreak
+        assertTrue(comparator.compare("a/*", "b/*") < 0);
+    }
 }

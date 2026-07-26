@@ -25,9 +25,11 @@ patterns are placed before general ones, so first-match-wins does the right thin
 In **annotation-based** configuration (Convention plugin `@Action` wildcards), there is **no ordering
 guarantee**. The registration order is derived from `Set<Class<?>>` class-scan order in
 `PackageBasedActionConfigBuilder.buildConfiguration(...)`, which is effectively arbitrary and
-non-deterministic across JVMs/classloaders. Consequently a general pattern such as `some/*` can be
-evaluated before, and shadow, a more specific pattern such as `some/usefull/*`, leaving the specific
-action unreachable.
+non-deterministic across JVMs/classloaders. Consequently, when two annotated patterns genuinely
+overlap — most clearly when a broad `**` pattern (the only token that crosses `/`) is registered
+before a narrower, more specific pattern it can also match, or when two patterns share the same
+matchable shape — the general pattern can win first-match-wins and shadow the specific one, leaving
+the specific action unreachable.
 
 ### Concrete example (from the ticket)
 
@@ -36,14 +38,23 @@ action unreachable.
 | `some/usefull/*` | specific — should handle `/some/usefull/sleeping` |
 | `some/*` | general — should handle `/some/eating` |
 
-With the default `WildcardHelper` matcher, `*` is greedy and crosses `/`, so `some/*` also matches
-`/some/usefull/sleeping`. If `some/*` happens to be registered first, it wins and `some/usefull/*`
-never matches.
+**Clarification (post-ticket):** with the default `WildcardHelper` matcher, single `*` (`MATCH_FILE`)
+matches only within one path segment and does **not** cross `/` — only `**` (`MATCH_PATH`) does.
+Under that rule, `some/*` matches exactly one segment after `some/` and `some/usefull/*` matches
+exactly one segment after `some/usefull/` — different segment counts, so the two patterns are
+**disjoint** and never compete for the same incoming URL; `some/*` alone cannot shadow
+`some/usefull/*`. The ticket's original example predates this clarification. The comparator still
+orders this pair deterministically (see the worked ranking below), which is a harmless improvement
+over non-deterministic scan order, but the *shadowing* failure mode described above requires
+genuinely overlapping patterns — which arises most clearly via `**` (e.g. a `**` catch-all registered
+ahead of a narrower sibling it can also match) or via patterns that share the same matchable shape.
 
 ### Matchers in play
 
-- `WildcardHelper` (default bean `struts`): `*` and `**`, greedy, `*` crosses `/`.
-- `NamedVariablePatternMatcher` (bean `namedVariable`): `{var}` → `([^/]+)`, does **not** cross `/`.
+- `WildcardHelper` (default bean `struts`): `*` (`MATCH_FILE`) matches within a single path segment
+  and does **not** cross `/`; `**` (`MATCH_PATH`) is the only token that crosses `/`.
+- `NamedVariablePatternMatcher` (bean `namedVariable`): `{var}` → `([^/]+)`, also does **not** cross
+  `/`.
 
 The defect is fundamentally about **match precedence / ordering**, not the regex semantics
 themselves.
@@ -151,6 +162,21 @@ builders.
   deterministic, if arbitrary. Documented behavior.
 - **No config flag.** Always on for Convention (per scope decision). The prior order was
   non-deterministic, so nothing could reliably depend on it.
+- **Known limitation — primary key can misrank `**` vs. multi-token patterns.** The comparator's
+  primary key is *raw* wildcard-token count, not `**`-awareness. A single-token `**` catch-all (1
+  wildcard) therefore ranks ahead of a narrower two-token pattern such as `*/*` (2 wildcards) even
+  though `*/*` matches a strictly smaller set of paths, so a `**` catch-all can shadow a more-specific
+  sibling within the same package. This is an accepted known limitation — it is still a net
+  improvement over the prior non-deterministic order, since the outcome is at least stable across
+  JVMs/classloaders. A future refinement would lift the `**`-count key above the raw
+  wildcard-token-count key so path-spanning patterns are always penalized first; that is out of scope
+  for this fix.
+- **Known limitation — parent-package actions are not resorted.**
+  `PackageConfig.getAllActionConfigs()` inserts parent-package actions into the result map *before*
+  the (sorted) own-package actions, so a parent package's wildcard action would still be matched ahead
+  of the sorted actions of a child package regardless of specificity. In practice this has no
+  observable impact: convention parent packages (e.g. `struts-default`) declare no wildcard action
+  mappings, so there is nothing there to shadow child-package actions.
 
 ## Testing
 

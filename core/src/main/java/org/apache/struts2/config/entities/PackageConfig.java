@@ -518,6 +518,15 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
             return this;
         }
 
+        /**
+         * Re-inserts this package's action configs into a new insertion-ordered map,
+         * ordered by the supplied comparator over the action-name keys. Must be called
+         * before {@link #build()}.
+         *
+         * @param byActionName comparator over action names determining match precedence
+         * @return this builder
+         * @since 7.3.0 (WW-3784)
+         */
         public Builder reorderActionConfigs(Comparator<String> byActionName) {
             List<Map.Entry<String, ActionConfig>> entries = new ArrayList<>(target.actionConfigs.entrySet());
             entries.sort(Map.Entry.comparingByKey(byActionName));

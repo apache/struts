@@ -390,6 +390,12 @@ abstract class AbstractMultiPartRequestTest {
     }
 
     @Test
+    public void maxParameterCountSetterStoresValue() {
+        multiPart.setMaxParameterCount("42");
+        assertThat(multiPart.maxParameterCount).isEqualTo(42L);
+    }
+
+    @Test
     public void maxStringLength() throws IOException {
         String content = formFile("file1", "test1.csv", "1,2,3,4") +
                 formFile("file2", "test2.csv", "5,6,7,8") +

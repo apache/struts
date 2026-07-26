@@ -603,6 +603,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         } else if (checked.contains(clazz.getName())) {
             return null;
         }
+        // Record this class so diamond-shaped interface hierarchies aren't re-traversed.
+        checked.add(clazz.getName());
 
         // look in properties of this class
         String msg = getRawMessageWithAlternate(clazz.getName(), locale, key, indexedKey);

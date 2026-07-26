@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.validator;
 
+import org.apache.struts2.FileManager;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
@@ -27,6 +28,8 @@ import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.test.DataAware2;
 import org.apache.struts2.test.SimpleAction3;
 import org.apache.struts2.test.User;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.validator.validators.DateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.ExpressionValidator;
@@ -39,10 +42,21 @@ import org.apache.struts2.StrutsException;
 import org.assertj.core.api.Assertions;
 import org.xml.sax.SAXParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -373,6 +387,174 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         e = i.next();
         assertEquals(e.getKey(), "passwordHint");
         assertEquals((e.getValue()).get(0), "password hint is required");
+    }
+
+    public void testConcurrentGetValidatorsReturnsConsistentResults() throws Exception {
+        final int threads = 16;
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Future<Integer>> futures = new ArrayList<>();
+
+        // actionValidatorManager is freshly injected in setUp(), so validatorCache is cold here -
+        // all 16 threads below race the first build for this key, which is the interesting
+        // contention this test exists to cover.
+        // ActionContext is a plain (non-inheritable) ThreadLocal, so each pool thread needs its
+        // own context bound - with its own ValueStack - before it can call getValidators(),
+        // mirroring what XWorkTestCaseHelper does for the main test thread.
+        ValueStackFactory valueStackFactory = container.getInstance(ValueStackFactory.class);
+
+        for (int t = 0; t < threads; t++) {
+            futures.add(pool.submit(() -> {
+                ValueStack stack = valueStackFactory.createValueStack();
+                stack.getActionContext().withContainer(container).withValueStack(stack).bind();
+                start.await();
+                return actionValidatorManager.getValidators(SimpleAction.class, alias).size();
+            }));
+        }
+
+        start.countDown();
+        int firstSize = futures.get(0).get(60, TimeUnit.SECONDS);
+        assertThat(firstSize).isGreaterThan(0);
+        for (Future<Integer> future : futures) {
+            assertThat(future.get(60, TimeUnit.SECONDS)).isEqualTo(firstSize);
+        }
+        pool.shutdown();
+        assertThat(pool.awaitTermination(60, TimeUnit.SECONDS)).isTrue();
+    }
+
+    public void testCachedValidatorConfigsAreUnmodifiable() {
+        actionValidatorManager.getValidators(SimpleAction.class, alias);
+
+        List<ValidatorConfig> cached = actionValidatorManager.validatorCache.values().iterator().next();
+
+        assertThatThrownBy(() -> cached.add(null))
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    /**
+     * Covers {@code getValidators}' {@code else if (reloadingConfigs)} branch: reached when the
+     * validator-config key is already cached <em>and</em> reload mode is on, in which case the
+     * configs are rebuilt and the cache entry is replaced rather than reused. Rebuilding produces a
+     * fresh {@link List} instance even though the content is unchanged, so object identity is the
+     * real, observable signal that this branch - rather than the {@code computeIfAbsent} branch -
+     * ran.
+     */
+    public void testGetValidatorsRebuildsCacheWhenReloadingConfigsEnabled() {
+        actionValidatorManager.getValidators(SimpleAction.class, alias);
+        String key = actionValidatorManager.buildValidatorKey(SimpleAction.class, alias);
+        List<ValidatorConfig> cachedBeforeReload = actionValidatorManager.validatorCache.get(key);
+        assertThat(cachedBeforeReload).isNotNull().isNotEmpty();
+
+        actionValidatorManager.reloadingConfigs = true;
+        actionValidatorManager.getValidators(SimpleAction.class, alias);
+
+        List<ValidatorConfig> cachedAfterReload = actionValidatorManager.validatorCache.get(key);
+        assertThat(cachedAfterReload)
+                .as("the else-if(reloadingConfigs) branch must rebuild and replace the cache entry, "
+                        + "not reuse the previously cached list")
+                .isNotSameAs(cachedBeforeReload);
+        assertThat(cachedAfterReload).hasSameSizeAs(cachedBeforeReload);
+    }
+
+    /**
+     * Minimal {@link FileManager} wrapping a real one, whose {@code fileNeedsReloading} answer is
+     * fixed at construction. {@code loadFile} and everything else delegate to the real instance so
+     * that the actual validation XML on the test classpath is genuinely parsed - only the reload
+     * check itself is made deterministic.
+     */
+    private static class ReloadFlagFileManager implements FileManager {
+        private final FileManager delegate;
+        private final boolean needsReloading;
+
+        ReloadFlagFileManager(FileManager delegate, boolean needsReloading) {
+            this.delegate = delegate;
+            this.needsReloading = needsReloading;
+        }
+
+        @Override
+        public void setReloadingConfigs(boolean reloadingConfigs) {
+            delegate.setReloadingConfigs(reloadingConfigs);
+        }
+
+        @Override
+        public boolean fileNeedsReloading(String fileName) {
+            return needsReloading;
+        }
+
+        @Override
+        public boolean fileNeedsReloading(URL fileUrl) {
+            return needsReloading;
+        }
+
+        @Override
+        public InputStream loadFile(URL fileUrl) {
+            return delegate.loadFile(fileUrl);
+        }
+
+        @Override
+        public void monitorFile(URL fileUrl) {
+            delegate.monitorFile(fileUrl);
+        }
+
+        @Override
+        public URL normalizeToFileProtocol(URL url) {
+            return delegate.normalizeToFileProtocol(url);
+        }
+
+        @Override
+        public boolean support() {
+            return delegate.support();
+        }
+
+        @Override
+        public boolean internal() {
+            return delegate.internal();
+        }
+
+        @Override
+        public Collection<? extends URL> getAllPhysicalUrls(URL url) throws IOException {
+            return delegate.getAllPhysicalUrls(url);
+        }
+    }
+
+    /**
+     * Covers {@code loadFile}'s {@code checkFile && fileManager.fileNeedsReloading(...)} branch,
+     * which re-parses and {@code put}s directly rather than using {@code computeIfAbsent}. Forcing
+     * a real re-parse produces a new {@link List} instance even though {@code SimpleAction-
+     * validationAlias-validation.xml} hasn't changed, so object identity is the observable proof
+     * that this branch - rather than the {@code computeIfAbsent} fallback - ran.
+     */
+    public void testLoadFileReparsesWhenCheckFileAndFileNeedsReloading() {
+        String fileName = SimpleAction.class.getName().replace('.', '/') + "-" + alias + "-validation.xml";
+        FileManager realFileManager = actionValidatorManager.fileManager;
+
+        actionValidatorManager.fileManager = new ReloadFlagFileManager(realFileManager, false);
+        List<ValidatorConfig> warm = actionValidatorManager.loadFile(fileName, SimpleAction.class, false);
+        assertThat(warm).isNotEmpty();
+        assertThat(actionValidatorManager.validatorFileCache.get(fileName)).isSameAs(warm);
+
+        actionValidatorManager.fileManager = new ReloadFlagFileManager(realFileManager, true);
+        List<ValidatorConfig> reloaded = actionValidatorManager.loadFile(fileName, SimpleAction.class, true);
+
+        assertThat(reloaded)
+                .as("checkFile && fileNeedsReloading must re-parse rather than reuse the cached list")
+                .isNotSameAs(warm);
+        assertThat(reloaded).hasSameSizeAs(warm);
+        assertThat(actionValidatorManager.validatorFileCache.get(fileName)).isSameAs(reloaded);
+    }
+
+    /**
+     * Covers {@code buildValidatorConfigs} returning {@code Collections.emptyList()} when the class
+     * was already recorded in the {@code checked} set - the short-circuit that stops the hierarchy
+     * walk from revisiting a class (e.g. an interface reachable through more than one path).
+     */
+    public void testBuildValidatorConfigsShortCircuitsWhenClassAlreadyChecked() {
+        Set<String> checked = new TreeSet<>();
+        checked.add(SimpleAction.class.getName());
+
+        List<ValidatorConfig> result = actionValidatorManager.buildValidatorConfigs(SimpleAction.class, alias, false, checked);
+
+        assertThat(result).isNotNull().isEmpty();
     }
 
 }

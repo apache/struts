@@ -547,6 +547,207 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Result of bean2.name lookup not as expected ?", "Okay! You found Me!", messageResult);
     }
 
+    public void testClassHierarchyCacheReusesFoundPattern() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        assertEquals("Cache not empty before first lookup ?", 0, provider.classHierarchyCacheSize());
+        String first = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", first);
+        assertEquals("Cache not populated after found lookup ?", 1, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Second lookup differs from first ?", first, second);
+        assertEquals("Cache grew on repeated lookup ?", 1, provider.classHierarchyCacheSize());
+    }
+
+    public void testClassHierarchyCacheStoresMisses() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        String first = provider.findText(CacheFixture.class, "cache.missing", Locale.ENGLISH, "Fallback", null, valueStack);
+        assertEquals("Fallback", first);
+        assertEquals("Miss not cached ?", 1, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(CacheFixture.class, "cache.missing", Locale.ENGLISH, "Fallback", null, valueStack);
+        assertEquals("Fallback", second);
+        assertEquals("Miss cache grew on repeat ?", 1, provider.classHierarchyCacheSize());
+    }
+
+    public void testFormattingIsPerCallNotCached() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        String x = provider.findText(CacheFixture.class, "cache.withparam", Locale.ENGLISH, null, new Object[]{"X"}, valueStack);
+        String y = provider.findText(CacheFixture.class, "cache.withparam", Locale.ENGLISH, null, new Object[]{"Y"}, valueStack);
+        assertEquals("Value with param X", x);
+        assertEquals("Value with param Y", y);
+        assertEquals("Raw pattern should be cached once, not per format ?", 1, provider.classHierarchyCacheSize());
+    }
+
+    public void testOgnlTranslationIsPerCall() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        valueStack.push(new CacheFixture("World"));
+        String world = provider.findText(CacheFixture.class, "cache.withognl", Locale.ENGLISH, null, null, valueStack);
+        valueStack.pop();
+        valueStack.push(new CacheFixture("Mars"));
+        String mars = provider.findText(CacheFixture.class, "cache.withognl", Locale.ENGLISH, null, null, valueStack);
+        valueStack.pop();
+
+        assertEquals("Hello World", world);
+        assertEquals("Hello Mars", mars);
+        assertEquals("Raw pattern should be cached once across value stacks ?", 1, provider.classHierarchyCacheSize());
+    }
+
+    public void testNullFormattingFallsThroughToDefault() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // "{0}" with a null arg formats to the literal "null"; findText must fall through to the default.
+        String first = provider.findText(CacheFixture.class, "cache.nullformat", Locale.ENGLISH, "Fallback", new Object[]{null}, valueStack);
+        assertEquals("Fallback", first);
+        // Repeat after the pattern is cached — still falls through.
+        String second = provider.findText(CacheFixture.class, "cache.nullformat", Locale.ENGLISH, "Fallback", new Object[]{null}, valueStack);
+        assertEquals("Fallback", second);
+    }
+
+    public void testReloadClearsClassHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Cache not populated ?", 1, provider.classHierarchyCacheSize());
+
+        provider.callReloadBundlesForceReload();
+        assertEquals("Reload did not clear class hierarchy cache ?", 0, provider.classHierarchyCacheSize());
+    }
+
+    public void testClearBundleAndClearMissingCacheEmptyClassHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Cache not populated ?", 1, provider.classHierarchyCacheSize());
+        provider.callClearBundleWithLocale("org/apache/struts2/text/CacheFixture", Locale.ENGLISH);
+        assertEquals("clearBundle did not empty class hierarchy cache ?", 0, provider.classHierarchyCacheSize());
+
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Cache not repopulated ?", 1, provider.classHierarchyCacheSize());
+        provider.callClearMissingBundlesCache();
+        assertEquals("clearMissingBundlesCache did not empty class hierarchy cache ?", 0, provider.classHierarchyCacheSize());
+    }
+
+    public void testPackageHierarchyCacheReusesFoundPattern() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // ModelDrivenAction2 lives in a package that provides "package.properties" = "It works!".
+        assertEquals("Package cache not empty before lookup ?", 0, provider.packageHierarchyCacheSize());
+        String first = provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("It works!", first);
+        assertEquals("Package cache not populated after found lookup ?", 1, provider.packageHierarchyCacheSize());
+
+        String second = provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Second package lookup differs ?", first, second);
+        assertEquals("Package cache grew on repeat ?", 1, provider.packageHierarchyCacheSize());
+    }
+
+    public void testReloadClearsPackageHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not populated ?", 1, provider.packageHierarchyCacheSize());
+
+        provider.callReloadBundlesForceReload();
+        assertEquals("Reload did not clear package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+    }
+
+    public void testClearBundleAndClearMissingCacheEmptyPackageHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not populated ?", 1, provider.packageHierarchyCacheSize());
+        provider.callClearBundleWithLocale("org/apache/struts2/test/package", Locale.getDefault());
+        assertEquals("clearBundle did not empty package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+
+        provider.findText(org.apache.struts2.test.ModelDrivenAction2.class, "package.properties", Locale.getDefault(), null, null, valueStack);
+        assertEquals("Package cache not repopulated ?", 1, provider.packageHierarchyCacheSize());
+        provider.callClearMissingBundlesCache();
+        assertEquals("clearMissingBundlesCache did not empty package hierarchy cache ?", 0, provider.packageHierarchyCacheSize());
+    }
+
+    public void testDeprecatedFindMessageStillDelegates() {
+        // findMessage leaves findText's hot path in this task; this locks the deprecated delegator.
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        assertEquals("Static cached value", provider.callFindMessage(CacheFixture.class, "cache.static", Locale.ENGLISH, valueStack));
+        assertNull(provider.callFindMessage(CacheFixture.class, "cache.missing", Locale.ENGLISH, valueStack));
+    }
+
+    public void testModelDrivenTierUsesClassHierarchyCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+
+        ModelDrivenAction2 action = new ModelDrivenAction2();
+        Mock mockActionInvocation = new Mock(ActionInvocation.class);
+        mockActionInvocation.matchAndReturn("getAction", action);
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // "invalid.count" resolves only via the model's hierarchy (TestBean2 -> TestBean.properties),
+        // not via the action class hierarchy, so it exercises the ModelDriven tier.
+        String first = provider.findText(ModelDrivenAction2.class, "invalid.count", Locale.ENGLISH, null, null, valueStack);
+        assertNotNull("Model-tier lookup found nothing ?", first);
+        assertTrue("Model-tier lookup did not resolve via the TestBean bundle ?", first.startsWith("TestBean model:"));
+        // Two entries: a miss for the action class hierarchy plus a hit for the model class hierarchy.
+        assertEquals("Class-hierarchy cache should hold action miss + model hit ?", 2, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(ModelDrivenAction2.class, "invalid.count", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Warm model-tier lookup differs from cold ?", first, second);
+        assertEquals("Cache grew on repeated model-tier lookup ?", 2, provider.classHierarchyCacheSize());
+    }
+
+    public void testLocaleIsPartOfCacheKey() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        String english = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        String german = provider.findText(CacheFixture.class, "cache.static", Locale.GERMAN, null, null, valueStack);
+        assertEquals("Static cached value", english);
+        assertEquals("Statischer Wert", german);
+        assertEquals("Each locale should have its own cache entry ?", 2, provider.classHierarchyCacheSize());
+
+        assertEquals("Warm English lookup differs ?", english,
+                provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack));
+        assertEquals("Warm German lookup differs ?", german,
+                provider.findText(CacheFixture.class, "cache.static", Locale.GERMAN, null, null, valueStack));
+        assertEquals("Cache grew on warm per-locale lookups ?", 2, provider.classHierarchyCacheSize());
+    }
+
+    public void testIndexedKeyResolvesThroughCache() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // "cache.indexed[20]" falls back to the general form "cache.indexed[*]" during raw resolution.
+        String first = provider.findText(CacheFixture.class, "cache.indexed[20]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Indexed cached value", first);
+        assertEquals("Indexed lookup not cached ?", 1, provider.classHierarchyCacheSize());
+
+        String second = provider.findText(CacheFixture.class, "cache.indexed[20]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Warm indexed lookup differs from cold ?", first, second);
+        assertEquals("Cache grew on warm indexed lookup ?", 1, provider.classHierarchyCacheSize());
+
+        // A different index is a distinct cache key (the cache is keyed on the full textKey),
+        // resolving to the same general form.
+        String other = provider.findText(CacheFixture.class, "cache.indexed[7]", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Indexed cached value", other);
+        assertEquals("A different index should create its own cache entry ?", 2, provider.classHierarchyCacheSize());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -615,6 +816,21 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         public boolean getBundlesReloadedIndicatorValue() {
             final Object reloadedObject = ActionContext.getContext().get(RELOADED);
             return reloadedObject instanceof Boolean && (Boolean) reloadedObject;
+        }
+
+        @Override
+        public int classHierarchyCacheSize() {
+            return super.classHierarchyCacheSize();
+        }
+
+        @Override
+        public int packageHierarchyCacheSize() {
+            return super.packageHierarchyCacheSize();
+        }
+
+        @SuppressWarnings("removal") // deliberately exercises the deprecated delegator
+        public String callFindMessage(Class<?> clazz, String key, Locale locale, ValueStack valueStack) {
+            return super.findMessage(clazz, key, null, locale, null, null, valueStack);
         }
     }
 }

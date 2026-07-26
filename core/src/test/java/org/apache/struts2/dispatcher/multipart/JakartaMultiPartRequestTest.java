@@ -18,18 +18,15 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,119 +36,6 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
     @Override
     protected AbstractMultiPartRequest createMultipartRequest() {
         return new JakartaMultiPartRequest();
-    }
-
-    @Test
-    public void temporaryFileCleanupForInMemoryUploads() throws IOException, NoSuchFieldException, IllegalAccessException {
-        // given - small files that will be in-memory
-        String content = formFile("file1", "test1.csv", "a,b,c,d") + 
-                        formFile("file2", "test2.csv", "1,2,3,4") +
-                        endline + "--" + boundary + "--";
-        
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
-        // when
-        multiPart.parse(mockRequest, tempDir);
-        
-        // Access private field to verify temporary files are tracked
-        Field tempFilesField = JakartaMultiPartRequest.class.getDeclaredField("temporaryFiles");
-        tempFilesField.setAccessible(true);
-        @SuppressWarnings("unchecked")
-        List<File> temporaryFiles = (List<File>) tempFilesField.get(multiPart);
-        
-        // Store file paths before cleanup for verification
-        List<String> tempFilePaths = temporaryFiles.stream()
-                .map(File::getAbsolutePath)
-                .toList();
-        
-        // Verify temporary files exist before cleanup
-        assertThat(temporaryFiles).isNotEmpty();
-        for (File tempFile : temporaryFiles) {
-            assertThat(tempFile).exists();
-        }
-        
-        // when - cleanup
-        multiPart.cleanUp();
-        
-        // then - verify files are deleted and tracking list is cleared
-        for (String tempFilePath : tempFilePaths) {
-            assertThat(new File(tempFilePath)).doesNotExist();
-        }
-        assertThat(temporaryFiles).isEmpty();
-    }
-
-    @Test
-    public void cleanupMethodsCanBeOverridden() {
-        // Create a custom implementation to test extensibility
-        class CustomJakartaMultiPartRequest extends JakartaMultiPartRequest {
-            boolean diskFileItemsCleanedUp = false;
-            boolean temporaryFilesCleanedUp = false;
-            
-            @Override
-            protected void cleanUpDiskFileItems() {
-                diskFileItemsCleanedUp = true;
-                super.cleanUpDiskFileItems();
-            }
-            
-            @Override
-            protected void cleanUpTemporaryFiles() {
-                temporaryFilesCleanedUp = true;
-                super.cleanUpTemporaryFiles();
-            }
-        }
-        
-        CustomJakartaMultiPartRequest customMultiPart = new CustomJakartaMultiPartRequest();
-        
-        // when
-        customMultiPart.cleanUp();
-        
-        // then
-        assertThat(customMultiPart.diskFileItemsCleanedUp).isTrue();
-        assertThat(customMultiPart.temporaryFilesCleanedUp).isTrue();
-    }
-
-    @Test
-    public void temporaryFileCreationFailureAddsError() throws IOException {
-        // Create a custom implementation that simulates temp file creation failure
-        class FaultyJakartaMultiPartRequest extends JakartaMultiPartRequest {
-            @Override
-            protected void processFileField(DiskFileItem item, String saveDir) {
-                // Simulate in-memory upload that fails to create temp file
-                if (item.isInMemory()) {
-                    try {
-                        // Simulate IOException during temp file creation
-                        throw new IOException("Simulated temp file creation failure");
-                    } catch (IOException e) {
-                        // Add the error to the errors list for proper user feedback
-                        LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), 
-                                                                        new Object[]{item.getName()});
-                        if (!errors.contains(errorMessage)) {
-                            errors.add(errorMessage);
-                        }
-                    }
-                } else {
-                    super.processFileField(item, saveDir);
-                }
-            }
-        }
-        
-        FaultyJakartaMultiPartRequest faultyMultiPart = new FaultyJakartaMultiPartRequest();
-        
-        // given - small file that would normally be in-memory
-        String content = formFile("file1", "test1.csv", "a,b") + 
-                        endline + "--" + boundary + "--";
-        
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
-        // when
-        faultyMultiPart.parse(mockRequest, tempDir);
-        
-        // then - verify error is properly captured
-        assertThat(faultyMultiPart.getErrors())
-                .hasSize(1)
-                .first()
-                .extracting(LocalizedMessage::getTextKey)
-                .isEqualTo("struts.messages.upload.error.IOException");
     }
 
     @Test
@@ -220,66 +104,6 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
         // then - verify complete cleanup
         assertThat(multiPart.uploadedFiles).isEmpty();
         assertThat(multiPart.parameters).isEmpty();
-    }
-
-    @Test
-    public void temporaryFilesCreatedInSaveDirectory() throws IOException, NoSuchFieldException, IllegalAccessException {
-        // Test that temporary files for in-memory uploads are created in the saveDir, not system temp
-        String content = formFile("file1", "test1.csv", "small,content") +
-                        endline + "--" + boundary + "--";
-        
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
-        // when
-        multiPart.parse(mockRequest, tempDir);
-        
-        // Access private field to get temporary files
-        Field tempFilesField = JakartaMultiPartRequest.class.getDeclaredField("temporaryFiles");
-        tempFilesField.setAccessible(true);
-        @SuppressWarnings("unchecked")
-        List<File> temporaryFiles = (List<File>) tempFilesField.get(multiPart);
-        
-        // then - verify temporary files are created in saveDir
-        assertThat(temporaryFiles).isNotEmpty();
-        for (File tempFile : temporaryFiles) {
-            // Verify the temporary file is in the saveDir, not system temp
-            assertThat(tempFile.getParent()).isEqualTo(tempDir);
-            assertThat(tempFile.getName()).startsWith("upload_");
-            assertThat(tempFile.getName()).endsWith(".tmp");
-            assertThat(tempFile).exists();
-        }
-    }
-
-    @Test
-    public void secureTemporaryFileNaming() throws IOException, NoSuchFieldException, IllegalAccessException {
-        // Test that temporary files use UUID-based naming for security
-        String content = formFile("file1", "malicious../../../etc/passwd", "content") +
-                        endline + "--" + boundary + "--";
-        
-        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
-        // when
-        multiPart.parse(mockRequest, tempDir);
-        
-        // Access private field to get temporary files
-        Field tempFilesField = JakartaMultiPartRequest.class.getDeclaredField("temporaryFiles");
-        tempFilesField.setAccessible(true);
-        @SuppressWarnings("unchecked")
-        List<File> temporaryFiles = (List<File>) tempFilesField.get(multiPart);
-        
-        // then - verify secure naming prevents directory traversal
-        assertThat(temporaryFiles).isNotEmpty();
-        for (File tempFile : temporaryFiles) {
-            // Verify the temporary file uses secure UUID naming
-            assertThat(tempFile.getName()).startsWith("upload_");
-            assertThat(tempFile.getName()).endsWith(".tmp");
-            // Verify it doesn't contain malicious path elements
-            assertThat(tempFile.getName()).doesNotContain("..");
-            assertThat(tempFile.getName()).doesNotContain("/");
-            assertThat(tempFile.getName()).doesNotContain("\\");
-            // Verify it's in the correct directory
-            assertThat(tempFile.getParent()).isEqualTo(tempDir);
-        }
     }
 
     @Test
@@ -424,7 +248,7 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
     @Test
     public void processFileFieldHandlesEmptyFileName() throws IOException {
-        String content = 
+        String content =
             endline + "--" + boundary + endline +
             "Content-Disposition: form-data; name=\"emptyfile\"; filename=\"\"" + endline +
             "Content-Type: text/plain" + endline +
@@ -436,12 +260,12 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
             endline +
             "valid file content" +
             endline + "--" + boundary + "--";
-        
+
         mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
-        
+
         // when
         multiPart.parse(mockRequest, tempDir);
-        
+
         // then - should only process the file with valid filename
         assertThat(multiPart.getErrors()).isEmpty();
         assertThat(multiPart.uploadedFiles).hasSize(1);
@@ -451,6 +275,37 @@ public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
                 .asInstanceOf(InstanceOfAssertFactories.FILE)
                 .content()
                 .isEqualTo("valid file content");
+    }
+
+    @Test
+    public void inMemoryUploadIsNotWrittenToDiskUntilContentRequested() throws IOException {
+        // given - a small file that Commons FileUpload keeps in memory
+        String content = formFile("file1", "test1.csv", "a,b,c,d") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        multiPart.parse(mockRequest, tempDir);
+
+        UploadedFile file = multiPart.getFile("file1")[0];
+
+        // then - nothing written to disk right after parse
+        assertThat(file.isFile()).isFalse();
+
+        // and - content is readable via the stream path without materializing
+        try (InputStream in = file.getInputStream()) {
+            assertThat(new String(in.readAllBytes(), StandardCharsets.UTF_8)).isEqualTo("a,b,c,d");
+        }
+        assertThat(file.isFile()).isFalse();
+
+        // and - getContent() materializes a real file on demand
+        File materialized = (File) file.getContent();
+        assertThat(materialized).exists().hasContent("a,b,c,d");
+        assertThat(file.isFile()).isTrue();
+
+        // and - cleanUp removes the materialized file
+        multiPart.cleanUp();
+        assertThat(materialized).doesNotExist();
     }
 
 }

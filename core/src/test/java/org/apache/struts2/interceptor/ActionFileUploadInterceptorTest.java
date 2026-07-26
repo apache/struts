@@ -27,6 +27,7 @@ import org.apache.struts2.ValidationAwareSupport;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.dispatcher.multipart.StrutsInMemoryUploadedFile;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.locale.DefaultLocaleProvider;
@@ -169,6 +170,45 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .asString()
                 .startsWith("Error uploading:")
                 .contains("inputName");
+    }
+
+    public void testAcceptFileDoesNotMaterializeInMemoryUpload() {
+        interceptor.setAllowedTypes("text/plain");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        UploadedFile file = StrutsInMemoryUploadedFile.Builder
+                .create("hello".getBytes(StandardCharsets.UTF_8), tempDir.toPath())
+                .withContentType("text/plain")
+                .withOriginalName("f.txt")
+                .withInputName("inputName")
+                .build();
+
+        boolean ok = interceptor.acceptFile(validation, file, "f.txt", "text/plain", "inputName");
+
+        assertThat(ok).isTrue();
+        assertThat(validation.hasErrors()).isFalse();
+        // The optimization: validation must NOT have written the in-memory upload to disk.
+        assertThat(file.isFile()).isFalse();
+    }
+
+    public void testRejectedInMemoryUploadIsStillNotMaterialized() {
+        interceptor.setAllowedTypes("text/plain");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        UploadedFile file = StrutsInMemoryUploadedFile.Builder
+                .create("hello".getBytes(StandardCharsets.UTF_8), tempDir.toPath())
+                .withContentType("text/html")
+                .withOriginalName("f.html")
+                .withInputName("inputName")
+                .build();
+
+        // wrong content type -> rejected
+        boolean ok = interceptor.acceptFile(validation, file, "f.html", "text/html", "inputName");
+
+        assertThat(ok).isFalse();
+        assertThat(validation.hasErrors()).isTrue();
+        // Even on rejection, no disk write happened.
+        assertThat(file.isFile()).isFalse();
     }
 
     public void testAcceptFileWithMaxSize() throws Exception {

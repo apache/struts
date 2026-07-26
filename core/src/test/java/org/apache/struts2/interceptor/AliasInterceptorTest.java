@@ -77,6 +77,30 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertNull(actionOne.getBlah());    //  WW-5087
     }
 
+    // WW-3427: a conversion error thrown while binding an aliased property must not be swallowed;
+    // it must be reported through the ConversionErrorInterceptor / conversion errors, exactly as it
+    // would be for a non-aliased property.
+    public void testConversionErrorOnAliasedPropertyIsReported() throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("aliasSource", "not a number");
+
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-alias-conversion.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasConversionTest", null, params);
+        AliasConversionAction action = (AliasConversionAction) proxy.getAction();
+
+        proxy.execute();
+
+        // The custom converter throws TypeConversionException while setting the aliased 'aliasDest'.
+        assertTrue("conversion error for aliased property was swallowed",
+                proxy.getInvocation().getInvocationContext().getConversionErrors().containsKey("aliasDest"));
+        assertTrue("ConversionErrorInterceptor did not register a field error for the aliased property",
+                action.getFieldErrors().containsKey("aliasDest"));
+        assertNull("aliasDest must remain unset after a failed conversion", action.getAliasDest());
+    }
+
     public void testNameNotAccepted() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("aliasSource", "source here");

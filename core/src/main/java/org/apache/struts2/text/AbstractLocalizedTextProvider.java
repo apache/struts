@@ -572,7 +572,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * backward compatibility with descendant classes that call it directly. <strong>No longer invoked
      * by {@code findText}</strong>: overriding this method does not affect framework message lookup
      * anymore; override {@link #formatMessage(String, Locale, ValueStack, Object[])} to customize
-     * rendering instead.
+     * rendering instead. Scheduled for removal in the next major release (see WW-5658).
      */
     @Deprecated(since = "7.3.0", forRemoval = true)
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
@@ -731,7 +731,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * redefined at multiple hierarchy levels with the shallow value formatting to {@code "null"}.
      * The bundle-reload check is now triggered once on entry (when reload mode is enabled) rather than
      * lazily per bundle probe, preserving the reload side effect that the previous getMessage-per-probe
-     * walk provided.
+     * walk provided. Scheduled for removal in the next major release (see WW-5658).
      */
     @Deprecated(since = "7.3.0", forRemoval = true)
     protected String findMessage(Class<?> clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,

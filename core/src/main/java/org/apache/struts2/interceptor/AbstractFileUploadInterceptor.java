@@ -56,6 +56,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY = "struts.messages.invalid.content.type";
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
+    public static final String STRUTS_MESSAGES_ERROR_UPLOAD_POLICY_UNRESOLVED_KEY = "struts.messages.error.upload.policy.unresolved";
 
     private final UploadPolicy configuredPolicy = new UploadPolicy();
 
@@ -133,6 +134,17 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         // If it's missing the upload failed
         if (file == null || file.isMissing()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
+            if (validation != null) {
+                validation.addFieldError(inputName, errMsg);
+            }
+            LOG.warn(errMsg);
+            return false;
+        }
+
+        if (policy.isUnresolved()) {
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOAD_POLICY_UNRESOLVED_KEY, new String[]{
+                inputName, originalFilename, String.join(", ", policy.getUnresolvedParams())
+            });
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }

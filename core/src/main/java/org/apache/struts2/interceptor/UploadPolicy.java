@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.util.TextParseUtil;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -36,6 +37,7 @@ public class UploadPolicy extends DisableParams {
     private Long maximumSize;
     private Set<String> allowedTypes = Collections.emptySet();
     private Set<String> allowedExtensions = Collections.emptySet();
+    private final Set<String> unresolvedParams = new LinkedHashSet<>();
 
     public UploadPolicy() {
     }
@@ -45,6 +47,7 @@ public class UploadPolicy extends DisableParams {
         this.maximumSize = other.maximumSize;
         this.allowedTypes = other.allowedTypes;
         this.allowedExtensions = other.allowedExtensions;
+        this.unresolvedParams.addAll(other.unresolvedParams);
     }
 
     /**
@@ -78,6 +81,24 @@ public class UploadPolicy extends DisableParams {
 
     public Set<String> getAllowedExtensions() {
         return allowedExtensions;
+    }
+
+    /**
+     * A parameter that could not be resolved makes this policy unusable: the upload is rejected
+     * rather than validated against a partially-resolved policy, so a broken expression cannot
+     * silently relax validation.
+     */
+    @Override
+    public void unresolved(String paramName) {
+        unresolvedParams.add(paramName);
+    }
+
+    public boolean isUnresolved() {
+        return !unresolvedParams.isEmpty();
+    }
+
+    public Set<String> getUnresolvedParams() {
+        return Collections.unmodifiableSet(unresolvedParams);
     }
 
     /**

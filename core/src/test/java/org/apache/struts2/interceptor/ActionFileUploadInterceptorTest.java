@@ -1160,4 +1160,42 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
+    public void testUnresolvedPolicyRejectsTheUpload() throws Exception {
+        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
+        container.inject(interceptor);
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes(null);   // ${allowedMimeTypes} will not resolve
+        container.inject(action);
+
+        runUploadAttempt(interceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+
+        assertThat(action.getUploadFiles()).isNull();
+        assertThat(action.getFieldErrors()).containsKey("file");
+    }
+
+    public void testResolvedPolicyStillAcceptsTheUpload() throws Exception {
+        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
+        container.inject(interceptor);
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/plain");
+        container.inject(action);
+
+        runUploadAttempt(interceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+
+        assertThat(action.hasFieldErrors()).isFalse();
+        assertThat(action.getUploadFiles()).isNotNull().hasSize(1);
+    }
+
+    public void testUploadPolicyTracksUnresolvedParams() {
+        UploadPolicy policy = new UploadPolicy();
+        assertThat(policy.isUnresolved()).isFalse();
+
+        policy.unresolved("allowedTypes");
+
+        assertThat(policy.isUnresolved()).isTrue();
+        assertThat(policy.getUnresolvedParams()).containsExactly("allowedTypes");
+    }
+
 }

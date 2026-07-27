@@ -54,6 +54,20 @@ public class MockLazyInterceptor extends AbstractInterceptor implements WithLazy
 
     private String foo = "";
     private String bar = "";
+    private String interceptorOnly = "";
+
+    /**
+     * A property of the interceptor with no counterpart on {@link MockLazyParams}. Configuring it on
+     * the {@code <interceptor>} definition is legitimate - definition params are applied to the
+     * interceptor and never reach the holder - so the configuration-time check must not reject it.
+     */
+    public void setInterceptorOnly(String interceptorOnly) {
+        this.interceptorOnly = interceptorOnly;
+    }
+
+    public String getInterceptorOnly() {
+        return interceptorOnly;
+    }
 
     public void setFoo(String foo) {
         this.foo = foo;

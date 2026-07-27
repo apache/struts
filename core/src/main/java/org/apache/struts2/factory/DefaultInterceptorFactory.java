@@ -29,8 +29,12 @@ import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.InterceptorParams;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -86,10 +90,15 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
             if (interceptor instanceof WithLazyParams<?> lazyInterceptor) {
                 LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated during action invocation",
                         interceptorClassName, WithLazyParams.class.getName());
-                allowlistLazyParamsHolder(lazyInterceptor);
+                InterceptorParams lazyParams = lazyInterceptor.newLazyParams();
+                validateLazyParamNames(interceptorConfig, lazyParams, interceptorRefParams);
+                allowlistLazyParamsHolder(lazyInterceptor, lazyParams);
             }
 
             return interceptor;
+        } catch (ConfigurationException e) {
+            // already carries its own message and location, don't bury it in a generic wrapper
+            throw e;
         } catch (InstantiationException e) {
             cause = e;
             message = "Unable to instantiate an instance of Interceptor class [" + interceptorClassName + "].";
@@ -108,6 +117,70 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
         }
 
         throw new ConfigurationException(message, cause, interceptorConfig);
+    }
+
+    /**
+     * Fails configuration when an interceptor-ref param of a {@link WithLazyParams} interceptor is
+     * not writable on its params holder.
+     * <p>
+     * <strong>Only the interceptor-ref params are checked, and that is exactly the set that reaches
+     * the holder.</strong> {@link org.apache.struts2.config.providers.InterceptorBuilder} passes the
+     * very map it hands to this factory on to the {@code InterceptorMapping} it creates, and
+     * {@code DefaultActionInvocation.mergedParams} feeds that map to
+     * {@link WithLazyParams.LazyParamInjector#resolveInto}. The params declared on the
+     * {@code <interceptor>} definition are deliberately not checked: they never reach the mapping,
+     * they are only applied to the interceptor instance a few lines above, and requiring them to
+     * exist on the holder too would reject working configurations - {@code <param name="disabled">}
+     * on an interceptor definition, for instance, is honoured through
+     * {@link org.apache.struts2.interceptor.AbstractInterceptor#shouldIntercept} alone.
+     * <p>
+     * Without this check an unknown name is only noticed per request, where
+     * {@code resolveInto} logs a WARN and notifies the holder - which for
+     * {@link org.apache.struts2.interceptor.UploadPolicy} means rejecting every upload of every
+     * request. The names are fully known at configuration-parse time, so a typo belongs to startup.
+     * The runtime handling stays in place as defence in depth for holders built outside this factory.
+     * <p>
+     * A param whose name is a compound OGNL expression (it contains a {@code .}) is not checked:
+     * only its leading segment would have to be readable rather than writable on the holder, which
+     * this simple property check cannot decide. Such names are left to the runtime path.
+     */
+    private void validateLazyParamNames(InterceptorConfig interceptorConfig, InterceptorParams lazyParams, Map<String, String> interceptorRefParams) {
+        if (lazyParams == null || interceptorRefParams == null || interceptorRefParams.isEmpty()) {
+            return;
+        }
+        Class<?> holderClass = lazyParams.getClass();
+        for (String paramName : interceptorRefParams.keySet()) {
+            if (paramName == null || paramName.indexOf('.') >= 0) {
+                LOG.debug("Skipping configuration-time check of compound lazy param name [{}] on holder [{}]",
+                        paramName, holderClass.getName());
+                continue;
+            }
+            if (!isWritableOnHolder(holderClass, paramName)) {
+                throw new ConfigurationException(String.format(
+                        "Param [%s] of interceptor [%s] (%s) is not a writable property of its lazy params holder [%s]."
+                                + " Params of a %s interceptor-ref are resolved onto that holder for each invocation,"
+                                + " so this one could never be applied - check the interceptor configuration for a typo.",
+                        paramName, interceptorConfig.getName(), interceptorConfig.getClassName(),
+                        holderClass.getName(), WithLazyParams.class.getSimpleName()), interceptorConfig);
+            }
+        }
+    }
+
+    /**
+     * @return true when OGNL could write {@code paramName} on the holder, i.e. there is a setter for
+     * it anywhere in the holder's hierarchy, or failing that a public field of that name
+     */
+    private boolean isWritableOnHolder(Class<?> holderClass, String paramName) {
+        try {
+            if (reflectionProvider.getSetMethod(holderClass, paramName) != null) {
+                return true;
+            }
+        } catch (IntrospectionException | ReflectionException e) {
+            LOG.debug("Could not introspect setter [{}] on lazy params holder [{}], falling back to field lookup",
+                    paramName, holderClass.getName(), e);
+        }
+        Field field = reflectionProvider.getField(holderClass, paramName);
+        return field != null && Modifier.isPublic(field.getModifiers());
     }
 
     /**
@@ -132,13 +205,12 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
      * The holder class is used as the registration key so repeated registrations - the factory is a
      * prototype and several interceptors may share a holder type - collapse onto one entry.
      */
-    private void allowlistLazyParamsHolder(WithLazyParams<?> lazyInterceptor) {
+    private void allowlistLazyParamsHolder(WithLazyParams<?> lazyInterceptor, InterceptorParams lazyParams) {
         if (providerAllowlist == null) {
             LOG.warn("No ProviderAllowlist available, cannot allowlist the lazy params holder of [{}];" +
                     " lazy params will fail to resolve if the OGNL allowlist is enabled", lazyInterceptor.getClass().getName());
             return;
         }
-        InterceptorParams lazyParams = lazyInterceptor.newLazyParams();
         if (lazyParams == null) {
             LOG.warn("Interceptor [{}] returned no lazy params holder, nothing to allowlist", lazyInterceptor.getClass().getName());
             return;

@@ -304,9 +304,14 @@ exists to remove. There are three such paths:
    skipped, and `maximumSize` stays `null` — which `acceptFile` reads as "no size limit". Left
    unnotified this branch is fail-*open*, so it must call `unresolved` too.
 3. **A param with no matching property on the holder** — the same `ReflectionException`
-   (`NoSuchPropertyException`) from a typo'd param name. Config-time reflection does not reject
-   it (`DefaultInterceptorFactory` calls `setProperties` without `throwPropertyExceptions`), so
-   the lazy path is where it first surfaces; it is notified for the same reason.
+   (`NoSuchPropertyException`) from a typo'd param name. This is now rejected at configuration
+   time: `DefaultInterceptorFactory` checks every *interceptor-ref* param of a `WithLazyParams`
+   interceptor against its holder type and throws `ConfigurationException` if it is not writable
+   there. Only the ref params are checked, because only those become
+   `InterceptorMapping#getParams()` and reach `resolveInto`; params on the `<interceptor>`
+   definition are applied to the interceptor instance and never reach the holder, so requiring
+   them on the holder would reject working configurations. The runtime notification stays as
+   defence in depth for holders and mappings built outside the factory.
 
 A new failure mode added to `resolveInto` later must be checked against this rule.
 
@@ -327,6 +332,12 @@ the shipped properties.
 This is a behaviour change for 7.2.x applications with a broken expression. Those
 applications are currently running with that validation silently disabled, which is the
 reason to surface it.
+
+The configuration-time param check is a behaviour change of its own and needs a release note:
+an application carrying a latent typo in a `<interceptor-ref>` param of a `WithLazyParams`
+interceptor now fails to start instead of failing every affected request. That is the point —
+the alternative is an outage that only shows up under upload traffic — but it is a startup
+failure where there was none.
 
 ## Testing
 

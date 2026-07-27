@@ -1224,4 +1224,33 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertThat(policy.getUnresolvedParams()).containsExactly("allowedTypes");
     }
 
+    /**
+     * An unresolvable {@code disabled} cannot relax validation - its absent value is {@code false},
+     * so the interceptor simply runs - and must not take the whole policy down with it.
+     */
+    public void testUnresolvedDisabledDoesNotMakeThePolicyUnusable() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain");
+
+        policy.unresolved(DisableParams.DISABLED_PARAM);
+
+        assertThat(policy.isUnresolved()).isFalse();
+        assertThat(policy.getUnresolvedParams()).isEmpty();
+        assertThat(policy.isDisabled()).isFalse();
+        assertThat(policy.getAllowedTypes()).containsExactly("text/plain");
+    }
+
+    /**
+     * ...but a validation dimension failing alongside it still does.
+     */
+    public void testUnresolvedDisabledDoesNotMaskOtherUnresolvedParams() {
+        UploadPolicy policy = new UploadPolicy();
+
+        policy.unresolved(DisableParams.DISABLED_PARAM);
+        policy.unresolved("maximumSize");
+
+        assertThat(policy.isUnresolved()).isTrue();
+        assertThat(policy.getUnresolvedParams()).containsExactly("maximumSize");
+    }
+
 }

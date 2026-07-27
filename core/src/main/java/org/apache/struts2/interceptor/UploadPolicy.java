@@ -88,15 +88,17 @@ public class UploadPolicy extends DisableParams {
      * rather than validated against a partially-resolved policy, so a broken expression cannot
      * silently relax validation.
      * <p>
-     * <strong>Any</strong> param name is recorded, {@code disabled} included. An unresolvable
-     * {@code <param name="disabled">${...}</param>} therefore leaves the interceptor enabled (the
-     * flag keeps its configured value) <em>and</em> marks this policy unusable, so every upload in
-     * that invocation is rejected. That is deliberate — a broken dispatch flag is a broken
-     * configuration, and refusing the upload is the safe reading — but it means a typo in
-     * {@code disabled} takes out upload validation rather than only the disabling.
+     * {@link DisableParams#DISABLED_PARAM} is the one exception and is not recorded. It is not a
+     * validation dimension: its unresolved value is simply {@code false}, which leaves the
+     * interceptor running and every other part of the policy intact, so it cannot relax validation.
+     * Recording it would let a broken {@code <param name="disabled">${...}</param>} reject every
+     * upload of the invocation, which is a failure mode of its own rather than a safe default.
      */
     @Override
     public void unresolved(String paramName) {
+        if (DISABLED_PARAM.equals(paramName)) {
+            return;
+        }
         unresolvedParams.add(paramName);
     }
 

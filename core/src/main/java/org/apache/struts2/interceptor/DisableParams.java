@@ -29,6 +29,13 @@ package org.apache.struts2.interceptor;
  */
 public class DisableParams implements InterceptorParams {
 
+    /**
+     * Name of the parameter bound to {@link #setDisabled(String)}.
+     *
+     * @since 7.3.0
+     */
+    public static final String DISABLED_PARAM = "disabled";
+
     private boolean disabled;
 
     public DisableParams() {

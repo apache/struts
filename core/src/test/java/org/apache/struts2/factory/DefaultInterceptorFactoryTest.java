@@ -69,8 +69,41 @@ public class DefaultInterceptorFactoryTest extends XWorkTestCase {
         }
     }
 
+    public void testBuildInterceptorPreservesLegacyWithLazyParamsContract() throws Exception {
+        DefaultInterceptorFactory factory = new DefaultInterceptorFactory();
+        container.inject(factory);
+
+        InterceptorConfig config = new InterceptorConfig.Builder("legacyLazy", LegacyLazyInterceptor.class.getName())
+                .addParam("mode", "${lazyMode}")
+                .build();
+
+        LegacyLazyInterceptor interceptor =
+                (LegacyLazyInterceptor) factory.buildInterceptor(config, Collections.emptyMap());
+
+        assertEquals("${lazyMode}", interceptor.getMode());
+
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(new LegacyLazyAction("strict"));
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .bind();
+
+        try {
+            WithLazyParams.LazyParamInjector lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(lazyParamInjector);
+
+            lazyParamInjector.injectParams(interceptor, config.getParams(), context);
+
+            assertEquals("strict", interceptor.getMode());
+        } finally {
+            ActionContext.clear();
+        }
+    }
+
     public static final class TypedLazyInterceptor extends AbstractInterceptor
-            implements WithLazyParams<TypedLazyInterceptor.LazyParams> {
+            implements WithLazyParams.InvocationScoped<TypedLazyInterceptor.LazyParams> {
         private Long maximumSize;
         private String mode;
 
@@ -97,7 +130,7 @@ public class DefaultInterceptorFactoryTest extends XWorkTestCase {
 
         @Override
         public String intercept(ActionInvocation invocation) throws Exception {
-            return WithLazyParams.super.intercept(invocation);
+            return WithLazyParams.InvocationScoped.super.intercept(invocation);
         }
 
         @Override
@@ -132,6 +165,23 @@ public class DefaultInterceptorFactoryTest extends XWorkTestCase {
         }
     }
 
+    public static final class LegacyLazyInterceptor extends AbstractInterceptor implements WithLazyParams {
+        private String mode;
+
+        public String getMode() {
+            return mode;
+        }
+
+        public void setMode(String mode) {
+            this.mode = mode;
+        }
+
+        @Override
+        public String intercept(ActionInvocation invocation) throws Exception {
+            return invocation.invoke();
+        }
+    }
+
     public static final class LazyParamAction {
         private final Long maxFileSize;
 
@@ -141,6 +191,18 @@ public class DefaultInterceptorFactoryTest extends XWorkTestCase {
 
         public Long getMaxFileSize() {
             return maxFileSize;
+        }
+    }
+
+    public static final class LegacyLazyAction {
+        private final String lazyMode;
+
+        private LegacyLazyAction(String lazyMode) {
+            this.lazyMode = lazyMode;
+        }
+
+        public String getLazyMode() {
+            return lazyMode;
         }
     }
 }

@@ -68,12 +68,16 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
             }
 
-            if (interceptor instanceof WithLazyParams) {
+            if (interceptor instanceof WithLazyParams.InvocationScoped) {
                 reflectionProvider.setProperties(filterFactoryTimeParams(params), interceptor);
-                LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated during action invocation",
+                LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated into invocation-scoped lazy params",
                         interceptorClassName, WithLazyParams.class.getName());
             } else {
                 reflectionProvider.setProperties(params, interceptor);
+                if (interceptor instanceof WithLazyParams) {
+                    LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated during action invocation",
+                            interceptorClassName, WithLazyParams.class.getName());
+                }
             }
 
             interceptor.init();

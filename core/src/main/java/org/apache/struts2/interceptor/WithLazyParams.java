@@ -30,9 +30,6 @@ import java.util.Map;
 
 /**
  * Interceptors marked with this interface support dynamic parameter evaluation at action invocation time.
- * Static parameters are set during interceptor creation (factory time), while lazy expression parameters
- * are re-evaluated during each action invocation to resolve expressions like ${someValue} into an
- * invocation-scoped parameter holder.
  * <p>
  * This enables both:
  * <ul>
@@ -42,25 +39,33 @@ import java.util.Map;
  * <p>
  * The {@link Interceptor#init()} method is called after initial parameter setting, so interceptors
  * can rely on configured values during initialization. Expression parameters (containing ${...})
- * are re-evaluated at invocation time via {@link LazyParamInjector}.
+ * are re-evaluated at invocation time via {@link LazyParamInjector}. Interceptors that need
+ * invocation-scoped lazy parameter state should additionally implement {@link InvocationScoped}.
  *
  * @since 2.5.9
  */
-public interface WithLazyParams<P> extends Interceptor {
+public interface WithLazyParams {
 
     /**
-     * Creates the per-invocation holder used for lazily resolved interceptor params.
+     * Optional extension for interceptors that need lazy params isolated per invocation instead of
+     * being written back into the long-lived interceptor instance.
      */
-    P newLazyParams();
+    interface InvocationScoped<P> extends WithLazyParams, Interceptor {
 
-    /**
-     * Intercepts using the per-invocation lazy params resolved for the current request.
-     */
-    String intercept(ActionInvocation invocation, P lazyParams) throws Exception;
+        /**
+         * Creates the per-invocation holder used for lazily resolved interceptor params.
+         */
+        P newLazyParams();
 
-    @Override
-    default String intercept(ActionInvocation invocation) throws Exception {
-        return intercept(invocation, newLazyParams());
+        /**
+         * Intercepts using the per-invocation lazy params resolved for the current request.
+         */
+        String intercept(ActionInvocation invocation, P lazyParams) throws Exception;
+
+        @Override
+        default String intercept(ActionInvocation invocation) throws Exception {
+            return intercept(invocation, newLazyParams());
+        }
     }
 
     class LazyParamInjector {
@@ -84,13 +89,22 @@ public interface WithLazyParams<P> extends Interceptor {
             this.ognlUtil = ognlUtil;
         }
 
-        public <P> P injectParams(WithLazyParams<P> interceptor, Map<String, String> params, ActionContext invocationContext) {
+        public <P> P injectParams(InvocationScoped<P> interceptor, Map<String, String> params, ActionContext invocationContext) {
             P lazyParams = interceptor.newLazyParams();
+            injectParams(lazyParams, params, invocationContext);
+            return lazyParams;
+        }
+
+        public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
+            injectParams((Object) interceptor, params, invocationContext);
+            return interceptor;
+        }
+
+        private void injectParams(Object target, Map<String, String> params, ActionContext invocationContext) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
-                ognlUtil.setProperty(entry.getKey(), paramValue, lazyParams, invocationContext.getContextMap());
+                ognlUtil.setProperty(entry.getKey(), paramValue, target, invocationContext.getContextMap());
             }
-            return lazyParams;
         }
     }
 }

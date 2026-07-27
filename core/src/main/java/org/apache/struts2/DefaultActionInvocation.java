@@ -259,8 +259,10 @@ public class DefaultActionInvocation implements ActionInvocation {
             if (interceptors.hasNext()) {
                 final InterceptorMapping interceptorMapping = interceptors.next();
                 Interceptor interceptor = interceptorMapping.getInterceptor();
-                if (interceptor instanceof WithLazyParams<?> withLazyParamsInterceptor) {
-                    resultCode = executeWithLazyParams(interceptorMapping, interceptor, withLazyParamsInterceptor);
+                if (interceptor instanceof WithLazyParams.InvocationScoped<?> invocationScopedInterceptor) {
+                    resultCode = executeWithLazyParams(interceptorMapping, interceptor, invocationScopedInterceptor);
+                } else if (interceptor instanceof WithLazyParams) {
+                    resultCode = executeWithLazyParams(interceptorMapping, interceptor);
                 } else if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
                     resultCode = executeConditional(conditionalInterceptor);
                 } else {
@@ -305,9 +307,20 @@ public class DefaultActionInvocation implements ActionInvocation {
         return resultCode;
     }
 
+    protected String executeWithLazyParams(InterceptorMapping interceptorMapping,
+                                           Interceptor interceptor) throws Exception {
+        lazyParamInjector.injectParams(
+                interceptor,
+                new LinkedHashMap<>(interceptorMapping.getParams()),
+                invocationContext
+        );
+
+        return executeLazyParamsInterceptor(interceptorMapping, interceptor);
+    }
+
     protected <P> String executeWithLazyParams(InterceptorMapping interceptorMapping,
                                                Interceptor interceptor,
-                                               WithLazyParams<P> withLazyParamsInterceptor) throws Exception {
+                                               WithLazyParams.InvocationScoped<P> withLazyParamsInterceptor) throws Exception {
         P lazyParams = lazyParamInjector.injectParams(
                 withLazyParamsInterceptor,
                 new LinkedHashMap<>(interceptorMapping.getParams()),
@@ -326,6 +339,22 @@ public class DefaultActionInvocation implements ActionInvocation {
 
         LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
         return withLazyParamsInterceptor.intercept(this, lazyParams);
+    }
+
+    protected String executeLazyParamsInterceptor(InterceptorMapping interceptorMapping,
+                                                  Interceptor interceptor) throws Exception {
+        if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
+            if (conditionalInterceptor.shouldIntercept(this)) {
+                LOG.debug("Executing conditional interceptor: {}", conditionalInterceptor.getClass().getSimpleName());
+                return interceptor.intercept(this);
+            } else {
+                LOG.debug("Interceptor: {} is disabled, skipping to next", conditionalInterceptor.getClass().getSimpleName());
+                return this.invoke();
+            }
+        }
+
+        LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
+        return interceptor.intercept(this);
     }
 
     protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {

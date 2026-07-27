@@ -23,7 +23,7 @@ import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
 
-public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams<MockLazyInterceptor.LazyParams> {
+public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams.InvocationScoped<MockLazyInterceptor.LazyParams> {
 
     private String foo = "";
     private String bar = "";
@@ -46,7 +46,7 @@ public class MockLazyInterceptor extends AbstractInterceptor implements WithLazy
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        return WithLazyParams.super.intercept(invocation);
+        return WithLazyParams.InvocationScoped.super.intercept(invocation);
     }
 
     @Override

@@ -203,13 +203,13 @@ import java.util.List;
  * @see AbstractFileUploadInterceptor
  */
 public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor
-        implements WithLazyParams<AbstractFileUploadInterceptor.UploadValidationPolicy> {
+        implements WithLazyParams.InvocationScoped<AbstractFileUploadInterceptor.UploadValidationPolicy> {
 
     protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        return WithLazyParams.super.intercept(invocation);
+        return WithLazyParams.InvocationScoped.super.intercept(invocation);
     }
 
     @Override

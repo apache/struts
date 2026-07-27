@@ -18,12 +18,15 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 
 import java.util.Map;
@@ -48,6 +51,8 @@ import java.util.Map;
 public interface WithLazyParams {
 
     class LazyParamInjector {
+
+        private static final Logger LOG = LogManager.getLogger(LazyParamInjector.class);
 
         protected OgnlUtil ognlUtil;
         protected TextParser textParser;
@@ -81,6 +86,50 @@ public interface WithLazyParams {
                 ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
             }
             return interceptor;
+        }
+
+        /**
+         * Resolves configured params into a per-invocation holder, leaving the interceptor untouched.
+         * <p>
+         * A {@code ${...}} expression that cannot be resolved is not written: the holder keeps its
+         * seeded configuration value and is notified via {@link InterceptorParams#unresolved(String)},
+         * so a broken expression cannot silently relax a validation policy.
+         *
+         * @since 7.3.0
+         */
+        public <P extends InterceptorParams> P resolveInto(P target, Map<String, String> params, ActionContext invocationContext) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String paramName = entry.getKey();
+                String rawValue = entry.getValue();
+                Object paramValue = textParser.evaluate(new char[]{'$'}, rawValue, valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
+
+                if (isUnresolved(rawValue, paramValue)) {
+                    LOG.warn("Param [{}] of [{}] could not be resolved from expression [{}]; keeping the configured value",
+                            paramName, target.getClass().getName(), rawValue);
+                    target.unresolved(paramName);
+                    continue;
+                }
+                try {
+                    // throwPropertyExceptions=true so a param with no matching property on the holder is
+                    // reported rather than silently ignored; OgnlUtil only warns in devMode otherwise
+                    ognlUtil.setProperty(paramName, paramValue, target, invocationContext.getContextMap(), true);
+                } catch (ReflectionException e) {
+                    LOG.warn("Param [{}] cannot be applied to [{}]; check the interceptor configuration",
+                            paramName, target.getClass().getName(), e);
+                }
+            }
+            return target;
+        }
+
+        /**
+         * {@link org.apache.struts2.util.OgnlTextParser} yields an empty string for an expression that
+         * does not resolve and gives no other signal, so the raw template is needed to tell that apart
+         * from a legitimately empty value.
+         */
+        private boolean isUnresolved(String rawValue, Object paramValue) {
+            return rawValue != null
+                    && rawValue.contains("${")
+                    && (paramValue == null || paramValue.toString().isEmpty());
         }
     }
 }

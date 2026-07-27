@@ -77,7 +77,9 @@ public class DefaultInterceptorFactoryTest extends StrutsInternalTestCase {
     public void testUnknownRefParamFailsConfiguration() {
         InterceptorConfig config = config("actionFileUpload", ActionFileUploadInterceptor.class);
 
-        assertThatThrownBy(() -> factory.buildInterceptor(config, params("maximumSizes", "1024")))
+        Map<String, String> refParams = params("maximumSizes", "1024");
+
+        assertThatThrownBy(() -> factory.buildInterceptor(config, refParams))
                 .isInstanceOf(ConfigurationException.class)
                 .hasMessageContaining("maximumSizes")
                 .hasMessageContaining("actionFileUpload")
@@ -93,7 +95,9 @@ public class DefaultInterceptorFactoryTest extends StrutsInternalTestCase {
     public void testUnknownRefParamFailureIsNotRewrapped() {
         InterceptorConfig config = config("actionFileUpload", ActionFileUploadInterceptor.class);
 
-        assertThatThrownBy(() -> factory.buildInterceptor(config, params("nope", "x")))
+        Map<String, String> refParams = params("nope", "x");
+
+        assertThatThrownBy(() -> factory.buildInterceptor(config, refParams))
                 .isInstanceOf(ConfigurationException.class)
                 .hasNoCause();
     }
@@ -121,7 +125,9 @@ public class DefaultInterceptorFactoryTest extends StrutsInternalTestCase {
     public void testSameParamOnTheRefIsValidated() {
         InterceptorConfig config = config("lazy", MockLazyInterceptor.class);
 
-        assertThatThrownBy(() -> factory.buildInterceptor(config, params("interceptorOnly", "x")))
+        Map<String, String> refParams = params("interceptorOnly", "x");
+
+        assertThatThrownBy(() -> factory.buildInterceptor(config, refParams))
                 .isInstanceOf(ConfigurationException.class)
                 .hasMessageContaining("interceptorOnly")
                 .hasMessageContaining(MockLazyInterceptor.MockLazyParams.class.getName());

@@ -24,6 +24,7 @@ import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.InterceptorConfig;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 
@@ -65,6 +66,41 @@ public class DefaultInterceptorFactoryTest extends XWorkTestCase {
             assertEquals(Long.valueOf(42L), lazyParams.getMaximumSize());
             assertEquals("strict", lazyParams.getMode());
         } finally {
+            ActionContext.clear();
+        }
+    }
+
+    public void testBuildInterceptorAllowlistsInvocationScopedLazyParamsCarrier() throws Exception {
+        DefaultInterceptorFactory factory = new DefaultInterceptorFactory();
+        container.inject(factory);
+
+        InterceptorConfig config = new InterceptorConfig.Builder("typedLazy", TypedLazyInterceptor.class.getName())
+                .addParam("maximumSize", "${maxFileSize}")
+                .build();
+
+        TypedLazyInterceptor interceptor =
+                (TypedLazyInterceptor) factory.buildInterceptor(config, Collections.emptyMap());
+
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(new LazyParamAction(42L));
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .bind();
+
+        ThreadAllowlist threadAllowlist = container.getInstance(ThreadAllowlist.class);
+        threadAllowlist.clearAllowlist();
+
+        try {
+            WithLazyParams.LazyParamInjector lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(lazyParamInjector);
+
+            lazyParamInjector.injectParams(interceptor, config.getParams(), context);
+
+            assertTrue(threadAllowlist.getAllowlist().contains(TypedLazyInterceptor.LazyParams.class));
+        } finally {
+            threadAllowlist.clearAllowlist();
             ActionContext.clear();
         }
     }

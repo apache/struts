@@ -22,6 +22,7 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStack;
@@ -72,6 +73,7 @@ public interface WithLazyParams {
 
         protected OgnlUtil ognlUtil;
         protected TextParser textParser;
+        protected ThreadAllowlist threadAllowlist;
         private final TextParseUtil.ParsedValueEvaluator valueEvaluator;
 
         public LazyParamInjector(final ValueStack valueStack) {
@@ -89,6 +91,11 @@ public interface WithLazyParams {
             this.ognlUtil = ognlUtil;
         }
 
+        @Inject
+        public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+            this.threadAllowlist = threadAllowlist;
+        }
+
         public <P> P injectParams(InvocationScoped<P> interceptor, Map<String, String> params, ActionContext invocationContext) {
             P lazyParams = interceptor.newLazyParams();
             injectParams(lazyParams, params, invocationContext);
@@ -101,6 +108,9 @@ public interface WithLazyParams {
         }
 
         private void injectParams(Object target, Map<String, String> params, ActionContext invocationContext) {
+            if (threadAllowlist != null) {
+                threadAllowlist.allowClassHierarchy(target.getClass());
+            }
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
                 ognlUtil.setProperty(entry.getKey(), paramValue, target, invocationContext.getContextMap());

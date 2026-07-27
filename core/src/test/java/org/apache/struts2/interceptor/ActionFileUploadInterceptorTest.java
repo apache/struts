@@ -34,6 +34,8 @@ import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import org.assertj.core.util.Files;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -41,8 +43,16 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -536,14 +546,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
-        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
-        jak.setMaxSize(String.valueOf(maxsize));
-        jak.setMaxFileSize(String.valueOf(maxfilesize));
-        jak.setMaxFiles(String.valueOf(maxfiles));
-        jak.setMaxStringLength(String.valueOf(maxStringLength));
-        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
-        return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+        return createMultipartRequest(request, maxsize, maxfilesize, maxfiles, maxStringLength);
     }
 
     protected void setUp() throws Exception {
@@ -953,6 +956,173 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         assertThat(policy.getAllowedTypes()).isEmpty();
         assertThat(policy.getAllowedExtensions()).isEmpty();
+    }
+
+    /**
+     * Regression for WW-5659: two concurrent invocations resolving different policies must not
+     * see each other's values. Scenario contributed by @deprrous in GitHub PR #1815.
+     */
+    public void testConcurrentDynamicPoliciesStayIsolatedPerRequest() throws Exception {
+        CoordinatedActionFileUploadInterceptor sharedInterceptor = new CoordinatedActionFileUploadInterceptor();
+        container.inject(sharedInterceptor);
+
+        MyDynamicFileUploadAction plainPolicyAction = new MyDynamicFileUploadAction();
+        plainPolicyAction.setAllowedMimeTypes("text/plain");
+        container.inject(plainPolicyAction);
+
+        MyDynamicFileUploadAction htmlPolicyAction = new MyDynamicFileUploadAction();
+        htmlPolicyAction.setAllowedMimeTypes("text/html");
+        container.inject(htmlPolicyAction);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<String> plainResult = executor.submit(() -> runUploadAttempt(
+                    sharedInterceptor, plainPolicyAction, createUploadRequest("plain-policy.html", "text/html", htmlContent)));
+
+            assertThat(sharedInterceptor.awaitFirstValidation()).isTrue();
+
+            Future<String> htmlResult = executor.submit(() -> runUploadAttempt(
+                    sharedInterceptor, htmlPolicyAction, createUploadRequest("html-policy.html", "text/html", htmlContent)));
+
+            assertThat(htmlResult.get(10, TimeUnit.SECONDS)).isEqualTo("success");
+            sharedInterceptor.releaseFirstValidation();
+            assertThat(plainResult.get(10, TimeUnit.SECONDS)).isEqualTo("success");
+        } finally {
+            sharedInterceptor.releaseFirstValidation();
+            executor.shutdownNow();
+            sharedInterceptor.destroy();
+        }
+
+        // the text/plain policy must have rejected the text/html upload despite the concurrent
+        // text/html invocation resolving a more permissive policy on the same interceptor
+        assertThat(plainPolicyAction.getUploadFiles()).isNull();
+        assertThat(plainPolicyAction.getFieldErrors()).containsKey("file");
+
+        assertThat(htmlPolicyAction.hasFieldErrors()).isFalse();
+        assertThat(htmlPolicyAction.getUploadFiles()).isNotNull().hasSize(1);
+        assertThat(htmlPolicyAction.getUploadFiles().get(0).getOriginalName()).isEqualTo("html-policy.html");
+    }
+
+    /**
+     * Regression for WW-5659: resolving an invocation's params must leave the interceptor
+     * singleton exactly as configured.
+     */
+    public void testResolutionDoesNotMutateTheInterceptor() throws Exception {
+        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
+        container.inject(interceptor);
+        interceptor.setAllowedTypes("text/plain");
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/html");
+        container.inject(action);
+
+        runUploadAttempt(interceptor, action, createUploadRequest("f.html", "text/html", htmlContent));
+
+        assertThat(interceptor.newLazyParams().getAllowedTypes()).containsExactly("text/plain");
+    }
+
+    /**
+     * Regression for WW-5659: a lazily resolved {@code disabled} must apply to one invocation only.
+     */
+    public void testDisabledIsResolvedPerInvocation() throws Exception {
+        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
+        container.inject(interceptor);
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/plain");
+        container.inject(action);
+
+        UploadPolicy policy = interceptor.newLazyParams();
+        policy.setDisabled("true");
+
+        assertThat(policy.isDisabled()).isTrue();
+        assertThat(interceptor.newLazyParams().isDisabled()).isFalse();
+    }
+
+    private String runUploadAttempt(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                    MyDynamicFileUploadAction action,
+                                    MockHttpServletRequest uploadRequest) throws Exception {
+        MultiPartRequestWrapper multiPartRequest = createMultipartRequest(uploadRequest, -1, -1, 3, -1);
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(action);
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .withServletRequest(multiPartRequest)
+                .bind();
+        try {
+            MockActionInvocation invocation = new MockActionInvocation();
+            invocation.setAction(action);
+            invocation.setResultCode("success");
+            invocation.setInvocationContext(context);
+
+            Map<String, String> params = new HashMap<>();
+            params.put("allowedTypes", "${allowedMimeTypes}");
+
+            WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(injector);
+            UploadPolicy policy = injector.resolveInto(actionFileUploadInterceptor.newLazyParams(), params, context);
+
+            return actionFileUploadInterceptor.intercept(invocation, policy);
+        } finally {
+            ActionContext.clear();
+        }
+    }
+
+    private MockHttpServletRequest createUploadRequest(String filename, String contentType, String content) {
+        MockHttpServletRequest uploadRequest = new MockHttpServletRequest();
+        uploadRequest.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        uploadRequest.setMethod("POST");
+        uploadRequest.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+        uploadRequest.setContent((encodeTextFile(filename, contentType, content) + endLine + "--" + boundary + "--")
+                .getBytes(StandardCharsets.UTF_8));
+        return uploadRequest;
+    }
+
+    private MultiPartRequestWrapper createMultipartRequest(MockHttpServletRequest multipartRequest, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
+        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        jak.setMaxSize(String.valueOf(maxsize));
+        jak.setMaxFileSize(String.valueOf(maxfilesize));
+        jak.setMaxFiles(String.valueOf(maxfiles));
+        jak.setMaxStringLength(String.valueOf(maxStringLength));
+        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        return new MultiPartRequestWrapper(jak, multipartRequest, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+    }
+
+    /** Pauses the first validation so a second invocation can overlap it. From PR #1815 by @deprrous. */
+    private static final class CoordinatedActionFileUploadInterceptor extends ActionFileUploadInterceptor {
+        private final AtomicBoolean pauseFirstValidation = new AtomicBoolean(true);
+        private final CountDownLatch firstValidationEntered = new CountDownLatch(1);
+        private final CountDownLatch allowFirstValidationToContinue = new CountDownLatch(1);
+
+        @Override
+        protected boolean acceptFile(UploadPolicy policy, Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+            if (pauseFirstValidation.compareAndSet(true, false)) {
+                firstValidationEntered.countDown();
+                awaitUnchecked(allowFirstValidationToContinue);
+            }
+            return super.acceptFile(policy, action, file, originalFilename, contentType, inputName);
+        }
+
+        private boolean awaitFirstValidation() throws InterruptedException {
+            return firstValidationEntered.await(10, TimeUnit.SECONDS);
+        }
+
+        private void releaseFirstValidation() {
+            allowFirstValidationToContinue.countDown();
+        }
+
+        private void awaitUnchecked(CountDownLatch latch) {
+            try {
+                if (!latch.await(10, TimeUnit.SECONDS)) {
+                    throw new AssertionError("Timed out waiting for concurrent validation release");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new AssertionError("Interrupted while waiting for concurrent validation release", e);
+            }
+        }
     }
 
 }

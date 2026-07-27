@@ -202,12 +202,22 @@ import java.util.List;
  * @see UploadedFilesAware
  * @see AbstractFileUploadInterceptor
  */
-public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor implements WithLazyParams {
+public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor implements WithLazyParams<UploadPolicy> {
 
     protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 
     @Override
+    public UploadPolicy newLazyParams() {
+        return copyConfiguredPolicy();
+    }
+
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        return intercept(invocation, newLazyParams());
+    }
+
+    @Override
+    public String intercept(ActionInvocation invocation, UploadPolicy policy) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         MultiPartRequestWrapper multiWrapper = request instanceof HttpServletRequestWrapper wrapper
                 ? findMultipartRequestWrapper(wrapper)
@@ -227,8 +237,6 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
                     UploadedFilesAware.class.getSimpleName());
             return invocation.invoke();
         }
-
-        UploadPolicy policy = copyConfiguredPolicy();
 
         applyValidation(action, multiWrapper);
 

@@ -21,9 +21,35 @@ package org.apache.struts2.mock;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.InterceptorParams;
 import org.apache.struts2.interceptor.WithLazyParams;
 
-public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams {
+public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams<MockLazyInterceptor.MockLazyParams> {
+
+    /**
+     * Per-invocation holder, seeded from the configured values.
+     */
+    public static class MockLazyParams implements InterceptorParams {
+
+        private String foo = "";
+        private String bar = "";
+
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setBar(String bar) {
+            this.bar = bar;
+        }
+
+        public String getBar() {
+            return bar;
+        }
+    }
 
     private String foo = "";
     private String bar = "";
@@ -44,12 +70,26 @@ public class MockLazyInterceptor extends AbstractInterceptor implements WithLazy
         return bar;
     }
 
+    @Override
+    public MockLazyParams newLazyParams() {
+        MockLazyParams params = new MockLazyParams();
+        params.setFoo(foo);
+        params.setBar(bar);
+        return params;
+    }
+
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        return intercept(invocation, newLazyParams());
+    }
+
+    @Override
+    public String intercept(ActionInvocation invocation, MockLazyParams lazyParams) throws Exception {
         if (invocation.getAction() instanceof SimpleAction) {
-            ((SimpleAction) invocation.getAction()).setName(foo);
+            ((SimpleAction) invocation.getAction()).setName(lazyParams.getFoo());
             // Only set blah if bar is configured (not empty)
-            if (bar != null && !bar.isEmpty()) {
-                ((SimpleAction) invocation.getAction()).setBlah(bar);
+            if (lazyParams.getBar() != null && !lazyParams.getBar().isEmpty()) {
+                ((SimpleAction) invocation.getAction()).setBlah(lazyParams.getBar());
             }
         }
         return invocation.invoke();

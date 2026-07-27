@@ -40,6 +40,7 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -258,17 +259,9 @@ public class DefaultActionInvocation implements ActionInvocation {
             if (interceptors.hasNext()) {
                 final InterceptorMapping interceptorMapping = interceptors.next();
                 Interceptor interceptor = interceptorMapping.getInterceptor();
-                if (interceptor instanceof WithLazyParams) {
-                    Map<String, String> params = interceptorMapping.getParams();
-
-                    proxy.getConfig().getInterceptors().stream()
-                            .filter(im -> im.getName().equals(interceptorMapping.getName()))
-                            .findFirst()
-                            .ifPresent(im -> params.putAll(im.getParams()));
-                    
-                    interceptor = lazyParamInjector.injectParams(interceptor, params, invocationContext);
-                }
-                if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
+                if (interceptor instanceof WithLazyParams<?> lazyInterceptor) {
+                    resultCode = invokeWithLazyParams(lazyInterceptor, interceptorMapping);
+                } else if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
                     resultCode = executeConditional(conditionalInterceptor);
                 } else {
                     LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
@@ -310,6 +303,44 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
 
         return resultCode;
+    }
+
+    /**
+     * Resolves lazy params into a per-invocation holder and dispatches to the interceptor.
+     * <p>
+     * {@link org.apache.struts2.interceptor.AbstractInterceptor} implements
+     * {@link ConditionalInterceptor}, so a lazy interceptor is normally conditional too; both the
+     * lazily resolved {@code disabled} flag and any custom {@code shouldIntercept} must be honoured
+     * here, because the single-argument {@code intercept} is not the entry point on this path.
+     */
+    private <P extends org.apache.struts2.interceptor.InterceptorParams> String invokeWithLazyParams(
+            WithLazyParams<P> lazyInterceptor, InterceptorMapping interceptorMapping) throws Exception {
+        P lazyParams = lazyParamInjector.resolveInto(
+                lazyInterceptor.newLazyParams(), mergedParams(interceptorMapping), invocationContext);
+
+        if (lazyParams instanceof org.apache.struts2.interceptor.DisableParams disableParams && disableParams.isDisabled()) {
+            LOG.debug("Interceptor: {} is disabled for this invocation, skipping to next", interceptorMapping.getName());
+            return this.invoke();
+        }
+        if (lazyInterceptor instanceof ConditionalInterceptor conditionalInterceptor
+                && !conditionalInterceptor.shouldIntercept(this)) {
+            LOG.debug("Interceptor: {} is disabled, skipping to next", interceptorMapping.getName());
+            return this.invoke();
+        }
+        LOG.debug("Executing lazy params interceptor: {}", interceptorMapping.getName());
+        return lazyInterceptor.intercept(this, lazyParams);
+    }
+
+    /**
+     * @return a fresh map; the mapping's own param map is shared across requests and must not be mutated
+     */
+    private Map<String, String> mergedParams(InterceptorMapping interceptorMapping) {
+        Map<String, String> merged = new HashMap<>(interceptorMapping.getParams());
+        proxy.getConfig().getInterceptors().stream()
+                .filter(im -> im.getName().equals(interceptorMapping.getName()))
+                .findFirst()
+                .ifPresent(im -> merged.putAll(im.getParams()));
+        return merged;
     }
 
     protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {

@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.TextParseUtil;
@@ -48,7 +49,21 @@ import java.util.Map;
  *
  * @since 2.5.9
  */
-public interface WithLazyParams {
+public interface WithLazyParams<P extends InterceptorParams> {
+
+    /**
+     * @return a fresh holder for one invocation, seeded from the configured values
+     * @since 7.3.0
+     */
+    P newLazyParams();
+
+    /**
+     * Invoked in place of {@link Interceptor#intercept(ActionInvocation)} when lazy params apply.
+     *
+     * @param lazyParams params resolved for this invocation only
+     * @since 7.3.0
+     */
+    String intercept(ActionInvocation invocation, P lazyParams) throws Exception;
 
     class LazyParamInjector {
 
@@ -78,14 +93,6 @@ public interface WithLazyParams {
         @Inject
         public void setOgnlUtil(OgnlUtil ognlUtil) {
             this.ognlUtil = ognlUtil;
-        }
-
-        public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
-                ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
-            }
-            return interceptor;
         }
 
         /**

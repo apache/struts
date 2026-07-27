@@ -18,20 +18,21 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStack;
-import org.apache.struts2.util.reflection.ReflectionProvider;
 
 import java.util.Map;
 
 /**
  * Interceptors marked with this interface support dynamic parameter evaluation at action invocation time.
- * Parameters are set during interceptor creation (factory time), then re-evaluated during each action
- * invocation to resolve expressions like ${someValue}.
+ * Static parameters are set during interceptor creation (factory time), while lazy expression parameters
+ * are re-evaluated during each action invocation to resolve expressions like ${someValue} into an
+ * invocation-scoped parameter holder.
  * <p>
  * This enables both:
  * <ul>
@@ -45,16 +46,27 @@ import java.util.Map;
  *
  * @since 2.5.9
  */
-public interface WithLazyParams {
+public interface WithLazyParams<P> extends Interceptor {
+
+    /**
+     * Creates the per-invocation holder used for lazily resolved interceptor params.
+     */
+    P newLazyParams();
+
+    /**
+     * Intercepts using the per-invocation lazy params resolved for the current request.
+     */
+    String intercept(ActionInvocation invocation, P lazyParams) throws Exception;
+
+    @Override
+    default String intercept(ActionInvocation invocation) throws Exception {
+        return intercept(invocation, newLazyParams());
+    }
 
     class LazyParamInjector {
 
-        private static final ThreadLocal<Boolean> PARAM_INJECTION_IN_PROGRESS = new ThreadLocal<>();
-
         protected OgnlUtil ognlUtil;
         protected TextParser textParser;
-        protected ReflectionProvider reflectionProvider;
-
         private final TextParseUtil.ParsedValueEvaluator valueEvaluator;
 
         public LazyParamInjector(final ValueStack valueStack) {
@@ -68,30 +80,17 @@ public interface WithLazyParams {
         }
 
         @Inject
-        public void setReflectionProvider(ReflectionProvider reflectionProvider) {
-            this.reflectionProvider = reflectionProvider;
-        }
-
-        @Inject
         public void setOgnlUtil(OgnlUtil ognlUtil) {
             this.ognlUtil = ognlUtil;
         }
 
-        public static boolean isParamInjectionInProgress() {
-            return Boolean.TRUE.equals(PARAM_INJECTION_IN_PROGRESS.get());
-        }
-
-        public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
-            PARAM_INJECTION_IN_PROGRESS.set(Boolean.TRUE);
-            try {
-                for (Map.Entry<String, String> entry : params.entrySet()) {
-                    Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
-                    ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
-                }
-                return interceptor;
-            } finally {
-                PARAM_INJECTION_IN_PROGRESS.remove();
+        public <P> P injectParams(WithLazyParams<P> interceptor, Map<String, String> params, ActionContext invocationContext) {
+            P lazyParams = interceptor.newLazyParams();
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
+                ognlUtil.setProperty(entry.getKey(), paramValue, lazyParams, invocationContext.getContextMap());
             }
+            return lazyParams;
         }
     }
 }

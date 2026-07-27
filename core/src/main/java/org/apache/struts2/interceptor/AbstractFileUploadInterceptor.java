@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.ActionContext;
 import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
@@ -63,7 +62,6 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     private Long maximumSize;
     private Set<String> allowedTypesSet = Collections.emptySet();
     private Set<String> allowedExtensionsSet = Collections.emptySet();
-    private final ThreadLocal<UploadValidationPolicy> requestScopedUploadValidationPolicy = new ThreadLocal<>();
 
     private ContentTypeMatcher<Object> matcher;
     private Container container;
@@ -84,12 +82,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param allowedExtensions A comma-delimited list of extensions
      */
     public void setAllowedExtensions(String allowedExtensions) {
-        Set<String> parsedAllowedExtensions = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
-        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
-            getOrCreateRequestScopedUploadValidationPolicy().allowedExtensionsSet = parsedAllowedExtensions;
-        } else {
-            allowedExtensionsSet = parsedAllowedExtensions;
-        }
+        allowedExtensionsSet = parseCommaDelimitedSet(allowedExtensions);
     }
 
     /**
@@ -98,12 +91,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param allowedTypes A comma-delimited list of types
      */
     public void setAllowedTypes(String allowedTypes) {
-        Set<String> parsedAllowedTypes = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
-        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
-            getOrCreateRequestScopedUploadValidationPolicy().allowedTypesSet = parsedAllowedTypes;
-        } else {
-            allowedTypesSet = parsedAllowedTypes;
-        }
+        allowedTypesSet = parseCommaDelimitedSet(allowedTypes);
     }
 
     /**
@@ -112,15 +100,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param maximumSize The maximum size in bytes
      */
     public void setMaximumSize(Long maximumSize) {
-        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
-            getOrCreateRequestScopedUploadValidationPolicy().maximumSize = maximumSize;
-        } else {
-            this.maximumSize = maximumSize;
-        }
-    }
-
-    protected void clearRequestScopedUploadValidationPolicy() {
-        requestScopedUploadValidationPolicy.remove();
+        this.maximumSize = maximumSize;
     }
 
     /**
@@ -134,7 +114,15 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @return true if the proposed file is acceptable by contentType and size.
      */
     protected boolean acceptFile(Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
-        UploadValidationPolicy validationPolicy = getUploadValidationPolicy();
+        return acceptFile(action, file, originalFilename, contentType, inputName, createUploadValidationPolicy());
+    }
+
+    protected boolean acceptFile(Object action,
+                                 UploadedFile file,
+                                 String originalFilename,
+                                 String contentType,
+                                 String inputName,
+                                 UploadValidationPolicy validationPolicy) {
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
@@ -186,21 +174,15 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 
-    private UploadValidationPolicy getUploadValidationPolicy() {
-        UploadValidationPolicy requestScopedPolicy = requestScopedUploadValidationPolicy.get();
-        if (requestScopedPolicy != null) {
-            return requestScopedPolicy;
-        }
+    protected UploadValidationPolicy createUploadValidationPolicy() {
         return new UploadValidationPolicy(maximumSize, allowedTypesSet, allowedExtensionsSet);
     }
 
-    private UploadValidationPolicy getOrCreateRequestScopedUploadValidationPolicy() {
-        UploadValidationPolicy requestScopedPolicy = requestScopedUploadValidationPolicy.get();
-        if (requestScopedPolicy == null) {
-            requestScopedPolicy = new UploadValidationPolicy(maximumSize, allowedTypesSet, allowedExtensionsSet);
-            requestScopedUploadValidationPolicy.set(requestScopedPolicy);
+    private Set<String> parseCommaDelimitedSet(String value) {
+        if (value == null || value.isBlank()) {
+            return Collections.emptySet();
         }
-        return requestScopedPolicy;
+        return TextParseUtil.commaDelimitedStringToSet(value);
     }
 
     /**
@@ -287,15 +269,31 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         }
     }
 
-    private static final class UploadValidationPolicy {
+    protected static class UploadValidationPolicy {
         private Long maximumSize;
-        private Set<String> allowedTypesSet;
-        private Set<String> allowedExtensionsSet;
+        private Set<String> allowedTypesSet = Collections.emptySet();
+        private Set<String> allowedExtensionsSet = Collections.emptySet();
 
         private UploadValidationPolicy(Long maximumSize, Set<String> allowedTypesSet, Set<String> allowedExtensionsSet) {
             this.maximumSize = maximumSize;
             this.allowedTypesSet = allowedTypesSet;
             this.allowedExtensionsSet = allowedExtensionsSet;
+        }
+
+        public void setMaximumSize(Long maximumSize) {
+            this.maximumSize = maximumSize;
+        }
+
+        public void setAllowedTypes(String allowedTypes) {
+            this.allowedTypesSet = allowedTypes == null || allowedTypes.isBlank()
+                    ? Collections.emptySet()
+                    : TextParseUtil.commaDelimitedStringToSet(allowedTypes);
+        }
+
+        public void setAllowedExtensions(String allowedExtensions) {
+            this.allowedExtensionsSet = allowedExtensions == null || allowedExtensions.isBlank()
+                    ? Collections.emptySet()
+                    : TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
         }
     }
 

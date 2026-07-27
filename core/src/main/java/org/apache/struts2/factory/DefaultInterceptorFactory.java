@@ -68,10 +68,12 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
             }
 
-            reflectionProvider.setProperties(params, interceptor);
             if (interceptor instanceof WithLazyParams) {
+                reflectionProvider.setProperties(filterFactoryTimeParams(params), interceptor);
                 LOG.debug("Interceptor {} implements {} - expression parameters will be re-evaluated during action invocation",
                         interceptorClassName, WithLazyParams.class.getName());
+            } else {
+                reflectionProvider.setProperties(params, interceptor);
             }
 
             interceptor.init();
@@ -94,6 +96,20 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
         }
 
         throw new ConfigurationException(message, cause, interceptorConfig);
+    }
+
+    private Map<String, String> filterFactoryTimeParams(Map<String, String> params) {
+        Map<String, String> eagerParams = new HashMap<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (!containsLazyParamExpression(entry.getValue())) {
+                eagerParams.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return eagerParams;
+    }
+
+    private boolean containsLazyParamExpression(String value) {
+        return value != null && value.contains("${") && value.contains("}");
     }
 
 }

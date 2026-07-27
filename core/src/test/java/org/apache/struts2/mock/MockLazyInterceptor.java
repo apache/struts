@@ -23,7 +23,7 @@ import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
 
-public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams {
+public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams<MockLazyInterceptor.LazyParams> {
 
     private String foo = "";
     private String bar = "";
@@ -44,14 +44,51 @@ public class MockLazyInterceptor extends AbstractInterceptor implements WithLazy
         return bar;
     }
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        return WithLazyParams.super.intercept(invocation);
+    }
+
+    @Override
+    public LazyParams newLazyParams() {
+        return new LazyParams(foo, bar);
+    }
+
+    @Override
+    public String intercept(ActionInvocation invocation, LazyParams lazyParams) throws Exception {
         if (invocation.getAction() instanceof SimpleAction) {
-            ((SimpleAction) invocation.getAction()).setName(foo);
+            ((SimpleAction) invocation.getAction()).setName(lazyParams.getFoo());
             // Only set blah if bar is configured (not empty)
-            if (bar != null && !bar.isEmpty()) {
-                ((SimpleAction) invocation.getAction()).setBlah(bar);
+            if (lazyParams.getBar() != null && !lazyParams.getBar().isEmpty()) {
+                ((SimpleAction) invocation.getAction()).setBlah(lazyParams.getBar());
             }
         }
         return invocation.invoke();
+    }
+
+    public static final class LazyParams {
+        private String foo = "";
+        private String bar = "";
+
+        private LazyParams(String foo, String bar) {
+            this.foo = foo;
+            this.bar = bar;
+        }
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+
+        public String getBar() {
+            return bar;
+        }
+
+        public void setBar(String bar) {
+            this.bar = bar;
+        }
     }
 }

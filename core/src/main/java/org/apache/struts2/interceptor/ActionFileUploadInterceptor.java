@@ -228,6 +228,8 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
             return invocation.invoke();
         }
 
+        UploadPolicy policy = copyConfiguredPolicy();
+
         applyValidation(action, multiWrapper);
 
         // bind allowed Files
@@ -245,7 +247,7 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
                 }
             } else {
                 for (UploadedFile uploadedFile : uploadedFiles) {
-                    if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
+                    if (acceptFile(policy, action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
                         acceptedFiles.add(uploadedFile);
                     }
                 }

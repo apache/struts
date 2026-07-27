@@ -24,7 +24,6 @@ import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -35,7 +34,6 @@ import org.apache.struts2.util.ContentTypeMatcher;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,9 +57,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
 
-    private Long maximumSize;
-    private Set<String> allowedTypesSet = Collections.emptySet();
-    private Set<String> allowedExtensionsSet = Collections.emptySet();
+    private final UploadPolicy configuredPolicy = new UploadPolicy();
 
     private ContentTypeMatcher<Object> matcher;
     private Container container;
@@ -77,35 +73,48 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     }
 
     /**
-     * Sets the allowed extensions
+     * Sets the allowed extensions. Applied at configuration time only; the effective policy for
+     * an invocation is a copy, see {@link ActionFileUploadInterceptor#newLazyParams()}.
      *
      * @param allowedExtensions A comma-delimited list of extensions
      */
     public void setAllowedExtensions(String allowedExtensions) {
-        allowedExtensionsSet = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
+        configuredPolicy.setAllowedExtensions(allowedExtensions);
     }
 
     /**
-     * Sets the allowed mimetypes
+     * Sets the allowed mimetypes. Applied at configuration time only; the effective policy for
+     * an invocation is a copy, see {@link ActionFileUploadInterceptor#newLazyParams()}.
      *
      * @param allowedTypes A comma-delimited list of types
      */
     public void setAllowedTypes(String allowedTypes) {
-        allowedTypesSet = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
+        configuredPolicy.setAllowedTypes(allowedTypes);
     }
 
     /**
-     * Sets the maximum size of an uploaded file
+     * Sets the maximum size of an uploaded file. Applied at configuration time only; the
+     * effective policy for an invocation is a copy, see
+     * {@link ActionFileUploadInterceptor#newLazyParams()}.
      *
      * @param maximumSize The maximum size in bytes
      */
     public void setMaximumSize(Long maximumSize) {
-        this.maximumSize = maximumSize;
+        configuredPolicy.setMaximumSize(maximumSize);
+    }
+
+    /**
+     * @return an independent copy of the configured policy, to be resolved for one invocation
+     * @since 7.3.0
+     */
+    protected UploadPolicy copyConfiguredPolicy() {
+        return configuredPolicy.copy();
     }
 
     /**
      * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
      *
+     * @param policy           - the effective upload policy for this invocation.
      * @param action           - uploading action for message retrieval.
      * @param file             - proposed upload file.
      * @param originalFilename - name of the file.
@@ -113,7 +122,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param inputName        - inputName of the file.
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+    protected boolean acceptFile(UploadPolicy policy, Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
@@ -131,21 +140,21 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (maximumSize != null && maximumSize < file.length()) {
+        if (policy.getMaximumSize() != null && policy.getMaximumSize() < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
-                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)
+                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
+        if ((!policy.getAllowedTypes().isEmpty()) && (!containsItem(policy.getAllowedTypes(), contentType))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{
                 inputName, originalFilename, file.getName(), contentType
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, originalFilename))) {
+        if ((!policy.getAllowedExtensions().isEmpty()) && (!hasAllowedExtension(policy.getAllowedExtensions(), originalFilename))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{
                 inputName, originalFilename, file.getName(), contentType
             });
@@ -161,7 +170,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return errorMessages.isEmpty();
     }
 
-    private String getMaximumSizeStr(Object action) {
+    private String getMaximumSizeStr(Object action, Long maximumSize) {
         return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 

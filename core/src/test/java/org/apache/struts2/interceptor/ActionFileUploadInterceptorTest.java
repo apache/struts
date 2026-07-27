@@ -63,7 +63,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testAcceptFileWithEmptyAllowedTypesAndExtensions() {
         // when allowed type is empty
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -75,7 +75,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -83,7 +83,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed types
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -94,7 +94,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/*");
 
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -102,7 +102,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.setAllowedTypes("text/h*");
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/plain", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/plain", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -114,7 +114,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed extensions
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -122,7 +122,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed extensions
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -130,7 +130,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.setAllowedExtensions(".txt,.lol");
         validation = new ValidationAwareSupport();
-        ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.lol", "text/plain", "inputName");
+        ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.lol", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -142,7 +142,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, null, "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, null, "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -159,7 +159,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/plain");
 
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(null), "filename.html", "text/plain", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(null), "filename.html", "text/plain", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -183,7 +183,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .withInputName("inputName")
                 .build();
 
-        boolean ok = interceptor.acceptFile(validation, file, "f.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, file, "f.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.hasErrors()).isFalse();
@@ -203,7 +203,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .build();
 
         // wrong content type -> rejected
-        boolean ok = interceptor.acceptFile(validation, file, "f.html", "text/html", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, file, "f.html", "text/html", "inputName");
 
         assertThat(ok).isFalse();
         assertThat(validation.hasErrors()).isTrue();
@@ -221,7 +221,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         File file = new File(new URI(url.toString()));
         assertThat(file).exists();
         UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
-        boolean notOk = interceptor.acceptFile(validation, uploadedFile, "filename", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, uploadedFile, "filename", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -918,6 +918,41 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         public void setMaxFileSize(Long maxFileSize) {
             this.maxFileSize = maxFileSize;
         }
+    }
+
+    public void testUploadPolicyParsesAndCopies() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain, text/html");
+        policy.setAllowedExtensions(".txt,.html");
+        policy.setMaximumSize(1024L);
+        policy.setDisabled("true");
+
+        UploadPolicy copy = policy.copy();
+
+        assertThat(copy.getAllowedTypes()).containsExactlyInAnyOrder("text/plain", "text/html");
+        assertThat(copy.getAllowedExtensions()).containsExactlyInAnyOrder(".txt", ".html");
+        assertThat(copy.getMaximumSize()).isEqualTo(1024L);
+        assertThat(copy.isDisabled()).isTrue();
+    }
+
+    public void testUploadPolicyCopyIsIndependentOfTheOriginal() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain");
+
+        UploadPolicy copy = policy.copy();
+        copy.setAllowedTypes("text/html");
+
+        assertThat(policy.getAllowedTypes()).containsExactly("text/plain");
+        assertThat(copy.getAllowedTypes()).containsExactly("text/html");
+    }
+
+    public void testUploadPolicyTreatsNullAsNoRestriction() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes(null);
+        policy.setAllowedExtensions(null);
+
+        assertThat(policy.getAllowedTypes()).isEmpty();
+        assertThat(policy.getAllowedExtensions()).isEmpty();
     }
 
 }

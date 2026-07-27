@@ -42,6 +42,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.struts2.ognl.OgnlUtilTest.createOgnlUtil;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -421,6 +422,58 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         // Verify static parameter is set and not evaluated as expression
         assertEquals("static value", action.getBlah());
+    }
+
+    /**
+     * Regression for WW-5659: a {@code disabled} param resolved lazily from the value stack must skip
+     * the interceptor for that invocation. It arrives through the interceptor mapping's params, so it
+     * lands on the per-invocation holder and is honoured there, never on the shared interceptor.
+     */
+    public void testInvokeWithLazyParamsSkipsLazilyDisabledInterceptor() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blah", "true");
+
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooLazilyDisabled", null, extraContext.getContextMap());
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+
+        // the rest of the stack still ran, so the params interceptor applied blah...
+        assertThat(action.getBlah()).isEqualTo("true");
+        // ...but the lazy interceptor was skipped, so it never applied its foo param to the action
+        assertThat(action.getName()).isNull();
+    }
+
+    /**
+     * Regression for WW-5659: {@code disabled} configured on the interceptor definition never reaches
+     * the params holder, so it can only be honoured through {@link org.apache.struts2.interceptor.ConditionalInterceptor#shouldIntercept}.
+     * The lazy path must still consult it.
+     */
+    public void testInvokeWithLazyParamsSkipsStaticallyDisabledInterceptor() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blah", "dynamic value");
+
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooStaticallyDisabled", null, extraContext.getContextMap());
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+
+        assertThat(action.getBlah()).isEqualTo("dynamic value");
+        assertThat(action.getName()).isNull();
     }
 
     public void testInvokeWithAsyncManager() throws Exception {

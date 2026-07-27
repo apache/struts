@@ -21,15 +21,16 @@ package org.apache.struts2.mock;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
-import org.apache.struts2.interceptor.InterceptorParams;
+import org.apache.struts2.interceptor.DisableParams;
 import org.apache.struts2.interceptor.WithLazyParams;
 
 public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams<MockLazyInterceptor.MockLazyParams> {
 
     /**
-     * Per-invocation holder, seeded from the configured values.
+     * Per-invocation holder, seeded from the configured values. Extends {@link DisableParams} so a
+     * lazily resolved {@code disabled} param applies to a single invocation.
      */
-    public static class MockLazyParams implements InterceptorParams {
+    public static class MockLazyParams extends DisableParams {
 
         private String foo = "";
         private String bar = "";

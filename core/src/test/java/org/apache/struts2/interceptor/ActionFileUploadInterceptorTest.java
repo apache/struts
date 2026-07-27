@@ -888,6 +888,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         private String allowedMimeTypes;
         private String allowedExtensions;
         private Long maxFileSize;
+        private String uploadDisabled;
 
         @Override
         public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
@@ -920,6 +921,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         public void setMaxFileSize(Long maxFileSize) {
             this.maxFileSize = maxFileSize;
+        }
+
+        public String getUploadDisabled() {
+            return uploadDisabled;
+        }
+
+        public void setUploadDisabled(String uploadDisabled) {
+            this.uploadDisabled = uploadDisabled;
         }
     }
 
@@ -1028,15 +1037,41 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
         container.inject(interceptor);
 
-        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
-        action.setAllowedMimeTypes("text/plain");
-        container.inject(action);
+        MyDynamicFileUploadAction disablingAction = new MyDynamicFileUploadAction();
+        disablingAction.setUploadDisabled("true");
+        container.inject(disablingAction);
 
-        UploadPolicy policy = interceptor.newLazyParams();
-        policy.setDisabled("true");
+        MyDynamicFileUploadAction enablingAction = new MyDynamicFileUploadAction();
+        enablingAction.setUploadDisabled("false");
+        container.inject(enablingAction);
 
-        assertThat(policy.isDisabled()).isTrue();
+        UploadPolicy disabledPolicy = resolveDisabled(interceptor, disablingAction);
+        UploadPolicy enabledPolicy = resolveDisabled(interceptor, enablingAction);
+
+        // the second resolution must not have cleared the first invocation's flag...
+        assertThat(disabledPolicy.isDisabled()).isTrue();
+        assertThat(enabledPolicy.isDisabled()).isFalse();
+        // ...and neither resolution may reach the shared interceptor
         assertThat(interceptor.newLazyParams().isDisabled()).isFalse();
+    }
+
+    private UploadPolicy resolveDisabled(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                         MyDynamicFileUploadAction action) {
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(action);
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .bind();
+        try {
+            WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(injector);
+            return injector.resolveInto(actionFileUploadInterceptor.newLazyParams(),
+                    Map.of("disabled", "${uploadDisabled}"), context);
+        } finally {
+            ActionContext.clear();
+        }
     }
 
     private String runUploadAttempt(ActionFileUploadInterceptor actionFileUploadInterceptor,

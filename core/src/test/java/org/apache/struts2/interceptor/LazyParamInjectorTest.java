@@ -51,6 +51,7 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
         public String getLabel() { return "resolved-label"; }
         public Long getLimit() { return 4096L; }
         public String getBlank() { return ""; }
+        public String getNotANumber() { return "5MB"; }
     }
 
     private ActionContext context;
@@ -127,6 +128,16 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
         assertThat(holder.getUnresolvedCalls()).containsExactly("name");
     }
 
+    public void testValueThatCannotBeConvertedSkipsWriteAndNotifiesHolder() {
+        Map<String, String> params = new HashMap<>();
+        params.put("size", "${notANumber}");
+
+        Holder holder = injector.resolveInto(new Holder(), params, context);
+
+        assertThat(holder.getSize()).isNull();
+        assertThat(holder.getUnresolvedCalls()).containsExactly("size");
+    }
+
     public void testResolvesDisabledOntoDisableParams() {
         Map<String, String> params = new HashMap<>();
         params.put("disabled", "true");
@@ -136,7 +147,7 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
         assertThat(holder.isDisabled()).isTrue();
     }
 
-    public void testUnknownParamIsIgnoredWithoutFailingTheInvocation() {
+    public void testUnknownParamDoesNotFailTheInvocationButNotifiesHolder() {
         Map<String, String> params = new HashMap<>();
         params.put("noSuchParam", "whatever");
 
@@ -144,5 +155,6 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
 
         assertThat(holder.getName()).isNull();
         assertThat(holder.getSize()).isNull();
+        assertThat(holder.getUnresolvedCalls()).containsExactly("noSuchParam");
     }
 }

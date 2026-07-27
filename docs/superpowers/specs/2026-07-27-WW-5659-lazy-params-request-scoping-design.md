@@ -173,8 +173,9 @@ Two behaviours are added:
   expression.
 - **Unknown-param warning.** A param with no matching property on the holder currently
   no-ops silently, because `ognlUtil.setProperty` swallows the `OgnlException`
-  (`OgnlUtil.java:297-299`). Log a WARN. Not a regression — a typo no-ops today too — but
-  this design makes it more likely to matter.
+  (`OgnlUtil.java:297-299`). Set `throwPropertyExceptions=true`, log a WARN, and call
+  `unresolved(paramName)` — see the general rule under *Error handling*. Not a regression in
+  detection — a typo no-ops today too — but this design makes it more likely to matter.
 
 ### `DefaultActionInvocation` (changed)
 
@@ -289,6 +290,25 @@ Under this design:
 - The write is skipped, so the holder keeps its seeded config-time value, and
   `unresolved(paramName)` is called.
 - A WARN is logged naming interceptor, param and expression.
+
+**The rule is general: every path in `resolveInto` that skips a write must notify the holder
+via `unresolved(paramName)`.** Any skipped write leaves the holder reporting a value the
+configuration did not ask for, and a holder that is not told cannot fail closed — it validates
+against a dimension that was silently dropped, which is precisely the failure this ticket
+exists to remove. There are three such paths:
+
+1. **Unresolvable or empty `${...}`** — detected by `isUnresolved`, as above.
+2. **A resolved value the holder's setter cannot accept** — e.g. `${uploadConfig.maxFileSize}`
+   returning a non-numeric `String` for the `Long` `maximumSize`. OGNL conversion throws
+   `ReflectionException` (`resolveInto` sets `throwPropertyExceptions=true`), the write is
+   skipped, and `maximumSize` stays `null` — which `acceptFile` reads as "no size limit". Left
+   unnotified this branch is fail-*open*, so it must call `unresolved` too.
+3. **A param with no matching property on the holder** — the same `ReflectionException`
+   (`NoSuchPropertyException`) from a typo'd param name. Config-time reflection does not reject
+   it (`DefaultInterceptorFactory` calls `setProperties` without `throwPropertyExceptions`), so
+   the lazy path is where it first surfaces; it is notified for the same reason.
+
+A new failure mode added to `resolveInto` later must be checked against this rule.
 
 `UploadPolicy.unresolved(param)` records the parameter and marks the whole policy unusable,
 regardless of the seeded value. A static fallback therefore applies only when the param is absent

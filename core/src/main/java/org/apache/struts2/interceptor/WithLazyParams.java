@@ -98,13 +98,22 @@ public interface WithLazyParams<P extends InterceptorParams> {
         /**
          * Resolves configured params into a per-invocation holder, leaving the interceptor untouched.
          * <p>
-         * A {@code ${...}} expression that resolves to null or an empty value is not written: the
-         * holder keeps its seeded configuration value and is notified via
-         * {@link InterceptorParams#unresolved(String)}. This also catches an expression that
-         * legitimately evaluates to an empty string, which is indistinguishable from a failed
-         * resolution (see {@link #isUnresolved}); for a fail-closed policy such as an allowlist,
-         * treating both as unusable is the safe reading, so a broken expression cannot silently
-         * relax a validation policy.
+         * <strong>Every path that skips a write notifies the holder</strong> via
+         * {@link InterceptorParams#unresolved(String)}, so the holder can fail closed rather than
+         * silently validating against a dimension that was dropped. Two such paths exist:
+         * <ul>
+         *   <li>a {@code ${...}} expression that resolves to null or an empty value (see
+         *       {@link #isUnresolved})</li>
+         *   <li>a resolved value the holder's setter cannot accept, e.g. a non-numeric string for a
+         *       {@code Long} property, which OGNL reports as a
+         *       {@link ReflectionException} during conversion</li>
+         * </ul>
+         * In both cases the holder keeps its seeded configuration value and a WARN is logged.
+         * <p>
+         * The empty-value rule also catches an expression that legitimately evaluates to an empty
+         * string, which is indistinguishable from a failed resolution; for a fail-closed policy such
+         * as an allowlist, treating both as unusable is the safe reading, so a broken expression
+         * cannot silently relax a validation policy.
          *
          * @since 7.3.0
          */
@@ -125,8 +134,9 @@ public interface WithLazyParams<P extends InterceptorParams> {
                     // reported rather than silently ignored; OgnlUtil only warns in devMode otherwise
                     ognlUtil.setProperty(paramName, paramValue, target, invocationContext.getContextMap(), true);
                 } catch (ReflectionException e) {
-                    LOG.warn("Param [{}] cannot be applied to [{}]; check the interceptor configuration",
+                    LOG.warn("Param [{}] cannot be applied to [{}] - the value was not written and the params are marked unusable; check the interceptor configuration",
                             paramName, target.getClass().getName(), e);
+                    target.unresolved(paramName);
                 }
             }
             return target;
@@ -141,6 +151,12 @@ public interface WithLazyParams<P extends InterceptorParams> {
          * to; a param that legitimately evaluates to an empty string is therefore also reported as
          * unresolved. That is a deliberate fail-closed choice: for a security-sensitive param (e.g.
          * an allowlist), silently accepting an unintended empty value is worse than refusing it.
+         * <p>
+         * <strong>Partial resolution is not detected.</strong> A value mixing several expressions,
+         * e.g. {@code ${a},${b}}, still parses to a non-empty string when only one of them resolves,
+         * so it is reported as resolved and the truncated value is written. For an allowlist that
+         * narrows the accepted set rather than widening it, so it does not relax validation, but the
+         * holder receives fewer entries than configured and gets no {@code unresolved} notification.
          */
         private boolean isUnresolved(String rawValue, Object paramValue) {
             return rawValue != null

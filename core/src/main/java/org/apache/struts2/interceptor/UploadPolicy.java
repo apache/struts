@@ -87,6 +87,13 @@ public class UploadPolicy extends DisableParams {
      * A parameter that could not be resolved makes this policy unusable: the upload is rejected
      * rather than validated against a partially-resolved policy, so a broken expression cannot
      * silently relax validation.
+     * <p>
+     * <strong>Any</strong> param name is recorded, {@code disabled} included. An unresolvable
+     * {@code <param name="disabled">${...}</param>} therefore leaves the interceptor enabled (the
+     * flag keeps its configured value) <em>and</em> marks this policy unusable, so every upload in
+     * that invocation is rejected. That is deliberate — a broken dispatch flag is a broken
+     * configuration, and refusing the upload is the safe reading — but it means a typo in
+     * {@code disabled} takes out upload validation rather than only the disabling.
      */
     @Override
     public void unresolved(String paramName) {
@@ -108,9 +115,14 @@ public class UploadPolicy extends DisableParams {
         return new UploadPolicy(this);
     }
 
+    /**
+     * The resulting set is unmodifiable: the copy constructor shares it by reference with the
+     * configured policy, so every per-invocation policy that does not override the param would
+     * otherwise hand out a live handle on process-wide configuration.
+     */
     private static Set<String> toSet(String commaDelimited) {
         return commaDelimited == null
                 ? Collections.emptySet()
-                : TextParseUtil.commaDelimitedStringToSet(commaDelimited);
+                : Collections.unmodifiableSet(TextParseUtil.commaDelimitedStringToSet(commaDelimited));
     }
 }

@@ -30,7 +30,9 @@ import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.ConditionalInterceptor;
+import org.apache.struts2.interceptor.DisableParams;
 import org.apache.struts2.interceptor.Interceptor;
+import org.apache.struts2.interceptor.InterceptorParams;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.ognl.OgnlUtil;
@@ -258,11 +260,11 @@ public class DefaultActionInvocation implements ActionInvocation {
         if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
             if (interceptors.hasNext()) {
                 final InterceptorMapping interceptorMapping = interceptors.next();
-                Interceptor interceptor = interceptorMapping.getInterceptor();
+                final Interceptor interceptor = interceptorMapping.getInterceptor();
                 if (interceptor instanceof WithLazyParams<?> lazyInterceptor) {
                     resultCode = invokeWithLazyParams(lazyInterceptor, interceptorMapping);
                 } else if (interceptor instanceof ConditionalInterceptor conditionalInterceptor) {
-                    resultCode = executeConditional(conditionalInterceptor);
+                    resultCode = executeConditional(conditionalInterceptor, interceptorMapping.getName());
                 } else {
                     LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
                     resultCode = interceptor.intercept(this);
@@ -313,18 +315,18 @@ public class DefaultActionInvocation implements ActionInvocation {
      * lazily resolved {@code disabled} flag and any custom {@code shouldIntercept} must be honoured
      * here, because the single-argument {@code intercept} is not the entry point on this path.
      */
-    private <P extends org.apache.struts2.interceptor.InterceptorParams> String invokeWithLazyParams(
+    private <P extends InterceptorParams> String invokeWithLazyParams(
             WithLazyParams<P> lazyInterceptor, InterceptorMapping interceptorMapping) throws Exception {
         P lazyParams = lazyParamInjector.resolveInto(
                 lazyInterceptor.newLazyParams(), mergedParams(interceptorMapping), invocationContext);
 
-        if (lazyParams instanceof org.apache.struts2.interceptor.DisableParams disableParams && disableParams.isDisabled()) {
-            LOG.debug("Interceptor: {} is disabled for this invocation, skipping to next", interceptorMapping.getName());
+        if (lazyParams instanceof DisableParams disableParams && disableParams.isDisabled()) {
+            LOG.debug("Interceptor: {} is disabled by its lazily resolved params, skipping to next", interceptorMapping.getName());
             return this.invoke();
         }
         if (lazyInterceptor instanceof ConditionalInterceptor conditionalInterceptor
                 && !conditionalInterceptor.shouldIntercept(this)) {
-            LOG.debug("Interceptor: {} is disabled, skipping to next", interceptorMapping.getName());
+            LOG.debug("Interceptor: {} declined by shouldIntercept() on the lazy params path, skipping to next", interceptorMapping.getName());
             return this.invoke();
         }
         LOG.debug("Executing lazy params interceptor: {}", interceptorMapping.getName());
@@ -332,6 +334,13 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     /**
+     * Merges the params declared on the interceptor-ref with those of the mapping being invoked.
+     * <p>
+     * The name-based lookup is inherited behaviour, kept as-is: the mapping is normally the very one
+     * found by name, so the merge is a no-op, and when a stack references the same interceptor name
+     * twice with different params it merges the first mapping's params over the current one, which
+     * is questionable. Changing it is out of scope here.
+     *
      * @return a fresh map; the mapping's own param map is shared across requests and must not be mutated
      */
     private Map<String, String> mergedParams(InterceptorMapping interceptorMapping) {
@@ -343,12 +352,25 @@ public class DefaultActionInvocation implements ActionInvocation {
         return merged;
     }
 
+    /**
+     * @deprecated since 7.3.0, use {@link #executeConditional(ConditionalInterceptor, String)} so the
+     * interceptor is identified by its mapping name in the logs.
+     */
+    @Deprecated
     protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {
+        return executeConditional(conditionalInterceptor, conditionalInterceptor.getClass().getSimpleName());
+    }
+
+    /**
+     * @param interceptorName the name of the interceptor mapping being invoked, used for logging
+     * @since 7.3.0
+     */
+    protected String executeConditional(ConditionalInterceptor conditionalInterceptor, String interceptorName) throws Exception {
         if (conditionalInterceptor.shouldIntercept(this)) {
-            LOG.debug("Executing conditional interceptor: {}", conditionalInterceptor.getClass().getSimpleName());
+            LOG.debug("Executing conditional interceptor: {}", interceptorName);
             return conditionalInterceptor.intercept(this);
         } else {
-            LOG.debug("Interceptor: {} is disabled, skipping to next", conditionalInterceptor.getClass().getSimpleName());
+            LOG.debug("Interceptor: {} declined by shouldIntercept(), skipping to next", interceptorName);
             return this.invoke();
         }
     }

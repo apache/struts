@@ -24,6 +24,7 @@ import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ConditionalInterceptor;
 import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.mock.MockActionProxy;
@@ -159,6 +160,40 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertFalse(mockInterceptor2.isExecuted());
         assertTrue(mockInterceptor3.isExecuted());
         assertTrue(defaultActionInvocation.isExecuted());
+    }
+
+    /**
+     * WW-5659: {@code executeConditional(ConditionalInterceptor)} was removed in 7.3.0 - it had no
+     * callers left, so a subclass still overriding it would have gone silently dead. The
+     * two-argument form is now the only extension point and must be handed the interceptor
+     * mapping's name, which is what the removed overload could not supply.
+     */
+    public void testExecuteConditionalOverrideReceivesTheMappingName() throws Exception {
+        // given
+        List<InterceptorMapping> interceptorMappings = new ArrayList<>();
+        MockInterceptor mockInterceptor = new MockInterceptor();
+        mockInterceptor.setFoo("test1");
+        mockInterceptor.setExpectedFoo("test1");
+        interceptorMappings.add(new InterceptorMapping("namedInStack", mockInterceptor));
+
+        List<String> observedNames = new ArrayList<>();
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocationTester(interceptorMappings) {
+            @Override
+            protected String executeConditional(ConditionalInterceptor conditionalInterceptor, String interceptorName) throws Exception {
+                observedNames.add(interceptorName);
+                return super.executeConditional(conditionalInterceptor, interceptorName);
+            }
+        };
+        container.inject(defaultActionInvocation);
+        defaultActionInvocation.stack = container.getInstance(ValueStackFactory.class).createValueStack();
+
+        // when
+        defaultActionInvocation.setResultCode("");
+        defaultActionInvocation.invoke();
+
+        // then
+        assertThat(observedNames).containsExactly("namedInStack");
+        assertThat(mockInterceptor.isExecuted()).isTrue();
     }
 
     public void testInvokingExistingExecuteMethod() throws Exception {

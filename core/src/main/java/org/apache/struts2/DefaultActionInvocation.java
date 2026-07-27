@@ -353,15 +353,10 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     /**
-     * @deprecated since 7.3.0, use {@link #executeConditional(ConditionalInterceptor, String)} so the
-     * interceptor is identified by its mapping name in the logs.
-     */
-    @Deprecated
-    protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {
-        return executeConditional(conditionalInterceptor, conditionalInterceptor.getClass().getSimpleName());
-    }
-
-    /**
+     * Replaces the single-argument form removed in 7.3.0. That one had no callers left once the
+     * mapping name became available here, so a subclass still overriding it would have gone quietly
+     * dead; removing it turns that into a compile error instead.
+     *
      * @param interceptorName the name of the interceptor mapping being invoked, used for logging
      * @since 7.3.0
      */

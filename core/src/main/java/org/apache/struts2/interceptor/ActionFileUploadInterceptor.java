@@ -198,6 +198,19 @@ import java.util.List;
  *  }
  * </pre>
  *
+ * <p>
+ * Dynamic parameters are resolved into a fresh {@link UploadPolicy} for each invocation, so the
+ * interceptor itself is never modified per request and concurrent uploads cannot observe each
+ * other's policy. An expression that cannot be resolved does not relax validation: the policy is
+ * marked unresolved and affected uploads are rejected. A lazily resolved {@code disabled} param
+ * only takes effect if the interceptor's params holder extends {@link DisableParams} — there is
+ * deliberately no fallback to the interceptor instance. Likewise, an interceptor that overrides
+ * {@link ConditionalInterceptor#shouldIntercept(ActionInvocation) shouldIntercept} to read its own
+ * lazily-injected fields would see only config-time values, since resolution never touches the
+ * interceptor; {@code ActionFileUploadInterceptor} does not override {@code shouldIntercept}, so
+ * this does not affect it.
+ * </p>
+ *
  * @see WithLazyParams
  * @see UploadedFilesAware
  * @see AbstractFileUploadInterceptor

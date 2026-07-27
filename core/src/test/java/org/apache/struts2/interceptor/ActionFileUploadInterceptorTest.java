@@ -648,11 +648,10 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        // Simulate WithLazyParams injection by manually setting the parameters
-        // In real execution, DefaultActionInvocation.invoke() would call LazyParamInjector
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-
-        interceptor.intercept(mai);
+        // Exercise the real resolution path: LazyParamInjector resolves ${allowedMimeTypes}
+        // into a fresh UploadPolicy instead of mutating the shared interceptor.
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -686,8 +685,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action1);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action1.getAllowedMimeTypes());
-        interceptor.intercept(mai1);
+        UploadPolicy policy1 = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai1, policy1);
 
         assertThat(action1.getUploadFiles()).isNotNull().hasSize(1);
         assertThat(action1.getUploadFiles().get(0).getContentType()).isEqualTo("text/plain");
@@ -715,8 +714,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
         // Simulate new parameter evaluation for second request
-        interceptor.setAllowedTypes(action2.getAllowedMimeTypes());
-        interceptor.intercept(mai2);
+        UploadPolicy policy2 = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai2, policy2);
 
         assertThat(action2.getUploadFiles()).isNotNull().hasSize(1);
         assertThat(action2.getUploadFiles().get(0).getContentType()).isEqualTo("text/html");
@@ -746,8 +745,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedExtensions(action.getAllowedExtensions());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), false, true, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -785,8 +784,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setMaximumSize(action.getMaxFileSize());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), false, false, true);
+        interceptor.intercept(mai, policy);
 
         // File should be rejected due to size
         assertThat(action.hasFieldErrors()).isTrue();
@@ -819,9 +818,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-        interceptor.setAllowedExtensions(action.getAllowedExtensions());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, true, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -856,8 +854,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -1072,6 +1070,34 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         } finally {
             ActionContext.clear();
         }
+    }
+
+    /**
+     * Resolves the given flags into a fresh {@link UploadPolicy} via the real
+     * {@link WithLazyParams.LazyParamInjector} path, using the already-bound {@code context}
+     * (and its ValueStack, with the action already pushed by the caller) rather than fabricating
+     * a new one. This mirrors what {@code DefaultActionInvocation} does at request time, so tests
+     * exercise the actual resolution instead of hand-calling a setter on the shared interceptor.
+     */
+    private UploadPolicy injectDynamicUploadPolicy(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                                    ActionContext context,
+                                                    boolean includeAllowedTypes,
+                                                    boolean includeAllowedExtensions,
+                                                    boolean includeMaximumSize) {
+        Map<String, String> params = new HashMap<>();
+        if (includeAllowedTypes) {
+            params.put("allowedTypes", "${allowedMimeTypes}");
+        }
+        if (includeAllowedExtensions) {
+            params.put("allowedExtensions", "${allowedExtensions}");
+        }
+        if (includeMaximumSize) {
+            params.put("maximumSize", "${maxFileSize}");
+        }
+
+        WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(context.getValueStack());
+        container.inject(injector);
+        return injector.resolveInto(actionFileUploadInterceptor.newLazyParams(), params, context);
     }
 
     private String runUploadAttempt(ActionFileUploadInterceptor actionFileUploadInterceptor,

@@ -290,19 +290,15 @@ Under this design:
   `unresolved(paramName)` is called.
 - A WARN is logged naming interceptor, param and expression.
 
-`UploadPolicy.unresolved(param)` then has to decide whether the seeded value is usable. Two
-cases exist, and they are distinguishable:
+`UploadPolicy.unresolved(param)` records the parameter and marks the whole policy unusable,
+regardless of the seeded value. A static fallback therefore applies only when the param is absent
+from the lazy map entirely, i.e. pure static configuration, which never triggers `unresolved`.
 
-- **A genuine static fallback.** The interceptor's own `<interceptor>` definition carried a
-  literal value for that param and the `<interceptor-ref>` overrode it with an expression,
-  so the seed is a real value (e.g. `image/png`). That value applies and validation
-  proceeds normally.
-- **No fallback.** The only configuration for that param is the expression itself, so
-  `buildInterceptor` seeded the holder with the literal `${...}` text — as a set containing
-  the string `"${uploadConfig.allowedMimeTypes}"`, which matches no content type.
+The seed-introspection alternative — honouring a seeded value that does not itself contain
+`${` — was rejected during planning: it is not implementable deterministically, because
+`maximumSize` is seeded as a `Long` and cannot carry a `${...}` literal, so the rule would behave
+differently per parameter type.
 
-The rule: `unresolved(param)` marks the dimension unusable **only if** the seeded value for
-that dimension still contains `${`. Otherwise a genuine static fallback exists and is used.
 A dimension marked unusable causes `acceptFile` to reject the file with a dedicated message
 rather than the opaque one produced by matching content types against literal `${...}` text.
 This needs a new bundle key — `struts.messages.error.upload.policy.unresolved` — added to
@@ -324,9 +320,7 @@ silently never runs. New tests must follow the existing style.
   `newLazyParams()` still returns the configured values — the singleton was never written.
 - `disabled` request-scoping: concurrent invocations resolving different `disabled` values;
   assert only the intended one is skipped.
-- Fail-closed: unresolved expression with no static fallback → rejected with the new
-  message; unresolved *with* a static fallback (literal on the `<interceptor>` definition,
-  expression on the `<interceptor-ref>`) → the static value applies and validation proceeds.
+- Fail-closed: unresolved expression → rejected with the new message.
 - `ConditionalInterceptor` interaction: a `WithLazyParams` interceptor that is also
   conditional still honours a custom `shouldIntercept`.
 - Migrate existing dynamic tests (`testDynamicParameterEvaluation` and friends) off the

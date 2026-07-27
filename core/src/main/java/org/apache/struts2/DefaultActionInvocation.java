@@ -42,8 +42,8 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -341,10 +341,11 @@ public class DefaultActionInvocation implements ActionInvocation {
      * twice with different params it merges the first mapping's params over the current one, which
      * is questionable. Changing it is out of scope here.
      *
-     * @return a fresh map; the mapping's own param map is shared across requests and must not be mutated
+     * @return a fresh map preserving the configuration order, so params are applied to the holder
+     * deterministically; the mapping's own param map is shared across requests and must not be mutated
      */
     private Map<String, String> mergedParams(InterceptorMapping interceptorMapping) {
-        Map<String, String> merged = new HashMap<>(interceptorMapping.getParams());
+        Map<String, String> merged = new LinkedHashMap<>(interceptorMapping.getParams());
         proxy.getConfig().getInterceptors().stream()
                 .filter(im -> im.getName().equals(interceptorMapping.getName()))
                 .findFirst()

@@ -45,7 +45,9 @@ import java.util.Map;
  * <p>
  * The {@link Interceptor#init()} method is called after initial parameter setting, so interceptors
  * can rely on configured values during initialization. Expression parameters (containing ${...})
- * are re-evaluated at invocation time via {@link LazyParamInjector}.
+ * are re-evaluated at invocation time via {@link LazyParamInjector} and written into a fresh
+ * {@link InterceptorParams} holder, never back onto the interceptor, which is shared across
+ * requests and stays untouched after {@link Interceptor#init()}.
  *
  * @since 2.5.9
  */
@@ -108,7 +110,13 @@ public interface WithLazyParams<P extends InterceptorParams> {
          *       {@code Long} property, which OGNL reports as a
          *       {@link ReflectionException} during conversion</li>
          * </ul>
-         * In both cases the holder keeps its seeded configuration value and a WARN is logged.
+         * In both cases the injector does nothing beyond skipping the write, notifying the holder and
+         * logging a WARN; what that means for the invocation is the holder's decision, since
+         * {@code unresolved} is a no-op by default. Whatever the holder was seeded with is left in
+         * place, but for a {@code ${...}} param that is not a usable default: the seed comes from
+         * applying the raw configuration string at build time, so it is either the unevaluated
+         * {@code ${...}} literal or, when the literal could not be converted to the property's type,
+         * nothing at all.
          * <p>
          * The empty-value rule also catches an expression that legitimately evaluates to an empty
          * string, which is indistinguishable from a failed resolution; for a fail-closed policy such
@@ -124,7 +132,7 @@ public interface WithLazyParams<P extends InterceptorParams> {
                 Object paramValue = textParser.evaluate(new char[]{'$'}, rawValue, valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
 
                 if (isUnresolved(rawValue, paramValue)) {
-                    LOG.warn("Param [{}] of [{}] could not be resolved from expression [{}]; keeping the configured value",
+                    LOG.warn("Param [{}] of [{}] could not be resolved from expression [{}] - the value was not written and the params holder was notified",
                             paramName, target.getClass().getName(), rawValue);
                     target.unresolved(paramName);
                     continue;
@@ -134,7 +142,7 @@ public interface WithLazyParams<P extends InterceptorParams> {
                     // reported rather than silently ignored; OgnlUtil only warns in devMode otherwise
                     ognlUtil.setProperty(paramName, paramValue, target, invocationContext.getContextMap(), true);
                 } catch (ReflectionException e) {
-                    LOG.warn("Param [{}] cannot be applied to [{}] - the value was not written and the params are marked unusable; check the interceptor configuration",
+                    LOG.warn("Param [{}] could not be applied to [{}] - the value was not written and the params holder was notified; check the interceptor configuration",
                             paramName, target.getClass().getName(), e);
                     target.unresolved(paramName);
                 }

@@ -30,13 +30,19 @@ package org.apache.struts2.interceptor;
 public interface InterceptorParams {
 
     /**
-     * Called when a {@code ${...}} parameter could not be resolved for the current invocation.
-     * The framework skips the write, leaving the seeded configuration value in place, and
-     * notifies the holder so it can decide how to degrade.
+     * Called when a configured parameter could not be applied for the current invocation - either a
+     * {@code ${...}} expression that did not resolve, or a value the holder's setter could not
+     * accept. The framework skips the write and notifies the holder so it can decide how to degrade.
+     * <p>
+     * Whatever the holder was seeded with stays in place, but it is rarely a usable default: the
+     * seed comes from applying the raw configuration string at build time, so for a {@code ${...}}
+     * param it is the unevaluated literal, or nothing at all when that literal could not be
+     * converted to the property's type. A holder guarding a security-sensitive dimension should
+     * therefore treat this as a reason to fail closed rather than carry on.
      * <p>
      * The default implementation does nothing.
      *
-     * @param paramName name of the parameter that could not be resolved
+     * @param paramName name of the parameter that could not be applied
      */
     default void unresolved(String paramName) {
     }

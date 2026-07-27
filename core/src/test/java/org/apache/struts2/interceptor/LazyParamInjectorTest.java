@@ -50,6 +50,7 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
     public static class Bean {
         public String getLabel() { return "resolved-label"; }
         public Long getLimit() { return 4096L; }
+        public String getBlank() { return ""; }
     }
 
     private ActionContext context;
@@ -106,6 +107,19 @@ public class LazyParamInjectorTest extends StrutsInternalTestCase {
 
         Map<String, String> params = new HashMap<>();
         params.put("name", "${noSuchProperty}");
+
+        Holder holder = injector.resolveInto(seeded, params, context);
+
+        assertThat(holder.getName()).isEqualTo("seeded-value");
+        assertThat(holder.getUnresolvedCalls()).containsExactly("name");
+    }
+
+    public void testExpressionResolvingToEmptyIsTreatedAsUnresolved() {
+        Holder seeded = new Holder();
+        seeded.setName("seeded-value");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "${blank}");
 
         Holder holder = injector.resolveInto(seeded, params, context);
 

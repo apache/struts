@@ -91,9 +91,13 @@ public interface WithLazyParams {
         /**
          * Resolves configured params into a per-invocation holder, leaving the interceptor untouched.
          * <p>
-         * A {@code ${...}} expression that cannot be resolved is not written: the holder keeps its
-         * seeded configuration value and is notified via {@link InterceptorParams#unresolved(String)},
-         * so a broken expression cannot silently relax a validation policy.
+         * A {@code ${...}} expression that resolves to null or an empty value is not written: the
+         * holder keeps its seeded configuration value and is notified via
+         * {@link InterceptorParams#unresolved(String)}. This also catches an expression that
+         * legitimately evaluates to an empty string, which is indistinguishable from a failed
+         * resolution (see {@link #isUnresolved}); for a fail-closed policy such as an allowlist,
+         * treating both as unusable is the safe reading, so a broken expression cannot silently
+         * relax a validation policy.
          *
          * @since 7.3.0
          */
@@ -122,9 +126,14 @@ public interface WithLazyParams {
         }
 
         /**
-         * {@link org.apache.struts2.util.OgnlTextParser} yields an empty string for an expression that
-         * does not resolve and gives no other signal, so the raw template is needed to tell that apart
-         * from a legitimately empty value.
+         * A {@code ${...}} param is treated as unresolved when its evaluated value is null or empty.
+         * <p>
+         * {@link org.apache.struts2.util.OgnlTextParser} yields the same empty string both when an
+         * expression fails to resolve and when it resolves to a legitimately empty value — there is
+         * no way to tell the two apart from the parser's output alone. This method does not attempt
+         * to; a param that legitimately evaluates to an empty string is therefore also reported as
+         * unresolved. That is a deliberate fail-closed choice: for a security-sensitive param (e.g.
+         * an allowlist), silently accepting an unintended empty value is worse than refusing it.
          */
         private boolean isUnresolved(String rawValue, Object paramValue) {
             return rawValue != null

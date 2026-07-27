@@ -899,8 +899,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             runUploadAttempt(
                     controlInterceptor,
                     controlAction,
-                    createUploadRequest("control.html", "text/html", htmlContent),
-                    controlAction.getAllowedMimeTypes()
+                    createUploadRequest("control.html", "text/html", htmlContent)
             );
 
             assertThat(controlAction.getUploadFiles()).isNull();
@@ -925,8 +924,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             Future<String> plainResult = executor.submit(() -> runUploadAttempt(
                     sharedInterceptor,
                     plainPolicyAction,
-                    createUploadRequest("plain-policy.html", "text/html", htmlContent),
-                    plainPolicyAction.getAllowedMimeTypes()
+                    createUploadRequest("plain-policy.html", "text/html", htmlContent)
             ));
 
             assertThat(sharedInterceptor.awaitFirstValidation()).isTrue();
@@ -934,8 +932,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             Future<String> htmlResult = executor.submit(() -> runUploadAttempt(
                     sharedInterceptor,
                     htmlPolicyAction,
-                    createUploadRequest("html-policy.html", "text/html", htmlContent),
-                    htmlPolicyAction.getAllowedMimeTypes()
+                    createUploadRequest("html-policy.html", "text/html", htmlContent)
             ));
 
             assertThat(htmlResult.get(10, TimeUnit.SECONDS)).isEqualTo("success");
@@ -959,8 +956,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
     private String runUploadAttempt(ActionFileUploadInterceptor actionFileUploadInterceptor,
                                     MyDynamicFileUploadAction action,
-                                    MockHttpServletRequest uploadRequest,
-                                    String allowedTypes) throws Exception {
+                                    MockHttpServletRequest uploadRequest) throws Exception {
         MultiPartRequestWrapper multiPartRequest = createMultipartRequest(uploadRequest, -1, -1, 3, -1);
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         valueStack.push(action);

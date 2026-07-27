@@ -208,59 +208,63 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        MultiPartRequestWrapper multiWrapper = request instanceof HttpServletRequestWrapper wrapper
-                ? findMultipartRequestWrapper(wrapper)
-                : null;
+        try {
+            HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
+            MultiPartRequestWrapper multiWrapper = request instanceof HttpServletRequestWrapper wrapper
+                    ? findMultipartRequestWrapper(wrapper)
+                    : null;
 
-        if (multiWrapper == null) {
-            if (LOG.isDebugEnabled()) {
-                ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
-            }
-            return invocation.invoke();
-        }
-
-        if (!(invocation.getAction() instanceof UploadedFilesAware action)) {
-            LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
-                    invocation.getProxy().getActionName(),
-                    UploadedFilesAware.class.getSimpleName());
-            return invocation.invoke();
-        }
-
-        applyValidation(action, multiWrapper);
-
-        // bind allowed Files
-        Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
-        List<UploadedFile> acceptedFiles = new ArrayList<>();
-
-        while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
-            // get the value of this input tag
-            String inputName = fileParameterNames.nextElement();
-            UploadedFile[] uploadedFiles = multiWrapper.getFiles(inputName);
-
-            if (uploadedFiles == null || uploadedFiles.length == 0) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
+            if (multiWrapper == null) {
+                if (LOG.isDebugEnabled()) {
+                    ActionProxy proxy = invocation.getProxy();
+                    LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
                 }
-            } else {
-                for (UploadedFile uploadedFile : uploadedFiles) {
-                    if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
-                        acceptedFiles.add(uploadedFile);
+                return invocation.invoke();
+            }
+
+            if (!(invocation.getAction() instanceof UploadedFilesAware action)) {
+                LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
+                        invocation.getProxy().getActionName(),
+                        UploadedFilesAware.class.getSimpleName());
+                return invocation.invoke();
+            }
+
+            applyValidation(action, multiWrapper);
+
+            // bind allowed Files
+            Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
+            List<UploadedFile> acceptedFiles = new ArrayList<>();
+
+            while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
+                // get the value of this input tag
+                String inputName = fileParameterNames.nextElement();
+                UploadedFile[] uploadedFiles = multiWrapper.getFiles(inputName);
+
+                if (uploadedFiles == null || uploadedFiles.length == 0) {
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
+                    }
+                } else {
+                    for (UploadedFile uploadedFile : uploadedFiles) {
+                        if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
+                            acceptedFiles.add(uploadedFile);
+                        }
                     }
                 }
             }
-        }
 
-        if (acceptedFiles.isEmpty()) {
-            LOG.debug("No files have been uploaded/accepted");
-        } else {
-            LOG.debug("Passing: {} uploaded file(s) to action", acceptedFiles.size());
-            action.withUploadedFiles(acceptedFiles);
-        }
+            if (acceptedFiles.isEmpty()) {
+                LOG.debug("No files have been uploaded/accepted");
+            } else {
+                LOG.debug("Passing: {} uploaded file(s) to action", acceptedFiles.size());
+                action.withUploadedFiles(acceptedFiles);
+            }
 
-        // invoke action
-        return invocation.invoke();
+            // invoke action
+            return invocation.invoke();
+        } finally {
+            clearRequestScopedUploadValidationPolicy();
+        }
     }
 
     /**
@@ -285,4 +289,3 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
     }
 
 }
-

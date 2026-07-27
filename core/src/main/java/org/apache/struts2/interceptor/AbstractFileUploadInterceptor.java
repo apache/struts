@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.locale.LocaleProvider;
 import org.apache.struts2.locale.LocaleProviderFactory;
 import org.apache.struts2.text.TextProvider;
@@ -62,6 +63,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     private Long maximumSize;
     private Set<String> allowedTypesSet = Collections.emptySet();
     private Set<String> allowedExtensionsSet = Collections.emptySet();
+    private final ThreadLocal<UploadValidationPolicy> requestScopedUploadValidationPolicy = new ThreadLocal<>();
 
     private ContentTypeMatcher<Object> matcher;
     private Container container;
@@ -82,7 +84,12 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param allowedExtensions A comma-delimited list of extensions
      */
     public void setAllowedExtensions(String allowedExtensions) {
-        allowedExtensionsSet = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
+        Set<String> parsedAllowedExtensions = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
+        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
+            getOrCreateRequestScopedUploadValidationPolicy().allowedExtensionsSet = parsedAllowedExtensions;
+        } else {
+            allowedExtensionsSet = parsedAllowedExtensions;
+        }
     }
 
     /**
@@ -91,7 +98,12 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param allowedTypes A comma-delimited list of types
      */
     public void setAllowedTypes(String allowedTypes) {
-        allowedTypesSet = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
+        Set<String> parsedAllowedTypes = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
+        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
+            getOrCreateRequestScopedUploadValidationPolicy().allowedTypesSet = parsedAllowedTypes;
+        } else {
+            allowedTypesSet = parsedAllowedTypes;
+        }
     }
 
     /**
@@ -100,7 +112,15 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param maximumSize The maximum size in bytes
      */
     public void setMaximumSize(Long maximumSize) {
-        this.maximumSize = maximumSize;
+        if (WithLazyParams.LazyParamInjector.isParamInjectionInProgress() && ActionContext.getContext() != null) {
+            getOrCreateRequestScopedUploadValidationPolicy().maximumSize = maximumSize;
+        } else {
+            this.maximumSize = maximumSize;
+        }
+    }
+
+    protected void clearRequestScopedUploadValidationPolicy() {
+        requestScopedUploadValidationPolicy.remove();
     }
 
     /**
@@ -114,6 +134,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @return true if the proposed file is acceptable by contentType and size.
      */
     protected boolean acceptFile(Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+        UploadValidationPolicy validationPolicy = getUploadValidationPolicy();
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
@@ -131,21 +152,21 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (maximumSize != null && maximumSize < file.length()) {
+        if (validationPolicy.maximumSize != null && validationPolicy.maximumSize < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
-                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)
+                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, validationPolicy.maximumSize)
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
+        if ((!validationPolicy.allowedTypesSet.isEmpty()) && (!containsItem(validationPolicy.allowedTypesSet, contentType))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{
                 inputName, originalFilename, file.getName(), contentType
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
-        if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, originalFilename))) {
+        if ((!validationPolicy.allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(validationPolicy.allowedExtensionsSet, originalFilename))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{
                 inputName, originalFilename, file.getName(), contentType
             });
@@ -161,8 +182,25 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return errorMessages.isEmpty();
     }
 
-    private String getMaximumSizeStr(Object action) {
+    private String getMaximumSizeStr(Object action, Long maximumSize) {
         return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
+    }
+
+    private UploadValidationPolicy getUploadValidationPolicy() {
+        UploadValidationPolicy requestScopedPolicy = requestScopedUploadValidationPolicy.get();
+        if (requestScopedPolicy != null) {
+            return requestScopedPolicy;
+        }
+        return new UploadValidationPolicy(maximumSize, allowedTypesSet, allowedExtensionsSet);
+    }
+
+    private UploadValidationPolicy getOrCreateRequestScopedUploadValidationPolicy() {
+        UploadValidationPolicy requestScopedPolicy = requestScopedUploadValidationPolicy.get();
+        if (requestScopedPolicy == null) {
+            requestScopedPolicy = new UploadValidationPolicy(maximumSize, allowedTypesSet, allowedExtensionsSet);
+            requestScopedUploadValidationPolicy.set(requestScopedPolicy);
+        }
+        return requestScopedPolicy;
     }
 
     /**
@@ -246,6 +284,18 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
                 }
                 validation.addActionError(errorMessage);
             }
+        }
+    }
+
+    private static final class UploadValidationPolicy {
+        private Long maximumSize;
+        private Set<String> allowedTypesSet;
+        private Set<String> allowedExtensionsSet;
+
+        private UploadValidationPolicy(Long maximumSize, Set<String> allowedTypesSet, Set<String> allowedExtensionsSet) {
+            this.maximumSize = maximumSize;
+            this.allowedTypesSet = allowedTypesSet;
+            this.allowedExtensionsSet = allowedExtensionsSet;
         }
     }
 

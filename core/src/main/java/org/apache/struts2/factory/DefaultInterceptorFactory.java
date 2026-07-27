@@ -36,6 +36,7 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -83,7 +84,13 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 throw new ConfigurationException("Class [" + interceptorClassName + "] does not implement Interceptor", interceptorConfig);
             }
 
-            reflectionProvider.setProperties(params, interceptor);
+            // A ${...} param belongs to the invocation, not to the interceptor: it is resolved per
+            // request into the params holder. Applying its raw text here would seed the interceptor
+            // with an unevaluated literal, or fail conversion outright for a typed property such as
+            // maximumSize. Static params still apply, and go on to seed the holder.
+            reflectionProvider.setProperties(
+                    interceptor instanceof WithLazyParams<?> ? withoutLazyExpressions(params) : params,
+                    interceptor);
 
             interceptor.init();
 
@@ -221,6 +228,21 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
                 .collect(Collectors.toSet());
         LOG.debug("Allowlisting lazy params holder [{}] and its supertypes {}", holderClass.getName(), holderTypes);
         providerAllowlist.registerAllowlist(holderClass, holderTypes);
+    }
+
+    /**
+     * Drops the params carrying a {@code ${...}} expression, which {@link WithLazyParams} resolves per
+     * invocation into its params holder instead.
+     * <p>
+     * The predicate matches {@code WithLazyParams.LazyParamInjector}'s, so a value treated as an
+     * expression at resolution time is the same one withheld here.
+     *
+     * @return the params to apply to the interceptor at configuration time
+     */
+    private static Map<String, String> withoutLazyExpressions(Map<String, String> params) {
+        return params.entrySet().stream()
+                .filter(entry -> entry.getValue() == null || !entry.getValue().contains("${"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (first, second) -> second, LinkedHashMap::new));
     }
 
 }

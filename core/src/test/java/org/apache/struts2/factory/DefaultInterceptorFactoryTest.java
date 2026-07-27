@@ -64,6 +64,39 @@ public class DefaultInterceptorFactoryTest extends StrutsInternalTestCase {
         return new InterceptorConfig.Builder(name, clazz.getName()).build();
     }
 
+    /**
+     * A {@code ${...}} param must not be applied to the interceptor at configuration time: the raw
+     * literal is meaningless as a policy value, and for the {@code Long} maximumSize it cannot even be
+     * converted. Idea from @deprrous in GitHub PR #1815.
+     */
+    public void testLazyExpressionsDoNotSeedTheInterceptor() throws Exception {
+        InterceptorConfig config = config("actionFileUpload", ActionFileUploadInterceptor.class);
+
+        ActionFileUploadInterceptor interceptor = (ActionFileUploadInterceptor) factory.buildInterceptor(config, params(
+                "allowedTypes", "${uploadConfig.allowedMimeTypes}",
+                "maximumSize", "${uploadConfig.maxFileSize}"));
+
+        UploadPolicy configured = interceptor.newLazyParams();
+        assertThat(configured.getAllowedTypes()).isEmpty();
+        assertThat(configured.getMaximumSize()).isNull();
+    }
+
+    /**
+     * Static params, by contrast, are the interceptor's configured policy and must still seed it - they
+     * are what a per-invocation holder starts from, and what survives a lazy param failing to resolve.
+     */
+    public void testStaticParamsStillSeedTheInterceptor() throws Exception {
+        InterceptorConfig config = config("actionFileUpload", ActionFileUploadInterceptor.class);
+
+        ActionFileUploadInterceptor interceptor = (ActionFileUploadInterceptor) factory.buildInterceptor(config, params(
+                "allowedTypes", "text/plain,text/html",
+                "maximumSize", "2048"));
+
+        UploadPolicy configured = interceptor.newLazyParams();
+        assertThat(configured.getAllowedTypes()).containsExactlyInAnyOrder("text/plain", "text/html");
+        assertThat(configured.getMaximumSize()).isEqualTo(2048L);
+    }
+
     public void testRefParamsWritableOnTheHolderAreAccepted() {
         InterceptorConfig config = config("actionFileUpload", ActionFileUploadInterceptor.class);
 

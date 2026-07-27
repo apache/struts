@@ -36,6 +36,8 @@ public class DisableParams implements InterceptorParams {
      */
     public static final String DISABLED_PARAM = "disabled";
 
+    private static final long serialVersionUID = 1L;
+
     private boolean disabled;
 
     public DisableParams() {

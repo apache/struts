@@ -18,16 +18,22 @@
  */
 package org.apache.struts2.interceptor;
 
+import java.io.Serializable;
+
 /**
  * Contract for an object holding the parameters of a single interceptor.
  * <p>
  * Implementations are per-invocation value objects: the framework resolves configured
  * parameters into a fresh instance for each action invocation, so nothing is written back
  * onto the interceptor, which stays immutable after {@link Interceptor#init()}.
+ * <p>
+ * Extends {@link Serializable} because an interceptor holding its configured params is itself
+ * {@link Interceptor serializable}; a non-serializable holder would silently break serialization
+ * of any interceptor that keeps one as a field.
  *
  * @since 7.3.0
  */
-public interface InterceptorParams {
+public interface InterceptorParams extends Serializable {
 
     /**
      * Called when a configured parameter could not be applied for the current invocation - either a

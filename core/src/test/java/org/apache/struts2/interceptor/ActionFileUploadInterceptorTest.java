@@ -1015,25 +1015,25 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
      * singleton exactly as configured.
      */
     public void testResolutionDoesNotMutateTheInterceptor() throws Exception {
-        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
-        container.inject(interceptor);
-        interceptor.setAllowedTypes("text/plain");
+        ActionFileUploadInterceptor configuredInterceptor = new ActionFileUploadInterceptor();
+        container.inject(configuredInterceptor);
+        configuredInterceptor.setAllowedTypes("text/plain");
 
         MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
         action.setAllowedMimeTypes("text/html");
         container.inject(action);
 
-        runUploadAttempt(interceptor, action, createUploadRequest("f.html", "text/html", htmlContent));
+        runUploadAttempt(configuredInterceptor, action, createUploadRequest("f.html", "text/html", htmlContent));
 
-        assertThat(interceptor.newLazyParams().getAllowedTypes()).containsExactly("text/plain");
+        assertThat(configuredInterceptor.newLazyParams().getAllowedTypes()).containsExactly("text/plain");
     }
 
     /**
      * Regression for WW-5659: a lazily resolved {@code disabled} must apply to one invocation only.
      */
-    public void testDisabledIsResolvedPerInvocation() throws Exception {
-        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
-        container.inject(interceptor);
+    public void testDisabledIsResolvedPerInvocation() {
+        ActionFileUploadInterceptor sharedInterceptor = new ActionFileUploadInterceptor();
+        container.inject(sharedInterceptor);
 
         MyDynamicFileUploadAction disablingAction = new MyDynamicFileUploadAction();
         disablingAction.setUploadDisabled("true");
@@ -1043,14 +1043,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         enablingAction.setUploadDisabled("false");
         container.inject(enablingAction);
 
-        UploadPolicy disabledPolicy = resolveDisabled(interceptor, disablingAction);
-        UploadPolicy enabledPolicy = resolveDisabled(interceptor, enablingAction);
+        UploadPolicy disabledPolicy = resolveDisabled(sharedInterceptor, disablingAction);
+        UploadPolicy enabledPolicy = resolveDisabled(sharedInterceptor, enablingAction);
 
         // the second resolution must not have cleared the first invocation's flag...
         assertThat(disabledPolicy.isDisabled()).isTrue();
         assertThat(enabledPolicy.isDisabled()).isFalse();
         // ...and neither resolution may reach the shared interceptor
-        assertThat(interceptor.newLazyParams().isDisabled()).isFalse();
+        assertThat(sharedInterceptor.newLazyParams().isDisabled()).isFalse();
     }
 
     private UploadPolicy resolveDisabled(ActionFileUploadInterceptor actionFileUploadInterceptor,
@@ -1187,28 +1187,28 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testUnresolvedPolicyRejectsTheUpload() throws Exception {
-        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
-        container.inject(interceptor);
+        ActionFileUploadInterceptor uploadInterceptor = new ActionFileUploadInterceptor();
+        container.inject(uploadInterceptor);
 
         MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
         action.setAllowedMimeTypes(null);   // ${allowedMimeTypes} will not resolve
         container.inject(action);
 
-        runUploadAttempt(interceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+        runUploadAttempt(uploadInterceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
 
         assertThat(action.getUploadFiles()).isNull();
         assertThat(action.getFieldErrors()).containsKey("file");
     }
 
     public void testResolvedPolicyStillAcceptsTheUpload() throws Exception {
-        ActionFileUploadInterceptor interceptor = new ActionFileUploadInterceptor();
-        container.inject(interceptor);
+        ActionFileUploadInterceptor uploadInterceptor = new ActionFileUploadInterceptor();
+        container.inject(uploadInterceptor);
 
         MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
         action.setAllowedMimeTypes("text/plain");
         container.inject(action);
 
-        runUploadAttempt(interceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+        runUploadAttempt(uploadInterceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
 
         assertThat(action.hasFieldErrors()).isFalse();
         assertThat(action.getUploadFiles()).isNotNull().hasSize(1);

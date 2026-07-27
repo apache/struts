@@ -34,6 +34,8 @@ import java.util.Set;
  */
 public class UploadPolicy extends DisableParams {
 
+    private static final long serialVersionUID = 1L;
+
     private Long maximumSize;
     private Set<String> allowedTypes = Collections.emptySet();
     private Set<String> allowedExtensions = Collections.emptySet();

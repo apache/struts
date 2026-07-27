@@ -14,7 +14,7 @@
 
 - **Ticket prefix:** every commit message starts with `WW-5659`.
 - **Target version:** 7.3.0. This is a deliberate public API break; no backport to 7.2.x.
-- **Test style:** `core` tests are JUnit 3 style — extend `StrutsInternalTestCase` (which extends `XWorkTestCase`, which extends `junit.framework.TestCase`), use `protected void setUp()`, and name tests `public void testXxx()`. **A JUnit 5 `@Test` annotation compiles and silently never runs.** Never add one.
+- **Test style:** `core` tests are JUnit 3 style — `protected void setUp()`, tests named `public void testXxx()`, no annotations. **A JUnit 5 `@Test` annotation compiles and silently never runs.** Never add one. Extend `StrutsInternalTestCase` (which extends `XWorkTestCase`, which extends `junit.framework.TestCase`) when the test needs the Struts container or `ActionContext`; extend `junit.framework.TestCase` directly for pure value-object tests that need neither.
 - **Assertions:** use AssertJ (`import static org.assertj.core.api.Assertions.assertThat;`), matching the existing `ActionFileUploadInterceptorTest`.
 - **Package:** all new production types go in `org.apache.struts2.interceptor`.
 - **License header:** every new `.java` file starts with the ASF header, copied verbatim from `core/src/main/java/org/apache/struts2/interceptor/WithLazyParams.java:1-18`.

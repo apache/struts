@@ -69,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -795,10 +796,28 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
 
         buildIndexActions(packageConfigs);
 
+        reorderActionConfigsBySpecificity(packageConfigs);
+
         // Add the new actions to the configuration
         Set<String> packageNames = packageConfigs.keySet();
         for (String packageName : packageNames) {
             configuration.addPackageConfig(packageName, packageConfigs.get(packageName).build());
+        }
+    }
+
+    /**
+     * Reorders each package's action configs most-specific-first so that annotated wildcard
+     * patterns follow specific-before-general precedence under first-match-wins matching.
+     * XML-defined packages are untouched: only packages built by this convention builder pass
+     * through here.
+     *
+     * @param packageConfigs the packages built during {@link #buildConfiguration(Set)}
+     * @since 7.3.0 (WW-3784)
+     */
+    static void reorderActionConfigsBySpecificity(Map<String, PackageConfig.Builder> packageConfigs) {
+        Comparator<String> bySpecificity = new ActionNameSpecificityComparator();
+        for (PackageConfig.Builder packageConfig : packageConfigs.values()) {
+            packageConfig.reorderActionConfigs(bySpecificity);
         }
     }
 

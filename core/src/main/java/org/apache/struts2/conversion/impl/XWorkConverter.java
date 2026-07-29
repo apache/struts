@@ -27,6 +27,8 @@ import org.apache.struts2.conversion.ConversionFileProcessor;
 import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.annotations.Conversion;
+import org.apache.struts2.conversion.annotations.ConversionRule;
+import org.apache.struts2.conversion.annotations.ConversionType;
 import org.apache.struts2.conversion.annotations.TypeConversion;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.AnnotationUtils;
@@ -40,8 +42,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -487,6 +491,52 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     /**
+     * Resolves the conversion mapping key for an annotation: the given name carrying the
+     * {@link ConversionRule}'s prefix. A name that already starts with <em>any</em> known rule's
+     * prefix is returned unchanged, not only the prefix of the declared rule, so annotations that
+     * spell the prefix out keep working. This matters because {@link ConversionRule#COLLECTION} and
+     * {@link ConversionRule#ELEMENT} are interchangeable in both {@link DefaultConversionAnnotationProcessor}
+     * and {@link DefaultObjectTypeDeterminer}: a key such as {@code Element_users} declared with
+     * {@code rule = COLLECTION} must not become {@code Collection_Element_users}.
+     *
+     * @param type the annotation's {@link ConversionType}; APPLICATION keys are class names and are never prefixed
+     * @param rule the annotation's {@link ConversionRule}
+     * @param name an explicit key or a property name derived from a method or field
+     * @return the mapping key, or null when no name is available and the entry must be skipped
+     * @since 7.3.0
+     */
+    static String resolveKey(ConversionType type, ConversionRule rule, String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        if (type == ConversionType.APPLICATION) {
+            return name;
+        }
+        String prefix = rule.prefix();
+        if (name.startsWith(prefix)) {
+            return name;
+        }
+        for (ConversionRule other : ConversionRule.values()) {
+            String otherPrefix = other.prefix();
+            if (!otherPrefix.isEmpty() && name.startsWith(otherPrefix)) {
+                return name;   // already carries a rule prefix; leave it exactly as written
+            }
+        }
+        return prefix + name;
+    }
+
+    /**
+     * True when a {@link TypeConversion} is APPLICATION-scoped but carries no explicit key.
+     * APPLICATION entries are stored in the global default converter map, which {@link
+     * #lookup(String, boolean)} and {@link #lookup(Class)} only ever read by <em>class name</em>.
+     * A member name derived from a method or field can never be looked up there, so such an entry
+     * must be skipped rather than registered under a key nothing can reach.
+     */
+    private static boolean isApplicationScopedWithoutKey(TypeConversion tc) {
+        return tc.type() == ConversionType.APPLICATION && StringUtils.isEmpty(tc.key());
+    }
+
+    /**
      * Looks for converter mappings for the specified class and adds it to an existing map.  Only new converters are
      * added.  If a converter is defined on a key that already exists, the converter is ignored.
      *
@@ -498,55 +548,134 @@ public class XWorkConverter extends DefaultTypeConverter {
         String converterFilename = buildConverterFilename(clazz);
         fileProcessor.process(mapping, clazz, converterFilename);
 
-        // Process annotations
-        Annotation[] annotations = clazz.getAnnotations();
+        processClassLevelAnnotations(mapping, clazz);
+        processMethodAnnotations(mapping, clazz);
+        processFieldAnnotations(mapping, clazz);
+    }
 
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof Conversion conversion) {
-                for (TypeConversion tc : conversion.conversions()) {
-                    if (mapping.containsKey(tc.key())) {
-                        break;
-                    }
-                    if (LOG.isDebugEnabled()) {
-                        if (StringUtils.isEmpty(tc.key())) {
-                            LOG.debug("WARNING! key of @TypeConversion [{}/{}] applied to [{}] is empty!", tc.converter(), tc.converterClass(), clazz.getName());
-                        } else {
-                            LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), tc.key());
-                        }
-                    }
-                    annotationProcessor.process(mapping, tc, tc.key());
+    /**
+     * Registers the {@link TypeConversion} entries declared by a class level {@link Conversion}
+     * annotation.
+     */
+    private void processClassLevelAnnotations(Map<String, Object> mapping, Class clazz) {
+        for (Annotation annotation : clazz.getAnnotations()) {
+            if (!(annotation instanceof Conversion conversion)) {
+                continue;
+            }
+            for (TypeConversion tc : conversion.conversions()) {
+                String key = resolveKey(tc.type(), tc.rule(), tc.key());
+                if (key == null) {
+                    LOG.warn("Ignoring @TypeConversion [{}/{}] declared on [{}]: no key was given and a class level annotation has no property name to derive one from",
+                            tc.converter(), tc.converterClass(), clazz.getName());
+                    continue;
                 }
+                if (mapping.containsKey(key)) {
+                    continue;
+                }
+                LOG.debug("TypeConversion [{}/{}] declared on [{}] resolved to key [{}]",
+                        tc.converter(), tc.converterClass(), clazz.getName(), key);
+                annotationProcessor.process(mapping, tc, key);
             }
         }
+    }
 
-        // Process annotated methods
+    /**
+     * Registers {@link TypeConversion} annotations found on the class' methods.
+     */
+    private void processMethodAnnotations(Map<String, Object> mapping, Class clazz) {
         for (Method method : clazz.getMethods()) {
-            annotations = method.getAnnotations();
-            for (Annotation annotation : annotations) {
+            // clazz.getMethods() returns inherited public methods too, and buildConverterMapping
+            // calls this method once per class in the hierarchy, so a single annotation declared
+            // on a base class method is visited once per subclass level: for C extends B extends A,
+            // an annotation on a method declared in A is seen three times, all with the same
+            // method.getDeclaringClass(). Only log skips on the pass whose clazz is that declaring
+            // class, so a misconfigured annotation is reported exactly once instead of once per
+            // subclass. This gates logging only - the derivation/registration pipeline in
+            // registerAnnotatedMember still runs on every visit, which first-writer-wins relies on.
+            // Note buildConverterMapping only visits each class' direct interfaces, never
+            // super-interfaces, so for "class C implements B" where "interface B extends A" and A
+            // declares the annotated method, no visited level ever satisfies declaringClass == clazz
+            // and a misconfigured annotation there logs nothing at all. Registration is unaffected.
+            boolean logSkips = method.getDeclaringClass() == clazz;
+            for (Annotation annotation : method.getAnnotations()) {
                 if (annotation instanceof TypeConversion tc) {
-                    String key = tc.key();
-                    // Default to the property name with prefix
-                    if (StringUtils.isEmpty(key)) {
-                        key = AnnotationUtils.resolvePropertyName(method);
-                        key = switch (tc.rule()) {
-                            case COLLECTION -> DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
-                            case CREATE_IF_NULL -> DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
-                            case ELEMENT -> DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
-                            case KEY -> DefaultObjectTypeDeterminer.KEY_PREFIX + key;
-                            case KEY_PROPERTY -> DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
-                            default -> key;
-                        };
-                        LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
-                    }
-                    if (mapping.containsKey(key)) {
-                        break;
-                    }
-                    annotationProcessor.process(mapping, tc, key);
+                    registerAnnotatedMember(mapping, tc, method, AnnotationUtils.resolvePropertyName(method), logSkips);
                 }
             }
         }
     }
 
+    /**
+     * Registers {@link TypeConversion} annotations found on the class' own fields. Only declared
+     * fields are read: {@link #buildConverterMapping(Class)} already walks the class hierarchy and
+     * calls this method once per class. Static and synthetic fields are skipped, which also makes
+     * this a no-op for interfaces.
+     *
+     * <p>The stated precedence "class &gt; method &gt; field" is per-class, not per-hierarchy-level:
+     * {@link #processMethodAnnotations(Map, Class)} sees {@link Class#getMethods()}, which includes
+     * inherited public methods, so a superclass's annotated setter claims its key before this pass
+     * ever looks at a subclass's field for that same class. A subclass field annotation only wins
+     * when no method anywhere in the hierarchy already claimed its key.</p>
+     */
+    private void processFieldAnnotations(Map<String, Object> mapping, Class clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                continue;
+            }
+            for (Annotation annotation : field.getAnnotations()) {
+                if (annotation instanceof TypeConversion tc) {
+                    // getDeclaredFields() is visited once per class, never revisited from a
+                    // subclass level, so there is no multi-visit noise to gate against here.
+                    registerAnnotatedMember(mapping, tc, field, field.getName(), true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Shared pipeline for a single {@link TypeConversion} annotation found by {@link
+     * #processMethodAnnotations(Map, Class)} or {@link #processFieldAnnotations(Map, Class)}: skip
+     * APPLICATION-scoped annotations with no explicit key, derive the name, resolve it to a mapping
+     * key, and register it unless something already claimed that key.
+     *
+     * @param mapping      the map being built for the current class
+     * @param tc           the annotation to register
+     * @param member       the annotated {@link Method} or {@link Field}; used only for its name and
+     *                     declaring class, both needed for logging
+     * @param fallbackName the name to use when {@code tc.key()} is empty - a resolved property name
+     *                     for a method, or the field's own name for a field
+     * @param logSkips     whether to log skipped entries; see {@link #processMethodAnnotations(Map, Class)}
+     *                     for why a method pass gates this and a field pass does not
+     */
+    private void registerAnnotatedMember(Map<String, Object> mapping, TypeConversion tc, Member member, String fallbackName, boolean logSkips) {
+        if (isApplicationScopedWithoutKey(tc)) {
+            if (logSkips) {
+                LOG.warn("Ignoring @TypeConversion on [{}#{}]: an application-scoped conversion needs an explicit class-name key, not a derived property name",
+                        member.getDeclaringClass().getName(), member.getName());
+            }
+            return;
+        }
+        String name = StringUtils.isEmpty(tc.key()) ? fallbackName : tc.key();
+        String key = resolveKey(tc.type(), tc.rule(), name);
+        if (key == null) {
+            if (logSkips) {
+                LOG.warn("Ignoring @TypeConversion on [{}#{}]: no key was given and no property name could be derived",
+                        member.getDeclaringClass().getName(), member.getName());
+            }
+            return;
+        }
+        if (mapping.containsKey(key)) {
+            if (logSkips) {
+                LOG.debug("Skipping @TypeConversion on [{}#{}]: key [{}] is already mapped, either by a higher " +
+                                "precedence source or by this same annotation seen at a lower level of the hierarchy",
+                        member.getDeclaringClass().getName(), member.getName(), key);
+            }
+            return;
+        }
+        LOG.debug("TypeConversion [{}/{}] on [{}#{}] resolved to key [{}]",
+                tc.converter(), tc.converterClass(), member.getDeclaringClass().getName(), member.getName(), key);
+        annotationProcessor.process(mapping, tc, key);
+    }
 
     /**
      * Looks for converter mappings for the specified class, traversing up its class hierarchy and interfaces and adding

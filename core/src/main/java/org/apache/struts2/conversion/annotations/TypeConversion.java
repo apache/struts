@@ -48,8 +48,15 @@ import java.lang.annotation.Target;
  * <p><u>Annotation usage:</u></p>
  *
  * <!-- START SNIPPET: usage -->
- * <p>The TypeConversion annotation can be applied at property and method level.</p>
+ * <p>The TypeConversion annotation can be applied at field and method level.</p>
  * <!-- END SNIPPET: usage -->
+ *
+ * <p>The {@code org.apache.struts2.util} package also has dedicated {@code @Key},
+ * {@code @Element}, {@code @KeyProperty} and {@code @CreateIfNull} annotations that {@link
+ * org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer} consults, on the field then its
+ * setter then its getter, <em>before</em> falling back to the converter mapping this annotation
+ * populates. If both a dedicated annotation and an equivalent {@code @TypeConversion} are declared
+ * for the same property, the dedicated annotation wins silently.</p>
  *
  * <p><u>Annotation parameters:</u></p>
  *
@@ -67,8 +74,11 @@ import java.lang.annotation.Target;
  * <tr>
  * <td>key</td>
  * <td>no</td>
- * <td>The annotated property/key name</td>
- * <td>The optional property name mostly used within TYPE level annotations.</td>
+ * <td>The resolved property name on a method; the field's own name on a field</td>
+ * <td>The property name the rule applies to. The matching prefix for the given rule
+ * (<code>Key_</code>, <code>Element_</code>, <code>KeyProperty_</code>, <code>CreateIfNull_</code>, or the deprecated
+ * <code>Collection_</code>) is prepended automatically unless the key already carries it. Required on TYPE level annotations,
+ * where there is no member name to derive it from.</td>
  * </tr>
  * <tr>
  * <td>type</td>
@@ -115,11 +125,10 @@ import java.lang.annotation.Target;
  *   private String convertInt;
  *
  *   private String convertDouble;
- *   private List users = null;
  *
  *   private HashMap keyValues = null;
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION)
+ *   &#64;TypeConversion()
  *   public void setConvertInt( String convertInt ) {
  *       this.convertInt = convertInt;
  *   }
@@ -128,6 +137,9 @@ import java.lang.annotation.Target;
  *   public void setConvertDouble( String convertDouble ) {
  *       this.convertDouble = convertDouble;
  *   }
+ *
+ *   &#64;TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "true")
+ *   private List users = null;
  *
  *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
  *   public void setUsers( List users ) {
@@ -139,7 +151,7 @@ import java.lang.annotation.Target;
  *       this.keyValues = keyValues;
  *   }
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converterClass = XWorkBasicConverter.class)
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date", converterClass = XWorkBasicConverter.class)
  *   public String execute() throws Exception {
  *       return SUCCESS;
  *   }
@@ -150,15 +162,26 @@ import java.lang.annotation.Target;
  * @author Rainer Hermanns
  * @version $Id$
  */
-@Target({ ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TypeConversion {
 
     /**
-     * The optional key name used within TYPE level annotations.
-     * Defaults to the property name.
+     * The property name this conversion applies to. Optional on a method, where it defaults to the
+     * resolved JavaBean property name; optional on a field, where it defaults to the <em>field's own
+     * name</em> instead - not necessarily the same thing. Required on TYPE level annotations.
+     *
+     * <p>The prefix matching the declared {@link ConversionRule} is prepended automatically, so
+     * {@code @TypeConversion(key = "users", rule = ConversionRule.CREATE_IF_NULL, value = "true")}
+     * and {@code @TypeConversion(key = "CreateIfNull_users", ...)} are equivalent.</p>
+     *
+     * <p>If a field's name does not match the property it backs (for example a field {@code _users}
+     * exposed as property {@code users}), give an explicit {@code key} of {@code "users"} - a derived
+     * key of {@code CreateIfNull__users} is never looked up, since conversion metadata is read by
+     * property name, not field name.</p>
      *
      * @return key
+     * @since 7.3.0 the rule prefix is derived; previously the full key had to be spelled out
      */
     String key() default "";
 
@@ -174,7 +197,7 @@ public @interface TypeConversion {
 
     /**
      * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, COLLECTION (deprecated) or a MAP.
-     * Note: Collection and Map conversion rules can be determined via org.apache.struts2.util.DefaultObjectTypeDeterminer.
+     * Note: Collection and Map conversion rules can be determined via org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer.
      *
      * @see DefaultObjectTypeDeterminer
      *

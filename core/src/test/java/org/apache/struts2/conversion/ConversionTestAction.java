@@ -53,7 +53,7 @@ public class ConversionTestAction implements Action {
         return convertInt;
     }
 
-    @TypeConversion(type = ConversionType.APPLICATION)
+    @TypeConversion()
     public void setConvertInt( String convertInt ) {
         this.convertInt = convertInt;
     }

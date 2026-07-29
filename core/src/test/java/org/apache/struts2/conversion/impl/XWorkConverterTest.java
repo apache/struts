@@ -37,8 +37,21 @@ import org.apache.struts2.util.FurColor;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
+import org.apache.struts2.conversion.ConversionAnnotationProcessor;
 import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.conversion.annotations.ConversionRule;
+import org.apache.struts2.conversion.annotations.ConversionType;
+import org.apache.struts2.util.ApplicationScopedWithoutKeyConversionAction;
+import org.apache.struts2.util.BareKeyConversionAction;
+import org.apache.struts2.util.CollidingKeyConversionAction;
+import org.apache.struts2.util.EmptyKeyConversionAction;
+import org.apache.struts2.util.ExplicitKeyConversionAction;
+import org.apache.struts2.util.FieldConversionAction;
+import org.apache.struts2.util.InheritedMethodConversionSubAction;
+import org.apache.struts2.util.MyBean;
+import org.apache.struts2.util.MyBeanAction;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -812,6 +825,172 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         // then
         assertEquals(converted, Arrays.asList(1, 2, 3));
+    }
+
+    public void testResolveKeyPrependsTheRulePrefix() {
+        assertEquals("KeyProperty_annotatedBeanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "annotatedBeanMap"));
+        assertEquals("Element_annotatedBeanList",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.ELEMENT, "annotatedBeanList"));
+        assertEquals("CreateIfNull_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.CREATE_IF_NULL, "users"));
+    }
+
+    public void testResolveKeyLeavesAnAlreadyPrefixedKeyAlone() {
+        assertEquals("KeyProperty_annotatedBeanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "KeyProperty_annotatedBeanMap"));
+        assertEquals("Key_beanMap",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY, "Key_beanMap"));
+
+        // COLLECTION and ELEMENT are interchangeable in DefaultConversionAnnotationProcessor and
+        // DefaultObjectTypeDeterminer, so a key already carrying either prefix must be left alone
+        // regardless of which of the two rules is declared.
+        assertEquals("Element_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.COLLECTION, "Element_users"));
+        assertEquals("Collection_users",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.ELEMENT, "Collection_users"));
+    }
+
+    public void testResolveKeyDoesNotPrefixPropertyOrMapRules() {
+        assertEquals("someProperty",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.PROPERTY, "someProperty"));
+        assertEquals("keyValues",
+                XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.MAP, "keyValues"));
+    }
+
+    public void testResolveKeyNeverPrefixesApplicationScopedKeys() {
+        assertEquals("java.util.Date",
+                XWorkConverter.resolveKey(ConversionType.APPLICATION, ConversionRule.PROPERTY, "java.util.Date"));
+        assertEquals("java.util.Date",
+                XWorkConverter.resolveKey(ConversionType.APPLICATION, ConversionRule.ELEMENT, "java.util.Date"));
+    }
+
+    public void testResolveKeyReturnsNullWhenNoNameIsAvailable() {
+        assertNull(XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.PROPERTY, null));
+        assertNull(XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY, ""));
+    }
+
+    public void testExplicitMethodKeyGetsTheRulePrefix() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(ExplicitKeyConversionAction.class, "CreateIfNull_bareList"));
+        assertNull(freshConverter.getConverter(ExplicitKeyConversionAction.class, "bareList"));
+    }
+
+    public void testClassLevelBareKeysGetTheRulePrefix() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("id", freshConverter.getConverter(BareKeyConversionAction.class, "KeyProperty_annotatedBeanMap"));
+        assertEquals(MyBean.class, freshConverter.getConverter(BareKeyConversionAction.class, "Element_annotatedBeanMap"));
+        assertEquals("id", freshConverter.getConverter(BareKeyConversionAction.class, "KeyProperty_annotatedBeanList"));
+        assertEquals(MyBean.class, freshConverter.getConverter(BareKeyConversionAction.class, "Element_annotatedBeanList"));
+    }
+
+    public void testClassLevelBareKeysMatchTheSpelledOutForm() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        for (String key : new String[]{"KeyProperty_annotatedBeanMap", "Element_annotatedBeanMap",
+                "KeyProperty_annotatedBeanList", "Element_annotatedBeanList"}) {
+            assertEquals("mismatch for " + key,
+                    freshConverter.getConverter(MyBeanAction.class, key),
+                    freshConverter.getConverter(BareKeyConversionAction.class, key));
+        }
+    }
+
+    public void testClassLevelEntriesAfterAKeyCollisionAreStillRegistered() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        // supplied by the -conversion.properties file, so the annotation must not overwrite it
+        assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_fromProperties"));
+        // the entry after the collision used to be dropped by `break`
+        assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_afterTheCollision"));
+    }
+
+    public void testClassLevelEmptyKeyRegistersNoMapping() throws Exception {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        Map<String, Object> mapping = freshConverter.buildConverterMapping(EmptyKeyConversionAction.class);
+
+        assertFalse("an empty class-level key must not register a \"\" mapping", mapping.containsKey(""));
+        assertTrue("no mapping should have been registered at all", mapping.isEmpty());
+    }
+
+    public void testFieldLevelAnnotationDerivesKeyFromTheFieldName() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(FieldConversionAction.class, "CreateIfNull_fieldOnlyList"));
+    }
+
+    public void testMethodAnnotationWinsOverFieldAnnotation() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals(Long.class, freshConverter.getConverter(FieldConversionAction.class, "Key_contestedMap"));
+    }
+
+    /**
+     * {@code processMethodAnnotations} gates its WARN logging to the hierarchy level whose {@code
+     * clazz} matches {@code method.getDeclaringClass()}, so a misconfigured annotation on an
+     * inherited method logs once instead of once per subclass. Gating logging alone is only safe
+     * because registration still happens at the subclass level - before that subclass's own field
+     * pass runs - as documented on {@code XWorkConverter#processFieldAnnotations}. {@link
+     * InheritedMethodConversionSubAction} declares a contesting field annotation for the same
+     * property the inherited setter claims; this asserts the inherited method annotation still wins,
+     * which would break if registration were mistakenly gated along with logging.
+     */
+    public void testInheritedMethodAnnotationStillRegistersThroughASubclass() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("true", freshConverter.getConverter(InheritedMethodConversionSubAction.class, "CreateIfNull_inheritedList"));
+    }
+
+    /**
+     * Wires a fresh {@link StrutsTypeConverterHolder} into both {@code freshConverter} and its
+     * {@link ConversionAnnotationProcessor}. The two are injected as independent singletons: an
+     * {@code APPLICATION}-scoped {@link TypeConversion} is registered by the annotation processor
+     * calling {@code TypeConverterHolder.addDefaultMapping} directly (bypassing the {@code mapping}
+     * map {@code XWorkConverter} caches per-class), so swapping only {@code XWorkConverter}'s own
+     * holder - as the other {@code freshConverter.setTypeConverterHolder(...)} tests in this file do
+     * for class/method/field mappings - would silently observe the shared container-wide holder
+     * instead of the one the test controls.
+     */
+    private XWorkConverter freshConverterWithIsolatedHolder(TypeConverterHolder holder) {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        DefaultConversionAnnotationProcessor freshProcessor = container.inject(DefaultConversionAnnotationProcessor.class);
+        freshProcessor.setTypeConverterHolder(holder);
+        freshConverter.setConversionAnnotationProcessor(freshProcessor);
+        freshConverter.setTypeConverterHolder(holder);
+        return freshConverter;
+    }
+
+    public void testApplicationScopedMethodWithoutKeyRegistersNoDefaultMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        XWorkConverter freshConverter = freshConverterWithIsolatedHolder(holder);
+
+        // forces the mapping to be built; the property itself does not need to resolve to anything
+        freshConverter.getConverter(ApplicationScopedWithoutKeyConversionAction.class, "anything");
+
+        assertFalse("a method-level APPLICATION conversion with no key must not register a default "
+                        + "mapping under the derived member name, which lookup(String,boolean)/lookup(Class) never read",
+                holder.containsDefaultMapping("applicationScopedMethod"));
+    }
+
+    public void testApplicationScopedFieldWithoutKeyRegistersNoDefaultMapping() {
+        StrutsTypeConverterHolder holder = new StrutsTypeConverterHolder();
+        XWorkConverter freshConverter = freshConverterWithIsolatedHolder(holder);
+
+        freshConverter.getConverter(ApplicationScopedWithoutKeyConversionAction.class, "anything");
+
+        assertFalse("a field-level APPLICATION conversion with no key must not register a default "
+                        + "mapping under the derived member name, which lookup(String,boolean)/lookup(Class) never read",
+                holder.containsDefaultMapping("applicationScopedField"));
     }
 
     public static class CountingXWorkConverter extends XWorkConverter {

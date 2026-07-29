@@ -23,6 +23,8 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ import java.util.List;
  */
 public class AnnotationActionValidatorManager extends DefaultActionValidatorManager {
 
+    private static final Logger LOG = LogManager.getLogger(AnnotationActionValidatorManager.class);
+
     @Override
     protected String buildValidatorKey(Class clazz, String context) {
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
@@ -48,20 +52,32 @@ public class AnnotationActionValidatorManager extends DefaultActionValidatorMana
             sb.append(config.getPackageName());
             sb.append("/");
         }
+
+        Object action = invocation.getAction();
+        boolean validatingActionClass = action != null && clazz.equals(action.getClass());
+        String configName = config.getName();
+        boolean wildcard = configName.contains(ActionConfig.WILDCARD)
+                || (configName.contains("{") && configName.contains("}"));
+
         // WW-2996: key needs to use the name of the action from the config file, instead of the url,
         // so wildcard actions will have the same validator
         // WW-3753: Using the config name instead of the context only for wildcard actions to keep the flexibility
         // provided by the original design (such as mapping different contexts to the same action and method if desired)
-        // WW-4536: Using NamedVariablePatternMatcher allows defines actions with patterns enclosed with '{}'
-        String configName = config.getName();
-        if (configName.contains(ActionConfig.WILDCARD) || (configName.contains("{") && configName.contains("}"))) {
+        // WW-4536: Using NamedVariablePatternMatcher allows defining actions with patterns enclosed with '{}'
+        // WW-3530: the config-name substitution only makes sense for the action's own class; a visited object
+        // (visitor validator) carries a stable, explicit context that must remain part of the key
+        if (validatingActionClass && wildcard) {
             sb.append(configName);
             sb.append("|");
             sb.append(proxy.getMethod());
         } else {
             sb.append(context);
         }
-        return sb.toString();
+
+        String validatorKey = sb.toString();
+        LOG.debug("Built validator key [{}] for class [{}] and context [{}]: validatingActionClass={}, wildcard={}, action config [{}]",
+                validatorKey, clazz.getName(), context, validatingActionClass, wildcard, configName);
+        return validatorKey;
     }
 
     @Override

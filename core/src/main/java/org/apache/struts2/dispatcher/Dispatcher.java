@@ -151,6 +151,9 @@ public class Dispatcher {
      */
     private String defaultLocale;
 
+    /**
+     * Store state of {@link StrutsConstants#STRUTS_LOCALE_VALIDATE_REQUEST} setting.
+     */
     private boolean validateRequestLocale = false;
 
     /**
@@ -312,6 +315,11 @@ public class Dispatcher {
         defaultLocale = val;
     }
 
+    /**
+     * Modify state of {@link StrutsConstants#STRUTS_LOCALE_VALIDATE_REQUEST} setting.
+     *
+     * @param val New setting
+     */
     @Inject(value = StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, required = false)
     public void setValidateRequestLocale(String val) {
         validateRequestLocale = Boolean.parseBoolean(val);

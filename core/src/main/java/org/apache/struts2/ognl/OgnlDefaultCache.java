@@ -64,6 +64,11 @@ public class OgnlDefaultCache<K, V> implements OgnlCache<K, V> {
     }
 
     @Override
+    public V remove(K key) {
+        return ognlCache.remove(key);
+    }
+
+    @Override
     public int size() {
         return ognlCache.size();
     }

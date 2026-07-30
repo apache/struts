@@ -64,6 +64,11 @@ public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
     }
 
     @Override
+    public V remove(K key) {
+        return cache.asMap().remove(key);
+    }
+
+    @Override
     public int size() {
         return cache.asMap().size();
     }

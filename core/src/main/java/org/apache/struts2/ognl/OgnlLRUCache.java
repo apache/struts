@@ -71,6 +71,11 @@ public class OgnlLRUCache<K, V> implements OgnlCache<K, V> {
     }
 
     @Override
+    public V remove(K key) {
+        return ognlLRUCache.remove(key);
+    }
+
+    @Override
     public int size() {
         return ognlLRUCache.size();
     }

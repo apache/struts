@@ -545,6 +545,22 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
 
     /**
+     * Specifies the type of cache to use for the localized-text provider caches. Valid values defined in
+     * {@link org.apache.struts2.ognl.OgnlCacheFactory.CacheType}.
+     *
+     * @since 7.3.0
+     */
+    public static final String STRUTS_I18N_CACHE_TYPE = "struts.i18n.cacheType";
+
+    /**
+     * Specifies the maximum size of each localized-text provider cache. Configure based on the cache type
+     * chosen and application-specific needs.
+     *
+     * @since 7.3.0
+     */
+    public static final String STRUTS_I18N_CACHE_MAXSIZE = "struts.i18n.cacheMaxSize";
+
+    /**
      * Specifies the type of cache to use for proxy detection. Valid values defined in
      * {@link org.apache.struts2.ognl.OgnlCacheFactory.CacheType}.
      *

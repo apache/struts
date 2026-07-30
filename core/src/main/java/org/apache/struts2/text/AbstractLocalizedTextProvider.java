@@ -18,12 +18,16 @@
  */
 package org.apache.struts2.text;
 
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.ognl.DefaultOgnlCacheFactory;
+import org.apache.struts2.ognl.OgnlCache;
+import org.apache.struts2.ognl.OgnlCacheFactory.CacheType;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
 
@@ -59,17 +63,25 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     @SuppressWarnings("java:S2129") // deliberate: a non-interned instance is required for an identity (==) sentinel
     private static final String NOT_FOUND = new String("__STRUTS_TEXT_NOT_FOUND__"); // unique identity sentinel; compared with ==
 
-    protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
     protected boolean reloadBundles = false;
     protected boolean searchDefaultBundlesFirst = false;  // Search default resource bundles first.  Note: This flag may not be meaningful to all implementations.
 
-    private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-    private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
-    private final ConcurrentMap<TextCacheKey, String> classHierarchyCache = new ConcurrentHashMap<>();
-    private final ConcurrentMap<TextCacheKey, String> packageHierarchyCache = new ConcurrentHashMap<>();
+
+    private volatile CacheType i18nCacheType = CacheType.WTLFU;
+    private volatile int i18nCacheMaxSize = 10000;
+
+    private <K, V> OgnlCache<K, V> buildI18nCache() {
+        return new DefaultOgnlCacheFactory<K, V>(i18nCacheMaxSize, i18nCacheType).buildOgnlCache();
+    }
+
+    protected OgnlCache<String, ResourceBundle> bundlesMap = buildI18nCache();
+    private OgnlCache<MessageFormatKey, MessageFormat> messageFormats = buildI18nCache();
+    private OgnlCache<String, Boolean> missingBundles = buildI18nCache();
+    private OgnlCache<TextCacheKey, String> classHierarchyCache = buildI18nCache();
+    private OgnlCache<TextCacheKey, String> packageHierarchyCache = buildI18nCache();
 
     @Override
     public void addDefaultResourceBundle(String bundleName) {
@@ -108,6 +120,21 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     /** Test-support accessor: current number of cached package-hierarchy resolutions. */
     protected int packageHierarchyCacheSize() {
         return packageHierarchyCache.size();
+    }
+
+    /** Test-support accessor: current number of cached resource bundles. */
+    protected int bundlesMapSize() {
+        return bundlesMap.size();
+    }
+
+    /** Test-support accessor: current number of cached missing-bundle markers. */
+    protected int missingBundlesSize() {
+        return missingBundles.size();
+    }
+
+    /** Test-support accessor: current number of cached message formats. */
+    protected int messageFormatsSize() {
+        return messageFormats.size();
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -404,39 +431,61 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         this.searchDefaultBundlesFirst = Boolean.parseBoolean(searchDefaultBundlesFirst);
     }
 
+    @Inject(value = StrutsConstants.STRUTS_I18N_CACHE_TYPE, required = false)
+    public void setI18nCacheType(String cacheType) {
+        this.i18nCacheType = EnumUtils.getEnumIgnoreCase(CacheType.class, cacheType, CacheType.WTLFU);
+        rebuildI18nCaches();
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_I18N_CACHE_MAXSIZE, required = false)
+    public void setI18nCacheMaxSize(String cacheMaxSize) {
+        this.i18nCacheMaxSize = Integer.parseInt(cacheMaxSize);
+        rebuildI18nCaches();
+    }
+
+    /**
+     * Rebuilds the localized-text caches from the current type/size. Called during dependency injection
+     * (single-threaded startup, before the provider serves lookups); discards any warm-up entries.
+     */
+    private void rebuildI18nCaches() {
+        bundlesMap = buildI18nCache();
+        messageFormats = buildI18nCache();
+        missingBundles = buildI18nCache();
+        classHierarchyCache = buildI18nCache();
+        packageHierarchyCache = buildI18nCache();
+    }
+
     @Override
     public ResourceBundle findResourceBundle(String bundleName, Locale locale) {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), bundleName, locale);
 
-        if (missingBundles.contains(key)) {
+        if (missingBundles.get(key) != null) {
             return null;
         }
 
         ResourceBundle bundle = null;
         try {
-            if (bundlesMap.containsKey(key)) {
-                bundle = bundlesMap.get(key);
-            } else {
+            bundle = bundlesMap.get(key);
+            if (bundle == null) {
                 bundle = ResourceBundle.getBundle(bundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
             }
         } catch (MissingResourceException ex) {
             if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
                 try {
-                    if (bundlesMap.containsKey(key)) {
-                        bundle = bundlesMap.get(key);
-                    } else {
+                    bundle = bundlesMap.get(key);
+                    if (bundle == null) {
                         bundle = ResourceBundle.getBundle(bundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
                     }
                 } catch (MissingResourceException e) {
                     LOG.debug("Missing resource bundle [{}]!", bundleName, e);
-                    missingBundles.add(key);
+                    missingBundles.put(key, Boolean.TRUE);
                 }
             } else {
                 LOG.debug("Missing resource bundle [{}]!", bundleName);
-                missingBundles.add(key);
+                missingBundles.put(key, Boolean.TRUE);
             }
         }
         return bundle;

@@ -50,6 +50,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOG = LogManager.getLogger(AbstractLocalizedTextProvider.class);
 
     public static final String XWORK_MESSAGES_BUNDLE = "org/apache/struts2/xwork-messages";

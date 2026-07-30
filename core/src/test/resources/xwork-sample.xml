@@ -72,6 +72,27 @@
             </interceptor-ref>
         </action>
 
+        <!-- disabled resolved lazily per invocation: reaches the interceptor mapping's params,
+             so it lands on the params holder and not on the shared interceptor -->
+        <action name="LazyFooLazilyDisabled" class="org.apache.struts2.SimpleAction">
+            <result name="error" type="void"/>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="lazy">
+                <param name="foo">should not be applied</param>
+                <param name="disabled">${blah}</param>
+            </interceptor-ref>
+        </action>
+
+        <!-- disabled configured statically on the interceptor definition: invisible to the params
+             holder, honoured only via ConditionalInterceptor#shouldIntercept -->
+        <action name="LazyFooStaticallyDisabled" class="org.apache.struts2.SimpleAction">
+            <result name="error" type="void"/>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="lazyStaticallyDisabled">
+                <param name="foo">should not be applied</param>
+            </interceptor-ref>
+        </action>
+
         <action name="WildCard" class="org.apache.struts2.SimpleAction">
             <param name="foo">17</param>
             <param name="bar">23</param>

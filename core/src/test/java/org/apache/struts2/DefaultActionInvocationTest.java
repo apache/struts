@@ -24,6 +24,7 @@ import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.ConditionalInterceptor;
 import org.apache.struts2.interceptor.Interceptor;
 import org.apache.struts2.interceptor.WithLazyParams;
 import org.apache.struts2.mock.MockActionProxy;
@@ -42,6 +43,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.struts2.ognl.OgnlUtilTest.createOgnlUtil;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -158,6 +160,40 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertFalse(mockInterceptor2.isExecuted());
         assertTrue(mockInterceptor3.isExecuted());
         assertTrue(defaultActionInvocation.isExecuted());
+    }
+
+    /**
+     * WW-5659: {@code executeConditional(ConditionalInterceptor)} was removed in 7.3.0 - it had no
+     * callers left, so a subclass still overriding it would have gone silently dead. The
+     * two-argument form is now the only extension point and must be handed the interceptor
+     * mapping's name, which is what the removed overload could not supply.
+     */
+    public void testExecuteConditionalOverrideReceivesTheMappingName() throws Exception {
+        // given
+        List<InterceptorMapping> interceptorMappings = new ArrayList<>();
+        MockInterceptor mockInterceptor = new MockInterceptor();
+        mockInterceptor.setFoo("test1");
+        mockInterceptor.setExpectedFoo("test1");
+        interceptorMappings.add(new InterceptorMapping("namedInStack", mockInterceptor));
+
+        List<String> observedNames = new ArrayList<>();
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocationTester(interceptorMappings) {
+            @Override
+            protected String executeConditional(ConditionalInterceptor conditionalInterceptor, String interceptorName) throws Exception {
+                observedNames.add(interceptorName);
+                return super.executeConditional(conditionalInterceptor, interceptorName);
+            }
+        };
+        container.inject(defaultActionInvocation);
+        defaultActionInvocation.stack = container.getInstance(ValueStackFactory.class).createValueStack();
+
+        // when
+        defaultActionInvocation.setResultCode("");
+        defaultActionInvocation.invoke();
+
+        // then
+        assertThat(observedNames).containsExactly("namedInStack");
+        assertThat(mockInterceptor.isExecuted()).isTrue();
     }
 
     public void testInvokingExistingExecuteMethod() throws Exception {
@@ -421,6 +457,58 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         // Verify static parameter is set and not evaluated as expression
         assertEquals("static value", action.getBlah());
+    }
+
+    /**
+     * Regression for WW-5659: a {@code disabled} param resolved lazily from the value stack must skip
+     * the interceptor for that invocation. It arrives through the interceptor mapping's params, so it
+     * lands on the per-invocation holder and is honoured there, never on the shared interceptor.
+     */
+    public void testInvokeWithLazyParamsSkipsLazilyDisabledInterceptor() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blah", "true");
+
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooLazilyDisabled", null, extraContext.getContextMap());
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+
+        // the rest of the stack still ran, so the params interceptor applied blah...
+        assertThat(action.getBlah()).isEqualTo("true");
+        // ...but the lazy interceptor was skipped, so it never applied its foo param to the action
+        assertThat(action.getName()).isNull();
+    }
+
+    /**
+     * Regression for WW-5659: {@code disabled} configured on the interceptor definition never reaches
+     * the params holder, so it can only be honoured through {@link org.apache.struts2.interceptor.ConditionalInterceptor#shouldIntercept}.
+     * The lazy path must still consult it.
+     */
+    public void testInvokeWithLazyParamsSkipsStaticallyDisabledInterceptor() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("blah", "dynamic value");
+
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooStaticallyDisabled", null, extraContext.getContextMap());
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+
+        assertThat(action.getBlah()).isEqualTo("dynamic value");
+        assertThat(action.getName()).isNull();
     }
 
     public void testInvokeWithAsyncManager() throws Exception {

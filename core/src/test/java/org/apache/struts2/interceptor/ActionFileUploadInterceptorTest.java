@@ -34,6 +34,8 @@ import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.util.ClassLoaderUtil;
+import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.ValueStackFactory;
 import org.assertj.core.util.Files;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -41,8 +43,16 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,7 +73,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testAcceptFileWithEmptyAllowedTypesAndExtensions() {
         // when allowed type is empty
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -75,7 +85,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -83,7 +93,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed types
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -94,7 +104,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/*");
 
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -102,7 +112,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.setAllowedTypes("text/h*");
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/plain", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/plain", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -114,7 +124,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is of allowed extensions
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -122,7 +132,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed extensions
         validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -130,7 +140,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         interceptor.setAllowedExtensions(".txt,.lol");
         validation = new ValidationAwareSupport();
-        ok = interceptor.acceptFile(validation, createTestFile(Files.newTemporaryFile()), "filename.lol", "text/plain", "inputName");
+        ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(Files.newTemporaryFile()), "filename.lol", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.getFieldErrors()).isEmpty();
@@ -142,7 +152,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, null, "filename.html", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, null, "filename.html", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -159,7 +169,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/plain");
 
         ValidationAwareSupport validation = new ValidationAwareSupport();
-        boolean notOk = interceptor.acceptFile(validation, createTestFile(null), "filename.html", "text/plain", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, createTestFile(null), "filename.html", "text/plain", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -183,7 +193,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .withInputName("inputName")
                 .build();
 
-        boolean ok = interceptor.acceptFile(validation, file, "f.txt", "text/plain", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, file, "f.txt", "text/plain", "inputName");
 
         assertThat(ok).isTrue();
         assertThat(validation.hasErrors()).isFalse();
@@ -203,7 +213,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .build();
 
         // wrong content type -> rejected
-        boolean ok = interceptor.acceptFile(validation, file, "f.html", "text/html", "inputName");
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, file, "f.html", "text/html", "inputName");
 
         assertThat(ok).isFalse();
         assertThat(validation.hasErrors()).isTrue();
@@ -221,7 +231,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         File file = new File(new URI(url.toString()));
         assertThat(file).exists();
         UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
-        boolean notOk = interceptor.acceptFile(validation, uploadedFile, "filename", "text/html", "inputName");
+        boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, uploadedFile, "filename", "text/html", "inputName");
 
         assertThat(notOk).isFalse();
         assertThat(validation.getFieldErrors()).isNotEmpty();
@@ -536,14 +546,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
-        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
-        jak.setMaxSize(String.valueOf(maxsize));
-        jak.setMaxFileSize(String.valueOf(maxfilesize));
-        jak.setMaxFiles(String.valueOf(maxfiles));
-        jak.setMaxStringLength(String.valueOf(maxStringLength));
-        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
-        return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+        return createMultipartRequest(request, maxsize, maxfilesize, maxfiles, maxStringLength);
     }
 
     protected void setUp() throws Exception {
@@ -645,11 +648,10 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        // Simulate WithLazyParams injection by manually setting the parameters
-        // In real execution, DefaultActionInvocation.invoke() would call LazyParamInjector
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-
-        interceptor.intercept(mai);
+        // Exercise the real resolution path: LazyParamInjector resolves ${allowedMimeTypes}
+        // into a fresh UploadPolicy instead of mutating the shared interceptor.
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -683,8 +685,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action1);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action1.getAllowedMimeTypes());
-        interceptor.intercept(mai1);
+        UploadPolicy policy1 = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai1, policy1);
 
         assertThat(action1.getUploadFiles()).isNotNull().hasSize(1);
         assertThat(action1.getUploadFiles().get(0).getContentType()).isEqualTo("text/plain");
@@ -712,8 +714,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
         // Simulate new parameter evaluation for second request
-        interceptor.setAllowedTypes(action2.getAllowedMimeTypes());
-        interceptor.intercept(mai2);
+        UploadPolicy policy2 = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai2, policy2);
 
         assertThat(action2.getUploadFiles()).isNotNull().hasSize(1);
         assertThat(action2.getUploadFiles().get(0).getContentType()).isEqualTo("text/html");
@@ -743,8 +745,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedExtensions(action.getAllowedExtensions());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), false, true, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -782,8 +784,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setMaximumSize(action.getMaxFileSize());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), false, false, true);
+        interceptor.intercept(mai, policy);
 
         // File should be rejected due to size
         assertThat(action.hasFieldErrors()).isTrue();
@@ -816,9 +818,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-        interceptor.setAllowedExtensions(action.getAllowedExtensions());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, true, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -853,8 +854,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles());
 
-        interceptor.setAllowedTypes(action.getAllowedMimeTypes());
-        interceptor.intercept(mai);
+        UploadPolicy policy = injectDynamicUploadPolicy(interceptor, ActionContext.getContext(), true, false, false);
+        interceptor.intercept(mai, policy);
 
         List<UploadedFile> files = action.getUploadFiles();
 
@@ -885,6 +886,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         private String allowedMimeTypes;
         private String allowedExtensions;
         private Long maxFileSize;
+        private String uploadDisabled;
 
         @Override
         public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
@@ -918,6 +920,337 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         public void setMaxFileSize(Long maxFileSize) {
             this.maxFileSize = maxFileSize;
         }
+
+        public String getUploadDisabled() {
+            return uploadDisabled;
+        }
+
+        public void setUploadDisabled(String uploadDisabled) {
+            this.uploadDisabled = uploadDisabled;
+        }
+    }
+
+    public void testUploadPolicyParsesAndCopies() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain, text/html");
+        policy.setAllowedExtensions(".txt,.html");
+        policy.setMaximumSize(1024L);
+        policy.setDisabled("true");
+
+        UploadPolicy copy = policy.copy();
+
+        assertThat(copy.getAllowedTypes()).containsExactlyInAnyOrder("text/plain", "text/html");
+        assertThat(copy.getAllowedExtensions()).containsExactlyInAnyOrder(".txt", ".html");
+        assertThat(copy.getMaximumSize()).isEqualTo(1024L);
+        assertThat(copy.isDisabled()).isTrue();
+    }
+
+    public void testUploadPolicyCopyIsIndependentOfTheOriginal() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain");
+
+        UploadPolicy copy = policy.copy();
+        copy.setAllowedTypes("text/html");
+
+        assertThat(policy.getAllowedTypes()).containsExactly("text/plain");
+        assertThat(copy.getAllowedTypes()).containsExactly("text/html");
+    }
+
+    public void testUploadPolicyTreatsNullAsNoRestriction() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes(null);
+        policy.setAllowedExtensions(null);
+
+        assertThat(policy.getAllowedTypes()).isEmpty();
+        assertThat(policy.getAllowedExtensions()).isEmpty();
+    }
+
+    /**
+     * Regression for WW-5659: two concurrent invocations resolving different policies must not
+     * see each other's values. Scenario contributed by @deprrous in GitHub PR #1815.
+     */
+    public void testConcurrentDynamicPoliciesStayIsolatedPerRequest() throws Exception {
+        CoordinatedActionFileUploadInterceptor sharedInterceptor = new CoordinatedActionFileUploadInterceptor();
+        container.inject(sharedInterceptor);
+
+        MyDynamicFileUploadAction plainPolicyAction = new MyDynamicFileUploadAction();
+        plainPolicyAction.setAllowedMimeTypes("text/plain");
+        container.inject(plainPolicyAction);
+
+        MyDynamicFileUploadAction htmlPolicyAction = new MyDynamicFileUploadAction();
+        htmlPolicyAction.setAllowedMimeTypes("text/html");
+        container.inject(htmlPolicyAction);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<String> plainResult = executor.submit(() -> runUploadAttempt(
+                    sharedInterceptor, plainPolicyAction, createUploadRequest("plain-policy.html", "text/html", htmlContent)));
+
+            assertThat(sharedInterceptor.awaitFirstValidation()).isTrue();
+
+            Future<String> htmlResult = executor.submit(() -> runUploadAttempt(
+                    sharedInterceptor, htmlPolicyAction, createUploadRequest("html-policy.html", "text/html", htmlContent)));
+
+            assertThat(htmlResult.get(10, TimeUnit.SECONDS)).isEqualTo("success");
+            sharedInterceptor.releaseFirstValidation();
+            assertThat(plainResult.get(10, TimeUnit.SECONDS)).isEqualTo("success");
+        } finally {
+            sharedInterceptor.releaseFirstValidation();
+            executor.shutdownNow();
+            sharedInterceptor.destroy();
+        }
+
+        // the text/plain policy must have rejected the text/html upload despite the concurrent
+        // text/html invocation resolving a more permissive policy on the same interceptor
+        assertThat(plainPolicyAction.getUploadFiles()).isNull();
+        assertThat(plainPolicyAction.getFieldErrors()).containsKey("file");
+
+        assertThat(htmlPolicyAction.hasFieldErrors()).isFalse();
+        assertThat(htmlPolicyAction.getUploadFiles()).isNotNull().hasSize(1);
+        assertThat(htmlPolicyAction.getUploadFiles().get(0).getOriginalName()).isEqualTo("html-policy.html");
+    }
+
+    /**
+     * Regression for WW-5659: resolving an invocation's params must leave the interceptor
+     * singleton exactly as configured.
+     */
+    public void testResolutionDoesNotMutateTheInterceptor() throws Exception {
+        ActionFileUploadInterceptor configuredInterceptor = new ActionFileUploadInterceptor();
+        container.inject(configuredInterceptor);
+        configuredInterceptor.setAllowedTypes("text/plain");
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/html");
+        container.inject(action);
+
+        runUploadAttempt(configuredInterceptor, action, createUploadRequest("f.html", "text/html", htmlContent));
+
+        assertThat(configuredInterceptor.newLazyParams().getAllowedTypes()).containsExactly("text/plain");
+    }
+
+    /**
+     * Regression for WW-5659: a lazily resolved {@code disabled} must apply to one invocation only.
+     */
+    public void testDisabledIsResolvedPerInvocation() {
+        ActionFileUploadInterceptor sharedInterceptor = new ActionFileUploadInterceptor();
+        container.inject(sharedInterceptor);
+
+        MyDynamicFileUploadAction disablingAction = new MyDynamicFileUploadAction();
+        disablingAction.setUploadDisabled("true");
+        container.inject(disablingAction);
+
+        MyDynamicFileUploadAction enablingAction = new MyDynamicFileUploadAction();
+        enablingAction.setUploadDisabled("false");
+        container.inject(enablingAction);
+
+        UploadPolicy disabledPolicy = resolveDisabled(sharedInterceptor, disablingAction);
+        UploadPolicy enabledPolicy = resolveDisabled(sharedInterceptor, enablingAction);
+
+        // the second resolution must not have cleared the first invocation's flag...
+        assertThat(disabledPolicy.isDisabled()).isTrue();
+        assertThat(enabledPolicy.isDisabled()).isFalse();
+        // ...and neither resolution may reach the shared interceptor
+        assertThat(sharedInterceptor.newLazyParams().isDisabled()).isFalse();
+    }
+
+    private UploadPolicy resolveDisabled(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                         MyDynamicFileUploadAction action) {
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(action);
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .bind();
+        try {
+            WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(injector);
+            return injector.resolveInto(actionFileUploadInterceptor.newLazyParams(),
+                    Map.of("disabled", "${uploadDisabled}"), context);
+        } finally {
+            ActionContext.clear();
+        }
+    }
+
+    /**
+     * Resolves the given flags into a fresh {@link UploadPolicy} via the real
+     * {@link WithLazyParams.LazyParamInjector} path, using the already-bound {@code context}
+     * (and its ValueStack, with the action already pushed by the caller) rather than fabricating
+     * a new one. This mirrors what {@code DefaultActionInvocation} does at request time, so tests
+     * exercise the actual resolution instead of hand-calling a setter on the shared interceptor.
+     */
+    private UploadPolicy injectDynamicUploadPolicy(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                                    ActionContext context,
+                                                    boolean includeAllowedTypes,
+                                                    boolean includeAllowedExtensions,
+                                                    boolean includeMaximumSize) {
+        Map<String, String> params = new HashMap<>();
+        if (includeAllowedTypes) {
+            params.put("allowedTypes", "${allowedMimeTypes}");
+        }
+        if (includeAllowedExtensions) {
+            params.put("allowedExtensions", "${allowedExtensions}");
+        }
+        if (includeMaximumSize) {
+            params.put("maximumSize", "${maxFileSize}");
+        }
+
+        WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(context.getValueStack());
+        container.inject(injector);
+        return injector.resolveInto(actionFileUploadInterceptor.newLazyParams(), params, context);
+    }
+
+    private String runUploadAttempt(ActionFileUploadInterceptor actionFileUploadInterceptor,
+                                    MyDynamicFileUploadAction action,
+                                    MockHttpServletRequest uploadRequest) throws Exception {
+        MultiPartRequestWrapper multiPartRequest = createMultipartRequest(uploadRequest, -1, -1, 3, -1);
+        ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.push(action);
+
+        ActionContext context = ActionContext.of(valueStack.getContext())
+                .withContainer(container)
+                .withValueStack(valueStack)
+                .withServletRequest(multiPartRequest)
+                .bind();
+        try {
+            MockActionInvocation invocation = new MockActionInvocation();
+            invocation.setAction(action);
+            invocation.setResultCode("success");
+            invocation.setInvocationContext(context);
+
+            Map<String, String> params = new HashMap<>();
+            params.put("allowedTypes", "${allowedMimeTypes}");
+
+            WithLazyParams.LazyParamInjector injector = new WithLazyParams.LazyParamInjector(valueStack);
+            container.inject(injector);
+            UploadPolicy policy = injector.resolveInto(actionFileUploadInterceptor.newLazyParams(), params, context);
+
+            return actionFileUploadInterceptor.intercept(invocation, policy);
+        } finally {
+            ActionContext.clear();
+        }
+    }
+
+    private MockHttpServletRequest createUploadRequest(String filename, String contentType, String content) {
+        MockHttpServletRequest uploadRequest = new MockHttpServletRequest();
+        uploadRequest.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        uploadRequest.setMethod("POST");
+        uploadRequest.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
+        uploadRequest.setContent((encodeTextFile(filename, contentType, content) + endLine + "--" + boundary + "--")
+                .getBytes(StandardCharsets.UTF_8));
+        return uploadRequest;
+    }
+
+    private MultiPartRequestWrapper createMultipartRequest(MockHttpServletRequest multipartRequest, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
+        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        jak.setMaxSize(String.valueOf(maxsize));
+        jak.setMaxFileSize(String.valueOf(maxfilesize));
+        jak.setMaxFiles(String.valueOf(maxfiles));
+        jak.setMaxStringLength(String.valueOf(maxStringLength));
+        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        return new MultiPartRequestWrapper(jak, multipartRequest, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+    }
+
+    /** Pauses the first validation so a second invocation can overlap it. From PR #1815 by @deprrous. */
+    private static final class CoordinatedActionFileUploadInterceptor extends ActionFileUploadInterceptor {
+        private final AtomicBoolean pauseFirstValidation = new AtomicBoolean(true);
+        private final CountDownLatch firstValidationEntered = new CountDownLatch(1);
+        private final CountDownLatch allowFirstValidationToContinue = new CountDownLatch(1);
+
+        @Override
+        protected boolean acceptFile(UploadPolicy policy, Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+            if (pauseFirstValidation.compareAndSet(true, false)) {
+                firstValidationEntered.countDown();
+                awaitUnchecked(allowFirstValidationToContinue);
+            }
+            return super.acceptFile(policy, action, file, originalFilename, contentType, inputName);
+        }
+
+        private boolean awaitFirstValidation() throws InterruptedException {
+            return firstValidationEntered.await(10, TimeUnit.SECONDS);
+        }
+
+        private void releaseFirstValidation() {
+            allowFirstValidationToContinue.countDown();
+        }
+
+        private void awaitUnchecked(CountDownLatch latch) {
+            try {
+                if (!latch.await(10, TimeUnit.SECONDS)) {
+                    throw new AssertionError("Timed out waiting for concurrent validation release");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new AssertionError("Interrupted while waiting for concurrent validation release", e);
+            }
+        }
+    }
+
+    public void testUnresolvedPolicyRejectsTheUpload() throws Exception {
+        ActionFileUploadInterceptor uploadInterceptor = new ActionFileUploadInterceptor();
+        container.inject(uploadInterceptor);
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes(null);   // ${allowedMimeTypes} will not resolve
+        container.inject(action);
+
+        runUploadAttempt(uploadInterceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+
+        assertThat(action.getUploadFiles()).isNull();
+        assertThat(action.getFieldErrors()).containsKey("file");
+    }
+
+    public void testResolvedPolicyStillAcceptsTheUpload() throws Exception {
+        ActionFileUploadInterceptor uploadInterceptor = new ActionFileUploadInterceptor();
+        container.inject(uploadInterceptor);
+
+        MyDynamicFileUploadAction action = new MyDynamicFileUploadAction();
+        action.setAllowedMimeTypes("text/plain");
+        container.inject(action);
+
+        runUploadAttempt(uploadInterceptor, action, createUploadRequest("f.txt", "text/plain", plainContent));
+
+        assertThat(action.hasFieldErrors()).isFalse();
+        assertThat(action.getUploadFiles()).isNotNull().hasSize(1);
+    }
+
+    public void testUploadPolicyTracksUnresolvedParams() {
+        UploadPolicy policy = new UploadPolicy();
+        assertThat(policy.isUnresolved()).isFalse();
+
+        policy.unresolved("allowedTypes");
+
+        assertThat(policy.isUnresolved()).isTrue();
+        assertThat(policy.getUnresolvedParams()).containsExactly("allowedTypes");
+    }
+
+    /**
+     * An unresolvable {@code disabled} cannot relax validation - its absent value is {@code false},
+     * so the interceptor simply runs - and must not take the whole policy down with it.
+     */
+    public void testUnresolvedDisabledDoesNotMakeThePolicyUnusable() {
+        UploadPolicy policy = new UploadPolicy();
+        policy.setAllowedTypes("text/plain");
+
+        policy.unresolved(DisableParams.DISABLED_PARAM);
+
+        assertThat(policy.isUnresolved()).isFalse();
+        assertThat(policy.getUnresolvedParams()).isEmpty();
+        assertThat(policy.isDisabled()).isFalse();
+        assertThat(policy.getAllowedTypes()).containsExactly("text/plain");
+    }
+
+    /**
+     * ...but a validation dimension failing alongside it still does.
+     */
+    public void testUnresolvedDisabledDoesNotMaskOtherUnresolvedParams() {
+        UploadPolicy policy = new UploadPolicy();
+
+        policy.unresolved(DisableParams.DISABLED_PARAM);
+        policy.unresolved("maximumSize");
+
+        assertThat(policy.isUnresolved()).isTrue();
+        assertThat(policy.getUnresolvedParams()).containsExactly("maximumSize");
     }
 
 }

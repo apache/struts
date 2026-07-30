@@ -18,12 +18,16 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.TextParser;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 
 import java.util.Map;
@@ -41,13 +45,31 @@ import java.util.Map;
  * <p>
  * The {@link Interceptor#init()} method is called after initial parameter setting, so interceptors
  * can rely on configured values during initialization. Expression parameters (containing ${...})
- * are re-evaluated at invocation time via {@link LazyParamInjector}.
+ * are re-evaluated at invocation time via {@link LazyParamInjector} and written into a fresh
+ * {@link InterceptorParams} holder, never back onto the interceptor, which is shared across
+ * requests and stays untouched after {@link Interceptor#init()}.
  *
  * @since 2.5.9
  */
-public interface WithLazyParams {
+public interface WithLazyParams<P extends InterceptorParams> {
+
+    /**
+     * @return a fresh holder for one invocation, seeded from the configured values
+     * @since 7.3.0
+     */
+    P newLazyParams();
+
+    /**
+     * Invoked in place of {@link Interceptor#intercept(ActionInvocation)} when lazy params apply.
+     *
+     * @param lazyParams params resolved for this invocation only
+     * @since 7.3.0
+     */
+    String intercept(ActionInvocation invocation, P lazyParams) throws Exception;
 
     class LazyParamInjector {
+
+        private static final Logger LOG = LogManager.getLogger(LazyParamInjector.class);
 
         protected OgnlUtil ognlUtil;
         protected TextParser textParser;
@@ -75,12 +97,79 @@ public interface WithLazyParams {
             this.ognlUtil = ognlUtil;
         }
 
-        public Interceptor injectParams(Interceptor interceptor, Map<String, String> params, ActionContext invocationContext) {
+        /**
+         * Resolves configured params into a per-invocation holder, leaving the interceptor untouched.
+         * <p>
+         * <strong>Every path that skips a write notifies the holder</strong> via
+         * {@link InterceptorParams#unresolved(String)}, so the holder can fail closed rather than
+         * silently validating against a dimension that was dropped. Two such paths exist:
+         * <ul>
+         *   <li>a {@code ${...}} expression that resolves to null or an empty value (see
+         *       {@link #isUnresolved})</li>
+         *   <li>a resolved value the holder's setter cannot accept, e.g. a non-numeric string for a
+         *       {@code Long} property, which OGNL reports as a
+         *       {@link ReflectionException} during conversion</li>
+         * </ul>
+         * In both cases the injector does nothing beyond skipping the write, notifying the holder and
+         * logging a WARN; what that means for the invocation is the holder's decision, since
+         * {@code unresolved} is a no-op by default. Whatever the holder was seeded with is left in
+         * place, but for a {@code ${...}} param that is not a usable default: the seed comes from
+         * applying the raw configuration string at build time, so it is either the unevaluated
+         * {@code ${...}} literal or, when the literal could not be converted to the property's type,
+         * nothing at all.
+         * <p>
+         * The empty-value rule also catches an expression that legitimately evaluates to an empty
+         * string, which is indistinguishable from a failed resolution; for a fail-closed policy such
+         * as an allowlist, treating both as unusable is the safe reading, so a broken expression
+         * cannot silently relax a validation policy.
+         *
+         * @since 7.3.0
+         */
+        public <P extends InterceptorParams> P resolveInto(P target, Map<String, String> params, ActionContext invocationContext) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                Object paramValue = textParser.evaluate(new char[]{'$'}, entry.getValue(), valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
-                ognlUtil.setProperty(entry.getKey(), paramValue, interceptor, invocationContext.getContextMap());
+                String paramName = entry.getKey();
+                String rawValue = entry.getValue();
+                Object paramValue = textParser.evaluate(new char[]{'$'}, rawValue, valueEvaluator, TextParser.DEFAULT_LOOP_COUNT);
+
+                if (isUnresolved(rawValue, paramValue)) {
+                    LOG.warn("Param [{}] of [{}] could not be resolved from expression [{}] - the value was not written and the params holder was notified",
+                            paramName, target.getClass().getName(), rawValue);
+                    target.unresolved(paramName);
+                    continue;
+                }
+                try {
+                    // throwPropertyExceptions=true so a param with no matching property on the holder is
+                    // reported rather than silently ignored; OgnlUtil only warns in devMode otherwise
+                    ognlUtil.setProperty(paramName, paramValue, target, invocationContext.getContextMap(), true);
+                } catch (ReflectionException e) {
+                    LOG.warn("Param [{}] could not be applied to [{}] - the value was not written and the params holder was notified; check the interceptor configuration",
+                            paramName, target.getClass().getName(), e);
+                    target.unresolved(paramName);
+                }
             }
-            return interceptor;
+            return target;
+        }
+
+        /**
+         * A {@code ${...}} param is treated as unresolved when its evaluated value is null or empty.
+         * <p>
+         * {@link org.apache.struts2.util.OgnlTextParser} yields the same empty string both when an
+         * expression fails to resolve and when it resolves to a legitimately empty value — there is
+         * no way to tell the two apart from the parser's output alone. This method does not attempt
+         * to; a param that legitimately evaluates to an empty string is therefore also reported as
+         * unresolved. That is a deliberate fail-closed choice: for a security-sensitive param (e.g.
+         * an allowlist), silently accepting an unintended empty value is worse than refusing it.
+         * <p>
+         * <strong>Partial resolution is not detected.</strong> A value mixing several expressions,
+         * e.g. {@code ${a},${b}}, still parses to a non-empty string when only one of them resolves,
+         * so it is reported as resolved and the truncated value is written. For an allowlist that
+         * narrows the accepted set rather than widening it, so it does not relax validation, but the
+         * holder receives fewer entries than configured and gets no {@code unresolved} notification.
+         */
+        private boolean isUnresolved(String rawValue, Object paramValue) {
+            return rawValue != null
+                    && rawValue.contains("${")
+                    && (paramValue == null || paramValue.toString().isEmpty());
         }
     }
 }

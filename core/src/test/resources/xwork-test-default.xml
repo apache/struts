@@ -42,6 +42,11 @@
                 <param name="foo">expectedFoo</param>
             </interceptor>
             <interceptor name="lazy" class="org.apache.struts2.mock.MockLazyInterceptor"/>
+            <!-- disabled at interceptor-definition level, so it never reaches InterceptorMapping#getParams()
+                 and is only visible through ConditionalInterceptor#shouldIntercept -->
+            <interceptor name="lazyStaticallyDisabled" class="org.apache.struts2.mock.MockLazyInterceptor">
+                <param name="disabled">true</param>
+            </interceptor>
 
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="staticParams"/>

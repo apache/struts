@@ -21,12 +21,53 @@ package org.apache.struts2.mock;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.DisableParams;
 import org.apache.struts2.interceptor.WithLazyParams;
 
-public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams {
+public class MockLazyInterceptor extends AbstractInterceptor implements WithLazyParams<MockLazyInterceptor.MockLazyParams> {
+
+    /**
+     * Per-invocation holder, seeded from the configured values. Extends {@link DisableParams} so a
+     * lazily resolved {@code disabled} param applies to a single invocation.
+     */
+    public static class MockLazyParams extends DisableParams {
+
+        private String foo = "";
+        private String bar = "";
+
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setBar(String bar) {
+            this.bar = bar;
+        }
+
+        public String getBar() {
+            return bar;
+        }
+    }
 
     private String foo = "";
     private String bar = "";
+    private String interceptorOnly = "";
+
+    /**
+     * A property of the interceptor with no counterpart on {@link MockLazyParams}. Configuring it on
+     * the {@code <interceptor>} definition is legitimate - definition params are applied to the
+     * interceptor and never reach the holder - so the configuration-time check must not reject it.
+     */
+    public void setInterceptorOnly(String interceptorOnly) {
+        this.interceptorOnly = interceptorOnly;
+    }
+
+    public String getInterceptorOnly() {
+        return interceptorOnly;
+    }
 
     public void setFoo(String foo) {
         this.foo = foo;
@@ -44,12 +85,26 @@ public class MockLazyInterceptor extends AbstractInterceptor implements WithLazy
         return bar;
     }
 
+    @Override
+    public MockLazyParams newLazyParams() {
+        MockLazyParams params = new MockLazyParams();
+        params.setFoo(foo);
+        params.setBar(bar);
+        return params;
+    }
+
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        return intercept(invocation, newLazyParams());
+    }
+
+    @Override
+    public String intercept(ActionInvocation invocation, MockLazyParams lazyParams) throws Exception {
         if (invocation.getAction() instanceof SimpleAction) {
-            ((SimpleAction) invocation.getAction()).setName(foo);
+            ((SimpleAction) invocation.getAction()).setName(lazyParams.getFoo());
             // Only set blah if bar is configured (not empty)
-            if (bar != null && !bar.isEmpty()) {
-                ((SimpleAction) invocation.getAction()).setBlah(bar);
+            if (lazyParams.getBar() != null && !lazyParams.getBar().isEmpty()) {
+                ((SimpleAction) invocation.getAction()).setBlah(lazyParams.getBar());
             }
         }
         return invocation.invoke();

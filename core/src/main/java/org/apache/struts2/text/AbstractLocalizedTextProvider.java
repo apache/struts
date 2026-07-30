@@ -70,9 +70,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
-    // Dedicated monitor for bundlesMap-related synchronization: bundlesMap itself is reassigned by
+    // Dedicated monitor for bundlesMap-related synchronization: bundlesMap is reassigned by
     // rebuildI18nCaches(), so locking on it directly would lock on a monitor that can change identity.
-    private final Object bundlesMapLock = new Object();
+    // transient + reinitialised in readObject: a bare Object is not Serializable.
+    private transient Object bundlesMapLock = new Object();
 
     private volatile CacheType i18nCacheType = CacheType.WTLFU;
     private volatile int i18nCacheMaxSize = 10000;
@@ -81,11 +82,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         return new DefaultOgnlCacheFactory<K, V>(i18nCacheMaxSize, i18nCacheType).buildOgnlCache();
     }
 
-    protected volatile OgnlCache<String, ResourceBundle> bundlesMap = buildI18nCache();
-    private volatile OgnlCache<MessageFormatKey, MessageFormat> messageFormats = buildI18nCache();
-    private volatile OgnlCache<String, Boolean> missingBundles = buildI18nCache();
-    private volatile OgnlCache<TextCacheKey, String> classHierarchyCache = buildI18nCache();
-    private volatile OgnlCache<TextCacheKey, String> packageHierarchyCache = buildI18nCache();
+    protected transient volatile OgnlCache<String, ResourceBundle> bundlesMap = buildI18nCache();
+    private transient volatile OgnlCache<MessageFormatKey, MessageFormat> messageFormats = buildI18nCache();
+    private transient volatile OgnlCache<String, Boolean> missingBundles = buildI18nCache();
+    private transient volatile OgnlCache<TextCacheKey, String> classHierarchyCache = buildI18nCache();
+    private transient volatile OgnlCache<TextCacheKey, String> packageHierarchyCache = buildI18nCache();
 
     @Override
     public void addDefaultResourceBundle(String bundleName) {
@@ -457,6 +458,12 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         missingBundles = buildI18nCache();
         classHierarchyCache = buildI18nCache();
         packageHierarchyCache = buildI18nCache();
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        bundlesMapLock = new Object();
+        rebuildI18nCaches();
     }
 
     @Override

@@ -84,10 +84,18 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         return new DefaultOgnlCacheFactory<K, V>(i18nCacheMaxSize, i18nCacheType).buildOgnlCache();
     }
 
+    // The OgnlCache implementations are themselves thread-safe; volatile only safely publishes the
+    // reference when rebuildI18nCaches() replaces a cache (during injection / readObject), so S3077
+    // ("volatile is not enough") does not apply here.
+    @SuppressWarnings("java:S3077")
     protected transient volatile OgnlCache<String, ResourceBundle> bundlesMap = buildI18nCache();
+    @SuppressWarnings("java:S3077")
     private transient volatile OgnlCache<MessageFormatKey, MessageFormat> messageFormats = buildI18nCache();
+    @SuppressWarnings("java:S3077")
     private transient volatile OgnlCache<String, Boolean> missingBundles = buildI18nCache();
+    @SuppressWarnings("java:S3077")
     private transient volatile OgnlCache<TextCacheKey, String> classHierarchyCache = buildI18nCache();
+    @SuppressWarnings("java:S3077")
     private transient volatile OgnlCache<TextCacheKey, String> packageHierarchyCache = buildI18nCache();
 
     @Override

@@ -136,6 +136,14 @@ public final class StrutsConstants {
     public static final String STRUTS_LOCALE = "struts.locale";
 
     /**
+     * When enabled, request-derived locales (from {@code Accept-Language}, used when {@code struts.locale} is
+     * unset) are restricted to the JVM's available-locale set; unavailable values fall back to the default.
+     *
+     * @since 7.3.0
+     */
+    public static final String STRUTS_LOCALE_VALIDATE_REQUEST = "struts.locale.validateRequestLocale";
+
+    /**
      * Whether to use a Servlet request parameter workaround necessary for some versions of WebLogic
      */
     public static final String STRUTS_DISPATCHER_PARAMETERSWORKAROUND = "struts.dispatcher.parametersWorkaround";

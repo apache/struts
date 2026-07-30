@@ -572,6 +572,46 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     }
 
     @Test
+    public void testValidateRequestLocaleOffPassesThrough() throws Exception {
+        initDispatcher(new HashMap<>());
+        dispatcher.setDefaultLocale(null);  // Force struts.locale unset; the test-config default would otherwise mask the request locale.
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        // A syntactically valid but not JVM-available locale.
+        Locale exotic = new Locale("en", "US", "xzz99");
+        when(request.getLocale()).thenReturn(exotic);
+
+        assertEquals("Default off must pass the request locale through unchanged",
+                exotic, dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testValidateRequestLocaleOnKeepsAvailableLocale() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
+        initDispatcher(params);
+        dispatcher.setDefaultLocale(null);  // Force struts.locale unset; the test-config default would otherwise mask the request locale.
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getLocale()).thenReturn(Locale.UK);
+
+        assertEquals("Available request locale must be kept", Locale.UK, dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testValidateRequestLocaleOnFallsBackForUnavailableLocale() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
+        initDispatcher(params);
+        dispatcher.setDefaultLocale(null);  // Force struts.locale unset; the test-config default would otherwise mask the request locale.
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        Locale exotic = new Locale("en", "US", "xzz99");
+        when(request.getLocale()).thenReturn(exotic);
+
+        // struts.locale unset in this dispatcher -> fall back to the JVM default.
+        assertEquals("Unavailable request locale must fall back to system default",
+                Locale.getDefault(), dispatcher.getLocale(request));
+    }
+
+    @Test
     public void dispatcherReinjectedAfterReload() {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);

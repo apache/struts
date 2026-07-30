@@ -34,9 +34,17 @@ For each claim, independently verify:
 | "No mitigation / no gate exists" | Search for gates, filters, allowlists, authorizers *yourself* — absence claims are the most often wrong |
 | "Default configuration" | Check the **effective runtime default**, not one source (see trap below) |
 | "Same as CVE-XXXX" | Confirm the mechanism actually matches; analogy ≠ equivalence |
-| A working PoC | Trace whether the payload survives every filter on the path |
+| A working PoC | **Run it if it is runnable**, then trace whether the payload survives every filter on the path |
 
 If the report has **no reproducible PoC against a default config**, that is itself a triage outcome — say so per `SECURITY.md`.
+
+## Find the control case
+
+A single odd behaviour is ambiguous — it can nearly always be read as intended. What settles it is the **sibling that behaves correctly under the same input**.
+
+Before writing a verdict, find the case that ought to differ and check it: the annotated property beside the unannotated one, the ordinary setter beside the dynamic one, the sibling path the same control does cover. Behave alike and you are probably looking at a design decision. Diverge, and the control is incomplete — that divergence *is* the finding.
+
+Prefer an executed differential to an argued one. An existing test that passes beside the reporter's failing one is the strongest evidence a triage can produce.
 
 ## The effective-default trap
 

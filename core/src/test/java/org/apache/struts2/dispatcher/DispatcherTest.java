@@ -572,7 +572,7 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     }
 
     @Test
-    public void testValidateRequestLocaleOffPassesThrough() throws Exception {
+    public void testValidateRequestLocaleOffPassesThrough() {
         initDispatcher(new HashMap<>());
         dispatcher.setDefaultLocale(null);  // Force struts.locale unset; the test-config default would otherwise mask the request locale.
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -585,7 +585,7 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     }
 
     @Test
-    public void testValidateRequestLocaleOnKeepsAvailableLocale() throws Exception {
+    public void testValidateRequestLocaleOnKeepsAvailableLocale() {
         Map<String, String> params = new HashMap<>();
         params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
         initDispatcher(params);
@@ -597,7 +597,7 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     }
 
     @Test
-    public void testValidateRequestLocaleOnFallsBackForUnavailableLocale() throws Exception {
+    public void testValidateRequestLocaleOnFallsBackForUnavailableLocale() {
         Map<String, String> params = new HashMap<>();
         params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
         initDispatcher(params);

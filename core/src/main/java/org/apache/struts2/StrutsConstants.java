@@ -792,4 +792,11 @@ public final class StrutsConstants {
      */
     public static final String STRUTS_CSP_NONCE_READER = "struts.csp.nonce.reader";
     public static final String STRUTS_CSP_NONCE_SOURCE = "struts.csp.nonce.source";
+
+    /**
+     * See {@link org.apache.struts2.action.CspReportAction}
+     *
+     * @since 7.3.0
+     */
+    public static final String STRUTS_CSP_REPORT_MAX_SIZE = "struts.csp.report.maxSize";
 }

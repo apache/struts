@@ -59,6 +59,9 @@ public class JSONUtil {
 
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
+    /** Chunk size used to read input incrementally while applying the length limit. */
+    private static final int READ_CHUNK_SIZE = 8192;
+
     private JSONReader reader;
     private JSONWriter writer;
 
@@ -297,13 +300,15 @@ public class JSONUtil {
      * @throws JSONException when IOException happens or limits are exceeded
      */
     public Object deserializeInput(Reader reader, int maxLength) throws JSONException {
-        BufferedReader bufferReader = new BufferedReader(reader);
-        String line;
         StringBuilder buffer = new StringBuilder();
+        char[] chunk = new char[READ_CHUNK_SIZE];
 
         try {
-            while ((line = bufferReader.readLine()) != null) {
-                buffer.append(line);
+            int read;
+            // Apply the limit while reading rather than afterwards, so input that contains no
+            // line terminator is not accumulated in full before the limit can be evaluated.
+            while ((read = reader.read(chunk)) != -1) {
+                buffer.append(chunk, 0, read);
                 if (buffer.length() > maxLength) {
                     throw new JSONException("JSON input exceeds maximum allowed length ("
                             + maxLength + "). Use " + JSONConstants.JSON_MAX_LENGTH + " to increase the limit.");

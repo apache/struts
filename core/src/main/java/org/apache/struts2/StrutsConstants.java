@@ -519,6 +519,13 @@ public final class StrutsConstants {
     public static final String STRUTS_CSP_NONCE_SOURCE = "struts.csp.nonce.source";
 
     /**
+     * See {@link org.apache.struts2.action.CspReportAction}
+     *
+     * @since 6.11.0
+     */
+    public static final String STRUTS_CSP_REPORT_MAX_SIZE = "struts.csp.report.maxSize";
+
+    /**
      * Specifies the type of cache to use for proxy detection in ProxyUtil.
      * Valid values defined in {@link com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType}.
      * Default is 'basic' (no Caffeine dependency required).

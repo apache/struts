@@ -153,6 +153,11 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
+     * Store state of {@link StrutsConstants#STRUTS_LOCALE_VALIDATE_REQUEST} setting.
+     */
+    private boolean validateRequestLocale = false;
+
+    /**
      * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
      */
     private String multipartSaveDir;
@@ -309,6 +314,18 @@ public class Dispatcher {
     @Inject(value = StrutsConstants.STRUTS_LOCALE, required = false)
     public void setDefaultLocale(String val) {
         defaultLocale = val;
+    }
+
+    /**
+     * Modify state of {@link StrutsConstants#STRUTS_LOCALE_VALIDATE_REQUEST} setting.
+     *
+     * @param val New setting
+     *
+     * @since 6.11.0
+     */
+    @Inject(value = StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, required = false)
+    public void setValidateRequestLocale(String val) {
+        validateRequestLocale = Boolean.parseBoolean(val);
     }
 
     /**
@@ -950,7 +967,7 @@ public class Dispatcher {
                 locale = LocaleUtils.toLocale(defaultLocale);
             } catch (IllegalArgumentException e) {
                 try {
-                    locale = request.getLocale();
+                    locale = resolveRequestLocale(request);
                     LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
                                     defaultLocale, locale), e);
                 } catch (RuntimeException rex) {
@@ -961,13 +978,40 @@ public class Dispatcher {
             }
         } else {
             try {
-                locale = request.getLocale();
+                locale = resolveRequestLocale(request);
             } catch (RuntimeException rex) {
                 LOG.warn("Cannot get locale from HTTP Request, falling back to system default locale", rex);
                 locale = Locale.getDefault();
             }
         }
         return locale;
+    }
+
+    /**
+     * Resolves the request locale. When {@code struts.locale.validateRequestLocale} is enabled and the
+     * request locale is not part of the JVM's available-locale set, falls back to the configured
+     * {@code struts.locale} when set and parseable, otherwise the JVM default. When disabled (default),
+     * returns the request locale unchanged.
+     *
+     * @param request the current request
+     * @return the locale to use for this request
+     *
+     * @since 6.11.0
+     */
+    protected Locale resolveRequestLocale(HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        if (!validateRequestLocale || LocaleUtils.isAvailableLocale(locale)) {
+            return locale;
+        }
+        if (defaultLocale != null) {
+            try {
+                return LocaleUtils.toLocale(defaultLocale);
+            } catch (IllegalArgumentException e) {
+                LOG.debug("Configured 'struts.locale' = [{}] is not parseable; falling back to system default", defaultLocale);
+            }
+        }
+        LOG.debug("Request locale [{}] is not available; falling back to system default locale", locale);
+        return Locale.getDefault();
     }
 
     /**

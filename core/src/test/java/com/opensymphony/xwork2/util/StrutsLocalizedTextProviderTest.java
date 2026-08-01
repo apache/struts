@@ -34,6 +34,11 @@ import com.opensymphony.xwork2.test.TestBean2;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -561,6 +566,109 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Result of bean.name lookup not as expected ?", "Haha you cant FindMe!", messageResult);
         messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "bean2.name", Locale.ENGLISH, null, paramArray, valueStack);
         assertEquals("Result of bean2.name lookup not as expected ?", "Okay! You found Me!", messageResult);
+    }
+
+    public void testCachesAreBoundedByConfiguredMaxSize() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheMaxSize("100");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        for (int i = 0; i < 20000; i++) {
+            Locale locale = Locale.forLanguageTag("en-US-x" + String.format("%05d", i));
+            provider.findText(CacheFixture.class, "cache.missing", locale, "Fallback", null, valueStack);
+        }
+
+        assertTrue("bundlesMap not bounded ?", provider.bundlesMapSize() <= 2000);
+        assertTrue("missingBundles not bounded ?", provider.missingBundlesSize() <= 2000);
+        assertTrue("messageFormats not bounded ?", provider.messageFormatsSize() <= 2000);
+    }
+
+    public void testCorrectTextStillReturnedUnderEviction() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheMaxSize("50");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // Force heavy eviction with many distinct locales.
+        for (int i = 0; i < 5000; i++) {
+            Locale locale = Locale.forLanguageTag("en-US-x" + String.format("%05d", i));
+            provider.findText(CacheFixture.class, "cache.missing", locale, "Fallback", null, valueStack);
+        }
+
+        // A real key in a real locale still resolves correctly after eviction pressure.
+        String result = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    public void testReloadClearsBoundedCaches() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(CacheFixture.class, "cache.missing", Locale.ENGLISH, "Fallback", null, valueStack);
+        assertTrue("missingBundles not populated ?", provider.missingBundlesSize() > 0);
+
+        provider.callReloadBundlesForceReload();
+        assertEquals("reload did not clear bundlesMap ?", 0, provider.bundlesMapSize());
+    }
+
+    public void testProviderIsUsableAfterDeserialization() throws Exception {
+        StrutsLocalizedTextProvider provider = new StrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(provider);
+        }
+        Object restored;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            restored = ois.readObject();
+        }
+        StrutsLocalizedTextProvider deserialized = (StrutsLocalizedTextProvider) restored;
+        // Caches were transient (null right after defaultReadObject) but readObject rebuilds them:
+        assertEquals("Deserialized caches not rebuilt empty", 0, deserialized.bundlesMapSize());
+        String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    /**
+     * A stream written before the i18n cache settings existed carries no value for them, and field
+     * initialisers do not run during deserialization, so they arrive as null/0. The provider must still
+     * come back usable rather than failing while rebuilding its caches.
+     */
+    public void testProviderIsUsableAfterDeserializingLegacyStream() throws Exception {
+        StrutsLocalizedTextProvider provider = new StrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+
+        // Simulate the absent-field state an older stream produces.
+        Field cacheType = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheType");
+        cacheType.setAccessible(true);
+        cacheType.set(provider, null);
+        Field maxSize = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheMaxSize");
+        maxSize.setAccessible(true);
+        maxSize.setInt(provider, 0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(provider);
+        }
+        Object restored;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            restored = ois.readObject();
+        }
+
+        StrutsLocalizedTextProvider deserialized = (StrutsLocalizedTextProvider) restored;
+        String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    public void testCacheTypeSelectionKeepsProviderWorking() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheType("basic");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        String result = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+        assertTrue("bundlesMap should populate", provider.bundlesMapSize() >= 1);
     }
 
     @Override

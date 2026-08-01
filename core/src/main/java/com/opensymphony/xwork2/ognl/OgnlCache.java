@@ -31,6 +31,15 @@ public interface OgnlCache<Key, Value> {
 
     void putIfAbsent(Key key, Value value);
 
+    /**
+     * Removes the mapping for the given key, if present.
+     *
+     * @param key the key to remove
+     * @return the previous value associated with the key, or {@code null} if none
+     * @since 6.11.0
+     */
+    Value remove(Key key);
+
     int size();
 
     void clear();

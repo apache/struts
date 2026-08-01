@@ -33,6 +33,9 @@ import java.util.ResourceBundle;
  */
 public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
+    // Pinned to the value implicitly computed for the pre-6.11.0 class shape, see AbstractLocalizedTextProvider.
+    private static final long serialVersionUID = 7569216885652454296L;
+
     private static final Logger LOG = LogManager.getLogger(GlobalLocalizedTextProvider.class);
 
     public GlobalLocalizedTextProvider() {

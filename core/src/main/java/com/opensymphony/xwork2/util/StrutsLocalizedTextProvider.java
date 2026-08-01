@@ -36,6 +36,9 @@ import java.util.ResourceBundle;
  */
 public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
+    // Pinned to the value implicitly computed for the pre-6.11.0 class shape, see AbstractLocalizedTextProvider.
+    private static final long serialVersionUID = -4377984952850818176L;
+
     private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
 
     /**

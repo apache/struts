@@ -146,7 +146,7 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 ## Test-build announcement
 
 - [ ] Drafted **after** the Version Notes page and GitHub release exist — it links both.
-- [ ] Subject `[TEST] Apache Struts X.Y.Z test build is ready`, Bcc `private@struts.apache.org`.
-- [ ] Recipient list confirmed with the release manager (`dev@` and `user@` have both been used).
+- [ ] Subject `[TEST] Apache Struts X.Y.Z test build is ready`.
+- [ ] Addressed to **both** `dev@struts.apache.org` and `user@struts.apache.org`, Bcc `private@struts.apache.org`.
 - [ ] Risk clause matches reality: silent when there are no Breaking changes, "but it contains significant changes" when there are.
 - [ ] Tag underscored in the release link, version dotted in the dist path and page title.

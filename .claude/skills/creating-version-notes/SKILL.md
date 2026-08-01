@@ -226,7 +226,16 @@ Pass `--prerelease` either way, so a release still under vote is not silently pr
 
 Once the Version Notes page and the GitHub release are both up, the release manager announces the test build so people can exercise the staged artifacts during the vote. **Draft it last** — every link in it points at something the earlier steps produced.
 
-Subject is `[TEST] Apache Struts X.Y.Z test build is ready`, Bcc `private@struts.apache.org`. The body is fixed apart from four substitutions:
+Subject is `[TEST] Apache Struts X.Y.Z test build is ready`. Send it to **both** lists, Bcc the private one:
+
+```
+To:  dev@struts.apache.org, user@struts.apache.org
+Bcc: private@struts.apache.org
+```
+
+Both audiences want it — committers to check the staged artifacts, users to test against their own applications — and a build announced to only one of them reaches half the people who could find a problem during the vote.
+
+The body is fixed apart from four substitutions:
 
 ```
 Hello,
@@ -259,7 +268,7 @@ Kind regards
 | `<RISK>` | Empty when the release has no Breaking changes; ` but it contains significant changes` when it does. 6.11.0 had none and said nothing; 7.3.0 had seven and said so |
 | Tag / paths | Tag underscored (`STRUTS_7_3_0`), dist path and page title dotted (`7.3.0`) |
 
-**The recipient list is the release manager's call** — 6.11.0 went to `dev@struts.apache.org`, 7.3.0 to `user@struts.apache.org`. Ask rather than inferring a rule from one release.
+Do not take the recipients from a previous announcement: 6.11.0 went to `dev@` alone and 7.3.0 to `user@` alone, and both were mistakes. Address every announcement to the two lists above.
 
 Keep the security posture of the pages: the mail links the release notes, it does not summarise what is in them, so no severity, CVE or S2-XXX reaches it either.
 

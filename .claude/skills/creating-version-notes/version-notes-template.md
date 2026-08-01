@@ -116,3 +116,12 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] Page created as a child of Migration Guide (`13981`).
 - [ ] **Listed at the top of the matching `Version Notes N.x` section on the Migration Guide**, and that edit verified against raw storage — the version diff renders empty even when the change landed.
 - [ ] Page re-fetched immediately before every write.
+
+## GitHub release notes
+
+- [ ] Original generated body saved before editing, so it can be restored.
+- [ ] Full Changelog compares against the **immediately preceding release** on this line, verified with `git log PREV..THIS` — GitHub's guess is often wrong after a branch rename.
+- [ ] Entries outside that range removed, including a `## New Contributors` block citing one.
+- [ ] Entries split by **ticket, not author**: ticketed → `## What's Changed`; untick eted dependency bumps → `### Dependencies`.
+- [ ] Generated order and entry text preserved within each section.
+- [ ] `gh release edit` passed `--prerelease` while the vote is open.

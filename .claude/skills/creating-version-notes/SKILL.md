@@ -1,6 +1,6 @@
 ---
 name: creating-version-notes
-description: Use when preparing, updating, or reviewing a Version Notes page on the Struts cwiki for a release or release candidate, on any maintenance line (6.x, 7.x), including assembling the issue list for a fix version.
+description: Use when preparing, updating, or reviewing the release documentation for a Struts release or release candidate on any maintenance line (6.x, 7.x) - the Version Notes page on the cwiki, its Migration Guide entry, and the GitHub release notes.
 ---
 
 # Creating Version Notes
@@ -113,6 +113,47 @@ Add an entry at the **top** of the list under the `<h2>` for the matching line �
 
 **Verify against raw storage, not the diff.** A version diff of this page renders empty even for a real change, because the markdown view discards `ac:link` bodies. Fetch the new version with `convert_to_markdown=false` and confirm the new entry is present, the prior entries survive in order, and the trailing `<h3>` appears exactly once.
 
+## The GitHub release notes
+
+A release also has a GitHub release at the `STRUTS_X_Y_Z` tag, kept as a **pre-release** while the vote runs. GitHub's generated body is a starting point that needs two corrections before it is fit to publish.
+
+### Check the range before anything else
+
+The generated body ends with `**Full Changelog**: .../compare/<PREVIOUS>...<THIS>`. **Confirm `<PREVIOUS>` is the immediately preceding release on this line.** GitHub picks it by tag reachability, and Struts release branches get renamed and re-imported, so older tags are frequently *not* ancestors of the new one and the heuristic reaches too far back.
+
+For 6.11.0 it chose `STRUTS_6_8_0` and produced ~101 entries, 88 of which had already shipped in 6.9.0 and 6.10.0.
+
+Get the real change set from git, which works even across unrelated histories:
+
+```bash
+git log --format='%h %s' STRUTS_6_10_0..STRUTS_6_11_0
+```
+
+Drop every generated entry outside that range and correct the Full Changelog link to the right previous tag. Drop `## New Contributors` too when the contribution it cites falls outside the range.
+
+### Split the entries
+
+Two sections, `### Dependencies` nested under `## What's Changed`, before any `## New Contributors`:
+
+| Entry | Section |
+|---|---|
+| Carries a `WW-XXXX` ticket — whoever authored it | `## What's Changed` |
+| A human PR that is not a dependency change (ci, chore, release prep) | `## What's Changed` |
+| A dependency bump with **no** ticket | `### Dependencies` |
+
+**The discriminator is the ticket, not the author.** A Dependabot PR carrying a ticket stays in What's Changed, because a ticketed bump is release content and appears in the Version Notes Dependency section. A human PR that is purely a dependency change (`Removes unused jaxb-core dependency`) belongs under Dependencies. Both cases occur in the 6.9.0 release.
+
+Preserve the generated relative order within each section, and keep the entry lines byte-identical — they carry the author and PR links GitHub rendered.
+
+### Applying it
+
+```bash
+gh release view STRUTS_X_Y_Z --json body -q .body > original.md   # keep, so it can be restored
+gh release edit STRUTS_X_Y_Z --prerelease --notes-file new.md
+```
+
+Pass `--prerelease` on the edit so a release still under vote is not silently promoted.
+
 ## Re-read the page immediately before you write to it
 
 Confluence has no conflict warning. Fetch the current version immediately before every write and compare the version number against the one you read; if it advanced, re-read, merge onto the newer content, and write that.
@@ -132,6 +173,9 @@ After writing, diff against the version you meant to build on. The diff should s
 - Breaking changes assembled by pasting ticket summaries
 - Creating the page without adding it to the Migration Guide index
 - Trusting an empty version diff on the Migration Guide as proof the edit landed
+- Publishing GitHub release notes without checking which tag the Full Changelog compares against
+- Splitting the GitHub sections by author instead of by whether the entry carries a ticket
+- Editing a GitHub release under vote without `--prerelease`
 - Writing from page content read earlier in the session without re-fetching
 
 ## Common Mistakes
@@ -147,6 +191,8 @@ After writing, diff against the version you meant to build on. The diff should s
 | "The pom version doesn't match the ticket, that's a gap" | Patch bumps ship untick eted by design. Only ticketed bumps get an entry. |
 | "The page is created, so the work is done" | It is invisible until listed on the Migration Guide. |
 | "The version diff is empty, so nothing changed" | The diff renders markdown, which drops `ac:link` bodies. Check raw storage. |
+| "GitHub generated the changelog, so the range is right" | It guesses the previous tag by reachability. Renamed branches make it reach too far back. Verify with `git log PREV..THIS`. |
+| "Dependabot authored it, so it goes under Dependencies" | Ticketed bumps stay in What's Changed. The ticket decides, not the author. |
 | "The fix is public, so I can describe the vulnerability" | The ticket being public does not publish the advisory. Neutral framing until the bulletin ships. |
 | "Breaking changes are the tickets typed as breaking" | They are the changes that break an application. Author them. |
 | "7.x needs different handling from 6.x" | Same structure, same process. Only the data differs. |

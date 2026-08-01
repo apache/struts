@@ -57,6 +57,9 @@ public class JSONUtil {
 
     public final static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final boolean CACHE_BEAN_INFO_DEFAULT = true;
+
+    /** Chunk size used to read input incrementally while applying the length limit. */
+    private static final int READ_CHUNK_SIZE = 8192;
     
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
@@ -337,13 +340,15 @@ public class JSONUtil {
      */
     public Object deserializeInput(Reader reader, int maxLength, int maxElements, int maxDepth,
                                    int maxStringLength, int maxKeyLength) throws JSONException {
-        BufferedReader bufferReader = new BufferedReader(reader);
         StringBuilder buffer = new StringBuilder();
-        String line;
+        char[] chunk = new char[READ_CHUNK_SIZE];
 
         try {
-            while ((line = bufferReader.readLine()) != null) {
-                buffer.append(line);
+            int read;
+            // Apply the limit while reading rather than afterwards, so input that contains no
+            // line terminator is not accumulated in full before the limit can be evaluated.
+            while ((read = reader.read(chunk)) != -1) {
+                buffer.append(chunk, 0, read);
                 if (buffer.length() > maxLength) {
                     throw new JSONException("JSON input length exceeds maximum allowed length of " + maxLength);
                 }

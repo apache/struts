@@ -289,6 +289,22 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_BEANINFO_CACHE_FACTORY = "struts.ognl.beanInfoCacheFactory";
 
     /**
+     * Specifies the type of cache to use for the localized-text provider caches. Valid values defined in
+     * {@link com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType}.
+     *
+     * @since 6.11.0
+     */
+    public static final String STRUTS_I18N_CACHE_TYPE = "struts.i18n.cacheType";
+
+    /**
+     * Specifies the maximum size of each localized-text provider cache. Configure based on the cache type
+     * chosen and application-specific needs.
+     *
+     * @since 6.11.0
+     */
+    public static final String STRUTS_I18N_CACHE_MAXSIZE = "struts.i18n.cacheMaxSize";
+
+    /**
      * Specifies the type of cache to use for BeanInfo objects.
      * @since 6.4.0
      * @see StrutsConstants#STRUTS_OGNL_EXPRESSION_CACHE_TYPE

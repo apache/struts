@@ -33,6 +33,8 @@ import java.util.ResourceBundle;
  */
 public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOG = LogManager.getLogger(GlobalLocalizedTextProvider.class);
 
     public GlobalLocalizedTextProvider() {

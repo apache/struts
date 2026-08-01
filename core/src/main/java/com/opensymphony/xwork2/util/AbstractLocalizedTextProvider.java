@@ -21,6 +21,10 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.DefaultOgnlCacheFactory;
+import com.opensymphony.xwork2.ognl.OgnlCache;
+import com.opensymphony.xwork2.ognl.OgnlCacheFactory.CacheType;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +49,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOG = LogManager.getLogger(AbstractLocalizedTextProvider.class);
 
     public static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
@@ -56,15 +62,34 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private static final String TOMCAT_WEBAPP_CLASSLOADER_BASE = "org.apache.catalina.loader.WebappClassLoaderBase";
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
 
-    protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
     protected boolean reloadBundles = false;
     protected boolean searchDefaultBundlesFirst = false;  // Search default resource bundles first.  Note: This flag may not be meaningful to all implementations.
 
-    private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-    private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
+
+    // Dedicated monitor for bundlesMap-related synchronization: bundlesMap is reassigned by
+    // rebuildI18nCaches(), so locking on it directly would lock on a monitor that can change identity.
+    // transient + reinitialised in readObject: a bare Object is not Serializable.
+    private transient Object bundlesMapLock = new Object();
+
+    private volatile CacheType i18nCacheType = CacheType.WTLFU;
+    private volatile int i18nCacheMaxSize = 10000;
+
+    private <K, V> OgnlCache<K, V> buildI18nCache() {
+        return new DefaultOgnlCacheFactory<K, V>(i18nCacheMaxSize, i18nCacheType).buildOgnlCache();
+    }
+
+    // The OgnlCache implementations are themselves thread-safe; volatile only safely publishes the
+    // reference when rebuildI18nCaches() replaces a cache (during injection / readObject), so S3077
+    // ("volatile is not enough") does not apply here.
+    @SuppressWarnings("java:S3077")
+    protected transient volatile OgnlCache<String, ResourceBundle> bundlesMap = buildI18nCache();
+    @SuppressWarnings("java:S3077")
+    private transient volatile OgnlCache<MessageFormatKey, MessageFormat> messageFormats = buildI18nCache();
+    @SuppressWarnings("java:S3077")
+    private transient volatile OgnlCache<String, Boolean> missingBundles = buildI18nCache();
 
     /**
      * Adds the bundle to the internal list of default bundles.
@@ -97,6 +122,21 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     protected ClassLoader getCurrentThreadContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    /** Test-support accessor: current number of cached resource bundles. */
+    protected int bundlesMapSize() {
+        return bundlesMap.size();
+    }
+
+    /** Test-support accessor: current number of cached missing-bundle markers. */
+    protected int missingBundlesSize() {
+        return missingBundles.size();
+    }
+
+    /** Test-support accessor: current number of cached message formats. */
+    protected int messageFormatsSize() {
+        return messageFormats.size();
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -221,7 +261,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @param classLoader a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
      */
     public void setDelegatedClassLoader(final ClassLoader classLoader) {
-        synchronized (bundlesMap) {
+        synchronized (bundlesMapLock) {
             delegatedClassLoaderMap.put(getCurrentThreadContextClassLoader().hashCode(), classLoader);
         }
     }
@@ -444,6 +484,44 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
+     * @param cacheType the type of cache to use for the localized-text caches
+     *
+     * @since 6.11.0
+     */
+    @Inject(value = StrutsConstants.STRUTS_I18N_CACHE_TYPE, required = false)
+    public void setI18nCacheType(String cacheType) {
+        this.i18nCacheType = EnumUtils.getEnumIgnoreCase(CacheType.class, cacheType, CacheType.WTLFU);
+        rebuildI18nCaches();
+    }
+
+    /**
+     * @param cacheMaxSize the maximum size of each localized-text cache
+     *
+     * @since 6.11.0
+     */
+    @Inject(value = StrutsConstants.STRUTS_I18N_CACHE_MAXSIZE, required = false)
+    public void setI18nCacheMaxSize(String cacheMaxSize) {
+        this.i18nCacheMaxSize = Integer.parseInt(cacheMaxSize);
+        rebuildI18nCaches();
+    }
+
+    /**
+     * Rebuilds the localized-text caches from the current type/size. Called during dependency injection
+     * (single-threaded startup, before the provider serves lookups); discards any warm-up entries.
+     */
+    private void rebuildI18nCaches() {
+        bundlesMap = buildI18nCache();
+        messageFormats = buildI18nCache();
+        missingBundles = buildI18nCache();
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        bundlesMapLock = new Object();
+        rebuildI18nCaches();
+    }
+
+    /**
      * Finds the given resource bundle by it's name.
      * <p>
      * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
@@ -458,34 +536,32 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
 
-        if (missingBundles.contains(key)) {
+        if (missingBundles.get(key) != null) {
             return null;
         }
 
         ResourceBundle bundle = null;
         try {
-            if (bundlesMap.containsKey(key)) {
-                bundle = bundlesMap.get(key);
-            } else {
+            bundle = bundlesMap.get(key);
+            if (bundle == null) {
                 bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
                 bundlesMap.putIfAbsent(key, bundle);
             }
         } catch (MissingResourceException ex) {
             if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
                 try {
-                    if (bundlesMap.containsKey(key)) {
-                        bundle = bundlesMap.get(key);
-                    } else {
+                    bundle = bundlesMap.get(key);
+                    if (bundle == null) {
                         bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
                         bundlesMap.putIfAbsent(key, bundle);
                     }
                 } catch (MissingResourceException e) {
                     LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
-                    missingBundles.add(key);
+                    missingBundles.put(key, Boolean.TRUE);
                 }
             } else {
                 LOG.debug("Missing resource bundle [{}]!", aBundleName);
-                missingBundles.add(key);
+                missingBundles.put(key, Boolean.TRUE);
             }
         }
         return bundle;

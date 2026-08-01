@@ -19,7 +19,9 @@ from a copy of the previous release's page — see the Iron Rule in `SKILL.md`.
 | DONE filter id | Saved-filter id for `issues/?filter=`, labelled `Struts X.Y.Z DONE`. Each release needs its own; a reused id lists the wrong release. |
 | TODO filter id | Constant across releases: `12351174`, labelled `Struts x.x.x TODO`. |
 | Issue sections | One `<h2>` per issue type present, ordered **Bug → New Feature → Improvement → Task → Dependency**, entries sorted by key ascending. |
-| Breaking changes | Optional. Authored prose, one `<li>` per change. Omit the section entirely when the release has none. |
+| Breaking changes | Optional. Authored, **one sentence plus the ticket link** per item. Omit the section when the release has none. |
+| Deprecations | Optional. Same one-line shape, for public API deprecated but still working. |
+| Rejected requests | Optional. Tickets resolved `Won't Do` against this fix version — never in a type section. |
 | Staging Repository | Always included, on every line — see `SKILL.md`. |
 
 ## Corrected storage format
@@ -74,7 +76,20 @@ Three defects present in the published pages are fixed here. Keep them fixed:
 <!-- OPTIONAL: omit the whole section when the release has no breaking changes -->
 <h2>Breaking changes</h2>
 <ul style="list-style-type: square;">
-  <li>WHAT AN APPLICATION MUST NOW DO DIFFERENTLY, AND WHAT REPLACES THE OLD BEHAVIOUR [<a href="https://issues.apache.org/jira/browse/WW-XXXX">WW-XXXX</a>].</li>
+  <li>ONE SENTENCE: WHAT AN APPLICATION SEES DIFFERENTLY [<a href="https://issues.apache.org/jira/browse/WW-XXXX">WW-XXXX</a>].</li>
+</ul>
+
+<!-- OPTIONAL: public API deprecated but still working -->
+<h2>Deprecations</h2>
+<ul style="list-style-type: square;">
+  <li><code>WHAT</code> is deprecated; use <code>REPLACEMENT</code> instead [<a href="https://issues.apache.org/jira/browse/WW-XXXX">WW-XXXX</a>].</li>
+</ul>
+
+<!-- OPTIONAL: tickets resolved Won't Do against this fix version -->
+<h2>Rejected requests</h2>
+<p>Two long-standing requests were closed as <em>Won't Do</em> in this cycle. They are listed here so the decision is visible rather than silent.</p>
+<ul style="list-style-type: square;">
+  <li>[<a href="https://issues.apache.org/jira/browse/WW-XXXX">WW-XXXX</a>] - SUMMARY - will not be implemented; REASON WHERE THE RELEASE MANAGER GAVE ONE.</li>
 </ul>
 
 <h2>Bug</h2>
@@ -109,19 +124,29 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] `ReleaseNote.jspa` label and its `version=` id are the same release.
 - [ ] `DONE` filter label and its `filter=` id are the same release.
 - [ ] Issue list reconciled against the release branch via each ticket's linked PR, not taken from JIRA alone.
-- [ ] Issue types ordered Bug → New Feature → Improvement → Task → Dependency; empty types omitted.
-- [ ] Breaking changes authored, or the section omitted because there are none.
+- [ ] Every ticket's **resolution** checked, not just its status — `Won't Do` goes under Rejected requests.
+- [ ] Sections ordered Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency; empty ones omitted.
+- [ ] Each Breaking changes and Deprecations item is one sentence plus its ticket link.
 - [ ] Staging Repository block present.
-- [ ] No unpublished severity, CVE, or S2-XXX reference anywhere on the page.
+- [ ] No unpublished severity, CVE, or S2-XXX reference anywhere on the page, and any security summary truncated at a clause boundary was reported to the release manager.
 - [ ] Page created as a child of Migration Guide (`13981`).
 - [ ] **Listed at the top of the matching `Version Notes N.x` section on the Migration Guide**, and that edit verified against raw storage — the version diff renders empty even when the change landed.
 - [ ] Page re-fetched immediately before every write.
 
 ## GitHub release notes
 
-- [ ] Original generated body saved before editing, so it can be restored.
-- [ ] Full Changelog compares against the **immediately preceding release** on this line, verified with `git log PREV..THIS` — GitHub's guess is often wrong after a branch rename.
-- [ ] Entries outside that range removed, including a `## New Contributors` block citing one.
-- [ ] Entries split by **ticket, not author**: ticketed → `## What's Changed`; untick eted dependency bumps → `### Dependencies`.
+- [ ] Body generated with `previous_tag_name` named explicitly, not left to GitHub's guess.
+- [ ] Entry count sane against `git log PREV..THIS`.
+- [ ] Original body saved first when editing an existing release, so it can be restored.
+- [ ] Entries split by **ticket, not author**: ticketed → `## What's Changed`; untick eted dependency bumps → `### Dependencies`; mixed PRs stay in What's Changed.
 - [ ] Generated order and entry text preserved within each section.
-- [ ] `gh release edit` passed `--prerelease` while the vote is open.
+- [ ] Split verified by diffing the sorted entry lists before and after — empty output.
+- [ ] `--prerelease` passed while the vote is open; `--verify-tag` when creating.
+
+## Test-build announcement
+
+- [ ] Drafted **after** the Version Notes page and GitHub release exist — it links both.
+- [ ] Subject `[TEST] Apache Struts X.Y.Z test build is ready`, Bcc `private@struts.apache.org`.
+- [ ] Recipient list confirmed with the release manager (`dev@` and `user@` have both been used).
+- [ ] Risk clause matches reality: silent when there are no Breaking changes, "but it contains significant changes" when there are.
+- [ ] Tag underscored in the release link, version dotted in the dist path and page title.

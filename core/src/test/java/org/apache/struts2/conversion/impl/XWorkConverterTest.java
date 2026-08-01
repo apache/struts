@@ -836,6 +836,7 @@ public class XWorkConverterTest extends XWorkTestCase {
                 XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.CREATE_IF_NULL, "users"));
     }
 
+    @SuppressWarnings("deprecation")
     public void testResolveKeyLeavesAnAlreadyPrefixedKeyAlone() {
         assertEquals("KeyProperty_annotatedBeanMap",
                 XWorkConverter.resolveKey(ConversionType.CLASS, ConversionRule.KEY_PROPERTY, "KeyProperty_annotatedBeanMap"));

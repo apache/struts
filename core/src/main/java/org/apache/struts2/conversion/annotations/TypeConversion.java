@@ -141,7 +141,7 @@ import java.lang.annotation.Target;
  *   &#64;TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "true")
  *   private List users = null;
  *
- *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
+ *   &#64;TypeConversion(rule = ConversionRule.ELEMENT, converterClass = String.class)
  *   public void setUsers( List users ) {
  *       this.users = users;
  *   }
@@ -196,7 +196,8 @@ public @interface TypeConversion {
     ConversionType type() default ConversionType.CLASS;
 
     /**
-     * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, COLLECTION (deprecated) or a MAP.
+     * The ConversionRule can be a PROPERTY, KEY, KEY_PROPERTY, ELEMENT, CREATE_IF_NULL or a MAP.
+     * {@link ConversionRule#COLLECTION} is also accepted, but deprecated - use ELEMENT instead.
      * Note: Collection and Map conversion rules can be determined via org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer.
      *
      * @see DefaultObjectTypeDeterminer

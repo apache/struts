@@ -152,6 +152,12 @@ public class XWorkConverter extends DefaultTypeConverter {
     public static final String REPORT_CONVERSION_ERRORS = "report.conversion.errors";
     public static final String CONVERSION_PROPERTY_FULLNAME = "conversion.property.fullName";
     public static final String CONVERSION_ERROR_PROPERTY_PREFIX = "invalid.fieldvalue.";
+    /**
+     * @deprecated since 7.3.0, use {@link DefaultObjectTypeDeterminer#ELEMENT_PREFIX} instead. A second
+     * public spelling of the same deprecated {@code Collection_} prefix as
+     * {@link DefaultObjectTypeDeterminer#DEPRECATED_ELEMENT_PREFIX}, unused by the framework itself.
+     */
+    @Deprecated(since = "7.3.0")
     public static final String CONVERSION_COLLECTION_PREFIX = "Collection_";
 
     public static final String LAST_BEAN_CLASS_ACCESSED = "last.bean.accessed";

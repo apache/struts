@@ -83,6 +83,8 @@ public class AnnotationUser implements AnnotationUserMarker {
         list = l;
     }
 
+    // deliberately declares the deprecated COLLECTION rule, to keep the Collection_ fallback covered
+    @SuppressWarnings("deprecation")
     @KeyProperty(value = "name")
     @TypeConversion(converterClass = String.class, rule = ConversionRule.COLLECTION)
     public List getList() {

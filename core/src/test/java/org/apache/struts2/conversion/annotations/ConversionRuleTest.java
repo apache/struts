@@ -24,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 
 public class ConversionRuleTest {
 
+    // COLLECTION is deprecated but must keep deriving Collection_ for existing annotations
+    @SuppressWarnings("deprecation")
     @Test
     public void prefixIsDefinedForEveryRule() {
         assertEquals("", ConversionRule.PROPERTY.prefix());

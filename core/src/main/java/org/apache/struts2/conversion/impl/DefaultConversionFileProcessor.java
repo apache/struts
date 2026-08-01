@@ -52,6 +52,9 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
         this.converterCreator = converterCreator;
     }
 
+    // DEPRECATED_ELEMENT_PREFIX is referenced deliberately: existing -conversion.properties files may
+    // still spell Collection_xxx, and those keys must keep being recognised as element metadata.
+    @SuppressWarnings("deprecation")
     public void process(Map<String, Object> mapping, Class clazz, String converterFilename) {
         try {
             InputStream is = fileManager.loadFile(ClassLoaderUtil.getResource(converterFilename, clazz));

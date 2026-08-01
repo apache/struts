@@ -53,6 +53,9 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
         this.converterHolder = converterHolder;
     }
 
+    // ConversionRule.COLLECTION is referenced deliberately: it remains a legal value on @TypeConversion
+    // and has to keep being treated exactly like ELEMENT.
+    @SuppressWarnings("deprecation")
     public void process(Map<String, Object> mapping, TypeConversion tc, String key) {
         LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), key);
         if (key == null) {

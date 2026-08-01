@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -625,6 +626,38 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         StrutsLocalizedTextProvider deserialized = (StrutsLocalizedTextProvider) restored;
         // Caches were transient (null right after defaultReadObject) but readObject rebuilds them:
         assertEquals("Deserialized caches not rebuilt empty", 0, deserialized.bundlesMapSize());
+        String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    /**
+     * A stream written before the i18n cache settings existed carries no value for them, and field
+     * initialisers do not run during deserialization, so they arrive as null/0. The provider must still
+     * come back usable rather than failing while rebuilding its caches.
+     */
+    public void testProviderIsUsableAfterDeserializingLegacyStream() throws Exception {
+        StrutsLocalizedTextProvider provider = new StrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+
+        // Simulate the absent-field state an older stream produces.
+        Field cacheType = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheType");
+        cacheType.setAccessible(true);
+        cacheType.set(provider, null);
+        Field maxSize = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheMaxSize");
+        maxSize.setAccessible(true);
+        maxSize.setInt(provider, 0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(provider);
+        }
+        Object restored;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            restored = ois.readObject();
+        }
+
+        StrutsLocalizedTextProvider deserialized = (StrutsLocalizedTextProvider) restored;
         String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
         assertEquals("Static cached value", result);
     }

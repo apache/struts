@@ -812,6 +812,38 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Static cached value", result);
     }
 
+    /**
+     * A stream written before the i18n cache settings existed carries no value for them, and field
+     * initialisers do not run during deserialization, so they arrive as null/0. The provider must still
+     * come back usable rather than failing while rebuilding its caches.
+     */
+    public void testProviderIsUsableAfterDeserializingLegacyStream() throws Exception {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+
+        // Simulate the absent-field state an older stream produces.
+        java.lang.reflect.Field cacheType = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheType");
+        cacheType.setAccessible(true);
+        cacheType.set(provider, null);
+        java.lang.reflect.Field maxSize = AbstractLocalizedTextProvider.class.getDeclaredField("i18nCacheMaxSize");
+        maxSize.setAccessible(true);
+        maxSize.setInt(provider, 0);
+
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos)) {
+            oos.writeObject(provider);
+        }
+        Object restored;
+        try (java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new java.io.ByteArrayInputStream(baos.toByteArray()))) {
+            restored = ois.readObject();
+        }
+
+        TestStrutsLocalizedTextProvider deserialized = (TestStrutsLocalizedTextProvider) restored;
+        String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
     public void testCacheTypeSelectionKeepsProviderWorking() {
         TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
         provider.setI18nCacheType("basic");

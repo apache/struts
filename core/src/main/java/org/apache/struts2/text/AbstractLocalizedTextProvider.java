@@ -50,7 +50,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
-    private static final long serialVersionUID = 1L;
+    // Pinned to the value implicitly computed for the Struts 7.2.1 class shape, so sessions serialized by
+    // an older node still deserialize here during a rolling upgrade. The caches that became transient are
+    // simply discarded from such a stream and rebuilt by readObject.
+    private static final long serialVersionUID = -4455624669971032217L;
 
     private static final Logger LOG = LogManager.getLogger(AbstractLocalizedTextProvider.class);
 
@@ -77,8 +80,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     // transient + reinitialised in readObject: a bare Object is not Serializable.
     private transient Object bundlesMapLock = new Object();
 
+    private static final int DEFAULT_I18N_CACHE_MAX_SIZE = 10000;
+
     private volatile CacheType i18nCacheType = CacheType.WTLFU;
-    private volatile int i18nCacheMaxSize = 10000;
+    private volatile int i18nCacheMaxSize = DEFAULT_I18N_CACHE_MAX_SIZE;
 
     private <K, V> OgnlCache<K, V> buildI18nCache() {
         return new DefaultOgnlCacheFactory<K, V>(i18nCacheMaxSize, i18nCacheType).buildOgnlCache();
@@ -473,6 +478,14 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
         in.defaultReadObject();
         bundlesMapLock = new Object();
+        // Field initialisers do not run during deserialization, so a stream written before these settings
+        // existed (an older node in a rolling upgrade) leaves them at null/0. Restore the defaults.
+        if (i18nCacheType == null) {
+            i18nCacheType = CacheType.WTLFU;
+        }
+        if (i18nCacheMaxSize <= 0) {
+            i18nCacheMaxSize = DEFAULT_I18N_CACHE_MAX_SIZE;
+        }
         rebuildI18nCaches();
     }
 

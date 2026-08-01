@@ -28,7 +28,17 @@ import org.apache.struts2.conversion.impl.DefaultObjectTypeDeterminer;
  */
 public enum ConversionRule {
 
-    PROPERTY, COLLECTION, MAP, KEY, KEY_PROPERTY, ELEMENT, CREATE_IF_NULL;
+    PROPERTY,
+
+    /**
+     * @deprecated since 7.3.0, use {@link #ELEMENT} instead. The {@code Collection_xxx} key format has
+     * been superseded by {@code Element_xxx} since WebWork 2.1.x; both are handled identically by the
+     * engine, and {@code Element_xxx} additionally covers the values of a {@code Map}.
+     */
+    @Deprecated(since = "7.3.0")
+    COLLECTION,
+
+    MAP, KEY, KEY_PROPERTY, ELEMENT, CREATE_IF_NULL;
 
     /**
      * The prefix a conversion mapping key carries for this rule, as read back by
@@ -43,6 +53,9 @@ public enum ConversionRule {
      * @return the mapping key prefix, never null; an empty string when the rule has none
      * @since 7.3.0
      */
+    // the switch is deliberately exhaustive with no default, so the deprecated COLLECTION arm - and
+    // with it the reference to the deprecated prefix constant - cannot be dropped
+    @SuppressWarnings("deprecation")
     public String prefix() {
         return switch (this) {
             case COLLECTION -> DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX;

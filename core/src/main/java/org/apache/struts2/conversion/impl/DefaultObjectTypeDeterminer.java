@@ -62,6 +62,13 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
     public static final String ELEMENT_PREFIX = "Element_";
     public static final String KEY_PROPERTY_PREFIX = "KeyProperty_";
     public static final String CREATE_IF_NULL_PREFIX = "CreateIfNull_";
+    /**
+     * @deprecated since 7.3.0, use {@link #ELEMENT_PREFIX} instead. The {@code Collection_xxx} key
+     * format has been superseded by {@code Element_xxx} since WebWork 2.1.x. Existing
+     * {@code -conversion.properties} files keep working: {@link #getElementClass(Class, String, Object)}
+     * still falls back to this prefix.
+     */
+    @Deprecated(since = "7.3.0")
     public static final String DEPRECATED_ELEMENT_PREFIX = "Collection_";
 
     private final ReflectionProvider reflectionProvider;

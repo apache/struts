@@ -71,6 +71,8 @@ public class ConversionTestAction implements Action {
         return users;
     }
 
+    // deliberately declares the deprecated COLLECTION rule, to keep the Collection_ fallback covered
+    @SuppressWarnings("deprecation")
     @TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
     public void setUsers( List users ) {
         this.users = users;

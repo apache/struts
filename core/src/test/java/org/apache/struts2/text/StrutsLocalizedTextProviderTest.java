@@ -748,6 +748,79 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("A different index should create its own cache entry ?", 2, provider.classHierarchyCacheSize());
     }
 
+    public void testCachesAreBoundedByConfiguredMaxSize() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheMaxSize("100");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        for (int i = 0; i < 20000; i++) {
+            Locale locale = Locale.forLanguageTag("en-US-x" + String.format("%05d", i));
+            provider.findText(CacheFixture.class, "cache.missing", locale, "Fallback", null, valueStack);
+        }
+
+        assertTrue("classHierarchyCache not bounded ?", provider.classHierarchyCacheSize() <= 2000);
+        assertTrue("packageHierarchyCache not bounded ?", provider.packageHierarchyCacheSize() <= 2000);
+        assertTrue("bundlesMap not bounded ?", provider.bundlesMapSize() <= 2000);
+        assertTrue("missingBundles not bounded ?", provider.missingBundlesSize() <= 2000);
+        assertTrue("messageFormats not bounded ?", provider.messageFormatsSize() <= 2000);
+    }
+
+    public void testCorrectTextStillReturnedUnderEviction() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheMaxSize("50");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        // Force heavy eviction with many distinct locales.
+        for (int i = 0; i < 5000; i++) {
+            Locale locale = Locale.forLanguageTag("en-US-x" + String.format("%05d", i));
+            provider.findText(CacheFixture.class, "cache.missing", locale, "Fallback", null, valueStack);
+        }
+
+        // A real key in a real locale still resolves correctly after eviction pressure.
+        String result = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    public void testReloadClearsBoundedCaches() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+
+        provider.findText(CacheFixture.class, "cache.missing", Locale.ENGLISH, "Fallback", null, valueStack);
+        assertTrue("missingBundles not populated ?", provider.missingBundlesSize() > 0);
+
+        provider.callReloadBundlesForceReload();
+        assertEquals("reload did not clear bundlesMap ?", 0, provider.bundlesMapSize());
+    }
+
+    public void testProviderIsUsableAfterDeserialization() throws Exception {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos)) {
+            oos.writeObject(provider);
+        }
+        Object restored;
+        try (java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new java.io.ByteArrayInputStream(baos.toByteArray()))) {
+            restored = ois.readObject();
+        }
+        TestStrutsLocalizedTextProvider deserialized = (TestStrutsLocalizedTextProvider) restored;
+        // Caches were transient (null right after defaultReadObject) but readObject rebuilds them:
+        assertEquals("Deserialized caches not rebuilt empty", 0, deserialized.classHierarchyCacheSize());
+        String result = deserialized.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+    }
+
+    public void testCacheTypeSelectionKeepsProviderWorking() {
+        TestStrutsLocalizedTextProvider provider = new TestStrutsLocalizedTextProvider();
+        provider.setI18nCacheType("basic");
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        String result = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
+        assertEquals("Static cached value", result);
+        assertTrue("class hierarchy cache should populate", provider.classHierarchyCacheSize() >= 1);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

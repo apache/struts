@@ -1,6 +1,6 @@
 ---
 name: creating-version-notes
-description: Use when preparing, updating, or reviewing the release documentation for a Struts release or release candidate on any maintenance line (6.x, 7.x) - the Version Notes page on the cwiki, its Migration Guide entry, and the GitHub release notes.
+description: Use when preparing, updating, or reviewing the release documentation for a Struts release or release candidate on any maintenance line (6.x, 7.x) - the Version Notes page on the cwiki, its Migration Guide entry, the GitHub release notes, and the test-build announcement mail.
 ---
 
 # Creating Version Notes
@@ -54,10 +54,13 @@ Group under `<h2>` per issue type, in this order, omitting any type with no issu
 
 Within a section, order by issue key ascending. Each entry is `[WW-XXXX] - <the JIRA summary verbatim>`.
 
-**Reconcile against what actually merged.** The JIRA query is the starting point, not the answer. Two mismatches to check:
+**Reconcile against what actually merged.** The JIRA query is the starting point, not the answer. Three mismatches to check:
 
-- A ticket marked fixed whose change did not make the release branch — it must not be listed.
+- A ticket resolved `Fixed` whose change did not make the release branch — it must not be listed as delivered.
+- A ticket resolved **`Won't Do`** or otherwise not `Fixed` — it belongs under `Rejected requests`, not in a type section and not dropped. Check the resolution, not just the status: both `Closed` and `Resolved` sit in the Done category.
 - Work that shipped under a ticket assigned to a different fix version — the notes under-report the release.
+
+A ticket with no commit in the range is not automatically wrong. Check its **component** first: `IDEA Plugin`, `Example Applications` and similar live in other repositories and are still legitimately part of the release.
 
 **Reconcile through the ticket's linked PR, reading the files it changed.** Do not grep commit subjects, and do not go looking for the class named in the ticket title: a title often names the *symptom* while the fix lives elsewhere. WW-5630 reads "Performance Issue SecurityMemberAccess" and was fixed in `ConfigParseUtil`; searching for the former concludes, wrongly, that the backport is missing. Squash-merges also rewrite hashes, so the merge commit id from the PR need not appear on the branch.
 
@@ -73,15 +76,49 @@ When a release is superseded before it ships, its content does not disappear —
 
 This is the same discipline `creating-security-bulletins` applies to Affected Software, for the same reason: naming a version that never reached users misdirects everyone downstream.
 
+## Page section order
+
+Beyond the boilerplate, sections appear in this order, each omitted when empty:
+
+**Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency → Issue Detail → Issue List → Other resources**
+
+The first three are authored; the issue-type sections are derived from JIRA.
+
 ## Breaking changes
 
-Present only when the release has them — a maintenance release usually does not. This section is **authored prose, not a ticket dump**: one item per change, each stating what an application must now do differently, with its ticket(s) linked at the end.
+Present only when the release has them — a maintenance release usually does not.
 
-The register is the upgrade decision, not the implementation. From 7.2.1:
+Each item is **one sentence plus its ticket link**:
 
-> `CookieInterceptor` now applies `@StrutsParameter` authorization to cookie values and deprecates the 4-arg `populateCookieValueIntoStack(...)` in favor of a new 5-arg overload taking the action, so un-annotated setters stop receiving cookies and subclass overrides must migrate.
+```
+<what changed, in terms of what an application sees> [WW-XXXX].
+```
 
-Name the type or setting a user must act on, say what stops working, and say what replaces it.
+> Annotated wildcard actions are matched most-specific-first, so action selection can differ [WW-3784].
+
+> `JSONInterceptor` uses a fresh reader and writer per request, so custom ones must not hold state between requests [WW-5650].
+
+The sentence exists so a reader can judge **whether to open the ticket**, not so they can avoid opening it. The ticket carries the detail — API signatures, migration steps, the config that changes. Naming the affected type or setting is enough; enumerating what replaces it is the ticket's job.
+
+Derive each item from the fix diff rather than the ticket title, and write only what you confirmed. A change you suspect is breaking but could not pin down is one to raise with the release manager, not to describe vaguely.
+
+## Deprecations
+
+Where a release deprecates public API, list it separately from Breaking changes — nothing stops working yet, so mixing the two overstates the upgrade cost. Same one-line shape, naming the replacement where there is one:
+
+> `ConversionRule.COLLECTION` and the `Collection_` key prefix are deprecated; use `ConversionRule.ELEMENT` and `Element_` instead [WW-5656].
+
+## Rejected requests
+
+A ticket resolved **`Won't Do`** (or otherwise not `Fixed`) against this fix version is still news: someone asked for it and the project decided against it.
+
+- **Do not put it in a type section.** Under Improvement or New Feature it reads as delivered.
+- **Do not silently drop it either.** The decision is the value.
+- List it under `Rejected requests`, saying it will not be implemented and, where the release manager gave one, the reason.
+
+> [WW-2635] - Flash scope - will not be implemented; the proposed mechanism could introduce a security risk.
+
+Note the JIRA-generated release notes linked from the page *will* still include these tickets under their type. Clearing the fix version in JIRA is the only way to change that, and is the release manager's call.
 
 ## Security fixes in a release
 
@@ -90,6 +127,10 @@ A release usually ships before its bulletin publishes and before a CVE exists. T
 - List the ticket as you would any other. It is already public; omitting it under-reports the release.
 - **Do not add security framing the bulletin has not published yet** — no severity, no attack description, no S2-XXX or CVE number that has not been assigned and published.
 - Once the bulletin is public, the notes may link it.
+
+**Where the ticket's own summary describes the defect, list the neutral part of it.** "List the summary verbatim" assumes a neutrally-worded ticket, and security tickets often are not. WW-5643 reads *"StrutsJSONReader parse state shared across concurrent requests — maxDepth bypass and cross-request data leak"*; the page carried it up to "concurrent requests" and stopped. The trailing clause is the bulletin's job.
+
+Truncate at the clause boundary — never paraphrase into something the ticket does not say, and never alter the ticket link. Then **tell the release manager which summaries you cut and why**: whether an already-public JIRA summary should be reproduced in full is their call, not yours, and it has to be made before the page goes up rather than edited afterwards.
 
 **REQUIRED BACKGROUND:** where the wording of a security-relevant entry is in question, `creating-security-bulletins` governs what may be said and when.
 
@@ -113,23 +154,36 @@ Add an entry at the **top** of the list under the `<h2>` for the matching line �
 
 **Verify against raw storage, not the diff.** A version diff of this page renders empty even for a real change, because the markdown view discards `ac:link` bodies. Fetch the new version with `convert_to_markdown=false` and confirm the new entry is present, the prior entries survive in order, and the trailing `<h3>` appears exactly once.
 
+This applies to **every** section update, including ones on the Version Notes page itself — shortening `Breaking changes` carries the same risk of swallowing the `Deprecations` heading that follows it. After any section write, confirm the sections below it are still present exactly once. Where the page has no `ac:link` in it, the cheaper markdown fetch is enough to see the headings.
+
+## Writing pages through the API
+
+`content_file` is rejected for any path outside the repository — a scratchpad path fails as path traversal. Draft wherever you like, but **pass the body as inline `content`** when creating or updating a page.
+
+The response carries the new version number. On a page you have just written, that number is its own check: a create followed by one update should report version 2, so anything higher means someone else wrote in between.
+
 ## The GitHub release notes
 
 A release also has a GitHub release at the `STRUTS_X_Y_Z` tag, kept as a **pre-release** while the vote runs. GitHub's generated body is a starting point that needs two corrections before it is fit to publish.
 
-### Check the range before anything else
+### Name the previous tag yourself
 
-The generated body ends with `**Full Changelog**: .../compare/<PREVIOUS>...<THIS>`. **Confirm `<PREVIOUS>` is the immediately preceding release on this line.** GitHub picks it by tag reachability, and Struts release branches get renamed and re-imported, so older tags are frequently *not* ancestors of the new one and the heuristic reaches too far back.
+**Never let GitHub choose the range.** It picks the previous tag by reachability, and Struts release branches get renamed and re-imported, so older tags are frequently *not* ancestors of the new one and the heuristic reaches too far back. For 6.11.0 it chose `STRUTS_6_8_0` and produced ~101 entries, 88 of which had already shipped in 6.9.0 and 6.10.0.
 
-For 6.11.0 it chose `STRUTS_6_8_0` and produced ~101 entries, 88 of which had already shipped in 6.9.0 and 6.10.0.
-
-Get the real change set from git, which works even across unrelated histories:
+Generate the body with the previous release named explicitly, and it comes out right the first time:
 
 ```bash
-git log --format='%h %s' STRUTS_6_10_0..STRUTS_6_11_0
+gh api -X POST repos/apache/struts/releases/generate-notes \
+  -f tag_name=STRUTS_7_3_0 -f previous_tag_name=STRUTS_7_2_1 -q .body > generated.md
 ```
 
-Drop every generated entry outside that range and correct the Full Changelog link to the right previous tag. Drop `## New Contributors` too when the contribution it cites falls outside the range.
+Confirm the entry count is plausible against the real change set, which `git log` gives even across unrelated histories:
+
+```bash
+git log --format='%h %s' STRUTS_7_2_1..STRUTS_7_3_0
+```
+
+**If you inherit a body GitHub generated on its own**, check the `**Full Changelog**: .../compare/<PREVIOUS>...<THIS>` line first, and regenerate as above rather than pruning by hand. When pruning is unavoidable, drop `## New Contributors` too if the contribution it cites falls outside the range — but keep it when the contributors are genuinely new in this range.
 
 ### Split the entries
 
@@ -143,16 +197,80 @@ Two sections, `### Dependencies` nested under `## What's Changed`, before any `#
 
 **The discriminator is the ticket, not the author.** A Dependabot PR carrying a ticket stays in What's Changed, because a ticketed bump is release content and appears in the Version Notes Dependency section. A human PR that is purely a dependency change (`Removes unused jaxb-core dependency`) belongs under Dependencies. Both cases occur in the 6.9.0 release.
 
-Preserve the generated relative order within each section, and keep the entry lines byte-identical — they carry the author and PR links GitHub rendered.
+A PR that mixes a dependency change with something else — CVE-driven library updates *plus* a CI tweak — stays in What's Changed. Dependencies is for entries that are nothing but a bump.
+
+Preserve the generated relative order within each section, and keep the entry lines byte-identical — they carry the author and PR links GitHub rendered. Split with a script rather than by retyping, then **prove nothing was lost**:
+
+```bash
+diff <(grep '^\* ' generated.md | sort) <(grep '^\* ' new.md | sort)
+```
+
+Empty output means the entry set is unchanged and only the grouping moved.
 
 ### Applying it
 
+The release may or may not exist yet — check before assuming which command you need.
+
 ```bash
+# it exists (release cut earlier, or notes already generated):
 gh release view STRUTS_X_Y_Z --json body -q .body > original.md   # keep, so it can be restored
 gh release edit STRUTS_X_Y_Z --prerelease --notes-file new.md
+
+# it does not exist yet:
+gh release create STRUTS_X_Y_Z --title "Struts X.Y.Z" --prerelease --verify-tag --notes-file new.md
 ```
 
-Pass `--prerelease` on the edit so a release still under vote is not silently promoted.
+Pass `--prerelease` either way, so a release still under vote is not silently promoted, and `--verify-tag` on create so a typo in the tag fails instead of creating one.
+
+## The test-build announcement
+
+Once the Version Notes page and the GitHub release are both up, the release manager announces the test build so people can exercise the staged artifacts during the vote. **Draft it last** — every link in it points at something the earlier steps produced.
+
+Subject is `[TEST] Apache Struts X.Y.Z test build is ready`. Send it to **both** lists, Bcc the private one:
+
+```
+To:  dev@struts.apache.org, user@struts.apache.org
+Bcc: private@struts.apache.org
+```
+
+Both audiences want it — committers to check the staged artifacts, users to test against their own applications — and a build announced to only one of them reaches half the people who could find a problem during the vote.
+
+The body is fixed apart from four substitutions:
+
+```
+Hello,
+
+This is a minor release of Struts <LINE> which contains <WHAT>, and it
+shouldn't break your code<RISK>. Please take your time and test the bits
+- any help is appreciated. Please report any problems you will spot.
+
+Here are the changes from the previous version:
+https://github.com/apache/struts/releases/tag/STRUTS_X_Y_Z
+
+Staging Maven repo
+https://repository.apache.org/content/groups/staging/
+
+Standalone artifacts
+https://dist.apache.org/repos/dist/dev/struts/X.Y.Z/
+
+Release notes
+https://cwiki.apache.org/confluence/display/WW/Version+Notes+X.Y.Z
+
+Kind regards
+--
+Łukasz
+```
+
+| Slot | How to fill it |
+|---|---|
+| `<LINE>` | `6.x` or `7.x` |
+| `<WHAT>` | What the issue list actually contains — `mostly bug fixes` for 6.11.0, `a few improvements and bug fixes` for 7.3.0 |
+| `<RISK>` | Empty when the release has no Breaking changes; ` but it contains significant changes` when it does. 6.11.0 had none and said nothing; 7.3.0 had seven and said so |
+| Tag / paths | Tag underscored (`STRUTS_7_3_0`), dist path and page title dotted (`7.3.0`) |
+
+Do not take the recipients from a previous announcement: 6.11.0 went to `dev@` alone and 7.3.0 to `user@` alone, and both were mistakes. Address every announcement to the two lists above.
+
+Keep the security posture of the pages: the mail links the release notes, it does not summarise what is in them, so no severity, CVE or S2-XXX reaches it either.
 
 ## Re-read the page immediately before you write to it
 
@@ -169,6 +287,11 @@ After writing, diff against the version you meant to build on. The diff should s
 - Publishing the issue list straight from JIRA without reconciling against the release branch
 - Concluding a backport is missing from a commit-subject grep, or from the class named in the ticket title
 - Treating an untick eted patch dependency bump as a reconciliation gap
+- Dropping a `Won't Do` ticket, or listing it under Improvement or New Feature as though it shipped
+- A Breaking changes item that runs past one sentence, or restates what the ticket already explains
+- Reproducing a security ticket's summary in full when it names the bypass or the leak
+- Letting GitHub pick the previous tag instead of passing `previous_tag_name`
+- Regrouping release entries by retyping them instead of scripting the split and diffing the result
 - A severity, CVE, or S2-XXX reference on the page that has not been published
 - Breaking changes assembled by pasting ticket summaries
 - Creating the page without adding it to the Migration Guide index
@@ -193,6 +316,10 @@ After writing, diff against the version you meant to build on. The diff should s
 | "The version diff is empty, so nothing changed" | The diff renders markdown, which drops `ac:link` bodies. Check raw storage. |
 | "GitHub generated the changelog, so the range is right" | It guesses the previous tag by reachability. Renamed branches make it reach too far back. Verify with `git log PREV..THIS`. |
 | "Dependabot authored it, so it goes under Dependencies" | Ticketed bumps stay in What's Changed. The ticket decides, not the author. |
+| "A Won't Do ticket isn't part of the release" | The decision is news. It goes under Rejected requests, not into a type section and not into the bin. |
+| "More detail in Breaking changes is safer" | One sentence plus the ticket link. The reader opens the ticket for detail; the page exists to tell them whether to. |
+| "The summary is public in JIRA, so I can repeat it" | Not when it names the bypass or the leak and the bulletin is unpublished. Truncate, and say you did. |
+| "GitHub will work out the previous tag" | Pass `previous_tag_name` and it is right the first time. |
 | "The fix is public, so I can describe the vulnerability" | The ticket being public does not publish the advisory. Neutral framing until the bulletin ships. |
 | "Breaking changes are the tickets typed as breaking" | They are the changes that break an application. Author them. |
 | "7.x needs different handling from 6.x" | Same structure, same process. Only the data differs. |

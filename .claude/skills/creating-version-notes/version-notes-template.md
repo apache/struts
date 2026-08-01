@@ -13,13 +13,14 @@ from a copy of the previous release's page — see the Iron Rule in `SKILL.md`.
 | Field | What goes in it |
 |---|---|
 | Version | The release being announced, e.g. `6.11.0`. Appears in the intro sentence, the page title, the Maven snippet, and both JIRA link labels. |
+| Parent page | Always `Migration Guide`, page id `13981`. Create the page as its child, and add it to that page's index — see `SKILL.md`. |
 | Prior notes page | Title of the previous **released** version's page in the same series, e.g. `Version Notes 6.10.0`. Skip versions that were cut but never released. |
 | JIRA version id | The numeric id for `ReleaseNote.jspa?version=`. Obtain from the WW project's versions — it is not the version name. `6.10.0` is `12357065`, `7.2.1` is `12355751`. |
 | DONE filter id | Saved-filter id for `issues/?filter=`, labelled `Struts X.Y.Z DONE`. Each release needs its own; a reused id lists the wrong release. |
 | TODO filter id | Constant across releases: `12351174`, labelled `Struts x.x.x TODO`. |
 | Issue sections | One `<h2>` per issue type present, ordered **Bug → New Feature → Improvement → Task → Dependency**, entries sorted by key ascending. |
 | Breaking changes | Optional. Authored prose, one `<li>` per change. Omit the section entirely when the release has none. |
-| Staging Repository | Optional. An explicit decision, not an inherited default — see `SKILL.md`. |
+| Staging Repository | Always included, on every line — see `SKILL.md`. |
 
 ## Corrected storage format
 
@@ -58,7 +59,6 @@ Three defects present in the published pages are fixed here. Keep them fixed:
   <ac:plain-text-body><![CDATA[mvn archetype:generate -DarchetypeCatalog=http://struts.apache.org/]]></ac:plain-text-body>
 </ac:structured-macro>
 
-<!-- OPTIONAL: include only by explicit decision; see SKILL.md -->
 <ac:structured-macro ac:name="code" ac:schema-version="1">
   <ac:parameter ac:name="title">Staging Repository</ac:parameter>
   <ac:parameter ac:name="language">xml</ac:parameter>
@@ -108,9 +108,11 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] Maven snippet version matches the release.
 - [ ] `ReleaseNote.jspa` label and its `version=` id are the same release.
 - [ ] `DONE` filter label and its `filter=` id are the same release.
-- [ ] Issue list reconciled against the release branch, not taken from JIRA alone.
+- [ ] Issue list reconciled against the release branch via each ticket's linked PR, not taken from JIRA alone.
 - [ ] Issue types ordered Bug → New Feature → Improvement → Task → Dependency; empty types omitted.
 - [ ] Breaking changes authored, or the section omitted because there are none.
-- [ ] Staging Repository block included or omitted by explicit decision.
+- [ ] Staging Repository block present.
 - [ ] No unpublished severity, CVE, or S2-XXX reference anywhere on the page.
-- [ ] Page re-fetched immediately before the write, and the post-write diff shows only intended changes.
+- [ ] Page created as a child of Migration Guide (`13981`).
+- [ ] **Listed at the top of the matching `Version Notes N.x` section on the Migration Guide**, and that edit verified against raw storage — the version diff renders empty even when the change landed.
+- [ ] Page re-fetched immediately before every write.

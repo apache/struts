@@ -195,4 +195,18 @@ public class SecurityMemberAccessPackageMatchingTest {
                     .isFalse();
         }
     }
+
+    @Test
+    public void twoSetOverloadEqualsDisjunctionOfSingleSetCalls() throws Exception {
+        for (Class<?> clazz : classShapes()) {
+            for (Set<String> first : CANDIDATE_SETS) {
+                for (Set<String> second : CANDIDATE_SETS) {
+                    assertThat(isClassBelongsToPackages(clazz, first, second))
+                            .as("clazz=[%s] first=%s second=%s", clazz.getName(), first, second)
+                            .isEqualTo(isClassBelongsToPackages(clazz, first)
+                                    || isClassBelongsToPackages(clazz, second));
+                }
+            }
+        }
+    }
 }

@@ -254,8 +254,7 @@ public class SecurityMemberAccess implements MemberAccess {
                 || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
                 || (threadAllowlist != null && threadAllowlist.getAllowlist().contains(clazz))
-                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES)
-                || isClassBelongsToPackages(clazz, allowlistPackageNames);
+                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
     }
 
     /**
@@ -391,7 +390,21 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        return isPackageBelongsToPackages(toPackageName(clazz), matchingPackages, emptySet());
+        return isClassBelongsToPackages(clazz, matchingPackages, emptySet());
+    }
+
+    /**
+     * Tests the class's package against two sets in a single walk. Equivalent to calling
+     * {@link #isClassBelongsToPackages(Class, Set)} once per set and OR-ing the results, but
+     * walks the package name only once.
+     *
+     * @param clazz  the class whose package is tested
+     * @param first  the first set of package names to match against
+     * @param second the second set of package names to match against
+     * @return {@code true} if the class's package or any parent package is in either set
+     */
+    public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
+        return isPackageBelongsToPackages(toPackageName(clazz), first, second);
     }
 
     /**

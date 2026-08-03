@@ -372,10 +372,16 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static String toPackageName(Class<?> clazz) {
-        if (clazz.getPackage() == null) {
+        // Class.getPackage() resolves through the defining classloader's package map on every
+        // call, whereas getPackageName() is computed once and cached on the Class. getPackage()
+        // returns null for exactly arrays, primitives and void, so the guard reproduces the
+        // previous result for every input. Note that void.class.isPrimitive() is true.
+        // Arrays deliberately keep the empty package here: getPackageName() would resolve them
+        // to the element type's package, which would loosen the allowlist. See WW-5674.
+        if (clazz.isArray() || clazz.isPrimitive()) {
             return "";
         }
-        return clazz.getPackage().getName();
+        return clazz.getPackageName();
     }
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {

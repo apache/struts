@@ -1,4 +1,4 @@
-# WW-5674 — Allocation-free `isClassBelongsToPackages` Implementation Plan
+# WW-5674 — Reduce `isClassBelongsToPackages` Allocations Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -466,7 +466,7 @@ package name shapes and candidate sets."
 
 **Interfaces:**
 - Consumes: `isPackageBelongsToPackages(String, Set<String>, Set<String>)` from Task 3.
-- Produces: `public static boolean SecurityMemberAccess.isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second)`.
+- Produces: `static boolean SecurityMemberAccess.isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second)` — package-private, matching `isPackageBelongsToPackages` beside it. (The plan originally specified `public static`; it was narrowed during the final review, since the overload has one caller and its only test is in the same package.)
 
 - [ ] **Step 1: Write the failing test**
 
@@ -521,7 +521,7 @@ with the delegating pair:
      * @param second the second set of package names to match against
      * @return {@code true} if the class's package or any parent package is in either set
      */
-    public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
+    static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
         return isPackageBelongsToPackages(toPackageName(clazz), first, second);
     }
 ```
@@ -618,8 +618,8 @@ One spec deviation, flagged in *File Structure*: tests live in a new `SecurityMe
 
 ## Follow-ups not in scope
 
-Neither is filed; file before referencing either from code, per the project's no-placeholder-TODO rule.
+All of these are now filed, so they may be referenced from code and commit messages without breaching the project's no-placeholder-TODO rule.
 
-- **WW-5675** is already filed and covers the dominant cost (config re-parsing driven by the `Scope.PROTOTYPE` bean). WW-5674 alone will not move the 9% figure much.
-- **Array/primitive package semantics** — whether `getPackageName()` semantics should be adopted for arrays. Tightens the exclusion list, loosens the allowlist. Needs its own security reasoning.
-- **`ConfigParseUtil.validatePackageNames`** (`ConfigParseUtil.java:143`) evaluates `Pattern.compile("\\s")` once per package name rather than once overall. One-line fix, belongs with WW-5675.
+- **WW-5675** covers the dominant cost (config re-parsing driven by the `Scope.PROTOTYPE` bean). WW-5674 alone will not move the 9% figure much. It also absorbed **`ConfigParseUtil.validatePackageNames`** (`ConfigParseUtil.java:143`), which evaluates `Pattern.compile("\\s")` once per package name rather than once overall — same root cause, per-instantiation work that should happen once.
+- **WW-5676** — whether array and primitive types should resolve to their element package. Tightens the exclusion list, loosens the allowlist. Filed as a standalone Improvement against 7.4.0 rather than a sub-task, because it is a security-semantics decision rather than a performance fix.
+- **WW-5677** — the remaining per-access `getPackage()` lookups in `checkDefaultPackageAccess` and `isExcludedPackageNamePatterns`. Same file as this plan, same hot path, but left alone here to keep this change reviewable as a single concern.

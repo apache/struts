@@ -1,4 +1,9 @@
-# WW-5674 — Make `SecurityMemberAccess.isClassBelongsToPackages` allocation-free
+# WW-5674 — Cut the per-call allocations in `SecurityMemberAccess.isClassBelongsToPackages`
+
+> The walk is allocation-*reduced*, not allocation-free: it still creates one
+> `substring` per package level. What it removes is everything around that — the
+> `String[]`, the list wrapper, the stream pipeline, the sublist views, and the
+> joined result strings.
 
 **Date:** 2026-08-03
 **Ticket:** [WW-5674](https://issues.apache.org/jira/browse/WW-5674) (sub-task of [WW-5667](https://issues.apache.org/jira/browse/WW-5667))
@@ -67,7 +72,8 @@ it on the `Class` object.
 
 ## Goals
 
-- Remove the per-call allocation overhead on the OGNL member-access hot path.
+- Cut the per-call allocation overhead on the OGNL member-access hot path down to
+  one substring per package level.
 - **Zero change to allow/deny semantics**, demonstrated by test, not by argument.
 - Keep the change small enough to review as a pure optimisation.
 
@@ -354,8 +360,15 @@ unreliable in CI.
 ## Out of scope for this spec
 
 - WW-5675 (config re-parsing / `Scope.PROTOTYPE`) — separate spec and PR.
-- Array and primitive package semantics — follow-up ticket, see above.
+- Array and primitive package semantics — WW-5676, see above.
 - `isExcludedPackageNamePatterns`, which walks `excludedPackageNamePatterns` with
   a stream and calls `toPackageName` per pattern. It benefits from the cheaper
   `toPackageName` for free, but its own stream overhead is not addressed here;
-  the pattern set is empty by default.
+  the pattern set is empty by default. Tracked as WW-5677.
+- `checkDefaultPackageAccess`, which still inspects `clazz.getPackage()` directly —
+  two classloader package-map lookups per class, up to four per `isAccessible()`
+  when `struts.disallowDefaultPackageAccess` is enabled. Its condition is
+  equivalent to `toPackageName(clazz).isEmpty()`, including for arrays and
+  primitives, so routing it through `toPackageName` would remove exactly the
+  lookup this spec eliminates fifteen lines away. Deliberately left out to keep
+  this change to one concern; tracked as WW-5677.

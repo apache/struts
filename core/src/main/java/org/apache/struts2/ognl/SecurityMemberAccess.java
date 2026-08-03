@@ -413,7 +413,14 @@ public class SecurityMemberAccess implements MemberAccess {
      * the OGNL member-access path. Shortest prefix first, so broad entries such as {@code java.io}
      * short-circuit earliest.
      *
-     * @param packageName the package name to test, empty for the default package
+     * <p>
+     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by
+     * the implementation this replaced, which matches more broadly — tightening exclusion but
+     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing
+     * dot, so every current caller is safe; route any other string through here only after
+     * confirming the same.
+     *
+     * @param packageName the package name to test, empty for the default package, never ending in {@code '.'}
      * @param first       the first set of package names to match against
      * @param second      the second set of package names to match against
      * @return {@code true} if the package or any parent package is in either set

@@ -175,4 +175,24 @@ public class SecurityMemberAccessPackageMatchingTest {
             }
         }
     }
+
+    @Test
+    public void indexWalkMatchesLegacyAcrossPackageNameShapes() {
+        for (String packageName : PACKAGE_NAMES) {
+            for (Set<String> candidates : CANDIDATE_SETS) {
+                assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, candidates, emptySet()))
+                        .as("packageName=[%s] candidates=%s", packageName, candidates)
+                        .isEqualTo(legacyPrefixMatch(packageName, candidates));
+            }
+        }
+    }
+
+    @Test
+    public void bothSetsEmptyShortCircuitsToFalse() {
+        for (String packageName : PACKAGE_NAMES) {
+            assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, emptySet(), emptySet()))
+                    .as("packageName=[%s] with no configured packages", packageName)
+                    .isFalse();
+        }
+    }
 }

@@ -32,11 +32,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
@@ -393,10 +391,33 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        List<String> packageParts = List.of(toPackageName(clazz).split("\\."));
-        return IntStream.range(0, packageParts.size())
-                .mapToObj(i -> String.join(".", packageParts.subList(0, i + 1)))
-                .anyMatch(matchingPackages::contains);
+        return isPackageBelongsToPackages(toPackageName(clazz), matchingPackages, emptySet());
+    }
+
+    /**
+     * Tests whether the given package name, or any of its parent packages, is present in either
+     * set. Walks the name in place rather than building the full prefix list, since this runs on
+     * the OGNL member-access path. Shortest prefix first, so broad entries such as {@code java.io}
+     * short-circuit earliest.
+     *
+     * @param packageName the package name to test, empty for the default package
+     * @param first       the first set of package names to match against
+     * @param second      the second set of package names to match against
+     * @return {@code true} if the package or any parent package is in either set
+     */
+    static boolean isPackageBelongsToPackages(String packageName, Set<String> first, Set<String> second) {
+        if (first.isEmpty() && second.isEmpty()) {
+            return false;
+        }
+        int idx = packageName.indexOf('.');
+        while (idx != -1) {
+            String prefix = packageName.substring(0, idx);
+            if (first.contains(prefix) || second.contains(prefix)) {
+                return true;
+            }
+            idx = packageName.indexOf('.', idx + 1);
+        }
+        return first.contains(packageName) || second.contains(packageName);
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {

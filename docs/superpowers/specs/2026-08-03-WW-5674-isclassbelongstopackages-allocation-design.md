@@ -221,6 +221,13 @@ of `isPackageBelongsToPackages` beside it. Publishing it would freeze it as
 `struts2-core` API until the next major release for no benefit — particularly
 unwelcome while WW-4759 is drawing the `struts2-api` boundary.
 
+That leaves a package-private overload sharing a name with a public method, which
+invites a later contributor to widen it to `public` as a consistency tidy-up
+without realising that adds permanent API surface. Renaming it — along with the
+awkward `is...BelongsTo...` grammar, and narrowing the two public statics that
+have no callers outside this class — is tracked as WW-5678 against 8.0.0, since
+the narrowing is source-breaking.
+
 ### 4. Single walk on the allowlist path
 
 ```java

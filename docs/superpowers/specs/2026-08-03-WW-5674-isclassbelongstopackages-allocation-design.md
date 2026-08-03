@@ -190,28 +190,30 @@ exclusion path under the shipped configuration, where
 `struts.excludedPackageNames` carries roughly thirty entries by default. It
 protects deployments that configure both sets empty.
 
-### 3. Both public entry points delegate to it
+### 3. Both entry points delegate to it
 
 ```java
 public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
     return isClassBelongsToPackages(clazz, matchingPackages, emptySet());
 }
 
-public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
+static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
     return isPackageBelongsToPackages(toPackageName(clazz), first, second);
 }
 ```
 
 One copy of the prefix logic, reached by every caller.
 
-The existing two-argument signature is retained. It is `public static` on a
-public class, so it is nominally API even though a repository-wide search finds
-no caller outside `SecurityMemberAccess` itself.
+The existing two-argument signature is retained unchanged. It is `public static`
+on a public class, so it is nominally API even though a repository-wide search
+finds no caller outside `SecurityMemberAccess` itself.
 
-The new three-argument overload is `public static` for consistency with the two
-public statics beside it. It has a single caller today; making it
-package-private instead would be a defensible alternative and is a trivial
-follow-up if the extra surface is unwelcome.
+The new three-argument overload is package-private. It has exactly one caller
+(`isClassAllowlisted`) and its only test lives in the same package, so
+package-private reaches everything that needs it, and it matches the visibility
+of `isPackageBelongsToPackages` beside it. Publishing it would freeze it as
+`struts2-core` API until the next major release for no benefit — particularly
+unwelcome while WW-4759 is drawing the `struts2-api` boundary.
 
 ### 4. Single walk on the allowlist path
 

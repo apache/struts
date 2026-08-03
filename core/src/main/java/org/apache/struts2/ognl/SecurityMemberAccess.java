@@ -403,7 +403,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @param second the second set of package names to match against
      * @return {@code true} if the class's package or any parent package is in either set
      */
-    public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
+    static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
         return isPackageBelongsToPackages(toPackageName(clazz), first, second);
     }
 

@@ -89,6 +89,7 @@ public class SecurityMemberAccessPackageMatchingTest {
             Set.of("java.io"),
             Set.of("org.apache.struts2"),
             Set.of("a"),
+            Set.of("a."),
             Set.of("a.b"),
             Set.of("zzz.not.matching"),
             Set.of("java.io", "org.apache.struts2", "javax"));
@@ -116,14 +117,25 @@ public class SecurityMemberAccessPackageMatchingTest {
     public void siblingPackageWithSharedCharacterPrefixDoesNotMatch() {
         Set<String> excluded = Set.of("org.apache.struts2");
 
-        assertThat(legacyPrefixMatch("org.apache.struts2x", excluded))
-                .as("a sibling package sharing a character prefix must not match")
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2x", excluded, emptySet()))
+                .as("a sibling package sharing a character prefix must not match (production)")
                 .isFalse();
+        assertThat(legacyPrefixMatch("org.apache.struts2x", excluded))
+                .as("a sibling package sharing a character prefix must not match (legacy oracle)")
+                .isFalse();
+
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2", excluded, emptySet()))
+                .as("an exact match must match (production)")
+                .isTrue();
         assertThat(legacyPrefixMatch("org.apache.struts2", excluded))
-                .as("an exact match must match")
+                .as("an exact match must match (legacy oracle)")
+                .isTrue();
+
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2.ognl", excluded, emptySet()))
+                .as("a sub-package must match (production)")
                 .isTrue();
         assertThat(legacyPrefixMatch("org.apache.struts2.ognl", excluded))
-                .as("a sub-package must match")
+                .as("a sub-package must match (legacy oracle)")
                 .isTrue();
     }
 

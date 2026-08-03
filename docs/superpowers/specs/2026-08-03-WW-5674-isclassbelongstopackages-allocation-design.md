@@ -125,7 +125,7 @@ Verified across eleven class shapes:
 | `String` | non-null | `"java.lang"` | `"java.lang"` |
 | default-package class | non-null | `""` | `""` |
 | nested (`Map.Entry`) | non-null | `"java.util"` | `"java.util"` |
-| lambda (hidden class) | non-null | `""` | `""` |
+| lambda (hidden class) | non-null | `"org.apache.struts2.ognl"` | `"org.apache.struts2.ognl"` |
 | JDK proxy | non-null | `"jdk.proxy1"` | `"jdk.proxy1"` |
 | `int`, `void` | null | `""` | `""` |
 | `int[]`, `String[]`, `String[][]` | null | `""` | `""` |
@@ -183,8 +183,12 @@ Shortest-prefix-first ordering is preserved. Ordering does not affect the result
 exclusions such as `java.io`, which are the common case.
 
 The `isEmpty()` short-circuit skips the walk — and therefore every substring
-allocation — when neither set is configured. `allowlistPackageNames` is empty by
-default, so this is the common path for the allowlist check.
+allocation — when neither set is configured. That requires both sets to be
+empty, so it does not fire on the allowlist path, where
+`ALLOWLIST_REQUIRED_PACKAGES` is always non-empty (see §4), nor on the
+exclusion path under the shipped configuration, where
+`struts.excludedPackageNames` carries roughly thirty entries by default. It
+protects deployments that configure both sets empty.
 
 ### 3. Both public entry points delegate to it
 

@@ -15,6 +15,12 @@ Companion to [`SKILL.md`](SKILL.md), which covers *how* to fill the slots; this 
 | `<SHAPE SENTENCE>` | See below — authored per release |
 | Page sections | Breaking changes, Deprecations, Rejected requests, and the issue-type sections, copied from the Version Notes page. Omit any the page omits. |
 
+**Where the page introduces a section with a sentence of its own, that sentence comes with it.**
+The skeleton below shows sections as bare lists, but `Rejected requests` on the 7.3.0 page opens
+with *"Two long-standing requests were closed as Won't Do in this cycle. They are listed here so
+the decision is visible rather than silent."* Without it the section reads as two unexplained
+ticket ids.
+
 ## The shape sentence is authored per release
 
 The opener is two sentences. The first is fixed. The second describes the *shape* of the issue

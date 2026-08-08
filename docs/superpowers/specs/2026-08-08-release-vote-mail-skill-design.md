@@ -104,8 +104,15 @@ Bcc: private@struts.apache.org
 but the vote stays on dev@ per ASF practice"* — it knew the rule and complied halfway, so the
 skill names Cc explicitly rather than saying "don't send it to the user list".
 
-Bcc rather than Cc for `private@` has a reason worth recording: on the 7.1.1 and 6.8.0 votes
-`private@` was on Cc, and reply-all `+1`s landed on the private PMC list.
+**`private@` is included for reach, not confidentiality.** Not every PMC member follows `dev@`,
+and PMC votes are the binding ones, so `private@` is what guarantees the binding voters see the
+call. Recording this matters for the security rule below: an agent that reads `private@` as a
+confidential channel has a ready-made justification for routing advisory detail there, which is
+exactly the baseline failure. Its presence is a delivery decision and nothing more.
+
+Bcc rather than Cc has its own reason: on the 7.1.1 and 6.8.0 votes `private@` was on Cc, and
+reply-all `+1`s landed on the private PMC list. Bcc gives the same reach while keeping the
+tally in one thread.
 
 ### 3. Draft, never send (addresses the send failure)
 

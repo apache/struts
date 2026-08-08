@@ -66,8 +66,14 @@ solicits votes that are not binding and scatters the tally across two lists.
 Cc is not a compromise. If a release manager asks you to include the user list, the answer is
 that the `[TEST]` mail already did.
 
-`private@` goes on **Bcc, not Cc**: on the 7.1.1 and 6.8.0 votes it was on Cc, and reply-all
-`+1`s landed on the private PMC list.
+**`private@` is on the mail for reach, not for confidentiality.** Not every PMC member follows
+`dev@`, and PMC votes are the binding ones, so `private@` is what guarantees the binding voters
+see the call. Nothing goes there that could not go to `dev@` — its presence is a delivery
+decision, and it is not an exemption from the rule above.
+
+It goes on **Bcc, not Cc**: on the 7.1.1 and 6.8.0 votes it was on Cc, and reply-all `+1`s
+landed on the private PMC list. Bcc gives the same reach while keeping the tally in one thread
+on `dev@`.
 
 Subject is exactly `[VOTE] Apache Struts X.Y.Z`.
 
@@ -124,6 +130,7 @@ A vote opened on a 404 burns the window before anyone can test.
 |---|---|
 | "Voters can't judge fixes they can't see" | They can open the restricted bulletins themselves. The vote is not the disclosure channel. |
 | "It's only going to private@, so nothing leaks" | The rule is about the vote, not the audience. A companion mail is part of the vote. |
+| "private@ is on the mail already, so it's a channel I can use" | It is there so binding voters see the call, not to carry anything `dev@` cannot. |
 | "Cc'ing user@ keeps the vote on dev@ and still informs them" | The `[TEST]` mail informed them. Cc splits the tally. |
 | "I verified everything, so I can send" | Verification earns a draft. Sending is the release manager's keystroke. |
 | "I'm adding to the boilerplate, not changing it" | Insertion is editing. The vote call is byte-frozen. |

@@ -32,11 +32,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
@@ -256,8 +254,7 @@ public class SecurityMemberAccess implements MemberAccess {
                 || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
                 || (threadAllowlist != null && threadAllowlist.getAllowlist().contains(clazz))
-                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES)
-                || isClassBelongsToPackages(clazz, allowlistPackageNames);
+                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
     }
 
     /**
@@ -372,10 +369,16 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static String toPackageName(Class<?> clazz) {
-        if (clazz.getPackage() == null) {
+        // Class.getPackage() resolves through the defining classloader's package map on every
+        // call, whereas getPackageName() is computed once and cached on the Class. getPackage()
+        // returns null for exactly arrays, primitives and void, so the guard reproduces the
+        // previous result for every input. Note that void.class.isPrimitive() is true.
+        // Arrays deliberately keep the empty package here: getPackageName() would resolve them
+        // to the element type's package, which would loosen the allowlist. See WW-5674.
+        if (clazz.isArray() || clazz.isPrimitive()) {
             return "";
         }
-        return clazz.getPackage().getName();
+        return clazz.getPackageName();
     }
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
@@ -387,10 +390,54 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        List<String> packageParts = List.of(toPackageName(clazz).split("\\."));
-        return IntStream.range(0, packageParts.size())
-                .mapToObj(i -> String.join(".", packageParts.subList(0, i + 1)))
-                .anyMatch(matchingPackages::contains);
+        return isClassBelongsToPackages(clazz, matchingPackages, emptySet());
+    }
+
+    /**
+     * Tests the class's package against two sets in a single walk. Equivalent to calling
+     * {@link #isClassBelongsToPackages(Class, Set)} once per set and OR-ing the results, but
+     * walks the package name only once.
+     *
+     * @param clazz  the class whose package is tested
+     * @param first  the first set of package names to match against
+     * @param second the second set of package names to match against
+     * @return {@code true} if the class's package or any parent package is in either set
+     */
+    static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
+        return isPackageBelongsToPackages(toPackageName(clazz), first, second);
+    }
+
+    /**
+     * Tests whether the given package name, or any of its parent packages, is present in either
+     * set. Walks the name in place rather than building the full prefix list, since this runs on
+     * the OGNL member-access path. Shortest prefix first, so broad entries such as {@code java.io}
+     * short-circuit earliest.
+     *
+     * <p>
+     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by
+     * the implementation this replaced, which matches more broadly — tightening exclusion but
+     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing
+     * dot, so every current caller is safe; route any other string through here only after
+     * confirming the same.
+     *
+     * @param packageName the package name to test, empty for the default package, never ending in {@code '.'}
+     * @param first       the first set of package names to match against
+     * @param second      the second set of package names to match against
+     * @return {@code true} if the package or any parent package is in either set
+     */
+    static boolean isPackageBelongsToPackages(String packageName, Set<String> first, Set<String> second) {
+        if (first.isEmpty() && second.isEmpty()) {
+            return false;
+        }
+        int idx = packageName.indexOf('.');
+        while (idx != -1) {
+            String prefix = packageName.substring(0, idx);
+            if (first.contains(prefix) || second.contains(prefix)) {
+                return true;
+            }
+            idx = packageName.indexOf('.', idx + 1);
+        }
+        return first.contains(packageName) || second.contains(packageName);
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {

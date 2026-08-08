@@ -79,7 +79,8 @@ Subject is exactly `[VOTE] Apache Struts X.Y.Z`.
 
 ## Draft it, do not send it
 
-Create a Gmail draft with To, Bcc, Subject and body set. **Never send.**
+Create a Gmail draft with To, Bcc, Subject and body set, and write the same body to a file whose
+path you hand over. **Never send.**
 
 | Rationalization | Reality |
 |---|---|
@@ -90,6 +91,26 @@ Create a Gmail draft with To, Bcc, Subject and body set. **Never send.**
 
 Sending opens a binding vote on a permanently archived public list and commits the PMC to the
 artifacts as staged.
+
+### Gmail mangles the links — hand over a paste-ready body
+
+Gmail's linkifier rewrites URLs server-side as the draft is stored, so the four link lines
+arrive as `https://www.google.com/url?q=...&source=gmail&ust=...` and the 72-column wrap is
+reflowed. There is no way to pass the body through the Gmail tool that avoids it:
+
+| Body passed as | Result |
+|---|---|
+| `body` only | Wrapped hrefs; plain rendering shows `bare-url <google.com/url?q=…>` |
+| `htmlBody` only | No plain-text part at all — HTML-only mail, wrong for an ASF list |
+| both | Worst: the plain part's *visible* text becomes the wrapped URL |
+
+`body` only is the least-bad, and is what to use. **Also write the exact body to a file and
+give the release manager its path.** Pasting plain text over the compose window restores both
+the bare URLs and the wrap, making the fix one select-all-paste instead of four hand-edited
+URLs.
+
+**Never re-run the draft-update tool on a draft whose links have already been fixed by hand** —
+it re-mangles them. A draft the release manager has corrected is finished; leave it alone.
 
 ## The boilerplate is frozen
 
@@ -123,6 +144,7 @@ A vote opened on a 404 burns the window before anyone can test.
 - A new paragraph inserted into the vote boilerplate
 - A quality checkbox arriving pre-ticked
 - An opening sentence carried over from the previous release
+- Re-running the draft-update tool on a draft whose links were already fixed by hand
 
 ## Common Mistakes
 

@@ -114,7 +114,9 @@ On behalf of the Apache Struts project
 ```
 
 Hard-wrap the body at 72 columns, continuation lines unindented, so the list stays legible in
-the ASF archives and in quoted replies.
+the ASF archives and in quoted replies. Gmail reflows the wrap and rewrites the link lines when
+it stores the draft — see *Gmail mangles the links* in [`SKILL.md`](SKILL.md) for why the body
+also has to be handed over as a file.
 
 ## Frozen text
 
@@ -143,3 +145,5 @@ repository does not.
 - [ ] All four checkboxes empty
 - [ ] No severity, CVE, S2-XXX, bulletin link or reporter detail anywhere
 - [ ] Exactly one mail
+- [ ] Body also saved to a file and its path handed over, so the mangled links and wrap can be
+      fixed with one paste

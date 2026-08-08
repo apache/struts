@@ -272,6 +272,8 @@ Do not take the recipients from a previous announcement: 6.11.0 went to `dev@` a
 
 Keep the security posture of the pages: the mail links the release notes, it does not summarise what is in them, so no severity, CVE or S2-XXX reaches it either.
 
+**The vote is the next step, and it is a different mail.** Once the test build is announced, `creating-release-vote-mail` composes the `[VOTE] Apache Struts X.Y.Z` call — to `dev@` alone, rendered from the page this skill produced. Do not draft it from here: its recipients, subject and body all differ from the announcement above.
+
 ## Re-read the page immediately before you write to it
 
 Confluence has no conflict warning. Fetch the current version immediately before every write and compare the version number against the one you read; if it advanced, re-read, merge onto the newer content, and write that.

@@ -87,6 +87,20 @@ Concrete class, no interface, **not** aliased in `StrutsBeanSelectionProvider`. 
 the shape of `ProviderAllowlist` and `ThreadAllowlist` (`DefaultConfiguration.java:418-419`), not a user extension
 point.
 
+`bootstrapFactories` is on the production path, not test-only: `ConfigurationManager.addDefaultContainerProviders`
+(`ConfigurationManager.java:94`) registers `StrutsDefaultConfigurationProvider`, which calls it at
+`StrutsDefaultConfigurationProvider.java:116`, and `Dispatcher` drives `ConfigurationManager`. It reads as
+test-oriented in a grep only because a dozen tests name the provider explicitly and `XWorkTestCaseHelper` — test
+scaffolding that lives in `core/src/main` — registers it too.
+
+The method serves both the bootstrap container (`DefaultConfiguration.java:360`) and the main container, so each
+gets its own configuration singleton. The bootstrap container carries only `BOOTSTRAP_CONSTANTS`, so most security
+constants are absent there, the `required = false` setters do not fire, and the bean falls back to defaults —
+exactly as a `SecurityMemberAccess` constructed in that container behaves today.
+
+The `TODO: SpringObjectFactoryTest fails when these are SINGLETON` comment at the top of `bootstrapFactories`
+applies to the `*Factory` beans in the first block, not to this region, where singletons are already the norm.
+
 It takes over these sixteen `@Inject` setters from `SecurityMemberAccess`:
 
 | Setter | Constant |

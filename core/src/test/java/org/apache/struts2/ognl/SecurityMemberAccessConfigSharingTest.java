@@ -162,6 +162,12 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
 
         assertTrue("dev-mode exclusions were not applied at startup",
                 excluded.contains("java.lang.ProcessBuilder"));
+        // The `contains` check above is non-vacuous only because the test container does not load
+        // struts-excluded-classes.xml, where java.lang.ProcessBuilder happens to sit in both the
+        // production and dev-mode excluded-classes sets. Asserting identity with the config bean's
+        // set keeps this test meaningful even if the harness starts loading that file.
+        assertSame("excludedClasses was not seeded from the dev-mode-resolved config",
+                container.getInstance(SecurityMemberAccessConfig.class).getExcludedClasses(), excluded);
     }
 
     public void testDevModeMethodsAreGone() throws Exception {

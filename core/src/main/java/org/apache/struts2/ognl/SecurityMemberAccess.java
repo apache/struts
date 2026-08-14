@@ -478,8 +478,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
@@ -493,8 +492,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedClasses(String commaDelimitedClasses) {
@@ -505,8 +503,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
@@ -517,8 +514,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNames(String commaDelimitedPackageNames) {
@@ -529,8 +525,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
@@ -541,8 +536,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
@@ -560,8 +554,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistClasses(String commaDelimitedClasses) {
@@ -572,8 +565,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
@@ -584,8 +576,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
@@ -596,8 +587,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
@@ -608,8 +598,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @deprecated since 7.4.0, configuration is parsed once per container by
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
-     * this setter, so overriding it in a subclass no longer affects configuration; subclasses that add
-     * their own exclusions must now do so another way.
+     * this setter.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {

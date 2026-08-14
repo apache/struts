@@ -14,7 +14,8 @@ boilerplate, around a plain-text rendering of the release's Version Notes page.
 
 **This is the step after `creating-version-notes`.** That skill produces the page, the GitHub
 release and the `[TEST]` announcement; this one consumes all three. If they do not exist yet,
-you are in the wrong skill.
+you are in the wrong skill. `releasing-struts` holds the surrounding phases and what happens
+once the vote passes.
 
 [`vote-mail-template.md`](vote-mail-template.md) is the source of truth for the artifact.
 

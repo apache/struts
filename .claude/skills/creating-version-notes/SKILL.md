@@ -13,6 +13,8 @@ A Version Notes page answers one question for a user deciding whether to upgrade
 
 **One skill covers every maintenance line.** 6.x and 7.x pages share an identical structure. The line changes the data (version, prior page, JIRA ids), never the process.
 
+**This is phase 3 of a seven-phase release.** `releasing-struts` holds the sequence, the gates and the mechanics either side of it; this skill owns the paperwork.
+
 ## The Iron Rule
 
 ```

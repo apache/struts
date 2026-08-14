@@ -71,12 +71,20 @@ as a source for the release number.
 ✔ `maven-release-plugin` 3.3.1, driven interactively, on that branch:
 
 ```bash
-mvn release:prepare -DautoVersionSubmodules=true
+mvn release:prepare
 ```
+
+✔ No flags. `autoVersionSubmodules` is configured in the root pom, along with the ASF parent's
+`useReleaseProfile=false`, `goals=deploy` and `releaseProfiles=apache-release`. If you find
+yourself passing `-D` to the release plugin, the setting belongs in the pom instead — a flag
+that has to be remembered is a flag that will be forgotten.
 
 ✔ **At the SCM tag prompt, type `STRUTS_X_Y_Z`.** The plugin's default would be
 `struts2-parent-X.Y.Z`; every Struts tag in history is the underscore form, and the GitHub
 release, the Version Notes and the site all assume it.
+
+This one cannot move into the pom: `tagNameFormat` interpolates `@{project.version}` and has no
+string functions, so the best it could produce is `STRUTS_7.3.0`. The prompt stays.
 
 Dry run first if you want one — add `-DdryRun=true`, then `mvn release:clean` before the real
 run. On failure, re-run the same command: `-Dresume` defaults to true and it picks up where it
@@ -87,8 +95,13 @@ stopped.
 `[maven-release-plugin] prepare for next development iteration`, plus the tag.
 
 ```bash
-mvn release:perform -DretryFailedDeploymentCount=10
+mvn release:perform
 ```
+
+✔ `retryFailedDeploymentCount=10` is configured on `maven-deploy-plugin` in the root pom, not
+passed here. It has to be in the pom to work at all: `release:perform` forks a fresh Maven
+build, and that fork does not inherit `-D` properties from the outer invocation — the flag the
+cwiki tells you to pass was doing nothing.
 
 ⚠ unverified: the fallback for re-running `perform` elsewhere —
 `git checkout STRUTS_X_Y_Z && mvn javadoc:javadoc deploy -DperformRelease=true -Papache-release`.

@@ -84,8 +84,6 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
                 config.getExcludedPackageExemptClasses(), SecurityMemberAccessTest.reflectField(first, "excludedPackageExemptClasses"));
         assertSame("allowlistClasses not seeded from config",
                 config.getAllowlistClasses(), SecurityMemberAccessTest.reflectField(first, "allowlistClasses"));
-        assertSame("allowlistPackageNames not seeded from config",
-                config.getAllowlistPackageNames(), SecurityMemberAccessTest.reflectField(first, "allowlistPackageNames"));
         Set<String> firstAllowlistPackageNamesUnion = SecurityMemberAccessTest.reflectField(first, "allowlistPackageNamesUnion");
         assertSame("allowlistPackageNamesUnion not seeded from config",
                 config.getAllowlistPackageNamesUnion(), firstAllowlistPackageNamesUnion);

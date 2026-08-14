@@ -122,7 +122,10 @@ are absent there, the `required = false` setters do not fire, and the bean falls
 `SecurityMemberAccess` constructed in that container behaves today.
 
 This failure mode is loud, not silent: `useConfig` is a mandatory `@Inject`, so a container missing the binding
-throws at build time rather than running with empty exclusions.
+fails closed with a `DependencyException`, not by running with empty exclusions. Because `SecurityMemberAccess` is
+`Scope.PROTOTYPE` and `ContainerImpl`'s injector cache is built lazily, that exception fires at the first
+`getInstance(SecurityMemberAccess.class)` rather than at `builder.create(...)` — still loud and still fail-closed,
+just not at container-build time.
 
 The `TODO: SpringObjectFactoryTest fails when these are SINGLETON` comment at the top of `bootstrapFactories`
 applies to the `*Factory` beans in the first block, not to this region, where singletons are already the norm.
@@ -301,7 +304,12 @@ configuration bean makes it a genuine once-per-container event.
 
 One, accepted during design review: the `"DevMode enabled, using DevMode excluded classes and packages for OGNL
 security enforcement!"` warning currently fires on the first OGNL access and will now fire when the configuration
-singleton is built. This makes it a deterministic startup signal rather than one contingent on traffic.
+singleton's `init()` runs. The main Dispatcher container is built with `builder.create(false)` (lazy singletons), so
+for it that is still triggered by first use — the config bean is constructed the first time something asks for a
+`SecurityMemberAccess`, not at container-build/startup time. The bootstrap container does use `create(true)` and so
+does log eagerly there. The change is still worth making — it moves the warning from being contingent on OGNL
+traffic to being contingent on the config bean's first use, which happens earlier and more predictably — but it is
+not a guaranteed startup-time log line for the main container.
 
 No other externally visible behaviour changes. OGNL allow/deny semantics are identical.
 

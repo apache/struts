@@ -111,7 +111,6 @@ public class SecurityMemberAccessTest {
                 "excludedPackageNamePatterns",
                 "excludedPackageExemptClasses",
                 "allowlistClasses",
-                "allowlistPackageNames",
                 "allowlistPackageNamesUnion",
                 "excludeProperties",
                 "acceptProperties");

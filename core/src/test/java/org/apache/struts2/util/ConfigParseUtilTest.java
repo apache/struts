@@ -196,20 +196,23 @@ public class ConfigParseUtilTest {
 
     @Test
     public void validatePackageNamesRejectsSpace() {
+        Set<String> packageNames = Set.of("java.lang", "org.apache struts2");
         assertThrows(ConfigurationException.class,
-                () -> ConfigParseUtil.validatePackageNames(Set.of("java.lang", "org.apache struts2")));
+                () -> ConfigParseUtil.validatePackageNames(packageNames));
     }
 
     @Test
     public void validatePackageNamesRejectsTab() {
+        Set<String> packageNames = Set.of("java\tlang");
         assertThrows(ConfigurationException.class,
-                () -> ConfigParseUtil.validatePackageNames(Set.of("java\tlang")));
+                () -> ConfigParseUtil.validatePackageNames(packageNames));
     }
 
     @Test
     public void validatePackageNamesRejectsNewline() {
+        Set<String> packageNames = Set.of("java\nlang");
         assertThrows(ConfigurationException.class,
-                () -> ConfigParseUtil.validatePackageNames(Set.of("java\nlang")));
+                () -> ConfigParseUtil.validatePackageNames(packageNames));
     }
 
     @Test

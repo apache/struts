@@ -109,7 +109,7 @@ public class SecurityMemberAccessConfig implements Initializable {
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
-    public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
+    void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
         this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
         if (!this.allowStaticFieldAccess) {
             useExcludedClasses(Class.class.getName());
@@ -117,27 +117,27 @@ public class SecurityMemberAccessConfig implements Initializable {
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
-    public void useExcludedClasses(String commaDelimitedClasses) {
+    void useExcludedClasses(String commaDelimitedClasses) {
         this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+    void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void useExcludedPackageNames(String commaDelimitedPackageNames) {
+    void useExcludedPackageNames(String commaDelimitedPackageNames) {
         this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
-    public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
+    void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
-    public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
+    void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
         if (!this.enforceAllowlistEnabled) {
             String msg = "OGNL allowlist is disabled!" +
@@ -149,12 +149,12 @@ public class SecurityMemberAccessConfig implements Initializable {
     }
 
     @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
-    public void useAllowlistClasses(String commaDelimitedClasses) {
+    void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
     @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
-    public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
+    void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
         this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
     }
@@ -179,42 +179,42 @@ public class SecurityMemberAccessConfig implements Initializable {
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, required = false)
-    public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
+    void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
         this.disallowProxyObjectAccess = BooleanUtils.toBoolean(disallowProxyObjectAccess);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
-    public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+    void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
-    public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
+    void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void useDevMode(String devMode) {
+    void useDevMode(String devMode) {
         this.isDevMode = BooleanUtils.toBoolean(devMode);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
-    public void useDevModeExcludedClasses(String commaDelimitedClasses) {
+    void useDevModeExcludedClasses(String commaDelimitedClasses) {
         this.devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void useDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+    void useDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void useDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
+    void useDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
         this.devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
-    public void useDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
+    void useDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 

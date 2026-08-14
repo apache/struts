@@ -86,16 +86,33 @@ Concrete class, no interface, **not** aliased in `StrutsBeanSelectionProvider`. 
 the shape of `ProviderAllowlist` and `ThreadAllowlist` (`DefaultConfiguration.java:418-419`), not a user extension
 point.
 
-`bootstrapFactories` is on the production path, not test-only: `ConfigurationManager.addDefaultContainerProviders`
-(`ConfigurationManager.java:94`) registers `StrutsDefaultConfigurationProvider`, which calls it at
-`StrutsDefaultConfigurationProvider.java:116`, and `Dispatcher` drives `ConfigurationManager`. It reads as
-test-oriented in a grep only because a dozen tests name the provider explicitly and `XWorkTestCaseHelper` — test
-scaffolding that lives in `core/src/main` — registers it too.
+**The bean must be registered in two places.** An earlier draft of this design claimed `bootstrapFactories` was on
+the production path because `ConfigurationManager.addDefaultContainerProviders` (`ConfigurationManager.java:94`)
+registers `StrutsDefaultConfigurationProvider`, which calls it at
+`StrutsDefaultConfigurationProvider.java:116`. **That claim is wrong**, and it was only caught when the full core
+suite failed with 1579 errors during implementation.
 
-The method serves both the bootstrap container (`DefaultConfiguration.java:360`) and the main container, so each
-gets its own configuration singleton. The bootstrap container carries only `BOOTSTRAP_CONSTANTS`, so most security
-constants are absent there, the `required = false` setters do not fire, and the bean falls back to defaults —
-exactly as a `SecurityMemberAccess` constructed in that container behaves today.
+`ConfigurationManager.addDefaultContainerProviders()` fires only when `containerProviders.isEmpty()`
+(`ConfigurationManager.java:78-80`). `Dispatcher.init()` (`Dispatcher.java:711-719`) installs its own provider
+list — including `StrutsBeanSelectionProvider` via `init_AliasStandardObjects` — so the list is never empty and
+`StrutsDefaultConfigurationProvider` is never added. The production container is built from
+`StrutsBeanSelectionProvider` plus `struts-beans.xml`, and `bootstrapFactories` is not on that path at all.
+
+The registration therefore goes in both places, which is precisely what `ProviderAllowlist` and `ThreadAllowlist`
+already do — `DefaultConfiguration.java:418-419` and `struts-beans.xml:175-176`:
+
+```xml
+    <bean class="org.apache.struts2.ognl.SecurityMemberAccessConfig"/>
+```
+
+The `DefaultConfiguration` registration serves the bootstrap container (`DefaultConfiguration.java:360`) and the
+`XWorkTestCase` harness; the `struts-beans.xml` entry serves the real Dispatcher container. The bootstrap
+container carries only `BOOTSTRAP_CONSTANTS`, so most security constants are absent there, the
+`required = false` setters do not fire, and the bean falls back to defaults — exactly as a `SecurityMemberAccess`
+constructed in that container behaves today.
+
+This failure mode is loud, not silent: `useConfig` is a mandatory `@Inject`, so a container missing the binding
+throws at build time rather than running with empty exclusions.
 
 The `TODO: SpringObjectFactoryTest fails when these are SINGLETON` comment at the top of `bootstrapFactories`
 applies to the `*Factory` beans in the first block, not to this region, where singletons are already the norm.

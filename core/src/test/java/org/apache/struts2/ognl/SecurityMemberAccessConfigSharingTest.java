@@ -148,4 +148,29 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
             super(providerAllowlist, threadAllowlist);
         }
     }
+
+    /**
+     * Dev-mode exclusions must be in force from the first access, with no lazy flip.
+     */
+    public void testDevModeExclusionsApplyWithoutAnAccess() throws Exception {
+        loadButSet(Map.of(
+                StrutsConstants.STRUTS_DEVMODE, "true",
+                StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, "java.lang.ProcessBuilder"));
+
+        SecurityMemberAccess sma = container.getInstance(SecurityMemberAccess.class);
+        Set<String> excluded = SecurityMemberAccessTest.reflectField(sma, "excludedClasses");
+
+        assertTrue("dev-mode exclusions were not applied at startup",
+                excluded.contains("java.lang.ProcessBuilder"));
+    }
+
+    public void testDevModeMethodsAreGone() throws Exception {
+        for (String name : new String[]{"useDevMode", "useDevModeExcludedClasses",
+                "useDevModeExcludedPackageNamePatterns", "useDevModeExcludedPackageNames",
+                "useDevModeExcludedPackageExemptClasses", "useDevModeConfiguration"}) {
+            for (java.lang.reflect.Method method : SecurityMemberAccess.class.getDeclaredMethods()) {
+                assertFalse("SecurityMemberAccess still declares " + name, method.getName().equals(name));
+            }
+        }
+    }
 }

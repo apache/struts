@@ -86,13 +86,6 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
 
-    private volatile boolean isDevModeInit;
-    private boolean isDevMode;
-    private Set<String> devModeExcludedClasses = Set.of(Object.class.getName());
-    private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
-    private Set<String> devModeExcludedPackageNames = emptySet();
-    private Set<String> devModeExcludedPackageExemptClasses = emptySet();
-
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
@@ -283,7 +276,6 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkExclusionList(Object target, Member member) {
-        useDevModeConfiguration();
         Class<?> memberClass = member.getDeclaringClass();
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", memberClass);
@@ -612,41 +604,4 @@ public class SecurityMemberAccess implements MemberAccess {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    protected void useDevMode(String devMode) {
-        this.isDevMode = BooleanUtils.toBoolean(devMode);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
-    public void useDevModeExcludedClasses(String commaDelimitedClasses) {
-        this.devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void useDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        this.devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void useDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
-        this.devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
-    public void useDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        this.devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
-    }
-
-    private void useDevModeConfiguration() {
-        if (!isDevMode || isDevModeInit) {
-            return;
-        }
-        logWarningForFirstOccurrence("devMode", LOG,
-                "DevMode enabled, using DevMode excluded classes and packages for OGNL security enforcement!");
-        isDevModeInit = true;
-        excludedClasses = devModeExcludedClasses;
-        excludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
-        excludedPackageNames = devModeExcludedPackageNames;
-        excludedPackageExemptClasses = devModeExcludedPackageExemptClasses;
-    }
 }

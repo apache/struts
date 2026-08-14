@@ -4,8 +4,6 @@
 **Target:** 7.4.0
 **Date:** 2026-08-14
 **Status:** Design approved, pending implementation plan
-**Open decision:** whether the five dev-mode setters are deleted or deprecated — see "`SecurityMemberAccess`
-changes"
 
 ## Problem
 
@@ -44,7 +42,8 @@ default configuration. Hoist it to a static constant.
 - Parse the OGNL security configuration once per container instead of once per `SecurityMemberAccess`.
 - Preserve OGNL allow/deny semantics exactly. No configuration may become more permissive.
 - Keep source compatibility for 7.4.0: existing subclasses and direct setter callers must continue to compile and
-  behave identically.
+  behave identically. The five dev-mode setters are the one signed-off exception — see "`SecurityMemberAccess`
+  changes".
 - Collapse the two-set allowlist walk introduced by WW-5674 into a single precomputed set.
 
 ## Non-goals
@@ -157,20 +156,21 @@ which seeds its fields by copying immutable set references — no parsing, no `H
 
 **Field added:** `allowlistPackageNamesUnion`.
 
-The five dev-mode setters are proposed for **deletion outright rather than deprecation**. This is a deliberate
-deviation from the "additive and deprecate, no breakage in a minor" policy chosen for the rest of this change, and
-needs explicit sign-off.
+The five dev-mode setters are **deleted outright rather than deprecated** — decided 2026-08-14. This is a
+deliberate, signed-off deviation from the "additive and deprecate, no breakage in a minor" policy that governs the
+rest of this change.
 
-The case for deleting them: they are `public`, but only ever container-injected, with no direct caller anywhere in
-core, plugins, or tests. Preserving them faithfully would mean keeping `isDevMode` plus the four dev-mode set
-fields on the instance and reinstating some form of the lazy flip — that is, keeping precisely the code this
-change exists to delete, to serve a caller that does not demonstrably exist.
+They are `public`, but only ever container-injected, with no direct caller anywhere in core, plugins, or tests.
+Preserving them faithfully would mean keeping `isDevMode` plus the four dev-mode set fields on the instance and
+reinstating some form of the lazy flip — that is, keeping precisely the code this change exists to delete, to
+serve a caller that does not demonstrably exist. Retention in simplified form was rejected because today's
+semantics are subtle enough that any simplification would silently change them: a manual
+`useDevModeExcludedClasses` call accumulates into the dev-mode set, which then *replaces* — rather than unions
+with — `excludedClasses` on first access.
 
-The case against: they are public methods on a user-overridable bean, so a deployment could in principle call
-them, and removal in a minor release would break it at compile time. Deprecating them while preserving exact
-semantics is not cheap, because today's semantics are subtle — a manual `useDevModeExcludedClasses` call
-accumulates into the dev-mode set, which then *replaces* (not unions with) `excludedClasses` on first access. Any
-simplified retention would silently change that.
+The accepted risk is that a deployment calling these methods directly breaks at compile time on upgrade to 7.4.0.
+This is a loud, immediate failure with an obvious fix, not a silent behavioural change, which is what makes it
+acceptable where the constructor break discussed below was not.
 
 The remaining eleven configuration setters stay as `@Deprecated` methods with their `@Inject` annotations removed.
 They keep mutating that instance exactly as they do now. Deprecation is by annotation only — no runtime warnings,
@@ -298,3 +298,6 @@ OGNL allow/deny semantics are unchanged.
   free here by the union collapse. The remaining visibility narrowing stays with that ticket.
 - **WW-5667** — the parent should be updated to note that this ticket, not WW-5674, is the one expected to move
   the reported 9%.
+- **Migration guide entry for 7.4.0** — the removal of the five dev-mode setters is a source-breaking change in a
+  minor release and must be called out in the Version Notes and Migration Guide, however narrow the affected
+  audience.

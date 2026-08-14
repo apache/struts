@@ -44,13 +44,28 @@ pipeline {
         stage('Detect changes') {
           steps {
             script {
-              // Skip the build when a push only touched .claude/ - agent
+              // Skip the build when a change only touched .claude/ - agent
               // instructions, not code. Fails open: anything unexpected (no
-              // previous successful build, an unreachable commit, a git error)
-              // reports true and the build runs as before.
+              // baseline, an unreachable commit, a git error) reports true and
+              // the build runs as before.
+              //
+              // On a pull request the baseline is the merge base with the
+              // target branch, NOT GIT_PREVIOUS_SUCCESSFUL_COMMIT. That pointer
+              // is the previous head of this same PR, so once the PR is rebased
+              // (or the target is merged into it) everything the target branch
+              // absorbed in the meantime looks like a change of the PR's own.
+              // The multibranch checkout already fetches the target branch, so
+              // origin/$CHANGE_TARGET resolves here. On a branch build there is
+              // no target and the previous successful commit is the only
+              // baseline available.
               env.CODE_CHANGED = sh(returnStdout: true, script: '''
                 set -u
-                base="${GIT_PREVIOUS_SUCCESSFUL_COMMIT:-}"
+                target="${CHANGE_TARGET:-}"
+                if [ -n "$target" ]; then
+                  base=$(git merge-base "origin/${target}" HEAD 2>/dev/null || true)
+                else
+                  base="${GIT_PREVIOUS_SUCCESSFUL_COMMIT:-}"
+                fi
                 if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
                   echo true
                   exit 0

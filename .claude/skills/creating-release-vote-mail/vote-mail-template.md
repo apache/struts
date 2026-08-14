@@ -114,9 +114,10 @@ On behalf of the Apache Struts project
 ```
 
 Hard-wrap the body at 72 columns, continuation lines unindented, so the list stays legible in
-the ASF archives and in quoted replies. Gmail reflows the wrap and rewrites the link lines when
-it stores the draft — see *Gmail mangles the links* in [`SKILL.md`](SKILL.md) for why the body
-also has to be handed over as a file.
+the ASF archives and in quoted replies. Gmail reflows the wrap, rewrites the link lines, and
+adds a `text/html` part that ASF lists reject — see *The mail must be text/plain* in
+[`SKILL.md`](SKILL.md) for why the body also has to be handed over as a file, and what the
+release manager has to do in the compose window before sending.
 
 ## Frozen text
 
@@ -147,3 +148,5 @@ repository does not.
 - [ ] Exactly one mail
 - [ ] Body also saved to a file and its path handed over, so the mangled links and wrap can be
       fixed with one paste
+- [ ] `htmlBody` not passed to the draft tool
+- [ ] Handover states: plain-text mode on, paste the file, send from the `@apache.org` identity

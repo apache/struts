@@ -7,21 +7,29 @@ description: Use when running or planning an Apache Struts release on any mainte
 
 ## Overview
 
-A release is seven phases with a gate between each. Most of the *writing* is already covered by
-other skills; this one owns the **order, the gates, and the mechanics** — and it is the only
-place that covers the last mile after the vote passes.
+A release is seven phases with a gate between each.
+
+**The process itself is published**, at
+[Release Guidelines](https://struts.apache.org/release-guidelines.html) — every phase, every
+command, the release policy and the one-time setup a new release manager needs. It is the source
+of truth, it is maintained in `apache/struts-site` (`source/release-guidelines.md`), and it is
+what you follow.
+
+This skill is the agent's half of it: the judgement about *ordering* and *when to stop*, which
+sibling skill owns which document, and the points where a step is the release manager's to take
+rather than yours. [`release-runbook.md`](release-runbook.md) holds that last part.
 
 **Core principle:** a phase is finished when its gate is verifiable by someone other than you.
 "I ran the command" is not a gate; "the URL resolves" is.
 
-[`release-runbook.md`](release-runbook.md) holds the commands. This page holds the sequence and
-the judgement.
+**Corrections go to the site page.** If a release teaches you something the guidelines get wrong,
+fix them in a PR to `apache/struts-site`. Only what is genuinely agent-specific belongs here.
 
 ## The phases
 
 | # | Phase | Gate before moving on |
 |---|---|---|
-| 1 | Prepare | Branch green, versions decided, BOM in sync |
+| 1 | Prepare | Branch green, version decided, parent poms released |
 | 2 | Cut | Tag pushed, artifacts in a **closed** Nexus staging repo |
 | 3 | Stage | Assemblies in `dist/dev`, Version Notes page live, `[TEST]` mail sent |
 | 4 | Vote | 72 h elapsed, three binding `+1`, result mail sent |
@@ -51,7 +59,8 @@ handled with no release in flight at all. It is a skill in its own right, invoke
 needed. Phase 7 is the reverse direction: *if* this release carries a security fix, then once
 phase 6 is done, go and follow that skill.
 
-This skill covers what none of them do: phases 1, 2, 5 and 6, and the ordering that binds them.
+Phases 1, 2, 5 and 6 have no sibling skill — the guidelines carry those steps, and this skill
+carries the ordering that binds them.
 
 ## Two lines, two releases
 
@@ -95,24 +104,17 @@ and gives operators nothing to do about it.
 tags is the vulnerability whatever the commit messages say. That is a reason to bundle it with
 unrelated work, or to publish the bulletins with the release, not a reason to pretend otherwise.
 
-## What the old cwiki page gets wrong
+## The cwiki release pages are retired
 
-[Building Struts 2 — Normal release](https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27832970)
-was last revised in **2017** and is the page a release manager is most likely to find. It is
-still right about JIRA, `release:prepare`/`release:perform`, Nexus and `dist.apache.org`, and
-wrong about everything downstream:
+The wiki pages a release manager used to land on — *Building Struts 2 — Normal release*,
+*Fast track release*, *Creating and Signing a Distribution*, *One time steps*,
+*Sample announcements* — were retired in August 2026 and now carry nothing but a pointer to
+[Release Guidelines](https://struts.apache.org/release-guidelines.html). Their old content
+survives only in page history, where it describes a process last revised between 2013 and 2017:
+`develop`/`master` branches, `people.apache.org`, an svn checkout of the production site.
 
-| It says | Reality |
-|---|---|
-| Branches `develop` / `master` | `main` and `support/struts-6-x-x` |
-| Tag `STRUTS_2_3_x` | `STRUTS_X_Y_Z` for the version being cut |
-| Export the wiki to `/docs` | The site no longer embeds exported Confluence pages |
-| Build the site with Docker Jekyll, commit `content/` | The site builds from a PR to `apache/struts-site` |
-| `svn co .../infra/websites/production/struts` | Gone; publishing is the merge |
-| `people.apache.org`, `source/announce.md`, `downloads.html` | Dead host, and the files are `announce-YYYY.md`, `releases.md` and `index.html` |
-
-Treat it as history. If you follow it, you will publish to a repository that no longer serves
-the site.
+**Never restore a step from that history.** If something in the guidelines looks incomplete, the
+answer is the last release, not the last wiki revision.
 
 ## Gates that are actually load-bearing
 
@@ -132,9 +134,10 @@ the site.
 - Announcing before the 24-hour mirror wait
 - Any severity, CVE, S2-XXX or bulletin link in release paperwork
 - A bulletin unrestricted before the fixed release is downloadable
-- Following the 2017 cwiki page for anything after the Nexus step
+- Reviving a step from the history of a retired cwiki page
 - One release "covering" both maintenance lines
 - Inferring the release version from the `-SNAPSHOT` in the pom
+- Closing or releasing a Nexus staging repository yourself — that is the release manager's login
 
 ## Common Mistakes
 
@@ -145,4 +148,5 @@ the site.
 | "I'll announce now and fix the site after" | The announcement links the site. Merge the site PR first. |
 | "The 6.x fix is the same change, so one announcement covers both" | Two artifacts, two downloads, two sets of affected users. |
 | "The pom says 7.3.1-SNAPSHOT, so this is 7.3.1" | The placeholder is not a decision. Semver impact decides. |
-| "The cwiki page is the official process" | It is the 2017 process. Where they disagree, this skill is current. |
+| "The process is documented in this skill" | It is documented on the site. This skill adds ordering, ownership and hand-offs. |
+| "I found the release steps on the wiki" | Those pages are stubs now. Their history is the 2013–2017 process. |

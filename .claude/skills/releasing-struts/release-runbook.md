@@ -3,10 +3,25 @@
 The commands, in order. [`SKILL.md`](SKILL.md) holds the sequence, the gates and the judgement;
 this file is what you type.
 
-**Provenance.** Everything marked ✔ was verified against the repository or a completed release
-(7.3.0 / 6.11.0, August 2026). Everything marked **⚠ unverified** is carried over from the 2017
-cwiki page and has *not* been confirmed against a current run — check it before relying on it,
-and correct this file when you do.
+**Provenance.** Everything marked ✔ was verified against the repository, a completed release
+(7.3.0 / 6.11.0, August 2026), or the release manager's scripts. Everything marked
+**⚠ unverified** is carried over from the 2017 cwiki page and has *not* been confirmed against a
+current run — check it before relying on it, and correct this file when you do.
+
+**The scripts.** Phases 3 and 5 ship with this skill, in [`scripts/`](scripts):
+
+| Script | Phase | What it does |
+|---|---|---|
+| [`stage-assemblies.sh`](scripts/stage-assemblies.sh) | 3 | Closed staging repo → `dist/dev`, renamed and re-hashed |
+| [`promote-dist.sh`](scripts/promote-dist.sh) | 5 | `dist/dev` → `dist/release` |
+
+Both take `$VERSION` from the environment and refuse to run without it. They are ports of the
+release manager's local toolbox (`~/Projects/Apache/minatour/bin/`), unchanged in behaviour
+apart from `set -eu`, the `$VERSION` guard, tolerant hash cleanup and an explicit svn commit
+message — each deviation is listed in the script's own header.
+
+A third script in that toolbox, `update-struts2-draft-docs.sh`, exports Confluence into the
+retired svn production site. **It is dead and is deliberately not ported.** Do not run it.
 
 ---
 
@@ -91,17 +106,30 @@ two; drop the stale one, checking the dates.
 
 ## Phase 3 — Stage
 
-⚠ unverified: the assembly-copying script on the cwiki page targets `people.apache.org`, which no
-longer exists. What must be true at the end is checkable:
+✔ [`scripts/stage-assemblies.sh`](scripts/stage-assemblies.sh) does this. It runs on your own
+machine — the cwiki's "log in to `people.apache.org`" step is dead, that host is gone.
+
+```bash
+VERSION=7.3.0 .claude/skills/releasing-struts/scripts/stage-assemblies.sh
+```
+
+It fetches `zip`, `md5`, `sha1` and `asc` from the **closed** staging repo, strips the
+`2-assembly` infix, drops the `.pom*` files and the legacy `md5`/`sha1` hashes, generates
+`.sha256` and `.sha512` locally with `shasum`, prints what it is about to publish, then
+`svn add`s the directory to `dist/dev/struts` and commits. It needs your ASF svn credentials.
+
+✔ Gate, verified against `dist/release/struts/7.3.0/`:
 
 ```
 https://dist.apache.org/repos/dist/dev/struts/$VERSION/
 ```
 
-holds the assemblies. ✔ Verified naming, from `dist/release/struts/7.3.0/`: `struts-$VERSION-all.zip`,
-`-apps.zip`, `-docs.zip`, `-lib.zip`, `-src.zip`, each with `.asc`, `.sha256` and `.sha512`
-alongside. The `2-assembly` infix Nexus uses is stripped. `KEYS` lives one level up, in
-`dist/release/struts/`.
+holds `struts-$VERSION-all.zip`, `-apps.zip`, `-docs.zip`, `-lib.zip` and `-src.zip`, each with
+`.asc`, `.sha256` and `.sha512` beside it. No `.md5`, no `.sha1`, no `.pom`. `KEYS` lives one
+level up, in `dist/release/struts/`.
+
+**The staging repo must be closed before you run this** — the script pulls from the staging
+*group* URL, and an open repo serves nothing there.
 
 Everything else in this phase belongs to **`creating-version-notes`**: the Version Notes page,
 its Staging Repository block, the Migration Guide entry, the GitHub release (created as a
@@ -117,12 +145,12 @@ its Staging Repository block, the Migration Guide entry, the GitHub release (cre
 
 ## Phase 5 — Promote
 
-⚠ unverified command, from the cwiki:
+✔ [`scripts/promote-dist.sh`](scripts/promote-dist.sh) does this — one server-side `svn mv`:
 
 ```bash
-svn mv https://dist.apache.org/repos/dist/dev/struts/$VERSION/ \
-       https://dist.apache.org/repos/dist/release/struts/ \
-       -m "Release Struts $VERSION"
+VERSION=7.3.0 .claude/skills/releasing-struts/scripts/promote-dist.sh
+# svn mv https://dist.apache.org/repos/dist/dev/struts/$VERSION/ \
+#        https://dist.apache.org/repos/dist/release/struts/ -m "Release Struts $VERSION"
 ```
 
 Then **release** the staging repository in Nexus, which replicates to Maven Central.

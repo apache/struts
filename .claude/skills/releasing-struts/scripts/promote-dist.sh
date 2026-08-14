@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Phase 5 - promote a release that passed its vote, moving the assemblies from
+# dist/dev to dist/release. This is the point at which the artifacts start
+# replicating to the mirrors.
+#
+# Usage:  VERSION=7.3.0 ./promote-dist.sh
+#
+# Run it only after the vote has passed. Wait 24 hours after this before
+# announcing anything - the announcement links a download page that the mirrors
+# have to have caught up with first.
+#
+# Ported from the release manager's local toolbox
+# (~/Projects/Apache/minatour/bin/update-struts2-dist.sh). Behaviour is unchanged
+# except:
+#   - set -eu and a required $VERSION, so an unset variable cannot move the whole
+#     dev directory
+#   - an explicit -m, so the move does not drop into $EDITOR
+
+set -eu
+
+if [ -z "${VERSION:-}" ]; then
+    echo "VERSION is not set. Usage: VERSION=7.3.0 $0" >&2
+    exit 1
+fi
+
+svn mv "https://dist.apache.org/repos/dist/dev/struts/$VERSION/" \
+       "https://dist.apache.org/repos/dist/release/struts/" \
+       -m "Release Struts $VERSION"
+
+echo "Done - verify https://dist.apache.org/repos/dist/release/struts/$VERSION/"
+echo "Now release the staging repository in Nexus, then wait 24 hours before announcing."

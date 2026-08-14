@@ -16,6 +16,11 @@
 name: Java Maven
 
 on:
+  # Deliberately NOT filtered by path. "Build and Test (JDK 17)" is a required
+  # status check in .asf.yaml, and a workflow skipped by path filtering never
+  # reports its checks - they stay Pending and the pull request can never be
+  # merged. The build job is skipped by condition instead (see `changes` below),
+  # which does report, as "skipped", and satisfies the requirement.
   pull_request:
   push:
     branches:
@@ -23,6 +28,8 @@ on:
       - 'develop'
       - 'release/*'
       - 'support/*'
+    paths-ignore:
+      - '.claude/**'
   workflow_dispatch:
   workflow_call:
 
@@ -33,8 +40,44 @@ env:
   LANG: en_US.utf8
 
 jobs:
+  changes:
+    name: Detect changes outside .claude
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Check which paths the pull request touches
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "Not a pull request - building."
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(gh api --paginate \
+            "repos/${{ github.repository }}/pulls/${{ github.event.number }}/files" \
+            --jq '.[].filename')
+          echo "Changed files:"
+          printf '%s\n' "$files"
+          # Anything outside .claude/ means a real build is needed; an empty
+          # diff, or one confined to .claude/, does not. Tested by emptiness
+          # rather than with `grep -qv`, whose exit status is not reliable
+          # across grep implementations.
+          outside=$(printf '%s\n' "$files" | grep -vE '^(\.claude/|$)' || true)
+          if [ -n "$outside" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Only .claude/ changed - skipping the build."
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
     name: Build and Test (JDK ${{ matrix.java }})${{ matrix.profile == '-Pjakartaee11' && ' (Jakarta EE 11 + Spring 7)' || matrix.profile }}
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

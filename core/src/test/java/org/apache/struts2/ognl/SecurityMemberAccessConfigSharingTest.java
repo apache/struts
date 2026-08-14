@@ -18,8 +18,10 @@
  */
 package org.apache.struts2.ognl;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.XWorkTestCase;
 
+import java.util.Map;
 import java.util.Set;
 
 public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
@@ -27,10 +29,38 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
     /**
      * Reference identity proves no re-parsing occurred: any re-parse necessarily
      * allocates a fresh set.
+     * <p>
+     * The instance-to-instance {@code assertSame} calls below are necessary but not sufficient:
+     * for a field whose default is {@link java.util.Collections#emptySet()}, two independently
+     * <em>unseeded</em> instances would also compare same, since {@code emptySet()} returns a
+     * JVM-wide singleton. Only {@code excludedClasses}, whose default {@code Set.of(...)} allocates
+     * a fresh instance per object, is proven by the instance-to-instance form alone. Every field is
+     * therefore additionally compared directly against the shared {@link SecurityMemberAccessConfig}
+     * bean, which fails on omission regardless of the default's identity.
+     * <p>
+     * That direct comparison is itself vacuous unless the configured value actually differs from the
+     * hardcoded default: {@code SecurityMemberAccess} and {@code SecurityMemberAccessConfig} share the
+     * same hardcoded defaults, so an unseeded field and a config parsed from an all-default container
+     * would also compare equal/same by coincidence. The container is therefore reloaded here with every
+     * relevant constant set away from its default, so a config value only matches the instance's field
+     * when {@code useConfig} actually ran.
      */
     public void testConfigDerivedSetsAreSharedAcrossInstances() throws Exception {
+        loadButSet(Map.of(
+                StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "false",
+                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, "^org\\.apache\\.struts2\\.ognl\\.testpkg\\..*",
+                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg",
+                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, "java.lang.String",
+                StrutsConstants.STRUTS_ALLOWLIST_ENABLE, "true",
+                StrutsConstants.STRUTS_ALLOWLIST_CLASSES, "java.lang.String",
+                StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg",
+                StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, "true",
+                StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, "true",
+                StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, "true"));
+
         SecurityMemberAccess first = container.getInstance(SecurityMemberAccess.class);
         SecurityMemberAccess second = container.getInstance(SecurityMemberAccess.class);
+        SecurityMemberAccessConfig config = container.getInstance(SecurityMemberAccessConfig.class);
 
         assertNotSame("expected a prototype bean", first, second);
 
@@ -41,11 +71,41 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
         Set<String> firstPackages = SecurityMemberAccessTest.reflectField(first, "excludedPackageNames");
         Set<String> secondPackages = SecurityMemberAccessTest.reflectField(second, "excludedPackageNames");
         assertSame("excluded package names were re-parsed per instance", firstPackages, secondPackages);
+
+        assertSame("excludedClasses not seeded from config",
+                config.getExcludedClasses(), SecurityMemberAccessTest.reflectField(first, "excludedClasses"));
+        assertSame("excludedPackageNamePatterns not seeded from config",
+                config.getExcludedPackageNamePatterns(), SecurityMemberAccessTest.reflectField(first, "excludedPackageNamePatterns"));
+        assertSame("excludedPackageNames not seeded from config",
+                config.getExcludedPackageNames(), SecurityMemberAccessTest.reflectField(first, "excludedPackageNames"));
+        assertSame("excludedPackageExemptClasses not seeded from config",
+                config.getExcludedPackageExemptClasses(), SecurityMemberAccessTest.reflectField(first, "excludedPackageExemptClasses"));
+        assertSame("allowlistClasses not seeded from config",
+                config.getAllowlistClasses(), SecurityMemberAccessTest.reflectField(first, "allowlistClasses"));
+        assertSame("allowlistPackageNames not seeded from config",
+                config.getAllowlistPackageNames(), SecurityMemberAccessTest.reflectField(first, "allowlistPackageNames"));
+
+        boolean firstAllowStaticFieldAccess = SecurityMemberAccessTest.reflectField(first, "allowStaticFieldAccess");
+        assertEquals("allowStaticFieldAccess not seeded from config",
+                config.isAllowStaticFieldAccess(), firstAllowStaticFieldAccess);
+        boolean firstEnforceAllowlistEnabled = SecurityMemberAccessTest.reflectField(first, "enforceAllowlistEnabled");
+        assertEquals("enforceAllowlistEnabled not seeded from config",
+                config.isEnforceAllowlistEnabled(), firstEnforceAllowlistEnabled);
+        boolean firstDisallowProxyObjectAccess = SecurityMemberAccessTest.reflectField(first, "disallowProxyObjectAccess");
+        assertEquals("disallowProxyObjectAccess not seeded from config",
+                config.isDisallowProxyObjectAccess(), firstDisallowProxyObjectAccess);
+        boolean firstDisallowProxyMemberAccess = SecurityMemberAccessTest.reflectField(first, "disallowProxyMemberAccess");
+        assertEquals("disallowProxyMemberAccess not seeded from config",
+                config.isDisallowProxyMemberAccess(), firstDisallowProxyMemberAccess);
+        boolean firstDisallowDefaultPackageAccess = SecurityMemberAccessTest.reflectField(first, "disallowDefaultPackageAccess");
+        assertEquals("disallowDefaultPackageAccess not seeded from config",
+                config.isDisallowDefaultPackageAccess(), firstDisallowDefaultPackageAccess);
     }
 
     public void testConfigBeanIsASingleton() {
-        assertSame(container.getInstance(SecurityMemberAccessConfig.class),
-                container.getInstance(SecurityMemberAccessConfig.class));
+        SecurityMemberAccessConfig instance = container.getInstance(SecurityMemberAccessConfig.class);
+        assertNotNull("SecurityMemberAccessConfig is not registered in the container", instance);
+        assertSame(instance, container.getInstance(SecurityMemberAccessConfig.class));
     }
 
     /**

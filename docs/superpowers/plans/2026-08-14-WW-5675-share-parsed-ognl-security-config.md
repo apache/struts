@@ -852,7 +852,41 @@ WW-5674 merged the two allowlist walks with a three-argument helper. With the co
 
 - [ ] **Step 1: Write the failing test**
 
-Append to `core/src/test/java/org/apache/struts2/ognl/SecurityMemberAccessPackageMatchingTest.java`. Do not modify or delete the frozen oracles already in that file.
+Work in `core/src/test/java/org/apache/struts2/ognl/SecurityMemberAccessPackageMatchingTest.java`. **Do not modify or delete the frozen oracles** (`legacyPrefixMatch`, `legacyToPackageName`) or the `PACKAGE_NAMES` / `CANDIDATE_SETS` / `classShapes()` fixtures. This file uses AssertJ (`assertThat`), not JUnit assertions â€” match that style.
+
+Narrowing the signatures in this task breaks three tests already in the file. Handle them exactly as follows; do not improvise, and do not delete a test merely because it fails to compile.
+
+**a. Convert `indexWalkMatchesLegacyAcrossPackageNameShapes` to the two-argument walk:**
+
+```java
+    @Test
+    public void indexWalkMatchesLegacyAcrossPackageNameShapes() {
+        for (String packageName : PACKAGE_NAMES) {
+            for (Set<String> candidates : CANDIDATE_SETS) {
+                assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, candidates))
+                        .as("packageName=[%s] candidates=%s", packageName, candidates)
+                        .isEqualTo(legacyPrefixMatch(packageName, candidates));
+            }
+        }
+    }
+```
+
+**b. Convert `bothSetsEmptyShortCircuitsToFalse`, renaming it since there is now one set:**
+
+```java
+    @Test
+    public void emptyCandidateSetShortCircuitsToFalse() {
+        for (String packageName : PACKAGE_NAMES) {
+            assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, emptySet()))
+                    .as("packageName=[%s] with no configured packages", packageName)
+                    .isFalse();
+        }
+    }
+```
+
+**c. Delete `twoSetOverloadEqualsDisjunctionOfSingleSetCalls` entirely.** It characterises the equivalence of the three-argument overload against two single-set calls; that overload no longer exists, so the property it asserts is gone. This is the one test in this file you may remove.
+
+**d. Append these two new tests:**
 
 ```java
     /**
@@ -866,9 +900,7 @@ Append to `core/src/test/java/org/apache/struts2/ognl/SecurityMemberAccessPackag
 
         Set<String> union = SecurityMemberAccessTest.reflectField(sma, "allowlistPackageNamesUnion");
 
-        assertTrue("configured package missing", union.contains("com.example.app"));
-        assertTrue("required Struts package dropped from the allowlist",
-                union.contains("org.apache.struts2.components"));
+        assertThat(union).contains("com.example.app", "org.apache.struts2.components");
     }
 
     @Test
@@ -877,20 +909,10 @@ Append to `core/src/test/java/org/apache/struts2/ognl/SecurityMemberAccessPackag
 
         Set<String> union = SecurityMemberAccessTest.reflectField(sma, "allowlistPackageNamesUnion");
 
-        assertTrue(union.contains("org.apache.struts2.components"));
-        assertTrue(union.contains("org.apache.struts2.views.jsp"));
-        assertTrue(union.contains("org.apache.struts2.validator.validators"));
-    }
-
-    @Test
-    public void singleSetWalkMatchesTheFrozenOracle() {
-        for (String packageName : PACKAGE_NAMES) {
-            for (Set<String> candidates : CANDIDATE_SETS) {
-                assertEquals("mismatch for " + packageName + " against " + candidates,
-                        legacyPrefixMatch(packageName, candidates),
-                        SecurityMemberAccess.isPackageBelongsToPackages(packageName, candidates));
-            }
-        }
+        assertThat(union).contains(
+                "org.apache.struts2.components",
+                "org.apache.struts2.views.jsp",
+                "org.apache.struts2.validator.validators");
     }
 ```
 
@@ -1017,7 +1039,7 @@ Remove the now-unused `emptySet` static import only if no other usage remains â€
 - [ ] **Step 6: Run the package-matching tests**
 
 Run: `mvn test -DskipAssembly -pl core -Dtest=SecurityMemberAccessPackageMatchingTest`
-Expected: PASS, 12 tests.
+Expected: PASS. The file had 9 tests; one is deleted and two are added, so expect 10.
 
 - [ ] **Step 7: Run the security suites**
 

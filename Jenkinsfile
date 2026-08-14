@@ -41,9 +41,37 @@ pipeline {
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
           }
         }
+        stage('Detect changes') {
+          steps {
+            script {
+              // Skip the build when a push only touched .claude/ - agent
+              // instructions, not code. Fails open: anything unexpected (no
+              // previous successful build, an unreachable commit, a git error)
+              // reports true and the build runs as before.
+              env.CODE_CHANGED = sh(returnStdout: true, script: '''
+                set -u
+                base="${GIT_PREVIOUS_SUCCESSFUL_COMMIT:-}"
+                if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+                  echo true
+                  exit 0
+                fi
+                outside=$(git diff --name-only "$base" HEAD | grep -vE '^(\\.claude/|$)' || true)
+                if [ -n "$outside" ]; then
+                  echo true
+                else
+                  echo false
+                fi
+              ''').trim()
+              echo "Changes outside .claude/: ${env.CODE_CHANGED}"
+            }
+          }
+        }
       }
     }
     stage('JDK 21') {
+      when {
+        expression { env.CODE_CHANGED != 'false' }
+      }
       agent {
         label 'ubuntu'
       }
@@ -74,6 +102,9 @@ pipeline {
       }
     }
     stage('JDK 17') {
+      when {
+        expression { env.CODE_CHANGED != 'false' }
+      }
       agent {
         label 'ubuntu'
       }

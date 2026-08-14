@@ -92,22 +92,47 @@ path you hand over. **Never send.**
 Sending opens a binding vote on a permanently archived public list and commits the PMC to the
 artifacts as staged.
 
-### Gmail mangles the links — hand over a paste-ready body
+### The mail must be text/plain, and no tool argument achieves that
 
-Gmail's linkifier rewrites URLs server-side as the draft is stored, so the four link lines
-arrive as `https://www.google.com/url?q=...&source=gmail&ust=...` and the 72-column wrap is
-reflowed. There is no way to pass the body through the Gmail tool that avoids it:
+An ASF list mail carries **one `text/plain` part and nothing else**. A `text/html` part is a
+delivery failure, not a cosmetic one — `announce@apache.org` rejects it permanently:
 
-| Body passed as | Result |
+```
+ezmlm-reject: fatal: Sorry, a message part has an unacceptable MIME Content-Type: 'text/html' (#5.2.3)
+```
+
+**A draft created through the Gmail tool is an HTML draft, whatever you pass it.** Gmail
+synthesises a `text/html` alternative when the draft is sent, linkifies every URL into
+`<a href>`, and reflows the plain part:
+
+| Body passed as | What is actually sent |
 |---|---|
-| `body` only | Wrapped hrefs; plain rendering shows `bare-url <google.com/url?q=…>` |
-| `htmlBody` only | No plain-text part at all — HTML-only mail, wrong for an ASF list |
-| both | Worst: the plain part's *visible* text becomes the wrapped URL |
+| `body` only | `multipart/alternative` — the HTML part is generated for you |
+| `htmlBody` only | HTML-only, no plain part at all |
+| both | Same, plus the plain part's visible text becomes the wrapped URL |
 
-`body` only is the least-bad, and is what to use. **Also write the exact body to a file and
-give the release manager its path.** Pasting plain text over the compose window restores both
-the bare URLs and the wrap, making the fix one select-all-paste instead of four hand-edited
-URLs.
+Gmail's linkifier also rewrites URLs server-side, so link lines can arrive as
+`https://www.google.com/url?q=...&source=gmail&ust=...`.
+
+**Do not rely on a bounce to catch this.** On the 2026-08-14 advisory run the same message was
+rejected by `announce@apache.org` and accepted by `user@struts.apache.org` — the HTML mail
+reached one list and not the other, from a single send.
+
+So the deliverable is three things, and it is incomplete without any of them:
+
+1. A Gmail draft with To, Bcc, Subject and `body`. **Never `htmlBody`.**
+2. The identical body written to a file, whose path you hand over.
+3. In your handover, the sending instruction: **switch the compose window to plain-text mode**
+   (⋮ → *Plain text mode*), then select-all and paste the file over the body.
+
+Step 3 is what actually produces the plain-text mail; steps 1 and 2 only make it one paste
+instead of four hand-edited URLs. Hard-wrap the file at 72 columns — a paste into plain-text
+mode keeps the wrapping the file has, and Gmail reflows anything longer.
+
+**Say which identity to send from: `@apache.org`.** The Gmail account's default sender is a
+personal address, and a vote arriving in the `dev@` archive from one reads as an outsider
+calling a PMC vote. Some ASF lists refuse it outright — `announcements@struts.apache.org`
+answers *"Must be sent from an @apache.org address."*
 
 **Never re-run the draft-update tool on a draft whose links have already been fixed by hand** —
 it re-mangles them. A draft the release manager has corrected is finished; leave it alone.
@@ -141,6 +166,8 @@ A vote opened on a 404 burns the window before anyone can test.
 - Severity, CVE, S2-XXX, bulletin link or reporter detail anywhere, on any channel
 - `user@struts.apache.org` in any header, including Cc
 - Sending rather than drafting
+- `htmlBody` passed to the draft tool, for any reason
+- A draft handed over without the plain-text-mode instruction and the body file
 - A new paragraph inserted into the vote boilerplate
 - A quality checkbox arriving pre-ticked
 - An opening sentence carried over from the previous release
@@ -158,3 +185,5 @@ A vote opened on a 404 burns the window before anyone can test.
 | "I'm adding to the boilerplate, not changing it" | Insertion is editing. The vote call is byte-frozen. |
 | "The release notes leave out what integrators need" | Then the page needs fixing. The mail renders the page. |
 | "Last release's opening sentence fits" | It described last release. Write the one this list supports. |
+| "I passed `body`, not `htmlBody`, so it's plain text" | Gmail generates the HTML part itself. The format is set in the compose window. |
+| "It went through last time, so HTML is tolerated" | Lists differ. One accepted the same message the other rejected. |

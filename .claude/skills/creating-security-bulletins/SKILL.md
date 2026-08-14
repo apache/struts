@@ -1,6 +1,6 @@
 ---
 name: creating-security-bulletins
-description: Use when drafting, updating, or reviewing an S2-XXX security bulletin on the Struts cwiki, when preparing bulletin text ahead of a CVE request, or when deciding how much detail about a fixed vulnerability is safe to publish.
+description: Use when drafting, updating, or reviewing an S2-XXX security bulletin on the Struts cwiki, when preparing bulletin text ahead of a CVE request, when publishing a bulletin and announcing it to the ASF lists, or when deciding how much detail about a fixed vulnerability is safe to publish.
 ---
 
 # Creating Security Bulletins
@@ -159,6 +159,52 @@ Bulletins stay restricted until the coordinated publication date.
 
 Expected on the Struts wiki: read and update limited to the author plus `struts-committers`.
 
+Publication is clearing them **completely** — read *and* update, both empty, matching every
+already-published bulletin. Verify with an unauthenticated fetch of the public URL, not with the
+API's response: the tool reporting success is not the page being readable.
+
+## Announcing it: the mail is text/plain, or it does not arrive
+
+Once the page is public the advisory goes to the lists. **The mail carries one `text/plain`
+part and nothing else.** A `text/html` part is a delivery failure — `announce@apache.org`
+rejects it permanently:
+
+```
+ezmlm-reject: fatal: Sorry, a message part has an unacceptable MIME Content-Type: 'text/html' (#5.2.3)
+```
+
+**Do not rely on a bounce to catch it.** On the S2-070 run, 2026-08-14, one send was rejected
+by `announce@apache.org` and *accepted* by `user@struts.apache.org`. The HTML advisory reached
+the user list. A partial failure looks like success in the Sent folder.
+
+Two unrelated defects bounced that morning, each from a different list:
+
+| Defect | What the list says |
+|---|---|
+| A `text/html` part | `unacceptable MIME Content-Type: 'text/html' (#5.2.3)` |
+| Wrong sender identity | `Must be sent from an @apache.org address.` |
+
+**The CVE tool generates both mails — use them.** Each record on `cveprocess.apache.org` has an
+*OSS/ASF Emails* tab holding a finished `oss-security` mail and a finished ASF-lists mail, built
+from the record's own affected ranges, description, credit and references, with send buttons
+that go through ASF infrastructure rather than a personal mailbox. Copying that text is how the
+mail stays consistent with the CVE record; composing a fresh one is how the two drift.
+
+If you draft in Gmail instead, the deliverable is three things and is incomplete without any:
+
+1. A draft with To, Bcc, Subject and `body`. **Never `htmlBody`** — and passing `body` alone
+   does not make the mail plain text; Gmail generates the HTML part itself on send.
+2. The identical body in a file, whose path you hand over, hard-wrapped at 72 columns.
+3. The sending instruction in your handover: **plain-text mode on** (⋮ → *Plain text mode*),
+   paste the file over the body, send from the `@apache.org` identity.
+
+The `oss-security` copy is a separate mail with no Cc and no Bcc — not the ASF mail with an
+extra recipient.
+
+**Recipients are not interchangeable.** The tool's ASF mail addresses `announce@apache.org` and
+`dev@`; Struts practice adds `user@struts.apache.org`, which is the list operators actually
+read. `announcements@struts.apache.org` takes only `@apache.org` senders.
+
 ## Start from the template, never from a previous bulletin
 
 **[`bulletin-template.md`](bulletin-template.md)** — the field reference, per-section guidance, pre-publication checklist, and a storage-format skeleton ready to POST to the Confluence API. **It is the source of truth.**
@@ -189,6 +235,10 @@ Read the whole page and rewrite it; do not patch the fields you happen to notice
 - No statement of who is *not* affected, when exposure depends on a plugin or an opt-in setting
 - Writing a page from content you read earlier in the session without re-fetching it first
 - Publishing without re-checking restrictions
+- Treating an API success as proof the page is publicly readable
+- `htmlBody` passed to the draft tool, for any reason
+- An announcement composed from scratch when the CVE record's *OSS/ASF Emails* tab holds one
+- A draft handed over without the plain-text-mode instruction and the body file
 - A severity rating chosen by feel, or by reachability alone, without checking it against the published scale
 - Rating something Low because the feature is opt-in — opt-in is the definition of Moderate
 
@@ -211,3 +261,6 @@ Read the whole page and rewrite it; do not patch the fields you happen to notice
 | "The patch is reviewed, so the release will contain it" | Reviewed is not merged. Re-check at publication, not at drafting. |
 | "Copying the last bulletin is quicker than the template" | It is how another advisory's CVE ships on your page. Copy the template. |
 | "I read the page a few minutes ago" | Someone else may have written to it since. Re-fetch, then write. There is no conflict warning. |
+| "I passed `body`, not `htmlBody`, so it's plain text" | Gmail generates the HTML part itself on send. The format is decided in the compose window. |
+| "It reached the lists, so the format was fine" | One list accepted the same message another rejected. Check every recipient, not the Sent folder. |
+| "Writing the mail myself is quicker than opening the CVE tool" | The tool's text is generated from the record. Hand-written text is how the mail and the CVE drift apart. |

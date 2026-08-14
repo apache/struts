@@ -22,6 +22,8 @@ Servers/
 
 # Scripts
 *.sh
+# ... except the ones that are part of a skill and have to travel with it
+!.claude/skills/**/scripts/*.sh
 
 # jenv
 .java-version

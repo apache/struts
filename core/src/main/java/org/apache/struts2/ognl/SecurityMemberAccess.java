@@ -112,6 +112,28 @@ public class SecurityMemberAccess implements MemberAccess {
         this.proxyService = proxyService;
     }
 
+    /**
+     * Copies the shared, already-parsed configuration into this instance. This is the only injected
+     * member that touches the configuration fields, so the unspecified order in which the container
+     * iterates {@code getDeclaredMethods()} cannot affect the result.
+     *
+     * @since Struts 7.4.0
+     */
+    @Inject
+    public void useConfig(SecurityMemberAccessConfig config) {
+        this.allowStaticFieldAccess = config.isAllowStaticFieldAccess();
+        this.excludedClasses = config.getExcludedClasses();
+        this.excludedPackageNamePatterns = config.getExcludedPackageNamePatterns();
+        this.excludedPackageNames = config.getExcludedPackageNames();
+        this.excludedPackageExemptClasses = config.getExcludedPackageExemptClasses();
+        this.enforceAllowlistEnabled = config.isEnforceAllowlistEnabled();
+        this.allowlistClasses = config.getAllowlistClasses();
+        this.allowlistPackageNames = config.getAllowlistPackageNames();
+        this.disallowProxyObjectAccess = config.isDisallowProxyObjectAccess();
+        this.disallowProxyMemberAccess = config.isDisallowProxyMemberAccess();
+        this.disallowDefaultPackageAccess = config.isDisallowDefaultPackageAccess();
+    }
+
     @Override
     public Object setup(OgnlContext context, Object target, Member member, String propertyName) {
         Object result = null;
@@ -470,7 +492,12 @@ public class SecurityMemberAccess implements MemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
         this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
         if (!this.allowStaticFieldAccess) {
@@ -478,27 +505,52 @@ public class SecurityMemberAccess implements MemberAccess {
         }
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useExcludedClasses(String commaDelimitedClasses) {
         this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useExcludedPackageNames(String commaDelimitedPackageNames) {
         this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
         if (!this.enforceAllowlistEnabled) {
@@ -510,27 +562,52 @@ public class SecurityMemberAccess implements MemberAccess {
         }
     }
 
-    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
-    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
         this.disallowProxyObjectAccess = BooleanUtils.toBoolean(disallowProxyObjectAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0.
+     */
+    @Deprecated
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }

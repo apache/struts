@@ -3,10 +3,10 @@
 The commands, in order. [`SKILL.md`](SKILL.md) holds the sequence, the gates and the judgement;
 this file is what you type.
 
-**Provenance.** Everything marked ✔ was verified against the repository, a completed release
-(7.3.0 / 6.11.0, August 2026), or the release manager's scripts. Everything marked
-**⚠ unverified** is carried over from the 2017 cwiki page and has *not* been confirmed against a
-current run — check it before relying on it, and correct this file when you do.
+**Provenance.** Everything marked ✔ was verified against the repository or a completed release
+(7.3.0 / 6.11.0, August 2026). Everything marked **⚠ unverified** is carried over from the 2017
+cwiki page and has *not* been confirmed against a current run — check it before relying on it,
+and correct this file when you do.
 
 **The scripts.** Phases 3 and 5 ship with this skill, in [`scripts/`](scripts):
 
@@ -15,13 +15,12 @@ current run — check it before relying on it, and correct this file when you do
 | [`stage-assemblies.sh`](scripts/stage-assemblies.sh) | 3 | Closed staging repo → `dist/dev`, renamed and re-hashed |
 | [`promote-dist.sh`](scripts/promote-dist.sh) | 5 | `dist/dev` → `dist/release` |
 
-Both take `$VERSION` from the environment and refuse to run without it. They are ports of the
-release manager's local toolbox (`~/Projects/Apache/minatour/bin/`), unchanged in behaviour
-apart from `set -eu`, the `$VERSION` guard, tolerant hash cleanup and an explicit svn commit
-message — each deviation is listed in the script's own header.
+Both take `$VERSION` from the environment, refuse to run without it, and refuse a value that is
+not a version number — `svn` resolves a `.` path element rather than rejecting it, so a stray
+`VERSION` would otherwise move the whole staging tree in one irreversible commit.
 
-A third script in that toolbox, `update-struts2-draft-docs.sh`, exports Confluence into the
-retired svn production site. **It is dead and is deliberately not ported.** Do not run it.
+Run them from a scratch directory (`cd "$(mktemp -d)"`), never from a repository checkout: the
+staging script creates `./$VERSION` and a temporary svn working copy in the current directory.
 
 ---
 
@@ -35,6 +34,19 @@ retired svn production site. **It is dead and is deliberately not ported.** Do n
 | 6.x | `support/struts-6-x-x` | `Build and Test (8)` |
 
 Both branches are protected in `.asf.yaml` and must be green before you start.
+
+**Check the JDK before building anything.** The line dictates it — 7.x builds on **JDK 17**, 6.x
+on **JDK 8** — and the whole release is produced by whichever JDK happens to be active in the
+shell. Cutting 6.x on 17 produces artifacts that will not run for the users that line exists for.
+
+```bash
+mvn -v          # reports the JDK Maven is actually using, not just $JAVA_HOME
+```
+
+**If it is the wrong version, stop and ask the release manager how to switch.** Local
+environments differ — jenv, SDKMAN, asdf, `JAVA_HOME` by hand, a Homebrew symlink — and guessing
+at someone's toolchain is how you end up building against a JDK they did not intend. Ask, do not
+infer. (`.java-version` is gitignored in this repo, so it is not a reliable signal either.)
 
 ```bash
 git checkout main && git pull --ff-only
@@ -80,8 +92,8 @@ yourself passing `-D` to the release plugin, the setting belongs in the pom inst
 that has to be remembered is a flag that will be forgotten.
 
 ✔ **At the SCM tag prompt, type `STRUTS_X_Y_Z`.** The plugin's default would be
-`struts2-parent-X.Y.Z`; every Struts tag in history is the underscore form, and the GitHub
-release, the Version Notes and the site all assume it.
+`struts2-project-X.Y.Z` (the root artifactId); every Struts tag in history is the underscore
+form, and the GitHub release, the Version Notes and the site all assume it.
 
 This one cannot move into the pom: `tagNameFormat` interpolates `@{project.version}` and has no
 string functions, so the best it could produce is `STRUTS_7.3.0`. The prompt stays.
@@ -106,9 +118,14 @@ cwiki tells you to pass was doing nothing.
 ⚠ unverified: the fallback for re-running `perform` elsewhere —
 `git checkout STRUTS_X_Y_Z && mvn javadoc:javadoc deploy -DperformRelease=true -Papache-release`.
 
-**Then close the staging repository** at <https://repository.apache.org/> — Staging Repositories
-→ select → Close. ⚠ unverified in detail, but the gate is checkable: the artifacts must resolve
-under
+**Then the staging repository has to be closed — and that is the release manager's action, not
+yours.** It happens in the Nexus web UI at <https://repository.apache.org/> (Staging Repositories
+→ select → Close), behind an ASF login. Say so, hand over, and **wait for confirmation before
+continuing** — phase 3 fetches from the staging *group* URL and gets nothing while the repo is
+open.
+
+⚠ unverified in detail, but the gate is checkable and worth checking yourself once you are told
+it is done: the artifacts must resolve under
 
 ```
 https://repository.apache.org/content/groups/staging/org/apache/struts/struts2-core/$VERSION/
@@ -137,9 +154,12 @@ It fetches `zip`, `md5`, `sha1` and `asc` from the **closed** staging repo, stri
 https://dist.apache.org/repos/dist/dev/struts/$VERSION/
 ```
 
-holds `struts-$VERSION-all.zip`, `-apps.zip`, `-docs.zip`, `-lib.zip` and `-src.zip`, each with
-`.asc`, `.sha256` and `.sha512` beside it. No `.md5`, no `.sha1`, no `.pom`. `KEYS` lives one
-level up, in `dist/release/struts/`.
+holds **six** assemblies — `struts-$VERSION-all.zip`, `-apps.zip`, `-docs.zip`, `-lib.zip`,
+`-min-lib.zip` and `-src.zip` — each with `.asc`, `.sha256` and `.sha512` beside it: 24 files.
+No `.md5`, no `.sha1`, no `.pom`. `KEYS` lives one level up, in `dist/release/struts/`.
+
+Count them. `set -eu` stops the script on a step that *fails*, not on a crawl that quietly
+returns a subset, so a short upload reaches `dist/dev` looking healthy.
 
 **The staging repo must be closed before you run this** — the script pulls from the staging
 *group* URL, and an open repo serves nothing there.
@@ -203,9 +223,16 @@ Then:
 
 - `source/announce-YYYY.md` — a new `####` entry at the top, newest first, with its `{#aYYYYMMDD}`
   anchor.
+- ✔ `source/releases.md` — the release table (Release / Release Date / Vulnerability / Version
+  Notes). **Easy to miss and both August 2026 PRs changed it**; a site PR without it is
+  incomplete.
 - `source/index.html` — the GA boxes read from `_config.yml`; the security boxes are hand-edited.
-- `source/download.cgi` — the Prior Releases section.
 - `source/dtds/` — only if a new DTD shipped.
+
+✔ **Not** `source/download.cgi` — that is a six-line wrapper around `mirrors.cgi` with no release
+content in it. `source/download.md` interpolates versions from `_config.yml` and its *Prior
+releases* section is a static pointer to `archive.apache.org`, so neither needs a per-release
+edit.
 
 Publishing is the merge. There is no separate deploy step and no svn.
 
@@ -242,10 +269,13 @@ requirements for that line, and the download page.
 
 ## Phase 7 — Advisories
 
-Only when the release carries a security fix, and only after phase 6.
+Only when the release carries a security fix, and the *publication* only after phase 6. The
+bulletin itself was almost certainly written when the report was triaged, long before this
+release existed.
 
 **`creating-security-bulletins`** owns all of it: unrestricting the bulletin, the CVE record on
 <https://cveprocess.apache.org>, and the advisory mails from that record's *OSS/ASF Emails* tab.
+Follow that skill from here; it is not a step in this runbook.
 
 The order that matters here: the CVE record goes `RESERVED → DRAFT → READY`, and **READY is the
 last state a PMC sets**. ASF Security submits it to the CVE Program and sets `PUBLIC`, so

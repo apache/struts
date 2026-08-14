@@ -9,13 +9,6 @@
 # Run it only after the vote has passed. Wait 24 hours after this before
 # announcing anything - the announcement links a download page that the mirrors
 # have to have caught up with first.
-#
-# Ported from the release manager's local toolbox
-# (~/Projects/Apache/minatour/bin/update-struts2-dist.sh). Behaviour is unchanged
-# except:
-#   - set -eu and a required $VERSION, so an unset variable cannot move the whole
-#     dev directory
-#   - an explicit -m, so the move does not drop into $EDITOR
 
 set -eu
 
@@ -23,6 +16,17 @@ if [ -z "${VERSION:-}" ]; then
     echo "VERSION is not set. Usage: VERSION=7.3.0 $0" >&2
     exit 1
 fi
+
+# Not cosmetic. svn resolves a "." path element instead of rejecting it, so
+# VERSION="." would move the whole of dist/dev/struts into dist/release in one
+# irreversible server-side commit. ".." is rejected by svn; "." is not.
+case "$VERSION" in
+    [0-9]*.[0-9]*.[0-9]*) ;;
+    *)
+        echo "VERSION must look like 7.3.0 (got '$VERSION')" >&2
+        exit 1
+        ;;
+esac
 
 svn mv "https://dist.apache.org/repos/dist/dev/struts/$VERSION/" \
        "https://dist.apache.org/repos/dist/release/struts/" \

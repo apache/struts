@@ -29,8 +29,10 @@ the judgement.
 | 6 | Publish | Site PR merged, GitHub release un-flagged, `[ANN]` mail delivered |
 | 7 | Advisories | Bulletins public, CVE records filled, advisory mails delivered |
 
-Phase 7 only exists when the release carries a security fix, and it is **strictly after** phase
-6 — see *Security work is a separate clock* below.
+Phase 7 only exists when the release carries a security fix, and *publishing* the advisory is
+**strictly after** phase 6 — see *Security work is a separate clock* below. Writing the bulletin
+is not: it is usually drafted long before the release exists, and often on its own timetable
+entirely.
 
 ## Which skill owns which artifact
 
@@ -41,7 +43,13 @@ Cross-references, not copies. Do not restate what these settle:
   paperwork.
 - **`creating-release-vote-mail`** — the `[VOTE]` mail. All of phase 4's paperwork.
 - **`creating-security-bulletins`** — the S2-XXX page, what may be disclosed and when,
-  publication, and the advisory mails. All of phase 7.
+  publication, and the advisory mails.
+
+**That last one is not a phase of this process.** A bulletin gets written when the report is
+triaged, which may be months before a release carries the fix, and plenty of bulletins are
+handled with no release in flight at all. It is a skill in its own right, invoked whenever it is
+needed. Phase 7 is the reverse direction: *if* this release carries a security fix, then once
+phase 6 is done, go and follow that skill.
 
 This skill covers what none of them do: phases 1, 2, 5 and 6, and the ordering that binds them.
 
@@ -101,7 +109,7 @@ wrong about everything downstream:
 | Export the wiki to `/docs` | The site no longer embeds exported Confluence pages |
 | Build the site with Docker Jekyll, commit `content/` | The site builds from a PR to `apache/struts-site` |
 | `svn co .../infra/websites/production/struts` | Gone; publishing is the merge |
-| `people.apache.org`, `source/announce.md`, `downloads.html` | Dead host, and the files are `announce-YYYY.md` and `download.cgi` |
+| `people.apache.org`, `source/announce.md`, `downloads.html` | Dead host, and the files are `announce-YYYY.md`, `releases.md` and `index.html` |
 
 Treat it as history. If you follow it, you will publish to a repository that no longer serves
 the site.

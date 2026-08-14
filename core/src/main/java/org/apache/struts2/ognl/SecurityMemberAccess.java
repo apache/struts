@@ -32,12 +32,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.util.ConfigParseUtil.toClassObjectsSet;
@@ -89,6 +91,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
+    private Set<String> allowlistPackageNamesUnion = ALLOWLIST_REQUIRED_PACKAGES;
 
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
@@ -121,10 +124,29 @@ public class SecurityMemberAccess implements MemberAccess {
         this.excludedPackageExemptClasses = config.getExcludedPackageExemptClasses();
         this.enforceAllowlistEnabled = config.isEnforceAllowlistEnabled();
         this.allowlistClasses = config.getAllowlistClasses();
-        this.allowlistPackageNames = config.getAllowlistPackageNames();
+        applyAllowlistPackageNames(config.getAllowlistPackageNames());
         this.disallowProxyObjectAccess = config.isDisallowProxyObjectAccess();
         this.disallowProxyMemberAccess = config.isDisallowProxyMemberAccess();
         this.disallowDefaultPackageAccess = config.isDisallowDefaultPackageAccess();
+    }
+
+    /**
+     * The only place the allowlist union is computed. Both the injected configuration and the
+     * deprecated setter route through here; splitting this in two would risk silently dropping
+     * {@code ALLOWLIST_REQUIRED_PACKAGES}, which fails open.
+     */
+    private void applyAllowlistPackageNames(Set<String> packageNames) {
+        this.allowlistPackageNames = packageNames;
+        this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, packageNames);
+    }
+
+    private static Set<String> union(Set<String> required, Set<String> configured) {
+        if (configured.isEmpty()) {
+            return required;
+        }
+        Set<String> union = new HashSet<>(required);
+        union.addAll(configured);
+        return unmodifiableSet(union);
     }
 
     @Override
@@ -269,7 +291,7 @@ public class SecurityMemberAccess implements MemberAccess {
                 || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
                 || (threadAllowlist != null && threadAllowlist.getAllowlist().contains(clazz))
-                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
+                || isClassBelongsToPackages(clazz, allowlistPackageNamesUnion);
     }
 
     /**
@@ -404,54 +426,38 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        return isClassBelongsToPackages(clazz, matchingPackages, emptySet());
+        return isPackageBelongsToPackages(toPackageName(clazz), matchingPackages);
     }
 
     /**
-     * Tests the class's package against two sets in a single walk. Equivalent to calling
-     * {@link #isClassBelongsToPackages(Class, Set)} once per set and OR-ing the results, but
-     * walks the package name only once.
-     *
-     * @param clazz  the class whose package is tested
-     * @param first  the first set of package names to match against
-     * @param second the second set of package names to match against
-     * @return {@code true} if the class's package or any parent package is in either set
-     */
-    static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
-        return isPackageBelongsToPackages(toPackageName(clazz), first, second);
-    }
-
-    /**
-     * Tests whether the given package name, or any of its parent packages, is present in either
-     * set. Walks the name in place rather than building the full prefix list, since this runs on
-     * the OGNL member-access path. Shortest prefix first, so broad entries such as {@code java.io}
+     * Tests whether the given package name, or any of its parent packages, is present in the set.
+     * Walks the name in place rather than building the full prefix list, since this runs on the OGNL
+     * member-access path. Shortest prefix first, so broad entries such as {@code java.io}
      * short-circuit earliest.
      *
      * <p>
-     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by
-     * the implementation this replaced, which matches more broadly — tightening exclusion but
-     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing
-     * dot, so every current caller is safe; route any other string through here only after
-     * confirming the same.
+     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by the
+     * implementation this replaced, which matches more broadly — tightening exclusion but
+     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing dot,
+     * and {@code ConfigParseUtil.toPackageNamesSet} strips them from configured names, so every
+     * current caller is safe; route any other string through here only after confirming the same.
      *
-     * @param packageName the package name to test, empty for the default package, never ending in {@code '.'}
-     * @param first       the first set of package names to match against
-     * @param second      the second set of package names to match against
-     * @return {@code true} if the package or any parent package is in either set
+     * @param packageName      the package name to test, empty for the default package, never ending in {@code '.'}
+     * @param matchingPackages the package names to match against
+     * @return {@code true} if the package or any parent package is in the set
      */
-    static boolean isPackageBelongsToPackages(String packageName, Set<String> first, Set<String> second) {
-        if (first.isEmpty() && second.isEmpty()) {
+    static boolean isPackageBelongsToPackages(String packageName, Set<String> matchingPackages) {
+        if (matchingPackages.isEmpty()) {
             return false;
         }
         int idx = packageName.indexOf('.');
         while (idx != -1) {
-            String prefix = packageName.substring(0, idx);
-            if (first.contains(prefix) || second.contains(prefix)) {
+            if (matchingPackages.contains(packageName.substring(0, idx))) {
                 return true;
             }
             idx = packageName.indexOf('.', idx + 1);
         }
-        return first.contains(packageName) || second.contains(packageName);
+        return matchingPackages.contains(packageName);
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
@@ -571,7 +577,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
-        this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+        applyAllowlistPackageNames(toPackageNamesSet(commaDelimitedPackageNames));
     }
 
     /**

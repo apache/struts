@@ -140,4 +140,25 @@ public class SecurityMemberAccessConfigTest {
 
         assertTrue(config.getExcludedClasses().contains("java.lang.Runtime"));
     }
+
+    @Test
+    public void allowlistPackageNamesUnionDefaultsToRequiredPackagesOnly() {
+        SecurityMemberAccessConfig config = new SecurityMemberAccessConfig();
+
+        assertEquals(Set.of("org.apache.struts2.validator.validators",
+                        "org.apache.struts2.components",
+                        "org.apache.struts2.views.jsp"),
+                config.getAllowlistPackageNamesUnion());
+    }
+
+    @Test
+    public void allowlistPackageNamesUnionRetainsRequiredPackagesWhenConfigured() {
+        SecurityMemberAccessConfig config = new SecurityMemberAccessConfig();
+        config.useAllowlistPackageNames("com.example.app");
+
+        assertTrue(config.getAllowlistPackageNamesUnion().contains("com.example.app"));
+        assertTrue(config.getAllowlistPackageNamesUnion().contains("org.apache.struts2.components"));
+        assertTrue(config.getAllowlistPackageNamesUnion().contains("org.apache.struts2.validator.validators"));
+        assertTrue(config.getAllowlistPackageNamesUnion().contains("org.apache.struts2.views.jsp"));
+    }
 }

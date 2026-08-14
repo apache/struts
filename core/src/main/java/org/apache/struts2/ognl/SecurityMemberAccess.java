@@ -32,14 +32,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableSet;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.util.ConfigParseUtil.toClassObjectsSet;
@@ -57,12 +55,6 @@ import static org.apache.struts2.util.DebugUtils.logWarningForFirstOccurrence;
 public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
-
-    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = Set.of(
-            "org.apache.struts2.validator.validators",
-            "org.apache.struts2.components",
-            "org.apache.struts2.views.jsp"
-    );
 
     private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = Set.of(
             java.lang.Enum.class,
@@ -91,7 +83,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
-    private Set<String> allowlistPackageNamesUnion = ALLOWLIST_REQUIRED_PACKAGES;
+    private Set<String> allowlistPackageNamesUnion = SecurityMemberAccessConfig.ALLOWLIST_REQUIRED_PACKAGES;
 
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
@@ -124,29 +116,24 @@ public class SecurityMemberAccess implements MemberAccess {
         this.excludedPackageExemptClasses = config.getExcludedPackageExemptClasses();
         this.enforceAllowlistEnabled = config.isEnforceAllowlistEnabled();
         this.allowlistClasses = config.getAllowlistClasses();
-        applyAllowlistPackageNames(config.getAllowlistPackageNames());
+        this.allowlistPackageNames = config.getAllowlistPackageNames();
+        this.allowlistPackageNamesUnion = config.getAllowlistPackageNamesUnion();
         this.disallowProxyObjectAccess = config.isDisallowProxyObjectAccess();
         this.disallowProxyMemberAccess = config.isDisallowProxyMemberAccess();
         this.disallowDefaultPackageAccess = config.isDisallowDefaultPackageAccess();
     }
 
     /**
-     * The only place the allowlist union is computed. Both the injected configuration and the
-     * deprecated setter route through here; splitting this in two would risk silently dropping
-     * {@code ALLOWLIST_REQUIRED_PACKAGES}, which fails open.
+     * Used only by the deprecated {@link #useAllowlistPackageNames(String)} setter path. The injected
+     * configuration path seeds both fields directly from {@link SecurityMemberAccessConfig}, which
+     * precomputes the union exactly once per container; both routes call
+     * {@link SecurityMemberAccessConfig#union(Set, Set)}, so there remains exactly one place in the
+     * codebase that computes the union, and {@code ALLOWLIST_REQUIRED_PACKAGES} cannot be silently
+     * dropped from either.
      */
     private void applyAllowlistPackageNames(Set<String> packageNames) {
         this.allowlistPackageNames = packageNames;
-        this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, packageNames);
-    }
-
-    private static Set<String> union(Set<String> required, Set<String> configured) {
-        if (configured.isEmpty()) {
-            return required;
-        }
-        Set<String> union = new HashSet<>(required);
-        union.addAll(configured);
-        return unmodifiableSet(union);
+        this.allowlistPackageNamesUnion = SecurityMemberAccessConfig.union(SecurityMemberAccessConfig.ALLOWLIST_REQUIRED_PACKAGES, packageNames);
     }
 
     @Override
@@ -495,7 +482,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
         this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
         if (!this.allowStaticFieldAccess) {
@@ -508,7 +495,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedClasses(String commaDelimitedClasses) {
         this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
@@ -518,7 +505,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
@@ -528,7 +515,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNames(String commaDelimitedPackageNames) {
         this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
@@ -538,7 +525,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
@@ -548,7 +535,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
         if (!this.enforceAllowlistEnabled) {
@@ -565,7 +552,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
@@ -575,7 +562,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         applyAllowlistPackageNames(toPackageNamesSet(commaDelimitedPackageNames));
     }
@@ -585,7 +572,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
         this.disallowProxyObjectAccess = BooleanUtils.toBoolean(disallowProxyObjectAccess);
     }
@@ -595,7 +582,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
@@ -605,7 +592,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
      * tests and existing callers; it will be removed in Struts 8.0.0.
      */
-    @Deprecated
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }

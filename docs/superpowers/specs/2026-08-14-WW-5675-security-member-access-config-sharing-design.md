@@ -96,7 +96,16 @@ suite failed with 1579 errors during implementation.
 (`ConfigurationManager.java:78-80`). `Dispatcher.init()` (`Dispatcher.java:711-719`) installs its own provider
 list — including `StrutsBeanSelectionProvider` via `init_AliasStandardObjects` — so the list is never empty and
 `StrutsDefaultConfigurationProvider` is never added. The production container is built from
-`StrutsBeanSelectionProvider` plus `struts-beans.xml`, and `bootstrapFactories` is not on that path at all.
+`StrutsBeanSelectionProvider` plus `struts-beans.xml`, and `bootstrapFactories` is not on the path of that *main
+Dispatcher* container.
+
+It is, however, on a different, load-bearing path: `DefaultConfiguration.reloadContainer` builds a **bootstrap**
+container from `bootstrapFactories` (`DefaultConfiguration.java:283`, via `createBootstrapContainer` at
+`DefaultConfiguration.java:348-373`), then calls `setContext(bootstrap)` (`DefaultConfiguration.java:307`), which
+calls `bootstrap.getInstance(ValueStackFactory.class).createValueStack()` — and building a value stack instantiates
+`SecurityMemberAccess` through `CompoundRootAccessor`/`RootAccessor`. So the bootstrap container's registration
+of `SecurityMemberAccessConfig` is not a fallback for some other, unused path: it is exercised on every
+`reloadContainer()` call, before the main Dispatcher container even exists.
 
 The registration therefore goes in both places, which is precisely what `ProviderAllowlist` and `ThreadAllowlist`
 already do — `DefaultConfiguration.java:418-419` and `struts-beans.xml:175-176`:
@@ -106,10 +115,11 @@ already do — `DefaultConfiguration.java:418-419` and `struts-beans.xml:175-176
 ```
 
 The `DefaultConfiguration` registration serves the bootstrap container (`DefaultConfiguration.java:360`) and the
-`XWorkTestCase` harness; the `struts-beans.xml` entry serves the real Dispatcher container. The bootstrap
-container carries only `BOOTSTRAP_CONSTANTS`, so most security constants are absent there, the
-`required = false` setters do not fire, and the bean falls back to defaults — exactly as a `SecurityMemberAccess`
-constructed in that container behaves today.
+`XWorkTestCase` harness; the `struts-beans.xml` entry serves the real Dispatcher container. **Both registrations
+are load-bearing** — production would throw at startup without either, since `useConfig` is a mandatory `@Inject`
+on `SecurityMemberAccess`. The bootstrap container carries only `BOOTSTRAP_CONSTANTS`, so most security constants
+are absent there, the `required = false` setters do not fire, and the bean falls back to defaults — exactly as a
+`SecurityMemberAccess` constructed in that container behaves today.
 
 This failure mode is loud, not silent: `useConfig` is a mandatory `@Inject`, so a container missing the binding
 throws at build time rather than running with empty exclusions.
@@ -230,15 +240,39 @@ This deletes the three-argument `isClassBelongsToPackages` overload and the two-
 
 The ticket flagged this as a fail-open hazard: if the union were computed in two places — once seeded from
 configuration, once when the deprecated `useAllowlistPackageNames` setter fires — the two could drift, silently
-dropping `ALLOWLIST_REQUIRED_PACKAGES` from the allowlist with nothing failing loudly. Both routes therefore
-funnel through one private method, so exactly one line in the codebase computes the union:
+dropping `ALLOWLIST_REQUIRED_PACKAGES` from the allowlist with nothing failing loudly. It is also a fail-open
+hazard if the union is *re-computed* per instance: that reintroduces exactly the per-instantiation `HashSet`
+allocation this ticket exists to remove, and lands on the deployments that configure the allowlist properly,
+inverting the ticket's intent.
+
+Both hazards are avoided by moving `ALLOWLIST_REQUIRED_PACKAGES` and the `union(...)` helper onto
+`SecurityMemberAccessConfig`, which precomputes `allowlistPackageNamesUnion` once, inside its own
+`useAllowlistPackageNames` setter, when the constant fires during container construction:
 
 ```java
-private void applyAllowlistPackageNames(Set<String> names) {
-    this.allowlistPackageNames = names;
-    this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, names);
+// SecurityMemberAccessConfig
+static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = Set.of(
+        "org.apache.struts2.validator.validators",
+        "org.apache.struts2.components",
+        "org.apache.struts2.views.jsp"
+);
+
+public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
+    this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+    this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
 }
+
+static Set<String> union(Set<String> required, Set<String> configured) { … }
 ```
+
+`SecurityMemberAccess.useConfig` copies the precomputed reference (`config.getAllowlistPackageNamesUnion()`) —
+no allocation on the hot instantiation path. Its deprecated `useAllowlistPackageNames` setter, which still mutates
+a single instance directly and has no `SecurityMemberAccessConfig` to read from, calls the same
+`SecurityMemberAccessConfig.union(...)` static method. Both routes therefore funnel through the one method, so
+exactly one line in the codebase computes the union, and `ALLOWLIST_REQUIRED_PACKAGES` cannot drift out of it
+through a second implementation. The constant and helper live on the config bean — the class that owns computing
+and exposing configuration-derived state — rather than being duplicated onto `SecurityMemberAccess`, whose
+deprecated setter merely calls back into it.
 
 `isPackageBelongsToPackages` currently early-returns on `first.isEmpty() && second.isEmpty()`. Since
 `ALLOWLIST_REQUIRED_PACKAGES` is never empty, that guard simply stops firing on the allowlist path; the exclusion
@@ -277,8 +311,8 @@ Core tests are JUnit 4 or extend `XWorkTestCase`. A JUnit 5 `@Test` added to the
 
 1. **Sharing proof.** Request several `SecurityMemberAccess` instances from one container and assert their
    configuration-derived sets are reference-identical (`assertSame`, not `assertEquals`). Reference identity is a
-   dependency-free proof that no re-parsing occurred, since any re-parse necessarily produces a fresh set. Backed
-   by a counting probe asserting exactly one parse per container.
+   dependency-free proof that no re-parsing occurred, since any re-parse necessarily produces a fresh set; this is
+   the sound substitute for a counting probe and is what the implementation actually asserts.
 2. **Instance isolation.** Calling a deprecated setter on one instance must not perturb a sibling instance or the
    singleton. The sets are `unmodifiableSet`, so an in-place mutation bug would throw rather than corrupt
    silently, but this invariant deserves an explicit assertion.

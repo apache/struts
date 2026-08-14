@@ -24,6 +24,8 @@ import org.apache.struts2.XWorkTestCase;
 import java.util.Map;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
 
     /**
@@ -46,17 +48,17 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
      * when {@code useConfig} actually ran.
      */
     public void testConfigDerivedSetsAreSharedAcrossInstances() throws Exception {
-        loadButSet(Map.of(
-                StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "false",
-                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, "^org\\.apache\\.struts2\\.ognl\\.testpkg\\..*",
-                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg",
-                StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, "java.lang.String",
-                StrutsConstants.STRUTS_ALLOWLIST_ENABLE, "true",
-                StrutsConstants.STRUTS_ALLOWLIST_CLASSES, "java.lang.String",
-                StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg",
-                StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, "true",
-                StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, "true",
-                StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, "true"));
+        loadButSet(Map.ofEntries(
+                Map.entry(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "false"),
+                Map.entry(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, "^org\\.apache\\.struts2\\.ognl\\.testpkg\\..*"),
+                Map.entry(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg"),
+                Map.entry(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, "java.lang.String"),
+                Map.entry(StrutsConstants.STRUTS_ALLOWLIST_ENABLE, "true"),
+                Map.entry(StrutsConstants.STRUTS_ALLOWLIST_CLASSES, "java.lang.String"),
+                Map.entry(StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, "org.apache.struts2.ognl.testpkg"),
+                Map.entry(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, "true"),
+                Map.entry(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, "true"),
+                Map.entry(StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, "true")));
 
         SecurityMemberAccess first = container.getInstance(SecurityMemberAccess.class);
         SecurityMemberAccess second = container.getInstance(SecurityMemberAccess.class);
@@ -84,6 +86,10 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
                 config.getAllowlistClasses(), SecurityMemberAccessTest.reflectField(first, "allowlistClasses"));
         assertSame("allowlistPackageNames not seeded from config",
                 config.getAllowlistPackageNames(), SecurityMemberAccessTest.reflectField(first, "allowlistPackageNames"));
+        Set<String> firstAllowlistPackageNamesUnion = SecurityMemberAccessTest.reflectField(first, "allowlistPackageNamesUnion");
+        assertSame("allowlistPackageNamesUnion not seeded from config",
+                config.getAllowlistPackageNamesUnion(), firstAllowlistPackageNamesUnion);
+        assertThat(firstAllowlistPackageNamesUnion).contains("org.apache.struts2.ognl.testpkg", "org.apache.struts2.components");
 
         boolean firstAllowStaticFieldAccess = SecurityMemberAccessTest.reflectField(first, "allowStaticFieldAccess");
         assertEquals("allowStaticFieldAccess not seeded from config",
@@ -171,12 +177,18 @@ public class SecurityMemberAccessConfigSharingTest extends XWorkTestCase {
     }
 
     public void testDevModeMethodsAreGone() throws Exception {
-        for (String name : new String[]{"useDevMode", "useDevModeExcludedClasses",
+        Set<String> removedMethods = Set.of("useDevMode", "useDevModeExcludedClasses",
                 "useDevModeExcludedPackageNamePatterns", "useDevModeExcludedPackageNames",
-                "useDevModeExcludedPackageExemptClasses", "useDevModeConfiguration"}) {
-            for (java.lang.reflect.Method method : SecurityMemberAccess.class.getDeclaredMethods()) {
-                assertFalse("SecurityMemberAccess still declares " + name, method.getName().equals(name));
-            }
+                "useDevModeExcludedPackageExemptClasses", "useDevModeConfiguration");
+        for (java.lang.reflect.Method method : SecurityMemberAccess.class.getDeclaredMethods()) {
+            assertFalse("SecurityMemberAccess still declares " + method.getName(), removedMethods.contains(method.getName()));
+        }
+
+        Set<String> removedFields = Set.of("isDevModeInit", "isDevMode", "devModeExcludedClasses",
+                "devModeExcludedPackageNamePatterns", "devModeExcludedPackageNames",
+                "devModeExcludedPackageExemptClasses");
+        for (java.lang.reflect.Field field : SecurityMemberAccess.class.getDeclaredFields()) {
+            assertFalse("SecurityMemberAccess still declares field " + field.getName(), removedFields.contains(field.getName()));
         }
     }
 }

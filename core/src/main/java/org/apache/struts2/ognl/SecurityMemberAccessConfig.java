@@ -25,10 +25,12 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.inject.Initializable;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
 import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.util.ConfigParseUtil.toClassObjectsSet;
@@ -57,6 +59,20 @@ public class SecurityMemberAccessConfig implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccessConfig.class);
 
+    /**
+     * Struts' own component packages, which must always be allowlisted regardless of what an
+     * application configures via {@code struts.allowlist.packageNames}. Lives here, alongside
+     * {@link #union(Set, Set)}, because this is the single place that computes
+     * {@code allowlistPackageNamesUnion}; {@link SecurityMemberAccess} references both statically for
+     * its default field value and its deprecated {@code useAllowlistPackageNames} setter, so the
+     * computation is never duplicated.
+     */
+    static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = Set.of(
+            "org.apache.struts2.validator.validators",
+            "org.apache.struts2.components",
+            "org.apache.struts2.views.jsp"
+    );
+
     private boolean allowStaticFieldAccess = true;
 
     private Set<String> excludedClasses = Set.of(Object.class.getName());
@@ -73,6 +89,7 @@ public class SecurityMemberAccessConfig implements Initializable {
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
+    private Set<String> allowlistPackageNamesUnion = ALLOWLIST_REQUIRED_PACKAGES;
 
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
@@ -139,6 +156,26 @@ public class SecurityMemberAccessConfig implements Initializable {
     @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+        this.allowlistPackageNamesUnion = union(ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
+    }
+
+    /**
+     * The only place in the codebase that computes the allowlist package union. Both
+     * {@link #useAllowlistPackageNames(String)} above and {@link SecurityMemberAccess}'s deprecated
+     * setter path call this method, so {@code ALLOWLIST_REQUIRED_PACKAGES} can never silently drop out
+     * of the union through a second, drifted implementation.
+     * <p>
+     * The early return aliases {@code required} directly into the result, which is safe only because
+     * every caller passes an immutable {@code Set.of(...)} for that argument; a mutable set must not be
+     * passed as {@code required}.
+     */
+    static Set<String> union(Set<String> required, Set<String> configured) {
+        if (configured.isEmpty()) {
+            return required;
+        }
+        Set<String> union = new HashSet<>(required);
+        union.addAll(configured);
+        return unmodifiableSet(union);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, required = false)
@@ -211,6 +248,10 @@ public class SecurityMemberAccessConfig implements Initializable {
 
     public Set<String> getAllowlistPackageNames() {
         return allowlistPackageNames;
+    }
+
+    public Set<String> getAllowlistPackageNamesUnion() {
+        return allowlistPackageNamesUnion;
     }
 
     public boolean isDisallowProxyObjectAccess() {

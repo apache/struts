@@ -165,13 +165,15 @@ public class SecurityMemberAccessConfig implements Initializable {
      * setter path call this method, so {@code ALLOWLIST_REQUIRED_PACKAGES} can never silently drop out
      * of the union through a second, drifted implementation.
      * <p>
-     * The early return aliases {@code required} directly into the result, which is safe only because
-     * every caller passes an immutable {@code Set.of(...)} for that argument; a mutable set must not be
-     * passed as {@code required}.
+     * The result is always immutable, whatever the caller passes. When nothing is configured the
+     * required set is returned through {@link Set#copyOf}, which the JDK short-circuits to the same
+     * instance for an already-immutable set — so the usual case allocates nothing, while a mutable
+     * {@code required} would still be defensively copied rather than aliased into a set shared by
+     * every {@link SecurityMemberAccess} in the container.
      */
     static Set<String> union(Set<String> required, Set<String> configured) {
         if (configured.isEmpty()) {
-            return required;
+            return Set.copyOf(required);
         }
         Set<String> union = new HashSet<>(required);
         union.addAll(configured);

@@ -112,7 +112,7 @@
         <!-- Maven plugin -->
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
-        <dependencycheck.version>12.2.2</dependencycheck.version>
+        <dependencycheck.version>13.0.0</dependencycheck.version>
         <owasp.skip>false</owasp.skip>
 
         <!-- dependency versions in alphanumeric order -->
@@ -395,7 +395,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>12.2.2</version>
+                    <version>13.0.0</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>

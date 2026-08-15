@@ -117,6 +117,8 @@ but make it deliberately and record which way you went.
       now, not at drafting time.
 - [ ] The fixed release is out and accepted.
 - [ ] Restrictions are lifted only at the coordinated publication moment.
+- [ ] The CVE record's `CNA_private.userslist` reads `user@struts.apache.org` and is saved,
+      so `Send these Emails` on the *OSS/ASF Emails* tab reaches the Struts user list.
 
 ## Storage-format skeleton
 

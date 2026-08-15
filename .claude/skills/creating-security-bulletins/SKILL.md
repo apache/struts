@@ -163,34 +163,66 @@ Publication is clearing them **completely** — read *and* update, both empty, m
 already-published bulletin. Verify with an unauthenticated fetch of the public URL, not with the
 API's response: the tool reporting success is not the page being readable.
 
-## Announcing it: the mail is text/plain, or it does not arrive
+## Announcing it: press the button on the CVE record
 
-Once the page is public the advisory goes to the lists. **The mail carries one `text/plain`
-part and nothing else.** A `text/html` part is a delivery failure — `announce@apache.org`
-rejects it permanently:
+Once the page is public the advisory goes out **from the CVE record**, not from a mailbox.
+Every record on `cveprocess.apache.org` carries an *OSS/ASF Emails* tab —
+`https://cveprocess.apache.org/cve5/CVE-YYYY-NNNNN#email` — holding two finished mails, one
+for `oss-security` and one for the ASF lists, generated from the record's own affected
+ranges, description, credit and references. A single **`Send these Emails`** button sits at
+the foot of the tab, and both mails point at it — *"Use the button below to send these
+mails, or copy, paste, and send the email yourself."*
 
-```
-ezmlm-reject: fatal: Sorry, a message part has an unacceptable MIME Content-Type: 'text/html' (#5.2.3)
-```
+The send is four steps, in order:
 
-**Do not rely on a bounce to catch it.** On the S2-070 run, 2026-08-14, one send was rejected
-by `announce@apache.org` and *accepted* by `user@struts.apache.org`. The HTML advisory reached
+1. **Set `userslist` to `user@struts.apache.org`** — the field is in the *Editor* tab, or as
+   `CNA_private.userslist` on the *Source* tab, which accepts the record as raw JSON. It is
+   labelled *"This is your project list such as users@ where you also want security
+   announcement emails go to"*, and it is what puts the Struts user list on the ASF mail.
+2. **`SAVE`.** The mails are regenerated from the saved record, not from the form.
+3. **Re-read both mails on the *OSS/ASF Emails* tab.** They are the deliverable — read them
+   as closely as you read the bulletin.
+4. **Press `Send these Emails`.**
+
+**Take the subject the tool generates, unedited** — `CVE-YYYY-NNNNN: Apache Struts: <title>`.
+No `[ANN]` prefix: that prefix belongs to *release* announcements, and ASF CVE reports do not
+carry it. No `- S2-XXX` suffix either; the bulletin reaches readers as a `References:` line.
+
+**Why the button rather than a mailbox.** Mail sent through the tool is moderated
+automatically, while the same text from a personal account waits for a human moderator. It
+also cannot get the `text/plain` contract or the sender identity wrong — which is the entire
+class of failure below.
+
+Both points are sebb's, on the S2-073 announcement thread, 2026-08-14.
+
+**Expect a delay either way, and do not read it as a failed send.** The tab warns that
+*"ASF announcement mailing lists are moderated. It may take some hours/days before your
+email will be published."* Silence on the archives an hour later is moderation, not a
+bounce.
+
+### The failure this replaces
+
+On 2026-08-14 all five advisories were sent by hand from Gmail. Every one failed at least
+once:
+
+| Send | Outcome |
+|---|---|
+| S2-070, from the personal Gmail identity | Bounced — `Must be sent from an @apache.org address.` |
+| S2-071…074, to `user@` with `announce@` in Cc/Bcc | Bounced — `unacceptable MIME Content-Type: 'text/html' (#5.2.3)` |
+| The re-sends, to `announce@` alone | Delivered, subjects hand-prefixed `[ANN] ` |
+
+The *bodies* were already the tool's generated text. Only the **sending** was hand-rolled,
+and every one of those failures came from the sending. `CNA_private.emailed` on those
+records is still `null`.
+
+**A bounce is not a reliable alarm.** That morning one HTML send was rejected by
+`announce@apache.org` and *accepted* by `user@struts.apache.org`. The HTML advisory reached
 the user list. A partial failure looks like success in the Sent folder.
 
-Two unrelated defects bounced that morning, each from a different list:
+### If the button is genuinely unavailable
 
-| Defect | What the list says |
-|---|---|
-| A `text/html` part | `unacceptable MIME Content-Type: 'text/html' (#5.2.3)` |
-| Wrong sender identity | `Must be sent from an @apache.org address.` |
-
-**The CVE tool generates both mails — use them.** Each record on `cveprocess.apache.org` has an
-*OSS/ASF Emails* tab holding a finished `oss-security` mail and a finished ASF-lists mail, built
-from the record's own affected ranges, description, credit and references, with send buttons
-that go through ASF infrastructure rather than a personal mailbox. Copying that text is how the
-mail stays consistent with the CVE record; composing a fresh one is how the two drift.
-
-If you draft in Gmail instead, the deliverable is three things and is incomplete without any:
+Only when the button itself fails — it errors, or the record will not save. Moderation delay
+is not unavailability. Then the mail is three things and is incomplete without any:
 
 1. A draft with To, Bcc, Subject and `body`. **Never `htmlBody`** — and passing `body` alone
    does not make the mail plain text; Gmail generates the HTML part itself on send.
@@ -198,12 +230,9 @@ If you draft in Gmail instead, the deliverable is three things and is incomplete
 3. The sending instruction in your handover: **plain-text mode on** (⋮ → *Plain text mode*),
    paste the file over the body, send from the `@apache.org` identity.
 
-The `oss-security` copy is a separate mail with no Cc and no Bcc — not the ASF mail with an
-extra recipient.
-
-**Recipients are not interchangeable.** The tool's ASF mail addresses `announce@apache.org` and
-`dev@`; Struts practice adds `user@struts.apache.org`, which is the list operators actually
-read. `announcements@struts.apache.org` takes only `@apache.org` senders.
+Copy the recipients and subject off the tool's tab rather than composing them. The
+`oss-security` copy is a separate mail with **no Cc and no Bcc** — not the ASF mail with an
+extra recipient — and `announcements@struts.apache.org` accepts only `@apache.org` senders.
 
 ## Start from the template, never from a previous bulletin
 
@@ -237,7 +266,9 @@ Read the whole page and rewrite it; do not patch the fields you happen to notice
 - Publishing without re-checking restrictions
 - Treating an API success as proof the page is publicly readable
 - `htmlBody` passed to the draft tool, for any reason
-- An announcement composed from scratch when the CVE record's *OSS/ASF Emails* tab holds one
+- An advisory sent from a mailbox while the record's `Send these Emails` button is available
+- `Send these Emails` pressed before `userslist` is set to `user@struts.apache.org` and saved
+- `[ANN]`, an S2-XXX suffix, or any other hand-edit to the subject the tool generated
 - A draft handed over without the plain-text-mode instruction and the body file
 - A severity rating chosen by feel, or by reachability alone, without checking it against the published scale
 - Rating something Low because the feature is opt-in — opt-in is the definition of Moderate
@@ -263,4 +294,7 @@ Read the whole page and rewrite it; do not patch the fields you happen to notice
 | "I read the page a few minutes ago" | Someone else may have written to it since. Re-fetch, then write. There is no conflict warning. |
 | "I passed `body`, not `htmlBody`, so it's plain text" | Gmail generates the HTML part itself on send. The format is decided in the compose window. |
 | "It reached the lists, so the format was fine" | One list accepted the same message another rejected. Check every recipient, not the Sent folder. |
-| "Writing the mail myself is quicker than opening the CVE tool" | The tool's text is generated from the record. Hand-written text is how the mail and the CVE drift apart. |
+| "I copied the tool's text, so the mail is fine" | The text was never what failed. Sending by hand is. Press the button. |
+| "The tool doesn't mail `user@`, so I'll send it myself" | It does once `userslist` says so. One field on the record, not a parallel process. |
+| "`[ANN]` marks it as an announcement" | ASF CVE reports don't carry it. The tool's subject *is* the subject. |
+| "Sending it myself is quicker than pressing the button" | It is slower end to end: a personal-account mail waits for a human moderator, the tool's does not. |

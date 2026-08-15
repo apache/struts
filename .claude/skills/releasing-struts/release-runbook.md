@@ -88,6 +88,9 @@ step: several supported versions from both lines are normally kept.
 
 ## Phase 6 — Publish
 
+**The `[ANN]` prefix belongs to this mail, not to advisories.** Release announcements keep it;
+CVE advisory subjects do not — see phase 7.
+
 **The `[ANN]` mail must be `text/plain`, and a draft made with the Gmail tool is an HTML draft
 whatever you pass it.** `announce@apache.org` rejects any message carrying a `text/html` part —
 
@@ -102,5 +105,9 @@ accepting the mail is not evidence the format was right.
 ## Phase 7 — Advisories
 
 **`creating-security-bulletins`** owns all of it: unrestricting the bulletin, the CVE record on
-<https://cveprocess.apache.org>, and the advisory mails from that record's *OSS/ASF Emails* tab.
-Follow that skill from here; it is not a step in this runbook.
+<https://cveprocess.apache.org>, and the advisory mails. Follow that skill from here; it is not
+a step in this runbook.
+
+**The mails are sent by the `Send these Emails` button** on the record's *OSS/ASF Emails* tab,
+not from a mailbox, and the subject the tool generates carries no `[ANN]`. That skill owns the
+detail, including the `userslist` field the button depends on.

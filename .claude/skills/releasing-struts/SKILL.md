@@ -35,7 +35,7 @@ fix them in a PR to `apache/struts-site`. Only what is genuinely agent-specific 
 | 4 | Vote | 72 h elapsed, three binding `+1`, result mail sent |
 | 5 | Promote | Nexus repo released, `dist/dev` → `dist/release`, 24 h rsync waited |
 | 6 | Publish | Site PR merged, GitHub release un-flagged, `[ANN]` mail delivered |
-| 7 | Advisories | Bulletins public, CVE records filled, advisory mails delivered |
+| 7 | Advisories | Bulletins public, CVE records filled, advisory mails sent from the CVE tool |
 
 Phase 7 only exists when the release carries a security fix, and *publishing* the advisory is
 **strictly after** phase 6 — see *Security work is a separate clock* below. Writing the bulletin
@@ -147,6 +147,7 @@ answer is the last release, not the last wiki revision.
 | "The vote passed, so it's released" | Nexus release, dist move and the mirror wait all come after. |
 | "I'll announce now and fix the site after" | The announcement links the site. Merge the site PR first. |
 | "The 6.x fix is the same change, so one announcement covers both" | Two artifacts, two downloads, two sets of affected users. |
+| "The advisory is an announcement, so it gets `[ANN]` too" | `[ANN]` is for releases. CVE reports take the CVE tool's subject unedited. |
 | "The pom says 7.3.1-SNAPSHOT, so this is 7.3.1" | The placeholder is not a decision. Semver impact decides. |
 | "The process is documented in this skill" | It is documented on the site. This skill adds ordering, ownership and hand-offs. |
 | "I found the release steps on the wiki" | Those pages are stubs now. Their history is the 2013–2017 process. |

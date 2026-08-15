@@ -47,6 +47,8 @@ public class ConfigParseUtil {
             .maximumSize(MAX_CLASSLOADER_CACHE_SIZE)
             .build();
 
+    private static final Pattern WHITESPACE = Pattern.compile("\\s");
+
     private ConfigParseUtil() {
     }
 
@@ -140,7 +142,7 @@ public class ConfigParseUtil {
     }
 
     public static void validatePackageNames(Collection<String> packageNames) {
-        if (packageNames.stream().anyMatch(s -> Pattern.compile("\\s").matcher(s).find())) {
+        if (packageNames.stream().anyMatch(s -> WHITESPACE.matcher(s).find())) {
             throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + packageNames);
         }
     }

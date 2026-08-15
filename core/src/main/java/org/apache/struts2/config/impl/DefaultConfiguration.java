@@ -121,6 +121,7 @@ import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.factory.StrutsResultFactory;
 import org.apache.struts2.ognl.OgnlGuard;
 import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.ognl.SecurityMemberAccessConfig;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.ThreadAllowlist;
 
@@ -417,6 +418,7 @@ public class DefaultConfiguration implements Configuration {
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
                 .factory(ProviderAllowlist.class, Scope.SINGLETON)
                 .factory(ThreadAllowlist.class, Scope.SINGLETON)
+                .factory(SecurityMemberAccessConfig.class, Scope.SINGLETON)
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
     }

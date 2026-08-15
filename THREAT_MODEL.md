@@ -29,10 +29,16 @@
   superset of the existing [`SECURITY.md`](SECURITY.md) and the published
   [Struts security guidance](https://struts.apache.org/security/); every
   load-bearing claim is tagged for provenance (see §14 for open questions).
+- **Last revised:** 2026-08-15 — re-baselined against Security Bulletins
+  **S2-070 … S2-074**, published 2026-08-14. This fired the §12 trigger twice over:
+  those bulletins added default-hardening controls (7.3.0 / 6.11.0, §5a) and named two
+  vulnerability classes the v0 draft did not carry as properties at all (§8.6, §8.7).
+  Bulletin-to-section map in §16.
 - **Version binding:** versioned with the project; a report against version *N*
   is triaged against the model as it stood at *N*. The security envelope changed
-  materially at **7.0** (several hardening knobs flipped to secure-by-default —
-  §5a), so the version is itself load-bearing.
+  materially at **7.0** (several hardening knobs flipped to secure-by-default) and
+  again at **7.3.0 / 6.11.0** (the first resource-bound controls — §5a), so the version
+  is itself load-bearing.
 - **Reporting cross-reference:** §8-property violations → report privately per
   [`SECURITY.md`](SECURITY.md) (`security@struts.apache.org`); §3/§9/§11a findings
   are closed citing this document and the existing `SECURITY.md` "Before
@@ -63,6 +69,15 @@ expression evaluation and request-parameter binding — become an injection vect
 That single sentence shapes the whole model: most "Struts is insecure" reports are
 either OGNL-injection-class (in model, §8) or application-responsibility (out of
 model, §3/§11a).
+
+Two corrections to that framing, drawn from the project's own published record.
+First, injection containment is not the only thing the framework owes its own
+machinery: it also owes **isolation between concurrently-served requests** and
+**bounds on what a single client can make it allocate or retain** (§8.6, §8.7).
+Second, OGNL remains the highest-*severity* class but is no longer the high-*volume*
+one — S2-070 through S2-074 are five consecutive bulletins with no OGNL among them
+(§16). A triager who expects every real finding to be OGNL-shaped will misroute the
+ones that are not.
 
 ## §2 Scope and intended use
 
@@ -97,10 +112,23 @@ it runs inside. *(documented — it is a framework, not a server.)*
 | Interceptor stack (cookie, fileupload, fetch-metadata, COOP/COEP, …) | per-request processing | request data | **In** *(documented)* |
 | Tag library / JSP & FreeMarker integration | view rendering, expression output | template eval | **In — output-side OGNL/EL** *(documented)* |
 | File upload (Jakarta multipart) | multipart request parsing | temp files | **In — historical CVE surface** *(documented — S2 bulletins)* |
-| Bundled plugins (REST, JSON, Convention, …) in this repo | extra mappers/result types | request data | **In — same request-trust surface** *(inferred — §14 Q-plugins)* |
+| Request-body readers (JSON body population, CSP violation-report collection) | reads the raw request body | heap, parse state | **In** *(documented — S2-070, S2-072, S2-073)* |
+| Bundled plugins (REST, JSON, Convention, …) in this repo | extra mappers/result types | request data | **In — same request-trust surface** *(documented — S2-070/071/072 are JSON-plugin bulletins; §14 Q-plugins answered)* |
 | Config Browser Plugin | exposes internal config | dev-only diagnostic | **In as dev-only** — exposure in prod is operator misconfig (§3/§11a) *(documented)* |
 | Embedding application's own actions/JSPs/config | the developer's code | as the app | **Out — application responsibility (§3)** *(documented)* |
 | Examples / showcase / test apps | demo code | n/a | **Out** *(see §3)* |
+
+**An optional feature is not a "non-default configuration."** Four of the five most
+recent bulletins concern surfaces that stay inert until an application turns them on:
+the JSON plugin's population of actions from a request body, its SMD / JSON-RPC branch
+(`enableSMD`), and a mapped endpoint collecting CSP violation reports. **None of that
+is `OUT-OF-MODEL: non-default-config`.** That disposition is for settings the project
+documents as *unsafe* (`devMode`, a disabled §5a hardening knob); a feature the project
+documents as *available* is in model at full request-trust level from the moment an
+application enables it, and the framework owes it the same §8 properties as the default
+path. Read literally, the v0 draft let a triager close all four — S2-070, S2-071,
+S2-072, S2-073 — as non-default configuration; this paragraph is what prevents that.
+*(documented — S2-070/071/072/073; §13, §14 Q-optional.)*
 
 ## §3 Out of scope (explicit non-goals)
 
@@ -122,9 +150,16 @@ links to them and assigns each a triage disposition (§13):
   authentication, authorization, session management, CSRF token storage, and
   transport (TLS). Struts is "a pure web framework," not a security framework.
   *(documented / inferred — §14 Q-env.)*
-- **Generic denial of service.** Per [`SECURITY.md`](SECURITY.md), generic flooding
-  or large-body streaming is not accepted; only *super-linear* amplification inside
-  framework code may be in model (§8 / §14 Q-dos). *(documented.)*
+- **Generic denial of service** — flooding, bandwidth exhaustion, or repeating a URL:
+  cases where the cost to the server stays proportionate and no framework limit is
+  missing or ineffective. The defence is the operator's, ahead of the application
+  (container, reverse proxy, network). *(documented — [`SECURITY.md`](SECURITY.md).)*
+  **This exclusion is narrower than the v0 draft claimed.** That draft read
+  `SECURITY.md`'s "avoid resource consumption non-linear in the size of inputs" as a
+  triage threshold and put everything linear out of model. The project's own bulletins
+  say otherwise: S2-072, S2-073, and S2-074 are all linear and all carry CVEs. The test
+  is **whether a bound exists, not what shape the curve is** (§8.7) — `SECURITY.md`
+  now states this directly.
 - **Already-disclosed S2-series vulnerabilities** — a duplicate of an existing
   Security Bulletin/CVE is closed by reference (the
   [`SECURITY.md` "Before Reporting"](SECURITY.md) checks), not re-triaged.
@@ -188,6 +223,13 @@ reproduced here.** Only the triage-load-bearing facts:
   annotation requirement (`struts.parameters.requireAnnotations`), excluded
   classes/packages, the expression-length cap (`struts.ognl.expressionMaxLength`,
   default 256), and the static-field/proxy/default-package/custom-map disallows.
+- The envelope moved again at **7.3.0 / 6.11.0**, which added the first *resource-bound*
+  controls — the substance of §8.7, and on by default. The localized-text caches became
+  bounded (`struts.i18n.cacheMaxSize`) and the CSP violation-report read became bounded
+  (`struts.csp.report.maxSize`, default 8192; a configured value outside 1..1048576 is
+  ignored and the default kept). `struts.locale.validateRequestLocale` (default `false`)
+  is the one opt-in of the set: it restricts request-derived locales to the runtime's
+  available-locale set. *(documented — S2-073, S2-074.)*
 - `struts.devMode` (must be `false` in production) and Dynamic Method Invocation
   (gated by Strict Method Invocation since 2.5) are the two settings whose *insecure*
   value most often turns a non-finding into an apparent finding.
@@ -212,6 +254,7 @@ so on modern JDKs the model cannot treat it as a relied-upon control (§14 Q-jsm
 | Cookies | cookie names/values (Cookie Interceptor) | **yes** | same OGNL/parameter concerns; checked by accepted/excluded patterns |
 | Headers | request headers | **yes** | header-driven expression/log paths |
 | Multipart upload | file content, filename, content-type | **yes** | parser robustness, temp-file handling (S2 history) |
+| Request body | raw body bytes (JSON body, CSP violation report) | **yes** | must be read under a bound; a limit the framework advertises must bound the read it names (§8.7) |
 | Expression context | values that reach an OGNL eval (tags, results, forced eval) | **yes if developer feeds untrusted input in** | the core RCE channel |
 | struts.xml / annotations / action code | framework + app configuration | **no — developer-trusted** | not an attacker surface (§3) |
 
@@ -220,17 +263,30 @@ The accepted/excluded pattern checkers (`AcceptedPatternsChecker` /
 Parameters and Cookie interceptors; a custom override that drops below the framework
 defaults is a developer error, not a framework flaw. *(documented.)*
 
+A request-derived value that becomes a **key in framework-managed state** is an input
+class in its own right, not merely a value in flight — a request-derived locale keys the
+framework's localized-text caches, for instance. Such state can be reached through
+ordinary request handling, not only through an application feature deliberately built on
+it. When triaging, ask not only "where does this value get evaluated?" but "what does the
+framework *retain*, keyed on it, and is that bounded?" *(documented — S2-074.)*
+
 ## §7 Adversary model
 
 - **In scope:** an **untrusted remote HTTP client** with no credentials, able to send
   arbitrary parameters, headers, cookies, and multipart uploads to any
   Struts-handled endpoint. Capabilities: craft parameter names/values carrying OGNL,
   attempt to reach executable-code creation through the ValueStack, pollute
-  parameter binding, exploit a file-upload or multipart parsing bug, or trigger a
-  super-linear resource path in framework code. Goal: **remote code execution via
-  OGNL** (the dominant Struts threat), and secondarily data disclosure, SSRF through
-  framework features, or DoS amplification. *(documented — the OGNL lineage is the
+  parameter binding, exploit a file-upload or multipart parsing bug, or drive framework
+  code into an unbounded allocation or an unbounded retention (§8.7). Goal: **remote
+  code execution via OGNL** (the dominant Struts threat), and secondarily data
+  disclosure — including disclosure *across* concurrent requests — SSRF through
+  framework features, or denial of service. *(documented — the OGNL lineage is the
   framework's stated central concern.)*
+  - **Two capabilities the v0 draft left implicit.** The client can issue requests
+    **concurrently**, racing any state the framework shares between them (§8.6); and it
+    can **repeat** requests to accumulate framework-side state, where no single request
+    is remarkable and the harm is in the aggregate (§8.7). Single-request reasoning is
+    not sufficient to clear a surface. *(documented — S2-070/071, S2-074.)*
 - **On-path network attacker** — only where the application/operator has not deployed
   TLS; transport security is the app's, so this is largely out of model (§3). *(inferred — §14 Q-env.)*
 - **Out of scope:** the application developer (writes trusted code/config); the
@@ -270,6 +326,24 @@ Struts' security work.)*
    `Sec-Fetch-*` and cross-origin isolation behaviour. *Violation:* the interceptor
    failing to enforce its documented behaviour when enabled. *Severity:* medium–high.
    *(documented — opt-in since 6.0.)*
+6. **Per-request state isolation.** A framework component holding per-request state —
+   parse state, serialization state, buffers — is not shared between requests being
+   served concurrently. *Violation:* data associated with one request becoming
+   observable in another, or a limit that holds for a single request being defeated by
+   racing two. *Severity:* high — it is a disclosure and integrity failure at once, and
+   it can void another §8 control rather than merely leaking. *Note:* this property is
+   violated by an ordinary concurrency bug, with no attacker sophistication required;
+   the same defect harms honest concurrent users. *(documented — S2-070, S2-071.)*
+7. **Bounded consumption of request-derived input.** Framework code that reads a request
+   body reads it under a limit, and framework-managed state keyed on request-derived
+   values (caches, maps) is bounded. A limit the framework advertises bounds the
+   operation it appears to govern. *Violation:* a single request making the framework
+   allocate in proportion to its size with no ceiling; unbounded retention accumulated
+   across requests; or a configured limit that does not constrain the read it names.
+   *Severity:* moderate–high (denial of service). *Note:* **linear growth is a
+   violation.** The test is whether a bound exists, not whether the curve bends — see
+   §3, and `SECURITY.md`'s paragraph on the linear cases. *(documented — S2-072,
+   S2-073, S2-074.)*
 
 ## §9 Security properties the framework does *not* provide
 
@@ -285,8 +359,12 @@ Struts' security work.)*
 - **No defence once OGNL evaluation is fed untrusted input by the application
   itself** (forced expression evaluation on a request value) — that is the developer
   handing OGNL the attacker's string. *(documented.)*
-- **No hard anti-DoS guarantee** beyond the "avoid super-linear in input size"
-  philosophy; generic flooding/streaming DoS is the operator's to absorb. *(documented.)*
+- **No hard anti-DoS guarantee.** The framework bounds what its own code reads and
+  retains (§8.7) and designs against super-linear consumption, but it cannot protect an
+  application from flooding, bandwidth exhaustion, or repeated requests whose cost to
+  the server stays proportionate — that is the operator's to absorb, ahead of the
+  application. The disclaimed property is *availability under generic load*, not
+  *boundedness of framework code*, which §8.7 does provide. *(documented.)*
 - **The OGNL Java Security Manager sandbox is not a relied-upon control on modern
   JDKs** (the underlying `SecurityManager` is deprecated for removal since JDK 17 and
   permanently disabled in JDK 24; see §5a). *(documented.)*
@@ -294,8 +372,11 @@ Struts' security work.)*
   app must define custom error pages; XSS in the default error page is a documented
   hardening item, not a defended property. *(documented.)*
 - **Well-known classes (framework):** OGNL/expression injection, multipart/file-upload
-  parsing bugs, and parameter-pollution are the framework's recurring risk classes;
-  reflected XSS, CSRF token management, and transport security are the application's.
+  parsing bugs, and parameter-pollution are the highest-severity recurring classes — but
+  the recent record adds two more that are currently the *more frequent* ones:
+  **unbounded reads and unbounded framework-managed state** (S2-072/073/074) and **state
+  shared across concurrent requests** (S2-070/071). Reflected XSS, CSRF token
+  management, and transport security remain the application's. *(documented — §16.)*
 
 ## §10 Downstream (developer + operator) responsibilities
 
@@ -306,6 +387,15 @@ parameter setters annotated, JSPs hidden behind actions, and the application's o
 authn/authz/CSRF/TLS supplied** (Struts provides none of those). The threat-model
 value is only that a finding requiring the developer to *violate* one of these is
 `OUT-OF-MODEL` (§3/§13), not that this list is novel.
+
+Two more that the recent bulletins name explicitly, both as workarounds and as standing
+practice: the **operator** enforces a maximum request-body size ahead of the
+application, in the reverse proxy or the servlet container, for any endpoint that
+accepts a body; and the **developer** sets `struts.locale` to a fixed value wherever
+request-derived locales are not actually needed. Both are defence in depth — they are
+*not* substitutes for the §8.7 bounds, and a missing framework bound stays a framework
+finding whether or not the operator happened to configure around it.
+*(documented — S2-072, S2-073, S2-074.)*
 
 ## §11 Known misuse patterns
 
@@ -339,8 +429,17 @@ authoritative list; §14 Q12.)*
 - **"I can enumerate / pass arbitrary parameters."** Parameter binding is the point of
   the framework; in-model only when it crosses the default annotation/allowlist
   protections.
-- **"Generic DoS: I streamed a huge body / hammered a URL."** Not accepted per
-  `SECURITY.md`; only super-linear amplification inside framework code is considered.
+- **"Generic DoS: I hammered a URL / saturated the pipe."** Not accepted — proportionate
+  cost with no missing framework bound is the operator's to absorb (§3). **But "I sent a
+  large body" does not belong to this bullet by default:** if framework code reads that
+  body into memory with no ceiling, it is a §8.7 violation and `VALID`, as S2-072 and
+  S2-073 both were. Establish that a bound exists before closing on this ground. *(This
+  bullet previously read "I streamed a huge body," which would have closed S2-072.)*
+- **"A framework cache grew when I sent many distinct values."** In model only where the
+  cache is genuinely *unbounded*, or keyed on an unvalidated and unbounded input set. A
+  bounded cache reaching its ceiling and evicting is working as designed, and a cache
+  keyed on a validated finite set — a locale restricted to the runtime's available
+  locales, for instance — is not unbounded. *(documented — S2-074.)*
 - **Duplicate of a disclosed S2-series bulletin/CVE** — closed by reference.
 - **Dependency-tail CVEs** (a transitive jar, e.g. a logging or XML library) from an
   SCA scan — triage upstream unless Struts' own code reaches the vulnerable path with
@@ -354,6 +453,11 @@ authoritative list; §14 Q12.)*
   integration with its own trust surface.
 - A change to how OGNL evaluation, the allowlist, or parameter binding works.
 - A report that cannot be routed to a §13 disposition → revise §8/§9.
+- **A published bulletin whose vulnerability class is not already a §8 property** — the
+  clearest signal that the model under-describes what the framework actually guarantees,
+  and the strongest one, because the PMC has already decided the question by issuing the
+  CVE. S2-070 … S2-074 triggered exactly this re-baseline (§16); the check belongs in
+  the release routine, not in the next report's triage.
 
 ## §13 Triage dispositions
 
@@ -362,7 +466,7 @@ authoritative list; §14 Q12.)*
 | `VALID` | A §8 property breaks via an untrusted HTTP client on a current-version, default-hardened app. | §8, §6, §7 |
 | `VALID-HARDENING` | A §11 misuse is too easy, or a default could be tightened. | §11/§5a |
 | `OUT-OF-MODEL: application-responsibility` | Requires a developer anti-pattern (unsafe setter, raw EL, forced eval, direct JSP) or the app's own authn/authz. | §3/§10 |
-| `OUT-OF-MODEL: non-default-config` | Only manifests with `devMode`, a dev-only plugin, DMI, or a disabled default protection. | §5a |
+| `OUT-OF-MODEL: non-default-config` | Only manifests with `devMode`, a dev-only plugin, DMI, or a disabled default protection — i.e. a setting the project documents as *unsafe*. **Not** a feature the project documents as optional and an application has enabled (§2). | §5a, §2 |
 | `OUT-OF-MODEL: adversary-not-in-scope` | Requires container/host/JVM/developer control. | §7 |
 | `OUT-OF-MODEL: unsupported-version` | Only affects an end-of-life (2.x) version. | §5 |
 | `BY-DESIGN: property-disclaimed` | Concerns a property §9 disclaims (no built-in authn/authz/encoding; generic DoS; JSM on JDK21+). | §9 |
@@ -371,6 +475,22 @@ authoritative list; §14 Q12.)*
 | `MODEL-GAP` | Unroutable. | triggers §12 |
 
 ## §14 Open questions for the maintainers
+
+**Answered since v0 — by the project's own published record (S2-070 … S2-074)**
+
+These two are carried here rather than deleted: the PMC settled them by issuing CVEs,
+so what remains is ratifying the *wording*, not the substance.
+
+- **Q-dos — answered.** The line is **boundedness, not curve shape**. Framework code
+  that reads or retains request-derived input with no ceiling is in model even where the
+  growth is linear — S2-072, S2-073, and S2-074 all carry CVEs on linear growth — while
+  generic load whose cost stays proportionate is not. Folded into §3, §8.7, §9, and
+  §11a; the matching clarification is now in [`SECURITY.md`](SECURITY.md) so the model
+  is no longer paraphrasing that document into a rule it does not state.
+- **Q-plugins — answered.** Bundled plugins are in scope at the same request-trust
+  level: S2-070, S2-071, and S2-072 are all JSON-plugin bulletins with CVEs. The
+  follow-on distinction this exposed — optional *feature* versus documented-unsafe
+  *configuration* — is now in §2 and §13, and is put to the PMC as Q-optional below.
 
 **Wave 1 — scope, defaults, intended use**
 
@@ -400,14 +520,23 @@ authoritative list; §14 Q12.)*
 - **Q-jsm.** Confirm the OGNL Java Security Manager sandbox is **not** a relied-upon
   control (opt-in, and non-functional on modern JDKs — see §5a), so a report premised
   on its absence is not a finding. (§5a/§9.)
-- **Q-dos.** Where is the line between "generic DoS we don't accept" and "super-linear
-  amplification inside framework code we do"? Confirm the §3/§8 wording. (§3.)
+- **Q-concurrency.** Confirm §8.6 as a framework property: per-request state must not be
+  shared between concurrently-served requests, and a violation is `VALID` on its own —
+  including where the only demonstrated consequence is that another framework limit can
+  be raced, with no data shown to cross. (§8.6, from S2-070/071.)
+- **Q-bounds.** Confirm the §8.7 scope: does it cover *all* framework-managed state
+  keyed on request-derived values, or only the caches and body reads bounded in
+  7.3.0/6.11.0? A triager needs to know whether an unbounded structure found elsewhere
+  in the framework is `VALID` or `VALID-HARDENING`. (§8.7.)
 
 **Wave 3 — surfaces & false-friends**
 
-- **Q-plugins.** Which bundled plugins (REST, JSON, Convention, …) are in scope at the
-  same request-trust level, and are any (e.g. REST/XML) historically higher-risk and
-  worth their own §8 note? (§2.)
+- **Q-optional.** Confirm the §2 rule that a documented-optional feature (JSON body
+  population, `enableSMD`, a mapped CSP-report endpoint, any bundled plugin) is in model
+  once an application enables it, and that `OUT-OF-MODEL: non-default-config` is
+  reserved for settings the project documents as *unsafe*. (§2/§13.)
+- **Q-plugin-risk.** With Q-plugins answered, the residual: are any bundled plugins
+  (e.g. REST/XML) historically higher-risk enough to warrant their own §8 note? (§2.)
 - **Q-upload.** Confirm the multipart/file-upload surface (Jakarta) and what the
   framework guarantees vs. leaves to the container/app. (§2/§6.)
 - **Q12.** Beyond the `SECURITY.md` "Before Reporting" list already folded into §11a,
@@ -434,6 +563,29 @@ sections:
 | DMI / Strict Method Invocation | §5a, §8.3 |
 | FetchMetadata / COOP / COEP | §5a, §8.5 |
 | OGNL JSM sandbox (modern-JDK limitation) | §5a, §9 |
-| Generic DoS not accepted; non-linear-in-input philosophy | §3, §8, §9 |
+| Generic DoS not accepted; non-linear-in-input philosophy | §3, §9 |
+| Unbounded reads/state are in scope even when linear | §3, §8.7, §11a |
+| Resource bounds (i18n cache size, CSP report size, locale validation) | §5a, §8.7 |
 | "Before Reporting" duplicate/known-config checks | §3, §11a, §13 (`DUPLICATE`) |
 | Supported versions (2.x EOL) | §5, §13 (`OUT-OF-MODEL: unsupported-version`) |
+
+## §16 Appendix — recent-bulletin back-map (S2-070 … S2-074)
+
+The five bulletins published on **2026-08-14** are the evidence base for the 2026-08-15
+revision, and the reason §8 grew two properties. Each is a published
+[Security Bulletin](https://cwiki.apache.org/confluence/display/WW/Security+Bulletins)
+on the Struts cwiki, all five published the same day. Ratings are the bulletins' own.
+
+| Bulletin | Rating | What it establishes for the model | § |
+| --- | --- | --- | --- |
+| **S2-070** (CVE-2026-73631) — shared parsing state, JSON plugin | Moderate | Per-request parse state shared across concurrent requests: cross-request disclosure and integrity loss, **and bypass of a configured limit** — one defect voiding another control | §8.6, §7, §2 |
+| **S2-071** (CVE-2026-73632) — shared serialization state, JSON plugin | Low | The same on the response side; the `json` *result type* is unaffected because a writer is built per request — the negative control for §8.6 | §8.6, §2 |
+| **S2-072** (CVE-2026-73633) — unbounded read of a JSON request body | Moderate | Linear DoS with a CVE, and an advertised limit (JSON input length) that did **not** bound the read it appeared to govern | §8.7, §3, §11a |
+| **S2-073** (CVE-2026-73634) — unbounded read of a CSP violation report | Moderate | Core rather than a plugin; inert until an application maps the endpoint; ordinarily unauthenticated *by design*, since browsers post to it directly | §8.7, §2, §10 |
+| **S2-074** (CVE-2026-73635) — unbounded localized-text cache growth | Moderate | Affects the **default configuration** rather than an opt-in feature; a request-derived value used as a **cache key**, making unbounded *retention* a class of its own alongside unbounded reads | §8.7, §6, §5a, §11a |
+
+Three of the five would have been closed as non-findings by the v0 draft — S2-072 and
+S2-073 under §11a's "I streamed a huge body," S2-074 under §3's super-linear-only rule —
+and the remaining two had no §8 property to violate. That is the honest summary of what
+this revision fixes, and the reason §12 now carries a bulletin-driven re-baseline
+trigger.

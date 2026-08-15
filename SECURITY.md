@@ -46,6 +46,13 @@ workarounds to generic problems (such as a client streaming lots of data to your
 the same URL repeatedly). In general, our philosophy is to avoid any attacks that can cause the server
 to consume resources in a non-linear relationship to the size of inputs.
 
+To be clear about the linear cases: that philosophy describes what we design against, not a threshold a
+report has to clear before we will accept it. Framework code that reads or retains request-derived input
+**without any bound** is in scope even where the growth is merely linear, and we have assigned CVEs for
+exactly that. What stays out of scope is the generic case above — where the cost to the server is
+proportionate, no framework limit is missing or ineffective, and the defence belongs to your servlet
+container, reverse proxy, or network.
+
 The mailing address is: [security@struts.apache.org](mailto:security@struts.apache.org)
 
 [General network server security tips](http://httpd.apache.org/docs/trunk/misc/security_tips.html)

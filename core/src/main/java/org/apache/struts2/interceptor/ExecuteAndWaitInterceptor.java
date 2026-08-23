@@ -111,6 +111,34 @@ import java.util.Map;
  * for obtaining and releasing resources that the background process will need to execute successfully. To use your
  * background process extension, extend ExecuteAndWaitInterceptor and implement the getNewBackgroundProcess() method.
  * </p>
+ *
+ * <p>
+ * The background process is keyed by action name alone, so within one session a given action can only run once at a
+ * time - a second browser tab joins the process already running instead of starting its own. Override
+ * {@link #getBackgroundProcessName(ActionProxy)} to widen that key, for example with the transaction token, so that
+ * each tab gets its own process:
+ * </p>
+ *
+ * <pre>
+ * public class TokenizedExecuteAndWaitInterceptor extends ExecuteAndWaitInterceptor {
+ *     &#64;Override
+ *     protected String getBackgroundProcessName(ActionProxy proxy) {
+ *         String token = TokenHelper.getToken();
+ *         return token == null
+ *             ? super.getBackgroundProcessName(proxy)
+ *             : super.getBackgroundProcessName(proxy) + "_" + token;
+ *     }
+ * }
+ * </pre>
+ *
+ * <p>
+ * Two caveats apply to any key that varies per request. First, the entry is dropped from the session only when a
+ * request observes the process as done, so a per-tab or per-token key strands one background process - and the action
+ * instance it holds - in the session for every run the user abandons; unlike the action-name key, that growth is
+ * unbounded. Second, the wait page must carry the value used in the key on every refresh (for instance
+ * &lt;s:url includeParams="all"/&gt; together with the token interceptor); if it does not, each refresh starts another
+ * background process rather than joining the one already running.
+ * </p>
  * <!-- END SNIPPET: extending -->
  *
  * <p><u>Example code:</u></p>

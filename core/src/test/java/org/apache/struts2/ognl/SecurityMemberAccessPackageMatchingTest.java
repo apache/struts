@@ -54,6 +54,15 @@ public class SecurityMemberAccessPackageMatchingTest {
     }
 
     /**
+     * The default-package condition replaced by WW-5677 in {@code checkDefaultPackageAccess},
+     * retained verbatim as the reference oracle. Deliberately calls {@link Class#getPackage()}
+     * directly rather than delegating to production code, so that it cannot drift with it.
+     */
+    private static boolean legacyDefaultPackageCondition(Class<?> clazz) {
+        return clazz.getPackage() == null || clazz.getPackage().getName().isEmpty();
+    }
+
+    /**
      * The {@code toPackageName} implementation replaced by WW-5674, retained as the reference oracle.
      */
     private static String legacyToPackageName(Class<?> clazz) {
@@ -165,6 +174,21 @@ public class SecurityMemberAccessPackageMatchingTest {
             assertThat(toPackageName(clazz))
                     .as("toPackageName(%s)", clazz.getName())
                     .isEqualTo(legacyToPackageName(clazz));
+        }
+    }
+
+    /**
+     * WW-5677 replaced {@code getPackage() == null || getPackage().getName().isEmpty()} in
+     * {@code checkDefaultPackageAccess} with {@code toPackageName(clazz).isEmpty()}. That gate
+     * decides whether a class counts as living in the default package, so the equivalence is
+     * asserted against the frozen oracle over every class shape rather than argued.
+     */
+    @Test
+    public void defaultPackageConditionMatchesLegacyAcrossClassShapes() throws Exception {
+        for (Class<?> clazz : classShapes()) {
+            assertThat(toPackageName(clazz).isEmpty())
+                    .as("default-package condition for %s", clazz.getName())
+                    .isEqualTo(legacyDefaultPackageCondition(clazz));
         }
     }
 

@@ -111,7 +111,7 @@ public class SecurityMemberAccessTest {
                 "excludedPackageNamePatterns",
                 "excludedPackageExemptClasses",
                 "allowlistClasses",
-                "allowlistPackageNames",
+                "allowlistPackageNamesUnion",
                 "excludeProperties",
                 "acceptProperties");
         for (String field : fields) {

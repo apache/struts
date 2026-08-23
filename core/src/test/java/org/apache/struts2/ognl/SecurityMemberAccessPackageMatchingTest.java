@@ -117,21 +117,21 @@ public class SecurityMemberAccessPackageMatchingTest {
     public void siblingPackageWithSharedCharacterPrefixDoesNotMatch() {
         Set<String> excluded = Set.of("org.apache.struts2");
 
-        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2x", excluded, emptySet()))
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2x", excluded))
                 .as("a sibling package sharing a character prefix must not match (production)")
                 .isFalse();
         assertThat(legacyPrefixMatch("org.apache.struts2x", excluded))
                 .as("a sibling package sharing a character prefix must not match (legacy oracle)")
                 .isFalse();
 
-        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2", excluded, emptySet()))
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2", excluded))
                 .as("an exact match must match (production)")
                 .isTrue();
         assertThat(legacyPrefixMatch("org.apache.struts2", excluded))
                 .as("an exact match must match (legacy oracle)")
                 .isTrue();
 
-        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2.ognl", excluded, emptySet()))
+        assertThat(SecurityMemberAccess.isPackageBelongsToPackages("org.apache.struts2.ognl", excluded))
                 .as("a sub-package must match (production)")
                 .isTrue();
         assertThat(legacyPrefixMatch("org.apache.struts2.ognl", excluded))
@@ -192,7 +192,7 @@ public class SecurityMemberAccessPackageMatchingTest {
     public void indexWalkMatchesLegacyAcrossPackageNameShapes() {
         for (String packageName : PACKAGE_NAMES) {
             for (Set<String> candidates : CANDIDATE_SETS) {
-                assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, candidates, emptySet()))
+                assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, candidates))
                         .as("packageName=[%s] candidates=%s", packageName, candidates)
                         .isEqualTo(legacyPrefixMatch(packageName, candidates));
             }
@@ -200,25 +200,37 @@ public class SecurityMemberAccessPackageMatchingTest {
     }
 
     @Test
-    public void bothSetsEmptyShortCircuitsToFalse() {
+    public void emptyCandidateSetShortCircuitsToFalse() {
         for (String packageName : PACKAGE_NAMES) {
-            assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, emptySet(), emptySet()))
+            assertThat(SecurityMemberAccess.isPackageBelongsToPackages(packageName, emptySet()))
                     .as("packageName=[%s] with no configured packages", packageName)
                     .isFalse();
         }
     }
 
+    /**
+     * The union must never lose ALLOWLIST_REQUIRED_PACKAGES. Dropping them would be a silent
+     * fail-open: Struts' own components would stop being allowlisted with nothing failing loudly.
+     */
     @Test
-    public void twoSetOverloadEqualsDisjunctionOfSingleSetCalls() throws Exception {
-        for (Class<?> clazz : classShapes()) {
-            for (Set<String> first : CANDIDATE_SETS) {
-                for (Set<String> second : CANDIDATE_SETS) {
-                    assertThat(isClassBelongsToPackages(clazz, first, second))
-                            .as("clazz=[%s] first=%s second=%s", clazz.getName(), first, second)
-                            .isEqualTo(isClassBelongsToPackages(clazz, first)
-                                    || isClassBelongsToPackages(clazz, second));
-                }
-            }
-        }
+    public void allowlistUnionRetainsRequiredPackagesAfterSetterCall() throws Exception {
+        SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
+        sma.useAllowlistPackageNames("com.example.app");
+
+        Set<String> union = SecurityMemberAccessTest.reflectField(sma, "allowlistPackageNamesUnion");
+
+        assertThat(union).contains("com.example.app", "org.apache.struts2.components");
+    }
+
+    @Test
+    public void allowlistUnionContainsRequiredPackagesByDefault() throws Exception {
+        SecurityMemberAccess sma = new SecurityMemberAccess(null, null);
+
+        Set<String> union = SecurityMemberAccessTest.reflectField(sma, "allowlistPackageNamesUnion");
+
+        assertThat(union).contains(
+                "org.apache.struts2.components",
+                "org.apache.struts2.views.jsp",
+                "org.apache.struts2.validator.validators");
     }
 }

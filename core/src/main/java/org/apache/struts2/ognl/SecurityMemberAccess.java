@@ -56,12 +56,6 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
-    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = Set.of(
-            "org.apache.struts2.validator.validators",
-            "org.apache.struts2.components",
-            "org.apache.struts2.views.jsp"
-    );
-
     private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = Set.of(
             java.lang.Enum.class,
             java.lang.String.class,
@@ -86,16 +80,9 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
 
-    private volatile boolean isDevModeInit;
-    private boolean isDevMode;
-    private Set<String> devModeExcludedClasses = Set.of(Object.class.getName());
-    private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
-    private Set<String> devModeExcludedPackageNames = emptySet();
-    private Set<String> devModeExcludedPackageExemptClasses = emptySet();
-
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
-    private Set<String> allowlistPackageNames = emptySet();
+    private Set<String> allowlistPackageNamesUnion = SecurityMemberAccessConfig.ALLOWLIST_REQUIRED_PACKAGES;
 
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
@@ -110,6 +97,40 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject
     public void setProxyService(ProxyService proxyService) {
         this.proxyService = proxyService;
+    }
+
+    /**
+     * Copies the shared, already-parsed configuration into this instance. This is the only injected
+     * member that touches the configuration fields, so the unspecified order in which the container
+     * iterates {@code getDeclaredMethods()} cannot affect the result.
+     *
+     * @since Struts 7.4.0
+     */
+    @Inject
+    public void useConfig(SecurityMemberAccessConfig config) {
+        this.allowStaticFieldAccess = config.isAllowStaticFieldAccess();
+        this.excludedClasses = config.getExcludedClasses();
+        this.excludedPackageNamePatterns = config.getExcludedPackageNamePatterns();
+        this.excludedPackageNames = config.getExcludedPackageNames();
+        this.excludedPackageExemptClasses = config.getExcludedPackageExemptClasses();
+        this.enforceAllowlistEnabled = config.isEnforceAllowlistEnabled();
+        this.allowlistClasses = config.getAllowlistClasses();
+        this.allowlistPackageNamesUnion = config.getAllowlistPackageNamesUnion();
+        this.disallowProxyObjectAccess = config.isDisallowProxyObjectAccess();
+        this.disallowProxyMemberAccess = config.isDisallowProxyMemberAccess();
+        this.disallowDefaultPackageAccess = config.isDisallowDefaultPackageAccess();
+    }
+
+    /**
+     * Used only by the deprecated {@link #useAllowlistPackageNames(String)} setter path. The injected
+     * configuration path seeds {@code allowlistPackageNamesUnion} directly from
+     * {@link SecurityMemberAccessConfig}, which precomputes the union exactly once per container; both
+     * routes call {@link SecurityMemberAccessConfig#union(Set, Set)}, so there remains exactly one place
+     * in the codebase that computes the union, and {@code ALLOWLIST_REQUIRED_PACKAGES} cannot be silently
+     * dropped from either.
+     */
+    private void applyAllowlistPackageNames(Set<String> packageNames) {
+        this.allowlistPackageNamesUnion = SecurityMemberAccessConfig.union(SecurityMemberAccessConfig.ALLOWLIST_REQUIRED_PACKAGES, packageNames);
     }
 
     @Override
@@ -254,14 +275,13 @@ public class SecurityMemberAccess implements MemberAccess {
                 || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
                 || (threadAllowlist != null && threadAllowlist.getAllowlist().contains(clazz))
-                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES, allowlistPackageNames);
+                || isClassBelongsToPackages(clazz, allowlistPackageNamesUnion);
     }
 
     /**
      * @return {@code true} if member access is allowed
      */
     protected boolean checkExclusionList(Object target, Member member) {
-        useDevModeConfiguration();
         Class<?> memberClass = member.getDeclaringClass();
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", memberClass);
@@ -390,54 +410,38 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
-        return isClassBelongsToPackages(clazz, matchingPackages, emptySet());
+        return isPackageBelongsToPackages(toPackageName(clazz), matchingPackages);
     }
 
     /**
-     * Tests the class's package against two sets in a single walk. Equivalent to calling
-     * {@link #isClassBelongsToPackages(Class, Set)} once per set and OR-ing the results, but
-     * walks the package name only once.
-     *
-     * @param clazz  the class whose package is tested
-     * @param first  the first set of package names to match against
-     * @param second the second set of package names to match against
-     * @return {@code true} if the class's package or any parent package is in either set
-     */
-    static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> first, Set<String> second) {
-        return isPackageBelongsToPackages(toPackageName(clazz), first, second);
-    }
-
-    /**
-     * Tests whether the given package name, or any of its parent packages, is present in either
-     * set. Walks the name in place rather than building the full prefix list, since this runs on
-     * the OGNL member-access path. Shortest prefix first, so broad entries such as {@code java.io}
+     * Tests whether the given package name, or any of its parent packages, is present in the set.
+     * Walks the name in place rather than building the full prefix list, since this runs on the OGNL
+     * member-access path. Shortest prefix first, so broad entries such as {@code java.io}
      * short-circuit earliest.
      *
      * <p>
-     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by
-     * the implementation this replaced, which matches more broadly — tightening exclusion but
-     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing
-     * dot, so every current caller is safe; route any other string through here only after
-     * confirming the same.
+     * The package name must not end in {@code '.'}. Such a name is probed one prefix more than by the
+     * implementation this replaced, which matches more broadly — tightening exclusion but
+     * <em>loosening</em> the allowlist. {@link Class#getPackageName()} cannot produce a trailing dot,
+     * and {@code ConfigParseUtil.toPackageNamesSet} strips them from configured names, so every
+     * current caller is safe; route any other string through here only after confirming the same.
      *
-     * @param packageName the package name to test, empty for the default package, never ending in {@code '.'}
-     * @param first       the first set of package names to match against
-     * @param second      the second set of package names to match against
-     * @return {@code true} if the package or any parent package is in either set
+     * @param packageName      the package name to test, empty for the default package, never ending in {@code '.'}
+     * @param matchingPackages the package names to match against
+     * @return {@code true} if the package or any parent package is in the set
      */
-    static boolean isPackageBelongsToPackages(String packageName, Set<String> first, Set<String> second) {
-        if (first.isEmpty() && second.isEmpty()) {
+    static boolean isPackageBelongsToPackages(String packageName, Set<String> matchingPackages) {
+        if (matchingPackages.isEmpty()) {
             return false;
         }
         int idx = packageName.indexOf('.');
         while (idx != -1) {
-            String prefix = packageName.substring(0, idx);
-            if (first.contains(prefix) || second.contains(prefix)) {
+            if (matchingPackages.contains(packageName.substring(0, idx))) {
                 return true;
             }
             idx = packageName.indexOf('.', idx + 1);
         }
-        return first.contains(packageName) || second.contains(packageName);
+        return matchingPackages.contains(packageName);
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
@@ -470,7 +474,13 @@ public class SecurityMemberAccess implements MemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
         this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
         if (!this.allowStaticFieldAccess) {
@@ -478,27 +488,57 @@ public class SecurityMemberAccess implements MemberAccess {
         }
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedClasses(String commaDelimitedClasses) {
         this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageNames(String commaDelimitedPackageNames) {
         this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
         if (!this.enforceAllowlistEnabled) {
@@ -510,66 +550,59 @@ public class SecurityMemberAccess implements MemberAccess {
         }
     }
 
-    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
-    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
-        this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+        applyAllowlistPackageNames(toPackageNamesSet(commaDelimitedPackageNames));
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
         this.disallowProxyObjectAccess = BooleanUtils.toBoolean(disallowProxyObjectAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
+    /**
+     * @deprecated since 7.4.0, configuration is parsed once per container by
+     * {@link SecurityMemberAccessConfig}. This method still mutates this instance and is retained for
+     * tests and existing callers; it will be removed in Struts 8.0.0. The container no longer invokes
+     * this setter.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    protected void useDevMode(String devMode) {
-        this.isDevMode = BooleanUtils.toBoolean(devMode);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
-    public void useDevModeExcludedClasses(String commaDelimitedClasses) {
-        this.devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void useDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        this.devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void useDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
-        this.devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
-    public void useDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        this.devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
-    }
-
-    private void useDevModeConfiguration() {
-        if (!isDevMode || isDevModeInit) {
-            return;
-        }
-        logWarningForFirstOccurrence("devMode", LOG,
-                "DevMode enabled, using DevMode excluded classes and packages for OGNL security enforcement!");
-        isDevModeInit = true;
-        excludedClasses = devModeExcludedClasses;
-        excludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
-        excludedPackageNames = devModeExcludedPackageNames;
-        excludedPackageExemptClasses = devModeExcludedPackageExemptClasses;
-    }
 }

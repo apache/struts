@@ -2,11 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-For detailed procedures, use the specialized agents and commands in `.claude/agents/` and `.claude/commands/`.
+For detailed procedures, use the specialized agents, commands and skills in `.claude/agents/`, `.claude/commands/` and `.claude/skills/`.
 
 ## Project Overview
 
-Apache Struts is a mature MVC web application framework for Java (originally WebWork 2). Current version: **7.2.0-SNAPSHOT**. Uses OGNL for value stack expressions and FreeMarker for UI tag templates.
+Apache Struts is a mature MVC web application framework for Java (originally WebWork 2). Uses OGNL for value stack expressions and FreeMarker for UI tag templates.
+
+**Version**: read it from the root `pom.xml` — it is `7.4.0-SNAPSHOT` as of 2026-08-23. Do not treat the `-SNAPSHOT` value as the next release number: the release version is chosen at release time from the semver impact of the accumulated changes, so `7.4.0-SNAPSHOT` may well ship as something else. Released versions are git tags like `STRUTS_7_2_1`.
 
 ### Build Commands
 
@@ -72,11 +74,26 @@ triage. [`AGENTS.md`](AGENTS.md) is a shorter LLM-facing wrapper around the same
 
 ## Testing
 
-Tests use JUnit 5 with AssertJ assertions and Mockito for mocking. Run with `mvn test -DskipAssembly`.
+Run with `mvn test -DskipAssembly`.
+
+**Tests are JUnit 4 — there is no JUnit 5 anywhere in this repo.** `parent/pom.xml` declares
+`junit:junit:4.13.2`; there are zero `org.junit.jupiter` imports. Two styles coexist:
+
+- **JUnit 3 style** — ~114 classes extend `XWorkTestCase` (which extends `junit.framework.TestCase`).
+  Methods must be named `testXxx()`. A Jupiter `@Test` annotation added to one of these **silently
+  never runs** — it does not fail, it is simply not collected.
+- **JUnit 4 style** — ~210 classes use `import org.junit.Test`.
+
+Before adding a test, open the target file and match the style already there. AssertJ assertions and
+Mockito mocks are both available and widely used. Introducing Jupiter is a build-infrastructure change
+that needs its own `WW-` ticket, never a side effect of a feature.
 
 ## Pull Requests
 
-- **Title format**: `WW-XXXX Description` (Jira ticket ID required)
+- **Title format**: `WW-XXXX Description` — a Jira ticket ID is required for any code change.
+  Pure documentation and build/CI changes (`SECURITY.md`, `AGENTS.md`, `CLAUDE.md`, `.claude/`,
+  workflows) take no ticket and use conventional-commit form instead: `docs: ...`, `build(ci): ...`,
+  `chore: ...`
 - **Link ticket in description**: `Fixes [WW-XXXX](https://issues.apache.org/jira/browse/WW-XXXX)`
 - **Issue tracker**: https://issues.apache.org/jira/projects/WW
 - **Never submit a PR that fixes a suspected vulnerability.** Before opening a PR, verify the change is not a security patch (OGNL injection, parameter

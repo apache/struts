@@ -310,6 +310,15 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     /**
+     * Blocks access to classes in the default (unnamed) package.
+     * <p>
+     * The emptiness of {@link #toPackageName(Class)} is the same test as the
+     * {@code getPackage() == null || getPackage().getName().isEmpty()} form this replaced, for every
+     * class shape: {@code getPackage()} is null for arrays, primitives and {@code void}, and names the
+     * unnamed package with the empty string, all of which {@code toPackageName} reports as empty. It
+     * avoids the {@code getPackage()} lookup through the defining classloader's package map, which
+     * ran twice per class here. See WW-5677.
+     *
      * @return {@code true} if member access is allowed
      */
     protected boolean checkDefaultPackageAccess(Object target, Member member) {
@@ -317,7 +326,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
         Class<?> memberClass = member.getDeclaringClass();
-        if (memberClass.getPackage() == null || memberClass.getPackage().getName().isEmpty()) {
+        if (toPackageName(memberClass).isEmpty()) {
             LOG.warn("Class [{}] from the default package is excluded!", memberClass);
             return false;
         }
@@ -325,7 +334,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
         Class<?> targetClass = target.getClass();
-        if (targetClass.getPackage() == null || targetClass.getPackage().getName().isEmpty()) {
+        if (toPackageName(targetClass).isEmpty()) {
             LOG.warn("Class [{}] from the default package is excluded!", targetClass);
             return false;
         }
@@ -407,7 +416,9 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
-        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(toPackageName(clazz)).matches());
+        // Resolved once rather than inside the lambda, which re-resolved it per configured pattern.
+        String packageName = toPackageName(clazz);
+        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(packageName).matches());
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {

@@ -404,6 +404,33 @@ public class SecurityMemberAccessTest {
         assertFalse("default package isn't excluded!", actual);
     }
 
+    /**
+     * WW-5677 routed {@code checkDefaultPackageAccess} through {@code toPackageName}. A class in a
+     * named package must still pass the gate when the setting is on.
+     */
+    @Test
+    public void testDefaultPackageAccessPermitsNamedPackageClass() throws Exception {
+        sma.useDisallowDefaultPackageAccess(Boolean.TRUE.toString());
+
+        Member member = FooBar.class.getMethod("getStringField");
+
+        assertTrue("a named-package class is blocked!", sma.checkDefaultPackageAccess(new FooBar(), member));
+    }
+
+    /**
+     * WW-5677 equivalence at the shape most likely to break it: an array target reports the empty
+     * package under both the old {@code getPackage() == null} form and the new one, so it must stay
+     * blocked. The member here declares in {@code java.lang}, so only the target branch can block.
+     */
+    @Test
+    public void testDefaultPackageAccessBlocksArrayTarget() throws Exception {
+        sma.useDisallowDefaultPackageAccess(Boolean.TRUE.toString());
+
+        Member member = Object.class.getMethod("toString");
+
+        assertFalse("an array target isn't blocked!", sma.checkDefaultPackageAccess(new String[0], member));
+    }
+
     @Test
     public void testDefaultPackageExclusion2() throws Exception {
         // given

@@ -69,7 +69,13 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                     String key = (String) entry.getKey();
 
                     if (mapping.containsKey(key)) {
-                        break;
+                        // Skip this entry only. Until WW-5685 this was a break, which abandoned the
+                        // rest of the file: a key claimed earlier in the hierarchy walk silently
+                        // dropped every remaining entry, and Properties.entrySet() has no defined
+                        // order, so which ones survived depended on hash order.
+                        LOG.debug("Skipping [{}] from [{}]: key is already mapped by a higher precedence source",
+                                key, converterFilename);
+                        continue;
                     }
                     // for keyProperty of Set
                     if (key.startsWith(DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX)

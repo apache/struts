@@ -50,6 +50,8 @@ import org.apache.struts2.util.EmptyKeyConversionAction;
 import org.apache.struts2.util.ExplicitKeyConversionAction;
 import org.apache.struts2.util.FieldConversionAction;
 import org.apache.struts2.util.InheritedMethodConversionSubAction;
+import org.apache.struts2.util.PropertiesCollisionSubAction;
+import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.MyBean;
 import org.apache.struts2.util.MyBeanAction;
 
@@ -909,6 +911,46 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_fromProperties"));
         // the entry after the collision used to be dropped by `break`
         assertEquals("true", freshConverter.getConverter(CollidingKeyConversionAction.class, "CreateIfNull_afterTheCollision"));
+    }
+
+    private static final String PROPERTIES_COLLISION_BASE_FILE =
+            "org/apache/struts2/util/PropertiesCollisionBaseAction-conversion.properties";
+
+    /**
+     * The key a {@link Properties} load yields first for the given file. {@code Properties} extends
+     * {@code Hashtable}, so the order is a function of the key strings rather than the file, and a
+     * collision on any later key would leave the test above unable to detect the defect.
+     */
+    private static String firstKeyOf(String filename) throws IOException {
+        Properties properties = new Properties();
+        try (InputStream is = ClassLoaderUtil.getResourceAsStream(filename, XWorkConverterTest.class)) {
+            properties.load(is);
+        }
+        return (String) properties.keySet().iterator().next();
+    }
+
+    /**
+     * WW-5685, the properties-file counterpart of the test above and the realistic trigger for it.
+     * The hierarchy walk reads the subclass file first and passes one accumulating mapping down, so
+     * by the time the superclass file is read its shared key is taken. That collision used to
+     * abandon the superclass file outright, dropping every other entry in it.
+     */
+    public void testPropertiesEntriesAfterAKeyCollisionAreStillRegistered() throws Exception {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+
+        assertEquals("the fixture only discriminates while the shared key is read first; "
+                        + "Properties iteration order has changed and it must be renamed again",
+                "CreateIfNull_overridden", firstKeyOf(PROPERTIES_COLLISION_BASE_FILE));
+
+        // the subclass file is read first, so it keeps the shared key
+        assertEquals("fromSub",
+                freshConverter.getConverter(PropertiesCollisionSubAction.class, "CreateIfNull_overridden"));
+
+        for (String key : new String[]{"CreateIfNull_alpha", "CreateIfNull_bravo", "CreateIfNull_charlie"}) {
+            assertEquals("superclass entry [" + key + "] was dropped after the collision", "true",
+                    freshConverter.getConverter(PropertiesCollisionSubAction.class, key));
+        }
     }
 
     public void testClassLevelEmptyKeyRegistersNoMapping() throws Exception {

@@ -393,8 +393,13 @@ public class SecurityMemberAccess implements MemberAccess {
         // call, whereas getPackageName() is computed once and cached on the Class. getPackage()
         // returns null for exactly arrays, primitives and void, so the guard reproduces the
         // previous result for every input. Note that void.class.isPrimitive() is true.
-        // Arrays deliberately keep the empty package here: getPackageName() would resolve them
-        // to the element type's package, which would loosen the allowlist. See WW-5674.
+        // Arrays deliberately keep the empty package. WW-5676 weighed resolving them to the element
+        // type's package and decided against it: that would tighten nothing, because the package
+        // check is unreachable for array targets -- every reflectively reachable member of an array
+        // class declares in java.lang.Object, which is permanently excluded -- while it would loosen
+        // the allowlist, implicitly allowlisting com.app.Thing[] for any application configuring
+        // struts.allowlist.packageNames=com.app. SecurityMemberAccessArrayTargetTest pins that
+        // reasoning; reopen WW-5676 if it ever stops holding.
         if (clazz.isArray() || clazz.isPrimitive()) {
             return "";
         }

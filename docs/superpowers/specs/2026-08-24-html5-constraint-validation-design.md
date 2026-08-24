@@ -96,7 +96,7 @@ become pure additions.
 | `regex` | `pattern` | only when `caseSensitive="true"` **and** the regex is ECMAScript-safe |
 | `int`, `short`, `long` | `min` / `max` | only when the control is already numeric |
 | `double` | `min` / `max` | only when the control is already numeric |
-| `date` | `min` / `max` | only when the control is already temporal |
+| `date` | `min` / `max` | only when the control is already temporal — **deferred, see below** |
 | `email`, `url` | — | never; browser regexes diverge from Struts' |
 | `creditcard`, `fieldexpression`, `expression`, `conversion`, visitor | — | no safe mapping |
 
@@ -105,6 +105,13 @@ become pure additions.
 
 `RegexFieldValidator` uses `matcher.matches()`, so it is fully anchored and matches HTML5 `pattern`
 semantics. The divergence is syntactic, not positional.
+
+**Temporal ranges are deferred out of the first implementation.** `DateRangeFieldValidator` extends
+`RangeValidatorSupport<Date>`, so it reaches the range branch and is rejected there for not being numeric —
+it emits nothing. Honouring it needs per-control ISO formatting (`date` wants `yyyy-MM-dd`, `month`
+`yyyy-MM`, `week` `yyyy-'W'ww`, `time` `HH:mm`), which is guesswork worth doing deliberately rather than
+alongside everything else. `HtmlControlType.supportsRange()` already covers the temporal types, so the enum
+needs no change when it lands. Filed as a follow-up on the implementation plan.
 
 ### ECMAScript-safe regex detection
 
@@ -156,9 +163,13 @@ belongs in the release notes.
 
 ```java
 public interface HtmlConstraintProvider {
-    Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control);
+    Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action);
 }
 ```
+
+The third parameter is required, not incidental: `Validator.getMessage(Object)` needs the action instance
+to resolve i18n text, and the `data-msg-*` attributes come from it. It may be null, in which case no
+messages are emitted.
 
 Named per the project convention of `Struts*` for default implementations rather than `Default*`. Registered
 **once** in `struts-beans.xml` as `type="...HtmlConstraintProvider" name="struts"`, following the
@@ -223,7 +234,11 @@ Gating the *computation* on the constant keeps the cost at zero when off. Themes
 `Form.getValidators(String)` re-runs the action-mapping lookup and
 `actionValidatorManager.getValidators(actionClass, actionName, methodName)` on every call, so a 20-field form
 would do 20 full lookups. `getFieldValidators` resolves the action's validator list **once**, memoises it on
-the form's attributes, and filters by field name per call.
+private fields of the `Form` component, and filters by field name per call.
+
+Memoise on component fields, not on the attributes map. A `Form` component is constructed per render by
+`ComponentTagSupport`, so a field is naturally request-scoped, and the attributes map is exposed to
+templates and should not carry private bookkeeping.
 
 The existing `getValidators(String)` stays untouched for the deprecated `form-close-validate.ftl` and is
 deleted with it in 8.0.0.

@@ -734,11 +734,26 @@ public interface HtmlConstraintProvider {
 
 Create `core/src/main/java/org/apache/struts2/components/StrutsHtmlConstraintProvider.java` with the licence header, then:
 
+**Post-implementation note (added during final-review fixup, not part of the original TDD pass):** the
+listing below is the shipped implementation, not the first draft. Two corrections were made after this
+task's tests originally went green, both discovered in a whole-branch review:
+
+- `addRequired` split into `addRequiredString` (safe on any text-entry or `TEXTAREA` control) and
+  `addRequiredField` (safe only on `RADIO`/`FILE` — see the mapping table in the spec). The original single
+  `addRequired`, gated only on `control != OTHER`, would have emitted `required` on a text input or a select,
+  which false-rejects an empty string the server accepts. `addRequiredField` was briefly dead code in an
+  intermediate commit because no component overrode `getControlType()` to return `RADIO` or `FILE`; that is
+  fixed in Task 6 below, which now includes those two overrides.
+- `addPattern` gained an explicit `EmailValidator`/`CreditCardValidator` exclusion and a `trim` guard, and
+  `addRange`/`addDoubleRange` gained an integral-`min` guard. Each is explained inline below.
+
 ```java
 package org.apache.struts2.components;
 
 import org.apache.struts2.validator.Validator;
+import org.apache.struts2.validator.validators.CreditCardValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
+import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.RangeValidatorSupport;
 import org.apache.struts2.validator.validators.RegexFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
@@ -777,8 +792,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control) {
-        if (validator instanceof RequiredFieldValidator || validator instanceof RequiredStringValidator) {
-            addRequired(attributes, control);
+        if (validator instanceof RequiredStringValidator) {
+            addRequiredString(attributes, control);
+        } else if (validator instanceof RequiredFieldValidator) {
+            addRequiredField(attributes, control);
         } else if (validator instanceof StringLengthFieldValidator lengthValidator) {
             addLength(attributes, lengthValidator, control);
         } else if (validator instanceof RegexFieldValidator regexValidator) {
@@ -790,8 +807,26 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
     }
 
-    protected void addRequired(Map<String, String> attributes, HtmlControlType control) {
-        if (control == HtmlControlType.OTHER) {
+    /**
+     * {@code requiredstring} fails on null, empty and (by default) blank, so the browser's
+     * {@code required} can only reject what the server would also reject. Safe on any text-entry control.
+     */
+    protected void addRequiredString(Map<String, String> attributes, HtmlControlType control) {
+        if (!control.supportsLength()) {
+            return;
+        }
+        attributes.put("required", "required");
+    }
+
+    /**
+     * {@code required} fails only on null, an empty array or an empty collection. A control that submits
+     * an empty string rather than omitting the parameter therefore passes server-side while the browser
+     * blocks it — an empty text input, a select with an empty-valued header option, and an unticked
+     * checkbox (CheckboxInterceptor substitutes "false") are all in that group. Only RADIO and FILE omit
+     * the parameter entirely when empty, so only they agree with the browser.
+     */
+    protected void addRequiredField(Map<String, String> attributes, HtmlControlType control) {
+        if (control != HtmlControlType.RADIO && control != HtmlControlType.FILE) {
             return;
         }
         attributes.put("required", "required");
@@ -816,6 +851,17 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (!control.supportsPattern() || !validator.isCaseSensitive()) {
             return;
         }
+        // trim defaults to true, and the server matches the trimmed value while pattern matches the
+        // raw one: "[a-z]+" would accept "abc " server-side and be blocked by the browser
+        if (validator.isTrimed()) {
+            return;
+        }
+        // Both extend RegexFieldValidator but do not match their regex against the raw value:
+        // CreditCardValidator strips all whitespace first, and both carry grammars the browser
+        // does not share. Neither is expressible as a pattern.
+        if (validator instanceof EmailValidator || validator instanceof CreditCardValidator) {
+            return;
+        }
         String regex = validator.getRegex();
         if (EcmaScriptSafeRegex.isSafe(regex)) {
             attributes.put("pattern", regex);
@@ -823,21 +869,53 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator, HtmlControlType control) {
-        if (!isNumeric(control)) {
+        if (!isNumericRange(control)) {
+            // Temporal controls support ranges too, but min/max there need per-control ISO
+            // formatting (date -> yyyy-MM-dd, month -> yyyy-MM, week -> yyyy-'W'ww, time -> HH:mm).
+            // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
             return;
         }
-        putIfPresent(attributes, "min", validator.getMin());
+        // min is guarded by isIntegral; see the comment on that method. The shipped Integer/Short/Long
+        // range validators always pass it, but a custom RangeValidatorSupport<Double> would not.
+        Object min = validator.getMin();
+        if (isIntegral(min)) {
+            putIfPresent(attributes, "min", min);
+        }
         putIfPresent(attributes, "max", validator.getMax());
     }
 
     protected void addDoubleRange(Map<String, String> attributes, DoubleRangeFieldValidator validator, HtmlControlType control) {
-        if (!isNumeric(control)) {
+        if (!isNumericRange(control)) {
             return;
         }
         // exclusive bounds have no HTML equivalent; omitting them leaves the browser more
         // permissive than the server, which is the safe direction
-        putIfPresent(attributes, "min", validator.getMinInclusive());
+        Double minInclusive = validator.getMinInclusive();
+        if (isIntegral(minInclusive)) {
+            putIfPresent(attributes, "min", minInclusive);
+        }
         putIfPresent(attributes, "max", validator.getMaxInclusive());
+    }
+
+    private boolean isNumericRange(HtmlControlType control) {
+        return control.supportsRange() && (control == HtmlControlType.NUMBER || control == HtmlControlType.RANGE);
+    }
+
+    /**
+     * A fractional {@code min} moves the HTML step base off zero, and with the default {@code step="1"}
+     * the browser then rejects whole numbers the server accepts. {@code max} does not participate in the
+     * step base, so only {@code min} needs this guard. For {@code input type="number"}/{@code "range"},
+     * the step base is the {@code min} attribute's value when present (otherwise 0); a {@code double}
+     * validator with {@code minInclusive=6000.1} would render {@code min="6000.1"}, making the only valid
+     * values 6000.1, 6001.1, 6002.1 … — the browser then rejects {@code 6002}, which
+     * {@code DoubleRangeFieldValidator} accepts server-side.
+     */
+    private boolean isIntegral(Object value) {
+        if (!(value instanceof java.lang.Number number)) {
+            return false;
+        }
+        double asDouble = number.doubleValue();
+        return !Double.isNaN(asDouble) && !Double.isInfinite(asDouble) && asDouble == Math.floor(asDouble);
     }
 
     protected void addMessage(Map<String, String> attributes, Validator validator, Object action) {
@@ -850,10 +928,6 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
     }
 
-    private boolean isNumeric(HtmlControlType control) {
-        return control == HtmlControlType.NUMBER || control == HtmlControlType.RANGE;
-    }
-
     private void putIfPresent(Map<String, String> attributes, String name, Object value) {
         if (value != null) {
             attributes.put(name, String.valueOf(value));
@@ -862,7 +936,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
 }
 ```
 
-**Scope decision, made explicit:** `DateRangeFieldValidator` extends `RangeValidatorSupport<Date>`, so it reaches `addRange`, where `isNumeric` rejects it and it emits nothing. Temporal `min`/`max` need per-control ISO formatting (`date` wants `yyyy-MM-dd`, `week` wants `2026-W12`, and so on) and are **deliberately not implemented here**. `HtmlControlType.supportsRange()` already covers the temporal types so the enum needs no change when this lands; file it as a follow-up rather than guessing at the formats now.
+**Scope decision, made explicit:** `DateRangeFieldValidator` extends `RangeValidatorSupport<Date>`, so it reaches `addRange`, where `isNumericRange` rejects it and it emits nothing. Temporal `min`/`max` need per-control ISO formatting (`date` wants `yyyy-MM-dd`, `week` wants `2026-W12`, and so on) and are **deliberately not implemented here**. `HtmlControlType.supportsRange()` already covers the temporal types so the enum needs no change when this lands; file it as a follow-up rather than guessing at the formats now.
 
 - [ ] **Step 5: Register the bean**
 
@@ -1094,6 +1168,8 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `core/src/main/java/org/apache/struts2/components/Password.java`
 - Modify: `core/src/main/java/org/apache/struts2/components/TextArea.java`
 - Modify: `core/src/main/java/org/apache/struts2/components/Select.java`
+- Modify: `core/src/main/java/org/apache/struts2/components/Radio.java` (added as a fix — see the correction note below)
+- Modify: `core/src/main/java/org/apache/struts2/components/File.java` (added as a fix — see the correction note below)
 - Test: `core/src/test/java/org/apache/struts2/components/ControlTypeTest.java`
 
 **Interfaces:**
@@ -1102,7 +1178,17 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 `attributes.type` is set by `TextField.evaluateExtraParams` (`TextField.java:91`) and by nothing else on the input path — `TextArea`, `Select`, `Checkbox`, `File`, `Hidden` and `Radio` have no `type` attribute at all. So the control type needs a component hook.
 
-`Checkbox`, `Radio`, `File` and `Hidden` deliberately get **no** override: they fall through to `OTHER`, which emits nothing, and that is the correct answer for all four. `ComboBox` extends `TextField` and correctly inherits `TEXT`.
+**Post-implementation correction (added during final-review fixup):** the steps below, as originally
+written, gave `Checkbox`, `Radio`, `File` and `Hidden` **no** override, on the theory that all four should
+fall through to `OTHER`. That was wrong for two of them. `RADIO` and `FILE` are the only controls where an
+unselected/empty submission omits the parameter entirely rather than submitting an empty value, so they are
+the only two where `required` agrees with the server (see the mapping table in the spec) — without their own
+`getControlType()` override they fall through to `OTHER`, and `addRequiredField` in `StrutsHtmlConstraintProvider`
+becomes unreachable dead code. `Radio` and `File` were given overrides as a fix, making it six overrides
+total, not four. `Checkbox` and `Hidden` are unaffected by this correction and still deliberately get no
+override: `CheckboxInterceptor` substitutes `"false"` for an unticked box, so the field is never missing
+server-side and a browser `required` there would false-reject. `ComboBox` extends `TextField` and correctly
+inherits `TEXT`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1177,7 +1263,8 @@ Place it next to the other `protected` helpers, above `evaluateExtraParams()`:
     }
 ```
 
-- [ ] **Step 4: Add the four overrides**
+- [ ] **Step 4: Add the overrides** (originally four; `Radio` and `File` were added as a fix — see the
+  correction note above)
 
 `TextField.java` — reads the attribute set by its own `evaluateExtraParams`, defaulting to `TEXT` to match `text.ftl`'s `attributes.type!"text"`:
 
@@ -1216,6 +1303,23 @@ Place it next to the other `protected` helpers, above `evaluateExtraParams()`:
     }
 ```
 
+`Radio.java` and `File.java` — added as a fix; without these, `addRequiredField` in
+`StrutsHtmlConstraintProvider` has no control type it can ever match, making it dead code:
+
+```java
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.RADIO;
+    }
+```
+
+```java
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.FILE;
+    }
+```
+
 - [ ] **Step 5: Run the test to verify it passes**
 
 Run: `mvn test -DskipAssembly -pl core -Dtest=ControlTypeTest`
@@ -1229,14 +1333,19 @@ git add core/src/main/java/org/apache/struts2/components/UIBean.java \
         core/src/main/java/org/apache/struts2/components/Password.java \
         core/src/main/java/org/apache/struts2/components/TextArea.java \
         core/src/main/java/org/apache/struts2/components/Select.java \
+        core/src/main/java/org/apache/struts2/components/Radio.java \
+        core/src/main/java/org/apache/struts2/components/File.java \
         core/src/test/java/org/apache/struts2/components/ControlTypeTest.java
 git diff --cached --name-only
 git commit -m "WW-5695 feat(components): resolve the HTML control type per component
 
 attributes.type is set by TextField and nothing else on the input path, so the
 control type cannot come from the attribute map alone. Adds getControlType()
-with four overrides; Checkbox, Radio, File and Hidden fall through to OTHER,
-which emits nothing and is correct for all four.
+with six overrides; Checkbox and Hidden fall through to OTHER, which emits
+nothing and is correct for both (CheckboxInterceptor substitutes false for an
+unticked box, so required there would false-reject). Radio and File get their
+own RADIO/FILE overrides, since they are the only controls where required
+agrees with the server.
 
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```

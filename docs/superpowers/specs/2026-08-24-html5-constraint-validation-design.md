@@ -90,15 +90,31 @@ become pure additions.
 
 | Validator | Emits | Condition |
 |---|---|---|
-| `required` | `required` | always |
-| `requiredstring` | `required` | always — server is stricter on whitespace-only input, which is safe |
-| `stringlength` | `minlength` / `maxlength` | only when `trim="false"` |
-| `regex` | `pattern` | only when `caseSensitive="true"` **and** the regex is ECMAScript-safe |
-| `int`, `short`, `long` | `min` / `max` | only when the control is already numeric |
-| `double` | `min` / `max` | only when the control is already numeric |
+| `required` | `required` | only on `RADIO` or `FILE` — everywhere else the control can submit a value the server accepts as non-missing (empty string, an unticked checkbox's substituted `"false"`, a select's empty-valued header option), so `required` there would false-reject |
+| `requiredstring` | `required` | on any text-entry or `TEXTAREA` control — server is stricter on whitespace-only input, which is safe |
+| `stringlength` | `minlength` / `maxlength` | only when the control supports length **and** `trim="false"` |
+| `regex` | `pattern` | only when the control supports pattern, `caseSensitive="true"`, `trim="false"`, the regex is ECMAScript-safe, and the validator is not `EmailValidator` or `CreditCardValidator` (see below) |
+| `int`, `short`, `long` | `min` / `max` | only when the control is already numeric; `min` additionally requires an integral bound (always true for these types) |
+| `double` | `min` / `max` | only when the control is already numeric; `min` is omitted when `minInclusive` is fractional — see "The integral-min guard" below |
 | `date` | `min` / `max` | only when the control is already temporal — **deferred, see below** |
 | `email`, `url` | — | never; browser regexes diverge from Struts' |
-| `creditcard`, `fieldexpression`, `expression`, `conversion`, visitor | — | no safe mapping |
+| `creditcard` | — | never; `CreditCardValidator` strips whitespace before matching, which a browser `pattern` cannot replicate |
+| `fieldexpression`, `expression`, `conversion`, visitor | — | no safe mapping |
+
+`RegexFieldValidator.trim` defaults to `true`, and the server matches the *trimmed* value while `pattern`
+matches the raw one, so a case-sensitive, portable regex like `[a-z]+` would still need `trim="false"` to be
+safe: `"abc "` would pass server-side and be blocked by the browser otherwise.
+
+### The integral-min guard
+
+For `input type="number"` and `type="range"`, the HTML step base is the `min` attribute's value when
+present (otherwise 0), and the default `step` is `1`. A `double` validator with a fractional
+`minInclusive` (say `6000.1`) would therefore render `min="6000.1"`, making the only valid values
+6000.1, 6001.1, 6002.1 … — the browser would reject `6002`, which `DoubleRangeFieldValidator` accepts
+server-side. `max` does not participate in the step base, so it is unaffected and always emitted when
+present. `min` is emitted only when the bound is integral; the shipped `Integer`/`Short`/`Long` range
+validators always satisfy this, so the guard only ever suppresses `min` for a fractional `double` bound
+(or a custom `RangeValidatorSupport` subclass parameterised with a fractional type).
 
 `stringlength` with `trim="true"` is excluded because the server measures the *trimmed* value: a
 `maxlength` derived from it would stop the user typing input the server would have accepted.
@@ -204,7 +220,7 @@ So the control type cannot be read from the attribute map alone; it needs a comp
 protected HtmlControlType getControlType();   // UIBean, returns OTHER
 ```
 
-Overridden in four places, which is all that is needed:
+Overridden in six places, which is all that is needed:
 
 | Component | Returns |
 |---|---|
@@ -213,9 +229,19 @@ Overridden in four places, which is all that is needed:
 | `Password` | `PASSWORD` — it extends `TextField` but its template hardcodes the type |
 | `TextArea` | `TEXTAREA` |
 | `Select` | `SELECT` |
+| `Radio` | `RADIO` |
+| `File` | `FILE` |
 
-`Checkbox`, `Radio`, `File` and `Hidden` deliberately get no override. They fall through to `OTHER`, which
-emits nothing — the correct answer for all four. `ComboBox` extends `TextField` and correctly inherits `TEXT`.
+`Radio` and `File` are overridden even though they support no pattern, length or range constraint — `RADIO`
+and `FILE` are the only two controls where an unselected/empty submission omits the parameter entirely
+rather than submitting an empty value, so they are the only two where `required` agrees with the server (see
+the mapping table above). Without the override both fall through to `OTHER`, which made `required` dead code
+for them — this was caught and fixed as part of implementation triage.
+
+`Checkbox` and `Hidden` deliberately get no override and fall through to `OTHER`, which emits nothing. This
+is not an oversight: `CheckboxInterceptor` substitutes `"false"` for an unticked box, so the field is never
+missing server-side and a browser `required` there would false-reject. `ComboBox` extends `TextField` and
+correctly inherits `TEXT`.
 
 ### `UIBean` hook
 

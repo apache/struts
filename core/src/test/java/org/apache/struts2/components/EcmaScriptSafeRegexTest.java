@@ -72,4 +72,12 @@ public class EcmaScriptSafeRegexTest {
         assertThat(EcmaScriptSafeRegex.isSafe("abc\\")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("[abc")).isFalse();
     }
+
+    @Test
+    public void rejectsWhitespaceClassesWhoseMeaningDiffersBetweenEngines() {
+        // Java's \s is ASCII-only by default; ECMAScript's includes NBSP and friends, so
+        // ^\S+$ accepts a value containing NBSP on the server and rejects it in the browser
+        assertThat(EcmaScriptSafeRegex.isSafe("^\\S+$")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("\\s*")).isFalse();
+    }
 }

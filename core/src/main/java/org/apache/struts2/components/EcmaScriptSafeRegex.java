@@ -31,8 +31,15 @@ package org.apache.struts2.components;
  */
 public final class EcmaScriptSafeRegex {
 
-    /** Escapes with identical meaning in both engines. */
-    private static final String ALLOWED_ESCAPES = "dDwWsSbBnrtf\\.*+?()[]{}|^$/-";
+    /**
+     * Escapes with identical meaning in both engines.
+     * <p>
+     * {@code \s} and {@code \S} are deliberately absent. Java's {@code \s} is ASCII-only by default
+     * while ECMAScript's is the wider Unicode set, so {@code ^\S+$} accepts a value containing NBSP
+     * on the server and rejects it in the browser. {@code \d} and {@code \w} are safe — both engines
+     * are ASCII-only for those, and JavaScript never widens them.
+     */
+    private static final String ALLOWED_ESCAPES = "dDwWbBnrtf\\.*+?()[]{}|^$/-";
 
     private EcmaScriptSafeRegex() {
     }

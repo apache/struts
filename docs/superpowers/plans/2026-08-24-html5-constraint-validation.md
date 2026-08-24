@@ -15,6 +15,12 @@
 ## Global Constraints
 
 - Target version string in every `@Deprecated` annotation: `since = "7.4.0", forRemoval = true`.
+- **Every new file — main source AND test source — must carry the Apache licence header**, copied verbatim
+  from a sibling file in the same directory. The code blocks in this plan omit it for brevity; that omission
+  is not permission to skip it. `apache-rat-plugin:check` is bound to the `prepare-package` phase
+  (`pom.xml:549-555`), so `mvn test -DskipAssembly` — the command every task below uses — **never runs the
+  licence check**. A missing header therefore passes every task-level verification in this plan and fails
+  the real build. Add it as you create each file.
 - **Tests are JUnit 4 or JUnit 3. There is no JUnit 5 in this repo.** New pure-unit test classes use `org.junit.Test`. Any test that renders a tag must extend `AbstractUITagTest` (JUnit 3 style: methods named `testXxx()`, no annotation). A Jupiter `@Test` on an `XWorkTestCase` subclass silently never runs.
 - Commit message format: `WW-XXXX <type>(<scope>): <description>`. Ticket prefix is mandatory.
 - Never commit to `main`. Work happens on `feature/WW-5695-html5-constraint-validation`.

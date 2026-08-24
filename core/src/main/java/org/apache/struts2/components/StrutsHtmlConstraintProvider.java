@@ -19,7 +19,9 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.validator.Validator;
+import org.apache.struts2.validator.validators.CreditCardValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
+import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.RangeValidatorSupport;
 import org.apache.struts2.validator.validators.RegexFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
@@ -58,8 +60,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control) {
-        if (validator instanceof RequiredFieldValidator || validator instanceof RequiredStringValidator) {
-            addRequired(attributes, control);
+        if (validator instanceof RequiredStringValidator) {
+            addRequiredString(attributes, control);
+        } else if (validator instanceof RequiredFieldValidator) {
+            addRequiredField(attributes, control);
         } else if (validator instanceof StringLengthFieldValidator lengthValidator) {
             addLength(attributes, lengthValidator, control);
         } else if (validator instanceof RegexFieldValidator regexValidator) {
@@ -71,8 +75,26 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
     }
 
-    protected void addRequired(Map<String, String> attributes, HtmlControlType control) {
-        if (control == HtmlControlType.OTHER) {
+    /**
+     * {@code requiredstring} fails on null, empty and (by default) blank, so the browser's
+     * {@code required} can only reject what the server would also reject. Safe on any text-entry control.
+     */
+    protected void addRequiredString(Map<String, String> attributes, HtmlControlType control) {
+        if (!control.supportsLength()) {
+            return;
+        }
+        attributes.put("required", "required");
+    }
+
+    /**
+     * {@code required} fails only on null, an empty array or an empty collection. A control that submits
+     * an empty string rather than omitting the parameter therefore passes server-side while the browser
+     * blocks it — an empty text input, a select with an empty-valued header option, and an unticked
+     * checkbox (CheckboxInterceptor substitutes "false") are all in that group. Only RADIO and FILE omit
+     * the parameter entirely when empty, so only they agree with the browser.
+     */
+    protected void addRequiredField(Map<String, String> attributes, HtmlControlType control) {
+        if (control != HtmlControlType.RADIO && control != HtmlControlType.FILE) {
             return;
         }
         attributes.put("required", "required");
@@ -97,6 +119,17 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (!control.supportsPattern() || !validator.isCaseSensitive()) {
             return;
         }
+        // trim defaults to true, and the server matches the trimmed value while pattern matches the
+        // raw one: "[a-z]+" would accept "abc " server-side and be blocked by the browser
+        if (validator.isTrimed()) {
+            return;
+        }
+        // Both extend RegexFieldValidator but do not match their regex against the raw value:
+        // CreditCardValidator strips all whitespace first, and both carry grammars the browser
+        // does not share. Neither is expressible as a pattern.
+        if (validator instanceof EmailValidator || validator instanceof CreditCardValidator) {
+            return;
+        }
         String regex = validator.getRegex();
         if (EcmaScriptSafeRegex.isSafe(regex)) {
             attributes.put("pattern", regex);
@@ -104,10 +137,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator, HtmlControlType control) {
-        if (!control.supportsRange()) {
-            return;
-        }
-        if (control != HtmlControlType.NUMBER && control != HtmlControlType.RANGE) {
+        if (!isNumericRange(control)) {
             // Temporal controls support ranges too, but min/max there need per-control ISO
             // formatting (date -> yyyy-MM-dd, month -> yyyy-MM, week -> yyyy-'W'ww, time -> HH:mm).
             // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
@@ -118,10 +148,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addDoubleRange(Map<String, String> attributes, DoubleRangeFieldValidator validator, HtmlControlType control) {
-        if (!control.supportsRange()) {
-            return;
-        }
-        if (control != HtmlControlType.NUMBER && control != HtmlControlType.RANGE) {
+        if (!isNumericRange(control)) {
             // Temporal controls support ranges too, but min/max there need per-control ISO
             // formatting (date -> yyyy-MM-dd, month -> yyyy-MM, week -> yyyy-'W'ww, time -> HH:mm).
             // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
@@ -131,6 +158,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         // permissive than the server, which is the safe direction
         putIfPresent(attributes, "min", validator.getMinInclusive());
         putIfPresent(attributes, "max", validator.getMaxInclusive());
+    }
+
+    private boolean isNumericRange(HtmlControlType control) {
+        return control.supportsRange() && (control == HtmlControlType.NUMBER || control == HtmlControlType.RANGE);
     }
 
     protected void addMessage(Map<String, String> attributes, Validator validator, Object action) {

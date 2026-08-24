@@ -20,6 +20,8 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.validator.Validator;
+import org.apache.struts2.validator.validators.CreditCardValidator;
+import org.apache.struts2.validator.validators.DateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.IntRangeFieldValidator;
@@ -30,6 +32,7 @@ import org.apache.struts2.validator.validators.StringLengthFieldValidator;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +57,48 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
-    public void requiredValidatorEmitsRequired() {
-        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.TEXT))
+    public void requiredStringEmitsRequiredEvenThoughServerIsStricter() {
+        assertThat(constraints(new RequiredStringValidator(), HtmlControlType.TEXT))
             .containsEntry("required", "required");
     }
 
     @Test
-    public void requiredStringEmitsRequiredEvenThoughServerIsStricter() {
-        assertThat(constraints(new RequiredStringValidator(), HtmlControlType.TEXT))
+    public void requiredStringEmitsRequiredOnTextarea() {
+        assertThat(constraints(new RequiredStringValidator(), HtmlControlType.TEXTAREA))
+            .containsEntry("required", "required");
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnATextControlBecauseEmptyStringWouldPassServerSide() {
+        // an empty text input submits name="", which RequiredFieldValidator accepts (it only
+        // rejects null / empty array / empty collection) — required here would false-reject
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.TEXT)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnACheckboxBecauseUncheckedSubstitutesFalse() {
+        // CheckboxInterceptor substitutes "false" for an unticked box, so the field is never
+        // null server-side and an unticked required checkbox would still pass validation
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.CHECKBOX)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnASelectBecauseAnEmptyOptionWouldPassServerSide() {
+        // a select with an empty-valued header option submits "", which passes server-side
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.SELECT)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsRequiredOnRadioBecauseNoSelectionOmitsTheParameter() {
+        // an unselected radio group omits the parameter entirely, agreeing with the server
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.RADIO))
+            .containsEntry("required", "required");
+    }
+
+    @Test
+    public void requiredFieldEmitsRequiredOnFileBecauseNoSelectionOmitsTheParameter() {
+        // an empty file input omits the parameter entirely, agreeing with the server
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.FILE))
             .containsEntry("required", "required");
     }
 
@@ -99,10 +136,24 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
+    public void stringLengthOmitsMinlengthWhenOnlyMaxLengthIsSet() {
+        StringLengthFieldValidator validator = new StringLengthFieldValidator();
+        validator.setTrim(false);
+        validator.setMaxLength(10);
+
+        Map<String, String> result = constraints(validator, HtmlControlType.TEXT);
+
+        // minLength defaults to the -1 sentinel (unset), which must not become "minlength=-1"
+        assertThat(result).containsEntry("maxlength", "10");
+        assertThat(result).doesNotContainKey("minlength");
+    }
+
+    @Test
     public void regexEmitsPatternWhenPortableAndCaseSensitive() {
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("[a-z]+");
         validator.setCaseSensitive(true);
+        validator.setTrim(false);
 
         assertThat(constraints(validator, HtmlControlType.TEXT))
             .containsEntry("pattern", "[a-z]+");
@@ -113,6 +164,7 @@ public class StrutsHtmlConstraintProviderTest {
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("[a-z]+");
         validator.setCaseSensitive(false);
+        validator.setTrim(false);
 
         // HTML pattern accepts no flags, so a case-insensitive rule cannot be expressed
         assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
@@ -123,6 +175,28 @@ public class StrutsHtmlConstraintProviderTest {
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("\\p{Alpha}+");
         validator.setCaseSensitive(true);
+        validator.setTrim(false);
+
+        assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
+    }
+
+    @Test
+    public void regexEmitsNothingWhenTrimming() {
+        // trim defaults to true: the server matches the trimmed value while pattern matches the
+        // raw one, so "abc " would pass server-side and be blocked by the browser
+        RegexFieldValidator validator = new RegexFieldValidator();
+        validator.setRegex("[a-z]+");
+        validator.setCaseSensitive(true);
+
+        assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
+    }
+
+    @Test
+    public void creditCardValidatorNeverContributesAPatternConstraint() {
+        // CreditCardValidator strips all whitespace before matching, so its regex cannot be
+        // expressed as a browser pattern without also stripping whitespace client-side
+        CreditCardValidator validator = new CreditCardValidator();
+        validator.setTrim(false);
 
         assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
     }
@@ -152,9 +226,19 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
+    public void dateRangeEmitsNothingBecauseTemporalFormattingIsDeferred() {
+        DateRangeFieldValidator validator = new DateRangeFieldValidator();
+        validator.setMin(new Date(0));
+        validator.setMax(new Date(1_000_000L));
+
+        assertThat(constraints(validator, HtmlControlType.DATE)).isEmpty();
+    }
+
+    @Test
     public void emailValidatorNeverContributesAConstraint() {
-        // the browser's email grammar differs from EmailValidator's, so honouring it
-        // could reject an address the server accepts
+        // the browser's email grammar differs from EmailValidator's, so honouring it could reject
+        // an address the server accepts. Guaranteed explicitly by addPattern's EmailValidator
+        // exclusion now, not incidentally by its constructor setting caseSensitive=false.
         assertThat(constraints(new EmailValidator(), HtmlControlType.TEXT)).isEmpty();
         assertThat(constraints(new EmailValidator(), HtmlControlType.EMAIL)).isEmpty();
     }

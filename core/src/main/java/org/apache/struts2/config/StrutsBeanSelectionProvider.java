@@ -29,6 +29,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.UnknownHandlerManager;
+import org.apache.struts2.components.HtmlConstraintProvider;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.conversion.ConversionAnnotationProcessor;
@@ -424,6 +425,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(MultiPartRequest.class, StrutsConstants.STRUTS_MULTIPART_PARSER, builder, props, Scope.PROTOTYPE);
         alias(FreemarkerManager.class, StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME, builder, props);
         alias(UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER, builder, props);
+        alias(HtmlConstraintProvider.class, StrutsConstants.STRUTS_HTML_CONSTRAINT_PROVIDER, builder, props);
         alias(ActionValidatorManager.class, StrutsConstants.STRUTS_ACTIONVALIDATORMANAGER, builder, props);
         alias(ValueStackFactory.class, StrutsConstants.STRUTS_VALUESTACKFACTORY, builder, props);
         alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);

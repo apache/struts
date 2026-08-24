@@ -219,6 +219,14 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
     /**
+     * The {@link org.apache.struts2.components.HtmlConstraintProvider} implementation used to derive
+     * HTML5 constraint attributes from an action's validators.
+     *
+     * @since 7.4.0
+     */
+    public static final String STRUTS_HTML_CONSTRAINT_PROVIDER = "struts.htmlConstraintProvider";
+
+    /**
      * The maximum size of a multipart request (file upload)
      */
     public static final String STRUTS_MULTIPART_MAX_SIZE = "struts.multipart.maxSize";

@@ -30,7 +30,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import java.io.IOException;
@@ -48,9 +47,12 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
     private static final Logger LOG = LogManager.getLogger(DefaultDispatcherErrorHandler.class);
 
+    private static final String ERROR_TEMPLATE = "/org/apache/struts2/dispatcher/error.ftl";
+
     private FreemarkerManager freemarkerManager;
     private boolean devMode;
-    private Template template;
+    private ServletContext servletContext;
+    private volatile Template template;
 
     @Inject
     public void setFreemarkerManager(FreemarkerManager freemarkerManager) {
@@ -63,12 +65,28 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     public void init(ServletContext ctx) {
-        try {
-            freemarker.template.Configuration config = freemarkerManager.getConfiguration(ctx);
-            template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
-        } catch (IOException e) {
-            throw new StrutsException(e);
+        this.servletContext = ctx;
+    }
+
+    /**
+     * Loads the problem report template on first use rather than at startup: it is only ever
+     * rendered in devMode, so a production application should never build a FreeMarker
+     * configuration on its behalf.
+     * <p>
+     * Two threads racing on the very first error may both load the template. That is harmless -
+     * FreeMarker caches templates in its own configuration - and cheaper than locking a path taken
+     * once per application.
+     *
+     * @return the problem report template
+     * @throws IOException if the template cannot be loaded
+     */
+    protected Template getTemplate() throws IOException {
+        Template result = template;
+        if (result == null) {
+            result = freemarkerManager.getConfiguration(servletContext).getTemplate(ERROR_TEMPLATE);
+            template = result;
         }
+        return result;
     }
 
     public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
@@ -115,7 +133,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             } while ((cur = cur.getCause()) != null);
 
             Writer writer = new StringWriter();
-            template.process(createReportData(e, chain), writer);
+            getTemplate().process(createReportData(e, chain), writer);
 
             response.setContentType("text/html");
             response.getWriter().write(writer.toString());

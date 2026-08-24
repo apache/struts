@@ -18,4 +18,8 @@
  * under the License.
  */
 -->
-<#if attributes.constraints??><#list attributes.constraints as attributeName, attributeValue> ${attributeName}="${attributeValue}"<#rt/></#list></#if>
+<#if attributes.constraints??>
+<#list attributes.constraints as attributeName, attributeValue>
+ ${attributeName}="${attributeValue}"<#rt/>
+</#list>
+</#if>

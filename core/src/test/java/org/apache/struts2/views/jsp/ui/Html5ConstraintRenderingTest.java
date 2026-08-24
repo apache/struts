@@ -39,6 +39,13 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
         assertFalse("expected no minlength in: " + output, output.contains("minlength="));
     }
 
+    public void testRendersExactMarkupWhenTheConstantIsOff() throws Exception {
+        String output = render("false");
+
+        assertEquals("<form id=\"constraintAction\" name=\"constraintAction\" action=\"/constraintAction.action\" method=\"post\">"
+            + "<input type=\"text\" name=\"username\" value=\"\" id=\"constraintAction_username\"/></form>", output);
+    }
+
     public void testRequiredLabelDoesNotBecomeARequiredAttribute() throws Exception {
         String output = render("true", "username", "true");
 

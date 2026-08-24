@@ -351,6 +351,7 @@ public class RestActionMapper extends DefaultActionMapper {
             Configuration config = configManager.getConfiguration();
             String prefix = uri.substring(0, lastSlash);
             namespace = "";
+            boolean rootAvailable = false;
             // Find the longest matching namespace, defaulting to the default
             for (Object o : config.getPackageConfigs().values()) {
                 String ns = ((PackageConfig) o).getNamespace();
@@ -359,9 +360,19 @@ public class RestActionMapper extends DefaultActionMapper {
                         namespace = ns;
                     }
                 }
+                if ("/".equals(ns)) {
+                    rootAvailable = true;
+                }
             }
 
+            // must be read before the root namespace is selected below, as it is relative to ""
             name = uri.substring(namespace.length() + 1);
+
+            // WW-5688, WW-2461: still none found, use the root namespace if it is declared, so that
+            // an id-bearing uri lands in the same namespace as the one without an id
+            if (rootAvailable && namespace.isEmpty()) {
+                namespace = "/";
+            }
         }
 
         mapping.setNamespace(cleanupNamespaceName(namespace));

@@ -1,0 +1,97 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2.components;
+
+/**
+ * Decides whether a Java regular expression can be handed to a browser as an HTML5 {@code pattern}
+ * attribute without changing meaning.
+ * <p>
+ * This is an allowlist by design. A denylist of Java-only constructs would violate the
+ * never-false-reject rule the first time it missed one, because a missed construct becomes a pattern
+ * the browser interprets differently and the user cannot get past. Anything not provably common to
+ * both engines is rejected, and the field simply gets no client-side check.
+ *
+ * @since 7.4.0
+ */
+public final class EcmaScriptSafeRegex {
+
+    /** Escapes with identical meaning in both engines. */
+    private static final String ALLOWED_ESCAPES = "dDwWsSbBnrtf\\.*+?()[]{}|^$/-";
+
+    private EcmaScriptSafeRegex() {
+    }
+
+    public static boolean isSafe(String regex) {
+        if (regex == null || regex.isEmpty()) {
+            return false;
+        }
+        boolean inCharClass = false;
+        for (int i = 0; i < regex.length(); i++) {
+            char current = regex.charAt(i);
+            switch (current) {
+                case '\\':
+                    if (i + 1 >= regex.length() || ALLOWED_ESCAPES.indexOf(regex.charAt(++i)) < 0) {
+                        return false;
+                    }
+                    break;
+                case '[':
+                    // Java allows nested classes and POSIX names; ECMAScript allows neither
+                    if (inCharClass || regex.startsWith("[:", i)) {
+                        return false;
+                    }
+                    inCharClass = true;
+                    break;
+                case ']':
+                    inCharClass = false;
+                    break;
+                case '&':
+                    // Java character-class intersection
+                    if (inCharClass && i + 1 < regex.length() && regex.charAt(i + 1) == '&') {
+                        return false;
+                    }
+                    break;
+                case '(':
+                    // only non-capturing groups and lookahead are portable; named groups,
+                    // lookbehind, atomic groups and inline flags are not
+                    if (i + 1 < regex.length() && regex.charAt(i + 1) == '?') {
+                        if (i + 2 >= regex.length()) {
+                            return false;
+                        }
+                        char kind = regex.charAt(i + 2);
+                        if (kind != ':' && kind != '=' && kind != '!') {
+                            return false;
+                        }
+                    }
+                    break;
+                case '*':
+                case '+':
+                case '?':
+                case '}':
+                    // possessive quantifier
+                    if (i + 1 < regex.length() && regex.charAt(i + 1) == '+') {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return !inCharClass;
+    }
+}

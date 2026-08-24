@@ -93,6 +93,7 @@ public class FormTag extends AbstractClosingTag {
         this.namespace = namespace;
     }
 
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void setValidate(String validate) {
         this.validate = validate;
     }

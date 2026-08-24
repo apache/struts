@@ -48,6 +48,7 @@ import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ * <strong>Deprecated since 7.4.0 — use the html5 theme's constraint attributes instead. Removed in 8.0.0.</strong>
  * <p>
  * Renders HTML an input form.
  * </p>
@@ -239,6 +240,7 @@ public class Form extends ClosingUIBean {
      * @param namespace    the namespace to check for
      * @param actionMethod the method to ckeck for
      */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     protected void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
 
         // Only evaluate if Client-Side js is to be enable when validate=true
@@ -268,6 +270,7 @@ public class Form extends ClosingUIBean {
         }
     }
 
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public List getValidators(String name) {
         Class actionClass = (Class) getAttributes().get("actionClass");
         if (actionClass == null) {
@@ -509,6 +512,7 @@ public class Form extends ClosingUIBean {
 
     @StrutsTagAttribute(description = "Whether client side/remote validation should be performed. Only" +
         " useful with theme xhtml/ajax", type = "Boolean", defaultValue = "false")
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public void setValidate(String validate) {
         this.validate = validate;
     }

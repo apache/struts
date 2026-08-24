@@ -19,6 +19,13 @@
  */
 -->
 <#--
+DEPRECATED since Struts 7.4.0, removed in 8.0.0 (WW-5694 / WW-5696).
+
+JavaScript client-side validation is superseded by native HTML5 constraint
+attributes in the html5 theme (WW-5695). This template, form-validate.ftl and
+validation.js are all removed in 8.0.0.
+-->
+<#--
 START SNIPPET: supported-validators
 Only the following validators are supported:
 * required validator

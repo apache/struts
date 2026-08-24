@@ -48,7 +48,6 @@ import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <strong>Deprecated since 7.4.0 — use the html5 theme's constraint attributes instead. Removed in 8.0.0.</strong>
  * <p>
  * Renders HTML an input form.
  * </p>
@@ -78,6 +77,9 @@ import java.util.Set;
  * </li>
  * </ol>
  * <p>
+ * <strong>The client-side JS <code>validate</code> attribute is deprecated since 7.4.0 — use the html5 theme's
+ * constraint attributes instead. Removed in 8.0.0.</strong>
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>

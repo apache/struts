@@ -968,6 +968,17 @@ public abstract class UIBean extends Component {
         }
     }
 
+    /**
+     * The kind of HTML control this component renders, used to decide which HTML5 constraint
+     * attributes are legal on it. Defaults to {@link HtmlControlType#OTHER}, which supports no
+     * constraints — so a component that does not override this emits none.
+     *
+     * @since 7.4.0
+     */
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.OTHER;
+    }
+
     protected void evaluateExtraParams() {
     }
 

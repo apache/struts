@@ -72,6 +72,12 @@ public class TextField extends UIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        Object type = getAttributes().get("type");
+        return type == null ? HtmlControlType.TEXT : HtmlControlType.from(String.valueOf(type));
+    }
+
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 

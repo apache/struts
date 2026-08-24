@@ -97,6 +97,11 @@ public class Select extends ListUIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.SELECT;
+    }
+
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 

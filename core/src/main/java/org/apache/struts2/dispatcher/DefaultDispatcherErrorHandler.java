@@ -52,7 +52,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     private FreemarkerManager freemarkerManager;
     private boolean devMode;
     private ServletContext servletContext;
-    private volatile Template template;
+    private Template template;
 
     @Inject
     public void setFreemarkerManager(FreemarkerManager freemarkerManager) {
@@ -73,20 +73,18 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
      * rendered in devMode, so a production application should never build a FreeMarker
      * configuration on its behalf.
      * <p>
-     * Two threads racing on the very first error may both load the template. That is harmless -
-     * FreeMarker caches templates in its own configuration - and cheaper than locking a path taken
-     * once per application.
+     * Synchronised rather than lock-free: this runs only when devMode is on and a request has
+     * already failed, and {@link FreemarkerManager#getConfiguration(ServletContext)} is itself
+     * synchronised, so the lock costs nothing that this path was not paying already.
      *
      * @return the problem report template
      * @throws IOException if the template cannot be loaded
      */
-    protected Template getTemplate() throws IOException {
-        Template result = template;
-        if (result == null) {
-            result = freemarkerManager.getConfiguration(servletContext).getTemplate(ERROR_TEMPLATE);
-            template = result;
+    protected synchronized Template getTemplate() throws IOException {
+        if (template == null) {
+            template = freemarkerManager.getConfiguration(servletContext).getTemplate(ERROR_TEMPLATE);
         }
-        return result;
+        return template;
     }
 
     public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {

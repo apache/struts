@@ -346,6 +346,14 @@ public class EcmaScriptSafeRegexTest {
     }
 
     @Test
+    public void rejectsWhitespaceClassesWhoseMeaningDiffersBetweenEngines() {
+        // Java's \s is ASCII-only by default; ECMAScript's includes NBSP and friends, so
+        // ^\S+$ accepts a value containing NBSP on the server and rejects it in the browser
+        assertThat(EcmaScriptSafeRegex.isSafe("^\\S+$")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("\\s*")).isFalse();
+    }
+
+    @Test
     public void rejectsPossessiveQuantifiers() {
         assertThat(EcmaScriptSafeRegex.isSafe("\\d++")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("a*+")).isFalse();
@@ -402,8 +410,15 @@ package org.apache.struts2.components;
  */
 public final class EcmaScriptSafeRegex {
 
-    /** Escapes with identical meaning in both engines. */
-    private static final String ALLOWED_ESCAPES = "dDwWsSbBnrtf\\.*+?()[]{}|^$/-";
+    /**
+     * Escapes with identical meaning in both engines.
+     * <p>
+     * {@code \s} and {@code \S} are deliberately absent. Java's {@code \s} is ASCII-only by default
+     * while ECMAScript's is the wider Unicode set, so {@code ^\S+$} accepts a value containing NBSP
+     * on the server and rejects it in the browser. {@code \d} and {@code \w} are safe — both engines
+     * are ASCII-only for those, and JavaScript never widens them.
+     */
+    private static final String ALLOWED_ESCAPES = "dDwWbBnrtf\\.*+?()[]{}|^$/-";
 
     private EcmaScriptSafeRegex() {
     }
@@ -471,7 +486,7 @@ public final class EcmaScriptSafeRegex {
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `mvn test -DskipAssembly -pl core -Dtest=EcmaScriptSafeRegexTest`
-Expected: PASS, 6 tests.
+Expected: PASS, 7 tests.
 
 - [ ] **Step 5: Commit**
 

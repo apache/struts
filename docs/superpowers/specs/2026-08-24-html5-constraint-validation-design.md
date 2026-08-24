@@ -119,9 +119,17 @@ This is the least-solved part of the design and the strongest argument for the p
 
 A denylist of Java-only constructs (`\p{Alpha}`, possessive quantifiers, `\A`/`\z`, lookbehind) violates the
 never-false-reject rule the first time it misses one: a missed construct becomes a `pattern` the browser
-interprets differently. So detection is an **allowlist** — literals, `\d \w \s` and their negations,
+interprets differently. So detection is an **allowlist** — literals, `\d` and `\w` and their negations,
 character classes without POSIX or Unicode property syntax, grouping, alternation, anchors, and bounded
 quantifiers. Anything outside it emits no `pattern`.
+
+**`\s` and `\S` are excluded, and this is the rule's first real test.** Java's `\s` is ASCII-only by default
+(`[ \t\n\x0B\f\r]`); ECMAScript's is always the wider Unicode set — NBSP, `﻿`, ` `, the ` `
+range. For a rule as ordinary as `^\S+$`, a value containing NBSP satisfies Java's `\S` and fails the
+browser's, so the server would accept input the browser silently refuses to submit. `\d` and `\w` are safe:
+both engines are ASCII-only for those by default, and JavaScript never widens them. An earlier draft of this
+spec listed `\s` among the safe escapes — that was wrong, and the governing rule outranks its own example
+list.
 
 This is conservative to the point that some legitimate regexes will silently get no client-side check. That
 is the correct failure direction under the agreed rule, and it is the piece most likely to need tuning after

@@ -122,6 +122,10 @@ public class Form extends ClosingUIBean {
     protected UrlRenderer urlRenderer;
     protected ActionValidatorManager actionValidatorManager;
 
+    private List<Validator> cachedActionValidators;
+    private String cachedActionName;
+    private boolean actionValidatorsResolved;
+
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -303,6 +307,47 @@ public class Form extends ClosingUIBean {
         findFieldValidators(name, actionClass, actionName, actionValidators, validators, "");
 
         return validators;
+    }
+
+    /**
+     * Returns the validators declared for a single field, resolving the action's validator list at
+     * most once per form render.
+     *
+     * @since 7.4.0
+     */
+    public List<Validator> getFieldValidators(String name) {
+        resolveActionValidators();
+        if (cachedActionValidators.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Class actionClass = (Class) getAttributes().get("actionClass");
+        List<Validator> validators = new ArrayList<>();
+        findFieldValidators(name, actionClass, cachedActionName, cachedActionValidators, validators, "");
+        return validators;
+    }
+
+    private void resolveActionValidators() {
+        if (actionValidatorsResolved) {
+            return;
+        }
+        actionValidatorsResolved = true;
+        cachedActionValidators = Collections.emptyList();
+
+        Class actionClass = (Class) getAttributes().get("actionClass");
+        if (actionClass == null) {
+            return;
+        }
+        ActionMapping mapping = actionMapper.getMappingFromActionName(findString(action));
+        if (mapping == null) {
+            mapping = actionMapper.getMappingFromActionName((String) getAttributes().get("actionName"));
+        }
+        if (mapping == null) {
+            return;
+        }
+        cachedActionName = mapping.getName();
+        String methodName = isValidateAnnotatedMethodOnly(cachedActionName) ? mapping.getMethod() : null;
+        cachedActionValidators =
+            actionValidatorManager.getValidators(actionClass, cachedActionName, methodName);
     }
 
     private boolean isValidateAnnotatedMethodOnly(String actionName) {

@@ -175,14 +175,43 @@ Defaults to `false` in `default.properties` for 7.4.0 and `true` for 8.0.0.
 Off by default matters: the `html5` theme shipped in 7.2.x, so emitting `required` on upgrade would start
 blocking submits on forms that render unchanged today. The 8.0.0 flip lands in a major with a migration entry.
 
+### Resolving the control type
+
+`attributes.type` is set by `TextField.evaluateExtraParams` (`TextField.java:91`) and by nothing else on the
+input path — `TextArea`, `Select`, `Checkbox`, `File`, `Hidden` and `Radio` have no `type` attribute at all.
+So the control type cannot be read from the attribute map alone; it needs a component-level hook:
+
+```java
+protected HtmlControlType getControlType();   // UIBean, returns OTHER
+```
+
+Overridden in four places, which is all that is needed:
+
+| Component | Returns |
+|---|---|
+| `UIBean` (base) | `OTHER` — supports nothing, so unknown controls emit no constraints |
+| `TextField` | `HtmlControlType.from(getAttributes().get("type"))`, defaulting to `TEXT` when absent, matching `text.ftl`'s `attributes.type!"text"` |
+| `Password` | `PASSWORD` — it extends `TextField` but its template hardcodes the type |
+| `TextArea` | `TEXTAREA` |
+| `Select` | `SELECT` |
+
+`Checkbox`, `Radio`, `File` and `Hidden` deliberately get no override. They fall through to `OTHER`, which
+emits nothing — the correct answer for all four. `ComboBox` extends `TextField` and correctly inherits `TEXT`.
+
 ### `UIBean` hook
 
-`UIBean.evaluateParams` already resolves `final Form form = findAncestor(Form.class)` and appends to
-`tagNames`. Immediately after that block, when the constant is on and a form was found:
+`UIBean.evaluateParams` resolves `final Form form = (Form) findAncestor(Form.class)` at `UIBean.java:824`
+and appends to `tagNames` just below it. **The hook cannot go there.** `evaluateExtraParams()` is the *last*
+statement of `evaluateParams()` (`UIBean.java:905`), and that is where `TextField` sets `attributes.type` —
+so at the `tagNames` block the control type is not yet resolved and every text field would look like `OTHER`.
+
+The hook therefore goes at the very end of `evaluateParams()`, after the `evaluateExtraParams()` call. The
+`form` local is declared at method scope and is still in scope there (the tooltip block below it already
+uses it). When the constant is on and a form was found:
 
 ```
 form.getFieldValidators(translatedName)
-  → provider.constraintsFor(validators, HtmlControlType.from(type))
+  → provider.constraintsFor(validators, getControlType())
   → addParameter("constraints", map)
 ```
 

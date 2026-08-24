@@ -204,6 +204,14 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
 
     /**
+     * Whether the html5 theme emits HTML5 constraint attributes derived from the action's validators.
+     * Defaults to false in 7.4.0; the default becomes true in 8.0.0.
+     *
+     * @since 7.4.0
+     */
+    public static final String STRUTS_UI_HTML5_CONSTRAINTS = "struts.ui.html5.constraints";
+
+    /**
      * Whether WebJars support is enabled (serving and URL building)
      */
     public static final String STRUTS_WEBJARS_ENABLED = "struts.webjars.enabled";

@@ -38,6 +38,7 @@ import org.apache.struts2.interceptor.TokenInterceptor;
 import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 import org.apache.struts2.result.ServletDispatcherResult;
+import org.apache.struts2.components.ConstraintAction;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
 
 import java.util.HashMap;
@@ -94,6 +95,13 @@ public class TestConfigurationProvider implements ConfigurationProvider {
             .addInterceptor(new InterceptorMapping("validation", validationInterceptor))
             .build();
 
+        ActionConfig constraintActionConfig = new ActionConfig.Builder("", "constraintAction", ConstraintAction.class.getName())
+            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
+                    .addParam("location", "success.jsp")
+                    .build())
+            .addInterceptor(new InterceptorMapping("validation", validationInterceptor))
+            .build();
+
         ActionConfig testActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
             .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
                     .addParam("location", "success.jsp")
@@ -119,6 +127,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
             .addActionConfig(EXECUTION_COUNT_ACTION_NAME, executionCountActionConfig)
             .addActionConfig(TEST_ACTION_NAME, testActionConfig)
             .addActionConfig("doubleValidationAction", doubleValidationActionConfig)
+            .addActionConfig("constraintAction", constraintActionConfig)
             .addActionConfig(TOKEN_ACTION_NAME, tokenActionConfig)
             .addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig)
             .addActionConfig("testActionTagAction", new ActionConfig.Builder("", "", TestAction.class.getName())

@@ -25,6 +25,7 @@ import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -531,6 +532,9 @@ public abstract class UIBean extends Component {
 
     protected CspNonceReader cspNonceReader;
 
+    protected HtmlConstraintProvider htmlConstraintProvider;
+    protected boolean html5ConstraintsEnabled;
+
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
@@ -559,6 +563,16 @@ public abstract class UIBean extends Component {
     @Inject
     public void setCspNonceReader(CspNonceReader cspNonceReader) {
         this.cspNonceReader = cspNonceReader;
+    }
+
+    @Inject
+    public void setHtmlConstraintProvider(HtmlConstraintProvider htmlConstraintProvider) {
+        this.htmlConstraintProvider = htmlConstraintProvider;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, required = false)
+    public void setHtml5ConstraintsEnabled(String html5ConstraintsEnabled) {
+        this.html5ConstraintsEnabled = BooleanUtils.toBoolean(html5ConstraintsEnabled);
     }
 
     @Override
@@ -903,6 +917,30 @@ public abstract class UIBean extends Component {
         }
 
         evaluateExtraParams();
+
+        // must run after evaluateExtraParams(): that is where TextField resolves attributes.type,
+        // and the control type decides which constraints are legal
+        addConstraintAttributes(form);
+    }
+
+    /**
+     * Derives HTML5 constraint attributes for this field from the action's validators.
+     *
+     * @since 7.4.0
+     */
+    protected void addConstraintAttributes(Form form) {
+        if (!html5ConstraintsEnabled || form == null || htmlConstraintProvider == null) {
+            return;
+        }
+        String fieldName = (String) getAttributes().get("name");
+        if (fieldName == null) {
+            return;
+        }
+        Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
+            form.getFieldValidators(fieldName), getControlType(), stack.peek());
+        if (!constraints.isEmpty()) {
+            addParameter("constraints", constraints);
+        }
     }
 
     /**

@@ -205,7 +205,7 @@ public final class StrutsConstants {
 
     /**
      * Whether the html5 theme emits HTML5 constraint attributes derived from the action's validators.
-     * Defaults to false in 7.4.0; the default becomes true in 8.0.0.
+     * Defaults to {@code false}; the default is expected to flip in a future major release.
      *
      * @since 7.4.0
      */

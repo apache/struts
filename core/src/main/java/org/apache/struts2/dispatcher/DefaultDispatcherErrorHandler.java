@@ -30,7 +30,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import java.io.IOException;
@@ -48,8 +47,11 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
     private static final Logger LOG = LogManager.getLogger(DefaultDispatcherErrorHandler.class);
 
+    private static final String ERROR_TEMPLATE = "/org/apache/struts2/dispatcher/error.ftl";
+
     private FreemarkerManager freemarkerManager;
     private boolean devMode;
+    private ServletContext servletContext;
     private Template template;
 
     @Inject
@@ -63,12 +65,26 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     public void init(ServletContext ctx) {
-        try {
-            freemarker.template.Configuration config = freemarkerManager.getConfiguration(ctx);
-            template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
-        } catch (IOException e) {
-            throw new StrutsException(e);
+        this.servletContext = ctx;
+    }
+
+    /**
+     * Loads the problem report template on first use rather than at startup: it is only ever
+     * rendered in devMode, so a production application should never build a FreeMarker
+     * configuration on its behalf.
+     * <p>
+     * Synchronised rather than lock-free: this runs only when devMode is on and a request has
+     * already failed, and {@link FreemarkerManager#getConfiguration(ServletContext)} is itself
+     * synchronised, so the lock costs nothing that this path was not paying already.
+     *
+     * @return the problem report template
+     * @throws IOException if the template cannot be loaded
+     */
+    protected synchronized Template getTemplate() throws IOException {
+        if (template == null) {
+            template = freemarkerManager.getConfiguration(servletContext).getTemplate(ERROR_TEMPLATE);
         }
+        return template;
     }
 
     public void handleError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
@@ -115,7 +131,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             } while ((cur = cur.getCause()) != null);
 
             Writer writer = new StringWriter();
-            template.process(createReportData(e, chain), writer);
+            getTemplate().process(createReportData(e, chain), writer);
 
             response.setContentType("text/html");
             response.getWriter().write(writer.toString());

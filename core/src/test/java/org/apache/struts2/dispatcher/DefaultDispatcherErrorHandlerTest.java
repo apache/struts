@@ -18,10 +18,14 @@
  */
 package org.apache.struts2.dispatcher;
 
+import freemarker.template.Configuration;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import org.apache.struts2.StrutsInternalTestCase;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -128,6 +132,61 @@ public class DefaultDispatcherErrorHandlerTest extends StrutsInternalTestCase {
             fail("Mock sendError call setup failed.  Ex: " + ioe);
         }
         defaultDispatcherErrorHandler.handleError(requestMock, responseMock, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, fakeException);
+    }
+
+    /**
+     * The dev-mode problem report is the only thing that needs FreeMarker here, so booting the
+     * application must not build a FreeMarker configuration just to have the template ready.
+     */
+    public void testInitDoesNotLoadErrorTemplate() {
+        RecordingFreemarkerManager freemarkerManager = createFreemarkerManager();
+        DefaultDispatcherErrorHandler defaultDispatcherErrorHandler = new DefaultDispatcherErrorHandler();
+        defaultDispatcherErrorHandler.setDevMode("true");
+        defaultDispatcherErrorHandler.setFreemarkerManager(freemarkerManager);
+
+        defaultDispatcherErrorHandler.init(dispatcher.servletContext);
+
+        assertFalse("init() must not touch FreeMarker", freemarkerManager.configurationRequested);
+    }
+
+    /**
+     * The deferred load must still happen, otherwise the problem report silently stops rendering.
+     */
+    public void testErrorTemplateLoadedOnFirstDevModeError() throws IOException {
+        RecordingFreemarkerManager freemarkerManager = createFreemarkerManager();
+        DefaultDispatcherErrorHandler defaultDispatcherErrorHandler = new DefaultDispatcherErrorHandler();
+        defaultDispatcherErrorHandler.setDevMode("true");
+        defaultDispatcherErrorHandler.setFreemarkerManager(freemarkerManager);
+        defaultDispatcherErrorHandler.init(dispatcher.servletContext);
+        Exception fakeException = new Exception("Fake Exception, devMode true");
+        responseMock.setContentType("text/html");
+        expectLastCall();
+        expect(responseMock.getWriter()).andStubReturn(new PrintWriter(new StringWriter()));
+        replay(responseMock);
+
+        defaultDispatcherErrorHandler.handleError(requestMock, responseMock, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, fakeException);
+
+        assertTrue("problem report must load the template on first use", freemarkerManager.configurationRequested);
+    }
+
+    private RecordingFreemarkerManager createFreemarkerManager() {
+        RecordingFreemarkerManager freemarkerManager = new RecordingFreemarkerManager();
+        container.inject(freemarkerManager);
+        return freemarkerManager;
+    }
+
+    /**
+     * Records whether the FreeMarker configuration was ever asked for, while still delegating so the
+     * template really renders.
+     */
+    private static class RecordingFreemarkerManager extends FreemarkerManager {
+        private boolean configurationRequested;
+
+        @Override
+        public Configuration getConfiguration(ServletContext servletContext) {
+            configurationRequested = true;
+            return super.getConfiguration(servletContext);
+        }
     }
 
     protected void setUp() {

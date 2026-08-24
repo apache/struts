@@ -1593,10 +1593,14 @@ Expected: FAIL — `testRendersConstraintAttributes` finds no `minlength`, becau
 `core/src/main/resources/template/html5/constraints.ftl`, with the same `<#--` licence header used by the neighbouring html5 templates, then:
 
 ```
-<#if attributes.constraints??><#list attributes.constraints as attributeName, attributeValue> ${attributeName}="${attributeValue?html}"<#rt/></#list></#if>
+<#if attributes.constraints??><#list attributes.constraints as attributeName, attributeValue> ${attributeName}="${attributeValue}"<#rt/></#list></#if>
 ```
 
-The `?html` escape matters: `pattern` and the `data-msg-*` values are author-controlled strings that land inside an HTML attribute.
+**Do not add a `?html` builtin — it is a parse error here.** `FreemarkerManager` sets
+`ENABLE_IF_DEFAULT_AUTO_ESCAPING_POLICY` with `HTMLOutputFormat` (`FreemarkerManager.java:354-355`), so values
+are already HTML-escaped by configuration and FreeMarker rejects `?html` as a double-escape. Zero templates in
+this repo use it. The escaping is still load-bearing — `data-msg-*` values are OGNL-interpolated and can carry
+user-submitted content — so never disable auto-escaping for this template.
 
 - [ ] **Step 4: Include it**
 

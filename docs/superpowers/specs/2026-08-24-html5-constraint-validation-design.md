@@ -254,7 +254,7 @@ deleted with it in 8.0.0.
 ### `html5/constraints.ftl` (new), included from `common-attributes.ftl`
 
 ```freemarker
-<#if attributes.constraints??><#list attributes.constraints as k, v> ${k}="${v?html}"<#rt/></#list></#if>
+<#if attributes.constraints??><#list attributes.constraints as k, v> ${k}="${v}"<#rt/></#list></#if>
 ```
 
 Including it from `common-attributes.ftl` means every `html5` input picks it up without per-template edits.

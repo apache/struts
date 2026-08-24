@@ -261,6 +261,23 @@ public class RestActionMapperTest extends TestCase {
         tryUri("/my/foo/23;edit", "/my", "foo/23;edit");
     }
 
+    /**
+     * WW-5688: when a package declares the root namespace, a uri that matches no more specific
+     * namespace belongs to that root rather than to the default namespace, so that "/foo" and
+     * "/foo/23" agree on where the action lives. Without a root package the default namespace
+     * still wins - see {@link #testParseNameAndNamespace()}.
+     */
+    public void testParseNameAndNamespaceWithRootPackage() {
+        config.addPackageConfig("root", new PackageConfig.Builder("root").namespace("/").build());
+
+        tryUri("/foo/23", "/", "foo/23");
+        tryUri("/foo/", "/", "foo/");
+        tryUri("/", "/", "");
+
+        // a longer declared namespace still outranks the root
+        tryUri("/my/foo/23", "/my", "foo/23");
+    }
+
     public void testShouldAllowExclamation() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido!edit");
         req.setServletPath("/animals/dog/fido!edit");

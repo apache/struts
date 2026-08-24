@@ -20,12 +20,21 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.validator.ActionValidatorManager;
 import org.apache.struts2.validator.Validator;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ui.FormTag;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 public class FormFieldValidatorsTest extends AbstractUITagTest {
 
@@ -44,11 +53,19 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         assertTrue(form.getFieldValidators("noSuchField").isEmpty());
     }
 
-    public void testRepeatedCallsAreConsistent() throws Exception {
+    public void testResolvesTheActionsValidatorsOnlyOnceAcrossFields() throws Exception {
         Form form = formForDoubleValidationAction();
 
-        assertEquals(form.getFieldValidators("myUpDownSelectTag").size(),
-            form.getFieldValidators("myUpDownSelectTag").size());
+        ActionValidatorManager manager = mock(ActionValidatorManager.class);
+        when(manager.getValidators(any(Class.class), anyString(), nullable(String.class)))
+            .thenReturn(Collections.emptyList());
+        form.setActionValidatorManager(manager);
+
+        form.getFieldValidators("myUpDownSelectTag");
+        form.getFieldValidators("someOtherField");
+
+        org.mockito.Mockito.verify(manager, times(1))
+            .getValidators(any(Class.class), anyString(), nullable(String.class));
     }
 
     private Form formForDoubleValidationAction() throws Exception {

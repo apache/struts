@@ -143,7 +143,12 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
             // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
             return;
         }
-        putIfPresent(attributes, "min", validator.getMin());
+        // min is guarded by isIntegral; see the comment on that method. The shipped Integer/Short/Long
+        // range validators always pass it, but a custom RangeValidatorSupport<Double> would not.
+        Object min = validator.getMin();
+        if (isIntegral(min)) {
+            putIfPresent(attributes, "min", min);
+        }
         putIfPresent(attributes, "max", validator.getMax());
     }
 
@@ -156,12 +161,28 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
         // exclusive bounds have no HTML equivalent; omitting them leaves the browser more
         // permissive than the server, which is the safe direction
-        putIfPresent(attributes, "min", validator.getMinInclusive());
+        Double minInclusive = validator.getMinInclusive();
+        if (isIntegral(minInclusive)) {
+            putIfPresent(attributes, "min", minInclusive);
+        }
         putIfPresent(attributes, "max", validator.getMaxInclusive());
     }
 
     private boolean isNumericRange(HtmlControlType control) {
         return control.supportsRange() && (control == HtmlControlType.NUMBER || control == HtmlControlType.RANGE);
+    }
+
+    /**
+     * A fractional {@code min} moves the HTML step base off zero, and with the default {@code step="1"}
+     * the browser then rejects whole numbers the server accepts. {@code max} does not participate in the
+     * step base, so only {@code min} needs this guard.
+     */
+    private boolean isIntegral(Object value) {
+        if (!(value instanceof java.lang.Number number)) {
+            return false;
+        }
+        double asDouble = number.doubleValue();
+        return !Double.isNaN(asDouble) && !Double.isInfinite(asDouble) && asDouble == Math.floor(asDouble);
     }
 
     protected void addMessage(Map<String, String> attributes, Validator validator, Object action) {

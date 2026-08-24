@@ -54,9 +54,21 @@ public class ControlTypeTest extends AbstractUITagTest {
         assertEquals(HtmlControlType.SELECT, select.getControlType());
     }
 
+    public void testRadioIsRadio() {
+        Radio radio = new Radio(stack, request, response);
+        assertEquals(HtmlControlType.RADIO, radio.getControlType());
+    }
+
+    public void testFileIsFile() {
+        File file = new File(stack, request, response);
+        assertEquals(HtmlControlType.FILE, file.getControlType());
+    }
+
     public void testControlsWithoutAnOverrideAreUnknown() {
+        // CheckboxInterceptor substitutes "false" for an unticked box, so the server accepts what
+        // a browser "required" would block — that is a real false reject, and the reason Checkbox
+        // and Hidden deliberately have no getControlType() override.
         assertEquals(HtmlControlType.OTHER, new Checkbox(stack, request, response).getControlType());
         assertEquals(HtmlControlType.OTHER, new Hidden(stack, request, response).getControlType());
-        assertEquals(HtmlControlType.OTHER, new File(stack, request, response).getControlType());
     }
 }

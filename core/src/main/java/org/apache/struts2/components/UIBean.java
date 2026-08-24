@@ -925,6 +925,17 @@ public abstract class UIBean extends Component {
 
     /**
      * Derives HTML5 constraint attributes for this field from the action's validators.
+     * <p>
+     * This reaches {@link Form#getFieldValidators(String)}, which resolves the action's validators via
+     * {@code AnnotationActionValidatorManager}, which in turn dereferences the current
+     * {@code ActionInvocation} unconditionally. Before this feature that path only ran under the opt-in
+     * {@code validate="true"}; with constraint derivation gated only by
+     * {@code struts.ui.html5.constraints}, every {@code html5}-themed form now runs it, including one
+     * rendered outside action scope (a direct JSP include from a plain servlet, say) — which would NPE.
+     * A stray {@code null} in the validator list, and a broken {@code ${}} in a validator message
+     * unbalancing the value stack in {@code ValidatorSupport.getMessage}, land in the same call. This
+     * feature is purely decorative — a missing constraint attribute costs nothing, a 500 costs the page —
+     * so the broad catch here is deliberate rather than a mistake.
      *
      * @since 7.4.0
      */
@@ -936,11 +947,39 @@ public abstract class UIBean extends Component {
         if (fieldName == null) {
             return;
         }
-        Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-            form.getFieldValidators(fieldName), getControlType(), stack.peek());
-        if (!constraints.isEmpty()) {
-            addParameter("constraints", constraints);
+        try {
+            Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
+                form.getFieldValidators(fieldName), getControlType(), stack.peek());
+            if (constraints.isEmpty()) {
+                return;
+            }
+            constraints = new LinkedHashMap<>(constraints);
+            constraints.keySet().removeIf(this::isAlreadyRendered);
+            if (!constraints.isEmpty()) {
+                addParameter("constraints", constraints);
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to derive HTML5 constraint attributes for field [{}], skipping", fieldName, e);
         }
+    }
+
+    /**
+     * True when the developer already supplied this attribute explicitly — as a declared tag attribute
+     * (e.g. {@code maxlength}) or a dynamic one (e.g. {@code min} on a numeric textfield, which is not a
+     * declared attribute of any component) — so a derived constraint of the same name must not be
+     * rendered a second time. The developer's own value always wins.
+     * <p>
+     * {@code required} is deliberately excluded from the declared-attribute half of this check:
+     * {@code requiredLabel} stores an unrelated boolean under the same {@code attributes.required} key,
+     * purely to draw a label asterisk in the xhtml theme, and that must never suppress a genuine
+     * {@code required} constraint derived from a {@code required}/{@code requiredstring} validator. A
+     * {@code required} attribute the developer typed by hand as a dynamic attribute still wins.
+     */
+    private boolean isAlreadyRendered(String attributeName) {
+        if (dynamicAttributes.containsKey(attributeName)) {
+            return true;
+        }
+        return !"required".equals(attributeName) && getAttributes().containsKey(attributeName);
     }
 
     /**

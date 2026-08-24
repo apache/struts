@@ -24,6 +24,8 @@ import org.apache.struts2.interceptor.parameter.StrutsParameter;
 public class ConstraintAction extends ActionSupport {
 
     private String username;
+    private String comment;
+    private String bio;
 
     public String getUsername() {
         return username;
@@ -32,5 +34,23 @@ public class ConstraintAction extends ActionSupport {
     @StrutsParameter
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    @StrutsParameter
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    @StrutsParameter
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

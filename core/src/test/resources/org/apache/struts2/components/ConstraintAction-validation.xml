@@ -28,4 +28,16 @@
             <message>username must be at least ${minLength} characters</message>
         </field-validator>
     </field>
+    <field name="comment">
+        <field-validator type="requiredstring">
+            <message>Contains "quotes" and &lt;brackets&gt;</message>
+        </field-validator>
+    </field>
+    <field name="bio">
+        <field-validator type="stringlength">
+            <param name="trim">false</param>
+            <param name="maxLength">10</param>
+            <message>bio must be at most ${maxLength} characters</message>
+        </field-validator>
+    </field>
 </validators>

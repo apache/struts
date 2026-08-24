@@ -62,6 +62,11 @@ public class File extends UIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.FILE;
+    }
+
     public void evaluateParams() {
         super.evaluateParams();
 

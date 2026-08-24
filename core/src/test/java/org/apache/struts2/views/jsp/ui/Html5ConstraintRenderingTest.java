@@ -54,11 +54,50 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
             output.contains("required=\"required\""));
     }
 
+    /**
+     * text.ftl renders {@code attributes.maxlength} (the developer's own tag attribute) before
+     * including common-attributes.ftl, which renders the derived {@code attributes.constraints} map.
+     * Without suppressing the derived duplicate, a stringlength validator on this field would render
+     * {@code maxlength} twice: once from the tag attribute, once from the constraint.
+     */
+    public void testDeveloperSetMaxlengthSuppressesTheDerivedOne() throws Exception {
+        String output = renderWithMaxlength("bio", "20");
+
+        int firstIndex = output.indexOf("maxlength=");
+        assertTrue("expected a maxlength attribute in: " + output, firstIndex >= 0);
+        assertEquals("expected exactly one maxlength attribute in: " + output,
+            firstIndex, output.lastIndexOf("maxlength="));
+        assertTrue("expected the developer's own value to win: " + output,
+            output.contains("maxlength=\"20\""));
+    }
+
+    /**
+     * data-msg-* values pass through TextParseUtil.translateVariables and can carry user-submitted
+     * content into an HTML attribute. Escaping is applied by FreemarkerManager's HTMLOutputFormat
+     * configuration, not by the template, so this pins it against regression.
+     */
+    public void testDataMsgAttributesAreHtmlEscaped() throws Exception {
+        String output = render("true", "comment", null);
+
+        assertTrue("expected the escaped message in: " + output,
+            output.contains("data-msg-requiredstring=\"Contains &quot;quotes&quot; and &lt;brackets&gt;\""));
+        assertFalse("the raw, unescaped message must never appear in: " + output,
+            output.contains("Contains \"quotes\" and <brackets>"));
+    }
+
     private String render(String constraintsEnabled) throws Exception {
         return render(constraintsEnabled, "username", null);
     }
 
     private String render(String constraintsEnabled, String fieldName, String requiredLabel) throws Exception {
+        return render(constraintsEnabled, fieldName, requiredLabel, null);
+    }
+
+    private String renderWithMaxlength(String fieldName, String maxlength) throws Exception {
+        return render("true", fieldName, null, maxlength);
+    }
+
+    private String render(String constraintsEnabled, String fieldName, String requiredLabel, String maxlength) throws Exception {
         initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
             put(StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, constraintsEnabled);
@@ -79,6 +118,9 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
         field.setName(fieldName);
         if (requiredLabel != null) {
             field.setRequiredLabel(requiredLabel);
+        }
+        if (maxlength != null) {
+            field.setMaxlength(maxlength);
         }
         field.doStartTag();
         field.doEndTag();

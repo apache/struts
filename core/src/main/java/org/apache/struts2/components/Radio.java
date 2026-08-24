@@ -74,4 +74,9 @@ public class Radio extends ListUIBean {
         return true;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.RADIO;
+    }
+
 }

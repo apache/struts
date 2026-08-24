@@ -194,8 +194,12 @@ public class StrutsHtmlConstraintProviderTest {
     @Test
     public void creditCardValidatorNeverContributesAPatternConstraint() {
         // CreditCardValidator strips all whitespace before matching, so its regex cannot be
-        // expressed as a browser pattern without also stripping whitespace client-side
+        // expressed as a browser pattern without also stripping whitespace client-side.
+        // caseSensitive and trim are set explicitly here so this test actually reaches the
+        // EmailValidator/CreditCardValidator exclusion in addPattern, rather than returning
+        // earlier at the case-sensitivity guard (the constructor defaults caseSensitive to false).
         CreditCardValidator validator = new CreditCardValidator();
+        validator.setCaseSensitive(true);
         validator.setTrim(false);
 
         assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
@@ -215,14 +219,43 @@ public class StrutsHtmlConstraintProviderTest {
 
     @Test
     public void doubleRangeEmitsInclusiveBoundsOnlyOnANumericControl() {
+        // integral bounds here, deliberately: a fractional min is covered separately by
+        // doubleRangeOmitsMinWhenItIsFractionalBecauseItWouldShiftTheStepBase, since it must NOT
+        // emit min at all (it would shift the HTML step base off zero)
+        DoubleRangeFieldValidator validator = new DoubleRangeFieldValidator();
+        validator.setMinInclusive(6000.0);
+        validator.setMaxInclusive(10000.1);
+
+        assertThat(constraints(validator, HtmlControlType.NUMBER))
+            .containsEntry("min", "6000.0")
+            .containsEntry("max", "10000.1");
+        assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
+    }
+
+    @Test
+    public void doubleRangeOmitsMinWhenItIsFractionalBecauseItWouldShiftTheStepBase() {
+        // min becomes the HTML step base, and the default step is 1: min="6000.1" would make the
+        // browser reject 6002, which DoubleRangeFieldValidator accepts server-side. max does not
+        // participate in the step base, so it is unaffected.
         DoubleRangeFieldValidator validator = new DoubleRangeFieldValidator();
         validator.setMinInclusive(6000.1);
         validator.setMaxInclusive(10000.1);
 
+        Map<String, String> result = constraints(validator, HtmlControlType.NUMBER);
+
+        assertThat(result).containsEntry("max", "10000.1");
+        assertThat(result).doesNotContainKey("min");
+    }
+
+    @Test
+    public void doubleRangeEmitsMinWhenItIsIntegral() {
+        DoubleRangeFieldValidator validator = new DoubleRangeFieldValidator();
+        validator.setMinInclusive(6000.0);
+        validator.setMaxInclusive(10000.0);
+
         assertThat(constraints(validator, HtmlControlType.NUMBER))
-            .containsEntry("min", "6000.1")
-            .containsEntry("max", "10000.1");
-        assertThat(constraints(validator, HtmlControlType.TEXT)).isEmpty();
+            .containsEntry("min", "6000.0")
+            .containsEntry("max", "10000.0");
     }
 
     @Test
@@ -237,10 +270,19 @@ public class StrutsHtmlConstraintProviderTest {
     @Test
     public void emailValidatorNeverContributesAConstraint() {
         // the browser's email grammar differs from EmailValidator's, so honouring it could reject
-        // an address the server accepts. Guaranteed explicitly by addPattern's EmailValidator
-        // exclusion now, not incidentally by its constructor setting caseSensitive=false.
-        assertThat(constraints(new EmailValidator(), HtmlControlType.TEXT)).isEmpty();
-        assertThat(constraints(new EmailValidator(), HtmlControlType.EMAIL)).isEmpty();
+        // an address the server accepts. caseSensitive and trim are set explicitly here so this
+        // test actually reaches addPattern's EmailValidator exclusion, rather than returning
+        // earlier at the case-sensitivity guard or the isTrimed() guard (the constructor defaults
+        // caseSensitive to false, and trim defaults to true).
+        EmailValidator textControlValidator = new EmailValidator();
+        textControlValidator.setCaseSensitive(true);
+        textControlValidator.setTrim(false);
+        assertThat(constraints(textControlValidator, HtmlControlType.TEXT)).isEmpty();
+
+        EmailValidator emailControlValidator = new EmailValidator();
+        emailControlValidator.setCaseSensitive(true);
+        emailControlValidator.setTrim(false);
+        assertThat(constraints(emailControlValidator, HtmlControlType.EMAIL)).isEmpty();
     }
 
     @Test

@@ -950,11 +950,17 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         assertTrue(form.getFieldValidators("noSuchField").isEmpty());
     }
 
-    public void testRepeatedCallsAreConsistent() throws Exception {
+    public void testResolvesTheActionsValidatorsOnlyOnceAcrossFields() throws Exception {
         Form form = formForDoubleValidationAction();
 
-        assertEquals(form.getFieldValidators("myUpDownSelectTag").size(),
-            form.getFieldValidators("myUpDownSelectTag").size());
+        ActionValidatorManager manager = mock(ActionValidatorManager.class);
+        when(manager.getValidators(any(), any(), any())).thenReturn(Collections.emptyList());
+        form.setActionValidatorManager(manager);
+
+        form.getFieldValidators("myUpDownSelectTag");
+        form.getFieldValidators("someOtherField");
+
+        verify(manager, times(1)).getValidators(any(), any(), any());
     }
 
     private Form formForDoubleValidationAction() throws Exception {
@@ -977,6 +983,16 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
     }
 }
 ```
+
+**Harness trap, part two:** `createMocks()` never calls `setConfig` on the `MockActionProxy` it builds, so
+`AnnotationActionValidatorManager.buildValidatorKey` dereferences a null `ActionConfig` and NPEs. The test's
+`setUp` also needs `((MockActionProxy) actionProxy).setConfig(configuration.getRuntimeConfiguration()
+.getActionConfig("", "doubleValidationAction"))`. This is why `FormTagTest` carries its own
+`prepareMockInvocation()` helper.
+
+**Do not write a memoisation test that only compares result sizes** — resolution is deterministic, so such a
+test passes identically against an implementation with no cache at all. Assert the *number of resolutions*
+with a mocked `ActionValidatorManager`, across two different field names.
 
 **Harness trap:** without `initDispatcher(configProviders = TestConfigurationProvider)` *and* `createMocks()`, the action config is not present and validator resolution silently returns nothing — the test would pass or fail for entirely the wrong reason. `DoubleValidationAction-validation.xml` already exists at `core/src/test/resources/org/apache/struts2/views/jsp/ui/` and declares a `double` validator for `myUpDownSelectTag`.
 

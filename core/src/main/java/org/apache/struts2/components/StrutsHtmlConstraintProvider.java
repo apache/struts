@@ -46,6 +46,11 @@ import java.util.Map;
  */
 public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
 
+    /**
+     * The HTML5 boolean attribute; its canonical serialisation repeats the attribute name as the value.
+     */
+    private static final String REQUIRED = "required";
+
     @Override
     public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action) {
         Map<String, String> attributes = new LinkedHashMap<>();
@@ -83,7 +88,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (!control.supportsLength()) {
             return;
         }
-        attributes.put("required", "required");
+        attributes.put(REQUIRED, REQUIRED);
     }
 
     /**
@@ -97,7 +102,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (control != HtmlControlType.RADIO && control != HtmlControlType.FILE) {
             return;
         }
-        attributes.put("required", "required");
+        attributes.put(REQUIRED, REQUIRED);
     }
 
     protected void addLength(Map<String, String> attributes, StringLengthFieldValidator validator, HtmlControlType control) {

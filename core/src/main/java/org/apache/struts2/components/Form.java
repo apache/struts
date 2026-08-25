@@ -101,6 +101,8 @@ public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
 
+    private static final String ATTR_ACTION_CLASS = "actionClass";
+
     private int sequence = 0;
 
     protected String onsubmit;
@@ -245,6 +247,10 @@ public class Form extends ClosingUIBean {
      * @param actionName   the actioName to check for
      * @param namespace    the namespace to check for
      * @param actionMethod the method to ckeck for
+     * @deprecated since 7.4.0, for removal in 8.0.0. The generated client-side validator only ever
+     * covered fields rendered by a nested Struts tag (WW-2975). Use the {@code html5} theme with
+     * {@code struts.ui.html5.constraints=true}, which derives native HTML5 constraint attributes
+     * per field instead.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     protected void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
@@ -276,9 +282,17 @@ public class Form extends ClosingUIBean {
         }
     }
 
+    /**
+     * Looks up the validators for a field, for the deprecated client-side JavaScript validator.
+     *
+     * @param name the field name to look up
+     * @return the validators applying to the field, never null
+     * @deprecated since 7.4.0, for removal in 8.0.0. Use {@link #getFieldValidators(String)}, which
+     * is generically typed and resolves the action's validators once per form rather than per field.
+     */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public List getValidators(String name) {
-        Class actionClass = (Class) getAttributes().get("actionClass");
+        Class actionClass = (Class) getAttributes().get(ATTR_ACTION_CLASS);
         if (actionClass == null) {
             return Collections.EMPTY_LIST;
         }
@@ -320,7 +334,7 @@ public class Form extends ClosingUIBean {
         if (cachedActionValidators.isEmpty()) {
             return Collections.emptyList();
         }
-        Class actionClass = (Class) getAttributes().get("actionClass");
+        Class actionClass = (Class) getAttributes().get(ATTR_ACTION_CLASS);
         List<Validator> validators = new ArrayList<>();
         findFieldValidators(name, actionClass, cachedActionName, cachedActionValidators, validators, "");
         return validators;
@@ -333,7 +347,7 @@ public class Form extends ClosingUIBean {
         actionValidatorsResolved = true;
         cachedActionValidators = Collections.emptyList();
 
-        Class actionClass = (Class) getAttributes().get("actionClass");
+        Class actionClass = (Class) getAttributes().get(ATTR_ACTION_CLASS);
         if (actionClass == null) {
             return;
         }
@@ -557,6 +571,11 @@ public class Form extends ClosingUIBean {
         this.namespace = namespace;
     }
 
+    /**
+     * @deprecated since 7.4.0, for removal in 8.0.0. The generated client-side validator only ever
+     * covered fields rendered by a nested Struts tag (WW-2975). Use the {@code html5} theme with
+     * {@code struts.ui.html5.constraints=true} instead.
+     */
     @StrutsTagAttribute(description = "Whether client side/remote validation should be performed. Only" +
         " useful with theme xhtml/ajax", type = "Boolean", defaultValue = "false")
     @Deprecated(since = "7.4.0", forRemoval = true)

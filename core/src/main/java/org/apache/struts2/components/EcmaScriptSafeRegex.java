@@ -49,56 +49,68 @@ public final class EcmaScriptSafeRegex {
             return false;
         }
         boolean inCharClass = false;
-        for (int i = 0; i < regex.length(); i++) {
+        int i = 0;
+        while (i < regex.length()) {
             char current = regex.charAt(i);
-            switch (current) {
-                case '\\':
-                    if (i + 1 >= regex.length() || ALLOWED_ESCAPES.indexOf(regex.charAt(++i)) < 0) {
-                        return false;
-                    }
-                    break;
-                case '[':
-                    // Java allows nested classes and POSIX names; ECMAScript allows neither
-                    if (inCharClass || regex.startsWith("[:", i)) {
-                        return false;
-                    }
-                    inCharClass = true;
-                    break;
-                case ']':
-                    inCharClass = false;
-                    break;
-                case '&':
-                    // Java character-class intersection
-                    if (inCharClass && i + 1 < regex.length() && regex.charAt(i + 1) == '&') {
-                        return false;
-                    }
-                    break;
-                case '(':
-                    // only non-capturing groups and lookahead are portable; named groups,
-                    // lookbehind, atomic groups and inline flags are not
-                    if (i + 1 < regex.length() && regex.charAt(i + 1) == '?') {
-                        if (i + 2 >= regex.length()) {
-                            return false;
-                        }
-                        char kind = regex.charAt(i + 2);
-                        if (kind != ':' && kind != '=' && kind != '!') {
-                            return false;
-                        }
-                    }
-                    break;
-                case '*':
-                case '+':
-                case '?':
-                case '}':
-                    // possessive quantifier
-                    if (i + 1 < regex.length() && regex.charAt(i + 1) == '+') {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
+            if (!isPortable(regex, i, current, inCharClass)) {
+                return false;
             }
+            if (current == '[') {
+                inCharClass = true;
+            } else if (current == ']') {
+                inCharClass = false;
+            }
+            // an escape consumes the character it escapes, which must not be scanned again
+            i += (current == '\\') ? 2 : 1;
         }
         return !inCharClass;
+    }
+
+    /**
+     * Whether the construct starting at {@code index} means the same thing to both engines. This is
+     * the whole allowlist: anything that reaches {@code default} is a character with no special
+     * meaning in either engine, or one whose meaning is shared.
+     */
+    private static boolean isPortable(String regex, int index, char current, boolean inCharClass) {
+        switch (current) {
+            case '\\':
+                return isAllowedEscape(regex, index);
+            case '[':
+                // Java allows nested classes and POSIX names; ECMAScript allows neither
+                return !inCharClass && !regex.startsWith("[:", index);
+            case '&':
+                // Java character-class intersection
+                return !inCharClass || !isFollowedBy(regex, index, '&');
+            case '(':
+                return isPortableGroup(regex, index);
+            case '*', '+', '?', '}':
+                // possessive quantifier
+                return !isFollowedBy(regex, index, '+');
+            default:
+                return true;
+        }
+    }
+
+    private static boolean isAllowedEscape(String regex, int index) {
+        return index + 1 < regex.length() && ALLOWED_ESCAPES.indexOf(regex.charAt(index + 1)) >= 0;
+    }
+
+    /**
+     * Only non-capturing groups and lookahead are portable; named groups, lookbehind, atomic groups
+     * and inline flags are not. A plain capturing group is always fine.
+     */
+    private static boolean isPortableGroup(String regex, int index) {
+        if (!isFollowedBy(regex, index, '?')) {
+            return true;
+        }
+        if (index + 2 >= regex.length()) {
+            return false;
+        }
+        char kind = regex.charAt(index + 2);
+        return kind == ':' || kind == '=' || kind == '!';
+    }
+
+    private static boolean isFollowedBy(String regex, int index, char expected) {
+        return index + 1 < regex.length() && regex.charAt(index + 1) == expected;
     }
 }

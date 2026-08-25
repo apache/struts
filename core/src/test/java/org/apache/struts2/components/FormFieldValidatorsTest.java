@@ -64,6 +64,7 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("myUpDownSelectTag");
         form.getFieldValidators("someOtherField");
 
+        // fully qualified: AbstractUITagTest inherits verify(URL), which would shadow a static import
         org.mockito.Mockito.verify(manager, times(1))
             .getValidators(any(Class.class), anyString(), nullable(String.class));
     }

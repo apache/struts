@@ -54,6 +54,7 @@ public class FormTag extends AbstractClosingTag {
     }
 
     @Override
+    @SuppressWarnings("removal") // must keep forwarding `validate` until it is removed in 8.0.0
     protected void populateParams() {
         super.populateParams();
         Form form = ((Form) component);
@@ -93,6 +94,11 @@ public class FormTag extends AbstractClosingTag {
         this.namespace = namespace;
     }
 
+    /**
+     * @deprecated since 7.4.0, for removal in 8.0.0. The generated client-side validator only ever
+     * covered fields rendered by a nested Struts tag (WW-2975). Use the {@code html5} theme with
+     * {@code struts.ui.html5.constraints=true} instead.
+     */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public void setValidate(String validate) {
         this.validate = validate;

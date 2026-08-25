@@ -87,7 +87,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         return (Map<String, String>) attributes.get("constraints");
     }
 
-    private void initDispatcherWith(String constraintsEnabled) throws Exception {
+    private void initDispatcherWith(String constraintsEnabled) {
         initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
             put(StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, constraintsEnabled);

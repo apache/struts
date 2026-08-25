@@ -144,8 +144,9 @@ public class StrutsHtmlConstraintProviderTest {
         Map<String, String> result = constraints(validator, HtmlControlType.TEXT);
 
         // minLength defaults to the -1 sentinel (unset), which must not become "minlength=-1"
-        assertThat(result).containsEntry("maxlength", "10");
-        assertThat(result).doesNotContainKey("minlength");
+        assertThat(result)
+            .containsEntry("maxlength", "10")
+            .doesNotContainKey("minlength");
     }
 
     @Test
@@ -243,8 +244,9 @@ public class StrutsHtmlConstraintProviderTest {
 
         Map<String, String> result = constraints(validator, HtmlControlType.NUMBER);
 
-        assertThat(result).containsEntry("max", "10000.1");
-        assertThat(result).doesNotContainKey("min");
+        assertThat(result)
+            .containsEntry("max", "10000.1")
+            .doesNotContainKey("min");
     }
 
     @Test

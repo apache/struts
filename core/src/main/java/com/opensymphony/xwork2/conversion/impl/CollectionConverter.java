@@ -61,7 +61,7 @@ public class CollectionConverter extends DefaultTypeConverter {
 
             for (Object anObjArray : objArray) {
                 Object convertedValue = converter.convertValue(context, target, member, propertyName, anObjArray, memberType);
-                if (!TypeConverter.NO_CONVERSION_POSSIBLE.equals(convertedValue)) {
+                if (convertedValue != TypeConverter.NO_CONVERSION_POSSIBLE) {
                     result.add(convertedValue);
                 }
             }
@@ -72,7 +72,7 @@ public class CollectionConverter extends DefaultTypeConverter {
 
             for (Object aCol : col) {
                 Object convertedValue = converter.convertValue(context, target, member, propertyName, aCol, memberType);
-                if (!TypeConverter.NO_CONVERSION_POSSIBLE.equals(convertedValue)) {
+                if (convertedValue != TypeConverter.NO_CONVERSION_POSSIBLE) {
                     result.add(convertedValue);
                 }
             }
@@ -80,7 +80,7 @@ public class CollectionConverter extends DefaultTypeConverter {
             result = createCollection(toType, memberType, -1);
             TypeConverter converter = getTypeConverter(context);
             Object convertedValue = converter.convertValue(context, target, member, propertyName, value, memberType);
-            if (!TypeConverter.NO_CONVERSION_POSSIBLE.equals(convertedValue)) {
+            if (convertedValue != TypeConverter.NO_CONVERSION_POSSIBLE) {
                 result.add(convertedValue);
             }
         }

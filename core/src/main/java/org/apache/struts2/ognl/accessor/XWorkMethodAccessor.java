@@ -20,6 +20,7 @@ package org.apache.struts2.ognl.accessor;
 
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.MethodFailedException;
+import ognl.OgnlException;
 import ognl.ObjectMethodAccessor;
 import ognl.OgnlContext;
 import ognl.OgnlRuntime;
@@ -27,6 +28,7 @@ import ognl.PropertyAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
@@ -77,12 +79,16 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
         }
 
-        //HACK - we pass indexed method access i.e. setXXX(A,B) pattern
+        //Indexed property access, i.e. the setXXX(A,B) / getXXX(A) pattern. Restricted to methods which
+        //really are indexed property accessors on the target type: a name prefix and an argument count
+        //alone would let any method be called while method execution is denied.
         if ((objects.length == 2 && string.startsWith("set")) || (objects.length == 1 && string.startsWith("get"))) {
-            Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
-            boolean e = exec != null && exec;
-            if (!e) {
-                return callMethodWithDebugInfo(context, object, string, objects);
+            if (isIndexedPropertyAccessor(object, string)) {
+                Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
+                boolean e = exec != null && exec;
+                if (!e) {
+                    return callMethodWithDebugInfo(context, object, string, objects);
+                }
             }
         }
         boolean e = ReflectionContextState.isDenyMethodExecution(context);
@@ -91,6 +97,23 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
             return callMethodWithDebugInfo(context, object, string, objects);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Whether {@code methodName} is an indexed property accessor on the target type, as opposed to an ordinary
+     * method which merely shares the {@code get}/{@code set} prefix and argument count of one.
+     */
+    private boolean isIndexedPropertyAccessor(Object object, String methodName) {
+        if (object == null || methodName.length() <= 3) {
+            return false;
+        }
+        String propertyName = Introspector.decapitalize(methodName.substring(3));
+        try {
+            return OgnlRuntime.getIndexedPropertyType(object.getClass(), propertyName) != OgnlRuntime.INDEXED_PROPERTY_NONE;
+        } catch (OgnlException e) {
+            LOG.debug("Could not determine whether [{}] is an indexed property of [{}]", propertyName, object.getClass(), e);
+            return false;
         }
     }
 

@@ -29,6 +29,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.Template;
@@ -933,9 +935,10 @@ public abstract class UIBean extends Component {
      * {@code struts.ui.html5.constraints}, every {@code html5}-themed form now runs it, including one
      * rendered outside action scope (a direct JSP include from a plain servlet, say) — which would NPE.
      * A stray {@code null} in the validator list, and a broken {@code ${}} in a validator message
-     * unbalancing the value stack in {@code ValidatorSupport.getMessage}, land in the same call. This
-     * feature is purely decorative — a missing constraint attribute costs nothing, a 500 costs the page —
-     * so the broad catch here is deliberate rather than a mistake.
+     * failing in {@code ValidatorSupport.getMessage}, land in the same call. This feature is purely
+     * decorative — a missing constraint attribute costs nothing, a 500 costs the page — so the broad
+     * catch here is deliberate rather than a mistake. Swallowing the failure is only safe because
+     * {@link #restoreStackDepth(int)} undoes whatever that failure left on the value stack.
      *
      * @since 7.4.0
      */
@@ -947,9 +950,10 @@ public abstract class UIBean extends Component {
         if (fieldName == null) {
             return;
         }
+        int stackDepth = stack.getRoot().size();
         try {
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-                form.getFieldValidators(fieldName), getControlType(), stack.peek());
+                form.getFieldValidators(fieldName), getControlType(), resolveAction());
             if (constraints.isEmpty()) {
                 return;
             }
@@ -960,6 +964,43 @@ public abstract class UIBean extends Component {
             }
         } catch (Exception e) {
             LOG.warn("Failed to derive HTML5 constraint attributes for field [{}], skipping", fieldName, e);
+        } finally {
+            restoreStackDepth(stackDepth);
+        }
+    }
+
+    /**
+     * The object server-side validation runs against, which is what the derived {@code data-msg-*}
+     * messages must be resolved against too: {@code ValidatorSupport.getMessage} builds a
+     * {@code DelegatingValidatorContext} from it, and that decides which resource bundle the message
+     * key is looked up in.
+     * <p>
+     * Deliberately not {@code stack.peek()}. The top of the stack is not the action whenever
+     * something has been pushed over it — {@code ModelDrivenInterceptor} pushes the model, and an
+     * {@code <s:iterator>} wrapping the field pushes the current element — so peeking would resolve
+     * messages against a model or a list element while {@code ValidationInterceptor} validated the
+     * action.
+     *
+     * @return the action, or null when rendering outside action scope, in which case the provider
+     * simply derives no message attributes
+     */
+    private Object resolveAction() {
+        ActionInvocation invocation = ActionContext.of(stack.getContext()).getActionInvocation();
+        return invocation == null ? null : invocation.getAction();
+    }
+
+    /**
+     * Pops whatever constraint derivation left behind. {@code ValidatorSupport.getMessage} pushes the
+     * action and the validator onto this same request-scoped stack — {@code
+     * DefaultActionValidatorManager.getValidators} hands it {@code ActionContext.getValueStack()} —
+     * and its matching pops are not in a {@code finally}. A message that fails to resolve (a bad
+     * {@code MessageFormat} pattern, an unresolvable {@code ${}}) would therefore leave frames on the
+     * stack, and because the catch above deliberately swallows the failure, every tag rendered after
+     * this one would silently resolve its OGNL against the wrong root.
+     */
+    private void restoreStackDepth(int depth) {
+        while (stack.getRoot().size() > depth) {
+            stack.pop();
         }
     }
 

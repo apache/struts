@@ -38,8 +38,16 @@ public final class EcmaScriptSafeRegex {
      * while ECMAScript's is the wider Unicode set, so {@code ^\S+$} accepts a value containing NBSP
      * on the server and rejects it in the browser. {@code \d} and {@code \w} are safe — both engines
      * are ASCII-only for those, and JavaScript never widens them.
+     * <p>
+     * {@code \b} and {@code \B} are absent for a sharper reason: their meaning is not even stable
+     * across the JDKs Struts supports. Up to Java 18 the boundary was decided by
+     * {@code Character.isLetterOrDigit}, making it Unicode-aware while {@code \w} stayed ASCII;
+     * JDK 19 resolved that inconsistency. So {@code ^\bäiti\b$} matches {@code äiti} on Java 17 and
+     * not on Java 21, while ECMAScript — whose boundary is always ASCII-word based — rejects it in
+     * every browser. On the Java 17 baseline that is a false reject, and no version check could fix
+     * it: one {@code validation.xml} would have to mean two different things depending on the JVM.
      */
-    private static final String ALLOWED_ESCAPES = "dDwWbBnrtf\\.*+?()[]{}|^$/-";
+    private static final String ALLOWED_ESCAPES = "dDwWnrtf\\.*+?()[]{}|^$/-";
 
     private EcmaScriptSafeRegex() {
     }

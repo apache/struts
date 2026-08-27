@@ -25,10 +25,15 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ui.FormTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConstraintAttributesTest extends AbstractUITagTest {
+
+    private FormTag form;
 
     public void testNoConstraintsWhenTheConstantIsOff() throws Exception {
         initDispatcherWith("false");
@@ -62,9 +67,75 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
             constraints == null || !constraints.containsKey("minlength"));
     }
 
+    /**
+     * The action handed to the provider must be the one server-side validation ran against —
+     * {@code ValidationInterceptor} validates {@code invocation.getAction()} — because
+     * {@code ValidatorSupport.getMessage} builds its {@code DelegatingValidatorContext} from that
+     * object, and the context decides which resource bundle a {@code data-msg-*} key resolves in.
+     * The top of the value stack is not that action whenever something has been pushed over it:
+     * {@code ModelDrivenInterceptor} pushes the model, an {@code <s:iterator>} around the field
+     * pushes the current element. The marker pushed here stands in for both.
+     */
+    public void testActionComesFromTheInvocationNotTheTopOfTheStack() throws Exception {
+        initDispatcherWith("true");
+
+        TextFieldTag field = startField(null);
+        List<Object> captured = new ArrayList<>();
+        // not named `action`: that would shadow the inherited field this test asserts against
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+            captured.add(derivedFrom);
+            return Collections.emptyMap();
+        });
+        Object pushedOverTheAction = new Object();
+        stack.push(pushedOverTheAction);
+
+        finishField(field);
+
+        assertEquals("expected the provider to be consulted once", 1, captured.size());
+        assertNotSame("messages must not resolve against whatever sits on top of the stack",
+            pushedOverTheAction, captured.get(0));
+        assertSame(action, captured.get(0));
+    }
+
+    /**
+     * Derivation runs against the request-scoped value stack — {@code
+     * DefaultActionValidatorManager.getValidators} hands each validator {@code
+     * ActionContext.getValueStack()} — and {@code ValidatorSupport.getMessage} pushes the action and
+     * the validator onto it with the matching pops outside any {@code finally}. A message that fails
+     * to resolve therefore leaves frames behind, and since the failure is deliberately swallowed,
+     * every tag rendered afterwards would silently resolve its OGNL against the wrong root. The
+     * provider below stands in for that, failing the same way at the same point.
+     */
+    public void testTheValueStackIsRestoredWhenDerivationFails() throws Exception {
+        initDispatcherWith("true");
+
+        TextFieldTag field = startField(null);
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+            stack.push(new Object());
+            throw new IllegalStateException("message resolution failed midway");
+        });
+        int depthBeforeRendering = stack.getRoot().size();
+
+        finishField(field);
+
+        assertEquals("a swallowed failure must not leave the stack dirty for later tags",
+            depthBeforeRendering, stack.getRoot().size());
+    }
+
     @SuppressWarnings("unchecked")
     private Map<String, String> renderFieldAndReturnConstraints(String type) throws Exception {
-        FormTag form = new FormTag();
+        TextFieldTag field = startField(type);
+
+        Map<String, Object> attributes =
+            ((UIBean) field.getComponent()).getAttributes();
+
+        finishField(field);
+
+        return (Map<String, String>) attributes.get("constraints");
+    }
+
+    private TextFieldTag startField(String type) throws Exception {
+        form = new FormTag();
         form.setPageContext(pageContext);
         form.setAction("constraintAction");
         form.setNamespace("");
@@ -77,14 +148,12 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
             field.setType(type);
         }
         field.doStartTag();
+        return field;
+    }
 
-        Map<String, Object> attributes =
-            ((UIBean) field.getComponent()).getAttributes();
-
+    private void finishField(TextFieldTag field) throws Exception {
         field.doEndTag();
         form.doEndTag();
-
-        return (Map<String, String>) attributes.get("constraints");
     }
 
     private void initDispatcherWith(String constraintsEnabled) {

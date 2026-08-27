@@ -80,4 +80,20 @@ public class EcmaScriptSafeRegexTest {
         assertThat(EcmaScriptSafeRegex.isSafe("^\\S+$")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("\\s*")).isFalse();
     }
+
+    @Test
+    public void rejectsWordBoundariesWhoseMeaningVariesByJdk() {
+        // Up to Java 18 the boundary was decided by Character.isLetterOrDigit, so it was
+        // Unicode-aware while \w stayed ASCII; JDK 19 made the two consistent. Pattern.matches(
+        // "^\\bäiti\\b$", "äiti") is therefore true on Java 17 and false on Java 21, while
+        // ECMAScript's always-ASCII boundary rejects it in every browser - a false reject on the
+        // Java 17 baseline.
+        assertThat(EcmaScriptSafeRegex.isSafe("^\\bäiti\\b$")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("^ä\\Biti$")).isFalse();
+        // rejected as a construct, not conditionally on the regex containing non-ASCII: a
+        // pattern is a template for input we have not seen, so an ASCII-only regex says nothing
+        // about the values it will be asked to match
+        assertThat(EcmaScriptSafeRegex.isSafe("\\bword\\b")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("a\\Bb")).isFalse();
+    }
 }

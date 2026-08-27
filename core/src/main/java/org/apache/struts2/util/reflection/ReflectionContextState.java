@@ -38,6 +38,13 @@ public class ReflectionContextState {
 	public static final String FULL_PROPERTY_PATH = "current.property.path"; // TODO: Probably a bug
 	public static final String CREATE_NULL_OBJECTS = "xwork.NullHandler.createNullObjects";
 	public static final String DENY_METHOD_EXECUTION = "xwork.MethodAccessor.denyMethodExecution";
+	/**
+	 * @deprecated since 7.4.0, no replacement. Nothing in the framework has ever set this key, so it has
+	 * never had any effect. Indexed property access is now identified by inspecting the target type rather
+	 * than by trusting a method name prefix, which leaves this flag with nothing to guard. Scheduled for
+	 * removal in 8.0.0 by WW-5699.
+	 */
+	@Deprecated
 	public static final String DENY_INDEXED_ACCESS_EXECUTION = "xwork.IndexedPropertyAccessor.denyMethodExecution";
 
     public static boolean isCreatingNullObjects(Map<String, Object> context) {

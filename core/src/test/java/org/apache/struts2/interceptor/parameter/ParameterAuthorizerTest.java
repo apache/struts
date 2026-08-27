@@ -170,6 +170,16 @@ public class ParameterAuthorizerTest {
     }
 
     @Test
+    public void transitionMode_modelDrivenUnannotatedActionMember_exempt() {
+        // Transition mode exists so an application can turn requireAnnotations on while it works
+        // through annotating. It must reach ModelDriven actions too, or the actions affected by
+        // scoping the exemption have no migration path.
+        authorizer.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("actionSecret", action.getModel(), action)).isTrue();
+    }
+
+    @Test
     public void nonModelDrivenAction_differentTarget_notExempt() {
         // Regression test: when target != action but action does NOT implement ModelDriven,
         // the target should NOT be exempt from annotation checks.

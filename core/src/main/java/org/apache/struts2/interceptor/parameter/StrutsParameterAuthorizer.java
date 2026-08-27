@@ -119,18 +119,20 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
         String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
         String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
+        // Transition mode: depth-0 (non-nested) parameters are exempt. Checked before the ModelDriven
+        // exemption so that it also covers a ModelDriven action's own members, which would otherwise
+        // have no migration path once the exemption is scoped to the model.
+        if (requireAnnotationsTransitionMode && paramDepth == 0) {
+            LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement",
+                    parameterName);
+            return true;
+        }
+
         // ModelDriven exemption: only exempt when the action explicitly implements ModelDriven
         // and the target is its model object. This prevents non-ModelDriven root objects
         // (e.g. JSONInterceptor's configurable rootObject) from bypassing annotation checks.
         if (target != action && action instanceof ModelDriven) {
             return isAuthorizedOnModelDrivenAction(normalisedRootProperty, target, action, paramDepth);
-        }
-
-        // Transition mode: depth-0 (non-nested) parameters are exempt
-        if (requireAnnotationsTransitionMode && paramDepth == 0) {
-            LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement",
-                    parameterName);
-            return true;
         }
 
         return hasValidAnnotatedMember(normalisedRootProperty, target, paramDepth);

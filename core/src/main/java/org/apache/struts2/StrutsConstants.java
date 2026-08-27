@@ -204,6 +204,14 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
 
     /**
+     * Whether the html5 theme emits HTML5 constraint attributes derived from the action's validators.
+     * Defaults to {@code false}; the default is expected to flip in a future major release.
+     *
+     * @since 7.4.0
+     */
+    public static final String STRUTS_UI_HTML5_CONSTRAINTS = "struts.ui.html5.constraints";
+
+    /**
      * Whether WebJars support is enabled (serving and URL building)
      */
     public static final String STRUTS_WEBJARS_ENABLED = "struts.webjars.enabled";
@@ -217,6 +225,14 @@ public final class StrutsConstants {
      * A global flag to enable/disable html body escaping in tags, can be overwritten per tag
      */
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
+
+    /**
+     * The {@link org.apache.struts2.components.HtmlConstraintProvider} implementation used to derive
+     * HTML5 constraint attributes from an action's validators.
+     *
+     * @since 7.4.0
+     */
+    public static final String STRUTS_HTML_CONSTRAINT_PROVIDER = "struts.htmlConstraintProvider";
 
     /**
      * The maximum size of a multipart request (file upload)

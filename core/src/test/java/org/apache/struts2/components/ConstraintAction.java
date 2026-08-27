@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,8 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<#if attributes.accesskey?has_content>
- accesskey="${attributes.accesskey}"<#rt/>
-</#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/constraints.ftl" /><#rt/>
+package org.apache.struts2.components;
+
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
+public class ConstraintAction extends ActionSupport {
+
+    private String username;
+    private String comment;
+    private String bio;
+
+    public String getUsername() {
+        return username;
+    }
+
+    @StrutsParameter
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    @StrutsParameter
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    @StrutsParameter
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+}

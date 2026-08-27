@@ -25,9 +25,12 @@ import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.Template;
@@ -531,6 +534,9 @@ public abstract class UIBean extends Component {
 
     protected CspNonceReader cspNonceReader;
 
+    protected HtmlConstraintProvider htmlConstraintProvider;
+    protected boolean html5ConstraintsEnabled;
+
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
@@ -559,6 +565,16 @@ public abstract class UIBean extends Component {
     @Inject
     public void setCspNonceReader(CspNonceReader cspNonceReader) {
         this.cspNonceReader = cspNonceReader;
+    }
+
+    @Inject
+    public void setHtmlConstraintProvider(HtmlConstraintProvider htmlConstraintProvider) {
+        this.htmlConstraintProvider = htmlConstraintProvider;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, required = false)
+    public void setHtml5ConstraintsEnabled(String html5ConstraintsEnabled) {
+        this.html5ConstraintsEnabled = BooleanUtils.toBoolean(html5ConstraintsEnabled);
     }
 
     @Override
@@ -903,6 +919,108 @@ public abstract class UIBean extends Component {
         }
 
         evaluateExtraParams();
+
+        // must run after evaluateExtraParams(): that is where TextField resolves attributes.type,
+        // and the control type decides which constraints are legal
+        addConstraintAttributes(form);
+    }
+
+    /**
+     * Derives HTML5 constraint attributes for this field from the action's validators.
+     * <p>
+     * This reaches {@link Form#getFieldValidators(String)}, which resolves the action's validators via
+     * {@code AnnotationActionValidatorManager}, which in turn dereferences the current
+     * {@code ActionInvocation} unconditionally. Before this feature that path only ran under the opt-in
+     * {@code validate="true"}; with constraint derivation gated only by
+     * {@code struts.ui.html5.constraints}, every {@code html5}-themed form now runs it, including one
+     * rendered outside action scope (a direct JSP include from a plain servlet, say) — which would NPE.
+     * A stray {@code null} in the validator list, and a broken {@code ${}} in a validator message
+     * failing in {@code ValidatorSupport.getMessage}, land in the same call. This feature is purely
+     * decorative — a missing constraint attribute costs nothing, a 500 costs the page — so the broad
+     * catch here is deliberate rather than a mistake. Swallowing the failure is only safe because
+     * {@link #restoreStackDepth(int)} undoes whatever that failure left on the value stack.
+     *
+     * @since 7.4.0
+     */
+    protected void addConstraintAttributes(Form form) {
+        if (!html5ConstraintsEnabled || form == null || htmlConstraintProvider == null) {
+            return;
+        }
+        String fieldName = (String) getAttributes().get("name");
+        if (fieldName == null) {
+            return;
+        }
+        int stackDepth = stack.getRoot().size();
+        try {
+            Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
+                form.getFieldValidators(fieldName), getControlType(), resolveAction());
+            if (constraints.isEmpty()) {
+                return;
+            }
+            constraints = new LinkedHashMap<>(constraints);
+            constraints.keySet().removeIf(this::isAlreadyRendered);
+            if (!constraints.isEmpty()) {
+                addParameter("constraints", constraints);
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to derive HTML5 constraint attributes for field [{}], skipping", fieldName, e);
+        } finally {
+            restoreStackDepth(stackDepth);
+        }
+    }
+
+    /**
+     * The object server-side validation runs against, which is what the derived {@code data-msg-*}
+     * messages must be resolved against too: {@code ValidatorSupport.getMessage} builds a
+     * {@code DelegatingValidatorContext} from it, and that decides which resource bundle the message
+     * key is looked up in.
+     * <p>
+     * Deliberately not {@code stack.peek()}. The top of the stack is not the action whenever
+     * something has been pushed over it — {@code ModelDrivenInterceptor} pushes the model, and an
+     * {@code <s:iterator>} wrapping the field pushes the current element — so peeking would resolve
+     * messages against a model or a list element while {@code ValidationInterceptor} validated the
+     * action.
+     *
+     * @return the action, or null when rendering outside action scope, in which case the provider
+     * simply derives no message attributes
+     */
+    private Object resolveAction() {
+        ActionInvocation invocation = ActionContext.of(stack.getContext()).getActionInvocation();
+        return invocation == null ? null : invocation.getAction();
+    }
+
+    /**
+     * Pops whatever constraint derivation left behind. {@code ValidatorSupport.getMessage} pushes the
+     * action and the validator onto this same request-scoped stack — {@code
+     * DefaultActionValidatorManager.getValidators} hands it {@code ActionContext.getValueStack()} —
+     * and its matching pops are not in a {@code finally}. A message that fails to resolve (a bad
+     * {@code MessageFormat} pattern, an unresolvable {@code ${}}) would therefore leave frames on the
+     * stack, and because the catch above deliberately swallows the failure, every tag rendered after
+     * this one would silently resolve its OGNL against the wrong root.
+     */
+    private void restoreStackDepth(int depth) {
+        while (stack.getRoot().size() > depth) {
+            stack.pop();
+        }
+    }
+
+    /**
+     * True when the developer already supplied this attribute explicitly — as a declared tag attribute
+     * (e.g. {@code maxlength}) or a dynamic one (e.g. {@code min} on a numeric textfield, which is not a
+     * declared attribute of any component) — so a derived constraint of the same name must not be
+     * rendered a second time. The developer's own value always wins.
+     * <p>
+     * {@code required} is deliberately excluded from the declared-attribute half of this check:
+     * {@code requiredLabel} stores an unrelated boolean under the same {@code attributes.required} key,
+     * purely to draw a label asterisk in the xhtml theme, and that must never suppress a genuine
+     * {@code required} constraint derived from a {@code required}/{@code requiredstring} validator. A
+     * {@code required} attribute the developer typed by hand as a dynamic attribute still wins.
+     */
+    private boolean isAlreadyRendered(String attributeName) {
+        if (dynamicAttributes.containsKey(attributeName)) {
+            return true;
+        }
+        return !"required".equals(attributeName) && getAttributes().containsKey(attributeName);
     }
 
     /**
@@ -966,6 +1084,17 @@ public abstract class UIBean extends Component {
         } else {
             return null;
         }
+    }
+
+    /**
+     * The kind of HTML control this component renders, used to decide which HTML5 constraint
+     * attributes are legal on it. Defaults to {@link HtmlControlType#OTHER}, which supports no
+     * constraints — so a component that does not override this emits none.
+     *
+     * @since 7.4.0
+     */
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.OTHER;
     }
 
     protected void evaluateExtraParams() {

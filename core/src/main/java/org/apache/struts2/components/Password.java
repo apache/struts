@@ -64,6 +64,11 @@ public class Password extends TextField {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.PASSWORD;
+    }
+
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 

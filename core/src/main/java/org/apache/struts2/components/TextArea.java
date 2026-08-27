@@ -62,6 +62,11 @@ public class TextArea extends UIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.TEXTAREA;
+    }
+
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 

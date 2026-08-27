@@ -18,7 +18,8 @@
  * under the License.
  */
 -->
-<#if attributes.accesskey?has_content>
- accesskey="${attributes.accesskey}"<#rt/>
+<#if attributes.constraints??>
+<#list attributes.constraints as attributeName, attributeValue>
+ ${attributeName}="${attributeValue}"<#rt/>
+</#list>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/constraints.ftl" /><#rt/>

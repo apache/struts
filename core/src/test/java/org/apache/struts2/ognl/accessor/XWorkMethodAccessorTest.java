@@ -37,7 +37,13 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
                 + " executed while method execution is denied", bean.attackArgument);
     }
 
-    public void testDenyMethodExecutionAllowsIntIndexedPropertyAccessor() {
+    /**
+     * Note the name: OGNL classifies this pair as {@code INDEXED_PROPERTY_OBJECT}, not {@code _INT}, because
+     * {@code findObjectIndexedPropertyDescriptors} overwrites the {@code java.beans} descriptor whenever it
+     * finds a matching get/set pair. {@link #testDenyMethodExecutionAllowsReadOnlyIntIndexedPropertyAccessor()}
+     * is what covers the {@code _INT} branch.
+     */
+    public void testDenyMethodExecutionAllowsIndexedPropertyAccessorDeclaredOverAnIntIndex() {
         Bean bean = new Bean();
         ValueStack vs = ActionContext.getContext().getValueStack();
         vs.push(bean);
@@ -59,6 +65,56 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
 
         assertEquals("object indexed property accessors must keep working while method execution is denied",
                 "keyedk", value);
+    }
+
+    /**
+     * A read-only indexed property is the one shape that reaches {@code INDEXED_PROPERTY_INT}: with no
+     * matching setter, OGNL leaves the {@code java.beans} {@code IndexedPropertyDescriptor} in place.
+     */
+    public void testDenyMethodExecutionAllowsReadOnlyIntIndexedPropertyAccessor() {
+        ReadOnlyIndexedBean bean = new ReadOnlyIndexedBean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        Object value = vs.findValue("getItem(1)");
+
+        assertEquals("a read-only indexed property accessor must keep working while method execution is denied",
+                "item1", value);
+    }
+
+    /**
+     * The property name alone does not identify the method that will run. This bean really does declare the
+     * indexed pair getItem(int)/setItem(int, String), so the property is indexed - but the one-argument call
+     * below dispatches to the unrelated getItem(String) overload, because the argument types choose the
+     * method and the caller chooses the arguments.
+     */
+    public void testDenyMethodExecutionBlocksAnOverloadOfAnIndexedAccessor() {
+        OverloadedIndexedBean bean = new OverloadedIndexedBean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("getItem('PWNED')");
+
+        assertNull("an overload sharing an indexed accessor's name must not be executed while method"
+                + " execution is denied", bean.overloadArgument);
+    }
+
+    /**
+     * The direction matters too: a read-only indexed property must not legitimise an unrelated two-argument
+     * setter that merely shares its name.
+     */
+    public void testDenyMethodExecutionBlocksUnrelatedSetterNamedAfterAReadOnlyIndexedProperty() {
+        ReadOnlyIndexedBean bean = new ReadOnlyIndexedBean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("setItem('PWNED', 'x')");
+
+        assertNull("a two-argument setter is not the accessor of a read-only indexed property and must not"
+                + " be executed while method execution is denied", bean.setterArgument);
     }
 
     public void testDenyMethodExecutionBlocksBareGetAccessor() {
@@ -119,6 +175,39 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
 
         public void setKeyed(String key, String value) {
             // present so that the pair forms an indexed property
+        }
+    }
+
+    public static class ReadOnlyIndexedBean {
+        private String setterArgument;
+
+        public String getItem(int index) {
+            return "item" + index;
+        }
+
+        /**
+         * Not the indexed setter of {@code item} - that would be {@code setItem(int, String)}. It only shares
+         * the name and the two-argument shape.
+         */
+        public void setItem(String key, String value) {
+            this.setterArgument = key;
+        }
+    }
+
+    public static class OverloadedIndexedBean {
+        private String overloadArgument;
+
+        public String getItem(int index) {
+            return "item" + index;
+        }
+
+        public void setItem(int index, String value) {
+            // present so that the pair forms an indexed property
+        }
+
+        public String getItem(String key) {
+            this.overloadArgument = key;
+            return "irrelevant";
         }
     }
 }

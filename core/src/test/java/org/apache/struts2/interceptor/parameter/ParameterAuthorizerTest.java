@@ -133,6 +133,43 @@ public class ParameterAuthorizerTest {
     }
 
     @Test
+    public void modelDriven_unannotatedActionMember_rejected() {
+        // The exemption covers the model, which is declared request surface by getModel().
+        // It must not reach members declared on the action itself.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("actionSecret", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_annotatedActionMember_authorized() {
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("actionAllowed", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_modelProperty_stillAuthorizedWithoutAnnotation() {
+        // The whole point of the exemption: model properties need no annotation.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("name", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_propertyOnNeitherModelNorAction_authorized() {
+        // A model bound through a custom OGNL property accessor (e.g. a Map-backed model) declares no
+        // bean property, and such a name cannot be reaching a member of the action either.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("noSuchPropertyAnywhere", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_modelPropertyShadowingUnannotatedActionProperty_authorized() {
+        // Declared on both. OGNL resolves against the stack top, which is the model, so the model's
+        // property wins and needs no annotation even though the action's namesake is unannotated.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("shared", action.getModel(), action)).isTrue();
+    }
+
+    @Test
     public void nonModelDrivenAction_differentTarget_notExempt() {
         // Regression test: when target != action but action does NOT implement ModelDriven,
         // the target should NOT be exempt from annotation checks.
@@ -267,9 +304,34 @@ public class ParameterAuthorizerTest {
         public Pojo getModel() { return new Pojo(); }
     }
 
+    public static class ModelActionWithOwnMembers implements ModelDriven<Pojo> {
+        private final Pojo model = new Pojo();
+        private String actionSecret;
+        private String actionAllowed;
+
+        @Override
+        public Pojo getModel() { return model; }
+
+        // NO @StrutsParameter — declared on the action, so the model exemption must not cover it
+        public void setActionSecret(String actionSecret) { this.actionSecret = actionSecret; }
+        public String getActionSecret() { return actionSecret; }
+
+        @StrutsParameter
+        public void setActionAllowed(String actionAllowed) { this.actionAllowed = actionAllowed; }
+        public String getActionAllowed() { return actionAllowed; }
+
+        // Namesake of a model property, deliberately unannotated
+        private String shared;
+        public void setShared(String shared) { this.shared = shared; }
+        public String getShared() { return shared; }
+    }
+
     public static class Pojo {
         private String name;
+        private String shared;
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
+        public String getShared() { return shared; }
+        public void setShared(String shared) { this.shared = shared; }
     }
 }

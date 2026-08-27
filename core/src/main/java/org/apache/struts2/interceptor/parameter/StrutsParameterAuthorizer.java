@@ -115,12 +115,15 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
         long paramDepth = parameterName.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
+        int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
+        String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
+        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
+
         // ModelDriven exemption: only exempt when the action explicitly implements ModelDriven
         // and the target is its model object. This prevents non-ModelDriven root objects
         // (e.g. JSONInterceptor's configurable rootObject) from bypassing annotation checks.
         if (target != action && action instanceof ModelDriven) {
-            LOG.debug("ModelDriven target detected (action implements ModelDriven), exempting from @StrutsParameter annotation requirement");
-            return true;
+            return isAuthorizedOnModelDrivenAction(normalisedRootProperty, target, action, paramDepth);
         }
 
         // Transition mode: depth-0 (non-nested) parameters are exempt
@@ -130,11 +133,52 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
             return true;
         }
 
-        int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
-        String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
-        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
-
         return hasValidAnnotatedMember(normalisedRootProperty, target, paramDepth);
+    }
+
+    /**
+     * Decides authorization for a {@link ModelDriven} action, whose model is on top of the value stack.
+     * <p>
+     * Returning an object from {@code getModel()} declares that object to be request surface, so anything the
+     * model itself can take is exempt from the {@link StrutsParameter} requirement. The exemption stops there:
+     * OGNL resolves the parameter name against the whole stack, which also holds the action, so a property
+     * declared on the action is still subject to the annotation requirement. Without that distinction a
+     * ModelDriven action would silently expose its own members.
+     * <p>
+     * A property declared on neither is allowed, since it cannot be reaching a member of the action - typically
+     * it is bound by a custom OGNL property accessor on the model, such as a Map-backed model.
+     */
+    protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
+        if (declaresProperty(model, rootProperty)) {
+            LOG.debug("Property [{}] belongs to the ModelDriven model, exempting from @StrutsParameter annotation requirement",
+                    rootProperty);
+            return true;
+        }
+        if (!declaresProperty(action, rootProperty)) {
+            LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
+                    rootProperty);
+            return true;
+        }
+        LOG.debug("Property [{}] is declared on the ModelDriven action itself, applying the @StrutsParameter annotation requirement",
+                rootProperty);
+        return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+    }
+
+    /**
+     * Whether {@code target} declares {@code property} as a bean property or a public field, irrespective of any
+     * {@link StrutsParameter} annotation.
+     */
+    protected boolean declaresProperty(Object target, String property) {
+        BeanInfo beanInfo = getBeanInfo(target);
+        if (beanInfo != null && Arrays.stream(beanInfo.getPropertyDescriptors())
+                .anyMatch(desc -> desc.getName().equals(property))) {
+            return true;
+        }
+        try {
+            return Modifier.isPublic(ultimateClass(target).getDeclaredField(property).getModifiers());
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
     }
 
     protected boolean hasValidAnnotatedMember(String rootProperty, Object target, long paramDepth) {

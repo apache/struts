@@ -44,7 +44,7 @@ public class ReflectionContextState {
 	 * than by trusting a method name prefix, which leaves this flag with nothing to guard. Scheduled for
 	 * removal in 8.0.0 by WW-5699.
 	 */
-	@Deprecated
+	@Deprecated(since = "7.4.0", forRemoval = true)
 	public static final String DENY_INDEXED_ACCESS_EXECUTION = "xwork.IndexedPropertyAccessor.denyMethodExecution";
 
     public static boolean isCreatingNullObjects(Map<String, Object> context) {

@@ -61,6 +61,18 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
                 "keyedk", value);
     }
 
+    public void testDenyMethodExecutionBlocksBareGetAccessor() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("get('PWNED')");
+
+        assertNull("a map style get(String) is not an indexed property accessor and must not be"
+                + " executed while method execution is denied", bean.bareGetArgument);
+    }
+
     public void testArgumentTakingGetterIsExecutedWhenMethodExecutionIsNotDenied() {
         Bean bean = new Bean();
         ValueStack vs = ActionContext.getContext().getValueStack();
@@ -74,6 +86,15 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
 
     public static class Bean {
         private String attackArgument;
+        private String bareGetArgument;
+
+        /**
+         * Named exactly "get", so there is no property name left once the prefix is removed.
+         */
+        public String get(String key) {
+            this.bareGetArgument = key;
+            return "irrelevant";
+        }
 
         /**
          * Not a JavaBeans property: takes an argument and has no matching setter, so it is not an

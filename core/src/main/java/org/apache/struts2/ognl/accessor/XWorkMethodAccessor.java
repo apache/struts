@@ -82,13 +82,12 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         //Indexed property access, i.e. the setXXX(A,B) / getXXX(A) pattern. Restricted to methods which
         //really are indexed property accessors on the target type: a name prefix and an argument count
         //alone would let any method be called while method execution is denied.
-        if ((objects.length == 2 && string.startsWith("set")) || (objects.length == 1 && string.startsWith("get"))) {
-            if (isIndexedPropertyAccessor(object, string)) {
-                Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
-                boolean e = exec != null && exec;
-                if (!e) {
-                    return callMethodWithDebugInfo(context, object, string, objects);
-                }
+        if (((objects.length == 2 && string.startsWith("set")) || (objects.length == 1 && string.startsWith("get")))
+                && isIndexedPropertyAccessor(object, string)) {
+            Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
+            boolean e = exec != null && exec;
+            if (!e) {
+                return callMethodWithDebugInfo(context, object, string, objects);
             }
         }
         boolean e = ReflectionContextState.isDenyMethodExecution(context);

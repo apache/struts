@@ -220,6 +220,24 @@ public class ParameterAuthorizerTest {
     }
 
     @Test
+    public void modelDriven_classProperty_rejected() {
+        // OgnlUtil introspects with Object as the stop class, so "class" shows up on no descriptor list
+        // and looks like a name declared nowhere - the shape the custom-accessor fallback exempts. It is
+        // not unknown, it is Object.getClass() on everything, and the non-ModelDriven path rejects it for
+        // want of an annotation. The exemption must not make a ModelDriven action the exception.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized("class.classLoader.foo", action.getModel(), action)).isFalse();
+        assertThat(authorizer.isAuthorized("class", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void nonModelDrivenAction_classProperty_rejected() {
+        // The behaviour the case above is being aligned with.
+        var action = new SecureAction();
+        assertThat(authorizer.isAuthorized("class.classLoader.foo", action, action)).isFalse();
+    }
+
+    @Test
     public void parameterNameBeginningWithNestingChar_rejected() {
         // Such a name has no root property to authorize. It used to reach charAt(0) on an empty string.
         var action = new ModelActionWithOwnMembers();

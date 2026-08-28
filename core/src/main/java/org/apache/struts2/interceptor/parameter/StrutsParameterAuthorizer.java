@@ -60,6 +60,13 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
     private static final Logger LOG = LogManager.getLogger(StrutsParameterAuthorizer.class);
 
+    /**
+     * {@link OgnlUtil#getBeanInfo(Class)} introspects with {@link Object} as the stop class, so this one never
+     * appears among the property descriptors and cannot be told apart from a genuinely unknown name by evidence
+     * alone. It is not unknown, though: it resolves to {@link Object#getClass()} on every object alike.
+     */
+    private static final String CLASS_PROPERTY = "class";
+
     private boolean requireAnnotations = false;
     private boolean requireAnnotationsTransitionMode = false;
     private boolean devMode = false;
@@ -153,7 +160,10 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * ModelDriven action would silently expose its own members.
      * <p>
      * A property declared on neither is allowed, since it cannot be reaching a member of the action - typically
-     * it is bound by a custom OGNL property accessor on the model, such as a Map-backed model.
+     * it is bound by a custom OGNL property accessor on the model, such as a Map-backed model. {@code class} is
+     * the exception to that: it is invisible to introspection here rather than absent, so it is rejected instead
+     * of taking the fallback, which keeps a ModelDriven action from handing OGNL a {@code class} path that the
+     * ordinary non-ModelDriven path would have rejected for want of an annotation.
      */
     protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
         if (declaresProperty(model, rootProperty, paramDepth)) {
@@ -162,6 +172,10 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
             return true;
         }
         if (!declaresProperty(action, rootProperty, paramDepth)) {
+            if (CLASS_PROPERTY.equals(rootProperty)) {
+                LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
+                return false;
+            }
             LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;

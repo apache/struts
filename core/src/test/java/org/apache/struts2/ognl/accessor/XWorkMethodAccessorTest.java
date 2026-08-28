@@ -158,7 +158,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
         vs.findValue("attack('PWNED')");
 
         assertNull("a one argument method without the get prefix must not be executed while method"
-                + " execution is denied", bean.attackArgument);
+                + " execution is denied", bean.unprefixedArgument);
     }
 
     public void testDenyMethodExecutionBlocksAnUnprefixedTwoArgumentMethod() {
@@ -170,7 +170,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
         vs.findValue("attack('PWNED', 'x')");
 
         assertNull("a two argument method without the set prefix must not be executed while method"
-                + " execution is denied", bean.attackArgument);
+                + " execution is denied", bean.unprefixedArgument);
     }
 
     /**
@@ -237,6 +237,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
         private String attackArgument;
         private String bareGetArgument;
         private String keyedArgument;
+        private String unprefixedArgument;
 
         /**
          * Named exactly "get", so there is no property name left once the prefix is removed.
@@ -273,14 +274,15 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
 
         /**
          * Neither prefix, so no property name can be derived from it at all - whatever its argument count.
+         * Records into its own field, so a test can tell this apart from {@link #getAttack(String)} having run.
          */
         public String attack(String argument) {
-            this.attackArgument = argument;
+            this.unprefixedArgument = argument;
             return "irrelevant";
         }
 
         public String attack(String argument, String other) {
-            this.attackArgument = argument;
+            this.unprefixedArgument = argument + "," + other;
             return "irrelevant";
         }
     }
@@ -297,7 +299,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
          * the name and the two-argument shape.
          */
         public void setItem(String key, String value) {
-            this.setterArgument = key;
+            this.setterArgument = key + "=" + value;
         }
     }
 
@@ -316,7 +318,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
          * Shares the name but not the argument count, so it is not what a one argument call resolves to.
          */
         public String getItem(String key, String other) {
-            this.overloadArgument = key;
+            this.overloadArgument = key + "," + other;
             return "irrelevant";
         }
     }

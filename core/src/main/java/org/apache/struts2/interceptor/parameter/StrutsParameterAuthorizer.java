@@ -117,6 +117,11 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
         int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
+        if (rootProperty.isEmpty()) {
+            LOG.debug("Parameter [{}] begins with a nesting character, so it names no root property to authorize; rejecting",
+                    parameterName);
+            return false;
+        }
         String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
         // Transition mode: depth-0 (non-nested) parameters are exempt. Checked before the ModelDriven
@@ -151,12 +156,12 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * it is bound by a custom OGNL property accessor on the model, such as a Map-backed model.
      */
     protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
-        if (declaresProperty(model, rootProperty)) {
+        if (declaresProperty(model, rootProperty, paramDepth)) {
             LOG.debug("Property [{}] belongs to the ModelDriven model, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;
         }
-        if (!declaresProperty(action, rootProperty)) {
+        if (!declaresProperty(action, rootProperty, paramDepth)) {
             LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;
@@ -167,20 +172,43 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     }
 
     /**
-     * Whether {@code target} declares {@code property} as a bean property or a public field, irrespective of any
-     * {@link StrutsParameter} annotation.
+     * Whether {@code target} can itself take {@code property} at this depth - as a bean property whose relevant
+     * accessor exists, the setter for a depth-0 parameter and the getter for a nested one, or as a public instance
+     * field. Any {@link StrutsParameter} annotation is irrelevant here; this asks only what the object can absorb.
+     * <p>
+     * It has to be bindability rather than the name alone, because OGNL walks the stack until an object actually
+     * accepts the assignment. A model which merely names the property without being able to take it - a getter-only
+     * property under a depth-0 parameter, say - does not absorb that parameter: OGNL moves on to the action, and an
+     * exemption granted on the name alone would hand over the action's own member, which is the very thing this
+     * scoping exists to prevent. Inherited public fields count for the same reason, that OGNL can set them.
      */
-    protected boolean declaresProperty(Object target, String property) {
+    protected boolean declaresProperty(Object target, String property, long paramDepth) {
         BeanInfo beanInfo = getBeanInfo(target);
         if (beanInfo != null && Arrays.stream(beanInfo.getPropertyDescriptors())
-                .anyMatch(desc -> desc.getName().equals(property))) {
+                .filter(desc -> desc.getName().equals(property))
+                .anyMatch(desc -> (paramDepth == 0 ? desc.getWriteMethod() : desc.getReadMethod()) != null)) {
             return true;
         }
+        return declaresBindablePublicField(target, property, paramDepth);
+    }
+
+    /**
+     * Whether {@code target} exposes {@code property} as a public instance field that this parameter could bind
+     * through. {@link Class#getField} rather than {@code getDeclaredField}, since an inherited public field is just
+     * as settable as a declared one. Static fields are not per-instance request surface, and a final field cannot
+     * take a depth-0 assignment, so neither counts as absorbing the parameter.
+     */
+    protected boolean declaresBindablePublicField(Object target, String property, long paramDepth) {
+        Field field;
         try {
-            return Modifier.isPublic(ultimateClass(target).getDeclaredField(property).getModifiers());
+            field = ultimateClass(target).getField(property);
         } catch (NoSuchFieldException e) {
             return false;
         }
+        if (Modifier.isStatic(field.getModifiers())) {
+            return false;
+        }
+        return paramDepth > 0 || !Modifier.isFinal(field.getModifiers());
     }
 
     protected boolean hasValidAnnotatedMember(String rootProperty, Object target, long paramDepth) {

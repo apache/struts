@@ -180,6 +180,62 @@ public class ParameterAuthorizerTest {
     }
 
     @Test
+    public void modelDriven_readOnlyModelPropertyShadowingUnannotatedActionSetter_rejected() {
+        // Verified against a real value stack: with the model on top and only a getter for "shadow",
+        // OGNL cannot assign to the model and moves on to the action, whose unannotated setter takes
+        // the value. Exempting on the name alone would therefore expose the action's own member.
+        var action = new ModelActionWithReadOnlyModelProperty();
+        assertThat(authorizer.isAuthorized("shadow", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_readOnlyModelProperty_stillAuthorizedForNestedParameter() {
+        // A getter is all a nested parameter needs of the root property: OGNL reads "shadow" from the
+        // model and assigns further in. The model does absorb this one, so the exemption still applies.
+        var action = new ModelActionWithReadOnlyModelProperty();
+        assertThat(authorizer.isAuthorized("shadow.anything", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_inheritedPublicFieldOnAction_rejected() {
+        // OGNL sets inherited public fields as readily as declared ones, so a field the action inherits
+        // is still the action's own member and still needs the annotation.
+        var action = new ModelActionInheritingPublicField();
+        assertThat(authorizer.isAuthorized("inheritedSecret", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_inheritedPublicFieldOnModel_authorized() {
+        // The mirror case: a public field the model inherits is model surface like any other.
+        var action = new ModelActionWithInheritingModel();
+        assertThat(authorizer.isAuthorized("inheritedModelField", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_staticFieldNamesakeOfUnannotatedActionProperty_rejected() {
+        // A constant is not per-instance request surface and cannot absorb the parameter, so it must not
+        // stand in for the model the way a real field would.
+        var action = new ModelActionWithConstantNamesake();
+        assertThat(authorizer.isAuthorized("constant", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void parameterNameBeginningWithNestingChar_rejected() {
+        // Such a name has no root property to authorize. It used to reach charAt(0) on an empty string.
+        var action = new ModelActionWithOwnMembers();
+        assertThat(authorizer.isAuthorized(".actionSecret", action.getModel(), action)).isFalse();
+        assertThat(authorizer.isAuthorized("[0].actionSecret", action.getModel(), action)).isFalse();
+        assertThat(authorizer.isAuthorized("(actionSecret)", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void parameterNameBeginningWithNestingChar_nonModelDriven_rejected() {
+        var action = new SecureAction();
+        assertThat(authorizer.isAuthorized(".annotatedProp", action, action)).isFalse();
+        assertThat(authorizer.isAuthorized("[0].annotatedProp", action, action)).isFalse();
+    }
+
+    @Test
     public void nonModelDrivenAction_differentTarget_notExempt() {
         // Regression test: when target != action but action does NOT implement ModelDriven,
         // the target should NOT be exempt from annotation checks.
@@ -334,6 +390,63 @@ public class ParameterAuthorizerTest {
         private String shared;
         public void setShared(String shared) { this.shared = shared; }
         public String getShared() { return shared; }
+    }
+
+    public static class ReadOnlyShadowModel {
+        public String getShadow() { return "read-only"; }
+    }
+
+    public static class ModelActionWithReadOnlyModelProperty implements ModelDriven<ReadOnlyShadowModel> {
+        private final ReadOnlyShadowModel model = new ReadOnlyShadowModel();
+        private String shadow;
+
+        @Override
+        public ReadOnlyShadowModel getModel() { return model; }
+
+        // NO @StrutsParameter — the model only reads "shadow", so a depth-0 parameter lands here
+        public void setShadow(String shadow) { this.shadow = shadow; }
+        public String getShadow() { return shadow; }
+    }
+
+    public static class BaseWithPublicField {
+        public String inheritedSecret;
+    }
+
+    public static class ModelActionInheritingPublicField extends BaseWithPublicField implements ModelDriven<Pojo> {
+        private final Pojo model = new Pojo();
+
+        @Override
+        public Pojo getModel() { return model; }
+    }
+
+    public static class ModelInheritingPublicField extends BaseWithPublicModelField {
+    }
+
+    public static class BaseWithPublicModelField {
+        public String inheritedModelField;
+    }
+
+    public static class ModelActionWithInheritingModel implements ModelDriven<ModelInheritingPublicField> {
+        private final ModelInheritingPublicField model = new ModelInheritingPublicField();
+
+        @Override
+        public ModelInheritingPublicField getModel() { return model; }
+    }
+
+    public static class ModelWithConstant {
+        public static final String constant = "not request surface";
+    }
+
+    public static class ModelActionWithConstantNamesake implements ModelDriven<ModelWithConstant> {
+        private final ModelWithConstant model = new ModelWithConstant();
+        private String constant;
+
+        @Override
+        public ModelWithConstant getModel() { return model; }
+
+        // NO @StrutsParameter
+        public void setConstant(String constant) { this.constant = constant; }
+        public String getConstant() { return constant; }
     }
 
     public static class Pojo {

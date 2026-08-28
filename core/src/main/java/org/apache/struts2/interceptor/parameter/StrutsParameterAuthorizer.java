@@ -208,21 +208,18 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
     /**
      * Whether {@code target} exposes {@code property} as a public instance field that this parameter could bind
-     * through. {@link Class#getField} rather than {@code getDeclaredField}, since an inherited public field is just
-     * as settable as a declared one. Static fields are not per-instance request surface, and a final field cannot
-     * take a depth-0 assignment, so neither counts as absorbing the parameter.
+     * through. {@link Class#getFields} covers inherited fields as well as declared ones, an inherited public field
+     * being just as settable as a declared one. Static fields are not per-instance request surface, and a final
+     * field cannot take a depth-0 assignment, so neither counts as absorbing the parameter.
+     * <p>
+     * Scanning the fields and matching the name here, rather than looking the name up with {@code getField},
+     * keeps the request-derived property name out of a reflection lookup. The two select the same fields.
      */
     protected boolean declaresBindablePublicField(Object target, String property, long paramDepth) {
-        Field field;
-        try {
-            field = ultimateClass(target).getField(property);
-        } catch (NoSuchFieldException e) {
-            return false;
-        }
-        if (Modifier.isStatic(field.getModifiers())) {
-            return false;
-        }
-        return paramDepth > 0 || !Modifier.isFinal(field.getModifiers());
+        return Arrays.stream(ultimateClass(target).getFields())
+                .filter(field -> field.getName().equals(property))
+                .anyMatch(field -> !Modifier.isStatic(field.getModifiers())
+                        && (paramDepth > 0 || !Modifier.isFinal(field.getModifiers())));
     }
 
     protected boolean hasValidAnnotatedMember(String rootProperty, Object target, long paramDepth) {

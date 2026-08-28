@@ -129,6 +129,99 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
                 + " executed while method execution is denied", bean.bareGetArgument);
     }
 
+    /**
+     * The object indexed pair is what parameter binding itself walks through, so the mutator half has to keep
+     * working under the deny flag exactly as the accessor half does.
+     */
+    public void testDenyMethodExecutionAllowsObjectIndexedPropertyMutator() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("setKeyed('k', 'v')");
+
+        assertEquals("object indexed property mutators must keep working while method execution is denied",
+                "k=v", bean.keyedArgument);
+    }
+
+    /**
+     * The prefix is half of what makes a call a candidate: a method taking the right number of arguments but
+     * named nothing like an accessor never reaches the property lookup at all.
+     */
+    public void testDenyMethodExecutionBlocksAnUnprefixedOneArgumentMethod() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("attack('PWNED')");
+
+        assertNull("a one argument method without the get prefix must not be executed while method"
+                + " execution is denied", bean.attackArgument);
+    }
+
+    public void testDenyMethodExecutionBlocksAnUnprefixedTwoArgumentMethod() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        vs.findValue("attack('PWNED', 'x')");
+
+        assertNull("a two argument method without the set prefix must not be executed while method"
+                + " execution is denied", bean.attackArgument);
+    }
+
+    /**
+     * The overload guard is scoped to the argument count, because that is what OGNL dispatches on. A method
+     * sharing the accessor's name but taking a different number of arguments is never a candidate for this
+     * call, and so must not cost the bean its indexed property access.
+     */
+    public void testDenyMethodExecutionAllowsIndexedAccessorWithAnOverloadOfAnotherArity() {
+        DifferentArityOverloadBean bean = new DifferentArityOverloadBean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        Object value = vs.findValue("getItem(1)");
+
+        assertEquals("an overload of another arity cannot be dispatched to and must not block indexed"
+                + " property access", "item1", value);
+        assertNull("the overload itself must not have been executed", bean.overloadArgument);
+    }
+
+    /**
+     * {@link ReflectionContextState#DENY_INDEXED_ACCESS_EXECUTION} is deprecated because Struts itself never
+     * sets it, but application and plugin code still can, and while it does the indexed accessor exemption
+     * has to stay switched off. That is the whole reason the key is deprecated rather than removed outright.
+     */
+    @SuppressWarnings("removal")
+    public void testDenyIndexedAccessExecutionSuppressesTheIndexedAccessorExemption() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+        vs.getContext().put(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION, Boolean.TRUE);
+
+        Object value = vs.findValue("getItem(1)");
+
+        assertNull("setting the legacy key must suppress the indexed accessor exemption", value);
+    }
+
+    @SuppressWarnings("removal")
+    public void testDenyIndexedAccessExecutionSetToFalseLeavesTheIndexedAccessorExemptionInPlace() {
+        Bean bean = new Bean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+        vs.getContext().put(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION, Boolean.FALSE);
+
+        Object value = vs.findValue("getItem(1)");
+
+        assertEquals("the legacy key set to false must leave indexed property access working", "item1", value);
+    }
+
     public void testArgumentTakingGetterIsExecutedWhenMethodExecutionIsNotDenied() {
         Bean bean = new Bean();
         ValueStack vs = ActionContext.getContext().getValueStack();
@@ -143,6 +236,7 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
     public static class Bean {
         private String attackArgument;
         private String bareGetArgument;
+        private String keyedArgument;
 
         /**
          * Named exactly "get", so there is no property name left once the prefix is removed.
@@ -174,7 +268,20 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
         }
 
         public void setKeyed(String key, String value) {
-            // present so that the pair forms an indexed property
+            this.keyedArgument = key + "=" + value;
+        }
+
+        /**
+         * Neither prefix, so no property name can be derived from it at all - whatever its argument count.
+         */
+        public String attack(String argument) {
+            this.attackArgument = argument;
+            return "irrelevant";
+        }
+
+        public String attack(String argument, String other) {
+            this.attackArgument = argument;
+            return "irrelevant";
         }
     }
 
@@ -191,6 +298,26 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
          */
         public void setItem(String key, String value) {
             this.setterArgument = key;
+        }
+    }
+
+    public static class DifferentArityOverloadBean {
+        private String overloadArgument;
+
+        public String getItem(int index) {
+            return "item" + index;
+        }
+
+        public void setItem(int index, String value) {
+            // present so that the pair forms an indexed property
+        }
+
+        /**
+         * Shares the name but not the argument count, so it is not what a one argument call resolves to.
+         */
+        public String getItem(String key, String other) {
+            this.overloadArgument = key;
+            return "irrelevant";
         }
     }
 

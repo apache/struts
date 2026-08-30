@@ -33,7 +33,11 @@ import java.util.StringTokenizer;
 /**
  * Extended version of {@link RestfulActionMapper}, see documentation for more details
  * <a href="https://struts.apache.org/core-developers/restful-action-mapper.html">Restful2ActionMapper</a>
+ *
+ * @deprecated since 6.12.0, this legacy mapper predates the Struts REST plugin, which is the maintained
+ * way to build REST-style applications with Struts. Scheduled for removal in the next major release.
  */
+@Deprecated
 public class Restful2ActionMapper extends DefaultActionMapper {
 
     private static final Logger LOG = LogManager.getLogger(Restful2ActionMapper.class);

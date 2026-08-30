@@ -71,6 +71,9 @@ For any security-related activity — vulnerability scans, security analysis, dr
 Read it first and follow its pre-reporting checks, assessment checklist, and reporting requirements. Reports must be sent privately to
 `security@struts.apache.org`; do not open a public GitHub issue, Jira issue, pull request, or mailing list thread for a suspected vulnerability before private
 triage. [`AGENTS.md`](AGENTS.md) is a shorter LLM-facing wrapper around the same process.
+[`THREAT_MODEL.md`](THREAT_MODEL.md) is where the scope lives — trust boundaries, the security properties the framework does and does not provide, the
+recurring non-findings (§11a), and the triage dispositions (§13). Read it before judging whether a finding is real: on Struts most candidate findings are
+closed as application responsibility or non-default configuration rather than as framework bugs.
 
 ## Testing
 

@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-For detailed procedures, use the specialized agents, commands and skills in `.claude/agents/`, `.claude/commands/` and `.claude/skills/`.
+For detailed procedures, use the specialized skills in `.claude/skills/`.
 
 ## Project Overview
 

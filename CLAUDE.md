@@ -82,10 +82,13 @@ Run with `mvn test -DskipAssembly`.
 **Tests are JUnit 4 — there is no JUnit 5 anywhere in this repo.** `parent/pom.xml` declares
 `junit:junit:4.13.2`; there are zero `org.junit.jupiter` imports. Two styles coexist:
 
-- **JUnit 3 style** — ~114 classes extend `XWorkTestCase` (which extends `junit.framework.TestCase`).
+- **JUnit 3 style** — classes extending `XWorkTestCase` (which extends `junit.framework.TestCase`).
   Methods must be named `testXxx()`. A Jupiter `@Test` annotation added to one of these **silently
   never runs** — it does not fail, it is simply not collected.
-- **JUnit 4 style** — ~210 classes use `import org.junit.Test`.
+- **JUnit 4 style** — classes using `import org.junit.Test`.
+
+Both styles are widespread and neither is being migrated away from; `grep -rl` for either marker
+gives the current split.
 
 Before adding a test, open the target file and match the style already there. AssertJ assertions and
 Mockito mocks are both available and widely used. Introducing Jupiter is a build-infrastructure change

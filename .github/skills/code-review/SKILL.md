@@ -26,12 +26,14 @@ Deeper references, when a review needs them:
 `org.junit.jupiter` imports. Two styles coexist and a new test must match the
 style already in the file it joins:
 
-- **JUnit 3 style** — around 117 classes extend `XWorkTestCase`, which extends
+- **JUnit 3 style** — classes extending `XWorkTestCase`, which extends
   `junit.framework.TestCase`. Test methods must be named `testXxx()`. A Jupiter
   `@Test` annotation added to one of these **silently never runs** — it does not
   fail, it is simply not collected. Flag this as blocking whenever you see
   `org.junit.jupiter` in a diff.
-- **JUnit 4 style** — around 212 classes use `import org.junit.Test`.
+- **JUnit 4 style** — classes using `import org.junit.Test`.
+
+Both styles are widespread and neither is being migrated away from.
 
 AssertJ assertions and Mockito mocks are both available and widely used.
 Introducing JUnit 5 is a build-infrastructure change that needs its own `WW-`

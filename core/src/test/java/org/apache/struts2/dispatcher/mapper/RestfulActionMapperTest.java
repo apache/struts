@@ -105,6 +105,22 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
         assertEquals("europe", am.getParams().get("region"));
     }
 
+    public void testGetMappingRejectsActionNameWithDisallowedCharacters() {
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/%{1+1}/x");
+
+        ActionMapping am = mapper.getMapping(request, null);
+        assertEquals("index", am.getName());
+    }
+
+    public void testGetMappingAcceptsRegularActionName() {
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/my-app.action/x");
+
+        ActionMapping am = mapper.getMapping(request, null);
+        assertEquals("my-app.action", am.getName());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         mapper = new RestfulActionMapper();

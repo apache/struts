@@ -34,7 +34,11 @@ import java.util.StringTokenizer;
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
  * <a href="https://struts.apache.org/core-developers/restful-action-mapper.html">RestfulActionMapper</a>
+ *
+ * @deprecated since 7.4.0, this legacy mapper predates the Struts REST plugin, which is the maintained
+ * way to build REST-style applications with Struts. Scheduled for removal in the next major release.
  */
+@Deprecated(forRemoval = true)
 public class RestfulActionMapper implements ActionMapper {
 
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);

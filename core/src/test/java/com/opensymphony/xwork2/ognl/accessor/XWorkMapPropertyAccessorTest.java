@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class XWorkMapPropertyAccessorTest extends XWorkTestCase {
@@ -55,6 +56,50 @@ public class XWorkMapPropertyAccessorTest extends XWorkTestCase {
         vs.push(new MapHolder(Collections.emptyMap()));
         ReflectionContextState.setCreatingNullObjects(vs.getContext(), false);
         assertNull(vs.findValue("map['key']"));
+    }
+
+    public void testUnconvertibleValueIsNotStored() {
+        TypedMapHolder holder = new TypedMapHolder();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(holder);
+
+        vs.setValue("counts[1]", "5");
+        vs.setValue("counts[2]", "not-a-number");
+
+        assertEquals(Integer.valueOf(5), holder.getCounts().get(1L));
+        assertOnlyDeclaredTypes(holder.getCounts());
+    }
+
+    public void testUnconvertibleKeyIsNotStored() {
+        TypedMapHolder holder = new TypedMapHolder();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(holder);
+
+        vs.setValue("counts[1]", "5");
+        vs.setValue("counts['abc']", "6");
+
+        assertEquals(Integer.valueOf(5), holder.getCounts().get(1L));
+        assertOnlyDeclaredTypes(holder.getCounts());
+    }
+
+    /**
+     * A Map declared to hold Long keys and Integer values must never be left holding anything else.
+     */
+    private static void assertOnlyDeclaredTypes(Map<Long, Integer> map) {
+        for (Object o : ((Map) map).entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            assertTrue("key is not a Long: " + entry.getKey(), entry.getKey() instanceof Long);
+            assertTrue("value is not an Integer: " + entry.getValue(), entry.getValue() instanceof Integer);
+        }
+    }
+
+    public static class TypedMapHolder {
+        @Element(value = Integer.class)
+        private final Map<Long, Integer> counts = new HashMap<>();
+
+        public Map<Long, Integer> getCounts() {
+            return counts;
+        }
     }
 
     private static class MapHolder {

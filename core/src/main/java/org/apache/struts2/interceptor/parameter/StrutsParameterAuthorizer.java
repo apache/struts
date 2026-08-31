@@ -60,6 +60,13 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
     private static final Logger LOG = LogManager.getLogger(StrutsParameterAuthorizer.class);
 
+    /**
+     * {@link OgnlUtil#getBeanInfo(Class)} introspects with {@link Object} as the stop class, so this one never
+     * appears among the property descriptors and cannot be told apart from a genuinely unknown name by evidence
+     * alone. It is not unknown, though: it resolves to {@link Object#getClass()} on every object alike.
+     */
+    private static final String CLASS_PROPERTY = "class";
+
     private boolean requireAnnotations = false;
     private boolean requireAnnotationsTransitionMode = false;
     private boolean devMode = false;
@@ -115,26 +122,110 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
 
         long paramDepth = parameterName.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
-        // ModelDriven exemption: only exempt when the action explicitly implements ModelDriven
-        // and the target is its model object. This prevents non-ModelDriven root objects
-        // (e.g. JSONInterceptor's configurable rootObject) from bypassing annotation checks.
-        if (target != action && action instanceof ModelDriven) {
-            LOG.debug("ModelDriven target detected (action implements ModelDriven), exempting from @StrutsParameter annotation requirement");
-            return true;
+        int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
+        String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
+        if (rootProperty.isEmpty()) {
+            LOG.debug("Parameter [{}] begins with a nesting character, so it names no root property to authorize; rejecting",
+                    parameterName);
+            return false;
         }
+        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
-        // Transition mode: depth-0 (non-nested) parameters are exempt
+        // Transition mode: depth-0 (non-nested) parameters are exempt. Checked before the ModelDriven
+        // exemption so that it also covers a ModelDriven action's own members, which would otherwise
+        // have no migration path once the exemption is scoped to the model.
         if (requireAnnotationsTransitionMode && paramDepth == 0) {
             LOG.debug("Annotation transition mode enabled, exempting non-nested parameter [{}] from @StrutsParameter annotation requirement",
                     parameterName);
             return true;
         }
 
-        int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
-        String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
-        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
+        // ModelDriven exemption: only exempt when the action explicitly implements ModelDriven
+        // and the target is its model object. This prevents non-ModelDriven root objects
+        // (e.g. JSONInterceptor's configurable rootObject) from bypassing annotation checks.
+        if (target != action && action instanceof ModelDriven) {
+            return isAuthorizedOnModelDrivenAction(normalisedRootProperty, target, action, paramDepth);
+        }
 
         return hasValidAnnotatedMember(normalisedRootProperty, target, paramDepth);
+    }
+
+    /**
+     * Decides authorization for a {@link ModelDriven} action, whose model is on top of the value stack.
+     * <p>
+     * Returning an object from {@code getModel()} declares that object to be request surface, so anything the
+     * model itself can take is exempt from the {@link StrutsParameter} requirement. The exemption stops there:
+     * OGNL resolves the parameter name against the whole stack, which also holds the action, so a property
+     * declared on the action is still subject to the annotation requirement. Without that distinction a
+     * ModelDriven action would silently expose its own members.
+     * <p>
+     * A property declared on neither is allowed: typically it is bound by a custom OGNL property accessor on
+     * the model, such as a Map-backed model. That fallback guarantees less than it may appear to - only that
+     * the name reaches no member {@link #declaresProperty} can see. OGNL walks the whole stack, so such a name
+     * can still land on the action wherever the action absorbs it by a route introspection here does not model:
+     * being a {@code Map} itself, or declaring a setter that OGNL matches on name and arity while
+     * {@link java.beans.Introspector} does not, a fluent one for instance - see WW-5709. Neither case is more
+     * permissive than the blanket exemption this scoping replaces.
+     * <p>
+     * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent,
+     * so it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
+     * {@code class} path that the ordinary non-ModelDriven path would have rejected for want of an annotation.
+     */
+    protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
+        if (declaresProperty(model, rootProperty, paramDepth)) {
+            LOG.debug("Property [{}] belongs to the ModelDriven model, exempting from @StrutsParameter annotation requirement",
+                    rootProperty);
+            return true;
+        }
+        if (!declaresProperty(action, rootProperty, paramDepth)) {
+            if (CLASS_PROPERTY.equals(rootProperty)) {
+                LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
+                return false;
+            }
+            LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
+                    rootProperty);
+            return true;
+        }
+        LOG.debug("Property [{}] is declared on the ModelDriven action itself, applying the @StrutsParameter annotation requirement",
+                rootProperty);
+        return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+    }
+
+    /**
+     * Whether {@code target} can itself take {@code property} at this depth - as a bean property whose relevant
+     * accessor exists, the setter for a depth-0 parameter and the getter for a nested one, or as a public instance
+     * field. Any {@link StrutsParameter} annotation is irrelevant here; this asks only what the object can absorb.
+     * <p>
+     * It has to be bindability rather than the name alone, because OGNL walks the stack until an object actually
+     * accepts the assignment. A model which merely names the property without being able to take it - a getter-only
+     * property under a depth-0 parameter, say - does not absorb that parameter: OGNL moves on to the action, and an
+     * exemption granted on the name alone would hand over the action's own member, which is the very thing this
+     * scoping exists to prevent. Inherited public fields count for the same reason, that OGNL can set them.
+     */
+    protected boolean declaresProperty(Object target, String property, long paramDepth) {
+        BeanInfo beanInfo = getBeanInfo(target);
+        if (beanInfo != null && Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(desc -> desc.getName().equals(property))
+                .anyMatch(desc -> (paramDepth == 0 ? desc.getWriteMethod() : desc.getReadMethod()) != null)) {
+            return true;
+        }
+        return declaresBindablePublicField(target, property, paramDepth);
+    }
+
+    /**
+     * Whether {@code target} exposes {@code property} as a public instance field that this parameter could bind
+     * through. {@link Class#getFields} covers inherited fields as well as declared ones, an inherited public field
+     * being just as settable as a declared one. Static fields are not per-instance request surface, and a final
+     * field cannot take a depth-0 assignment, so neither counts as absorbing the parameter.
+     * <p>
+     * Scanning the fields and matching the name here, rather than looking the name up with {@code getField},
+     * keeps the request-derived property name out of a reflection lookup. The two select the same fields.
+     */
+    protected boolean declaresBindablePublicField(Object target, String property, long paramDepth) {
+        return Arrays.stream(ultimateClass(target).getFields())
+                .filter(field -> field.getName().equals(property))
+                .anyMatch(field -> !Modifier.isStatic(field.getModifiers())
+                        && (paramDepth > 0 || !Modifier.isFinal(field.getModifiers())));
     }
 
     protected boolean hasValidAnnotatedMember(String rootProperty, Object target, long paramDepth) {

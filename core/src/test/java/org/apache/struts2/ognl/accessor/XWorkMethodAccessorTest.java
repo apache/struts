@@ -192,6 +192,23 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
     }
 
     /**
+     * An override is not an overload: it is the same signature, so there is only ever one method a call can
+     * dispatch to, and the bean must keep its indexed property access. The shape is an ordinary one - a base
+     * class declaring the indexed pair, a subclass refining the accessor.
+     */
+    public void testDenyMethodExecutionAllowsIndexedAccessorOverriddenInASubclass() {
+        OverriddenIndexedBean bean = new OverriddenIndexedBean();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(bean);
+        ReflectionContextState.setDenyMethodExecution(vs.getContext(), true);
+
+        Object value = vs.findValue("getItem(1)");
+
+        assertEquals("an overriding accessor is the same signature as the one it overrides, not a second"
+                + " dispatch candidate, and must not block indexed property access", "overridden1", value);
+    }
+
+    /**
      * {@link ReflectionContextState#DENY_INDEXED_ACCESS_EXECUTION} is deprecated because Struts itself never
      * sets it, but application and plugin code still can, and while it does the indexed accessor exemption
      * has to stay switched off. That is the whole reason the key is deprecated rather than removed outright.
@@ -284,6 +301,29 @@ public class XWorkMethodAccessorTest extends XWorkTestCase {
         public String attack(String argument, String other) {
             this.unprefixedArgument = argument + "," + other;
             return "irrelevant";
+        }
+    }
+
+    public static class BaseIndexedBean {
+
+        public String getItem(int index) {
+            return "item" + index;
+        }
+
+        public void setItem(int index, String value) {
+            // present so that the pair forms an indexed property
+        }
+    }
+
+    /**
+     * Overrides the inherited indexed accessor rather than overloading it. The returned value differs from
+     * the base class so a test can tell which of the two ran.
+     */
+    public static class OverriddenIndexedBean extends BaseIndexedBean {
+
+        @Override
+        public String getItem(int index) {
+            return "overridden" + index;
         }
     }
 

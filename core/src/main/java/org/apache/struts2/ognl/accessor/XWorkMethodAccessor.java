@@ -153,11 +153,21 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
     /**
      * Whether the named method is the only one of that argument count, and so is certainly the one OGNL
      * dispatches to. With an overload present the argument values decide, and those come from the caller.
+     * <p>
+     * Candidates are counted by signature rather than by {@link Method}, because {@code getMethods} reports
+     * an overridden method and the method overriding it separately. Those two share a parameter list, so
+     * they are not a choice the dispatcher makes - only one implementation can ever run - and an accessor
+     * refined in a subclass must not lose the bean its indexed property access. Distinct parameter lists of
+     * the same arity are the real overloads, and still deny.
      */
     private static boolean isTheOnlyDispatchCandidate(Class<?> targetType, String methodName, int argCount) {
         List<Method> candidates = OgnlRuntime.getMethods(targetType, methodName, false);
         return candidates != null
-                && candidates.stream().filter(candidate -> candidate.getParameterCount() == argCount).count() == 1;
+                && candidates.stream()
+                        .filter(candidate -> candidate.getParameterCount() == argCount)
+                        .map(candidate -> Arrays.asList(candidate.getParameterTypes()))
+                        .distinct()
+                        .count() == 1;
     }
 
     private Object callMethodWithDebugInfo(OgnlContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {

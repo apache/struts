@@ -23,12 +23,14 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.url.UrlDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * Simple Restfull Action Mapper to support REST application
@@ -41,9 +43,29 @@ public class RestfulActionMapper implements ActionMapper {
 
     private UrlDecoder decoder;
 
+    /**
+     * Matches action names allowed in the request URI, aligned with {@link DefaultActionMapper}.
+     */
+    private Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
+
+    /**
+     * Action name used when the name extracted from the URI is not allowed, aligned with {@link DefaultActionMapper}.
+     */
+    private String defaultActionName = "index";
+
     @Inject
     public void setDecoder(UrlDecoder decoder) {
         this.decoder = decoder;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
+    public void setAllowedActionNames(String allowedActionNames) {
+        this.allowedActionNames = Pattern.compile(allowedActionNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEFAULT_ACTION_NAME, required = false)
+    public void setDefaultActionName(String defaultActionName) {
+        this.defaultActionName = defaultActionName;
     }
 
     /* (non-Javadoc)
@@ -57,7 +79,7 @@ public class RestfulActionMapper implements ActionMapper {
             return null;
         }
 
-        String actionName = uri.substring(1, nextSlash);
+        String actionName = cleanupActionName(uri.substring(1, nextSlash));
         Map<String, Object> parameters = new HashMap<>();
         try {
             StringTokenizer st = new StringTokenizer(uri.substring(nextSlash), "/");
@@ -94,6 +116,22 @@ public class RestfulActionMapper implements ActionMapper {
 
     public ActionMapping getMappingFromActionName(String actionName) {
         return new ActionMapping(actionName, null, null, null);
+    }
+
+    /**
+     * Checks action name against the allowed pattern; if it does not match, returns the default action name.
+     * Mirrors {@link DefaultActionMapper#cleanupActionName(String)}.
+     *
+     * @param rawActionName action name extracted from the URI
+     * @return safe action name
+     */
+    protected String cleanupActionName(final String rawActionName) {
+        if (allowedActionNames.matcher(rawActionName).matches()) {
+            return rawActionName;
+        } else {
+            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", rawActionName, allowedActionNames, defaultActionName);
+            return defaultActionName;
+        }
     }
 
     /* (non-Javadoc)

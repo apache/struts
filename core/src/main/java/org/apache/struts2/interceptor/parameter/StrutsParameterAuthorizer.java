@@ -159,11 +159,17 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * declared on the action is still subject to the annotation requirement. Without that distinction a
      * ModelDriven action would silently expose its own members.
      * <p>
-     * A property declared on neither is allowed, since it cannot be reaching a member of the action - typically
-     * it is bound by a custom OGNL property accessor on the model, such as a Map-backed model. {@code class} is
-     * the exception to that: it is invisible to introspection here rather than absent, so it is rejected instead
-     * of taking the fallback, which keeps a ModelDriven action from handing OGNL a {@code class} path that the
-     * ordinary non-ModelDriven path would have rejected for want of an annotation.
+     * A property declared on neither is allowed: typically it is bound by a custom OGNL property accessor on
+     * the model, such as a Map-backed model. That fallback guarantees less than it may appear to - only that
+     * the name reaches no member {@link #declaresProperty} can see. OGNL walks the whole stack, so such a name
+     * can still land on the action wherever the action absorbs it by a route introspection here does not model:
+     * being a {@code Map} itself, or declaring a setter that OGNL matches on name and arity while
+     * {@link java.beans.Introspector} does not, a fluent one for instance - see WW-5709. Neither case is more
+     * permissive than the blanket exemption this scoping replaces.
+     * <p>
+     * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent,
+     * so it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
+     * {@code class} path that the ordinary non-ModelDriven path would have rejected for want of an annotation.
      */
     protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
         if (declaresProperty(model, rootProperty, paramDepth)) {

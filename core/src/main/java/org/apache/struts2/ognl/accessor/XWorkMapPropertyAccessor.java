@@ -20,6 +20,7 @@ package org.apache.struts2.ognl.accessor;
 
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.reflection.ReflectionContextState;
@@ -127,8 +128,17 @@ public class XWorkMapPropertyAccessor extends MapPropertyAccessor {
         LOG.trace("Entering setProperty({},{},{},{})", context, target, name, value);
 
         Object key = getKey(context, name);
+        if (key == TypeConverter.NO_CONVERSION_POSSIBLE) {
+            LOG.debug("Unable to convert key [{}] to the declared key type, skipping assignment", name);
+            return;
+        }
+        Object convertedValue = getValue(context, value);
+        if (convertedValue == TypeConverter.NO_CONVERSION_POSSIBLE) {
+            LOG.debug("Unable to convert value for key [{}] to the declared element type, skipping assignment", key);
+            return;
+        }
         Map map = (Map) target;
-        map.put(key, getValue(context, value));
+        map.put(key, convertedValue);
     }
 
     private Object getValue(OgnlContext context, Object value) {

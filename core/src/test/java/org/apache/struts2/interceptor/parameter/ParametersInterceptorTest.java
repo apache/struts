@@ -48,6 +48,7 @@ import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.util.Element;
 import org.junit.Assert;
 
 import java.io.File;
@@ -1011,6 +1012,44 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         container.inject(config.getInterceptors().get(0).getInterceptor());
+    }
+
+    /**
+     * WW-5700: a value that cannot be converted to the map's element type must not be stored.
+     * An unchecked s:checkbox with submitUnchecked="true" submits the CheckboxInterceptor's
+     * uncheckedValue, "false", which cannot become an Integer.
+     */
+    public void testUnconvertibleValueIsNotBoundIntoTypedMap() {
+        CheckboxAction action = new CheckboxAction();
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(action);
+
+        ParametersInterceptor pi = new ParametersInterceptor();
+        container.inject(pi);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("capDeferral[100]", "1");
+        params.put("capDeferral[200]", "false");
+
+        pi.applyParameters(action, vs, HttpParameters.create(params).build());
+
+        Map<Long, Integer> capDeferral = action.getCapDeferral();
+        assertEquals("sanity: the convertible value must still bind", Integer.valueOf(1), capDeferral.get(100L));
+        for (Object entry : ((Map) capDeferral).entrySet()) {
+            Map.Entry e = (Map.Entry) entry;
+            assertTrue("key is not a Long: " + e.getKey(), e.getKey() instanceof Long);
+            assertTrue("value is not an Integer: " + e.getValue(), e.getValue() instanceof Integer);
+        }
+    }
+
+    public static class CheckboxAction {
+        @Element(value = Integer.class)
+        private final Map<Long, Integer> capDeferral = new HashMap<>();
+
+        @StrutsParameter(depth = 1)
+        public Map<Long, Integer> getCapDeferral() {
+            return capDeferral;
+        }
     }
 
 }

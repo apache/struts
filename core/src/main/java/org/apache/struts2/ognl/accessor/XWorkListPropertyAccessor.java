@@ -20,6 +20,7 @@ package org.apache.struts2.ognl.accessor;
 
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.conversion.ObjectTypeDeterminer;
+import org.apache.struts2.conversion.TypeConverter;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
@@ -30,6 +31,8 @@ import ognl.OgnlException;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +45,8 @@ import java.util.List;
  * @author Gabriel Zimmerman
  */
 public class XWorkListPropertyAccessor extends ListPropertyAccessor {
+
+    private static final Logger LOG = LogManager.getLogger(XWorkListPropertyAccessor.class);
 
     private XWorkCollectionPropertyAccessor _sAcc = new XWorkCollectionPropertyAccessor();
 
@@ -167,6 +172,10 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
         }
 
         Object realValue = getRealValue(context, value, convertToClass);
+        if (realValue == TypeConverter.NO_CONVERSION_POSSIBLE) {
+            LOG.debug("Unable to convert value for index [{}] to the declared element type, skipping assignment", name);
+            return;
+        }
 
         if (target instanceof List list && name instanceof Number) {
             //make sure there are enough spaces in the List to set

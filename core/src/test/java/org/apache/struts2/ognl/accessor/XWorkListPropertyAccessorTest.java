@@ -64,6 +64,22 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
         assertEquals(myList.size(), vs.findValue("strings.size"));
     }
 
+    public void testUnconvertibleElementIsNotStored() {
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        ListHolder listHolder = new ListHolder();
+        listHolder.setLongs(new ArrayList<>());
+        vs.push(listHolder);
+
+        vs.setValue("longs[0]", "1");
+        vs.setValue("longs[1]", "not-a-number");
+
+        assertEquals(Long.valueOf(1), listHolder.getLongs().get(0));
+        for (Object element : (List) listHolder.getLongs()) {
+            assertTrue("list must not hold a non-Long element: " + element,
+                    element == null || element instanceof Long);
+        }
+    }
+
     public void testAutoGrowthCollectionLimit() {
         PropertyAccessor accessor = container.getInstance(PropertyAccessor.class, ArrayList.class.getName());
         ((XWorkListPropertyAccessor) accessor).setAutoGrowCollectionLimit("2");

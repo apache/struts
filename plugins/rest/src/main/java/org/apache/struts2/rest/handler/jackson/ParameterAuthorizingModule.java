@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
+import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -43,8 +44,14 @@ import java.util.Iterator;
 public class ParameterAuthorizingModule extends SimpleModule {
 
     private static final long serialVersionUID = 1L;
+    private boolean requireAnySetterAnnotations;
 
     public ParameterAuthorizingModule() {
+        this(false);
+    }
+
+    public ParameterAuthorizingModule(boolean requireAnySetterAnnotations) {
+        this.requireAnySetterAnnotations = requireAnySetterAnnotations;
         setDeserializerModifier(new BeanDeserializerModifier() {
             @Override
             public BeanDeserializerBuilder updateBuilder(DeserializationConfig config,
@@ -57,6 +64,13 @@ public class ParameterAuthorizingModule extends SimpleModule {
                         continue; // idempotent; protect against double-registration
                     }
                     builder.addOrReplaceProperty(new AuthorizingSettableBeanProperty(original), true);
+                }
+                if (ParameterAuthorizingModule.this.requireAnySetterAnnotations) {
+                    SettableAnyProperty anySetter = builder.getAnySetter();
+                    if (anySetter != null && !(anySetter instanceof AuthorizingSettableAnyProperty)) {
+                        builder.setAnySetter(null);
+                        builder.setAnySetter(new AuthorizingSettableAnyProperty(anySetter));
+                    }
                 }
                 return builder;
             }
@@ -71,5 +85,13 @@ public class ParameterAuthorizingModule extends SimpleModule {
                 return new RedactionAwareDeserializer(deserializer);
             }
         });
+    }
+
+    /**
+     * Configures any-setter enforcement. Set this before the mapper is first used so Jackson has
+     * not yet cached deserializers built by this module.
+     */
+    public void setRequireAnySetterAnnotations(boolean requireAnySetterAnnotations) {
+        this.requireAnySetterAnnotations = requireAnySetterAnnotations;
     }
 }

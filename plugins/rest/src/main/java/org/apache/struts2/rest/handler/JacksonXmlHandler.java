@@ -20,9 +20,13 @@ package org.apache.struts2.rest.handler;
 
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.rest.RestConstants;
+import org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -37,10 +41,11 @@ public class JacksonXmlHandler implements AuthorizationAwareContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";
     private final XmlMapper mapper;
+    private final ParameterAuthorizingModule parameterAuthorizingModule = new ParameterAuthorizingModule();
 
     public JacksonXmlHandler() {
         mapper = new XmlMapper();
-        mapper.registerModule(new org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule());
+        mapper.registerModule(parameterAuthorizingModule);
     }
 
     @Override
@@ -65,6 +70,11 @@ public class JacksonXmlHandler implements AuthorizationAwareContentTypeHandler {
     @Override
     public String getExtension() {
         return "xml";
+    }
+
+    @Inject(value = RestConstants.REST_ANY_SETTER_REQUIRE_ANNOTATIONS, required = false)
+    public void setAnySetterRequireAnnotations(String value) {
+        parameterAuthorizingModule.setRequireAnySetterAnnotations(BooleanUtils.toBoolean(value));
     }
 
 }

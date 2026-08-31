@@ -18,17 +18,22 @@
  */
 package org.apache.struts2.rest.handler.jackson;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import junit.framework.TestCase;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.beans.ConstructorProperties;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +118,136 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         mapper.readValue("{\"name\":\"alice\",\"address\":{\"city\":\"Warsaw\"}}", Person.class);
         assertEquals("path stack must be empty after deserialization", "",
                 ParameterAuthorizationContext.currentPathPrefix());
+    }
+
+    public void testAnySetterEnforcementDisabledByDefault() throws Exception {
+        bind((path, t, a) -> false, new UnannotatedAnySetterBean());
+        UnannotatedAnySetterBean result = mapper.readValue(
+                "{\"role\":\"admin\"}", UnannotatedAnySetterBean.class);
+        assertEquals("admin", result.values.get("role"));
+    }
+
+    public void testUnannotatedAnySetterRejectedWhenEnforcementEnabled() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> true, new UnannotatedAnySetterBean());
+        UnannotatedAnySetterBean result = enforcingMapper.readValue(
+                "{\"role\":\"admin\"}", UnannotatedAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testAnySetterWithoutDynamicKeyOptInRejected() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> true, new AnnotatedAnySetterBean());
+        AnnotatedAnySetterBean result = enforcingMapper.readValue(
+                "{\"role\":\"admin\"}", AnnotatedAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testMethodAnySetterWithDynamicKeyOptInAcceptsScalar() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
+        DynamicScalarAnySetterBean result = enforcingMapper.readValue(
+                "{\"role\":\"admin\"}", DynamicScalarAnySetterBean.class);
+        assertEquals("admin", result.values.get("role"));
+    }
+
+    public void testFieldAnySetterWithDynamicKeyOptInAcceptsScalar() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicFieldAnySetterBean());
+        DynamicFieldAnySetterBean result = enforcingMapper.readValue(
+                "{\"role\":\"admin\"}", DynamicFieldAnySetterBean.class);
+        assertEquals("admin", result.values.get("role"));
+    }
+
+    public void testDynamicKeyDepthZeroRejectsNestedMembers() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthZeroAnySetterBean());
+        DynamicDepthZeroAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"city\":\"Warsaw\"}}", DynamicDepthZeroAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testDynamicKeyDepthOneAcceptsDirectMember() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthOneAnySetterBean());
+        DynamicDepthOneAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"city\":\"Warsaw\"}}",
+                DynamicDepthOneAnySetterBean.class);
+        assertEquals("Warsaw", result.values.get("home").city);
+    }
+
+    public void testDynamicKeyDepthOneRejectsGrandchildBeforeConstruction() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthOneAnySetterBean());
+        DynamicDepthOneAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"city\":\"Warsaw\",\"geo\":{\"country\":\"PL\"}}}",
+                DynamicDepthOneAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testDynamicKeyDepthZeroRejectsUntypedObject() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
+        DynamicScalarAnySetterBean result = enforcingMapper.readValue(
+                "{\"settings\":{\"role\":\"admin\"}}", DynamicScalarAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testDynamicKeyDepthTwoAcceptsGrandchild() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthTwoAnySetterBean());
+        DynamicDepthTwoAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"geo\":{\"country\":\"PL\"}}}", DynamicDepthTwoAnySetterBean.class);
+        assertEquals("PL", result.values.get("home").geo.country);
+    }
+
+    public void testCreatorParameterAnySetterRejectedWhenEnforcementEnabled() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> true, new CreatorAnySetterBean(Map.of()));
+        CreatorAnySetterBean result = enforcingMapper.readValue(
+                "{\"role\":\"admin\"}", CreatorAnySetterBean.class);
+        assertTrue(result.values.isEmpty());
+    }
+
+    public void testUnauthorizedParentStillBlocksNestedAnySetter() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new AnySetterParent());
+        AnySetterParent result = enforcingMapper.readValue(
+                "{\"child\":{\"role\":\"admin\"}}", AnySetterParent.class);
+        assertNull(result.child);
+    }
+
+    public void testJsonUnwrappedRemainsUnaffected() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> true, new UnwrappedBean());
+        UnwrappedBean result = enforcingMapper.readValue("{\"city\":\"Warsaw\"}", UnwrappedBean.class);
+        assertEquals("Warsaw", result.address.city);
+    }
+
+    public void testDynamicKeyScopeCleanAfterDeserialization() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthTwoAnySetterBean());
+        enforcingMapper.readValue(
+                "{\"home\":{\"geo\":{\"country\":\"PL\"}}}", DynamicDepthTwoAnySetterBean.class);
+        assertFalse(DynamicKeyAuthorizationContext.isActive());
+        assertEquals("", ParameterAuthorizationContext.currentPathPrefix());
+    }
+
+    public void testXmlAnySetterUsesSameOptIn() throws Exception {
+        XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.registerModule(new ParameterAuthorizingModule(true));
+
+        bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
+        DynamicScalarAnySetterBean allowed = xmlMapper.readValue(
+                "<DynamicScalarAnySetterBean><role>admin</role></DynamicScalarAnySetterBean>",
+                DynamicScalarAnySetterBean.class);
+        assertEquals("admin", allowed.values.get("role"));
+
+        bind((path, t, a) -> true, new UnannotatedAnySetterBean());
+        UnannotatedAnySetterBean rejected = xmlMapper.readValue(
+                "<UnannotatedAnySetterBean><role>admin</role></UnannotatedAnySetterBean>",
+                UnannotatedAnySetterBean.class);
+        assertTrue(rejected.values.isEmpty());
     }
 
     public void testBuilderDeserializationNoContextPassThrough() throws Exception {
@@ -280,6 +415,10 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     // --- Fixtures ---
 
+    private ObjectMapper enforcingMapper() {
+        return new ObjectMapper().registerModule(new ParameterAuthorizingModule(true));
+    }
+
     public static class Person {
         public String name;
         public String role;
@@ -293,6 +432,94 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     public static class Address {
         public String city;
         public String zip;
+        public Geo geo;
+    }
+
+    public static class Geo {
+        public String country;
+    }
+
+    public static class UnannotatedAnySetterBean {
+        public final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class AnnotatedAnySetterBean {
+        public final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class DynamicScalarAnySetterBean {
+        public final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true)
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class DynamicFieldAnySetterBean {
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true)
+        public Map<String, Object> values = new LinkedHashMap<>();
+    }
+
+    public static class DynamicDepthZeroAnySetterBean {
+        public final Map<String, Address> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true)
+        public void put(String name, Address value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class DynamicDepthOneAnySetterBean {
+        public final Map<String, Address> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true, depth = 1)
+        public void put(String name, Address value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class DynamicDepthTwoAnySetterBean {
+        public final Map<String, Address> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true, depth = 2)
+        public void put(String name, Address value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class CreatorAnySetterBean {
+        public final Map<String, Object> values;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorAnySetterBean(@JsonAnySetter Map<String, Object> values) {
+            this.values = values;
+        }
+    }
+
+    public static class AnySetterParent {
+        public DynamicScalarAnySetterBean child;
+    }
+
+    public static class UnwrappedBean {
+        @JsonUnwrapped
+        public Address address = new Address();
     }
 
     /**

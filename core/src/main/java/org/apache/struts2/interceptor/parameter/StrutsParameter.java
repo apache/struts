@@ -43,4 +43,13 @@ public @interface StrutsParameter {
      * In a practical sense, the depth dictates the number of periods or brackets that can appear in the parameter name.
      */
     int depth() default 0;
+
+    /**
+     * Allows a dynamic property sink, such as a REST JSON or XML any-setter, to accept parameter
+     * names that do not correspond to declared members on the action.
+     * <p>
+     * This is an explicit opt-in for input channels that support dynamic keys. Ordinary parameter
+     * injection ignores this flag. The {@link #depth()} value limits nesting below each dynamic key.
+     */
+    boolean allowDynamicKeys() default false;
 }

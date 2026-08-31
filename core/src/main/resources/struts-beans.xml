@@ -79,6 +79,8 @@
           class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper"/>
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="prefix"
           class="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper"/>
+    <!-- Deprecated for removal: the legacy "restful" and "restful2" mappers predate the Struts REST
+         plugin, which is the maintained way to build REST-style applications. -->
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful"
           class="org.apache.struts2.dispatcher.mapper.RestfulActionMapper"/>
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful2"

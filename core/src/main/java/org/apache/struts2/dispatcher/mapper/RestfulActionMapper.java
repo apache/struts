@@ -36,7 +36,11 @@ import java.util.regex.Pattern;
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
  * <a href="https://struts.apache.org/core-developers/restful-action-mapper.html">RestfulActionMapper</a>
+ *
+ * @deprecated since 6.12.0, this legacy mapper predates the Struts REST plugin, which is the maintained
+ * way to build REST-style applications with Struts. Scheduled for removal in the next major release.
  */
+@Deprecated
 public class RestfulActionMapper implements ActionMapper {
 
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);

@@ -39,6 +39,7 @@ import org.apache.tiles.core.definition.pattern.PatternDefinitionResolver;
 import org.apache.tiles.core.definition.pattern.PrefixedPatternDefinitionResolver;
 import org.apache.tiles.core.definition.pattern.regexp.RegexpDefinitionPatternMatcherFactory;
 import org.apache.tiles.core.definition.pattern.wildcard.WildcardDefinitionPatternMatcherFactory;
+import org.apache.tiles.core.evaluator.AttributeEvaluator;
 import org.apache.tiles.core.evaluator.AttributeEvaluatorFactory;
 import org.apache.tiles.core.evaluator.BasicAttributeEvaluatorFactory;
 import org.apache.tiles.core.evaluator.impl.DirectAttributeEvaluator;
@@ -73,6 +74,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Dedicated Struts factory to build Tiles container with support for:
@@ -88,6 +90,13 @@ import java.util.Set;
 public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     private static final Logger LOG = LogManager.getLogger(StrutsTilesContainerFactory.class);
+
+    static final String LEGACY_OGNL_WARNING = "Legacy Tiles OGNL evaluation is enabled through "
+        + "struts.tiles.ognl.legacy.enabled. Migrate expressions to S2: or ordinary Tiles mechanisms; the "
+        + "compatibility flag and legacy evaluator will be removed in Struts 8.0.0.";
+
+    private final boolean legacyOgnlEnabled;
+    private final AtomicBoolean legacyOgnlWarningLogged = new AtomicBoolean();
 
     /**
      * The freemarker renderer name.
@@ -112,6 +121,14 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     public static final String EL = "EL";
     public static final String S2 = "S2";
     public static final String I18N = "I18N";
+
+    public StrutsTilesContainerFactory() {
+        this(false);
+    }
+
+    StrutsTilesContainerFactory(boolean legacyOgnlEnabled) {
+        this.legacyOgnlEnabled = legacyOgnlEnabled;
+    }
 
     @Override
     public TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext applicationContext) {
@@ -155,7 +172,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(I18N, createI18NEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createConfiguredOgnlEvaluator());
 
         ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
         if (elEvaluator != null) {
@@ -252,6 +269,21 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         return new I18NAttributeEvaluator();
     }
 
+    private AttributeEvaluator createConfiguredOgnlEvaluator() {
+        if (legacyOgnlEnabled) {
+            if (legacyOgnlWarningLogged.compareAndSet(false, true)) {
+                logLegacyOgnlWarning();
+            }
+            return createOGNLEvaluator();
+        }
+        return new DisabledOgnlAttributeEvaluator();
+    }
+
+    void logLegacyOgnlWarning() {
+        LOG.warn(LEGACY_OGNL_WARNING);
+    }
+
+    @SuppressWarnings("removal")
     protected OGNLAttributeEvaluator createOGNLEvaluator() {
         try {
             PropertyAccessor objectPropertyAccessor = OgnlRuntime.getPropertyAccessor(Object.class);

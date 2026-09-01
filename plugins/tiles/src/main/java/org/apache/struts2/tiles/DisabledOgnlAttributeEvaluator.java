@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -16,35 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.tiles.ognl;
+package org.apache.struts2.tiles;
 
-import ognl.Ognl;
-import ognl.OgnlException;
 import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.core.evaluator.EvaluationException;
 import org.apache.tiles.request.Request;
 
 /**
- * Evaluates attribute expressions and expressions with OGNL language.
- *
- * @since 2.2.0
- * @deprecated This legacy evaluator does not use the Struts OGNL controls used by {@code S2:} and is disabled by
- * default. Temporary use requires {@code struts.tiles.ognl.legacy.enabled=true}. Migrate to {@code S2:} or ordinary
- * Tiles mechanisms. This evaluator is targeted for removal in Struts 8.0.0.
+ * Fails closed when the deprecated Tiles OGNL evaluator has not been explicitly enabled.
  */
-@Deprecated(since = "7.4.0", forRemoval = true)
-public class OGNLAttributeEvaluator extends AbstractAttributeEvaluator {
+final class DisabledOgnlAttributeEvaluator extends AbstractAttributeEvaluator {
 
-    /** {@inheritDoc} */
+    static final String DISABLED_MESSAGE = "The Tiles OGNL evaluator is disabled. Migrate the expression to S2:, "
+        + "or temporarily enable struts.tiles.ognl.legacy.enabled. Legacy Tiles OGNL support will be removed in "
+        + "Struts 8.0.0.";
+
     @Override
     public Object evaluate(String expression, Request request) {
-        if (expression == null) {
-            throw new IllegalArgumentException("The expression parameter cannot be null");
-        }
-        try {
-            return Ognl.getValue(expression, request);
-        } catch (OgnlException e) {
-            throw new EvaluationException("Cannot evaluate OGNL expression '" + expression + "'", e);
-        }
+        throw new EvaluationException(DISABLED_MESSAGE, null);
     }
 }

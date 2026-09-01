@@ -49,7 +49,9 @@ public @interface StrutsParameter {
      * names that do not correspond to declared members on the action.
      * <p>
      * This is an explicit opt-in for input channels that support dynamic keys. Ordinary parameter
-     * injection ignores this flag. The {@link #depth()} value limits nesting below each dynamic key.
+     * injection ignores this flag, although placing {@code @StrutsParameter} on a field still makes
+     * that field eligible for ordinary query and form parameter injection. The {@link #depth()} value
+     * limits nesting below each dynamic key.
      */
     boolean allowDynamicKeys() default false;
 }

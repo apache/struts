@@ -44,7 +44,7 @@ import java.util.Iterator;
 public class ParameterAuthorizingModule extends SimpleModule {
 
     private static final long serialVersionUID = 1L;
-    private boolean requireAnySetterAnnotations;
+    private volatile boolean requireAnySetterAnnotations;
 
     public ParameterAuthorizingModule() {
         this(false);
@@ -93,5 +93,14 @@ public class ParameterAuthorizingModule extends SimpleModule {
      */
     public void setRequireAnySetterAnnotations(boolean requireAnySetterAnnotations) {
         this.requireAnySetterAnnotations = requireAnySetterAnnotations;
+    }
+
+    /**
+     * Clears request-scoped dynamic-key authorization state after a mapper read.
+     *
+     * @since 7.4.0
+     */
+    public void clearAuthorizationContext() {
+        DynamicKeyAuthorizationContext.clear();
     }
 }

@@ -52,7 +52,11 @@ public class JacksonXmlHandler implements AuthorizationAwareContentTypeHandler {
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         LOG.debug("Converting input into an object of: {}", target.getClass().getName());
         ObjectReader or = mapper.readerForUpdating(target);
-        or.readValue(in);
+        try {
+            or.readValue(in);
+        } finally {
+            parameterAuthorizingModule.clearAuthorizationContext();
+        }
     }
 
     @Override

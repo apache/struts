@@ -126,13 +126,21 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
                 return;
             }
             try (JsonParser replay = value.asParserOnFirstToken()) {
-                DynamicKeyAuthorizationContext.push(path, allowedDepth);
-                ParameterAuthorizationContext.pushPath(prefixForNested(path));
+                boolean scopePushed = false;
+                boolean pathPushed = false;
                 try {
+                    DynamicKeyAuthorizationContext.push(path, allowedDepth);
+                    scopePushed = true;
+                    ParameterAuthorizationContext.pushPath(prefixForNested(path));
+                    pathPushed = true;
                     delegate.deserializeAndSet(replay, context, instance, propertyName);
                 } finally {
-                    ParameterAuthorizationContext.popPath();
-                    DynamicKeyAuthorizationContext.pop();
+                    if (pathPushed) {
+                        ParameterAuthorizationContext.popPath();
+                    }
+                    if (scopePushed) {
+                        DynamicKeyAuthorizationContext.pop();
+                    }
                 }
             }
         }
@@ -144,7 +152,13 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
             return delegate.deserialize(parser, context);
         }
 
-        String path = ParameterAuthorizationContext.pathFor(parser.currentName());
+        String propertyName = parser.currentName();
+        if (propertyName == null) {
+            rejectMissingPropertyName(parser);
+            return REJECTED_VALUE;
+        }
+
+        String path = ParameterAuthorizationContext.pathFor(propertyName);
         int allowedDepth = allowedDepth(path);
         if (allowedDepth < 0) {
             rejectPermission(parser, path);
@@ -158,13 +172,21 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
                 return REJECTED_VALUE;
             }
             try (JsonParser replay = value.asParserOnFirstToken()) {
-                DynamicKeyAuthorizationContext.push(path, allowedDepth);
-                ParameterAuthorizationContext.pushPath(prefixForNested(path));
+                boolean scopePushed = false;
+                boolean pathPushed = false;
                 try {
+                    DynamicKeyAuthorizationContext.push(path, allowedDepth);
+                    scopePushed = true;
+                    ParameterAuthorizationContext.pushPath(prefixForNested(path));
+                    pathPushed = true;
                     return delegate.deserialize(replay, context);
                 } finally {
-                    ParameterAuthorizationContext.popPath();
-                    DynamicKeyAuthorizationContext.pop();
+                    if (pathPushed) {
+                        ParameterAuthorizationContext.popPath();
+                    }
+                    if (scopePushed) {
+                        DynamicKeyAuthorizationContext.pop();
+                    }
                 }
             }
         }
@@ -205,6 +227,11 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
     private void rejectDepth(JsonParser parser, String path, int valueDepth, int allowedDepth) throws IOException {
         LOG.warn("REST body any-setter parameter [{}] rejected; value depth [{}] exceeds "
                 + "@StrutsParameter depth [{}]", path, valueDepth, allowedDepth);
+        redactAndSkip(parser);
+    }
+
+    private void rejectMissingPropertyName(JsonParser parser) throws IOException {
+        LOG.warn("REST body any-setter parameter rejected; dynamic property name is unavailable");
         redactAndSkip(parser);
     }
 

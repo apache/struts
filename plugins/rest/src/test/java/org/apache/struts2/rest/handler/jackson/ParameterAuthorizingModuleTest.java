@@ -22,20 +22,31 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
+import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import junit.framework.TestCase;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.rest.handler.JacksonJsonHandler;
 
 import java.beans.ConstructorProperties;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ParameterAuthorizingModuleTest extends TestCase {
 
@@ -49,6 +60,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     @Override
     protected void tearDown() {
         ParameterAuthorizationContext.unbind();
+        DynamicKeyAuthorizationContext.clear();
     }
 
     private void bind(ParameterAuthorizer authorizer, Object instance) {
@@ -207,6 +219,52 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         CreatorAnySetterBean result = enforcingMapper.readValue(
                 "{\"role\":\"admin\"}", CreatorAnySetterBean.class);
         assertTrue(result.values.isEmpty());
+    }
+
+    public void testDeserializeWithoutCurrentNameRejectsAndClearsScope() throws Exception {
+        AtomicReference<SettableAnyProperty> captured = new AtomicReference<>();
+        SimpleModule captureModule = new SimpleModule("capture-any-setter");
+        captureModule.setDeserializerModifier(new BeanDeserializerModifier() {
+            @Override
+            public BeanDeserializerBuilder updateBuilder(DeserializationConfig config,
+                                                          BeanDescription beanDesc,
+                                                          BeanDeserializerBuilder builder) {
+                if (beanDesc.getBeanClass() == PropertyCreatorWithAnySetterBean.class) {
+                    captured.set(builder.getAnySetter());
+                }
+                return builder;
+            }
+        });
+        ObjectMapper captureMapper = new ObjectMapper().registerModule(captureModule);
+        captureMapper.readValue("{\"name\":\"alice\"}", PropertyCreatorWithAnySetterBean.class);
+
+        assertNotNull(captured.get());
+        AuthorizingSettableAnyProperty property = new AuthorizingSettableAnyProperty(captured.get());
+        bind((path, t, a) -> true, new PropertyCreatorWithAnySetterBean(""));
+        try (TokenBuffer value = new TokenBuffer(captureMapper, false)) {
+            value.writeString("admin");
+            try (JsonParser parser = value.asParserOnFirstToken()) {
+                assertNull(parser.currentName());
+                assertNotNull(property.deserialize(parser, null));
+            }
+        }
+
+        assertFalse(DynamicKeyAuthorizationContext.isActive());
+        assertEquals("", ParameterAuthorizationContext.currentPathPrefix());
+    }
+
+    public void testJacksonHandlerClearsDynamicScopeAfterReadFailure() throws Exception {
+        DynamicKeyAuthorizationContext.push("stale", 0);
+        assertTrue(DynamicKeyAuthorizationContext.isActive());
+
+        try {
+            new JacksonJsonHandler().toObject(null, new StringReader("{"), new Person());
+            fail("expected malformed JSON to fail");
+        } catch (Exception expected) {
+            // The handler's request-boundary cleanup must run even when Jackson aborts the read.
+        }
+
+        assertFalse(DynamicKeyAuthorizationContext.isActive());
     }
 
     public void testUnauthorizedParentStillBlocksNestedAnySetter() throws Exception {
@@ -510,6 +568,22 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public CreatorAnySetterBean(@JsonAnySetter Map<String, Object> values) {
             this.values = values;
+        }
+    }
+
+    public static class PropertyCreatorWithAnySetterBean {
+        public final String name;
+        public final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public PropertyCreatorWithAnySetterBean(@JsonProperty("name") String name) {
+            this.name = name;
+        }
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true)
+        public void put(String key, Object value) {
+            values.put(key, value);
         }
     }
 

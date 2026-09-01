@@ -76,6 +76,10 @@ final class DynamicKeyAuthorizationContext {
         return scopes != null && !scopes.isEmpty();
     }
 
+    static void clear() {
+        SCOPES.remove();
+    }
+
     private static int remainingDepth(Scope scope, String path) {
         if (path == null || scope.basePath == null || !path.startsWith(scope.basePath)) {
             return -1;

@@ -47,7 +47,11 @@ public class JacksonJsonHandler implements AuthorizationAwareContentTypeHandler 
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         ObjectReader or = mapper.readerForUpdating(target);
-        or.readValue(in);
+        try {
+            or.readValue(in);
+        } finally {
+            parameterAuthorizingModule.clearAuthorizationContext();
+        }
     }
 
     @Override

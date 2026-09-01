@@ -89,16 +89,7 @@ public class TilesOgnlEvaluatorIntegrationTest {
         tilesRequest = new ServletRequest(applicationContext, servletRequest, servletResponse);
 
         StrutsTilesContainerFactory factory = new StrutsTilesContainerFactory();
-        JspFactory originalJspFactory = JspFactory.getDefaultFactory();
-        AttributeEvaluatorFactory evaluators;
-        try {
-            JspFactory.setDefaultFactory(null);
-            evaluators = factory.createAttributeEvaluatorFactory(
-                applicationContext, factory.createLocaleResolver(applicationContext)
-            );
-        } finally {
-            JspFactory.setDefaultFactory(originalJspFactory);
-        }
+        AttributeEvaluatorFactory evaluators = createAttributeEvaluatorFactoryWithoutEl(factory, applicationContext);
         rendererFactory = new BasicRendererFactory();
         rendererFactory.registerRenderer("string", new StringRenderer());
         tilesContainer = new BasicTilesContainer();
@@ -133,9 +124,8 @@ public class TilesOgnlEvaluatorIntegrationTest {
             Marker marker = new Marker();
             tilesRequest.getContext("request").put("marker", marker);
             StrutsTilesContainerFactory legacyFactory = new StrutsTilesContainerFactory(true);
-            tilesContainer.setAttributeEvaluatorFactory(legacyFactory.createAttributeEvaluatorFactory(
-                tilesRequest.getApplicationContext(), legacyFactory.createLocaleResolver(tilesRequest.getApplicationContext())
-            ));
+            tilesContainer.setAttributeEvaluatorFactory(createAttributeEvaluatorFactoryWithoutEl(
+                legacyFactory, tilesRequest.getApplicationContext()));
 
             assertEquals("touched", tilesContainer.evaluate(
                 expression("marker.touch()", StrutsTilesContainerFactory.OGNL), tilesRequest));
@@ -172,6 +162,18 @@ public class TilesOgnlEvaluatorIntegrationTest {
             return OgnlRuntime.getPropertyAccessor(Request.class);
         } catch (OgnlException ignored) {
             return null;
+        }
+    }
+
+    private static AttributeEvaluatorFactory createAttributeEvaluatorFactoryWithoutEl(
+            StrutsTilesContainerFactory factory, ApplicationContext applicationContext) {
+        JspFactory originalJspFactory = JspFactory.getDefaultFactory();
+        try {
+            JspFactory.setDefaultFactory(null);
+            return factory.createAttributeEvaluatorFactory(
+                applicationContext, factory.createLocaleResolver(applicationContext));
+        } finally {
+            JspFactory.setDefaultFactory(originalJspFactory);
         }
     }
 

@@ -45,6 +45,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspFactory;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -88,9 +89,16 @@ public class TilesOgnlEvaluatorIntegrationTest {
         tilesRequest = new ServletRequest(applicationContext, servletRequest, servletResponse);
 
         StrutsTilesContainerFactory factory = new StrutsTilesContainerFactory();
-        AttributeEvaluatorFactory evaluators = factory.createAttributeEvaluatorFactory(
-            applicationContext, factory.createLocaleResolver(applicationContext)
-        );
+        JspFactory originalJspFactory = JspFactory.getDefaultFactory();
+        AttributeEvaluatorFactory evaluators;
+        try {
+            JspFactory.setDefaultFactory(null);
+            evaluators = factory.createAttributeEvaluatorFactory(
+                applicationContext, factory.createLocaleResolver(applicationContext)
+            );
+        } finally {
+            JspFactory.setDefaultFactory(originalJspFactory);
+        }
         rendererFactory = new BasicRendererFactory();
         rendererFactory.registerRenderer("string", new StringRenderer());
         tilesContainer = new BasicTilesContainer();

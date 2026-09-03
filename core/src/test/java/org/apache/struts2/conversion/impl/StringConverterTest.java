@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 
@@ -100,6 +101,18 @@ public class StringConverterTest extends StrutsInternalTestCase {
 
         // then does not lose integer and fraction digits
         assertEquals(aBitBiggerThanDouble.substring(0, 309) + "," + aBitBiggerThanDouble.substring(310), value);
+    }
+
+    public void testBigDecimalFractionDigitsAreBounded() throws Exception {
+        // given
+        StringConverter converter = new StringConverter();
+        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+
+        // when the scale of the value exceeds the supported number of fraction digits
+        Object value = converter.convertValue(context, null, null, null, new BigDecimal(BigInteger.ONE, 100_000), null);
+
+        // then the length of the output is bounded by the converter, not by the scale of the value
+        assertEquals("0", value);
     }
 
     public void testStringArrayToStringConversion() {

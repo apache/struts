@@ -36,6 +36,18 @@ import java.util.Objects;
 
 public class StringConverter extends DefaultTypeConverter {
 
+    /**
+     * Upper bound on the number of fraction digits emitted when formatting a number.
+     * <p>
+     * Covers every {@code double} and {@code float} value in full - the widest is
+     * {@link Double#MIN_VALUE} at 325 fraction digits - so the round-trip precision
+     * introduced by WW-4871 is preserved. Beyond that bound the length of the output
+     * would follow the scale of the value rather than its precision, so a
+     * {@link BigDecimal} scaled past this limit is rounded to it.
+     */
+    private static final int MAX_FRACTION_DIGITS = 340;
+
+
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         String result;
@@ -86,7 +98,7 @@ public class StringConverter extends DefaultTypeConverter {
             // TODO: delete this variable and corresponding if statement when jdk fixed java.text.NumberFormat.format's behavior with Float
             Object fixedValue = value;
             if (value instanceof BigDecimal || value instanceof Double || value instanceof Float) {
-                format.setMaximumFractionDigits(Integer.MAX_VALUE);
+                format.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
                 if (value instanceof Float) {
                     fixedValue = Double.valueOf(value.toString());
                 }

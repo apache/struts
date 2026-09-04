@@ -171,6 +171,15 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertEquals("admin", result.values.get("role"));
     }
 
+    public void testFieldAnySetterDepthOneAcceptsDirectMember() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthOneFieldAnySetterBean());
+        DynamicDepthOneFieldAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"city\":\"Warsaw\"}}",
+                DynamicDepthOneFieldAnySetterBean.class);
+        assertEquals("Warsaw", result.values.get("home").city);
+    }
+
     public void testDynamicKeyDepthZeroRejectsNestedMembers() throws Exception {
         ObjectMapper enforcingMapper = enforcingMapper();
         bind((path, t, a) -> false, new DynamicDepthZeroAnySetterBean());
@@ -530,6 +539,12 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         @JsonAnySetter
         @StrutsParameter(allowDynamicKeys = true)
         public Map<String, Object> values = new LinkedHashMap<>();
+    }
+
+    public static class DynamicDepthOneFieldAnySetterBean {
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true, depth = 1)
+        public Map<String, Address> values = new LinkedHashMap<>();
     }
 
     public static class DynamicDepthZeroAnySetterBean {

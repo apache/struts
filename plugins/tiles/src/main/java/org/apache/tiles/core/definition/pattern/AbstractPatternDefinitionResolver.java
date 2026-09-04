@@ -21,9 +21,9 @@ package org.apache.tiles.core.definition.pattern;
 import org.apache.tiles.api.Definition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A pattern definition resolver that stores {@link DefinitionPatternMatcher}
@@ -39,7 +39,7 @@ public abstract class AbstractPatternDefinitionResolver<T> implements PatternDef
     /**
      * Stores patterns depending on the locale they refer to.
      */
-    private final Map<T, List<DefinitionPatternMatcher>> localePatternPaths = new HashMap<>();
+    private final Map<T, List<DefinitionPatternMatcher>> localePatternPaths = new ConcurrentHashMap<>();
 
     /** {@inheritDoc} */
     public Definition resolveDefinition(String name, T customizationKey) {
@@ -102,5 +102,11 @@ public abstract class AbstractPatternDefinitionResolver<T> implements PatternDef
     public void clearPatternPaths(T customizationKey) {
         if (localePatternPaths.get(customizationKey) != null)
             localePatternPaths.get(customizationKey).clear();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removePatternPaths(T customizationKey) {
+        localePatternPaths.remove(customizationKey);
     }
 }

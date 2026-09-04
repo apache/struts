@@ -26,7 +26,6 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.locale.LocaleUtil;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -54,11 +53,24 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO im
     public static final String CHECK_REFRESH_INIT_PARAMETER = "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
 
     /**
+     * Default upper bound on the number of customization keys (locales) whose definitions are cached at once. Since the
+     * customization key is derived from the request locale, this bounds the cache so it cannot grow without limit as
+     * distinct locales are encountered.
+     */
+    public static final int DEFAULT_MAX_CACHED_LOCALES = 1000;
+
+    /**
      * The locale-specific set of definitions objects.
      *
      * @since 2.1.0
      */
     protected Map<Locale, Map<String, Definition>> locale2definitionMap;
+
+    /**
+     * Maximum number of customization keys (locales) retained in {@link #locale2definitionMap}. When exceeded, the
+     * eldest entry is evicted (and reloaded on demand if requested again).
+     */
+    protected int maxCachedLocales = DEFAULT_MAX_CACHED_LOCALES;
 
     /**
      * Flag that, when <code>true</code>, enables automatic checking of URLs
@@ -82,7 +94,29 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO im
      */
     public CachingLocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         super(applicationContext);
-        locale2definitionMap = new HashMap<>();
+        locale2definitionMap = new LinkedHashMap<Locale, Map<String, Definition>>(16, 0.75f, false) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Locale, Map<String, Definition>> eldest) {
+                if (size() <= maxCachedLocales) {
+                    return false;
+                }
+                if (definitionResolver != null) {
+                    definitionResolver.removePatternPaths(eldest.getKey());
+                }
+                return true;
+            }
+        };
+    }
+
+    /**
+     * Sets the maximum number of customization keys (locales) whose definitions are cached. When more distinct keys are
+     * requested, the eldest cached entry is evicted so the cache cannot grow without bound. Evicted entries are reloaded
+     * on demand if requested again, so eviction never changes rendering, only re-incurs a load.
+     *
+     * @param maxCachedLocales the maximum number of cached customization keys; values below 1 are treated as 1
+     */
+    public void setMaxCachedLocales(int maxCachedLocales) {
+        this.maxCachedLocales = Math.max(1, maxCachedLocales);
     }
 
     /**

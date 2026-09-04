@@ -18,6 +18,9 @@
  */
 package org.apache.struts2.tiles;
 
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 import org.apache.tiles.api.TilesContainer;
 import org.apache.tiles.core.evaluator.AttributeEvaluatorFactory;
 import org.apache.tiles.core.evaluator.impl.DirectAttributeEvaluator;
@@ -42,11 +45,13 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("removal")
 public class StrutsTilesContainerFactoryTest {
 
     private StrutsTilesContainerFactory factory;
@@ -78,22 +83,64 @@ public class StrutsTilesContainerFactoryTest {
     }
 
     @Test
-    public void createAttributeEvaluatorFactory() {
+    public void createAttributeEvaluatorFactoryDefaultsToDisabledOgnlWithoutRawConstruction() {
+        TrackingFactory trackingFactory = new TrackingFactory(false);
+        PropertyAccessor requestAccessorBefore = getRequestAccessorOrNull();
         LocaleResolver resolver = factory.createLocaleResolver(applicationContext);
         // explicitly disables support for EL
         JspFactory.setDefaultFactory(null);
 
-        AttributeEvaluatorFactory attributeEvaluatorFactory = factory.createAttributeEvaluatorFactory(applicationContext, resolver);
+        AttributeEvaluatorFactory attributeEvaluatorFactory = trackingFactory.createAttributeEvaluatorFactory(applicationContext, resolver);
         assertTrue("The class of the evaluator is not correct",
                 attributeEvaluatorFactory.getAttributeEvaluator((String) null) instanceof DirectAttributeEvaluator);
         assertTrue("The class of the evaluator is not correct",
                 attributeEvaluatorFactory.getAttributeEvaluator("S2") instanceof StrutsAttributeEvaluator);
         assertTrue("The class of the evaluator is not correct",
-                attributeEvaluatorFactory.getAttributeEvaluator("OGNL") instanceof OGNLAttributeEvaluator);
+                attributeEvaluatorFactory.getAttributeEvaluator("OGNL") instanceof DisabledOgnlAttributeEvaluator);
         assertTrue("The class of the evaluator is not correct",
                 attributeEvaluatorFactory.getAttributeEvaluator("I18N") instanceof I18NAttributeEvaluator);
         assertTrue("The class of the evaluator is not correct",
                 attributeEvaluatorFactory.getAttributeEvaluator("EL") instanceof DirectAttributeEvaluator);
+        assertEquals("The raw evaluator construction path must not run", 0, trackingFactory.rawEvaluatorCreations);
+        assertSame("The default path must not mutate the shared Tiles Request accessor",
+            requestAccessorBefore, getRequestAccessorOrNull());
+    }
+
+    @Test
+    public void createAttributeEvaluatorFactoryEnablesLegacyOgnlExplicitly() throws OgnlException {
+        PropertyAccessor originalAccessor = getRequestAccessorOrNull();
+        try {
+            TrackingFactory trackingFactory = new TrackingFactory(true);
+            LocaleResolver resolver = trackingFactory.createLocaleResolver(applicationContext);
+            JspFactory.setDefaultFactory(null);
+
+            AttributeEvaluatorFactory attributeEvaluatorFactory = trackingFactory.createAttributeEvaluatorFactory(
+                applicationContext, resolver);
+
+            assertTrue(attributeEvaluatorFactory.getAttributeEvaluator("OGNL") instanceof OGNLAttributeEvaluator);
+            assertEquals(1, trackingFactory.rawEvaluatorCreations);
+            assertTrue(OgnlRuntime.getPropertyAccessor(org.apache.tiles.request.Request.class)
+                instanceof org.apache.tiles.ognl.DelegatePropertyAccessor);
+        } finally {
+            OgnlRuntime.setPropertyAccessor(org.apache.tiles.request.Request.class, originalAccessor);
+        }
+    }
+
+    @Test
+    public void legacyWarningIsLoggedOncePerFactoryConstruction() throws OgnlException {
+        PropertyAccessor originalAccessor = getRequestAccessorOrNull();
+        try {
+            TrackingFactory trackingFactory = new TrackingFactory(true);
+            JspFactory.setDefaultFactory(null);
+            LocaleResolver resolver = trackingFactory.createLocaleResolver(applicationContext);
+            trackingFactory.createAttributeEvaluatorFactory(applicationContext, resolver);
+            trackingFactory.createAttributeEvaluatorFactory(applicationContext, resolver);
+
+            assertEquals(1, trackingFactory.legacyWarningCount);
+            assertEquals(StrutsTilesContainerFactory.LEGACY_OGNL_WARNING, trackingFactory.legacyWarningMessage);
+        } finally {
+            OgnlRuntime.setPropertyAccessor(org.apache.tiles.request.Request.class, originalAccessor);
+        }
     }
 
     @Test
@@ -123,6 +170,36 @@ public class StrutsTilesContainerFactoryTest {
         verify(rendererFactory).getRenderer("template");
         verify(rendererFactory).getRenderer("definition");
         verify(rendererFactory).getRenderer("freemarker");
+    }
+
+    private static PropertyAccessor getRequestAccessorOrNull() {
+        try {
+            return OgnlRuntime.getPropertyAccessor(org.apache.tiles.request.Request.class);
+        } catch (OgnlException ignored) {
+            return null;
+        }
+    }
+
+    private static class TrackingFactory extends StrutsTilesContainerFactory {
+        private int rawEvaluatorCreations;
+        private int legacyWarningCount;
+        private String legacyWarningMessage;
+
+        private TrackingFactory(boolean legacyOgnlEnabled) {
+            super(legacyOgnlEnabled);
+        }
+
+        @Override
+        protected OGNLAttributeEvaluator createOGNLEvaluator() {
+            rawEvaluatorCreations++;
+            return super.createOGNLEvaluator();
+        }
+
+        @Override
+        void logLegacyOgnlWarning() {
+            legacyWarningCount++;
+            legacyWarningMessage = LEGACY_OGNL_WARNING;
+        }
     }
 
 }

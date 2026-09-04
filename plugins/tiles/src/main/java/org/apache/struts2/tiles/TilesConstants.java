@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,17 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+package org.apache.struts2.tiles;
 
-<struts>
-    <constant name="struts.tiles.ognl.legacy.enabled" value="false"/>
+/**
+ * Constants used by the Tiles plugin.
+ */
+public final class TilesConstants {
 
-    <package name="tiles-default" extends="struts-default">
-        <result-types>
-            <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
-        </result-types>
-    </package>
-</struts>
+    /**
+     * Temporarily enables legacy raw Tiles OGNL evaluation.
+     *
+     * @deprecated Migrate Tiles expressions to {@code S2:} or ordinary Tiles mechanisms. This compatibility
+     * constant and the legacy evaluator are targeted for removal in Struts 8.0.0.
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
+    public static final String STRUTS_TILES_OGNL_LEGACY_ENABLED = "struts.tiles.ognl.legacy.enabled";
+
+    private TilesConstants() {
+    }
+}

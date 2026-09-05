@@ -43,6 +43,7 @@ import org.apache.struts2.rest.handler.JacksonJsonHandler;
 
 import java.beans.ConstructorProperties;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +170,64 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         DynamicFieldAnySetterBean result = enforcingMapper.readValue(
                 "{\"role\":\"admin\"}", DynamicFieldAnySetterBean.class);
         assertEquals("admin", result.values.get("role"));
+    }
+
+    public void testMethodAnySetterPreservesFloatingPointValues() throws Exception {
+        String number = "1.2345678901234567890123456789";
+        for (boolean useBigDecimal : new boolean[]{false, true}) {
+            ObjectMapper enforcingMapper = enforcingMapper()
+                    .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, useBigDecimal);
+            bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
+            DynamicScalarAnySetterBean result = enforcingMapper.readValue(
+                    "{\"amount\":" + number + "}", DynamicScalarAnySetterBean.class);
+            assertEquals(useBigDecimal ? new BigDecimal(number) : Double.valueOf(number),
+                    result.values.get("amount"));
+        }
+    }
+
+    public void testFieldAnySetterPreservesFloatingPointValues() throws Exception {
+        String number = "1.2345678901234567890123456789";
+        for (boolean useBigDecimal : new boolean[]{false, true}) {
+            ObjectMapper enforcingMapper = enforcingMapper()
+                    .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, useBigDecimal);
+            bind((path, t, a) -> false, new DynamicFieldAnySetterBean());
+            DynamicFieldAnySetterBean result = enforcingMapper.readValue(
+                    "{\"amount\":" + number + "}", DynamicFieldAnySetterBean.class);
+            assertEquals(useBigDecimal ? new BigDecimal(number) : Double.valueOf(number),
+                    result.values.get("amount"));
+        }
+    }
+
+    public void testPropertyCreatorAnySetterPreservesFloatingPointValues() throws Exception {
+        String number = "1.2345678901234567890123456789";
+        for (boolean useBigDecimal : new boolean[]{false, true}) {
+            ObjectMapper enforcingMapper = enforcingMapper()
+                    .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, useBigDecimal);
+            bind((path, t, a) -> true, new PropertyCreatorWithAnySetterBean(""));
+            // Read the dynamic value before the constructor argument so Jackson buffers it.
+            PropertyCreatorWithAnySetterBean result = enforcingMapper.readValue(
+                    "{\"amount\":" + number + ",\"name\":\"alice\"}", PropertyCreatorWithAnySetterBean.class);
+            assertEquals("alice", result.name);
+            assertEquals(useBigDecimal ? new BigDecimal(number) : Double.valueOf(number),
+                    result.values.get("amount"));
+        }
+    }
+
+    public void testXmlAnySetterPreservesNumericTextRoundTrip() throws Exception {
+        String number = "1.2345678901234567890123456789";
+        for (boolean useBigDecimal : new boolean[]{false, true}) {
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.registerModule(new ParameterAuthorizingModule(true));
+            xmlMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, useBigDecimal);
+            bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
+            DynamicScalarAnySetterBean result = xmlMapper.readValue(
+                    "<value><amount>" + number + "</amount></value>", DynamicScalarAnySetterBean.class);
+            assertEquals(number, result.values.get("amount"));
+
+            DynamicScalarAnySetterBean roundTrip = xmlMapper.readValue(
+                    xmlMapper.writeValueAsString(result.values), DynamicScalarAnySetterBean.class);
+            assertEquals(number, roundTrip.values.get("amount"));
+        }
     }
 
     public void testFieldAnySetterDepthOneAcceptsDirectMember() throws Exception {

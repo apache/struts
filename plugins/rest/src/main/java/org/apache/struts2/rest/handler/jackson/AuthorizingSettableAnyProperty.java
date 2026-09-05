@@ -119,7 +119,7 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
             return;
         }
 
-        try (TokenBuffer value = TokenBuffer.asCopyOfValue(parser)) {
+        try (TokenBuffer value = context.bufferAsCopyOfValue(parser)) {
             int valueDepth = valueDepth(value);
             if (valueDepth > allowedDepth) {
                 rejectDepth(parser, path, valueDepth, allowedDepth);
@@ -165,7 +165,7 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
             return REJECTED_VALUE;
         }
 
-        try (TokenBuffer value = TokenBuffer.asCopyOfValue(parser)) {
+        try (TokenBuffer value = context.bufferAsCopyOfValue(parser)) {
             int valueDepth = valueDepth(value);
             if (valueDepth > allowedDepth) {
                 rejectDepth(parser, path, valueDepth, allowedDepth);

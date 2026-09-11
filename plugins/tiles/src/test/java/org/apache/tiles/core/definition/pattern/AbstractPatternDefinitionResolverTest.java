@@ -79,6 +79,35 @@ public class AbstractPatternDefinitionResolverTest {
         testResolveDefinitionImpl();
     }
 
+    /**
+     * Test method for
+     * {@link AbstractPatternDefinitionResolver#removePatternPaths(Object)}: the key and its patterns are dropped
+     * entirely, so nothing resolves for that key afterwards.
+     */
+    @Test
+    public void testRemovePatternPaths() {
+        firstMatcher = createMock(DefinitionPatternMatcher.class);
+        thirdMatcher = createMock(DefinitionPatternMatcher.class);
+
+        Definition firstDefinition = new Definition("first", null, null);
+        Definition firstTransformedDefinition = new Definition("firstTransformed", null, null);
+
+        expect(firstMatcher.createDefinition("firstTransformed")).andReturn(firstTransformedDefinition);
+        replay(firstMatcher, thirdMatcher);
+
+        Map<String, Definition> localeDefsMap = new LinkedHashMap<>();
+        localeDefsMap.put("first", firstDefinition);
+        resolver.storeDefinitionPatterns(localeDefsMap, 1);
+
+        assertEquals(firstTransformedDefinition, resolver.resolveDefinition("firstTransformed", 1));
+
+        resolver.removePatternPaths(1);
+        assertNull("removePatternPaths must drop the entry so nothing resolves for the key",
+            resolver.resolveDefinition("firstTransformed", 1));
+
+        verify(firstMatcher, thirdMatcher);
+    }
+
     private void testResolveDefinitionImpl() {
 
         firstMatcher = createMock(DefinitionPatternMatcher.class);

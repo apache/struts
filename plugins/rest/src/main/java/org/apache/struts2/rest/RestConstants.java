@@ -23,6 +23,7 @@ public class RestConstants {
     public static final String REST_LOGGER = "struts.rest.logger";
     public static final String REST_DEFAULT_ERROR_RESULT_NAME = "struts.rest.defaultErrorResultName";
     public static final String REST_CONTENT_RESTRICT_TO_GET = "struts.rest.content.restrictToGET";
+    public static final String REST_ANY_SETTER_REQUIRE_ANNOTATIONS = "struts.rest.anySetter.requireAnnotations";
     public static final String REST_MAPPER_INDEX_METHOD_NAME = "struts.mapper.indexMethodName";
     public static final String REST_MAPPER_GET_METHOD_NAME = "struts.mapper.getMethodName";
     public static final String REST_MAPPER_POST_METHOD_NAME = "struts.mapper.postMethodName";

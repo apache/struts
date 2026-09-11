@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.rest;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.mockobjects.dynamic.AnyConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
@@ -36,6 +37,9 @@ import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.rest.handler.JacksonJsonHandler;
 import org.apache.struts2.util.StrutsProxyService;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 
@@ -59,6 +63,10 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     }
 
     private void setupInterceptorWithAction(Object actionInstance) {
+        setupInterceptorWithAction(actionInstance, false);
+    }
+
+    private void setupInterceptorWithAction(Object actionInstance, boolean requireAnySetterAnnotations) {
         var ognlUtil = new OgnlUtil(
                 new DefaultOgnlExpressionCacheFactory<>("1000", LRU.toString()),
                 new DefaultOgnlBeanInfoCacheFactory<>("1000", LRU.toString()),
@@ -80,10 +88,12 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
+        JacksonJsonHandler handler = new JacksonJsonHandler();
+        handler.setAnySetterRequireAnnotations(Boolean.toString(requireAnySetterAnnotations));
         mockSelector.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
             @Override
             public boolean matches(Object[] args) { return true; }
-        }, new JacksonJsonHandler());
+        }, handler);
         interceptor.setContentTypeHandlerSelector((ContentTypeHandlerManager) mockSelector.proxy());
     }
 
@@ -167,6 +177,27 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
                 restrictedAction.getUnauthorized());
     }
 
+    public void testAnySetterEnforcementIsBackwardCompatibleByDefault() throws Exception {
+        UnannotatedAnySetterAction anySetterAction = new UnannotatedAnySetterAction();
+        setupInterceptorWithAction(anySetterAction);
+        runWithBody("{\"role\":\"admin\"}");
+        assertEquals("admin", anySetterAction.getValues().get("role"));
+    }
+
+    public void testAnySetterEnforcementRejectsUnannotatedSinkWhenEnabled() throws Exception {
+        UnannotatedAnySetterAction anySetterAction = new UnannotatedAnySetterAction();
+        setupInterceptorWithAction(anySetterAction, true);
+        runWithBody("{\"role\":\"admin\"}");
+        assertTrue(anySetterAction.getValues().isEmpty());
+    }
+
+    public void testAnySetterEnforcementAcceptsExplicitDynamicKeySink() throws Exception {
+        AnnotatedAnySetterAction anySetterAction = new AnnotatedAnySetterAction();
+        setupInterceptorWithAction(anySetterAction, true);
+        runWithBody("{\"role\":\"admin\"}");
+        assertEquals("admin", anySetterAction.getValues().get("role"));
+    }
+
     // --- Test fixtures for new path verification ---
 
     /**
@@ -201,6 +232,33 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         // No @StrutsParameter annotation — depth-0 path "unauthorized" is rejected.
         public void setUnauthorized(SecureRestAction.Address unauthorized) {
             this.unauthorized = unauthorized;
+        }
+    }
+
+    public static class UnannotatedAnySetterAction extends ActionSupport {
+        private final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+
+        public Map<String, Object> getValues() {
+            return values;
+        }
+    }
+
+    public static class AnnotatedAnySetterAction extends ActionSupport {
+        private final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true)
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+
+        public Map<String, Object> getValues() {
+            return values;
         }
     }
 }

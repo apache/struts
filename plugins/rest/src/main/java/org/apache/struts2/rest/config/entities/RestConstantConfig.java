@@ -29,6 +29,7 @@ public class RestConstantConfig extends ConstantConfig {
     private Boolean restLogger;
     private String restDefaultErrorResultName;
     private Boolean restContentRestrictToGet;
+    private Boolean restAnySetterRequireAnnotations;
     private String mapperIndexMethodName;
     private String mapperGetMethodName;
     private String mapperPostMethodName;
@@ -50,6 +51,8 @@ public class RestConstantConfig extends ConstantConfig {
         map.put(RestConstants.REST_LOGGER, Objects.toString(restLogger, null));
         map.put(RestConstants.REST_DEFAULT_ERROR_RESULT_NAME, restDefaultErrorResultName);
         map.put(RestConstants.REST_CONTENT_RESTRICT_TO_GET, Objects.toString(restContentRestrictToGet, null));
+        map.put(RestConstants.REST_ANY_SETTER_REQUIRE_ANNOTATIONS,
+                Objects.toString(restAnySetterRequireAnnotations, null));
         map.put(RestConstants.REST_MAPPER_INDEX_METHOD_NAME, mapperIndexMethodName);
         map.put(RestConstants.REST_MAPPER_GET_METHOD_NAME, mapperGetMethodName);
         map.put(RestConstants.REST_MAPPER_POST_METHOD_NAME, mapperPostMethodName);
@@ -96,6 +99,14 @@ public class RestConstantConfig extends ConstantConfig {
 
     public void setRestContentRestrictToGet(Boolean restContentRestrictToGet) {
         this.restContentRestrictToGet = restContentRestrictToGet;
+    }
+
+    public Boolean getRestAnySetterRequireAnnotations() {
+        return restAnySetterRequireAnnotations;
+    }
+
+    public void setRestAnySetterRequireAnnotations(Boolean restAnySetterRequireAnnotations) {
+        this.restAnySetterRequireAnnotations = restAnySetterRequireAnnotations;
     }
 
     public String getMapperIndexMethodName() {

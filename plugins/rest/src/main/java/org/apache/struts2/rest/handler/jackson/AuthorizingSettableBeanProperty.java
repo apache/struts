@@ -83,7 +83,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
             return;
         }
         String path = ParameterAuthorizationContext.pathFor(getName());
-        if (!ParameterAuthorizationContext.isAuthorized(path)) {
+        if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
             ParameterAuthorizationContext.markRedacted();
@@ -104,7 +104,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
             return delegate.deserializeSetAndReturn(p, ctxt, instance);
         }
         String path = ParameterAuthorizationContext.pathFor(getName());
-        if (!ParameterAuthorizationContext.isAuthorized(path)) {
+        if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
             ParameterAuthorizationContext.markRedacted();

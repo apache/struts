@@ -34,6 +34,7 @@ import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.locale.URLApplicationResource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -367,5 +368,41 @@ public class CachingLocaleUrlDefinitionDAOTest extends TestCase {
         // It is right not to resolve inheritance in this DAO.
         assertEquals(1, attributes.size());
         verify(applicationContext);
+    }
+
+    /**
+     * The definitions cache is keyed by locale, so it must not grow beyond the configured bound as distinct
+     * locales are requested; the eldest entry is evicted instead, and the eviction is propagated to the pattern
+     * resolver so its per-locale store cannot grow without bound either.
+     */
+    public void testLocaleCacheIsBounded() {
+        List<ApplicationResource> sourceURLs = new ArrayList<>();
+        sourceURLs.add(url1);
+        sourceURLs.add(url2);
+        sourceURLs.add(url3);
+        definitionDao.setSources(sourceURLs);
+        definitionDao.setReader(new DigesterDefinitionsReader());
+
+        List<Locale> evicted = new ArrayList<>();
+        WildcardDefinitionPatternMatcherFactory factory = new WildcardDefinitionPatternMatcherFactory();
+        PatternDefinitionResolver<Locale> recordingResolver = new BasicPatternDefinitionResolver<Locale>(factory, factory) {
+            @Override
+            public void removePatternPaths(Locale customizationKey) {
+                evicted.add(customizationKey);
+                super.removePatternPaths(customizationKey);
+            }
+        };
+        definitionDao.setPatternDefinitionResolver(recordingResolver);
+        definitionDao.setMaxCachedLocales(2);
+
+        for (Locale locale : new Locale[]{Locale.US, Locale.FRENCH, Locale.CANADA_FRENCH, Locale.CHINA}) {
+            assertNotNull("Definitions for " + locale + " were not loaded.",
+                definitionDao.getDefinitions(locale));
+        }
+
+        assertEquals("Definitions cache must not grow beyond the configured bound",
+            2, definitionDao.locale2definitionMap.size());
+        assertEquals("Evicted locales must be removed from the pattern resolver in lockstep",
+            Arrays.asList(Locale.US, Locale.FRENCH), evicted);
     }
 }

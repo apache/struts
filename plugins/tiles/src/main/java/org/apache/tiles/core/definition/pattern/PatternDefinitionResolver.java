@@ -60,4 +60,12 @@ public interface PatternDefinitionResolver<T> {
      * @param customizationKey customization key
      */
     void clearPatternPaths(T customizationKey);
+
+    /**
+     * Removes the stored patterns for a specific customization key entirely, including the key itself. Used when the
+     * owning definitions cache evicts a customization key so that the pattern store cannot grow without bound.
+     *
+     * @param customizationKey customization key
+     */
+    void removePatternPaths(T customizationKey);
 }

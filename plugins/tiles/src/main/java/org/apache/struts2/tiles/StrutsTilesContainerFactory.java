@@ -26,12 +26,15 @@ import jakarta.el.ELResolver;
 import jakarta.el.ListELResolver;
 import jakarta.el.MapELResolver;
 import jakarta.el.ResourceBundleELResolver;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspFactory;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.tiles.api.TilesContainer;
 import org.apache.tiles.core.definition.DefinitionsFactory;
 import org.apache.tiles.core.definition.pattern.DefinitionPatternMatcherFactory;
@@ -39,6 +42,7 @@ import org.apache.tiles.core.definition.pattern.PatternDefinitionResolver;
 import org.apache.tiles.core.definition.pattern.PrefixedPatternDefinitionResolver;
 import org.apache.tiles.core.definition.pattern.regexp.RegexpDefinitionPatternMatcherFactory;
 import org.apache.tiles.core.definition.pattern.wildcard.WildcardDefinitionPatternMatcherFactory;
+import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.core.evaluator.AttributeEvaluator;
 import org.apache.tiles.core.evaluator.AttributeEvaluatorFactory;
 import org.apache.tiles.core.evaluator.BasicAttributeEvaluatorFactory;
@@ -67,6 +71,8 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.render.BasicRendererFactory;
 import org.apache.tiles.request.render.ChainedDelegateRenderer;
 import org.apache.tiles.request.render.Renderer;
+import org.apache.tiles.request.servlet.NotAServletEnvironmentException;
+import org.apache.tiles.request.servlet.ServletUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -95,7 +101,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         + "struts.tiles.ognl.legacy.enabled. Migrate expressions to S2: or ordinary Tiles mechanisms; the "
         + "compatibility flag and legacy evaluator will be removed in Struts 8.0.0.";
 
-    private final boolean legacyOgnlEnabled;
+    private final Boolean legacyOgnlEnabled;
     private final AtomicBoolean legacyOgnlWarningLogged = new AtomicBoolean();
 
     /**
@@ -123,10 +129,10 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     public static final String I18N = "I18N";
 
     public StrutsTilesContainerFactory() {
-        this(false);
+        legacyOgnlEnabled = null;
     }
 
-    StrutsTilesContainerFactory(boolean legacyOgnlEnabled) {
+    public StrutsTilesContainerFactory(boolean legacyOgnlEnabled) {
         this.legacyOgnlEnabled = legacyOgnlEnabled;
     }
 
@@ -270,13 +276,37 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     }
 
     private AttributeEvaluator createConfiguredOgnlEvaluator() {
-        if (legacyOgnlEnabled) {
+        if (legacyOgnlEnabled == null) {
+            return new ConfiguredOgnlAttributeEvaluator();
+        }
+        return createOgnlEvaluator(legacyOgnlEnabled);
+    }
+
+    private AttributeEvaluator createOgnlEvaluator(boolean enabled) {
+        if (enabled) {
             if (legacyOgnlWarningLogged.compareAndSet(false, true)) {
                 logLegacyOgnlWarning();
             }
             return createOGNLEvaluator();
         }
         return new DisabledOgnlAttributeEvaluator();
+    }
+
+    @SuppressWarnings("removal")
+    boolean isLegacyOgnlEnabled(Request request) {
+        try {
+            ServletContext servletContext = ServletUtil.getServletRequest(request)
+                .getRequest().getServletContext();
+            Dispatcher dispatcher = Dispatcher.getInstance(servletContext);
+            if (dispatcher == null) {
+                return false;
+            }
+            String configuredValue = dispatcher.getConfigurationManager().getConfiguration().getContainer().getInstance(
+                String.class, TilesConstants.STRUTS_TILES_OGNL_LEGACY_ENABLED);
+            return BooleanUtils.toBoolean(configuredValue);
+        } catch (NotAServletEnvironmentException ignored) {
+            return false;
+        }
     }
 
     void logLegacyOgnlWarning() {
@@ -299,6 +329,30 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             return new OGNLAttributeEvaluator();
         } catch (OgnlException e) {
             throw new TilesContainerFactoryException("Cannot initialize OGNL evaluator", e);
+        }
+    }
+
+    private final class ConfiguredOgnlAttributeEvaluator extends AbstractAttributeEvaluator {
+
+        private volatile AttributeEvaluator delegate;
+
+        @Override
+        public Object evaluate(String expression, Request request) {
+            return getDelegate(request).evaluate(expression, request);
+        }
+
+        private AttributeEvaluator getDelegate(Request request) {
+            AttributeEvaluator result = delegate;
+            if (result == null) {
+                synchronized (this) {
+                    result = delegate;
+                    if (result == null) {
+                        result = createOgnlEvaluator(isLegacyOgnlEnabled(request));
+                        delegate = result;
+                    }
+                }
+            }
+            return result;
         }
     }
 

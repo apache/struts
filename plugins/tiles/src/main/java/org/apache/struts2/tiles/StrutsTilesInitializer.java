@@ -32,13 +32,13 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
 
     private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
 
-    private final boolean legacyOgnlEnabled;
+    private final Boolean legacyOgnlEnabled;
 
     public StrutsTilesInitializer() {
-        this(false);
+        legacyOgnlEnabled = null;
     }
 
-    StrutsTilesInitializer(boolean legacyOgnlEnabled) {
+    public StrutsTilesInitializer(boolean legacyOgnlEnabled) {
         this.legacyOgnlEnabled = legacyOgnlEnabled;
     }
 
@@ -58,6 +58,9 @@ public class StrutsTilesInitializer extends AbstractTilesInitializer {
     @Override
     protected AbstractTilesContainerFactory createContainerFactory(ApplicationContext context) {
         LOG.trace("Creating dedicated Struts factory to create Tiles container");
+        if (legacyOgnlEnabled == null) {
+            return new StrutsTilesContainerFactory();
+        }
         return new StrutsTilesContainerFactory(legacyOgnlEnabled);
     }
 

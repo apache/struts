@@ -16,5 +16,7 @@ Applications that temporarily require the legacy raw evaluator can set the follo
 <constant name="struts.tiles.ognl.legacy.enabled" value="true"/>
 ```
 
-Enabling the constant produces a startup warning. The compatibility constant is deprecated in Struts 7.4.0; both it
+The plugin resolves this constant from the current web application's Struts configuration on the first `OGNL:`
+evaluation and caches the result for that evaluator lifecycle. Enabling the constant produces a one-time migration
+warning when the legacy evaluator is first used. The compatibility constant is deprecated in Struts 7.4.0; both it
 and the legacy evaluator are targeted for removal in Struts 8.0.0.

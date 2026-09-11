@@ -120,19 +120,87 @@ public class TilesOgnlEvaluatorIntegrationTest {
     @Test
     public void legacyOgnlLanguagePreservesRawEvaluationWhenExplicitlyEnabled() throws OgnlException {
         PropertyAccessor originalAccessor = getRequestAccessorOrNull();
+        org.apache.struts2.dispatcher.Dispatcher legacyDispatcher = null;
         try {
-            Marker marker = new Marker();
-            tilesRequest.getContext("request").put("marker", marker);
-            StrutsTilesContainerFactory legacyFactory = new StrutsTilesContainerFactory(true);
-            tilesContainer.setAttributeEvaluatorFactory(createAttributeEvaluatorFactoryWithoutEl(
-                legacyFactory, tilesRequest.getApplicationContext()));
-
-            assertEquals("touched", tilesContainer.evaluate(
+            EvaluationException disabled = assertThrows(EvaluationException.class, () -> tilesContainer.evaluate(
                 expression("marker.touch()", StrutsTilesContainerFactory.OGNL), tilesRequest));
+            assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, disabled.getMessage());
+
+            MockServletContext legacyServletContext = new MockServletContext();
+            legacyDispatcher = StrutsTestCaseHelper.initDispatcher(legacyServletContext, Map.of(
+                "config", "struts-default.xml,org/apache/struts2/tiles/struts-tiles-legacy.xml",
+                StrutsConstants.STRUTS_ALLOWLIST_ENABLE, Boolean.TRUE.toString()));
+            assertEquals(Boolean.TRUE.toString(), legacyDispatcher.getConfigurationManager().getConfiguration()
+                .getContainer().getInstance(
+                String.class, TilesConstants.STRUTS_TILES_OGNL_LEGACY_ENABLED));
+            ApplicationContext legacyApplicationContext = new ServletApplicationContext(legacyServletContext);
+            MockHttpServletRequest legacyServletRequest = new MockHttpServletRequest(legacyServletContext);
+            Request legacyTilesRequest = new ServletRequest(
+                legacyApplicationContext, legacyServletRequest, mock(HttpServletResponse.class));
+            Marker marker = new Marker();
+            legacyTilesRequest.getContext("request").put("marker", marker);
+            TrackingFactory legacyFactory = new TrackingFactory();
+            BasicTilesContainer legacyTilesContainer = new BasicTilesContainer();
+            legacyTilesContainer.setAttributeEvaluatorFactory(createAttributeEvaluatorFactoryWithoutEl(
+                legacyFactory, legacyApplicationContext));
+
+            assertEquals("The raw evaluator must not be built during Tiles construction",
+                0, legacyFactory.rawEvaluatorCreations);
+            assertEquals("touched", legacyTilesContainer.evaluate(
+                expression("marker.touch()", StrutsTilesContainerFactory.OGNL), legacyTilesRequest));
+            assertEquals("touched", legacyTilesContainer.evaluate(
+                expression("marker.touch()", StrutsTilesContainerFactory.OGNL), legacyTilesRequest));
             assertTrue("The explicitly enabled legacy evaluator must preserve existing behavior", marker.touched);
+            assertEquals("The compatibility constant must be resolved once per evaluator", 1,
+                legacyFactory.configurationResolutions);
+            assertEquals("The raw evaluator must be constructed once per evaluator", 1,
+                legacyFactory.rawEvaluatorCreations);
+            assertEquals("The migration warning must be emitted once per evaluator lifecycle", 1,
+                legacyFactory.legacyWarnings);
+
+            EvaluationException stillDisabled = assertThrows(EvaluationException.class, () -> tilesContainer.evaluate(
+                expression("marker.touch()", StrutsTilesContainerFactory.OGNL), tilesRequest));
+            assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, stillDisabled.getMessage());
         } finally {
+            StrutsTestCaseHelper.tearDown(legacyDispatcher);
             OgnlRuntime.setPropertyAccessor(Request.class, originalAccessor);
         }
+    }
+
+    @Test
+    public void missingDispatcherFailsClosedAndCachesTheDecision() {
+        MockServletContext servletContext = new MockServletContext();
+        ApplicationContext applicationContext = new ServletApplicationContext(servletContext);
+        Request request = new ServletRequest(
+            applicationContext, new MockHttpServletRequest(servletContext), mock(HttpServletResponse.class));
+        TrackingFactory factory = new TrackingFactory();
+        AttributeEvaluatorFactory evaluators = createAttributeEvaluatorFactoryWithoutEl(factory, applicationContext);
+
+        EvaluationException first = assertThrows(EvaluationException.class,
+            () -> evaluators.getAttributeEvaluator(StrutsTilesContainerFactory.OGNL).evaluate("ignored", request));
+        EvaluationException second = assertThrows(EvaluationException.class,
+            () -> evaluators.getAttributeEvaluator(StrutsTilesContainerFactory.OGNL).evaluate("ignored", request));
+
+        assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, first.getMessage());
+        assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, second.getMessage());
+        assertEquals(1, factory.configurationResolutions);
+        assertEquals(0, factory.rawEvaluatorCreations);
+    }
+
+    @Test
+    public void nonServletRequestFailsClosedWithoutExposingEnvironmentFailure() {
+        TrackingFactory factory = new TrackingFactory();
+        AttributeEvaluatorFactory evaluators = createAttributeEvaluatorFactoryWithoutEl(
+            factory, tilesRequest.getApplicationContext());
+
+        EvaluationException exception = assertThrows(EvaluationException.class,
+            () -> evaluators.getAttributeEvaluator(StrutsTilesContainerFactory.OGNL)
+                .evaluate("sensitive-expression", mock(Request.class)));
+
+        assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, exception.getMessage());
+        assertFalse(exception.getMessage().contains("sensitive-expression"));
+        assertEquals(1, factory.configurationResolutions);
+        assertEquals(0, factory.rawEvaluatorCreations);
     }
 
     @Test
@@ -189,6 +257,29 @@ public class TilesOgnlEvaluatorIntegrationTest {
         public String touch() {
             touched = true;
             return "touched";
+        }
+    }
+
+    private static class TrackingFactory extends StrutsTilesContainerFactory {
+        private int configurationResolutions;
+        private int rawEvaluatorCreations;
+        private int legacyWarnings;
+
+        @Override
+        boolean isLegacyOgnlEnabled(Request request) {
+            configurationResolutions++;
+            return super.isLegacyOgnlEnabled(request);
+        }
+
+        @Override
+        protected org.apache.tiles.ognl.OGNLAttributeEvaluator createOGNLEvaluator() {
+            rawEvaluatorCreations++;
+            return super.createOGNLEvaluator();
+        }
+
+        @Override
+        void logLegacyOgnlWarning() {
+            legacyWarnings++;
         }
     }
 }

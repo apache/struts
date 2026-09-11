@@ -20,9 +20,7 @@ package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,10 +35,10 @@ import java.io.IOException;
  * skipped via {@link JsonParser#skipChildren()}, so any nested object graph is never instantiated
  * and setter side effects on unauthorized properties never fire.
  *
- * <p>Path tracking: the wrapper pushes the full path of the current property onto the context's
- * path stack before delegating, then pops in a {@code finally} block. For collection / map / array-typed
- * properties, the path pushed is suffixed with {@code [0]} so nested element members produce paths like
- * {@code items[0].field} — matching {@code ParametersInterceptor} depth semantics.</p>
+ * <p>Path tracking for nested members is done by the {@link AuthorizingValueDeserializer} wrapped
+ * around every property's value deserializer, so the direct path and the buffered creator path
+ * compute the same paths. Values Jackson assigns after construction go through {@link #set} and
+ * {@link #setAndReturn}, which apply the same authorization to the already-materialized value.</p>
  *
  * <p>When {@link ParameterAuthorizationContext#isActive()} is {@code false}, this wrapper is a
  * straight pass-through to the delegate — no overhead for default-config requests.</p>
@@ -61,17 +59,17 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
     }
 
     /**
-     * Creator-bound properties (records, {@code @JsonCreator} constructors) never reach
-     * {@link #deserializeAndSet}/{@link #deserializeSetAndReturn}: Jackson calls the {@code final}
-     * {@code SettableBeanProperty#deserialize} directly, through this property's own value deserializer.
-     * Wrap that deserializer with {@link AuthorizingValueDeserializer}, scoped to {@link CreatorProperty}
-     * so ordinary setter/field/builder properties -- already authorized below -- aren't double-checked.
+     * Creator-bound properties, and non-creator properties Jackson buffers while collecting creator
+     * parameters, never reach {@link #deserializeAndSet}/{@link #deserializeSetAndReturn}: Jackson calls
+     * the {@code final} {@code SettableBeanProperty#deserialize} directly, through this property's own
+     * value deserializer. Wrap that deserializer with {@link AuthorizingValueDeserializer} for every
+     * property; it owns the path push for nested members on both the direct and the buffered path.
      */
     @Override
     public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
         JsonDeserializer<?> effective = deser;
-        if (delegate instanceof CreatorProperty && !(deser instanceof AuthorizingValueDeserializer)) {
-            effective = new AuthorizingValueDeserializer(deser, getName());
+        if (!(deser instanceof AuthorizingValueDeserializer)) {
+            effective = new AuthorizingValueDeserializer(deser, getName(), getType());
         }
         return _with(delegate.withValueDeserializer(effective));
     }
@@ -90,12 +88,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
             p.skipChildren();
             return;
         }
-        ParameterAuthorizationContext.pushPath(prefixForNested(path));
-        try {
-            delegate.deserializeAndSet(p, ctxt, instance);
-        } finally {
-            ParameterAuthorizationContext.popPath();
-        }
+        delegate.deserializeAndSet(p, ctxt, instance);
     }
 
     @Override
@@ -111,24 +104,41 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
             p.skipChildren();
             return instance;
         }
-        ParameterAuthorizationContext.pushPath(prefixForNested(path));
-        try {
-            return delegate.deserializeSetAndReturn(p, ctxt, instance);
-        } finally {
-            ParameterAuthorizationContext.popPath();
+        return delegate.deserializeSetAndReturn(p, ctxt, instance);
+    }
+
+    @Override
+    public void set(Object instance, Object value) throws IOException {
+        if (isAuthorizedForSet(instance)) {
+            delegate.set(instance, value);
         }
     }
 
-    /**
-     * For Collection / Map / Array properties, the path to push for nested element members is
-     * {@code path + "[0]"} — matching {@code ParametersInterceptor} bracket-depth semantics. Scalar /
-     * bean properties push the path unchanged.
-     */
-    private String prefixForNested(String pathOfThisProperty) {
-        JavaType type = getType();
-        if (type != null && (type.isCollectionLikeType() || type.isMapLikeType() || type.isArrayType())) {
-            return pathOfThisProperty + "[0]";
+    @Override
+    public Object setAndReturn(Object instance, Object value) throws IOException {
+        if (isAuthorizedForSet(instance)) {
+            return delegate.setAndReturn(instance, value);
         }
-        return pathOfThisProperty;
+        return instance;
+    }
+
+    /**
+     * Guards the already-materialized assignment path: Jackson buffers non-creator properties seen
+     * before the last creator parameter and assigns them after construction via
+     * {@code PropertyValue.Regular.assign} -> {@code set()}, which does not go through
+     * {@link #deserializeAndSet}.
+     */
+    private boolean isAuthorizedForSet(Object instance) {
+        if (!ParameterAuthorizationContext.isActive()) {
+            return true;
+        }
+        String path = ParameterAuthorizationContext.pathFor(getName());
+        if (DynamicKeyAuthorizationContext.isAuthorized(path)) {
+            return true;
+        }
+        LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
+                path, instance.getClass().getName());
+        ParameterAuthorizationContext.markRedacted();
+        return false;
     }
 }

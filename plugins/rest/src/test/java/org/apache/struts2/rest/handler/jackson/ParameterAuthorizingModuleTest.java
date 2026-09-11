@@ -21,6 +21,8 @@ package org.apache.struts2.rest.handler.jackson;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
@@ -434,6 +436,96 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull(result.secret);
     }
 
+    public void testSetterBufferedBeforeCreatorParamIsAuthorized() throws Exception {
+        // A non-creator property that appears before the last creator parameter is buffered by
+        // Jackson and assigned through SettableBeanProperty.set() after construction.
+        bind((path, t, a) -> "name".equals(path), new CreatorWithSetter(""));
+        CreatorWithSetter result = mapper.readValue("{\"role\":\"admin\",\"name\":\"alice\"}", CreatorWithSetter.class);
+        assertEquals("alice", result.name);
+        assertNull("buffered setter property assigned without authorization ?", result.getRole());
+    }
+
+    public void testSetterAfterCreatorParamIsAuthorized() throws Exception {
+        // Control: the same property after the last creator parameter takes the direct path.
+        bind((path, t, a) -> "name".equals(path), new CreatorWithSetter(""));
+        CreatorWithSetter result = mapper.readValue("{\"name\":\"alice\",\"role\":\"admin\"}", CreatorWithSetter.class);
+        assertEquals("alice", result.name);
+        assertNull(result.getRole());
+    }
+
+    public void testSetterOnlyTypeSameMemberOrderIsAuthorized() throws Exception {
+        // Control: without a creator nothing is buffered, so member order does not matter.
+        bind((path, t, a) -> "name".equals(path), new Person());
+        Person result = mapper.readValue("{\"role\":\"admin\",\"name\":\"alice\"}", Person.class);
+        assertEquals("alice", result.name);
+        assertNull(result.role);
+    }
+
+    public void testNestedSetterBufferedBeforeCreatorParamIsAuthorized() throws Exception {
+        bind((path, t, a) -> "inner".equals(path) || "inner.name".equals(path), new CreatorHolder(null));
+        CreatorHolder result = mapper.readValue(
+                "{\"inner\":{\"role\":\"admin\",\"name\":\"alice\"}}", CreatorHolder.class);
+        assertNotNull(result.inner);
+        assertEquals("alice", result.inner.name);
+        assertNull("nested buffered setter property assigned without authorization ?", result.inner.getRole());
+    }
+
+    public void testBufferedBeanValuedSetterChildrenAuthorizedAtOwnDepth() throws Exception {
+        // The buffered read goes through the final SettableBeanProperty.deserialize(), so the
+        // nested bean's members must still be authorized under the property's own prefix.
+        bind((path, t, a) -> "inner".equals(path) || "inner.name".equals(path)
+                || "inner.address".equals(path) || "inner.address.city".equals(path), new CreatorAddressHolder(null));
+        CreatorAddressHolder result = mapper.readValue(
+                "{\"inner\":{\"address\":{\"city\":\"Warsaw\",\"zip\":\"00-001\"},\"name\":\"alice\"}}",
+                CreatorAddressHolder.class);
+        assertEquals("alice", result.inner.name);
+        assertNotNull("buffered nested bean dropped ?", result.inner.getAddress());
+        assertEquals("nested member checked at the wrong depth ?", "Warsaw", result.inner.getAddress().city);
+        assertNull(result.inner.getAddress().zip);
+    }
+
+    public void testBeanValuedSetterAfterCreatorParamChildrenAuthorizedAtOwnDepth() throws Exception {
+        // Control: the direct path for the same property and authorizer.
+        bind((path, t, a) -> "inner".equals(path) || "inner.name".equals(path)
+                || "inner.address".equals(path) || "inner.address.city".equals(path), new CreatorAddressHolder(null));
+        CreatorAddressHolder result = mapper.readValue(
+                "{\"inner\":{\"name\":\"alice\",\"address\":{\"city\":\"Warsaw\",\"zip\":\"00-001\"}}}",
+                CreatorAddressHolder.class);
+        assertEquals("alice", result.inner.name);
+        assertEquals("Warsaw", result.inner.getAddress().city);
+        assertNull(result.inner.getAddress().zip);
+    }
+
+    public void testSetterlessCollectionElementsAuthorizedAtOwnDepth() throws Exception {
+        // A collection getter without a setter is deserialized in place through the three-argument
+        // deserialize(); element members must be checked under items[0], not under the parent.
+        bind((path, t, a) -> "order".equals(path) || "order.items".equals(path) || "order.name".equals(path),
+                new OrderHolder());
+        OrderHolder result = mapper.readValue("{\"order\":{\"items\":[{\"name\":\"x\"}]}}", OrderHolder.class);
+        assertEquals(1, result.order.getItems().size());
+        assertNull("element member authorized by the parent's sibling grant ?", result.order.getItems().get(0).name);
+    }
+
+    public void testPolymorphicPropertyMembersAuthorizedAtOwnDepth() throws Exception {
+        // A @JsonTypeInfo property is deserialized through deserializeWithType(); the subtype's
+        // members must be checked under pet, not against the enclosing bean.
+        bind((path, t, a) -> "pet".equals(path) || "owner".equals(path), new Kennel());
+        Kennel result = mapper.readValue("{\"pet\":{\"@type\":\"dog\",\"owner\":\"alice\"}}", Kennel.class);
+        assertTrue(result.pet instanceof Dog);
+        assertNull("subtype member authorized by the enclosing bean's sibling grant ?", ((Dog) result.pet).owner);
+    }
+
+    public void testBufferedSetterInsideDynamicKeyScopeIsAuthorizedByDepth() throws Exception {
+        // Inside a dynamic-key scope the buffered path must consult the same depth rule as the
+        // direct path, not the annotation authorizer (which rejects everything here).
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthTwoCreatorAnySetterBean());
+        DynamicDepthTwoCreatorAnySetterBean result = enforcingMapper.readValue(
+                "{\"home\":{\"role\":\"admin\",\"name\":\"alice\"}}", DynamicDepthTwoCreatorAnySetterBean.class);
+        assertEquals("alice", result.values.get("home").name);
+        assertEquals("admin", result.values.get("home").getRole());
+    }
+
     public void testCreatorPropertyEntirelyRejected_dropsWholeSubtree() throws Exception {
         // "inner" itself is never authorized -- the whole nested creator-bound object must be
         // dropped, matching how a rejected non-creator nested bean property behaves (see
@@ -555,6 +647,91 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         public RecordAddress recordAddress;
     }
 
+    public static class CreatorWithSetter {
+        public final String name;
+        private String role;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorWithSetter(@JsonProperty("name") String name) {
+            this.name = name;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+    }
+
+    public static class CreatorWithAddress {
+        public final String name;
+        private Address address;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorWithAddress(@JsonProperty("name") String name) {
+            this.name = name;
+        }
+
+        public Address getAddress() {
+            return address;
+        }
+
+        public void setAddress(Address address) {
+            this.address = address;
+        }
+    }
+
+    public static class CreatorAddressHolder {
+        public final CreatorWithAddress inner;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorAddressHolder(@JsonProperty("inner") CreatorWithAddress inner) {
+            this.inner = inner;
+        }
+    }
+
+    public static class OrderHolder {
+        public Order order;
+    }
+
+    public static class Order {
+        public String name;
+        private final java.util.List<OrderItem> itemList = new java.util.ArrayList<>();
+
+        public java.util.List<OrderItem> getItems() {
+            return itemList;
+        }
+    }
+
+    public static class OrderItem {
+        public String name;
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+    @JsonSubTypes(@JsonSubTypes.Type(value = Dog.class, name = "dog"))
+    public abstract static class Animal {
+    }
+
+    public static class Dog extends Animal {
+        public String owner;
+    }
+
+    public static class Kennel {
+        public Animal pet;
+        public String owner;
+    }
+
+    public static class CreatorHolder {
+        public final CreatorWithSetter inner;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorHolder(@JsonProperty("inner") CreatorWithSetter inner) {
+            this.inner = inner;
+        }
+    }
+
     public static class Address {
         public String city;
         public String zip;
@@ -622,6 +799,16 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         @JsonAnySetter
         @StrutsParameter(allowDynamicKeys = true, depth = 1)
         public void put(String name, Address value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class DynamicDepthTwoCreatorAnySetterBean {
+        public final Map<String, CreatorWithSetter> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true, depth = 2)
+        public void put(String name, CreatorWithSetter value) {
             values.put(name, value);
         }
     }

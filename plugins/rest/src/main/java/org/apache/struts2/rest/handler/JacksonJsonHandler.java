@@ -21,9 +21,12 @@ package org.apache.struts2.rest.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.rest.RestConstants;
+import org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -36,14 +39,19 @@ public class JacksonJsonHandler implements AuthorizationAwareContentTypeHandler 
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";
+    private final ParameterAuthorizingModule parameterAuthorizingModule = new ParameterAuthorizingModule();
     private ObjectMapper mapper = new ObjectMapper()
-            .registerModule(new org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule());
+            .registerModule(parameterAuthorizingModule);
 
     @Override
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         ObjectReader or = mapper.readerForUpdating(target);
-        or.readValue(in);
+        try {
+            or.readValue(in);
+        } finally {
+            parameterAuthorizingModule.clearAuthorizationContext();
+        }
     }
 
     @Override
@@ -66,5 +74,10 @@ public class JacksonJsonHandler implements AuthorizationAwareContentTypeHandler 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
         this.defaultEncoding = val;
+    }
+
+    @Inject(value = RestConstants.REST_ANY_SETTER_REQUIRE_ANNOTATIONS, required = false)
+    public void setAnySetterRequireAnnotations(String value) {
+        parameterAuthorizingModule.setRequireAnySetterAnnotations(BooleanUtils.toBoolean(value));
     }
 }

@@ -58,7 +58,7 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
             return super.deserialize(p, ctxt);
         }
         String path = ParameterAuthorizationContext.pathFor(propertyName);
-        if (!ParameterAuthorizationContext.isAuthorized(path)) {
+        if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization (creator-bound property)", path);
             ParameterAuthorizationContext.markRedacted();
             p.skipChildren();

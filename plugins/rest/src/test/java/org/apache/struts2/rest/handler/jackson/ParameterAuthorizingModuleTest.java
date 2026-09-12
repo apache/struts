@@ -20,6 +20,7 @@ package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonMerge;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -515,6 +516,40 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull("subtype member authorized by the enclosing bean's sibling grant ?", ((Dog) result.pet).owner);
     }
 
+    public void testNoContext_passThroughBufferedSetter() throws Exception {
+        CreatorWithSetter result = mapper.readValue("{\"role\":\"admin\",\"name\":\"alice\"}", CreatorWithSetter.class);
+        assertEquals("alice", result.name);
+        assertEquals("admin", result.getRole());
+    }
+
+    public void testNoContext_passThroughSetterlessCollection() throws Exception {
+        OrderHolder result = mapper.readValue("{\"order\":{\"items\":[{\"name\":\"x\"}]}}", OrderHolder.class);
+        assertEquals("x", result.order.getItems().get(0).name);
+    }
+
+    public void testNoContext_passThroughPolymorphicProperty() throws Exception {
+        Kennel result = mapper.readValue("{\"pet\":{\"@type\":\"dog\",\"owner\":\"alice\"}}", Kennel.class);
+        assertEquals("alice", ((Dog) result.pet).owner);
+    }
+
+    public void testBufferedPolymorphicSetterIsAuthorized() throws Exception {
+        // A polymorphic setter buffered before the creator parameter goes through deserializeWithType().
+        bind((path, t, a) -> "name".equals(path), new CreatorWithPet(""));
+        CreatorWithPet result = mapper.readValue(
+                "{\"pet\":{\"@type\":\"dog\",\"owner\":\"alice\"},\"name\":\"alice\"}", CreatorWithPet.class);
+        assertEquals("alice", result.name);
+        assertNull("buffered polymorphic setter assigned without authorization ?", result.getPet());
+    }
+
+    public void testMergeIntoExistingValueIsAuthorized() throws Exception {
+        // @JsonMerge into a non-null value deserializes in place through the three-argument
+        // deserialize(); an unauthorized property must leave the existing value untouched.
+        bind((path, t, a) -> "name".equals(path), new MergingBean());
+        MergingBean result = mapper.readValue("{\"name\":\"alice\",\"address\":{\"city\":\"Warsaw\"}}", MergingBean.class);
+        assertEquals("alice", result.name);
+        assertNull("merged into an unauthorized property ?", result.address.city);
+    }
+
     public void testBufferedSetterInsideDynamicKeyScopeIsAuthorizedByDepth() throws Exception {
         // Inside a dynamic-key scope the buffered path must consult the same depth rule as the
         // direct path, not the annotation authorizer (which rejects everything here).
@@ -721,6 +756,30 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     public static class Kennel {
         public Animal pet;
         public String owner;
+    }
+
+    public static class CreatorWithPet {
+        public final String name;
+        private Animal pet;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorWithPet(@JsonProperty("name") String name) {
+            this.name = name;
+        }
+
+        public Animal getPet() {
+            return pet;
+        }
+
+        public void setPet(Animal pet) {
+            this.pet = pet;
+        }
+    }
+
+    public static class MergingBean {
+        public String name;
+        @JsonMerge
+        public Address address = new Address();
     }
 
     public static class CreatorHolder {

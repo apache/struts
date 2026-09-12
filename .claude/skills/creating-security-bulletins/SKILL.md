@@ -81,7 +81,7 @@ Two traps in applying it:
 
 ## CVE placeholder
 
-CVEs are requested **after** the fixed release is out and accepted. Until then the row carries a placeholder that cannot be mistaken for a real identifier:
+By our practice, the CVE is requested around the fixed release rather than at triage — but this is a PMC choice, not an ASF requirement (ASF permits allocating earlier and sharing the id with the reporter). Until one is assigned, the row carries a placeholder that cannot be mistaken for a real identifier:
 
 ```
 CVE-YYYY-NNNNN (to be assigned before publication)

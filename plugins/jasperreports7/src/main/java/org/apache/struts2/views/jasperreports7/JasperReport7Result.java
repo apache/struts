@@ -61,8 +61,13 @@ import java.util.TimeZone;
  *
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
- * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
- * datasource from the value stack (usually a List).</li>
+ * <li><b>dataSource</b> - the EL expression used to retrieve the
+ * datasource from the value stack (usually a List). When neither dataSource
+ * nor connection is set the report is filled from its parameters alone,
+ * so a data supplier expected by the report's query executer (e.g.
+ * <code>HIBERNATE_SESSION</code>, <code>CSV_INPUT_STREAM</code>,
+ * <code>JSON_INPUT_STREAM</code>) or a ready <code>REPORT_DATA_SOURCE</code> /
+ * <code>REPORT_CONNECTION</code> can be handed over via reportParameters.</li>
  * <li><b>parse</b> - true by default. If set to false, all the parameters will
  * not be parsed for EL expressions.</li>
  * <li><b>format</b> - the format in which the report should be generated. Valid
@@ -161,7 +166,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         ValueStack stack = invocation.getStack();
         Connection reportConnection = (Connection) stack.findValue(connection);
         ValueStackDataSource reportDataSource = null;
-        if (reportConnection == null) {
+        if (reportConnection == null && dataSource != null) {
             reportDataSource = prepareDataSource(stack);
         }
 
@@ -185,10 +190,13 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         // Fill the report and produce a print object
         try {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(systemId));
-            if (reportConnection == null) {
+            if (reportConnection != null) {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, reportConnection);
+            } else if (reportDataSource != null) {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, reportDataSource);
             } else {
-                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, reportConnection);
+                LOG.debug("No dataSource or connection set, filling {} from report parameters only", systemId);
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
             }
 
             if (invocation.getAction() instanceof JasperReport7Aware action) {
@@ -305,11 +313,6 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
      * @param invocation Current invocation.
      */
     private void initializeProperties(ActionInvocation invocation) {
-        if (dataSource == null && connection == null) {
-            String message = "No dataSource specified...";
-            LOG.error(message);
-            throw new RuntimeException(message);
-        }
         if (dataSource != null) {
             parsedDataSource = conditionalParse(dataSource, invocation);
         }

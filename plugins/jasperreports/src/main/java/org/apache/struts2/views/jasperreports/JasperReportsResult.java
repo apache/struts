@@ -72,8 +72,13 @@ import java.util.TimeZone;
  *
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
- * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
- * datasource from the value stack (usually a List).</li>
+ * <li><b>dataSource</b> - the EL expression used to retrieve the
+ * datasource from the value stack (usually a List). When neither dataSource
+ * nor connection is set the report is filled from its parameters alone,
+ * so a data supplier expected by the report's query executer (e.g.
+ * <code>HIBERNATE_SESSION</code>, <code>CSV_INPUT_STREAM</code>,
+ * <code>JSON_INPUT_STREAM</code>) or a ready <code>REPORT_DATA_SOURCE</code> /
+ * <code>REPORT_CONNECTION</code> can be handed over via reportParameters.</li>
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for EL expressions.</li>
  * <li><b>format</b> - the format in which the report should be generated. Valid
@@ -258,7 +263,6 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     }
 
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        // Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
         initializeProperties(invocation);
 
         LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
@@ -284,7 +288,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         ValueStackDataSource stackDataSource = null;
 
         Connection conn = (Connection) stack.findValue(connection);
-        if (conn == null) {
+        if (conn == null && dataSource != null) {
             boolean evaluated = parsedDataSource != null && !parsedDataSource.equals(dataSource);
             boolean reevaluate = !evaluated || isAcceptableExpression(parsedDataSource);
             if (reevaluate) {
@@ -338,10 +342,13 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Fill the report and produce a print object
         try {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(systemId));
-            if (conn == null) {
+            if (conn != null) {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+            } else if (stackDataSource != null) {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
             } else {
-                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+                LOG.debug("No dataSource or connection set, filling {} from report parameters only", systemId);
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);
             }
         } catch (JRException e) {
             LOG.error("Error building report for uri {}", systemId, e);
@@ -460,11 +467,6 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @throws Exception on initialization error.
      */
     private void initializeProperties(ActionInvocation invocation) {
-        if (dataSource == null && connection == null) {
-            String message = "No dataSource specified...";
-            LOG.error(message);
-            throw new RuntimeException(message);
-        }
         if (dataSource != null) {
             parsedDataSource = conditionalParse(dataSource, invocation);
         }

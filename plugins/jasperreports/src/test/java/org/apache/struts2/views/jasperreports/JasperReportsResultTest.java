@@ -28,7 +28,9 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.junit.StrutsTestCase;
 
 import jakarta.servlet.ServletException;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -169,6 +171,21 @@ public class JasperReportsResultTest extends StrutsTestCase {
         assertTrue(response.getContentAsString().contains("Qux Report"));
     }
 
+    public void testFillFromReportParametersWithoutDataSourceOrConnection() throws Exception {
+        stack.push(new Object() {
+            public Map<String, Object> getReportParameters() {
+                return Map.of("CSV_INPUT_STREAM",
+                        new ByteArrayInputStream("Foo,Bar\n".getBytes(StandardCharsets.UTF_8)));
+            }
+        });
+        result.setReportParameters("reportParameters");
+        compileAndUseReport("csv.jrxml");
+
+        result.execute(this.invocation);
+
+        assertTrue(response.getContentAsString().contains("Hello Foo Bar!"));
+    }
+
     public void testExportParametersNotAccepted() throws Exception {
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
 
@@ -234,10 +251,15 @@ public class JasperReportsResultTest extends StrutsTestCase {
 
         result = new JasperReportsResult();
         container.inject(result);
-        URL url = ClassLoaderUtil.getResource("org/apache/struts2/views/jasperreports/simple.jrxml", this.getClass());
-        JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
-        result.setLocation("org/apache/struts2/views/jasperreports/simple.jrxml.jasper");
+        compileAndUseReport("simple.jrxml");
         result.setFormat(JasperReportConstants.FORMAT_XML);
+    }
+
+    private void compileAndUseReport(String jrxml) throws Exception {
+        String resource = "org/apache/struts2/views/jasperreports/" + jrxml;
+        URL url = ClassLoaderUtil.getResource(resource, this.getClass());
+        JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
+        result.setLocation(resource + ".jasper");
     }
 
 

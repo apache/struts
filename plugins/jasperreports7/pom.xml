@@ -34,6 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jasperreports7.version>7.0.7</jasperreports7.version>
+        <tomcat-embed.version>10.1.55</tomcat-embed.version>
     </properties>
 
     <dependencies>
@@ -76,6 +77,12 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat-embed.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

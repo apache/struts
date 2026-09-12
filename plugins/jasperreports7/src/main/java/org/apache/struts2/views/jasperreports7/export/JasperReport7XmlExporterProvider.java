@@ -48,7 +48,8 @@ public class JasperReport7XmlExporterProvider implements JasperReport7ExporterPr
         SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
         exporter.setExporterInput(input);
 
-        try (OutputStream responseOutput = response.getOutputStream()) {
+        try {
+            OutputStream responseOutput = response.getOutputStream();
             XmlExporterOutput exporterOutput = new SimpleXmlExporterOutput(responseOutput);
             exporter.setExporterOutput(exporterOutput);
         } catch (IOException e) {

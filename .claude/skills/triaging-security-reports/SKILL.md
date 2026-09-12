@@ -93,9 +93,11 @@ Once you *have* been asked:
   doesn't already exist (it often does) and that you intend to actually do it. Beyond that, a triage
   reply does not get to settle **severity ratings, bulletins, CVE requests, fix versions, or
   timelines** — those are the PMC's, and a reply that states one has made the decision on their
-  behalf. A CVE especially: it is requested once the fixed release is out, never at triage (see
-  [`creating-security-bulletins`](../creating-security-bulletins/SKILL.md)). When the reporter asks
-  for one of these, say the decision comes later and report the question to the user; do not answer it.
+  behalf. A CVE especially: our practice is to allocate it around release time and publish it with
+  the bulletin, but that timing is the PMC's call (ASF actually permits allocating earlier and
+  sharing the id with the reporter — see [`creating-security-bulletins`](../creating-security-bulletins/SKILL.md)),
+  so a reply must not promise a CVE or its timing. When the reporter asks for one of these, say the
+  decision comes later and report the question to the user; do not answer it.
 - Acknowledge anything the reporter got right (e.g. correct CVE-fix verification) — it builds the relationship and signals you actually read it.
 - Keep it private: no public issue, PR, Jira, or list thread before triage. Never open a PR that is itself the security fix (see [`CLAUDE.md`](../../../CLAUDE.md)).
 
@@ -109,7 +111,7 @@ Once you *have* been asked:
 - Promising a fix/warning "we'll add" without checking it isn't already there.
 - Writing "not a vulnerability in the default configuration" → reframe as vuln-or-not + operator responsibility.
 - About to create a reply draft that nobody asked for — the verdict is the deliverable, the draft is a separate task.
-- About to write a severity rating, a bulletin, a fix version, or a CVE into a reply as though it were decided — it isn't yours to decide.
+- About to write a severity rating, a bulletin, a fix version, or a CVE (or its timing) into a reply as though it were decided — it isn't yours to decide.
 
 ## Common Mistakes
 
@@ -123,4 +125,4 @@ Once you *have* been asked:
 | "Not a vuln in default config" | Either it's a vuln or it's operator-owned opt-in. The default-config hedge muddies both. |
 | "Triage is done, so drafting the reply is the next step" | Triage ends at the assessment. Replying is a separate task the user starts. |
 | "A draft is harmless — it isn't sent" | The draft is the artifact. Creating it unasked decides for the user that the project is ready to answer. |
-| "The reporter asked about a CVE, so I should answer it" | Report the question to the user. Answering it commits the project to a process decision that isn't yours. |
+| "The reporter asked about a CVE, so I should answer it" | Report the question to the user. CVE timing is a PMC choice (not a fixed rule), so answering it commits the project to a process decision that isn't yours. |

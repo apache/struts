@@ -81,7 +81,7 @@ Two traps in applying it:
 
 ## CVE placeholder
 
-CVEs are requested **after** the fixed release is out and accepted. Until then the row carries a placeholder that cannot be mistaken for a real identifier:
+By our practice, the CVE is requested around the fixed release rather than at triage — but this is a PMC choice, not an ASF requirement (ASF permits allocating earlier and sharing the id with the reporter). Until one is assigned, the row carries a placeholder that cannot be mistaken for a real identifier:
 
 ```
 CVE-YYYY-NNNNN (to be assigned before publication)
@@ -90,6 +90,8 @@ CVE-YYYY-NNNNN (to be assigned before publication)
 Never leave a cloned page's real CVE in place. Never invent a well-formed-looking number.
 
 One CVE per independently fixable issue — separate fixes get separate bulletins and separate CVEs, per [CNA rules 4.1.10](https://www.cve.org/ResourcesSupport/AllResources/CNARules).
+
+For the full ASF process behind CVE handling — reserving, timing, and sharing an id with the reporter (steps 7–9) — see the [ASF committer security process](https://www.apache.org/security/committers.html). Consult it if anything here is unclear or a report raises a case our practice doesn't cover.
 
 ## The disclosure budget
 

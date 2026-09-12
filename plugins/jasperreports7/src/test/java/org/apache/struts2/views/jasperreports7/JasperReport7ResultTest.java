@@ -21,6 +21,7 @@ package org.apache.struts2.views.jasperreports7;
 import jakarta.servlet.ServletException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
@@ -265,6 +266,27 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         // then
         assertThat(response.getContentType()).isEqualTo("text/csv");
         assertThat(response.getContentAsString()).contains("Qux Report");
+    }
+
+    public void testCsvRecordsAreSeparatedByNewlines() throws Exception {
+        // given
+        result.setDataSource("{#{'firstName':'Foo', 'lastName':'Bar'}, #{'firstName':'Baz', 'lastName':'Qux'}}");
+        result.setReportParameters("#{'title':'Qux'}");
+        result.setFormat(JasperReport7Constants.FORMAT_CSV);
+        invocation.setAction(new JasperReport7Aware() {
+            @Override
+            public String getCsvDelimiter(ActionInvocation invocation) {
+                return ";";
+            }
+        });
+
+        // when
+        result.execute(this.invocation);
+
+        // then
+        String csv = response.getContentAsString();
+        assertThat(csv).doesNotContain("Qux Report;Hello");
+        assertThat(csv.lines()).containsExactly("Qux Report", "Hello Foo Bar!", "Hello Baz Qux!");
     }
 
     public void testExportToRtf() throws Exception {

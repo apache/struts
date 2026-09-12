@@ -77,7 +77,6 @@ public class JasperReport7CsvExporterProvider implements JasperReport7ExporterPr
 
         SimpleCsvExporterConfiguration config = new SimpleCsvExporterConfiguration();
         config.setFieldDelimiter(reportDelimiter);
-        config.setRecordDelimiter(reportDelimiter);
         exporter.setConfiguration(config);
 
         SimpleExporterInput input = new SimpleExporterInput(jasperPrint);

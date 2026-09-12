@@ -33,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
@@ -71,7 +72,8 @@ import java.util.TimeZone;
  * <li><b>parse</b> - true by default. If set to false, all the parameters will
  * not be parsed for EL expressions.</li>
  * <li><b>format</b> - the format in which the report should be generated. Valid
- * values can be found in {@link JasperReport7Constants}. If no format is
+ * values can be found in {@link JasperReport7Constants} and are matched case-insensitively,
+ * so <code>csv</code> and <code>CSV</code> select the same exporter. If no format is
  * specified, PDF will be used.</li>
  * <li><b>contentDisposition</b> - disposition (defaults to "inline", values are
  * typically <i>filename="document.pdf"</i>).</li>
@@ -103,7 +105,7 @@ import java.util.TimeZone;
  * &lt;result name="success" type="jasperReport7"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
- *   &lt;param name="format"&gt;CSV&lt;/param&gt;
+ *   &lt;param name="format"&gt;csv&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
@@ -211,7 +213,11 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
         try {
             LOG.debug("Export the print object to the desired output format: {}", format);
-            JasperReport7ExporterProvider<?> exporterProvider = invocation.getInvocationContext().getContainer().getInstance(JasperReport7ExporterProvider.class, format);
+            Container container = invocation.getInvocationContext().getContainer();
+            JasperReport7ExporterProvider<?> exporterProvider = container.getInstance(JasperReport7ExporterProvider.class, format);
+            if (exporterProvider == null) {
+                exporterProvider = container.getInstance(JasperReport7ExporterProvider.class, format.toLowerCase(Locale.ROOT));
+            }
             if (exporterProvider == null) {
                 throw new StrutsException("No exporter found for format: " + format);
             }

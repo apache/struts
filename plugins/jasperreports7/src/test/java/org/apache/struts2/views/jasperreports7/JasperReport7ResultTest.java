@@ -289,6 +289,20 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         assertThat(csv.lines()).containsExactly("Qux Report", "Hello Foo Bar!", "Hello Baz Qux!");
     }
 
+    public void testFormatLookupIsCaseInsensitive() throws Exception {
+        // given
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        result.setReportParameters("#{'title':'Qux'}");
+        result.setFormat("CSV");
+
+        // when
+        result.execute(this.invocation);
+
+        // then
+        assertThat(response.getContentType()).isEqualTo("text/csv");
+        assertThat(response.getContentAsString()).contains("Qux Report");
+    }
+
     public void testExportToRtf() throws Exception {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");

@@ -91,6 +91,8 @@ Never leave a cloned page's real CVE in place. Never invent a well-formed-lookin
 
 One CVE per independently fixable issue — separate fixes get separate bulletins and separate CVEs, per [CNA rules 4.1.10](https://www.cve.org/ResourcesSupport/AllResources/CNARules).
 
+For the full ASF process behind CVE handling — reserving, timing, and sharing an id with the reporter (steps 7–9) — see the [ASF committer security process](https://www.apache.org/security/committers.html). Consult it if anything here is unclear or a report raises a case our practice doesn't cover.
+
 ## The disclosure budget
 
 **The budget covers every prose section — `Problem`, `Backward compatibility`, and `Workaround` alike.** `Problem` is the section authors guard; `Backward compatibility` is the one that leaks, because describing what changed about the fixed behaviour describes the defect. A note saying which inputs are handled differently now points straight at the code path that was rewritten. Apply the table below to all three sections, and write the BC note in terms of what an application might *observe*, never what the fix altered internally.

@@ -452,7 +452,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             messageFormats.put(key, format);
         }
 
-        return format;
+        // MessageFormat is not thread-safe; the cached instance is a template that is never formatted directly
+        return (MessageFormat) format.clone();
     }
 
     protected String formatWithNullDetection(MessageFormat mf, Object[] args) {

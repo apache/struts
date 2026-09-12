@@ -70,7 +70,8 @@ public class JasperReport7HtmlExporterProvider implements JasperReport7ExporterP
         SimpleExporterInput input = new SimpleExporterInput(jasperPrint);
         exporter.setExporterInput(input);
 
-        try (OutputStream responseStream = response.getOutputStream()) {
+        try {
+            OutputStream responseStream = response.getOutputStream();
             SimpleHtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput(responseStream);
             HtmlResourceHandler imageHandler = new WebHtmlResourceHandler(request.getContextPath() + imageServletUrl + "%s");
             exporterOutput.setImageHandler(imageHandler);

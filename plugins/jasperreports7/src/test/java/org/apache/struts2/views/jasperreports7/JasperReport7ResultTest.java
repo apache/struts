@@ -19,6 +19,10 @@
 package org.apache.struts2.views.jasperreports7;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
@@ -29,6 +33,7 @@ import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ValueStack;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -303,6 +308,26 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         assertThat(response.getContentAsString()).contains("Qux Report");
     }
 
+    public void testExportWritesNothingAfterClosingTheResponseStream() throws Exception {
+        for (String format : List.of(JasperReport7Constants.FORMAT_PDF, JasperReport7Constants.FORMAT_CSV,
+                JasperReport7Constants.FORMAT_HTML, JasperReport7Constants.FORMAT_RTF,
+                JasperReport7Constants.FORMAT_XML, JasperReport7Constants.FORMAT_XLSX)) {
+            // given
+            response.setCommitted(false);
+            response.reset();
+            ActionContext.getContext().withServletResponse(new StrictCloseResponse(response));
+            result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+            result.setReportParameters("#{'title':'Qux'}");
+            result.setFormat(format);
+
+            // when
+            result.execute(this.invocation);
+
+            // then
+            assertThat(response.getContentAsByteArray()).as(format).isNotEmpty();
+        }
+    }
+
     public void testExportToRtf() throws Exception {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
@@ -384,6 +409,53 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         URL url = ClassLoaderUtil.getResource(resource, this.getClass());
         JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
         result.setLocation(resource + ".jasper");
+    }
+
+    /**
+     * Behaves like a servlet container: once the output stream is closed, further writes are lost.
+     */
+    private static class StrictCloseResponse extends HttpServletResponseWrapper {
+
+        private ServletOutputStream stream;
+
+        StrictCloseResponse(HttpServletResponse response) {
+            super(response);
+        }
+
+        @Override
+        public ServletOutputStream getOutputStream() throws IOException {
+            if (stream == null) {
+                ServletOutputStream delegate = super.getOutputStream();
+                stream = new ServletOutputStream() {
+                    private boolean closed;
+
+                    @Override
+                    public void write(int b) throws IOException {
+                        if (closed) {
+                            throw new IOException("Stream closed");
+                        }
+                        delegate.write(b);
+                    }
+
+                    @Override
+                    public void close() throws IOException {
+                        closed = true;
+                        delegate.close();
+                    }
+
+                    @Override
+                    public boolean isReady() {
+                        return delegate.isReady();
+                    }
+
+                    @Override
+                    public void setWriteListener(WriteListener writeListener) {
+                        delegate.setWriteListener(writeListener);
+                    }
+                };
+            }
+            return stream;
+        }
     }
 
     private static final List<Map<String, String>> JR_MAP_ARRAY_DATA_SOURCE = Stream.<Map<String, String>>of(

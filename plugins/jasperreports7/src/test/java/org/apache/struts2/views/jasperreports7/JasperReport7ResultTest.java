@@ -27,7 +27,9 @@ import org.apache.struts2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ValueStack;
 
+import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +197,25 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         assertThat(response.getContentAsString()).contains("Baz Report");
     }
 
+    public void testFillFromReportParametersWithoutDataSourceOrConnection() throws Exception {
+        // given
+        stack.push(new Object() {
+            public Map<String, Object> getReportParameters() {
+                return Map.of("CSV_INPUT_STREAM",
+                        new ByteArrayInputStream("Foo,Bar\n".getBytes(StandardCharsets.UTF_8)));
+            }
+        });
+        result.setReportParameters("reportParameters");
+        compileAndUseReport("csv.jrxml");
+
+        // when
+        result.execute(this.invocation);
+
+        // then
+        assertThat(response.getContentType()).isEqualTo("text/xml");
+        assertThat(response.getContentAsString()).contains("Hello Foo Bar!");
+    }
+
     public void testExportToXml() throws Exception {
         // given
         result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
@@ -295,10 +316,15 @@ public class JasperReport7ResultTest extends StrutsTestCase {
 
         result = new JasperReport7Result();
         container.inject(result);
-        URL url = ClassLoaderUtil.getResource("org/apache/struts2/views/jasperreports7/simple.jrxml", this.getClass());
-        JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
-        result.setLocation("org/apache/struts2/views/jasperreports7/simple.jrxml.jasper");
+        compileAndUseReport("simple.jrxml");
         result.setFormat(JasperReport7Constants.FORMAT_XML);
+    }
+
+    private void compileAndUseReport(String jrxml) throws Exception {
+        String resource = "org/apache/struts2/views/jasperreports7/" + jrxml;
+        URL url = ClassLoaderUtil.getResource(resource, this.getClass());
+        JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
+        result.setLocation(resource + ".jasper");
     }
 
     private static final List<Map<String, String>> JR_MAP_ARRAY_DATA_SOURCE = Stream.<Map<String, String>>of(

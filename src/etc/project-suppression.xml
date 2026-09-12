@@ -19,14 +19,6 @@
 -->
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
     <suppress>
-        <notes><![CDATA[
-    file name: jasperreports-*.jar
-    https://community.jaspersoft.com/knowledgebase/faq/update-details-about-the-java-vulnerability-r4897/
-    One way to prevent such an attack would be to make sure the parent Java application runs on Java 17 or later, where this type of attack is blocked by some changes made to the Java platform itself.
-    ]]></notes>
-        <cve>CVE-2025-10492</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[false positive due to naming to close to apache tiles
         cpe:2.3:a:apache:tiles:*:*:*:*:*:*:*:* versions from (including) 2.0]]></notes>
         <cve>CVE-2023-49735</cve>

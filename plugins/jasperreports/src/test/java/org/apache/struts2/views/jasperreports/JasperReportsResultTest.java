@@ -171,6 +171,39 @@ public class JasperReportsResultTest extends StrutsTestCase {
         assertTrue(response.getContentAsString().contains("Qux Report"));
     }
 
+    public void testDeclaredParameterResolvedFromValueStack() throws Exception {
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        stack.push(new Object() {
+            public String getTitle() {
+                return "Shadow";
+            }
+        });
+
+        result.execute(this.invocation);
+
+        assertTrue(response.getContentAsString().contains("Shadow Report"));
+    }
+
+    public void testExplicitNullParameterIsNotShadowedByValueStack() throws Exception {
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        stack.push(new Object() {
+            public String getTitle() {
+                return "Shadow";
+            }
+
+            public Map<String, Object> getReportParameters() {
+                Map<String, Object> params = new HashMap<>();
+                params.put("title", null);
+                return params;
+            }
+        });
+        result.setReportParameters("reportParameters");
+
+        result.execute(this.invocation);
+
+        assertTrue(response.getContentAsString().contains("null Report"));
+    }
+
     public void testFillFromReportParametersWithoutDataSourceOrConnection() throws Exception {
         stack.push(new Object() {
             public Map<String, Object> getReportParameters() {

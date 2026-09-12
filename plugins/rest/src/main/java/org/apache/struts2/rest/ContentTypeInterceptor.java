@@ -27,6 +27,7 @@ import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,8 +35,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.FilterReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -62,9 +66,12 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ContentTypeInterceptor.class);
 
+    public static final int DEFAULT_MAX_LENGTH = 2_097_152;
+
     private ContentTypeHandlerManager selector;
     private ParameterAuthorizer parameterAuthorizer;
     private boolean requireAnnotations = false;
+    private int maxLength = DEFAULT_MAX_LENGTH;
 
     @Inject
     public void setContentTypeHandlerSelector(ContentTypeHandlerManager selector) {
@@ -81,6 +88,27 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
     }
 
+    @Inject(value = RestConstants.REST_CONTENT_MAX_LENGTH, required = false)
+    public void setMaxLength(String maxLength) {
+        if (StringUtils.isBlank(maxLength)) {
+            return;
+        }
+        int length;
+        try {
+            length = Integer.parseInt(maxLength.trim());
+        } catch (NumberFormatException e) {
+            LOG.warn("Ignoring non-numeric {} value: {}, keeping {}",
+                    RestConstants.REST_CONTENT_MAX_LENGTH, maxLength, this.maxLength);
+            return;
+        }
+        if (length < 1) {
+            LOG.warn("Ignoring out-of-range {} value: {}, expected 1 or more, keeping {}",
+                    RestConstants.REST_CONTENT_MAX_LENGTH, length, this.maxLength);
+            return;
+        }
+        this.maxLength = length;
+    }
+
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         ContentTypeHandler handler = selector.getHandlerForRequest(request);
@@ -91,19 +119,35 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         }
 
         if (request.getContentLength() > 0) {
-            applyRequestBody(invocation, handler, target, openBodyReader(request));
+            BoundedReader reader = new BoundedReader(openBodyReader(request), maxLength);
+            try {
+                applyRequestBody(invocation, handler, target, reader);
+            } catch (Exception e) {
+                if (reader.limitExceeded()) {
+                    throw requestBodyTooLarge();
+                }
+                throw e;
+            }
+            if (reader.limitExceeded()) {
+                throw requestBodyTooLarge();
+            }
         }
         return invocation.invoke();
     }
 
-    private static InputStreamReader openBodyReader(HttpServletRequest request) throws java.io.IOException {
+    private RequestBodyTooLargeException requestBodyTooLarge() {
+        return new RequestBodyTooLargeException("Request body exceeds maximum allowed length ("
+                + maxLength + "). Use " + RestConstants.REST_CONTENT_MAX_LENGTH + " to increase the limit.");
+    }
+
+    private static InputStreamReader openBodyReader(HttpServletRequest request) throws IOException {
         String encoding = request.getCharacterEncoding();
         InputStream is = request.getInputStream();
         return encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
     }
 
     private void applyRequestBody(ActionInvocation invocation, ContentTypeHandler handler, Object target,
-                                  InputStreamReader reader) throws Exception {
+                                  Reader reader) throws Exception {
         if (!requireAnnotations) {
             // Direct deserialization (backward compat when requireAnnotations is not enabled).
             handler.toObject(invocation, reader, target);
@@ -122,7 +166,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
      * for the call duration.
      */
     private void applyWithAuthorizationContext(ActionInvocation invocation, ContentTypeHandler handler, Object target,
-                                               InputStreamReader reader) throws java.io.IOException {
+                                               Reader reader) throws IOException {
         Object action = invocation.getAction();
         Object resolvedTarget = parameterAuthorizer.resolveTarget(action);
         org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext.bind(
@@ -141,7 +185,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
      * unauthorized property is nulled out, so skipping is the safer choice).
      */
     private void applyTwoPhaseDeserialize(ActionInvocation invocation, ContentTypeHandler handler, Object target,
-                                          InputStreamReader reader) throws Exception {
+                                          Reader reader) throws Exception {
         Object freshInstance = createFreshInstance(target.getClass());
         if (freshInstance == null) {
             LOG.warn("REST body rejected: requireAnnotations=true but [{}] has no no-arg constructor; "
@@ -376,6 +420,62 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Stops the handler at {@code struts.rest.content.maxLength} characters. The handler may wrap the
+     * {@link IOException} thrown here in its own type, so {@link #intercept} consults
+     * {@link #limitExceeded()} afterwards rather than relying on what propagates.
+     */
+    private static final class BoundedReader extends FilterReader {
+
+        private final int limit;
+        private long consumed;
+        private boolean limitExceeded;
+
+        BoundedReader(Reader in, int limit) {
+            super(in);
+            this.limit = limit;
+        }
+
+        @Override
+        public int read() throws IOException {
+            int c = super.read();
+            if (c != -1) {
+                consumed(1);
+            }
+            return c;
+        }
+
+        @Override
+        public int read(char[] buf, int off, int len) throws IOException {
+            int n = super.read(buf, off, len);
+            if (n > 0) {
+                consumed(n);
+            }
+            return n;
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long skipped = super.skip(n);
+            if (skipped > 0) {
+                consumed(skipped);
+            }
+            return skipped;
+        }
+
+        private void consumed(long n) throws IOException {
+            consumed += n;
+            if (consumed > limit) {
+                limitExceeded = true;
+                throw new IOException("Request body exceeds " + limit + " characters");
+            }
+        }
+
+        boolean limitExceeded() {
+            return limitExceeded;
+        }
     }
 
 }

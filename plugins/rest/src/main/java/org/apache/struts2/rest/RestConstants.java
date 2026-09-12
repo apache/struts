@@ -36,4 +36,5 @@ public class RestConstants {
     public static final String REST_MAPPER_PUT_CONTINUE_METHOD_NAME = "struts.mapper.putContinueMethodName";
     public static final String STRUTS_REST_NAMESPACE = "struts.rest.namespace";
     public static final String REST_VALIDATION_FAILURE_STATUS_CODE = "struts.rest.validationFailureStatusCode";
+    public static final String REST_CONTENT_MAX_LENGTH = "struts.rest.content.maxLength";
 }

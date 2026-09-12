@@ -197,6 +197,29 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         assertThat(response.getContentAsString()).contains("Baz Report");
     }
 
+    public void testExplicitNullParameterIsNotShadowedByValueStack() throws Exception {
+        // given
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        stack.push(new Object() {
+            public String getTitle() {
+                return "Shadow";
+            }
+
+            public Map<String, Object> getReportParameters() {
+                Map<String, Object> params = new HashMap<>();
+                params.put("title", null);
+                return params;
+            }
+        });
+        result.setReportParameters("reportParameters");
+
+        // when
+        result.execute(this.invocation);
+
+        // then
+        assertThat(response.getContentAsString()).contains("null Report");
+    }
+
     public void testFillFromReportParametersWithoutDataSourceOrConnection() throws Exception {
         // given
         stack.push(new Object() {

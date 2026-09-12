@@ -66,17 +66,14 @@ public class ValueStackShadowMap extends HashMap<String, Object> {
      * Implementation of get(), overriding HashMap implementation.
      *
      * @param key - The key to get in HashMap and if not found there from the valueStack.
-     * @return value - The object from HashMap or if null, from the valueStack.
+     * @return value - The object from HashMap or, if the key is absent, from the valueStack.
      * @see java.util.HashMap#get
      */
     @Override
     public Object get(Object key) {
-        Object value = super.get(key);
-
-        if (key != null && value == null) {
-            value = valueStack.findValue(key.toString());
+        if (key == null || super.containsKey(key)) {
+            return super.get(key);
         }
-
-        return value;
+        return valueStack.findValue(key.toString());
     }
 }

@@ -53,10 +53,11 @@ public class ValueStackShadowMap extends HashMap<String, Object> {
      * @return <tt>true</tt>, if contains key, <tt>false</tt> otherwise.
      * @see java.util.HashMap#containsKey
      */
-    public boolean containsKey(String key) {
+    @Override
+    public boolean containsKey(Object key) {
         boolean hasKey = super.containsKey(key);
 
-        if (!hasKey && valueStack.findValue(key) != null) {
+        if (!hasKey && key != null && valueStack.findValue(key.toString()) != null) {
             hasKey = true;
         }
 
@@ -67,16 +68,30 @@ public class ValueStackShadowMap extends HashMap<String, Object> {
      * Implementation of get(), overriding HashMap implementation.
      *
      * @param key - The key to get in HashMap and if not found there from the valueStack.
-     * @return value - The object from HashMap or if null, from the valueStack.
+     * @return value - The object from HashMap or, if the key is absent, from the valueStack.
      * @see java.util.HashMap#get
      */
-    public Object get(String key) {
-        Object value = super.get(key);
-
-        if ((value == null)) {
-            value = valueStack.findValue((String) key);
+    @Override
+    public Object get(Object key) {
+        if (key == null || super.containsKey(key)) {
+            return super.get(key);
         }
+        return valueStack.findValue(key.toString());
+    }
 
-        return value;
+    /**
+     * @deprecated since 7.4.0, use {@link #containsKey(Object)}
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
+    public boolean containsKey(String key) {
+        return containsKey((Object) key);
+    }
+
+    /**
+     * @deprecated since 7.4.0, use {@link #get(Object)}
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
+    public Object get(String key) {
+        return get((Object) key);
     }
 }

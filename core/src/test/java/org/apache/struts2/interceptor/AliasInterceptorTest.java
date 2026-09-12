@@ -101,6 +101,37 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertNull("aliasDest must remain unset after a failed conversion", action.getAliasDest());
     }
 
+    // WW-3226: there is no 'overwrite' flag; whichever of 'alias' and 'params' runs last wins when the
+    // request carries both the source name and the alias target. The docs promise exactly this.
+    public void testDirectParameterWinsWhenAliasRunsBeforeParams() throws Exception {
+        SimpleAction action = executeWithBothNamesSubmitted("aliasBeforeParams");
+
+        assertEquals("from-source", action.getAliasSource());
+        assertEquals("direct", action.getAliasDest());
+    }
+
+    public void testAliasOverridesDirectParameterWhenAliasRunsAfterParams() throws Exception {
+        SimpleAction action = executeWithBothNamesSubmitted("aliasAfterParams");
+
+        assertEquals("from-source", action.getAliasSource());
+        assertEquals("from-source", action.getAliasDest());
+    }
+
+    private SimpleAction executeWithBothNamesSubmitted(String actionName) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("aliasSource", "from-source");
+        params.put("aliasDest", "direct");
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
+
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-alias-ordering.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", actionName, null, extraContext.getContextMap());
+        proxy.execute();
+        return (SimpleAction) proxy.getAction();
+    }
+
     public void testNameNotAccepted() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("aliasSource", "source here");

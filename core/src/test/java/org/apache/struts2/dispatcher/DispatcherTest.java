@@ -18,6 +18,12 @@
  */
 package org.apache.struts2.dispatcher;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.ObjectFactory;
@@ -50,8 +56,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -609,6 +617,52 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
         // struts.locale unset in this dispatcher -> fall back to the JVM default.
         assertEquals("Unavailable request locale must fall back to system default",
                 Locale.getDefault(), dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testGetLocale_With_BadDefaultLocale_ValidateOn_UnavailableRequestLocale() {
+        Map<String, String> params = new HashMap<>();
+        params.put(StrutsConstants.STRUTS_LOCALE, "This_is_not_a_valid_Locale_string");
+        params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
+        initDispatcher(params);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getLocale()).thenReturn(new Locale("en", "US", "xzz99"));
+
+        assertEquals("Unparseable struts.locale and rejected request locale must fall back to system default",
+                Locale.getDefault(), dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testGetLocale_With_BadDefaultLocale_WarnsWithResolvedLocaleNotRequestLocale() {
+        Map<String, String> params = new HashMap<>();
+        params.put(StrutsConstants.STRUTS_LOCALE, "This_is_not_a_valid_Locale_string");
+        params.put(StrutsConstants.STRUTS_LOCALE_VALIDATE_REQUEST, "true");
+        initDispatcher(params);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getLocale()).thenReturn(new Locale("en", "US", "xzz99"));
+
+        List<String> warnings = new ArrayList<>();
+        Logger logger = (Logger) LogManager.getLogger(Dispatcher.class);
+        AbstractAppender appender = new AbstractAppender("WW-5670", null, null, false, Property.EMPTY_ARRAY) {
+            @Override
+            public void append(LogEvent event) {
+                if (event.getLevel() == Level.WARN) {
+                    warnings.add(event.getMessage().getFormattedMessage());
+                }
+            }
+        };
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            dispatcher.getLocale(request);
+        } finally {
+            logger.removeAppender(appender);
+            appender.stop();
+        }
+
+        assertThat(warnings).singleElement().asString()
+                .contains("defaulting to resolved locale [" + Locale.getDefault() + "]")
+                .doesNotContain("request locale");
     }
 
     @Test

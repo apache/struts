@@ -152,6 +152,11 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
+     * {@link #defaultLocale} parsed once at injection time; {@code null} when unset or unparseable.
+     */
+    private Locale parsedDefaultLocale;
+
+    /**
      * Store state of {@link StrutsConstants#STRUTS_LOCALE_VALIDATE_REQUEST} setting.
      */
     private boolean validateRequestLocale = false;
@@ -312,6 +317,15 @@ public class Dispatcher {
      */
     @Inject(value = StrutsConstants.STRUTS_LOCALE, required = false)
     public void setDefaultLocale(String val) {
+        Locale parsed = null;
+        if (val != null) {
+            try {
+                parsed = LocaleUtils.toLocale(val);
+            } catch (IllegalArgumentException e) {
+                LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, the locale will be resolved per request instead", val), e);
+            }
+        }
+        parsedDefaultLocale = parsed;
         defaultLocale = val;
     }
 
@@ -938,20 +952,18 @@ public class Dispatcher {
     }
 
     protected Locale getLocale(HttpServletRequest request) {
+        if (parsedDefaultLocale != null) {
+            return parsedDefaultLocale;
+        }
         Locale locale;
         if (defaultLocale != null) {
             try {
-                locale = LocaleUtils.toLocale(defaultLocale);
-            } catch (IllegalArgumentException e) {
-                try {
-                    locale = resolveRequestLocale(request);
-                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
-                                    defaultLocale, locale), e);
-                } catch (RuntimeException rex) {
-                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, and cannot get locale from HTTP Request, falling back to system default locale",
-                                    defaultLocale), rex);
-                    locale = Locale.getDefault();
-                }
+                locale = resolveRequestLocale(request);
+                LOG.warn("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to resolved locale [{}]", defaultLocale, locale);
+            } catch (RuntimeException rex) {
+                LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, and cannot get locale from HTTP Request, falling back to system default locale",
+                                defaultLocale), rex);
+                locale = Locale.getDefault();
             }
         } else {
             try {
@@ -975,12 +987,8 @@ public class Dispatcher {
         if (!validateRequestLocale || LocaleUtils.isAvailableLocale(locale)) {
             return locale;
         }
-        if (defaultLocale != null) {
-            try {
-                return LocaleUtils.toLocale(defaultLocale);
-            } catch (IllegalArgumentException e) {
-                LOG.debug("Configured 'struts.locale' = [{}] is not parseable; falling back to system default", defaultLocale);
-            }
+        if (parsedDefaultLocale != null) {
+            return parsedDefaultLocale;
         }
         LOG.debug("Request locale [{}] is not available; falling back to system default locale", locale);
         return Locale.getDefault();

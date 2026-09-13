@@ -21,7 +21,6 @@ package org.apache.struts2.interceptor.csp;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -50,7 +49,8 @@ public class DefaultCspSettings implements CspSettings {
 
     private final SecureRandom sRand = new SecureRandom();
 
-    private CspNonceSource nonceSource = CspNonceSource.SESSION;
+    private String nonceSource;
+    private String legacyNonceSource;
 
     protected String reportUri;
     protected String reportTo;
@@ -59,21 +59,27 @@ public class DefaultCspSettings implements CspSettings {
 
     @Inject(value = StrutsConstants.STRUTS_CSP_NONCE_SOURCE, required = false)
     public void setNonceSource(String nonceSource) {
-        if (StringUtils.isBlank(nonceSource)) {
-            this.nonceSource = CspNonceSource.SESSION;
-        } else {
-            this.nonceSource = CspNonceSource.valueOf(nonceSource.toUpperCase());
-        }
+        this.nonceSource = nonceSource;
+    }
+
+    /**
+     * @deprecated since 7.4.0, use {@link #setNonceSource(String)} instead
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
+    @Inject(value = StrutsConstants.STRUTS_CSP_NONCE_SOURCE_LEGACY, required = false)
+    public void setLegacyNonceSource(String legacyNonceSource) {
+        this.legacyNonceSource = legacyNonceSource;
     }
 
     @Override
     public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {
-        if (this.nonceSource == CspNonceSource.SESSION) {
+        CspNonceSource source = CspNonceSource.resolve(nonceSource, legacyNonceSource);
+        if (source == CspNonceSource.SESSION) {
             addCspHeadersWithSession(request, response);
-        } else if (this.nonceSource == CspNonceSource.REQUEST) {
+        } else if (source == CspNonceSource.REQUEST) {
             addCspHeadersWithRequest(request, response);
         } else {
-            LOG.warn("Unknown nonce source: {}, ignoring CSP settings", nonceSource);
+            LOG.warn("Unknown nonce source: {}, ignoring CSP settings", source);
         }
     }
 

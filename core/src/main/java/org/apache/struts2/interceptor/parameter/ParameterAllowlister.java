@@ -41,4 +41,22 @@ public interface ParameterAllowlister {
      * @param target        the object receiving the parameter value (the action, or the model for ModelDriven actions)
      */
     void primeAllowlistForPath(String parameterName, Object target);
+
+    /**
+     * Primes for a parameter that {@link ParameterAuthorizer#isAuthorized} may have granted on either object: a
+     * {@link org.apache.struts2.ModelDriven} action's own annotated members are authorized on the action while the
+     * resolved target is its model, so both are primed. Each priming is a no-op unless that object annotates the
+     * root property, so priming the second object cannot allowlist anything the developer did not declare.
+     *
+     * @param parameterName the parameter name (e.g. {@code "user.role"}, {@code "items[0].name"})
+     * @param target        the object receiving the parameter value, as resolved by {@link ParameterAuthorizer#resolveTarget}
+     * @param action        the action instance
+     * @since 7.4.0
+     */
+    default void primeAllowlistForPath(String parameterName, Object target, Object action) {
+        primeAllowlistForPath(parameterName, target);
+        if (target != action) {
+            primeAllowlistForPath(parameterName, action);
+        }
+    }
 }

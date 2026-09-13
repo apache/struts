@@ -38,6 +38,7 @@ import org.apache.struts2.interceptor.ValidationAware;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.ognl.OgnlValueStack;
 import org.apache.struts2.ognl.OgnlValueStackFactory;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
@@ -281,6 +282,41 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals("bound on the model", action.getModel().getName());
         assertEquals("bound through the annotated fluent setter", action.getAllowed());
         assertNull(action.getSecret());
+    }
+
+    /**
+     * WW-5710: a nested property annotated on the ModelDriven action itself is authorized on the action, but the
+     * allowlist used to be primed against the model only, so with the allowlist enabled (the default) OGNL refused
+     * the path the authorizer had just granted. The model property alongside proves the parameters were applied.
+     */
+    public void testModelDrivenAnnotatedNestedPropertyOnActionIsAllowlisted() throws Exception {
+        loadButSet(Map.of(
+                StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true",
+                StrutsConstants.STRUTS_ALLOWLIST_ENABLE, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        NestedModelDrivenAction action = new NestedModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+        // What configuration loading does for the action class and ModelDrivenInterceptor for the model;
+        // Address is allowlisted by nothing but the priming under test
+        ThreadAllowlist threadAllowlist = container.getInstance(ThreadAllowlist.class);
+        threadAllowlist.allowClassHierarchy(NestedModelDrivenAction.class);
+        threadAllowlist.allowClassHierarchy(TestBean.class);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("address.city", "bound through the action's annotated getter");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        try {
+            assertEquals("bound on the model", action.getModel().getName());
+            assertEquals("bound through the action's annotated getter", action.getAddress().getCity());
+        } finally {
+            threadAllowlist.clearAllowlist();
+        }
     }
 
     public void testParametersDoesNotAffectSession() throws Exception {
@@ -1039,6 +1075,23 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         @StrutsParameter
         public FluentModelDrivenAction setAllowed(String allowed) { this.allowed = allowed; return this; }
         public String getAllowed() { return allowed; }
+    }
+
+    public static class NestedModelDrivenAction implements ModelDriven<TestBean> {
+        private final TestBean model = new TestBean();
+        private final Address address = new Address();
+
+        @Override
+        public TestBean getModel() { return model; }
+
+        @StrutsParameter(depth = 1)
+        public Address getAddress() { return address; }
+    }
+
+    public static class Address {
+        private String city;
+        public String getCity() { return city; }
+        public void setCity(String city) { this.city = city; }
     }
 
     private class NoParametersAction implements Action, NoParameters {

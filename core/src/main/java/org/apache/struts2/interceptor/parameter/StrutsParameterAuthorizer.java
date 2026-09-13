@@ -30,15 +30,18 @@ import org.apache.struts2.util.ProxyService;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
+import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Comparator.comparingInt;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
 import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
@@ -162,10 +165,9 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * A property declared on neither is allowed: typically it is bound by a custom OGNL property accessor on
      * the model, such as a Map-backed model. That fallback guarantees less than it may appear to - only that
      * the name reaches no member {@link #declaresProperty} can see. OGNL walks the whole stack, so such a name
-     * can still land on the action wherever the action absorbs it by a route introspection here does not model:
-     * being a {@code Map} itself, or declaring a setter that OGNL matches on name and arity while
-     * {@link java.beans.Introspector} does not, a fluent one for instance - see WW-5709. Neither case is more
-     * permissive than the blanket exemption this scoping replaces.
+     * can still land on the action wherever the action absorbs it by a route introspection here does not model,
+     * being a {@code Map} itself for instance. That is no more permissive than the blanket exemption this
+     * scoping replaces.
      * <p>
      * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent,
      * so it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
@@ -203,13 +205,53 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * scoping exists to prevent. Inherited public fields count for the same reason, that OGNL can set them.
      */
     protected boolean declaresProperty(Object target, String property, long paramDepth) {
+        return findBindableAccessor(target, property, paramDepth).isPresent()
+                || declaresBindablePublicField(target, property, paramDepth);
+    }
+
+    /**
+     * The method OGNL would go through to bind {@code property} on {@code target} at this depth: the setter for a
+     * depth-0 parameter, the getter for a nested one.
+     * <p>
+     * The setter is matched the way OGNL matches it - a public instance method named {@code set} plus the
+     * capitalised property name, taking one argument - and not through {@link PropertyDescriptor#getWriteMethod()},
+     * which {@link java.beans.Introspector} only fills in for a {@code void} setter. A fluent setter returning
+     * {@code this} is just as bindable to OGNL, so it has to be just as visible here, both to carry a
+     * {@link StrutsParameter} annotation and to count as declared on a {@link ModelDriven} action.
+     * <p>
+     * Where several setters qualify, the one declared furthest down the hierarchy wins - an override is what OGNL
+     * invokes and what the developer annotated, while the erased setter of a generic superclass is listed
+     * alongside it and carries no annotation - and among overloads declared at that level an annotated one, since
+     * annotating any overload declares the property request surface.
+     */
+    protected Optional<Method> findBindableAccessor(Object target, String property, long paramDepth) {
         BeanInfo beanInfo = getBeanInfo(target);
-        if (beanInfo != null && Arrays.stream(beanInfo.getPropertyDescriptors())
-                .filter(desc -> desc.getName().equals(property))
-                .anyMatch(desc -> (paramDepth == 0 ? desc.getWriteMethod() : desc.getReadMethod()) != null)) {
-            return true;
+        if (beanInfo == null) {
+            return Optional.empty();
         }
-        return declaresBindablePublicField(target, property, paramDepth);
+        if (paramDepth == 0) {
+            String setterName = "set" + Character.toUpperCase(property.charAt(0)) + property.substring(1);
+            return Arrays.stream(beanInfo.getMethodDescriptors())
+                    .map(MethodDescriptor::getMethod)
+                    .filter(method -> method.getName().equals(setterName)
+                            && method.getParameterCount() == 1
+                            && !Modifier.isStatic(method.getModifiers()))
+                    .max(comparingInt((Method method) -> inheritanceDepth(method.getDeclaringClass()))
+                            .thenComparing(method -> getParameterAnnotation(method) != null));
+        }
+        return Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(desc -> desc.getName().equals(property))
+                .map(PropertyDescriptor::getReadMethod)
+                .filter(Objects::nonNull)
+                .findFirst();
+    }
+
+    private static int inheritanceDepth(Class<?> type) {
+        int depth = 0;
+        for (Class<?> ancestor = type.getSuperclass(); ancestor != null; ancestor = ancestor.getSuperclass()) {
+            depth++;
+        }
+        return depth;
     }
 
     /**
@@ -231,35 +273,29 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     protected boolean hasValidAnnotatedMember(String rootProperty, Object target, long paramDepth) {
         LOG.debug("Checking target [{}] for a matching, correctly annotated member for property [{}]",
                 target.getClass().getSimpleName(), rootProperty);
-        BeanInfo beanInfo = getBeanInfo(target);
-        if (beanInfo == null) {
-            return hasValidAnnotatedField(target, rootProperty, paramDepth);
-        }
-
-        Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
-                .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
-        if (propDescOpt.isEmpty()) {
-            return hasValidAnnotatedField(target, rootProperty, paramDepth);
-        }
-
-        if (hasValidAnnotatedPropertyDescriptor(target, propDescOpt.get(), paramDepth)) {
+        Optional<Method> accessor = findBindableAccessor(target, rootProperty, paramDepth);
+        if (accessor.isPresent() && hasValidAnnotatedMethod(target, accessor.get(), paramDepth)) {
             return true;
         }
-
         return hasValidAnnotatedField(target, rootProperty, paramDepth);
     }
 
+    /**
+     * @deprecated a {@link PropertyDescriptor} cannot describe every setter OGNL binds through; use
+     * {@link #findBindableAccessor} with {@link #hasValidAnnotatedMethod} instead
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     protected boolean hasValidAnnotatedPropertyDescriptor(Object target, PropertyDescriptor propDesc, long paramDepth) {
-        Class<?> targetClass = ultimateClass(target);
         Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
-        if (relevantMethod == null) {
-            return false;
-        }
-        if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
+        return relevantMethod != null && hasValidAnnotatedMethod(target, relevantMethod, paramDepth);
+    }
+
+    protected boolean hasValidAnnotatedMethod(Object target, Method method, long paramDepth) {
+        if (getPermittedInjectionDepth(method) < paramDepth) {
             String logMessage = format(
                     "Parameter injection for method [%s] on target [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
-                    relevantMethod.getName(),
-                    relevantMethod.getDeclaringClass().getName());
+                    method.getName(),
+                    method.getDeclaringClass().getName());
             if (devMode) {
                 notifyDeveloperOfError(LOG, target, logMessage);
             } else {
@@ -267,8 +303,8 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
             }
             return false;
         }
-        LOG.debug("Success: Matching annotated method [{}] found for property [{}] of depth [{}] on target [{}]",
-                relevantMethod.getName(), propDesc.getName(), paramDepth, targetClass.getSimpleName());
+        LOG.debug("Success: Matching annotated method [{}] of depth [{}] found on target [{}]",
+                method.getName(), paramDepth, ultimateClass(target).getSimpleName());
         return true;
     }
 

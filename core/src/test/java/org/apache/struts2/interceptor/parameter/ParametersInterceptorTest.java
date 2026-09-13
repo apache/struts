@@ -22,7 +22,9 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.ModelDrivenAction;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.text.TextProvider;
@@ -253,6 +255,32 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(nameVal, model.getName());
         assertEquals(15, model.getCount());
         assertEquals(fooVal, action.getFoo());
+    }
+
+    /**
+     * WW-5709: OGNL binds through a public one-argument setX method whatever it returns, so a fluent setter on a
+     * ModelDriven action is as much the action's own member as a void one and needs the same annotation. The model
+     * property alongside it proves the parameters were applied at all.
+     */
+    public void testModelDrivenFluentSetterOnActionRequiresAnnotation() throws Exception {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        FluentModelDrivenAction action = new FluentModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("secret", "leaked through the fluent setter");
+        params.put("allowed", "bound through the annotated fluent setter");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertEquals("bound through the annotated fluent setter", action.getAllowed());
+        assertNull(action.getSecret());
     }
 
     public void testParametersDoesNotAffectSession() throws Exception {
@@ -995,6 +1023,23 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
     */
 
+
+    public static class FluentModelDrivenAction implements ModelDriven<TestBean> {
+        private final TestBean model = new TestBean();
+        private String secret;
+        private String allowed;
+
+        @Override
+        public TestBean getModel() { return model; }
+
+        // NO @StrutsParameter
+        public FluentModelDrivenAction setSecret(String secret) { this.secret = secret; return this; }
+        public String getSecret() { return secret; }
+
+        @StrutsParameter
+        public FluentModelDrivenAction setAllowed(String allowed) { this.allowed = allowed; return this; }
+        public String getAllowed() { return allowed; }
+    }
 
     private class NoParametersAction implements Action, NoParameters {
 

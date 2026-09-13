@@ -219,6 +219,68 @@ public class ParameterAuthorizerTest {
         assertThat(authorizer.isAuthorized("constant", action.getModel(), action)).isFalse();
     }
 
+    // --- Fluent setters (WW-5709) ---
+
+    @Test
+    public void annotatedFluentSetter_authorized() {
+        // OGNL binds through any public one-argument setX method, whatever it returns; java.beans only
+        // sees void ones. The annotation has to count on the method OGNL will actually call.
+        var action = new FluentAction();
+        assertThat(authorizer.isAuthorized("name", action, action)).isTrue();
+    }
+
+    @Test
+    public void unannotatedFluentSetter_rejected() {
+        var action = new FluentAction();
+        assertThat(authorizer.isAuthorized("role", action, action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_unannotatedFluentSetterOnAction_rejected() {
+        // Invisible to java.beans, the fluent setter used to look declared on neither the model nor the
+        // action and took the custom-accessor fallback, which is the one gap WW-5698 left open.
+        var action = new ModelActionWithFluentSetter();
+        assertThat(authorizer.isAuthorized("actionSecret", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_annotatedFluentSetterOnAction_authorized() {
+        var action = new ModelActionWithFluentSetter();
+        assertThat(authorizer.isAuthorized("actionAllowed", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_fluentSetterOnModelShadowingUnannotatedActionSetter_authorized() {
+        // The model absorbs the parameter through its fluent setter, so the action's unannotated
+        // namesake is never reached.
+        var action = new ModelActionWithFluentModel();
+        assertThat(authorizer.isAuthorized("shared", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_staticSetterNamesakeOfUnannotatedActionProperty_rejected() {
+        // OGNL never invokes static methods on a request path, so a static setX on the model does not
+        // absorb the parameter and must not exempt the action's namesake.
+        var action = new ModelActionWithStaticSetterNamesake();
+        assertThat(authorizer.isAuthorized("constant", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void annotatedSetterOverridingGenericBaseSetter_authorized() {
+        // The base class's erased setModel(Object) is listed alongside the override. The override is the
+        // method OGNL invokes and the one the developer annotated, so it must be the one judged.
+        var action = new GenericOverrideAction();
+        assertThat(authorizer.isAuthorized("model", action, action)).isTrue();
+    }
+
+    @Test
+    public void annotatedSetterBesideUnannotatedOverload_authorized() {
+        // Overloads tie on inheritance depth and the Introspector lists them in type-name order, so
+        // setAge(int) comes before setAge(String). Annotating either overload declares the property.
+        var action = new OverloadedSetterAction();
+        assertThat(authorizer.isAuthorized("age", action, action)).isTrue();
+    }
+
     @Test
     public void modelDriven_classProperty_rejected() {
         // OgnlUtil introspects with Object as the stop class, so "class" shows up on no descriptor list
@@ -465,6 +527,93 @@ public class ParameterAuthorizerTest {
         // NO @StrutsParameter
         public void setConstant(String constant) { this.constant = constant; }
         public String getConstant() { return constant; }
+    }
+
+    public static class FluentAction {
+        private String name;
+        private String role;
+
+        @StrutsParameter
+        public FluentAction setName(String name) { this.name = name; return this; }
+        public String getName() { return name; }
+
+        // NO @StrutsParameter
+        public FluentAction setRole(String role) { this.role = role; return this; }
+        public String getRole() { return role; }
+    }
+
+    public static class ModelActionWithFluentSetter implements ModelDriven<Pojo> {
+        private final Pojo model = new Pojo();
+        private String actionSecret;
+        private String actionAllowed;
+
+        @Override
+        public Pojo getModel() { return model; }
+
+        // NO @StrutsParameter
+        public ModelActionWithFluentSetter setActionSecret(String actionSecret) { this.actionSecret = actionSecret; return this; }
+        public String getActionSecret() { return actionSecret; }
+
+        @StrutsParameter
+        public ModelActionWithFluentSetter setActionAllowed(String actionAllowed) { this.actionAllowed = actionAllowed; return this; }
+        public String getActionAllowed() { return actionAllowed; }
+    }
+
+    public static class FluentModel {
+        private String shared;
+        public FluentModel setShared(String shared) { this.shared = shared; return this; }
+        public String getShared() { return shared; }
+    }
+
+    public static class ModelActionWithFluentModel implements ModelDriven<FluentModel> {
+        private final FluentModel model = new FluentModel();
+        private String shared;
+
+        @Override
+        public FluentModel getModel() { return model; }
+
+        // NO @StrutsParameter
+        public void setShared(String shared) { this.shared = shared; }
+        public String getShared() { return shared; }
+    }
+
+    public static class ModelWithStaticSetter {
+        public static void setConstant(String ignored) { }
+    }
+
+    public static class ModelActionWithStaticSetterNamesake implements ModelDriven<ModelWithStaticSetter> {
+        private final ModelWithStaticSetter model = new ModelWithStaticSetter();
+        private String constant;
+
+        @Override
+        public ModelWithStaticSetter getModel() { return model; }
+
+        // NO @StrutsParameter
+        public void setConstant(String constant) { this.constant = constant; }
+        public String getConstant() { return constant; }
+    }
+
+    public static class GenericBase<T> {
+        public void setModel(T model) { }
+    }
+
+    public static class GenericOverrideAction extends GenericBase<String> {
+        private String model;
+
+        @StrutsParameter
+        @Override
+        public void setModel(String model) { this.model = model; }
+        public String getModel() { return model; }
+    }
+
+    public static class OverloadedSetterAction {
+        private String age;
+
+        @StrutsParameter
+        public void setAge(String age) { this.age = age; }
+        // NO @StrutsParameter - convenience overload
+        public void setAge(int age) { this.age = String.valueOf(age); }
+        public String getAge() { return age; }
     }
 
     public static class Pojo {

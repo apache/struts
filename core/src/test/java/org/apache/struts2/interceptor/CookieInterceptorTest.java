@@ -29,7 +29,11 @@ import jakarta.servlet.http.Cookie;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.action.CookiesAware;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.interceptor.parameter.ParameterAllowlister;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
@@ -469,6 +473,59 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(sessionCookieName));
         assertFalse(excludedName.get(appCookieName));
         assertFalse(excludedName.get(reqCookieName));
+    }
+
+    /**
+     * WW-5710: a nested cookie path annotated on the ModelDriven action itself is authorized on the action, so the
+     * allowlist has to be primed against the action as well, not only against the model.
+     */
+    public void testNestedCookieOnModelDrivenActionMemberPrimesAllowlist() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setCookies(new Cookie("address.city", "London"));
+        ServletActionContext.setRequest(request);
+
+        ModelDrivenActionWithNestedMember action = new ModelDrivenActionWithNestedMember();
+        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext().getValueStack().push(action.getModel());
+
+        ActionInvocation invocation = (ActionInvocation) createMock(ActionInvocation.class);
+        expect(invocation.getAction()).andReturn(action);
+        expect(invocation.invoke()).andReturn(Action.SUCCESS);
+        replay(invocation);
+
+        CookieInterceptor interceptor = new CookieInterceptor();
+        interceptor.setCookiesName("*");
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        interceptor.setParameterAuthorizer(container.getInstance(ParameterAuthorizer.class));
+        interceptor.setParameterAllowlister(container.getInstance(ParameterAllowlister.class));
+        ThreadAllowlist threadAllowlist = container.getInstance(ThreadAllowlist.class);
+
+        try {
+            interceptor.intercept(invocation);
+            assertTrue(threadAllowlist.getAllowlist().contains(Address.class));
+            assertEquals("London", action.getAddress().getCity());
+        } finally {
+            threadAllowlist.clearAllowlist();
+        }
+        verify(invocation);
+    }
+
+    public static class ModelDrivenActionWithNestedMember extends ActionSupport implements ModelDriven<Object> {
+        private final Object model = new Object();
+        private final Address address = new Address();
+
+        @Override
+        public Object getModel() { return model; }
+
+        @StrutsParameter(depth = 1)
+        public Address getAddress() { return address; }
+    }
+
+    public static class Address {
+        private String city;
+        public String getCity() { return city; }
+        public void setCity(String city) { this.city = city; }
     }
 
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {

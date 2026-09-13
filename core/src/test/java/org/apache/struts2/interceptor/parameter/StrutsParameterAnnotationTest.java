@@ -424,6 +424,23 @@ public class StrutsParameterAnnotationTest {
         testParameter(proxiedAction, "name.nested", true);
     }
 
+    /**
+     * WW-5710: a nested property annotated on the ModelDriven action itself is authorized on the action, so the
+     * allowlist has to be primed against the action as well, not only against the model.
+     */
+    @Test
+    public void modelDrivenAction_annotatedNestedPropertyOnAction_allowlisted() {
+        var action = new ModelActionWithNestedProperty();
+
+        // Emulate ModelDrivenInterceptor running previously
+        var valueStack = new StubValueStack();
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        testParameter(action, "publicPojo.key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
+    }
+
     public static class FieldAction {
         @StrutsParameter
         private String privateStr;
@@ -513,6 +530,20 @@ public class StrutsParameterAnnotationTest {
         @Override
         public Pojo getModel() {
             return new Pojo();
+        }
+    }
+
+    public static class ModelActionWithNestedProperty implements ModelDriven<Pojo> {
+        private final Pojo model = new Pojo();
+
+        @Override
+        public Pojo getModel() {
+            return model;
+        }
+
+        @StrutsParameter(depth = 1)
+        public Pojo getPublicPojo() {
+            return null;
         }
     }
 

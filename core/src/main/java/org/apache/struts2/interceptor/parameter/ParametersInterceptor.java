@@ -378,7 +378,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
 
-        parameterAllowlister.primeAllowlistForPath(name, target);
+        parameterAllowlister.primeAllowlistForPath(name, target, action);
         return true;
     }
 

@@ -52,7 +52,7 @@ import static org.apache.struts2.security.DefaultAcceptedPatternsChecker.NESTING
  *   <li>{@code paramDepth == 0} — shallow setter; OGNL does not need to traverse</li>
  *   <li>the root property has no {@code @StrutsParameter} annotation reachable via {@link java.beans.PropertyDescriptor}
  *       or as a public field (e.g. a {@code ModelDriven} model whose properties are not individually annotated). A
- *       {@code LOG.debug} surfaces this case so the gap between authorization and OGNL traversal is observable.</li>
+ *       {@code LOG.debug} names the object that primed nothing, so a path OGNL then refuses can be traced back.</li>
  * </ul>
  *
  * @since 7.2.0
@@ -100,10 +100,9 @@ public class OgnlParameterAllowlister implements ParameterAllowlister {
         if (allowlistViaPublicField(target, normalisedRootProperty, paramDepth)) {
             return;
         }
-        // Authorization passed but no @StrutsParameter on the root property — e.g. ModelDriven model with no
-        // per-property annotations. OGNL won't be able to walk this nested path; surface the gap in logs.
-        LOG.debug("Parameter [{}] authorized but no @StrutsParameter on root property [{}] of [{}]; "
-                + "OGNL allowlist not primed and nested traversal may be blocked",
+        // No @StrutsParameter on the root property of this object - e.g. a ModelDriven model with no per-property
+        // annotations. Whether OGNL can still walk the path depends on the other objects primed for it.
+        LOG.debug("Parameter [{}] has no @StrutsParameter on root property [{}] of [{}]; nothing allowlisted from it",
                 parameterName, normalisedRootProperty, ultimateClass(target).getSimpleName());
     }
 

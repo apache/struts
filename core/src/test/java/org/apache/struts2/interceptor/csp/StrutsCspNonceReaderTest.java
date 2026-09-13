@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +50,7 @@ public class StrutsCspNonceReaderTest {
 
         assertEquals(CspNonceSource.SESSION, value.getSource());
         assertFalse(value.isNonceValueSet());
-        assertTrue("reader must not start a session", request.getSession(false) == null);
+        assertNull("reader must not start a session", request.getSession(false));
     }
 
     @Test

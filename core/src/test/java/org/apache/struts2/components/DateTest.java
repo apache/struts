@@ -87,21 +87,19 @@ public class DateTest extends StrutsInternalTestCase {
         Date date = new Date(stack);
         date.setDateFormatter(new SimpleDateFormatAdapter());
 
-        java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
-
-        String expected = prepareFormat().format(now);
-        context.put("myDate", now);
+        context.put("myDate", java.sql.Date.valueOf("2024-03-15"));
 
         Writer writer = new StringWriter();
 
         // when
         date.setName("myDate");
         date.setNice(false);
+        date.setFormat("yyyy-MM-dd");
         date.start(writer);
         date.end(writer, "");
 
         // then
-        assertEquals(expected, writer.toString());
+        assertEquals("2024-03-15", writer.toString());
     }
 
     public void testJavaSqlTime() {

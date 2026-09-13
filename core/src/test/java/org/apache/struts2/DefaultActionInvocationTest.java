@@ -460,6 +460,25 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
     }
 
     /**
+     * WW-5663: the same WithLazyParams interceptor referenced twice with different params. Each invocation
+     * must see its own ref's params; the lookup by name used to merge the first ref's params over every
+     * later one, so the action ended up with "first".
+     */
+    public void testInvokeWithLazyParamsRepeatedRefKeepsEachRefsOwnParams() throws Exception {
+        ActionContext extraContext = ActionContext.of();
+
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
+        container.inject(defaultActionInvocation);
+
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFooTwice", null, extraContext.getContextMap());
+        defaultActionInvocation.init(actionProxy);
+        defaultActionInvocation.invoke();
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+        assertEquals("second", action.getName());
+    }
+
+    /**
      * Regression for WW-5659: a {@code disabled} param resolved lazily from the value stack must skip
      * the interceptor for that invocation. It arrives through the interceptor mapping's params, so it
      * lands on the per-invocation holder and is honoured there, never on the shared interceptor.

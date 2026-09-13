@@ -72,6 +72,16 @@
             </interceptor-ref>
         </action>
 
+        <action name="LazyFooTwice" class="org.apache.struts2.SimpleAction">
+            <result name="error" type="void"/>
+            <interceptor-ref name="lazy">
+                <param name="foo">first</param>
+            </interceptor-ref>
+            <interceptor-ref name="lazy">
+                <param name="foo">second</param>
+            </interceptor-ref>
+        </action>
+
         <!-- disabled resolved lazily per invocation: reaches the interceptor mapping's params,
              so it lands on the params holder and not on the shared interceptor -->
         <action name="LazyFooLazilyDisabled" class="org.apache.struts2.SimpleAction">

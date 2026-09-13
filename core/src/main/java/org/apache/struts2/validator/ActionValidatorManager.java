@@ -87,4 +87,13 @@ public interface ActionValidatorManager {
      * @throws ValidationException if an error happens when validating the action.
      */
     void validate(Object object, String context, ValidatorContext validatorContext, String method) throws ValidationException;
+
+    /**
+     * Drops every cached validator configuration. Called during {@code Dispatcher.cleanup()};
+     * the default is a no-op so implementations that hold no state need not override it.
+     *
+     * @since 7.4.0
+     */
+    default void clearCache() {
+    }
 }

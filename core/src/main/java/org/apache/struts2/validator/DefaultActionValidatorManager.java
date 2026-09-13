@@ -177,6 +177,12 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Override
+    public void clearCache() {
+        validatorCache.clear();
+        validatorFileCache.clear();
+    }
+
+    @Override
     public void validate(Object object, String context, ValidatorContext validatorContext, String method) throws ValidationException {
         List<Validator> validators = getValidators(object.getClass(), context, method);
         Set<String> shortcircuitedFields = null;

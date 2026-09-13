@@ -197,4 +197,12 @@ public class StrutsTypeConverterHolder implements TypeConverterHolder {
         unknownMappingsInternal.add(className);
     }
 
+    @Override
+    public void clearCache() {
+        defaultMappings.clear();
+        mappings.clear();
+        unknownMappingsInternal.clear();
+        unknownMappings.clear();
+    }
+
 }

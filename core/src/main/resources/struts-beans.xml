@@ -290,5 +290,9 @@
           class="org.apache.struts2.dispatcher.FreemarkerCacheDestroyable"/>
     <bean type="org.apache.struts2.dispatcher.InternalDestroyable" name="debugUtilsCache"
           class="org.apache.struts2.dispatcher.DebugUtilsCacheDestroyable"/>
+    <bean type="org.apache.struts2.dispatcher.InternalDestroyable" name="typeConverterHolder"
+          class="org.apache.struts2.dispatcher.TypeConverterHolderDestroyable"/>
+    <bean type="org.apache.struts2.dispatcher.InternalDestroyable" name="actionValidatorManager"
+          class="org.apache.struts2.dispatcher.ActionValidatorManagerDestroyable"/>
 
 </struts>

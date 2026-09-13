@@ -43,7 +43,6 @@ import org.apache.struts2.util.ValueStackFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -318,7 +317,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     private <P extends InterceptorParams> String invokeWithLazyParams(
             WithLazyParams<P> lazyInterceptor, InterceptorMapping interceptorMapping) throws Exception {
         P lazyParams = lazyParamInjector.resolveInto(
-                lazyInterceptor.newLazyParams(), mergedParams(interceptorMapping), invocationContext);
+                lazyInterceptor.newLazyParams(), interceptorMapping.getParams(), invocationContext);
 
         if (lazyParams instanceof DisableParams disableParams && disableParams.isDisabled()) {
             LOG.debug("Interceptor: {} is disabled by its lazily resolved params, skipping to next", interceptorMapping.getName());
@@ -331,26 +330,6 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
         LOG.debug("Executing lazy params interceptor: {}", interceptorMapping.getName());
         return lazyInterceptor.intercept(this, lazyParams);
-    }
-
-    /**
-     * Merges the params declared on the interceptor-ref with those of the mapping being invoked.
-     * <p>
-     * The name-based lookup is inherited behaviour, kept as-is: the mapping is normally the very one
-     * found by name, so the merge is a no-op, and when a stack references the same interceptor name
-     * twice with different params it merges the first mapping's params over the current one, which
-     * is questionable. Changing it is out of scope here.
-     *
-     * @return a fresh map preserving the configuration order, so params are applied to the holder
-     * deterministically; the mapping's own param map is shared across requests and must not be mutated
-     */
-    private Map<String, String> mergedParams(InterceptorMapping interceptorMapping) {
-        Map<String, String> merged = new LinkedHashMap<>(interceptorMapping.getParams());
-        proxy.getConfig().getInterceptors().stream()
-                .filter(im -> im.getName().equals(interceptorMapping.getName()))
-                .findFirst()
-                .ifPresent(im -> merged.putAll(im.getParams()));
-        return merged;
     }
 
     /**

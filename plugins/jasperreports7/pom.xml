@@ -34,7 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jasperreports7.version>7.0.7</jasperreports7.version>
-        <tomcat-embed.version>10.1.55</tomcat-embed.version>
+        <tomcat-embed.version>10.1.59</tomcat-embed.version>
     </properties>
 
     <dependencies>

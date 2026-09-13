@@ -450,6 +450,7 @@ public abstract class UIBean extends Component {
 
     static final String TEMPLATE_DIR = "templateDir";
     static final String THEME = "theme";
+    private static final String CONSTRAINT_THEME = "html5";
 
     protected static final String ATTR_FIELD_VALUE = "fieldValue";
     protected static final String ATTR_NAME_VALUE = "nameValue";
@@ -947,7 +948,7 @@ public abstract class UIBean extends Component {
             return;
         }
         String fieldName = (String) getAttributes().get("name");
-        if (fieldName == null) {
+        if (fieldName == null || !themeRendersConstraints()) {
             return;
         }
         int stackDepth = stack.getRoot().size();
@@ -967,6 +968,27 @@ public abstract class UIBean extends Component {
         } finally {
             restoreStackDepth(stackDepth);
         }
+    }
+
+    /**
+     * Only {@code html5/common-attributes.ftl} renders the derived map, so deriving it under any other
+     * theme is wasted work for every field. A custom theme inherits that template through
+     * {@code parent = html5} in its theme.properties, hence the walk up the ancestry rather than a
+     * name match. The gate is still by name: a theme that renders {@code attributes.constraints} itself
+     * without descending from html5 never receives the map.
+     */
+    private boolean themeRendersConstraints() {
+        Template template = buildTemplateName(this.template, getDefaultTemplate());
+        TemplateEngine engine = templateEngineManager.getTemplateEngine(template, templateSuffix);
+        if (engine == null) {
+            return false;
+        }
+        for (Template candidate : template.getPossibleTemplates(engine)) {
+            if (CONSTRAINT_THEME.equals(candidate.getTheme())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -21,28 +21,9 @@
 -->
 <!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.dtd">
 <validators>
-    <field name="username">
-        <field-validator type="stringlength">
-            <param name="trim">false</param>
-            <param name="minLength">3</param>
-            <message>username must be at least ${minLength} characters</message>
-        </field-validator>
-    </field>
-    <field name="comment">
+    <field name="name">
         <field-validator type="requiredstring">
-            <message>Contains "quotes" and &lt;brackets&gt;</message>
-        </field-validator>
-    </field>
-    <field name="bio">
-        <field-validator type="stringlength">
-            <param name="trim">false</param>
-            <param name="maxLength">10</param>
-            <message>bio must be at most ${maxLength} characters</message>
-        </field-validator>
-    </field>
-    <field name="user">
-        <field-validator type="visitor">
-            <message/>
+            <message>name is required</message>
         </field-validator>
     </field>
 </validators>

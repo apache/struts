@@ -26,6 +26,8 @@ public class ConstraintAction extends ActionSupport {
     private String username;
     private String comment;
     private String bio;
+    private String nickname;
+    private ConstraintUser user;
 
     public String getUsername() {
         return username;
@@ -52,5 +54,23 @@ public class ConstraintAction extends ActionSupport {
     @StrutsParameter
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    @StrutsParameter
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    @StrutsParameter(depth = 1)
+    public ConstraintUser getUser() {
+        return user;
+    }
+
+    public void setUser(ConstraintUser user) {
+        this.user = user;
     }
 }

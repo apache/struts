@@ -152,4 +152,13 @@ public interface TypeConverterHolder {
         return mapping;
     }
 
+    /**
+     * Drops every registered and cached mapping. Called during {@code Dispatcher.cleanup()};
+     * the default is a no-op so implementations that hold no state need not override it.
+     *
+     * @since 7.4.0
+     */
+    default void clearCache() {
+    }
+
 }

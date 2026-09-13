@@ -21,10 +21,14 @@ package org.apache.struts2.dispatcher;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsJUnit4InternalTestCase;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.conversion.TypeConverterHolder;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.util.DebugUtils;
 import org.apache.struts2.util.fs.DefaultFileManager;
+import org.apache.struts2.validator.ActionValidatorManager;
+import org.apache.struts2.validator.DefaultActionValidatorManager;
+import org.apache.struts2.validator.ValidatorConfig;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -58,7 +62,7 @@ public class DispatcherCleanupTest extends StrutsJUnit4InternalTestCase {
         Set<String> expected = new HashSet<>(Arrays.asList(
                 "componentCache", "compoundRootAccessor", "defaultFileManager",
                 "scopeInterceptorCache", "ognlCache", "finalizableReferenceQueue",
-                "freemarkerCache", "debugUtilsCache"
+                "freemarkerCache", "debugUtilsCache", "typeConverterHolder", "actionValidatorManager"
         ));
         assertThat(names).containsAll(expected);
     }
@@ -130,6 +134,47 @@ public class DispatcherCleanupTest extends StrutsJUnit4InternalTestCase {
         dispatcher.cleanup();
 
         assertThat(lazyCache).isEmpty();
+    }
+
+    @Test
+    public void cleanupClearsTypeConverterHolderCaches() {
+        initDispatcher(emptyMap());
+
+        Container container = dispatcher.getConfigurationManager().getConfiguration().getContainer();
+        TypeConverterHolder holder = container.getInstance(TypeConverterHolder.class);
+        holder.addMapping(DispatcherCleanupTest.class, Map.of("field", new Object()));
+        holder.addUnknownMapping(DispatcherCleanupTest.class.getName());
+        assertThat(holder.getMapping(DispatcherCleanupTest.class)).isNotNull();
+        assertThat(holder.containsUnknownMapping(DispatcherCleanupTest.class.getName())).isTrue();
+
+        dispatcher.cleanup();
+
+        assertThat(holder.getMapping(DispatcherCleanupTest.class)).isNull();
+        assertThat(holder.containsUnknownMapping(DispatcherCleanupTest.class.getName())).isFalse();
+    }
+
+    @Test
+    public void cleanupClearsActionValidatorManagerCaches() throws Exception {
+        initDispatcher(emptyMap());
+
+        Container container = dispatcher.getConfigurationManager().getConfiguration().getContainer();
+        ActionValidatorManager manager = container.getInstance(ActionValidatorManager.class);
+        Map<String, List<ValidatorConfig>> validatorCache = instanceMap(manager, "validatorCache");
+        Map<String, List<ValidatorConfig>> validatorFileCache = instanceMap(manager, "validatorFileCache");
+        validatorCache.put("test-key", new ArrayList<>());
+        validatorFileCache.put("test-file", new ArrayList<>());
+
+        dispatcher.cleanup();
+
+        assertThat(validatorCache).isEmpty();
+        assertThat(validatorFileCache).isEmpty();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, List<ValidatorConfig>> instanceMap(ActionValidatorManager manager, String fieldName) throws Exception {
+        Field field = DefaultActionValidatorManager.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return (Map<String, List<ValidatorConfig>>) field.get(manager);
     }
 
     @Test

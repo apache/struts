@@ -18,10 +18,41 @@
  */
 package org.apache.struts2.interceptor.csp;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Source of the nonce value
  */
 public enum CspNonceSource {
     REQUEST,
-    SESSION
+    SESSION;
+
+    private static final Logger LOG = LogManager.getLogger(CspNonceSource.class);
+    private static final AtomicBoolean LEGACY_WARNED = new AtomicBoolean();
+
+    /**
+     * Resolves the configured source: {@link StrutsConstants#STRUTS_CSP_NONCE_SOURCE} wins, then the deprecated
+     * {@link StrutsConstants#STRUTS_CSP_NONCE_SOURCE_LEGACY}, otherwise {@link #SESSION}.
+     *
+     * @since 7.4.0
+     */
+    @SuppressWarnings("removal")
+    public static CspNonceSource resolve(String canonical, String legacy) {
+        if (StringUtils.isNotBlank(canonical)) {
+            return valueOf(canonical.trim().toUpperCase());
+        }
+        if (StringUtils.isNotBlank(legacy)) {
+            if (LEGACY_WARNED.compareAndSet(false, true)) {
+                LOG.warn("Constant '{}' is deprecated, use '{}' instead",
+                        StrutsConstants.STRUTS_CSP_NONCE_SOURCE_LEGACY, StrutsConstants.STRUTS_CSP_NONCE_SOURCE);
+            }
+            return valueOf(legacy.trim().toUpperCase());
+        }
+        return SESSION;
+    }
 }

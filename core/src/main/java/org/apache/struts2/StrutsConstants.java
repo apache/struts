@@ -834,7 +834,19 @@ public final class StrutsConstants {
      * @since 6.8.0
      */
     public static final String STRUTS_CSP_NONCE_READER = "struts.csp.nonce.reader";
+
+    /**
+     * See {@link org.apache.struts2.interceptor.csp.CspNonceSource}
+     *
+     * @since 6.8.0
+     */
     public static final String STRUTS_CSP_NONCE_SOURCE = "struts.csp.nonce.source";
+
+    /**
+     * @deprecated since 7.4.0, use {@link #STRUTS_CSP_NONCE_SOURCE} instead
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
+    public static final String STRUTS_CSP_NONCE_SOURCE_LEGACY = "struts.csp.nonceSource";
 
     /**
      * See {@link org.apache.struts2.action.CspReportAction}

@@ -20,7 +20,6 @@ package org.apache.struts2.interceptor.csp;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -37,13 +36,16 @@ public class StrutsCspNonceReader implements CspNonceReader {
 
     private final CspNonceSource nonceSource;
 
-    @Inject(value = StrutsConstants.STRUTS_CSP_NONCE_SOURCE, required = false)
     public StrutsCspNonceReader(String source) {
-        if (StringUtils.isBlank(source)) {
-            this.nonceSource = CspNonceSource.SESSION;
-        } else {
-            this.nonceSource = CspNonceSource.valueOf(source.toUpperCase());
-        }
+        this(source, null);
+    }
+
+    @Inject
+    public StrutsCspNonceReader(
+            @Inject(value = StrutsConstants.STRUTS_CSP_NONCE_SOURCE, required = false) String source,
+            @Inject(value = StrutsConstants.STRUTS_CSP_NONCE_SOURCE_LEGACY, required = false) String legacySource
+    ) {
+        this.nonceSource = CspNonceSource.resolve(source, legacySource);
     }
 
     @Override

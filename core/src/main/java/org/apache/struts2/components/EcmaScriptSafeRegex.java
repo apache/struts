@@ -67,6 +67,8 @@ public final class EcmaScriptSafeRegex {
         boolean inCharClass = false;
         // true while the previous unit is a plain literal a range can start from
         boolean rangeStartAvailable = false;
+        // true right after a quantifier: Java stacks them (a{2}{3}), the browser has nothing to repeat
+        boolean afterQuantifier = false;
         int i = 0;
         while (i < regex.length()) {
             char current = regex.charAt(i);
@@ -77,6 +79,7 @@ public final class EcmaScriptSafeRegex {
                 // an escape consumes the character it escapes, which must not be scanned again;
                 // in unicode-sets mode a class escape cannot bound a range either
                 rangeStartAvailable = false;
+                afterQuantifier = false;
                 i += 2;
             } else if (inCharClass) {
                 if (current == ']') {
@@ -97,19 +100,24 @@ public final class EcmaScriptSafeRegex {
                 }
             } else if (current == '{') {
                 int close = endOfQuantifier(regex, i);
-                if (close < 0 || isFollowedBy(regex, close, '+')) {
+                if (afterQuantifier || close < 0 || isFollowedBy(regex, close, '+')) {
                     return false;
                 }
+                afterQuantifier = true;
                 i = close + 1;
             } else {
-                if (!isPortable(regex, i, current)) {
+                if (!isPortable(regex, i, current) || (afterQuantifier && (current == '*' || current == '+'))) {
                     return false;
                 }
                 if (current == '[') {
                     inCharClass = true;
                     rangeStartAvailable = false;
+                    // the negation marker is part of the class opening, not a literal
+                    i += isFollowedBy(regex, i, '^') ? 2 : 1;
+                } else {
+                    i++;
                 }
-                i++;
+                afterQuantifier = current == '*' || current == '+' || current == '?';
             }
         }
         return !inCharClass;

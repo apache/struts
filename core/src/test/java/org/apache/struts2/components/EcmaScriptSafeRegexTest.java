@@ -77,6 +77,26 @@ public class EcmaScriptSafeRegexTest {
         assertThat(EcmaScriptSafeRegex.isSafe("[|]")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("[{]")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("[a-z0-9._%+-]+@[a-z]+")).isFalse();
+        // the negation marker is not a literal a range can start from
+        assertThat(EcmaScriptSafeRegex.isSafe("[^-a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("^[^-,]+$")).isFalse();
+    }
+
+    @Test
+    public void rejectsStackedQuantifiers() {
+        // Java compiles a{2}{3}; the browser throws "nothing to repeat"
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}{3}")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z]{2}{3}")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}*")).isFalse();
+    }
+
+    @Test
+    public void acceptsLazyQuantifiersAndNegatedClasses() {
+        assertThat(EcmaScriptSafeRegex.isSafe("a+?")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}?")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^a-z]+")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^\\d]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("(?:ab){2}")).isTrue();
     }
 
     @Test

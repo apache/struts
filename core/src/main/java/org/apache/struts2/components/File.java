@@ -67,6 +67,15 @@ public class File extends UIBean {
         return HtmlControlType.FILE;
     }
 
+    /**
+     * A file input never renders its value, so keep the raw property: converting null to a String
+     * yields "", which would hide a missing attachment from the constraint derivation.
+     */
+    @Override
+    protected Class<?> getValueClassType() {
+        return null;
+    }
+
     public void evaluateParams() {
         super.evaluateParams();
 

@@ -18,15 +18,26 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.components.ConstraintAction;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Html5ConstraintRenderingTest extends AbstractUITagTest {
+
+    /**
+     * Push the action whose validators run, so a field's bound value is the one the provider sees.
+     */
+    @Override
+    public Action getAction() {
+        return new ConstraintAction();
+    }
 
     public void testRendersConstraintAttributes() throws Exception {
         String output = render("true");
@@ -113,6 +124,22 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
             2, output.split("required=\"required\"", -1).length - 1);
     }
 
+    /**
+     * The bound int renders as 0, which is not in the list, so no radio is checked; the server would
+     * still accept the empty submit because 0 is a non-null Integer.
+     */
+    public void testRendersNoRequiredOnARadioBackedByAPrimitive() throws Exception {
+        String output = renderTag("true", () -> {
+            RadioTag radio = new RadioTag();
+            radio.setName("priority");
+            radio.setList("{1,2,3}");
+            return radio;
+        });
+
+        assertTrue("expected the radios in: " + output, output.contains("name=\"priority\""));
+        assertFalse("expected no required in: " + output, output.contains("required=\"required\""));
+    }
+
     public void testRendersRequiredOnAFileInput() throws Exception {
         String output = renderTag("true", () -> {
             FileTag file = new FileTag();
@@ -122,6 +149,21 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
 
         assertTrue("expected required in: " + output,
             output.contains("type=\"file\" name=\"attachment\"") && output.contains("required=\"required\""));
+    }
+
+    /**
+     * The edit flow: prepare() loaded the existing attachment, so an empty submit keeps it and the
+     * server accepts; the browser must not insist on a new file.
+     */
+    public void testRendersNoRequiredOnAFileInputWhoseAttachmentIsAlreadyLoaded() throws Exception {
+        String output = renderTag("true", action -> action.setAttachment(new Object()), () -> {
+            FileTag file = new FileTag();
+            file.setName("attachment");
+            return file;
+        });
+
+        assertTrue("expected the file input in: " + output, output.contains("type=\"file\" name=\"attachment\""));
+        assertFalse("expected no required in: " + output, output.contains("required=\"required\""));
     }
 
     /**
@@ -167,11 +209,17 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
     }
 
     private String renderTag(String constraintsEnabled, Supplier<AbstractUITag> tagFactory) throws Exception {
+        return renderTag(constraintsEnabled, action -> { }, tagFactory);
+    }
+
+    private String renderTag(String constraintsEnabled, Consumer<ConstraintAction> prepare,
+                             Supplier<AbstractUITag> tagFactory) throws Exception {
         initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
             put(StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, constraintsEnabled);
         }});
         createMocks();
+        prepare.accept((ConstraintAction) action);
         ((MockActionProxy) actionProxy).setConfig(configuration.getRuntimeConfiguration().getActionConfig("", "constraintAction"));
 
         FormTag form = new FormTag();

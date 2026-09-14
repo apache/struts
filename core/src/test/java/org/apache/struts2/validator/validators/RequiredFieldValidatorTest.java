@@ -25,6 +25,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RequiredFieldValidatorTest extends StrutsInternalTestCase {
 
@@ -91,6 +92,22 @@ public class RequiredFieldValidatorTest extends StrutsInternalTestCase {
         assertEquals(1, context.getFieldErrors().size());
         assertNotNull(context.getFieldErrors().get("shorts"));
         assertEquals("shorts field is required!", context.getFieldErrors().get("shorts").get(0));
+    }
+
+    @Test
+    public void testIsMissingMatchesWhatValidateRejects() {
+        // StrutsHtmlConstraintProvider asks this predicate whether the browser's required would
+        // agree with the server on a field's current value
+        RequiredFieldValidator rfv = new RequiredFieldValidator();
+
+        assertTrue(rfv.isMissing(null));
+        assertTrue(rfv.isMissing(new Integer[]{}));
+        assertTrue(rfv.isMissing(new ArrayList<Short>()));
+
+        assertFalse(rfv.isMissing(0));
+        assertFalse(rfv.isMissing(""));
+        assertFalse(rfv.isMissing(new Integer[]{1}));
+        assertFalse(rfv.isMissing(List.of("a")));
     }
 
 }

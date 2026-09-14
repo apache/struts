@@ -145,7 +145,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
 
         declaredMaxlength = "5";
         TextFieldTag field = startField(null);
-        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) ->
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom, value) ->
             new java.util.LinkedHashMap<>(Map.of("Type", "email", "Maxlength", "9", "required", "required")));
         Map<String, Object> attributes = ((UIBean) field.getComponent()).getAttributes();
 
@@ -332,7 +332,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
 
         TextFieldTag field = startField(null);
         List<Object> captured = new ArrayList<>();
-        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom, value) -> {
             captured.add(derivedFrom);
             captured.add(validators.get(0).getMessage(derivedFrom));
             return Collections.emptyMap();
@@ -377,7 +377,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         TextFieldTag field = startField(null);
         List<Object> captured = new ArrayList<>();
         // not named `action`: that would shadow the inherited field this test asserts against
-        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom, value) -> {
             captured.add(derivedFrom);
             return Collections.emptyMap();
         });
@@ -405,7 +405,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         initDispatcherWith("true");
 
         TextFieldTag field = startField(null);
-        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom, value) -> {
             stack.push(new Object());
             throw new IllegalStateException("message resolution failed midway");
         });

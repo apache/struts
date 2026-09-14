@@ -66,12 +66,22 @@ public class RequiredFieldValidator extends FieldValidatorSupport {
         String fieldName = getFieldName();
         Object value = this.getFieldValue(fieldName, object);
 
-        if (value == null) {
-            addFieldError(fieldName, object);
-        } else if (value.getClass().isArray() && Array.getLength(value) == 0) {
-            addFieldError(fieldName, object);
-        } else if (Collection.class.isAssignableFrom(value.getClass()) && ((Collection) value).isEmpty()) {
+        if (isMissing(value)) {
             addFieldError(fieldName, object);
         }
+    }
+
+    /**
+     * @return whether this validator rejects the value: null, an empty array or an empty collection
+     * @since 7.4.0
+     */
+    public boolean isMissing(Object value) {
+        if (value == null) {
+            return true;
+        }
+        if (value.getClass().isArray()) {
+            return Array.getLength(value) == 0;
+        }
+        return value instanceof Collection<?> collection && collection.isEmpty();
     }
 }

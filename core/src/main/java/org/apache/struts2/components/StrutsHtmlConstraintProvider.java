@@ -65,13 +65,14 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     private static final String BLANK = "[\\x00-\\x20]*";
 
     @Override
-    public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action) {
+    public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action,
+                                              Object value) {
         Map<String, String> attributes = new LinkedHashMap<>();
         if (validators == null || validators.isEmpty() || control == null) {
             return attributes;
         }
         for (Validator validator : validators) {
-            addConstraints(attributes, validator, control);
+            addConstraints(attributes, validator, control, value);
             if (control != HtmlControlType.UNSUPPORTED) {
                 addMessage(attributes, validator, action);
             }
@@ -105,11 +106,12 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         attributes.computeIfPresent(PATTERN_ATTRIBUTE, (name, regex) -> "(?:" + regex + ")|" + BLANK);
     }
 
-    protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control) {
+    protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control,
+                                  Object value) {
         if (validator instanceof RequiredStringValidator) {
             addRequiredString(attributes, control);
-        } else if (validator instanceof RequiredFieldValidator) {
-            addRequiredField(attributes, control);
+        } else if (validator instanceof RequiredFieldValidator requiredValidator) {
+            addRequiredField(attributes, requiredValidator, control, value);
         } else if (validator instanceof StringLengthFieldValidator lengthValidator) {
             addLength(attributes, lengthValidator, control);
         } else if (validator instanceof RegexFieldValidator regexValidator) {
@@ -138,12 +140,19 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * blocks it — an empty text input, a select with an empty-valued header option, and an unticked
      * checkbox (CheckboxInterceptor substitutes "false") are all in that group. Only RADIO and FILE omit
      * the parameter entirely when empty, so only they agree with the browser.
+     * <p>
+     * An omitted parameter leaves the property at whatever it already holds, which is the value being
+     * rendered — a primitive's 0, or what {@code prepare()} loaded. The validator itself decides whether
+     * that value would fail, so the attribute is emitted only when the two sides agree on it.
      */
-    protected void addRequiredField(Map<String, String> attributes, HtmlControlType control) {
+    protected void addRequiredField(Map<String, String> attributes, RequiredFieldValidator validator,
+                                    HtmlControlType control, Object value) {
         if (control != HtmlControlType.RADIO && control != HtmlControlType.FILE) {
             return;
         }
-        attributes.put(REQUIRED_ATTRIBUTE, REQUIRED_ATTRIBUTE);
+        if (validator.isMissing(value)) {
+            attributes.put(REQUIRED_ATTRIBUTE, REQUIRED_ATTRIBUTE);
+        }
     }
 
     protected void addLength(Map<String, String> attributes, StringLengthFieldValidator validator, HtmlControlType control) {

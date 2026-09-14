@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import ognl.NoSuchPropertyException;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.ConstraintAction;
@@ -26,6 +28,7 @@ import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -167,6 +170,33 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
     }
 
     /**
+     * An UploadedFilesAware action receives the part by name and has no property behind the input;
+     * with struts.el.throwExceptionOnFailure the missing property must not turn into a 500.
+     */
+    public void testRendersAFileInputBoundToNoPropertyWhenElFailuresThrow() throws Exception {
+        String output = renderTag("true", Map.of(StrutsConstants.STRUTS_EL_THROW_EXCEPTION, "true"), action -> { }, () -> {
+            FileTag file = new FileTag();
+            file.setName("upload");
+            return file;
+        });
+
+        assertTrue("expected the file input in: " + output, output.contains("type=\"file\" name=\"upload\""));
+    }
+
+    public void testAFileInputStillSurfacesABrokenExpressionWhenElFailuresThrow() throws Exception {
+        try {
+            renderTag("true", Map.of(StrutsConstants.STRUTS_EL_THROW_EXCEPTION, "true"), action -> { }, () -> {
+                FileTag file = new FileTag();
+                file.setName("upload[");
+                return file;
+            });
+            fail("expected the broken expression to throw");
+        } catch (StrutsException e) {
+            assertFalse("only a missing property is tolerated", e.getCause() instanceof NoSuchPropertyException);
+        }
+    }
+
+    /**
      * combobox.ftl reaches constraints.ftl through html5/text.ftl, so the text half of the control
      * already carries constraints; this pins that against a template rewrite.
      */
@@ -214,9 +244,15 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
 
     private String renderTag(String constraintsEnabled, Consumer<ConstraintAction> prepare,
                              Supplier<AbstractUITag> tagFactory) throws Exception {
+        return renderTag(constraintsEnabled, Map.of(), prepare, tagFactory);
+    }
+
+    private String renderTag(String constraintsEnabled, Map<String, String> extraConstants,
+                             Consumer<ConstraintAction> prepare, Supplier<AbstractUITag> tagFactory) throws Exception {
         initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
             put(StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, constraintsEnabled);
+            putAll(extraConstants);
         }});
         createMocks();
         prepare.accept((ConstraintAction) action);

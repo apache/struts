@@ -36,9 +36,11 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
 
     private FormTag form;
 
+    private Action actionOverride;
+
     @Override
     public Action getAction() {
-        return new ConstraintAction();
+        return actionOverride != null ? actionOverride : new ConstraintAction();
     }
 
     private String theme = "html5";
@@ -203,10 +205,12 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
      * both declare is validated off the model. Rendering must read it off the same instance.
      */
     public void testVisitedObjectIsResolvedFromTheModelWhenTheModelDrivenInterceptorIsConfigured() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
         actionName = "modelDrivenConstraintAction";
         initDispatcherWith("true");
         fieldName = "user.email";
-        ConstraintAction model = modelDrivenSetup("Action", "Model");
+        ConstraintAction model = userLabelled("Action", "Model");
+        ((ModelDrivenConstraintAction) action).setModel(model);
         stack.push(model);
 
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
@@ -216,13 +220,14 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     }
 
     /**
-     * Without the interceptor configured, whatever sits above the action at render time is a page
-     * frame, not the model validation saw — so it must not win.
+     * modelDriven is in the default stack, so the interceptor being configured says nothing about
+     * whether it pushed: for an action that is not ModelDriven the frame above it is a page frame.
      */
-    public void testAnObjectAboveTheActionIsIgnoredWithoutTheModelDrivenInterceptor() throws Exception {
+    public void testAPageFrameAboveANonModelDrivenActionIsIgnoredEvenWithTheInterceptorConfigured() throws Exception {
+        actionName = "modelDrivenConstraintAction";
         initDispatcherWith("true");
         fieldName = "user.email";
-        stack.push(modelDrivenSetup("Action", "Model"));
+        stack.push(userLabelled("Action", "Shadow"));
 
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
 
@@ -230,15 +235,50 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
     }
 
-    private ConstraintAction modelDrivenSetup(String actionsLabel, String modelsLabel) {
+    /**
+     * The interceptor pushes nothing for a null model, so the frame above the action is a page frame.
+     */
+    public void testAPageFrameAboveAModelDrivenActionWithANullModelIsIgnored() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        stack.push(userLabelled("Action", "Shadow"));
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Without the interceptor configured, whatever sits above the action at render time is a page
+     * frame, not the model validation saw — so it must not win.
+     */
+    public void testAnObjectAboveTheActionIsIgnoredWithoutTheModelDrivenInterceptor() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintAction model = userLabelled("Action", "Model");
+        ((ModelDrivenConstraintAction) action).setModel(model);
+        stack.push(model);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /** Sets the action's user label and returns another action whose user carries the other label. */
+    private ConstraintAction userLabelled(String actionsLabel, String othersLabel) {
         ConstraintUser actionsUser = new ConstraintUser();
         actionsUser.setLabel(actionsLabel);
         ((ConstraintAction) action).setUser(actionsUser);
-        ConstraintAction model = new ConstraintAction();
-        ConstraintUser modelsUser = new ConstraintUser();
-        modelsUser.setLabel(modelsLabel);
-        model.setUser(modelsUser);
-        return model;
+        ConstraintAction other = new ConstraintAction();
+        ConstraintUser othersUser = new ConstraintUser();
+        othersUser.setLabel(othersLabel);
+        other.setUser(othersUser);
+        return other;
     }
 
     /**

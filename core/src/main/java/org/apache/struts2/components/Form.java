@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.interceptor.ModelDrivenInterceptor;
 import org.apache.struts2.util.CompoundRoot;
@@ -436,9 +437,7 @@ public class Form extends ClosingUIBean {
      * Validation reads the visited object off the stack as the interceptors left it: the action, with
      * the model {@code ModelDrivenInterceptor} pushed directly above it. At render time an
      * {@code <s:iterator>} or {@code <s:push>} frame above those may expose the same property, so
-     * that validation-time pair is put back on top for the lookup. The model is taken from the stack,
-     * not from {@code getModel()}: the interceptor may not be configured, and a fresh instance per
-     * call would not be the one validation ran against.
+     * that validation-time pair is put back on top for the lookup.
      */
     private Object findAsValidation(String path) {
         Object action = currentAction();
@@ -448,8 +447,7 @@ public class Form extends ClosingUIBean {
         CompoundRoot root = getStack().getRoot();
         int depth = root.size();
         try {
-            int actionIndex = root.indexOf(action);
-            Object model = actionIndex > 0 && modelDrivenInterceptorConfigured() ? root.get(actionIndex - 1) : null;
+            Object model = modelPushedAbove(action, root);
             getStack().push(action);
             if (model != null) {
                 getStack().push(model);
@@ -462,11 +460,29 @@ public class Form extends ClosingUIBean {
         }
     }
 
+    /**
+     * The instance the interceptor pushed, taken from the stack rather than from {@code getModel()}
+     * again — a fresh instance per call would not be the one validation ran against. The interceptor
+     * pushes only for a ModelDriven action with a non-null model, and only when it is in the
+     * rendering action's stack (it is in the default one, so that alone proves nothing).
+     */
+    private Object modelPushedAbove(Object action, CompoundRoot root) {
+        if (!(action instanceof ModelDriven<?> modelDriven) || modelDriven.getModel() == null) {
+            return null;
+        }
+        int actionIndex = root.indexOf(action);
+        if (actionIndex <= 0 || !modelDrivenInterceptorConfigured()) {
+            return null;
+        }
+        return root.get(actionIndex - 1);
+    }
+
     private boolean modelDrivenInterceptorConfigured() {
         if (modelDrivenConfigured == null) {
             modelDrivenConfigured = false;
-            ActionConfig actionConfig = configuration.getRuntimeConfiguration()
-                .getActionConfig(getNamespace(stack), cachedActionName);
+            ActionInvocation invocation = getStack().getActionContext().getActionInvocation();
+            ActionConfig actionConfig = invocation == null || invocation.getProxy() == null
+                ? null : invocation.getProxy().getConfig();
             if (actionConfig != null) {
                 for (InterceptorMapping interceptorMapping : actionConfig.getInterceptors()) {
                     if (interceptorMapping.getInterceptor() instanceof ModelDrivenInterceptor) {

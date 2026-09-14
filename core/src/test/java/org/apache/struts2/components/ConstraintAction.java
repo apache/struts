@@ -28,6 +28,9 @@ public class ConstraintAction extends ActionSupport {
     private String bio;
     private String nickname;
     private ConstraintUser user;
+    private String code;
+    private String choice;
+    private Object attachment;
 
     public String getUsername() {
         return username;
@@ -63,6 +66,32 @@ public class ConstraintAction extends ActionSupport {
     @StrutsParameter
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    @StrutsParameter
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getChoice() {
+        return choice;
+    }
+
+    @StrutsParameter
+    public void setChoice(String choice) {
+        this.choice = choice;
+    }
+
+    public Object getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Object attachment) {
+        this.attachment = attachment;
     }
 
     @StrutsParameter(depth = 1)

@@ -24,6 +24,7 @@ import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class Html5ConstraintRenderingTest extends AbstractUITagTest {
 
@@ -85,6 +86,55 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
             output.contains("Contains \"quotes\" and <brackets>"));
     }
 
+    public void testRendersPatternOnATextField() throws Exception {
+        String output = render("true", "code", null);
+
+        assertTrue("expected pattern in: " + output, output.contains("pattern=\"^[A-Z]{3}\\d{2}$\""));
+    }
+
+    /**
+     * radiomap.ftl includes common-attributes.ftl once per option, so every input of the group
+     * carries the attribute; HTML applies {@code required} to the group as a whole.
+     */
+    public void testRendersRequiredOnEveryRadioOfTheGroup() throws Exception {
+        String output = renderTag("true", () -> {
+            RadioTag radio = new RadioTag();
+            radio.setName("choice");
+            radio.setList("{'yes','no'}");
+            return radio;
+        });
+
+        assertEquals("expected required on both radios in: " + output,
+            2, output.split("required=\"required\"", -1).length - 1);
+    }
+
+    public void testRendersRequiredOnAFileInput() throws Exception {
+        String output = renderTag("true", () -> {
+            FileTag file = new FileTag();
+            file.setName("attachment");
+            return file;
+        });
+
+        assertTrue("expected required in: " + output,
+            output.contains("type=\"file\" name=\"attachment\"") && output.contains("required=\"required\""));
+    }
+
+    /**
+     * combobox.ftl reaches constraints.ftl through html5/text.ftl, so the text half of the control
+     * already carries constraints; this pins that against a template rewrite.
+     */
+    public void testRendersConstraintsOnTheTextHalfOfACombobox() throws Exception {
+        String output = renderTag("true", () -> {
+            ComboBoxTag combo = new ComboBoxTag();
+            combo.setName("username");
+            combo.setList("{'a','b'}");
+            return combo;
+        });
+
+        assertTrue("expected minlength on the text input in: " + output,
+            output.contains("name=\"username\" value=\"\" id=\"constraintAction_username\" minlength=\"3\""));
+    }
+
     private String render(String constraintsEnabled) throws Exception {
         return render(constraintsEnabled, "username", null);
     }
@@ -98,6 +148,20 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
     }
 
     private String render(String constraintsEnabled, String fieldName, String requiredLabel, String maxlength) throws Exception {
+        return renderTag(constraintsEnabled, () -> {
+            TextFieldTag field = new TextFieldTag();
+            field.setName(fieldName);
+            if (requiredLabel != null) {
+                field.setRequiredLabel(requiredLabel);
+            }
+            if (maxlength != null) {
+                field.setMaxlength(maxlength);
+            }
+            return field;
+        });
+    }
+
+    private String renderTag(String constraintsEnabled, Supplier<AbstractUITag> tagFactory) throws Exception {
         initDispatcher(new HashMap<String, String>() {{
             put("configProviders", TestConfigurationProvider.class.getName());
             put(StrutsConstants.STRUTS_UI_HTML5_CONSTRAINTS, constraintsEnabled);
@@ -112,16 +176,9 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
         form.setNamespace("");
         form.doStartTag();
 
-        TextFieldTag field = new TextFieldTag();
+        AbstractUITag field = tagFactory.get();
         field.setPageContext(pageContext);
         field.setTheme("html5");
-        field.setName(fieldName);
-        if (requiredLabel != null) {
-            field.setRequiredLabel(requiredLabel);
-        }
-        if (maxlength != null) {
-            field.setMaxlength(maxlength);
-        }
         field.doStartTag();
         field.doEndTag();
         form.doEndTag();

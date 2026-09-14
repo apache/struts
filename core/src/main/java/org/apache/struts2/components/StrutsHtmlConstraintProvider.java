@@ -69,12 +69,14 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (validators == null || validators.isEmpty() || control == null) {
             return attributes;
         }
-        boolean rejectsBlank = rejectsBlank(validators);
         for (Validator validator : validators) {
-            addConstraints(attributes, validator, control, rejectsBlank);
+            addConstraints(attributes, validator, control);
             if (control != HtmlControlType.UNSUPPORTED) {
                 addMessage(attributes, validator, action);
             }
+        }
+        if (!rejectsBlank(validators)) {
+            admitBlankInPattern(attributes);
         }
         return attributes;
     }
@@ -92,8 +94,20 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         return false;
     }
 
-    protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control,
-                                  boolean rejectsBlank) {
+    /**
+     * {@code RegexFieldValidator} skips a value that trims to empty before it looks at {@code trim},
+     * while the browser skips {@code pattern} only for the empty string. Unless another validator on
+     * the field rejects blank input, the pattern therefore gets a whitespace-only alternative so that
+     * a single space is not blocked client-side and accepted server-side.
+     */
+    protected void admitBlankInPattern(Map<String, String> attributes) {
+        String pattern = attributes.get("pattern");
+        if (pattern != null) {
+            attributes.put("pattern", "(?:" + pattern + ")|" + BLANK);
+        }
+    }
+
+    protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control) {
         if (validator instanceof RequiredStringValidator) {
             addRequiredString(attributes, control);
         } else if (validator instanceof RequiredFieldValidator) {
@@ -101,7 +115,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         } else if (validator instanceof StringLengthFieldValidator lengthValidator) {
             addLength(attributes, lengthValidator, control);
         } else if (validator instanceof RegexFieldValidator regexValidator) {
-            addPattern(attributes, regexValidator, control, rejectsBlank);
+            addPattern(attributes, regexValidator, control);
         } else if (validator instanceof DoubleRangeFieldValidator doubleValidator) {
             addDoubleRange(attributes, doubleValidator, control);
         } else if (validator instanceof RangeValidatorSupport<?> rangeValidator) {
@@ -148,14 +162,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
     }
 
-    /**
-     * {@code RegexFieldValidator} skips a value that trims to empty before it looks at {@code trim},
-     * while the browser skips {@code pattern} only for the empty string. Unless another validator on
-     * the field rejects blank input, the pattern therefore carries a whitespace-only alternative so
-     * that a single space is not blocked client-side and accepted server-side.
-     */
-    protected void addPattern(Map<String, String> attributes, RegexFieldValidator validator, HtmlControlType control,
-                              boolean rejectsBlank) {
+    protected void addPattern(Map<String, String> attributes, RegexFieldValidator validator, HtmlControlType control) {
         // HTML pattern accepts no flags, so a case-insensitive rule cannot be expressed at all
         if (!control.supportsPattern() || !validator.isCaseSensitive()) {
             return;
@@ -172,10 +179,9 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
             return;
         }
         String regex = validator.getRegex();
-        if (!EcmaScriptSafeRegex.isSafe(regex)) {
-            return;
+        if (EcmaScriptSafeRegex.isSafe(regex)) {
+            attributes.put("pattern", regex);
         }
-        attributes.put("pattern", rejectsBlank ? regex : "(?:" + regex + ")|" + BLANK);
     }
 
     protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator, HtmlControlType control) {

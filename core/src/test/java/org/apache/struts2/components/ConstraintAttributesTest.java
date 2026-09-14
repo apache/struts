@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
@@ -34,6 +35,12 @@ import java.util.Map;
 public class ConstraintAttributesTest extends AbstractUITagTest {
 
     private FormTag form;
+
+    @Override
+    public Action getAction() {
+        return new ConstraintAction();
+    }
+
     private String theme = "html5";
     private String fieldName = "username";
     private final Map<String, String> dynamicAttributes = new HashMap<>();
@@ -77,6 +84,11 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals("3", constraints.get("minlength"));
     }
 
+    /**
+     * The message key lives in the visited class's own bundle ({@code ConstraintUser.properties}),
+     * which is where {@code VisitorFieldValidator} resolves it during validation — through a
+     * composite text provider over the visited object and the action. Rendering must use the same.
+     */
     public void testVisitorValidatedNestedFieldGetsTheConcreteConstraint() throws Exception {
         initDispatcherWith("true");
         fieldName = "user.name";
@@ -84,8 +96,26 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
         assertNotNull("expected constraints for a visitor-validated field", constraints);
         assertEquals("required", constraints.get("required"));
-        assertEquals("name is required", constraints.get("data-msg-requiredstring"));
+        assertEquals("Name is required", constraints.get("data-msg-requiredstring"));
         assertFalse(constraints.containsKey("data-msg-field-visitor"));
+    }
+
+    /**
+     * Validation pushes the visited instance before resolving the message, so {@code ${label}} in a
+     * visited message reads the visited bean, not the action. Same at render time when the instance
+     * exists.
+     */
+    public void testVisitorValidatedMessageResolvesExpressionsAgainstTheVisitedInstance() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        ((ConstraintAction) action).setUser(user);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: e-mail is required", constraints.get("data-msg-requiredstring"));
     }
 
     /**

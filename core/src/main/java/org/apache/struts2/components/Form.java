@@ -26,7 +26,11 @@ import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptorUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.text.CompositeTextProvider;
+import org.apache.struts2.text.TextProvider;
+import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.validator.ActionValidatorManager;
+import org.apache.struts2.validator.DelegatingValidatorContext;
 import org.apache.struts2.validator.FieldValidator;
 import org.apache.struts2.validator.ValidationException;
 import org.apache.struts2.validator.ValidationInterceptor;
@@ -130,6 +134,8 @@ public class Form extends ClosingUIBean {
     private String cachedActionName;
     private boolean actionValidatorsResolved;
     private final Map<Class<?>, List<Validator>> cachedVisitorValidators = new HashMap<>();
+    private final Map<String, String> visitedPaths = new HashMap<>();
+    protected TextProviderFactory textProviderFactory;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -168,6 +174,11 @@ public class Form extends ClosingUIBean {
     @Inject
     public void setActionValidatorManager(ActionValidatorManager mgr) {
         this.actionValidatorManager = mgr;
+    }
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
     }
 
 
@@ -343,8 +354,46 @@ public class Form extends ClosingUIBean {
         // the wrapper only exists to prefix the field name for the deprecated JS validator; callers of
         // this method dispatch on the concrete validator type
         validators.replaceAll(validator -> validator instanceof FieldVisitorValidatorWrapper wrapper
-            ? wrapper.getFieldValidator() : validator);
+            ? unwrap(name, wrapper) : validator);
         return validators;
+    }
+
+    /**
+     * The object a field's validators run against: the visited object for a field reached through a
+     * {@code visitor} validator, otherwise null — the caller then uses the action, as validation does.
+     * Resolved by {@link #getFieldValidators(String)}, which must run first.
+     *
+     * @since 7.4.0
+     */
+    public Object getValidatedObject(String name) {
+        String path = visitedPaths.get(name);
+        return path == null ? null : getStack().findValue(path);
+    }
+
+    /**
+     * Gives the nested validator the text provider {@code VisitorFieldValidator.validateObject} gives
+     * it: the visited class's bundle first, then the action's. The instance is only needed when it is
+     * itself a {@code TextProvider}; the class-based provider works for a form rendered before the
+     * visited object exists.
+     */
+    private FieldValidator unwrap(String name, FieldVisitorValidatorWrapper wrapper) {
+        FieldValidator validator = wrapper.getFieldValidator();
+        if (wrapper.getVisitedClass() == null) {
+            return validator;
+        }
+        visitedPaths.put(name, wrapper.getVisitedPath());
+        Object action = getStack().getActionContext().getActionInvocation() == null
+            ? null : getStack().getActionContext().getActionInvocation().getAction();
+        if (action == null || textProviderFactory == null) {
+            return validator;
+        }
+        Object visited = getStack().findValue(wrapper.getVisitedPath());
+        TextProvider visitedProvider = visited instanceof TextProvider textProvider
+            ? textProvider : textProviderFactory.createInstance(wrapper.getVisitedClass());
+        DelegatingValidatorContext parent = new DelegatingValidatorContext(action, textProviderFactory);
+        CompositeTextProvider composite = new CompositeTextProvider(List.of(visitedProvider, parent));
+        validator.setValidatorContext(new DelegatingValidatorContext(parent, composite, parent));
+        return validator;
     }
 
     private void resolveActionValidators() {
@@ -389,6 +438,12 @@ public class Form extends ClosingUIBean {
 
     private void findFieldValidators(String name, Class actionClass, String actionName,
                                      List<Validator> validatorList, List<Validator> resultValidators, String prefix) {
+        findFieldValidators(name, actionClass, actionName, validatorList, resultValidators, prefix, null, null);
+    }
+
+    private void findFieldValidators(String name, Class actionClass, String actionName,
+                                     List<Validator> validatorList, List<Validator> resultValidators, String prefix,
+                                     Class<?> visitedClass, String visitedPath) {
 
         for (Validator validator : validatorList) {
             if (validator instanceof FieldValidator fieldValidator) {
@@ -403,12 +458,12 @@ public class Form extends ClosingUIBean {
                     List<Validator> visitorValidators = cachedVisitorValidators.computeIfAbsent(clazz,
                         visited -> actionValidatorManager.getValidators(visited, actionName));
                     String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
-                    findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix);
+                    String vPath = visitedPath == null ? vfValidator.getFieldName() : visitedPath + "." + vfValidator.getFieldName();
+                    findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix, clazz, vPath);
                 } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {
-                    if (StringUtils.isNotBlank(prefix)) {
+                    if (visitedClass != null) {
                         //fixing field name for js side
-                        FieldVisitorValidatorWrapper wrap = new FieldVisitorValidatorWrapper(fieldValidator, prefix);
-                        resultValidators.add(wrap);
+                        resultValidators.add(new FieldVisitorValidatorWrapper(fieldValidator, prefix, visitedClass, visitedPath));
                     } else {
                         resultValidators.add(fieldValidator);
                     }
@@ -428,10 +483,31 @@ public class Form extends ClosingUIBean {
     public static class FieldVisitorValidatorWrapper implements FieldValidator {
         private FieldValidator fieldValidator;
         private String namePrefix;
+        private final Class<?> visitedClass;
+        private final String visitedPath;
 
         public FieldVisitorValidatorWrapper(FieldValidator fv, String namePrefix) {
+            this(fv, namePrefix, null, null);
+        }
+
+        /**
+         * @param visitedClass the class the visitor validates, whose bundle its messages resolve in
+         * @param visitedPath  the OGNL path of the visited object from the action, e.g. {@code user}
+         * @since 7.4.0
+         */
+        public FieldVisitorValidatorWrapper(FieldValidator fv, String namePrefix, Class<?> visitedClass, String visitedPath) {
             this.fieldValidator = fv;
             this.namePrefix = namePrefix;
+            this.visitedClass = visitedClass;
+            this.visitedPath = visitedPath;
+        }
+
+        public Class<?> getVisitedClass() {
+            return visitedClass;
+        }
+
+        public String getVisitedPath() {
+            return visitedPath;
         }
 
         public String getValidatorType() {

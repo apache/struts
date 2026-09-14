@@ -42,7 +42,9 @@ public interface HtmlConstraintProvider {
     /**
      * @param validators the field's validators; may be null or empty
      * @param control    the kind of control being rendered
-     * @param action     the action instance, used to resolve i18n validator messages; may be null
+     * @param action     the object the field's validators run against, used to resolve i18n validator
+     *                   messages: the action, or the visited object for a field reached through a
+     *                   {@code visitor} validator; may be null
      * @return attribute name to value; never null, possibly empty
      */
     Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action);

@@ -23,7 +23,12 @@
 <validators>
     <field name="name">
         <field-validator type="requiredstring">
-            <message>name is required</message>
+            <message key="name.required"/>
+        </field-validator>
+    </field>
+    <field name="email">
+        <field-validator type="requiredstring">
+            <message key="email.required"/>
         </field-validator>
     </field>
 </validators>

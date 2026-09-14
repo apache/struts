@@ -21,6 +21,8 @@ package org.apache.struts2.components;
 public class ConstraintUser {
 
     private String name;
+    private String email;
+    private String label = "Name";
 
     public String getName() {
         return name;
@@ -28,5 +30,21 @@ public class ConstraintUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

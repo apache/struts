@@ -22,6 +22,7 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.Validator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -954,8 +955,10 @@ public abstract class UIBean extends Component {
         }
         int stackDepth = stack.getRoot().size();
         try {
+            List<Validator> validators = form.getFieldValidators(fieldName);
+            Object validated = form.getValidatedObject(fieldName);
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-                form.getFieldValidators(fieldName), getControlType(), resolveAction());
+                validators, getControlType(), validated != null ? validated : resolveAction());
             if (constraints.isEmpty()) {
                 return;
             }
@@ -1006,6 +1009,9 @@ public abstract class UIBean extends Component {
      * {@code <s:iterator>} wrapping the field pushes the current element — so peeking would resolve
      * messages against a model or a list element while {@code ValidationInterceptor} validated the
      * action.
+     *
+     * A field reached through a {@code visitor} validator is validated against the visited object
+     * instead, so {@link Form#getValidatedObject(String)} takes precedence when that object exists.
      *
      * @return the action, or null when rendering outside action scope, in which case the provider
      * simply derives no message attributes

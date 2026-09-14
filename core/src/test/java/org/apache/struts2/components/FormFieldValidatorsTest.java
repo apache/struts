@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.validator.ActionValidatorManager;
@@ -41,6 +42,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class FormFieldValidatorsTest extends AbstractUITagTest {
+
+    @Override
+    public Action getAction() {
+        return new ConstraintAction();
+    }
 
     public void testFindsTheFieldsValidators() throws Exception {
         Form form = formForDoubleValidationAction();
@@ -106,6 +112,35 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         assertEquals(1, validators.size());
         assertTrue("expected the concrete validator, got " + validators.get(0).getClass(),
             validators.get(0) instanceof RequiredStringValidator);
+    }
+
+    public void testUnwrappedVisitorValidatorResolvesMessagesFromTheVisitedClassBundle() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        Validator validator = form.getFieldValidators("user.name").get(0);
+
+        assertEquals("Name is required", validator.getMessage(action));
+    }
+
+    public void testValidatedObjectIsTheVisitedInstanceForAVisitorNestedField() throws Exception {
+        currentActionIs("constraintAction");
+        ConstraintUser user = new ConstraintUser();
+        ((ConstraintAction) action).setUser(user);
+        Form form = formFor("constraintAction");
+
+        form.getFieldValidators("user.name");
+
+        assertSame(user, form.getValidatedObject("user.name"));
+    }
+
+    public void testValidatedObjectIsNullForADirectField() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        form.getFieldValidators("username");
+
+        assertNull(form.getValidatedObject("username"));
     }
 
     /**

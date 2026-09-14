@@ -34,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -67,9 +68,7 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("myUpDownSelectTag");
         form.getFieldValidators("someOtherField");
 
-        // fully qualified: AbstractUITagTest inherits verify(URL), which would shadow a static import
-        org.mockito.Mockito.verify(manager, times(1))
-            .getValidators(any(Class.class), anyString(), nullable(String.class));
+        then(manager).should(times(1)).getValidators(any(Class.class), anyString(), nullable(String.class));
     }
 
     /**
@@ -123,7 +122,7 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("username");
         form.getFieldValidators("bio");
 
-        org.mockito.Mockito.verify(manager, times(1)).getValidators(eq(ConstraintUser.class), anyString());
+        then(manager).should(times(1)).getValidators(eq(ConstraintUser.class), anyString());
     }
 
     private void currentActionIs(String actionName) {

@@ -978,12 +978,12 @@ public abstract class UIBean extends Component {
      * without descending from html5 never receives the map.
      */
     private boolean themeRendersConstraints() {
-        Template template = buildTemplateName(this.template, getDefaultTemplate());
-        TemplateEngine engine = templateEngineManager.getTemplateEngine(template, templateSuffix);
+        Template resolved = buildTemplateName(template, getDefaultTemplate());
+        TemplateEngine engine = templateEngineManager.getTemplateEngine(resolved, templateSuffix);
         if (engine == null) {
             return false;
         }
-        for (Template candidate : template.getPossibleTemplates(engine)) {
+        for (Template candidate : resolved.getPossibleTemplates(engine)) {
             if (CONSTRAINT_THEME.equals(candidate.getTheme())) {
                 return true;
             }

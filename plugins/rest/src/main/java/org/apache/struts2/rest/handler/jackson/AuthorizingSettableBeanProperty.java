@@ -49,13 +49,29 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
 
     private static final Logger LOG = LogManager.getLogger(AuthorizingSettableBeanProperty.class);
 
+    private final String memberName;
+
+    /**
+     * @deprecated keys authorization on the wire name; use
+     * {@link #AuthorizingSettableBeanProperty(SettableBeanProperty, String)} with the Java member name
+     */
+    @Deprecated(since = "7.4.0", forRemoval = true)
     public AuthorizingSettableBeanProperty(SettableBeanProperty delegate) {
+        this(delegate, delegate.getName());
+    }
+
+    /**
+     * @param memberName the Java member name the authorizer resolves, which differs from
+     *                   {@link #getName()} once the property is renamed on the wire
+     */
+    public AuthorizingSettableBeanProperty(SettableBeanProperty delegate, String memberName) {
         super(delegate);
+        this.memberName = memberName;
     }
 
     @Override
     protected SettableBeanProperty withDelegate(SettableBeanProperty d) {
-        return new AuthorizingSettableBeanProperty(d);
+        return new AuthorizingSettableBeanProperty(d, memberName);
     }
 
     /**
@@ -69,7 +85,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
     public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
         JsonDeserializer<?> effective = deser;
         if (!(deser instanceof AuthorizingValueDeserializer)) {
-            effective = new AuthorizingValueDeserializer(deser, getName(), getType());
+            effective = new AuthorizingValueDeserializer(deser, memberName, getType());
         }
         return _with(delegate.withValueDeserializer(effective));
     }
@@ -80,7 +96,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
             delegate.deserializeAndSet(p, ctxt, instance);
             return;
         }
-        String path = ParameterAuthorizationContext.pathFor(getName());
+        String path = ParameterAuthorizationContext.pathFor(memberName);
         if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
@@ -96,7 +112,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isActive()) {
             return delegate.deserializeSetAndReturn(p, ctxt, instance);
         }
-        String path = ParameterAuthorizationContext.pathFor(getName());
+        String path = ParameterAuthorizationContext.pathFor(memberName);
         if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
             LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
                     path, instance.getClass().getName());
@@ -132,7 +148,7 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
         if (!ParameterAuthorizationContext.isActive()) {
             return true;
         }
-        String path = ParameterAuthorizationContext.pathFor(getName());
+        String path = ParameterAuthorizationContext.pathFor(memberName);
         if (DynamicKeyAuthorizationContext.isAuthorized(path)) {
             return true;
         }

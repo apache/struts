@@ -25,15 +25,22 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import java.beans.Introspector;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Jackson {@link SimpleModule} that wraps every {@link SettableBeanProperty} on every bean type
  * with an {@link AuthorizingSettableBeanProperty}, enforcing {@code @StrutsParameter} authorization
  * during deserialization via the {@link org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext}
- * ThreadLocal.
+ * ThreadLocal. Each wrapper is keyed by the Java member Jackson invokes for the property, not the
+ * external name a {@code @JsonProperty} or naming strategy puts on the wire, since the authorizer
+ * resolves the path against the member.
  *
  * <p>Register this module once on each handler's mapper (e.g. in the constructor). All per-request
  * authorization state is read from the ThreadLocal context, so the module + mapper combination is
@@ -44,6 +51,8 @@ import java.util.Iterator;
 public class ParameterAuthorizingModule extends SimpleModule {
 
     private static final long serialVersionUID = 1L;
+    private static final List<String> MUTATOR_PREFIXES = List.of("set");
+    private static final List<String> GETTER_PREFIXES = List.of("get", "is");
     private volatile boolean requireAnySetterAnnotations;
 
     public ParameterAuthorizingModule() {
@@ -63,7 +72,8 @@ public class ParameterAuthorizingModule extends SimpleModule {
                     if (original instanceof AuthorizingSettableBeanProperty) {
                         continue; // idempotent; protect against double-registration
                     }
-                    builder.addOrReplaceProperty(new AuthorizingSettableBeanProperty(original), true);
+                    builder.addOrReplaceProperty(
+                            new AuthorizingSettableBeanProperty(original, memberNameOf(original)), true);
                 }
                 if (ParameterAuthorizingModule.this.requireAnySetterAnnotations) {
                     SettableAnyProperty anySetter = builder.getAnySetter();
@@ -85,6 +95,34 @@ public class ParameterAuthorizingModule extends SimpleModule {
                 return new RedactionAwareDeserializer(deserializer);
             }
         });
+    }
+
+    /**
+     * The bean property name {@code StrutsParameterAuthorizer} resolves to the member Jackson will
+     * invoke for this property: the field itself, or the property a one-argument {@code set} or
+     * no-argument {@code get}/{@code is} accessor is named after. A creator parameter has no such
+     * member, and Jackson merges a renamed accessor into whatever property already owns its external
+     * name, so neither the external name nor {@code BeanPropertyDefinition#getInternalName()}
+     * identifies the member reliably. Properties with no member, or an accessor outside the bean
+     * convention, keep the external name.
+     */
+    static String memberNameOf(SettableBeanProperty property) {
+        AnnotatedMember member = property.getMember();
+        if (member instanceof AnnotatedField) {
+            return member.getName();
+        }
+        if (member instanceof AnnotatedMethod method) {
+            List<String> prefixes = method.getParameterCount() == 1 ? MUTATOR_PREFIXES
+                    : method.getParameterCount() == 0 ? GETTER_PREFIXES : List.of();
+            String methodName = method.getName();
+            for (String prefix : prefixes) {
+                if (methodName.length() > prefix.length() && methodName.startsWith(prefix)
+                        && Character.isUpperCase(methodName.charAt(prefix.length()))) {
+                    return Introspector.decapitalize(methodName.substring(prefix.length()));
+                }
+            }
+        }
+        return property.getName();
     }
 
     /**

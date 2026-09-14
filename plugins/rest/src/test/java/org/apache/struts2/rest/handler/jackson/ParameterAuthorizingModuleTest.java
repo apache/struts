@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
@@ -46,8 +47,10 @@ import org.apache.struts2.rest.handler.JacksonJsonHandler;
 
 import java.beans.ConstructorProperties;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -134,6 +137,37 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         mapper.readValue("{\"name\":\"alice\",\"address\":{\"city\":\"Warsaw\"}}", Person.class);
         assertEquals("path stack must be empty after deserialization", "",
                 ParameterAuthorizationContext.currentPathPrefix());
+    }
+
+    public void testNamingStrategyAuthorizesJavaMemberNamesAtEveryLevel() throws Exception {
+        ObjectMapper snakeCase = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                .registerModule(new ParameterAuthorizingModule());
+        List<String> seen = new ArrayList<>();
+        bind((path, t, a) -> seen.add(path), new CamelCasePerson());
+        CamelCasePerson result = snakeCase.readValue(
+                "{\"user_name\":\"alice\",\"home_address\":{\"street_name\":\"Main\"},"
+                        + "\"other_addresses\":[{\"street_name\":\"Side\"}]}",
+                CamelCasePerson.class);
+        assertEquals("alice", result.userName);
+        assertEquals("Main", result.homeAddress.streetName);
+        assertEquals("Side", result.otherAddresses.get(0).streetName);
+        assertEquals(List.of("userName", "homeAddress", "homeAddress.streetName",
+                "otherAddresses", "otherAddresses[0].streetName"), List.copyOf(new LinkedHashSet<>(seen)));
+    }
+
+    public void testMemberNameKeepsExternalNameForMutatorOutsideBeanConvention() throws Exception {
+        List<String> seen = new ArrayList<>();
+        bind((path, t, a) -> seen.add(path), new FluentMutatorBean());
+        mapper.readValue("{\"settings\":\"dark\",\"issue\":\"open\"}", FluentMutatorBean.class);
+        assertEquals(List.of("settings", "issue"), List.copyOf(new LinkedHashSet<>(seen)));
+    }
+
+    public void testMemberNameKeepsExternalNameForOneArgGetterNamedMutator() throws Exception {
+        List<String> seen = new ArrayList<>();
+        bind((path, t, a) -> seen.add(path), new GetterNamedMutatorBean());
+        mapper.readValue("{\"nick\":\"x\"}", GetterNamedMutatorBean.class);
+        assertEquals(List.of("nick"), List.copyOf(new LinkedHashSet<>(seen)));
     }
 
     public void testAnySetterEnforcementDisabledByDefault() throws Exception {
@@ -1032,5 +1066,36 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     /** A record with a primitive component, to exercise FAIL_ON_NULL_FOR_PRIMITIVES interaction. */
     public record Money(int amount, String currency) {
+    }
+
+    public static class CamelCasePerson {
+        public String userName;
+        public CamelCaseAddress homeAddress;
+        public List<CamelCaseAddress> otherAddresses;
+    }
+
+    public static class CamelCaseAddress {
+        public String streetName;
+    }
+
+    public static class FluentMutatorBean {
+        String settings;
+        String issue;
+
+        @JsonProperty("settings")
+        public void settings(String settings) { this.settings = settings; }
+
+        @JsonProperty("issue")
+        public void issue(String issue) { this.issue = issue; }
+    }
+
+    public static class GetterNamedMutatorBean {
+        String name;
+        String nick;
+
+        public void setName(String name) { this.name = name; }
+
+        @JsonProperty("nick")
+        public void getName(String nick) { this.nick = nick; }
     }
 }

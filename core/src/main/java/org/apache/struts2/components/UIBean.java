@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
@@ -961,8 +962,7 @@ public abstract class UIBean extends Component {
             constraints = new LinkedHashMap<>(constraints);
             // the template has already written type by the time the map renders; a second one is a
             // duplicate attribute, of which the browser keeps the first
-            constraints.remove("type");
-            constraints.keySet().removeIf(this::isAlreadyRendered);
+            constraints.keySet().removeIf(name -> "type".equalsIgnoreCase(name) || isAlreadyRendered(name));
             if (!constraints.isEmpty()) {
                 addParameter("constraints", constraints);
             }
@@ -1042,13 +1042,20 @@ public abstract class UIBean extends Component {
      * {@code required} attribute the developer typed by hand as a dynamic attribute still wins.
      */
     private boolean isAlreadyRendered(String attributeName) {
-        // HTML attribute names are ASCII case-insensitive, and dynamic ones are typed by the developer
-        for (String dynamicAttribute : dynamicAttributes.keySet()) {
-            if (dynamicAttribute.equalsIgnoreCase(attributeName)) {
+        // HTML attribute names are ASCII case-insensitive
+        if (containsIgnoreCase(dynamicAttributes.keySet(), attributeName)) {
+            return true;
+        }
+        return !"required".equalsIgnoreCase(attributeName) && containsIgnoreCase(getAttributes().keySet(), attributeName);
+    }
+
+    private static boolean containsIgnoreCase(Set<String> names, String name) {
+        for (String candidate : names) {
+            if (candidate.equalsIgnoreCase(name)) {
                 return true;
             }
         }
-        return !"required".equals(attributeName) && getAttributes().containsKey(attributeName);
+        return false;
     }
 
     /**

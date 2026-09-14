@@ -49,6 +49,14 @@ public final class EcmaScriptSafeRegex {
      */
     private static final String ALLOWED_ESCAPES = "dDwWnrtf\\.*+?()[]{}|^$/";
 
+    /**
+     * Browsers compile {@code pattern} with the {@code v} (unicode sets) flag. Inside a character
+     * class that mode reserves these unescaped, and any doubled {@link #CLASS_PUNCTUATORS}, as syntax;
+     * Java reads them as literals.
+     */
+    private static final String CLASS_SYNTAX = "(){}/|";
+    private static final String CLASS_PUNCTUATORS = "&!#$%*+,.:;<=>?@^`~";
+
     private EcmaScriptSafeRegex() {
     }
 
@@ -57,41 +65,72 @@ public final class EcmaScriptSafeRegex {
             return false;
         }
         boolean inCharClass = false;
+        // true while the previous unit is a plain literal a range can start from
+        boolean rangeStartAvailable = false;
         int i = 0;
         while (i < regex.length()) {
             char current = regex.charAt(i);
-            if (!isPortable(regex, i, current, inCharClass)) {
-                return false;
+            if (current == '\\') {
+                if (!isAllowedEscape(regex, i, inCharClass)) {
+                    return false;
+                }
+                // an escape consumes the character it escapes, which must not be scanned again;
+                // in unicode-sets mode a class escape cannot bound a range either
+                rangeStartAvailable = false;
+                i += 2;
+            } else if (inCharClass) {
+                if (current == ']') {
+                    inCharClass = false;
+                    i++;
+                } else if (current == '-') {
+                    if (!isRangeOperator(regex, i, rangeStartAvailable)) {
+                        return false;
+                    }
+                    rangeStartAvailable = false;
+                    i += 2;
+                } else {
+                    if (!isPortableInClass(regex, i, current)) {
+                        return false;
+                    }
+                    rangeStartAvailable = true;
+                    i++;
+                }
+            } else if (current == '{') {
+                int close = endOfQuantifier(regex, i);
+                if (close < 0 || isFollowedBy(regex, close, '+')) {
+                    return false;
+                }
+                i = close + 1;
+            } else {
+                if (!isPortable(regex, i, current)) {
+                    return false;
+                }
+                if (current == '[') {
+                    inCharClass = true;
+                    rangeStartAvailable = false;
+                }
+                i++;
             }
-            if (current == '[') {
-                inCharClass = true;
-            } else if (current == ']') {
-                inCharClass = false;
-            }
-            // an escape consumes the character it escapes, which must not be scanned again
-            i += (current == '\\') ? 2 : 1;
         }
         return !inCharClass;
     }
 
     /**
-     * Whether the construct starting at {@code index} means the same thing to both engines. This is
-     * the whole allowlist: anything that reaches {@code default} is a character with no special
-     * meaning in either engine, or one whose meaning is shared.
+     * Whether the construct starting at {@code index}, outside a character class, means the same thing
+     * to both engines. This is the whole allowlist: anything that reaches {@code default} is a character
+     * with no special meaning in either engine, or one whose meaning is shared.
      */
-    private static boolean isPortable(String regex, int index, char current, boolean inCharClass) {
+    private static boolean isPortable(String regex, int index, char current) {
         switch (current) {
-            case '\\':
-                return isAllowedEscape(regex, index, inCharClass);
             case '[':
-                // Java allows nested classes and POSIX names; ECMAScript allows neither
-                return !inCharClass && !regex.startsWith("[:", index) && !opensWithLiteralBracket(regex, index);
-            case '&':
-                // Java character-class intersection
-                return !inCharClass || !isFollowedBy(regex, index, '&');
+                // Java allows POSIX names and a leading literal ]; ECMAScript allows neither
+                return !regex.startsWith("[:", index) && !opensWithLiteralBracket(regex, index);
+            case ']', '}':
+                // a literal in Java, "lone quantifier brackets" in the browser
+                return false;
             case '(':
                 return isPortableGroup(regex, index);
-            case '*', '+', '?', '}':
+            case '*', '+', '?':
                 // possessive quantifier
                 return !isFollowedBy(regex, index, '+');
             default:
@@ -99,12 +138,44 @@ public final class EcmaScriptSafeRegex {
         }
     }
 
+    private static boolean isPortableInClass(String regex, int index, char current) {
+        if (current == '[' || CLASS_SYNTAX.indexOf(current) >= 0) {
+            // nested classes are Java-only; the rest are unicode-sets syntax characters
+            return false;
+        }
+        return CLASS_PUNCTUATORS.indexOf(current) < 0 || !isFollowedBy(regex, index, current);
+    }
+
+    /**
+     * Inside a class an unescaped hyphen is portable only as a range operator between two plain
+     * literals: {@code [a-z]}. Anywhere else Java reads it as a literal and the browser throws.
+     */
+    private static boolean isRangeOperator(String regex, int index, boolean rangeStartAvailable) {
+        if (!rangeStartAvailable || index + 1 >= regex.length()) {
+            return false;
+        }
+        char end = regex.charAt(index + 1);
+        return end != ']' && end != '\\' && end != '-' && end != '[' && CLASS_SYNTAX.indexOf(end) < 0;
+    }
+
+    /**
+     * Index of the {@code }} closing a {@code {n}}, {@code {n,}} or {@code {n,m}} quantifier that opens
+     * at {@code index}, or -1 when the braces do not form one — which Java rejects as well.
+     */
+    private static int endOfQuantifier(String regex, int index) {
+        int close = regex.indexOf('}', index);
+        if (close < 0 || !regex.substring(index + 1, close).matches("\\d+(,\\d*)?")) {
+            return -1;
+        }
+        return close;
+    }
+
     private static boolean isAllowedEscape(String regex, int index, boolean inCharClass) {
         if (index + 1 >= regex.length()) {
             return false;
         }
         char escaped = regex.charAt(index + 1);
-        // HTML compiles pattern with the Unicode flag, under which \- is only legal inside a class
+        // in unicode mode \- is only legal inside a class
         if (escaped == '-') {
             return inCharClass;
         }
@@ -113,7 +184,7 @@ public final class EcmaScriptSafeRegex {
 
     /**
      * Java reads a {@code ]} directly after {@code [} or {@code [^} as a literal member of the class;
-     * ECMAScript reads {@code []} as an empty class and the rest as literals.
+     * the browser's unicode-mode compiler rejects it.
      */
     private static boolean opensWithLiteralBracket(String regex, int index) {
         int first = isFollowedBy(regex, index, '^') ? index + 2 : index + 1;

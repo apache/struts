@@ -328,6 +328,19 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
+    public void messageIsEmittedForADottedValidatorType() {
+        // legal both as a validators.xml type name and as a data-* attribute suffix
+        Validator validator = mock(Validator.class);
+        when(validator.getValidatorType()).thenReturn("acme.required");
+        when(validator.getMessage(action)).thenReturn("needed");
+
+        Map<String, String> result =
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+
+        assertThat(result).containsEntry("data-msg-acme.required", "needed");
+    }
+
+    @Test
     public void rangeOmitsAMaxThatIsNotANumber() {
         // a date range on a control the developer declared numeric: min already fails the integral
         // guard, max must not fall through as Date.toString()

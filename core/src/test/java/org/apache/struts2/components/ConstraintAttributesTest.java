@@ -37,6 +37,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     private String theme = "html5";
     private String fieldName = "username";
     private final Map<String, String> dynamicAttributes = new HashMap<>();
+    private String declaredMaxlength;
 
     public void testNoConstraintsWhenTheConstantIsOff() throws Exception {
         initDispatcherWith("false");
@@ -106,12 +107,13 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
      * {@code html5/text.ftl} has already emitted a hardcoded {@code type} by the time the constraint
      * map renders, so a {@code type} from a provider would be a duplicate attribute the browser drops.
      */
-    public void testATypeFromTheProviderIsDiscarded() throws Exception {
+    public void testATypeOrADeclaredAttributeFromTheProviderIsDiscardedRegardlessOfCase() throws Exception {
         initDispatcherWith("true");
 
+        declaredMaxlength = "5";
         TextFieldTag field = startField(null);
         ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) ->
-            new java.util.LinkedHashMap<>(Map.of("type", "email", "required", "required")));
+            new java.util.LinkedHashMap<>(Map.of("Type", "email", "Maxlength", "9", "required", "required")));
         Map<String, Object> attributes = ((UIBean) field.getComponent()).getAttributes();
 
         finishField(field);
@@ -119,7 +121,8 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         @SuppressWarnings("unchecked")
         Map<String, String> constraints = (Map<String, String>) attributes.get("constraints");
         assertNotNull(constraints);
-        assertFalse("type must never reach the template", constraints.containsKey("type"));
+        assertFalse("type must never reach the template, whatever its case", constraints.containsKey("Type"));
+        assertFalse("a declared maxlength wins over a provider's Maxlength", constraints.containsKey("Maxlength"));
         assertEquals("required", constraints.get("required"));
     }
 
@@ -221,6 +224,9 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         field.setName(fieldName);
         if (type != null) {
             field.setType(type);
+        }
+        if (declaredMaxlength != null) {
+            field.setMaxlength(declaredMaxlength);
         }
         for (Map.Entry<String, String> dynamic : dynamicAttributes.entrySet()) {
             field.setDynamicAttribute(null, dynamic.getKey(), dynamic.getValue());

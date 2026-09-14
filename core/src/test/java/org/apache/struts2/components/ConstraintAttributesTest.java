@@ -269,6 +269,42 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
     }
 
+    /**
+     * The interceptor pushes the model it saw; a model that only came into existence later was never
+     * pushed, so the frame above the action is still a page frame.
+     */
+    public void testAModelCreatedAfterTheInterceptorRanIsNotMistakenForAPushedOne() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintAction shadow = userLabelled("Action", "Shadow");
+        ((ModelDrivenConstraintAction) action).setModel(new ConstraintAction());
+        stack.push(shadow);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Validation builds the visited provider from the instance's runtime class, so a subclass's own
+     * bundle wins over the declared type's.
+     */
+    public void testVisitedProviderUsesTheRuntimeClassOfTheVisitedInstance() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser admin = new AdminConstraintUser();
+        admin.setLabel("Root");
+        ((ConstraintAction) action).setUser(admin);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Admin Root: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
     /** Sets the action's user label and returns another action whose user carries the other label. */
     private ConstraintAction userLabelled(String actionsLabel, String othersLabel) {
         ConstraintUser actionsUser = new ConstraintUser();

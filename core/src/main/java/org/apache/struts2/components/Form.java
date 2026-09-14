@@ -461,10 +461,10 @@ public class Form extends ClosingUIBean {
     }
 
     /**
-     * The instance the interceptor pushed, taken from the stack rather than from {@code getModel()}
-     * again — a fresh instance per call would not be the one validation ran against. The interceptor
-     * pushes only for a ModelDriven action with a non-null model, and only when it is in the
-     * rendering action's stack (it is in the default one, so that alone proves nothing).
+     * The model the interceptor pushed: the frame directly above the action, and only when it is the
+     * action's current model — anything else there is a page frame. The interceptor is in the default
+     * stack, so its being configured alone proves nothing; it is still checked because a stack without
+     * it never pushes, however the model looks now.
      */
     private Object modelPushedAbove(Object action, CompoundRoot root) {
         if (!(action instanceof ModelDriven<?> modelDriven) || modelDriven.getModel() == null) {
@@ -474,7 +474,8 @@ public class Form extends ClosingUIBean {
         if (actionIndex <= 0 || !modelDrivenInterceptorConfigured()) {
             return null;
         }
-        return root.get(actionIndex - 1);
+        Object above = root.get(actionIndex - 1);
+        return above == modelDriven.getModel() ? above : null;
     }
 
     private boolean modelDrivenInterceptorConfigured() {
@@ -512,8 +513,9 @@ public class Form extends ClosingUIBean {
         List<String> paths = wrapper.getVisitedPaths();
         for (int level = classes.size() - 1; level >= 0; level--) {
             Object visited = findAsValidation(paths.get(level));
-            providers.add(visited instanceof TextProvider textProvider
-                ? textProvider : textProviderFactory.createInstance(classes.get(level)));
+            // the runtime class when the instance exists, as validation does; the declared one otherwise
+            providers.add(visited instanceof TextProvider textProvider ? textProvider
+                : textProviderFactory.createInstance(visited != null ? visited.getClass() : classes.get(level)));
         }
         providers.add(parent);
         validator.setValidatorContext(new DelegatingValidatorContext(parent, new CompositeTextProvider(providers), parent));

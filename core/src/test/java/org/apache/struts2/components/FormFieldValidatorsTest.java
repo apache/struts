@@ -143,7 +143,11 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         currentActionIs("constraintAction");
         Form form = formFor("constraintAction");
 
-        assertEquals(2, form.getFieldValidators("name").size());
+        List<Validator> validators = form.getFieldValidators("name");
+
+        assertEquals(2, validators.size());
+        assertNotSame("two visitors must not share one validator instance, or the second context "
+            + "overwrites the first", validators.get(0), validators.get(1));
         assertNull(form.getValidatedObject("name"));
     }
 
@@ -158,9 +162,10 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
 
     /**
      * The manager caches only validator configs and builds fresh instances on every call, so the
-     * visitor branch must be resolved once per form like the top-level list, not once per field.
+     * visitor branch must be resolved once per visitor per form, not once per field. The fixture
+     * declares three visitors over ConstraintUser (user, owner, contact).
      */
-    public void testResolvesAVisitorsValidatorsOnlyOnceAcrossFields() throws Exception {
+    public void testResolvesAVisitorsValidatorsOnlyOncePerVisitorAcrossFields() throws Exception {
         currentActionIs("constraintAction");
         Form form = formFor("constraintAction");
         ActionValidatorManager manager = spy(container.getInstance(ActionValidatorManager.class));
@@ -170,7 +175,7 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("username");
         form.getFieldValidators("bio");
 
-        then(manager).should(times(1)).getValidators(eq(ConstraintUser.class), anyString());
+        then(manager).should(times(3)).getValidators(eq(ConstraintUser.class), anyString());
     }
 
     private void currentActionIs(String actionName) {

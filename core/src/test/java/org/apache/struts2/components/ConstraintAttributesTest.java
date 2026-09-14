@@ -198,6 +198,29 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     }
 
     /**
+     * ModelDrivenInterceptor pushes the model above the action before validation runs, so a property
+     * both declare is validated off the model. Rendering must read it off the same object.
+     */
+    public void testVisitedObjectIsResolvedFromTheModelOfAModelDrivenAction() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser actionsUser = new ConstraintUser();
+        actionsUser.setLabel("Action");
+        ((ConstraintAction) action).setUser(actionsUser);
+        ConstraintAction model = new ConstraintAction();
+        ConstraintUser modelsUser = new ConstraintUser();
+        modelsUser.setLabel("Model");
+        model.setUser(modelsUser);
+        ((ConstraintAction) action).setModel(model);
+        stack.push(model);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Model: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
      * With {@code user} set but {@code user.address} still null there is no Address to validate
      * against; the provider gets the action, as for any field whose visited object does not exist,
      * rather than the User one level up — and {@code ${...}} agrees with that, so the User's label

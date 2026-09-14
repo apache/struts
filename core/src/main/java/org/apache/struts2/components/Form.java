@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.RuntimeConfiguration;
@@ -135,7 +136,7 @@ public class Form extends ClosingUIBean {
     private List<Validator> cachedActionValidators;
     private String cachedActionName;
     private boolean actionValidatorsResolved;
-    private final Map<Class<?>, List<Validator>> cachedVisitorValidators = new HashMap<>();
+    private final Map<String, List<Validator>> cachedVisitorValidators = new HashMap<>();
     private final Map<String, String> visitedPaths = new HashMap<>();
     private final Map<String, List<Object>> visitedObjects = new HashMap<>();
     protected TextProviderFactory textProviderFactory;
@@ -415,7 +416,7 @@ public class Form extends ClosingUIBean {
         StringBuilder prefix = new StringBuilder();
         for (String segment : path.split("\\.")) {
             prefix.append(prefix.isEmpty() ? "" : ".").append(segment);
-            Object visited = findFromAction(prefix.toString());
+            Object visited = findAsValidation(prefix.toString());
             if (visited == null) {
                 break;
             }
@@ -430,20 +431,27 @@ public class Form extends ClosingUIBean {
     }
 
     /**
-     * Validation reads the visited object off the action. At render time an {@code <s:iterator>} or
-     * {@code <s:push>} frame above the action may expose the same property, so the action is put on
-     * top for the lookup.
+     * Validation reads the visited object off the stack as the interceptors left it: the action, with
+     * a ModelDriven model above it. At render time an {@code <s:iterator>} or {@code <s:push>} frame
+     * above those may expose the same property, so that validation-time pair is put on top for the
+     * lookup.
      */
-    private Object findFromAction(String path) {
+    private Object findAsValidation(String path) {
         Object action = currentAction();
         if (action == null) {
             return getStack().findValue(path);
         }
+        int depth = getStack().getRoot().size();
         getStack().push(action);
+        if (action instanceof ModelDriven<?> modelDriven && modelDriven.getModel() != null) {
+            getStack().push(modelDriven.getModel());
+        }
         try {
             return getStack().findValue(path);
         } finally {
-            getStack().pop();
+            while (getStack().getRoot().size() > depth) {
+                getStack().pop();
+            }
         }
     }
 
@@ -464,7 +472,7 @@ public class Form extends ClosingUIBean {
         List<Class<?>> classes = wrapper.getVisitedClasses();
         List<String> paths = wrapper.getVisitedPaths();
         for (int level = classes.size() - 1; level >= 0; level--) {
-            Object visited = findFromAction(paths.get(level));
+            Object visited = findAsValidation(paths.get(level));
             providers.add(visited instanceof TextProvider textProvider
                 ? textProvider : textProviderFactory.createInstance(classes.get(level)));
         }
@@ -533,11 +541,13 @@ public class Form extends ClosingUIBean {
                         continue;
                     }
 
-                    List<Validator> visitorValidators = cachedVisitorValidators.computeIfAbsent(clazz,
-                        visited -> actionValidatorManager.getValidators(visited, actionName));
                     String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
                     String vPath = visitedPaths.isEmpty() ? vfValidator.getFieldName()
                         : visitedPaths.get(visitedPaths.size() - 1) + "." + vfValidator.getFieldName();
+                    // per visitor, not per class: unwrap() sets a context on these instances, and two
+                    // visitors over one class must not overwrite each other's
+                    List<Validator> visitorValidators = cachedVisitorValidators.computeIfAbsent(vPath,
+                        path -> actionValidatorManager.getValidators(clazz, actionName));
                     findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix,
                         append(visitedClasses, clazz), append(visitedPaths, vPath));
                 } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {
@@ -591,11 +601,11 @@ public class Form extends ClosingUIBean {
             this.visitedPaths = List.copyOf(visitedPaths);
         }
 
-        public List<Class<?>> getVisitedClasses() {
+        List<Class<?>> getVisitedClasses() {
             return visitedClasses;
         }
 
-        public List<String> getVisitedPaths() {
+        List<String> getVisitedPaths() {
             return visitedPaths;
         }
 

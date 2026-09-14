@@ -19,15 +19,17 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
-public class ConstraintAction extends ActionSupport {
+public class ConstraintAction extends ActionSupport implements ModelDriven<Object> {
 
     private String username;
     private String comment;
     private String bio;
     private String nickname;
     private ConstraintUser user;
+    private Object model;
     private ConstraintUser owner = new ConstraintUser();
     private ConstraintUser contact = new ConstraintUser();
     private String code;
@@ -94,6 +96,15 @@ public class ConstraintAction extends ActionSupport {
 
     public void setAttachment(Object attachment) {
         this.attachment = attachment;
+    }
+
+    @Override
+    public Object getModel() {
+        return model;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
     }
 
     public ConstraintUser getOwner() {

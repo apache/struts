@@ -40,6 +40,24 @@
             <message>bio must be at most ${maxLength} characters</message>
         </field-validator>
     </field>
+    <field name="code">
+        <field-validator type="regex">
+            <param name="regex"><![CDATA[^[A-Z]{3}\d{2}$]]></param>
+            <param name="trim">false</param>
+            <param name="caseSensitive">true</param>
+            <message>code must be three letters and two digits</message>
+        </field-validator>
+    </field>
+    <field name="choice">
+        <field-validator type="required">
+            <message>pick one</message>
+        </field-validator>
+    </field>
+    <field name="attachment">
+        <field-validator type="required">
+            <message>attach a file</message>
+        </field-validator>
+    </field>
     <field name="user">
         <field-validator type="visitor">
             <message/>

@@ -36,6 +36,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     private FormTag form;
     private String theme = "html5";
     private String fieldName = "username";
+    private final Map<String, String> dynamicAttributes = new HashMap<>();
 
     public void testNoConstraintsWhenTheConstantIsOff() throws Exception {
         initDispatcherWith("false");
@@ -84,6 +85,42 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals("required", constraints.get("required"));
         assertEquals("name is required", constraints.get("data-msg-requiredstring"));
         assertFalse(constraints.containsKey("data-msg-field-visitor"));
+    }
+
+    /**
+     * HTML attribute names are ASCII case-insensitive, and the documented rule is that the developer's
+     * own value always wins — including one typed as {@code MAXLENGTH}.
+     */
+    public void testADynamicAttributeSuppressesTheDerivedOneRegardlessOfCase() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "bio";
+        dynamicAttributes.put("MAXLENGTH", "5");
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertTrue("expected the derived maxlength to yield to the developer's MAXLENGTH",
+            constraints == null || !constraints.containsKey("maxlength"));
+    }
+
+    /**
+     * {@code html5/text.ftl} has already emitted a hardcoded {@code type} by the time the constraint
+     * map renders, so a {@code type} from a provider would be a duplicate attribute the browser drops.
+     */
+    public void testATypeFromTheProviderIsDiscarded() throws Exception {
+        initDispatcherWith("true");
+
+        TextFieldTag field = startField(null);
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) ->
+            new java.util.LinkedHashMap<>(Map.of("type", "email", "required", "required")));
+        Map<String, Object> attributes = ((UIBean) field.getComponent()).getAttributes();
+
+        finishField(field);
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> constraints = (Map<String, String>) attributes.get("constraints");
+        assertNotNull(constraints);
+        assertFalse("type must never reach the template", constraints.containsKey("type"));
+        assertEquals("required", constraints.get("required"));
     }
 
     /**
@@ -184,6 +221,9 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         field.setName(fieldName);
         if (type != null) {
             field.setType(type);
+        }
+        for (Map.Entry<String, String> dynamic : dynamicAttributes.entrySet()) {
+            field.setDynamicAttribute(null, dynamic.getKey(), dynamic.getValue());
         }
         field.doStartTag();
         return field;

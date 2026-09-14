@@ -959,6 +959,9 @@ public abstract class UIBean extends Component {
                 return;
             }
             constraints = new LinkedHashMap<>(constraints);
+            // the template has already written type by the time the map renders; a second one is a
+            // duplicate attribute, of which the browser keeps the first
+            constraints.remove("type");
             constraints.keySet().removeIf(this::isAlreadyRendered);
             if (!constraints.isEmpty()) {
                 addParameter("constraints", constraints);
@@ -1039,8 +1042,11 @@ public abstract class UIBean extends Component {
      * {@code required} attribute the developer typed by hand as a dynamic attribute still wins.
      */
     private boolean isAlreadyRendered(String attributeName) {
-        if (dynamicAttributes.containsKey(attributeName)) {
-            return true;
+        // HTML attribute names are ASCII case-insensitive, and dynamic ones are typed by the developer
+        for (String dynamicAttribute : dynamicAttributes.keySet()) {
+            if (dynamicAttribute.equalsIgnoreCase(attributeName)) {
+                return true;
+            }
         }
         return !"required".equals(attributeName) && getAttributes().containsKey(attributeName);
     }
@@ -1110,13 +1116,13 @@ public abstract class UIBean extends Component {
 
     /**
      * The kind of HTML control this component renders, used to decide which HTML5 constraint
-     * attributes are legal on it. Defaults to {@link HtmlControlType#OTHER}, which supports no
+     * attributes are legal on it. Defaults to {@link HtmlControlType#UNSUPPORTED}, which supports no
      * constraints — so a component that does not override this emits none.
      *
      * @since 7.4.0
      */
     protected HtmlControlType getControlType() {
-        return HtmlControlType.OTHER;
+        return HtmlControlType.UNSUPPORTED;
     }
 
     protected void evaluateExtraParams() {

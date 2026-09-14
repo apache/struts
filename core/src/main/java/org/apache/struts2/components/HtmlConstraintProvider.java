@@ -27,8 +27,13 @@ import java.util.Map;
  * Maps a field's validators onto the HTML attributes a theme should render for it.
  * <p>
  * The default implementation is deliberately conservative — see {@link StrutsHtmlConstraintProvider}.
- * Applications wanting a best-effort mapping (an {@code email} validator becoming
- * {@code type="email"}, say) should register their own implementation instead.
+ * Applications wanting a less conservative mapping (a rewritten {@code pattern} for a
+ * case-insensitive regex, say) should register their own implementation instead.
+ * <p>
+ * A {@code type} entry in the returned map is discarded: the templates have already written the
+ * input's {@code type} by the time the map renders, so changing it needs a template override, not a
+ * provider. Any entry whose name matches an attribute the developer set on the tag is discarded too —
+ * the developer's own value always wins.
  *
  * @since 7.4.0
  */

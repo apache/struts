@@ -44,6 +44,21 @@ public class EcmaScriptSafeRegexTest {
     }
 
     @Test
+    public void allowsAnEscapedHyphenOnlyInsideACharacterClass() {
+        // HTML compiles pattern with the Unicode flag, under which \- outside a class is a
+        // SyntaxError and the whole attribute is ignored — silently, so the allowlist must not admit it
+        assertThat(EcmaScriptSafeRegex.isSafe("[\\w\\-]+")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("\\d+\\-\\d+")).isFalse();
+    }
+
+    @Test
+    public void rejectsAClosingBracketThatOpensAClass() {
+        // Java reads []a] as a class holding ] and a; ECMAScript reads an empty class then "a]"
+        assertThat(EcmaScriptSafeRegex.isSafe("[]a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^]a]")).isFalse();
+    }
+
+    @Test
     public void rejectsPossessiveQuantifiers() {
         assertThat(EcmaScriptSafeRegex.isSafe("\\d++")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("a*+")).isFalse();

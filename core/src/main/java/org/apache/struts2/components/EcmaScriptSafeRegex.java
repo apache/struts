@@ -47,7 +47,7 @@ public final class EcmaScriptSafeRegex {
      * every browser. On the Java 17 baseline that is a false reject, and no version check could fix
      * it: one {@code validation.xml} would have to mean two different things depending on the JVM.
      */
-    private static final String ALLOWED_ESCAPES = "dDwWnrtf\\.*+?()[]{}|^$/-";
+    private static final String ALLOWED_ESCAPES = "dDwWnrtf\\.*+?()[]{}|^$/";
 
     private EcmaScriptSafeRegex() {
     }
@@ -82,10 +82,10 @@ public final class EcmaScriptSafeRegex {
     private static boolean isPortable(String regex, int index, char current, boolean inCharClass) {
         switch (current) {
             case '\\':
-                return isAllowedEscape(regex, index);
+                return isAllowedEscape(regex, index, inCharClass);
             case '[':
                 // Java allows nested classes and POSIX names; ECMAScript allows neither
-                return !inCharClass && !regex.startsWith("[:", index);
+                return !inCharClass && !regex.startsWith("[:", index) && !opensWithLiteralBracket(regex, index);
             case '&':
                 // Java character-class intersection
                 return !inCharClass || !isFollowedBy(regex, index, '&');
@@ -99,8 +99,25 @@ public final class EcmaScriptSafeRegex {
         }
     }
 
-    private static boolean isAllowedEscape(String regex, int index) {
-        return index + 1 < regex.length() && ALLOWED_ESCAPES.indexOf(regex.charAt(index + 1)) >= 0;
+    private static boolean isAllowedEscape(String regex, int index, boolean inCharClass) {
+        if (index + 1 >= regex.length()) {
+            return false;
+        }
+        char escaped = regex.charAt(index + 1);
+        // HTML compiles pattern with the Unicode flag, under which \- is only legal inside a class
+        if (escaped == '-') {
+            return inCharClass;
+        }
+        return ALLOWED_ESCAPES.indexOf(escaped) >= 0;
+    }
+
+    /**
+     * Java reads a {@code ]} directly after {@code [} or {@code [^} as a literal member of the class;
+     * ECMAScript reads {@code []} as an empty class and the rest as literals.
+     */
+    private static boolean opensWithLiteralBracket(String regex, int index) {
+        int first = isFollowedBy(regex, index, '^') ? index + 2 : index + 1;
+        return first < regex.length() && regex.charAt(first) == ']';
     }
 
     /**

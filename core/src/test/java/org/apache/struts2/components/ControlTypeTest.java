@@ -36,7 +36,7 @@ public class ControlTypeTest extends AbstractUITagTest {
     public void testTextFieldFallsBackForAnUnknownType() {
         TextField textField = new TextField(stack, request, response);
         textField.addParameter("type", "supercolor");
-        assertEquals(HtmlControlType.OTHER, textField.getControlType());
+        assertEquals(HtmlControlType.UNSUPPORTED, textField.getControlType());
     }
 
     public void testPasswordIsAlwaysPassword() {

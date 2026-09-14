@@ -102,10 +102,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * a single space is not blocked client-side and accepted server-side.
      */
     protected void admitBlankInPattern(Map<String, String> attributes) {
-        String pattern = attributes.get(PATTERN_ATTRIBUTE);
-        if (pattern != null) {
-            attributes.put(PATTERN_ATTRIBUTE, "(?:" + pattern + ")|" + BLANK);
-        }
+        attributes.computeIfPresent(PATTERN_ATTRIBUTE, (name, regex) -> "(?:" + regex + ")|" + BLANK);
     }
 
     protected void addConstraints(Map<String, String> attributes, Validator validator, HtmlControlType control) {

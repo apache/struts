@@ -440,15 +440,15 @@ public class Form extends ClosingUIBean {
      * that validation-time pair is put back on top for the lookup.
      */
     private Object findAsValidation(String path) {
-        Object action = currentAction();
-        if (action == null) {
+        Object invoked = currentAction();
+        if (invoked == null) {
             return getStack().findValue(path);
         }
         CompoundRoot root = getStack().getRoot();
         int depth = root.size();
         try {
-            Object model = modelPushedAbove(action, root);
-            getStack().push(action);
+            Object model = modelPushedAbove(invoked, root);
+            getStack().push(invoked);
             if (model != null) {
                 getStack().push(model);
             }
@@ -503,23 +503,32 @@ public class Form extends ClosingUIBean {
      */
     private FieldValidator unwrap(FieldVisitorValidatorWrapper wrapper) {
         FieldValidator validator = wrapper.getFieldValidator();
-        Object action = currentAction();
-        if (wrapper.getVisitedClasses().isEmpty() || action == null || textProviderFactory == null) {
+        Object invoked = currentAction();
+        if (wrapper.getVisitedClasses().isEmpty() || invoked == null || textProviderFactory == null) {
             return validator;
         }
-        DelegatingValidatorContext parent = new DelegatingValidatorContext(action, textProviderFactory);
+        DelegatingValidatorContext parent = new DelegatingValidatorContext(invoked, textProviderFactory);
         List<TextProvider> providers = new ArrayList<>();
         List<Class<?>> classes = wrapper.getVisitedClasses();
         List<String> paths = wrapper.getVisitedPaths();
         for (int level = classes.size() - 1; level >= 0; level--) {
-            Object visited = findAsValidation(paths.get(level));
-            // the runtime class when the instance exists, as validation does; the declared one otherwise
-            providers.add(visited instanceof TextProvider textProvider ? textProvider
-                : textProviderFactory.createInstance(visited != null ? visited.getClass() : classes.get(level)));
+            providers.add(visitedTextProvider(findAsValidation(paths.get(level)), classes.get(level)));
         }
         providers.add(parent);
         validator.setValidatorContext(new DelegatingValidatorContext(parent, new CompositeTextProvider(providers), parent));
         return validator;
+    }
+
+    /**
+     * What {@code VisitorFieldValidator.createTextProvider} builds: the instance itself when it is a
+     * TextProvider, else a provider for its runtime class — or for the declared class when the instance
+     * does not exist yet.
+     */
+    private TextProvider visitedTextProvider(Object visited, Class<?> declared) {
+        if (visited instanceof TextProvider textProvider) {
+            return textProvider;
+        }
+        return textProviderFactory.createInstance(visited != null ? visited.getClass() : declared);
     }
 
     private void resolveActionValidators() {
@@ -564,13 +573,16 @@ public class Form extends ClosingUIBean {
 
     private void findFieldValidators(String name, Class actionClass, String actionName,
                                      List<Validator> validatorList, List<Validator> resultValidators, String prefix) {
-        findFieldValidators(name, actionClass, actionName, validatorList, resultValidators, prefix,
-            Collections.emptyList(), Collections.emptyList());
+        findFieldValidators(name, actionClass, actionName, validatorList, resultValidators, prefix, Collections.emptyList());
+    }
+
+    /** One level of visitor nesting: the class it validates and the OGNL path of that object from the action. */
+    private record Visit(Class<?> clazz, String path) {
     }
 
     private void findFieldValidators(String name, Class actionClass, String actionName,
                                      List<Validator> validatorList, List<Validator> resultValidators, String prefix,
-                                     List<Class<?>> visitedClasses, List<String> visitedPaths) {
+                                     List<Visit> visits) {
 
         for (Validator validator : validatorList) {
             if (validator instanceof FieldValidator fieldValidator) {
@@ -583,20 +595,21 @@ public class Form extends ClosingUIBean {
                     }
 
                     String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
-                    String vPath = visitedPaths.isEmpty() ? vfValidator.getFieldName()
-                        : visitedPaths.get(visitedPaths.size() - 1) + "." + vfValidator.getFieldName();
+                    String vPath = visits.isEmpty() ? vfValidator.getFieldName()
+                        : visits.get(visits.size() - 1).path() + "." + vfValidator.getFieldName();
                     // per visitor, not per class: unwrap() sets a context on these instances, and two
                     // visitors over one class must not overwrite each other's
                     List<Validator> visitorValidators = cachedVisitorValidators.computeIfAbsent(vPath,
                         path -> actionValidatorManager.getValidators(clazz, actionName));
                     findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix,
-                        append(visitedClasses, clazz), append(visitedPaths, vPath));
+                        append(visits, new Visit(clazz, vPath)));
                 } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {
-                    if (visitedClasses.isEmpty()) {
+                    if (visits.isEmpty()) {
                         resultValidators.add(fieldValidator);
                     } else {
                         //fixing field name for js side
-                        resultValidators.add(new FieldVisitorValidatorWrapper(fieldValidator, prefix, visitedClasses, visitedPaths));
+                        resultValidators.add(new FieldVisitorValidatorWrapper(fieldValidator, prefix,
+                            visits.stream().map(Visit::clazz).toList(), visits.stream().map(Visit::path).toList()));
                     }
                 }
             }

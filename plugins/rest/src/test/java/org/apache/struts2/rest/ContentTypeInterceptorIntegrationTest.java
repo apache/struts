@@ -19,6 +19,7 @@
 package org.apache.struts2.rest;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mockobjects.dynamic.AnyConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
@@ -198,6 +199,29 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         assertEquals("admin", anySetterAction.getValues().get("role"));
     }
 
+    public void testAnnotatedMemberRenamedOnTheWireIsApplied() throws Exception {
+        RenamedPropertiesAction renamed = new RenamedPropertiesAction();
+        setupInterceptorWithAction(renamed);
+        runWithBody("{\"user_name\":\"alice\"}");
+        assertEquals("alice", renamed.getUserName());
+    }
+
+    public void testUnannotatedMemberRenamedOntoAnnotatedMemberNameIsRejected() throws Exception {
+        RenamedPropertiesAction renamed = new RenamedPropertiesAction();
+        setupInterceptorWithAction(renamed);
+        runWithBody("{\"name\":true}");
+        assertFalse("wire key [name] lands on the unannotated setAdmin, not the annotated setName",
+                renamed.isAdmin());
+    }
+
+    public void testUnannotatedMemberMergedIntoAnnotatedMemberPropertyIsRejected() throws Exception {
+        MergedPropertyAction merged = new MergedPropertyAction();
+        setupInterceptorWithAction(merged);
+        runWithBody("{\"name\":\"x\"}");
+        assertNull("Jackson merges both setters into property [name] and invokes the explicitly named,"
+                + " unannotated setAdmin", merged.admin());
+    }
+
     // --- Test fixtures for new path verification ---
 
     /**
@@ -260,5 +284,52 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         public Map<String, Object> getValues() {
             return values;
         }
+    }
+
+    /**
+     * Jackson external names diverge from the Java members: the annotated {@code userName} arrives
+     * as {@code user_name}, and the unannotated {@code admin} arrives under the annotated member's
+     * Java name {@code name}.
+     */
+    public static class RenamedPropertiesAction extends ActionSupport {
+        private String userName;
+        private String name;
+        private boolean admin;
+
+        public String getUserName() { return userName; }
+
+        @StrutsParameter
+        @JsonProperty("user_name")
+        public void setUserName(String userName) { this.userName = userName; }
+
+        public String getName() { return name; }
+
+        @StrutsParameter
+        @JsonProperty("display_name")
+        public void setName(String name) { this.name = name; }
+
+        public boolean isAdmin() { return admin; }
+
+        @JsonProperty("name")
+        public void setAdmin(boolean admin) { this.admin = admin; }
+    }
+
+    /**
+     * The annotated {@code setName} and the unannotated {@code @JsonProperty("name") setAdmin} collapse
+     * into a single Jackson property {@code name} whose mutator is {@code setAdmin}.
+     */
+    public static class MergedPropertyAction extends ActionSupport {
+        private String name;
+        private String admin;
+
+        public String getName() { return name; }
+
+        @StrutsParameter
+        public void setName(String name) { this.name = name; }
+
+        public String admin() { return admin; }
+
+        @JsonProperty("name")
+        public void setAdmin(String admin) { this.admin = admin; }
     }
 }

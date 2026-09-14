@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.validator.ActionValidatorManager;
@@ -41,6 +42,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class FormFieldValidatorsTest extends AbstractUITagTest {
+
+    @Override
+    public Action getAction() {
+        return new ConstraintAction();
+    }
 
     public void testFindsTheFieldsValidators() throws Exception {
         Form form = formForDoubleValidationAction();
@@ -108,11 +114,58 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
             validators.get(0) instanceof RequiredStringValidator);
     }
 
+    public void testUnwrappedVisitorValidatorResolvesMessagesFromTheVisitedClassBundle() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        Validator validator = form.getFieldValidators("user.name").get(0);
+
+        assertEquals("Name is required", validator.getMessage(action));
+    }
+
+    public void testValidatedObjectIsTheVisitedInstanceForAVisitorNestedField() throws Exception {
+        currentActionIs("constraintAction");
+        ConstraintUser user = new ConstraintUser();
+        ((ConstraintAction) action).setUser(user);
+        Form form = formFor("constraintAction");
+
+        form.getFieldValidators("user.name");
+
+        assertSame(user, form.getValidatedObject("user.name"));
+    }
+
+    /**
+     * Two {@code appendPrefix="false"} visitors over classes that both declare {@code name} give the
+     * field two validators from two objects; there is no single object to hand the provider, so it
+     * falls back to the action rather than picking one at random.
+     */
+    public void testValidatedObjectIsNullWhenTwoVisitorsClaimTheSameUnprefixedField() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        List<Validator> validators = form.getFieldValidators("name");
+
+        assertEquals(2, validators.size());
+        assertNotSame("two visitors must not share one validator instance, or the second context "
+            + "overwrites the first", validators.get(0), validators.get(1));
+        assertNull(form.getValidatedObject("name"));
+    }
+
+    public void testValidatedObjectIsNullForADirectField() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        form.getFieldValidators("username");
+
+        assertNull(form.getValidatedObject("username"));
+    }
+
     /**
      * The manager caches only validator configs and builds fresh instances on every call, so the
-     * visitor branch must be resolved once per form like the top-level list, not once per field.
+     * visitor branch must be resolved once per visitor per form, not once per field. The fixture
+     * declares three visitors over ConstraintUser (user, owner, contact).
      */
-    public void testResolvesAVisitorsValidatorsOnlyOnceAcrossFields() throws Exception {
+    public void testResolvesAVisitorsValidatorsOnlyOncePerVisitorAcrossFields() throws Exception {
         currentActionIs("constraintAction");
         Form form = formFor("constraintAction");
         ActionValidatorManager manager = spy(container.getInstance(ActionValidatorManager.class));
@@ -122,7 +175,7 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("username");
         form.getFieldValidators("bio");
 
-        then(manager).should(times(1)).getValidators(eq(ConstraintUser.class), anyString());
+        then(manager).should(times(3)).getValidators(eq(ConstraintUser.class), anyString());
     }
 
     private void currentActionIs(String actionName) {

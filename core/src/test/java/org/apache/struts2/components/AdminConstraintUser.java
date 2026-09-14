@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,22 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.dtd">
-<validators>
-    <field name="name">
-        <field-validator type="requiredstring">
-            <message key="name.required"/>
-        </field-validator>
-    </field>
-    <field name="email">
-        <field-validator type="requiredstring">
-            <message key="email.required"/>
-        </field-validator>
-    </field>
-    <field name="address">
-        <field-validator type="visitor">
-            <message/>
-        </field-validator>
-    </field>
-</validators>
+package org.apache.struts2.components;
+
+public class AdminConstraintUser extends ConstraintUser {
+}

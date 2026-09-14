@@ -21,19 +21,9 @@
 -->
 <!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.dtd">
 <validators>
-    <field name="name">
+    <field name="street">
         <field-validator type="requiredstring">
-            <message key="name.required"/>
-        </field-validator>
-    </field>
-    <field name="email">
-        <field-validator type="requiredstring">
-            <message key="email.required"/>
-        </field-validator>
-    </field>
-    <field name="address">
-        <field-validator type="visitor">
-            <message/>
+            <message key="street.required"/>
         </field-validator>
     </field>
 </validators>

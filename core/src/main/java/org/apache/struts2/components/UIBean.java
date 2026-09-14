@@ -22,6 +22,7 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.validator.Validator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -954,8 +955,20 @@ public abstract class UIBean extends Component {
         }
         int stackDepth = stack.getRoot().size();
         try {
+            List<Validator> validators = form.getFieldValidators(fieldName);
+            // validation resolves a nested message with every visited object on the stack; both
+            // happen only when the whole chain exists, so ${...} agrees with the object handed over
+            // (restoreStackDepth pops the pushes)
+            Object validated = form.getValidatedObject(fieldName);
+            if (validated == null) {
+                validated = resolveAction();
+            } else {
+                for (Object visited : form.getVisitedObjects(fieldName)) {
+                    stack.push(visited);
+                }
+            }
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-                form.getFieldValidators(fieldName), getControlType(), resolveAction());
+                validators, getControlType(), validated);
             if (constraints.isEmpty()) {
                 return;
             }
@@ -1006,6 +1019,9 @@ public abstract class UIBean extends Component {
      * {@code <s:iterator>} wrapping the field pushes the current element — so peeking would resolve
      * messages against a model or a list element while {@code ValidationInterceptor} validated the
      * action.
+     *
+     * A field reached through a {@code visitor} validator is validated against the visited object
+     * instead, so {@link Form#getValidatedObject(String)} takes precedence when that object exists.
      *
      * @return the action, or null when rendering outside action scope, in which case the provider
      * simply derives no message attributes

@@ -28,6 +28,8 @@ public class ConstraintAction extends ActionSupport {
     private String bio;
     private String nickname;
     private ConstraintUser user;
+    private ConstraintUser owner = new ConstraintUser();
+    private ConstraintUser contact = new ConstraintUser();
     private String code;
     private String choice;
     private Object attachment;
@@ -92,6 +94,14 @@ public class ConstraintAction extends ActionSupport {
 
     public void setAttachment(Object attachment) {
         this.attachment = attachment;
+    }
+
+    public ConstraintUser getOwner() {
+        return owner;
+    }
+
+    public ConstraintUser getContact() {
+        return contact;
     }
 
     @StrutsParameter(depth = 1)

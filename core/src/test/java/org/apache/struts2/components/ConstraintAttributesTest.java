@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.action.Action;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
@@ -34,8 +35,17 @@ import java.util.Map;
 public class ConstraintAttributesTest extends AbstractUITagTest {
 
     private FormTag form;
+
+    private Action actionOverride;
+
+    @Override
+    public Action getAction() {
+        return actionOverride != null ? actionOverride : new ConstraintAction();
+    }
+
     private String theme = "html5";
     private String fieldName = "username";
+    private String actionName = "constraintAction";
     private final Map<String, String> dynamicAttributes = new HashMap<>();
     private String declaredMaxlength;
 
@@ -77,6 +87,11 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals("3", constraints.get("minlength"));
     }
 
+    /**
+     * The message key lives in the visited class's own bundle ({@code ConstraintUser.properties}),
+     * which is where {@code VisitorFieldValidator} resolves it during validation — through a
+     * composite text provider over the visited object and the action. Rendering must use the same.
+     */
     public void testVisitorValidatedNestedFieldGetsTheConcreteConstraint() throws Exception {
         initDispatcherWith("true");
         fieldName = "user.name";
@@ -84,8 +99,26 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
         assertNotNull("expected constraints for a visitor-validated field", constraints);
         assertEquals("required", constraints.get("required"));
-        assertEquals("name is required", constraints.get("data-msg-requiredstring"));
+        assertEquals("Name is required", constraints.get("data-msg-requiredstring"));
         assertFalse(constraints.containsKey("data-msg-field-visitor"));
+    }
+
+    /**
+     * Validation pushes the visited instance before resolving the message, so {@code ${label}} in a
+     * visited message reads the visited bean, not the action. Same at render time when the instance
+     * exists.
+     */
+    public void testVisitorValidatedMessageResolvesExpressionsAgainstTheVisitedInstance() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        ((ConstraintAction) action).setUser(user);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: e-mail is required", constraints.get("data-msg-requiredstring"));
     }
 
     /**
@@ -124,6 +157,191 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertFalse("type must never reach the template, whatever its case", constraints.containsKey("Type"));
         assertFalse("a declared maxlength wins over a provider's Maxlength", constraints.containsKey("Maxlength"));
         assertEquals("required", constraints.get("required"));
+    }
+
+    /**
+     * Validation chains the providers and the stack through every visited level, so a message key in
+     * the intermediate class's bundle, and a {@code ${...}} reading the intermediate object, both
+     * resolve for a doubly-nested field.
+     */
+    public void testDoublyNestedVisitorMessageResolvesThroughTheIntermediateObject() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address.street";
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        user.setAddress(new ConstraintAddress());
+        ((ConstraintAction) action).setUser(user);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: street is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Validation resolves the visited object from the action. At render time an {@code <s:iterator>}
+     * or {@code <s:push>} frame above the action may expose the same property, and must not win.
+     */
+    public void testVisitedObjectIsResolvedFromTheActionNotTheTopOfTheStack() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser actionsUser = new ConstraintUser();
+        actionsUser.setLabel("Account");
+        ((ConstraintAction) action).setUser(actionsUser);
+        ConstraintAction shadow = new ConstraintAction();
+        ConstraintUser shadowsUser = new ConstraintUser();
+        shadowsUser.setLabel("Shadow");
+        shadow.setUser(shadowsUser);
+        stack.push(shadow);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * ModelDrivenInterceptor pushes the model above the action before validation runs, so a property
+     * both declare is validated off the model. Rendering must read it off the same instance.
+     */
+    public void testVisitedObjectIsResolvedFromTheModelWhenTheModelDrivenInterceptorIsConfigured() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintAction model = userLabelled("Action", "Model");
+        ((ModelDrivenConstraintAction) action).setModel(model);
+        stack.push(model);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Model: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * modelDriven is in the default stack, so the interceptor being configured says nothing about
+     * whether it pushed: for an action that is not ModelDriven the frame above it is a page frame.
+     */
+    public void testAPageFrameAboveANonModelDrivenActionIsIgnoredEvenWithTheInterceptorConfigured() throws Exception {
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        stack.push(userLabelled("Action", "Shadow"));
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * The interceptor pushes nothing for a null model, so the frame above the action is a page frame.
+     */
+    public void testAPageFrameAboveAModelDrivenActionWithANullModelIsIgnored() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        stack.push(userLabelled("Action", "Shadow"));
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Without the interceptor configured, whatever sits above the action at render time is a page
+     * frame, not the model validation saw — so it must not win.
+     */
+    public void testAnObjectAboveTheActionIsIgnoredWithoutTheModelDrivenInterceptor() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintAction model = userLabelled("Action", "Model");
+        ((ModelDrivenConstraintAction) action).setModel(model);
+        stack.push(model);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * The interceptor pushes the model it saw; a model that only came into existence later was never
+     * pushed, so the frame above the action is still a page frame.
+     */
+    public void testAModelCreatedAfterTheInterceptorRanIsNotMistakenForAPushedOne() throws Exception {
+        actionOverride = new ModelDrivenConstraintAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintAction shadow = userLabelled("Action", "Shadow");
+        ((ModelDrivenConstraintAction) action).setModel(new ConstraintAction());
+        stack.push(shadow);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Validation builds the visited provider from the instance's runtime class, so a subclass's own
+     * bundle wins over the declared type's.
+     */
+    public void testVisitedProviderUsesTheRuntimeClassOfTheVisitedInstance() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser admin = new AdminConstraintUser();
+        admin.setLabel("Root");
+        ((ConstraintAction) action).setUser(admin);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Admin Root: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /** Sets the action's user label and returns another action whose user carries the other label. */
+    private ConstraintAction userLabelled(String actionsLabel, String othersLabel) {
+        ConstraintUser actionsUser = new ConstraintUser();
+        actionsUser.setLabel(actionsLabel);
+        ((ConstraintAction) action).setUser(actionsUser);
+        ConstraintAction other = new ConstraintAction();
+        ConstraintUser othersUser = new ConstraintUser();
+        othersUser.setLabel(othersLabel);
+        other.setUser(othersUser);
+        return other;
+    }
+
+    /**
+     * With {@code user} set but {@code user.address} still null there is no Address to validate
+     * against; the provider gets the action, as for any field whose visited object does not exist,
+     * rather than the User one level up — and {@code ${...}} agrees with that, so the User's label
+     * does not leak into an Address message.
+     */
+    public void testAPartialVisitedChainHandsTheProviderTheAction() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address.street";
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        ((ConstraintAction) action).setUser(user);
+
+        TextFieldTag field = startField(null);
+        List<Object> captured = new ArrayList<>();
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+            captured.add(derivedFrom);
+            captured.add(validators.get(0).getMessage(derivedFrom));
+            return Collections.emptyMap();
+        });
+
+        finishField(field);
+
+        assertSame(action, captured.get(0));
+        assertEquals(": street is required", captured.get(1));
     }
 
     /**
@@ -214,7 +432,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     private TextFieldTag startField(String type) throws Exception {
         form = new FormTag();
         form.setPageContext(pageContext);
-        form.setAction("constraintAction");
+        form.setAction(actionName);
         form.setNamespace("");
         form.setTheme(theme);
         form.doStartTag();
@@ -249,6 +467,6 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         // createMocks() never sets a config on the MockActionProxy it builds; without one,
         // AnnotationActionValidatorManager.buildValidatorKey NPEs dereferencing proxy.getConfig().
         ((MockActionProxy) actionProxy).setConfig(
-            configuration.getRuntimeConfiguration().getActionConfig("", "constraintAction"));
+            configuration.getRuntimeConfiguration().getActionConfig("", actionName));
     }
 }

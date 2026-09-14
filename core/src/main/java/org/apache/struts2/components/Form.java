@@ -19,8 +19,9 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.ModelDriven;
 import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.interceptor.ModelDrivenInterceptor;
+import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.ActionConfig;
@@ -139,6 +140,7 @@ public class Form extends ClosingUIBean {
     private final Map<String, List<Validator>> cachedVisitorValidators = new HashMap<>();
     private final Map<String, String> visitedPaths = new HashMap<>();
     private final Map<String, List<Object>> visitedObjects = new HashMap<>();
+    private Boolean modelDrivenConfigured;
     protected TextProviderFactory textProviderFactory;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
@@ -432,27 +434,48 @@ public class Form extends ClosingUIBean {
 
     /**
      * Validation reads the visited object off the stack as the interceptors left it: the action, with
-     * a ModelDriven model above it. At render time an {@code <s:iterator>} or {@code <s:push>} frame
-     * above those may expose the same property, so that validation-time pair is put on top for the
-     * lookup.
+     * the model {@code ModelDrivenInterceptor} pushed directly above it. At render time an
+     * {@code <s:iterator>} or {@code <s:push>} frame above those may expose the same property, so
+     * that validation-time pair is put back on top for the lookup. The model is taken from the stack,
+     * not from {@code getModel()}: the interceptor may not be configured, and a fresh instance per
+     * call would not be the one validation ran against.
      */
     private Object findAsValidation(String path) {
         Object action = currentAction();
         if (action == null) {
             return getStack().findValue(path);
         }
-        int depth = getStack().getRoot().size();
-        getStack().push(action);
-        if (action instanceof ModelDriven<?> modelDriven && modelDriven.getModel() != null) {
-            getStack().push(modelDriven.getModel());
-        }
+        CompoundRoot root = getStack().getRoot();
+        int depth = root.size();
         try {
+            int actionIndex = root.indexOf(action);
+            Object model = actionIndex > 0 && modelDrivenInterceptorConfigured() ? root.get(actionIndex - 1) : null;
+            getStack().push(action);
+            if (model != null) {
+                getStack().push(model);
+            }
             return getStack().findValue(path);
         } finally {
-            while (getStack().getRoot().size() > depth) {
+            while (root.size() > depth) {
                 getStack().pop();
             }
         }
+    }
+
+    private boolean modelDrivenInterceptorConfigured() {
+        if (modelDrivenConfigured == null) {
+            modelDrivenConfigured = false;
+            ActionConfig actionConfig = configuration.getRuntimeConfiguration()
+                .getActionConfig(getNamespace(stack), cachedActionName);
+            if (actionConfig != null) {
+                for (InterceptorMapping interceptorMapping : actionConfig.getInterceptors()) {
+                    if (interceptorMapping.getInterceptor() instanceof ModelDrivenInterceptor) {
+                        modelDrivenConfigured = true;
+                    }
+                }
+            }
+        }
+        return modelDrivenConfigured;
     }
 
     /**

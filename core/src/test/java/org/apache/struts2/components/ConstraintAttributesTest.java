@@ -43,6 +43,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
 
     private String theme = "html5";
     private String fieldName = "username";
+    private String actionName = "constraintAction";
     private final Map<String, String> dynamicAttributes = new HashMap<>();
     private String declaredMaxlength;
 
@@ -199,25 +200,45 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
 
     /**
      * ModelDrivenInterceptor pushes the model above the action before validation runs, so a property
-     * both declare is validated off the model. Rendering must read it off the same object.
+     * both declare is validated off the model. Rendering must read it off the same instance.
      */
-    public void testVisitedObjectIsResolvedFromTheModelOfAModelDrivenAction() throws Exception {
+    public void testVisitedObjectIsResolvedFromTheModelWhenTheModelDrivenInterceptorIsConfigured() throws Exception {
+        actionName = "modelDrivenConstraintAction";
         initDispatcherWith("true");
         fieldName = "user.email";
-        ConstraintUser actionsUser = new ConstraintUser();
-        actionsUser.setLabel("Action");
-        ((ConstraintAction) action).setUser(actionsUser);
-        ConstraintAction model = new ConstraintAction();
-        ConstraintUser modelsUser = new ConstraintUser();
-        modelsUser.setLabel("Model");
-        model.setUser(modelsUser);
-        ((ConstraintAction) action).setModel(model);
+        ConstraintAction model = modelDrivenSetup("Action", "Model");
         stack.push(model);
 
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
 
         assertNotNull(constraints);
         assertEquals("Model: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * Without the interceptor configured, whatever sits above the action at render time is a page
+     * frame, not the model validation saw — so it must not win.
+     */
+    public void testAnObjectAboveTheActionIsIgnoredWithoutTheModelDrivenInterceptor() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        stack.push(modelDrivenSetup("Action", "Model"));
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Action: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    private ConstraintAction modelDrivenSetup(String actionsLabel, String modelsLabel) {
+        ConstraintUser actionsUser = new ConstraintUser();
+        actionsUser.setLabel(actionsLabel);
+        ((ConstraintAction) action).setUser(actionsUser);
+        ConstraintAction model = new ConstraintAction();
+        ConstraintUser modelsUser = new ConstraintUser();
+        modelsUser.setLabel(modelsLabel);
+        model.setUser(modelsUser);
+        return model;
     }
 
     /**
@@ -335,7 +356,7 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     private TextFieldTag startField(String type) throws Exception {
         form = new FormTag();
         form.setPageContext(pageContext);
-        form.setAction("constraintAction");
+        form.setAction(actionName);
         form.setNamespace("");
         form.setTheme(theme);
         form.doStartTag();
@@ -370,6 +391,6 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         // createMocks() never sets a config on the MockActionProxy it builds; without one,
         // AnnotationActionValidatorManager.buildValidatorKey NPEs dereferencing proxy.getConfig().
         ((MockActionProxy) actionProxy).setConfig(
-            configuration.getRuntimeConfiguration().getActionConfig("", "constraintAction"));
+            configuration.getRuntimeConfiguration().getActionConfig("", actionName));
     }
 }

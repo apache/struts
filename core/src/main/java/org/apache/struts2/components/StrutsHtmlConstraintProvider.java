@@ -52,6 +52,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * The HTML5 boolean attribute; its canonical serialisation repeats the attribute name as the value.
      */
     private static final String REQUIRED = "required";
+    private static final String PATTERN = "pattern";
     /**
      * What a validator type may contain to become part of a {@code data-msg-*} name: no character that
      * ends or splits an attribute name, and no colon, which an XML parser reads as a namespace prefix.
@@ -101,9 +102,9 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * a single space is not blocked client-side and accepted server-side.
      */
     protected void admitBlankInPattern(Map<String, String> attributes) {
-        String pattern = attributes.get("pattern");
+        String pattern = attributes.get(PATTERN);
         if (pattern != null) {
-            attributes.put("pattern", "(?:" + pattern + ")|" + BLANK);
+            attributes.put(PATTERN, "(?:" + pattern + ")|" + BLANK);
         }
     }
 
@@ -180,7 +181,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
         String regex = validator.getRegex();
         if (EcmaScriptSafeRegex.isSafe(regex)) {
-            attributes.put("pattern", regex);
+            attributes.put(PATTERN, regex);
         }
     }
 

@@ -63,4 +63,16 @@
             <message/>
         </field-validator>
     </field>
+    <field name="owner">
+        <field-validator type="visitor">
+            <param name="appendPrefix">false</param>
+            <message/>
+        </field-validator>
+    </field>
+    <field name="contact">
+        <field-validator type="visitor">
+            <param name="appendPrefix">false</param>
+            <message/>
+        </field-validator>
+    </field>
 </validators>

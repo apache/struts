@@ -157,6 +157,25 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     }
 
     /**
+     * Validation chains the providers and the stack through every visited level, so a message key in
+     * the intermediate class's bundle, and a {@code ${...}} reading the intermediate object, both
+     * resolve for a doubly-nested field.
+     */
+    public void testDoublyNestedVisitorMessageResolvesThroughTheIntermediateObject() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address.street";
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        user.setAddress(new ConstraintAddress());
+        ((ConstraintAction) action).setUser(user);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: street is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
      * Pins the hook to running after {@code evaluateExtraParams()}. A {@code stringlength} validator on
      * a control the browser treats as numeric must not emit {@code minlength} at all — that attribute
      * is not legal there. This can only resolve correctly if the control type ({@code type="number"},

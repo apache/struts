@@ -134,6 +134,19 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         assertSame(user, form.getValidatedObject("user.name"));
     }
 
+    /**
+     * Two {@code appendPrefix="false"} visitors over classes that both declare {@code name} give the
+     * field two validators from two objects; there is no single object to hand the provider, so it
+     * falls back to the action rather than picking one at random.
+     */
+    public void testValidatedObjectIsNullWhenTwoVisitorsClaimTheSameUnprefixedField() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        assertEquals(2, form.getFieldValidators("name").size());
+        assertNull(form.getValidatedObject("name"));
+    }
+
     public void testValidatedObjectIsNullForADirectField() throws Exception {
         currentActionIs("constraintAction");
         Form form = formFor("constraintAction");

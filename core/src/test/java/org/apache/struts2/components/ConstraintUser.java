@@ -23,6 +23,7 @@ public class ConstraintUser {
     private String name;
     private String email;
     private String label = "Name";
+    private ConstraintAddress address;
 
     public String getName() {
         return name;
@@ -46,5 +47,13 @@ public class ConstraintUser {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public ConstraintAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(ConstraintAddress address) {
+        this.address = address;
     }
 }

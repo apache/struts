@@ -64,11 +64,17 @@ public class ControlTypeTest extends AbstractUITagTest {
         assertEquals(HtmlControlType.FILE, file.getControlType());
     }
 
-    public void testControlsWithoutAnOverrideAreUnknown() {
-        // CheckboxInterceptor substitutes "false" for an unticked box, so the server accepts what
-        // a browser "required" would block — that is a real false reject, and the reason Checkbox
-        // and Hidden deliberately have no getControlType() override.
-        assertEquals(HtmlControlType.OTHER, new Checkbox(stack, request, response).getControlType());
-        assertEquals(HtmlControlType.OTHER, new Hidden(stack, request, response).getControlType());
+    /**
+     * Neither type supports a constraint and the default provider never emits {@code required} for
+     * them (CheckboxInterceptor substitutes "false" for an unticked box, so the server accepts what
+     * the browser would block). The honest type is for replacement providers, which otherwise cannot
+     * tell a checkbox or hidden input from an unknown control.
+     */
+    public void testCheckboxIsCheckbox() {
+        assertEquals(HtmlControlType.CHECKBOX, new Checkbox(stack, request, response).getControlType());
+    }
+
+    public void testHiddenIsHidden() {
+        assertEquals(HtmlControlType.HIDDEN, new Hidden(stack, request, response).getControlType());
     }
 }

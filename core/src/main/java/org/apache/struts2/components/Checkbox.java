@@ -74,6 +74,11 @@ public class Checkbox extends UIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.CHECKBOX;
+    }
+
     protected void evaluateExtraParams() {
         if (fieldValue != null) {
             addParameter(ATTR_FIELD_VALUE, findString(fieldValue));

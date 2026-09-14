@@ -34,6 +34,8 @@ import java.util.Map;
 public class ConstraintAttributesTest extends AbstractUITagTest {
 
     private FormTag form;
+    private String theme = "html5";
+    private String fieldName = "username";
 
     public void testNoConstraintsWhenTheConstantIsOff() throws Exception {
         initDispatcherWith("false");
@@ -47,6 +49,41 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         Map<String, String> constraints = renderFieldAndReturnConstraints(null);
         assertNotNull("expected constraints to be populated", constraints);
         assertEquals("3", constraints.get("minlength"));
+    }
+
+    /**
+     * Only the html5 theme renders the derived map, so under any other theme the derivation is
+     * wasted work per field — validator resolution plus a {@code getMessage()} call each.
+     */
+    public void testNoConstraintsUnderAThemeThatDoesNotRenderThem() throws Exception {
+        initDispatcherWith("true");
+        theme = "xhtml";
+
+        assertNull(renderFieldAndReturnConstraints(null));
+    }
+
+    /**
+     * A custom theme declares {@code parent = html5} in its theme.properties and inherits the
+     * templates that render the map, so the gate has to walk the ancestry, not match the name.
+     */
+    public void testConstraintsUnderAThemeInheritingFromHtml5() throws Exception {
+        initDispatcherWith("true");
+        theme = "html5child";
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+        assertNotNull("expected constraints under a child of html5", constraints);
+        assertEquals("3", constraints.get("minlength"));
+    }
+
+    public void testVisitorValidatedNestedFieldGetsTheConcreteConstraint() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.name";
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+        assertNotNull("expected constraints for a visitor-validated field", constraints);
+        assertEquals("required", constraints.get("required"));
+        assertEquals("name is required", constraints.get("data-msg-requiredstring"));
+        assertFalse(constraints.containsKey("data-msg-field-visitor"));
     }
 
     /**
@@ -139,11 +176,12 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         form.setPageContext(pageContext);
         form.setAction("constraintAction");
         form.setNamespace("");
+        form.setTheme(theme);
         form.doStartTag();
 
         TextFieldTag field = new TextFieldTag();
         field.setPageContext(pageContext);
-        field.setName("username");
+        field.setName(fieldName);
         if (type != null) {
             field.setType(type);
         }

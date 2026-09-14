@@ -43,7 +43,9 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -127,6 +129,7 @@ public class Form extends ClosingUIBean {
     private List<Validator> cachedActionValidators;
     private String cachedActionName;
     private boolean actionValidatorsResolved;
+    private final Map<Class<?>, List<Validator>> cachedVisitorValidators = new HashMap<>();
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -337,6 +340,10 @@ public class Form extends ClosingUIBean {
         Class actionClass = (Class) getAttributes().get(ATTR_ACTION_CLASS);
         List<Validator> validators = new ArrayList<>();
         findFieldValidators(name, actionClass, cachedActionName, cachedActionValidators, validators, "");
+        // the wrapper only exists to prefix the field name for the deprecated JS validator; callers of
+        // this method dispatch on the concrete validator type
+        validators.replaceAll(validator -> validator instanceof FieldVisitorValidatorWrapper wrapper
+            ? wrapper.getFieldValidator() : validator);
         return validators;
     }
 
@@ -393,7 +400,8 @@ public class Form extends ClosingUIBean {
                         continue;
                     }
 
-                    List<Validator> visitorValidators = actionValidatorManager.getValidators(clazz, actionName);
+                    List<Validator> visitorValidators = cachedVisitorValidators.computeIfAbsent(clazz,
+                        visited -> actionValidatorManager.getValidators(visited, actionName));
                     String vPrefix = prefix + (vfValidator.isAppendPrefix() ? vfValidator.getFieldName() + "." : "");
                     findFieldValidators(name, clazz, actionName, visitorValidators, resultValidators, vPrefix);
                 } else if ((prefix + fieldValidator.getFieldName()).equals(name)) {

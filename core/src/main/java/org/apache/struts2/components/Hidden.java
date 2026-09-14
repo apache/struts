@@ -63,4 +63,9 @@ public class Hidden extends UIBean {
         return TEMPLATE;
     }
 
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.HIDDEN;
+    }
+
 }

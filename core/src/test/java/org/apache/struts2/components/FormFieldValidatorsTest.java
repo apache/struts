@@ -22,6 +22,7 @@ import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.validator.ActionValidatorManager;
 import org.apache.struts2.validator.Validator;
+import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ui.FormTag;
 
@@ -31,8 +32,11 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -64,16 +68,79 @@ public class FormFieldValidatorsTest extends AbstractUITagTest {
         form.getFieldValidators("myUpDownSelectTag");
         form.getFieldValidators("someOtherField");
 
-        // fully qualified: AbstractUITagTest inherits verify(URL), which would shadow a static import
-        org.mockito.Mockito.verify(manager, times(1))
-            .getValidators(any(Class.class), anyString(), nullable(String.class));
+        then(manager).should(times(1)).getValidators(any(Class.class), anyString(), nullable(String.class));
+    }
+
+    /**
+     * The common {@code <s:form>} carries no {@code action} attribute; {@code ServletUrlRenderer}
+     * then resolves the name from the current invocation into {@code attributes.actionName} only.
+     * Validators scoped to that alias ({@code ConstraintAction-constraintAction-validation.xml})
+     * must still be found, not silently skipped under an empty context.
+     */
+    public void testFindsAliasScopedValidatorsForAFormWithoutAnActionAttribute() throws Exception {
+        currentActionIs("constraintAction");
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        Form form = (Form) tag.getComponent();
+
+        List<Validator> validators = form.getFieldValidators("nickname");
+
+        assertEquals(1, validators.size());
+        assertEquals("requiredstring", validators.get(0).getValidatorType());
+    }
+
+    /**
+     * A {@code visitor} on {@code user} reaches {@code user.name} through {@code
+     * FieldVisitorValidatorWrapper}, which exists to prefix the field name for the deprecated JS
+     * validator and implements only {@code FieldValidator}. The constraint provider dispatches on the
+     * concrete validator type, so the wrapper has to be unwrapped or the field gets a
+     * {@code data-msg-field-visitor} and never a constraint.
+     */
+    public void testUnwrapsVisitorValidatedFieldValidators() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+
+        List<Validator> validators = form.getFieldValidators("user.name");
+
+        assertEquals(1, validators.size());
+        assertTrue("expected the concrete validator, got " + validators.get(0).getClass(),
+            validators.get(0) instanceof RequiredStringValidator);
+    }
+
+    /**
+     * The manager caches only validator configs and builds fresh instances on every call, so the
+     * visitor branch must be resolved once per form like the top-level list, not once per field.
+     */
+    public void testResolvesAVisitorsValidatorsOnlyOnceAcrossFields() throws Exception {
+        currentActionIs("constraintAction");
+        Form form = formFor("constraintAction");
+        ActionValidatorManager manager = spy(container.getInstance(ActionValidatorManager.class));
+        form.setActionValidatorManager(manager);
+
+        form.getFieldValidators("user.name");
+        form.getFieldValidators("username");
+        form.getFieldValidators("bio");
+
+        then(manager).should(times(1)).getValidators(eq(ConstraintUser.class), anyString());
+    }
+
+    private void currentActionIs(String actionName) {
+        MockActionProxy proxy = (MockActionProxy) actionProxy;
+        proxy.setActionName(actionName);
+        proxy.setNamespace("");
+        proxy.setConfig(configuration.getRuntimeConfiguration().getActionConfig("", actionName));
     }
 
     private Form formForDoubleValidationAction() throws Exception {
+        return formFor("doubleValidationAction");
+    }
+
+    private Form formFor(String actionName) throws Exception {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
-        tag.setAction("doubleValidationAction");
+        tag.setAction(actionName);
         tag.setNamespace("");
         tag.doStartTag();
         return (Form) tag.getComponent();

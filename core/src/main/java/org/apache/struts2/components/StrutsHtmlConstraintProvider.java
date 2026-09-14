@@ -28,9 +28,11 @@ import org.apache.struts2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.StringLengthFieldValidator;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Default {@link HtmlConstraintProvider}.
@@ -50,6 +52,11 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * The HTML5 boolean attribute; its canonical serialisation repeats the attribute name as the value.
      */
     private static final String REQUIRED = "required";
+    /**
+     * What a validator type may contain to become part of a {@code data-msg-*} name: no character that
+     * ends or splits an attribute name, and no colon, which an XML parser reads as a namespace prefix.
+     */
+    private static final Pattern ATTRIBUTE_NAME = Pattern.compile("[A-Za-z0-9_.-]+");
 
     @Override
     public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action) {
@@ -59,7 +66,9 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         }
         for (Validator validator : validators) {
             addConstraints(attributes, validator, control);
-            addMessage(attributes, validator, action);
+            if (control != HtmlControlType.UNSUPPORTED) {
+                addMessage(attributes, validator, action);
+            }
         }
         return attributes;
     }
@@ -154,7 +163,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (isIntegral(min)) {
             putIfPresent(attributes, "min", min);
         }
-        putIfPresent(attributes, "max", validator.getMax());
+        Object max = validator.getMax();
+        if (isFiniteNumber(max)) {
+            putIfPresent(attributes, "max", max);
+        }
     }
 
     protected void addDoubleRange(Map<String, String> attributes, DoubleRangeFieldValidator validator, HtmlControlType control) {
@@ -170,7 +182,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (isIntegral(minInclusive)) {
             putIfPresent(attributes, "min", minInclusive);
         }
-        putIfPresent(attributes, "max", validator.getMaxInclusive());
+        Double maxInclusive = validator.getMaxInclusive();
+        if (isFiniteNumber(maxInclusive)) {
+            putIfPresent(attributes, "max", maxInclusive);
+        }
     }
 
     private boolean isNumericRange(HtmlControlType control) {
@@ -183,20 +198,38 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * step base, so only {@code min} needs this guard.
      */
     private boolean isIntegral(Object value) {
+        if (!isFiniteNumber(value)) {
+            return false;
+        }
+        // decided on the decimal representation, which is also what gets rendered: a BigDecimal
+        // such as 1.0000000000000000001 rounds to 1.0 as a double yet renders with its fraction
+        try {
+            return new BigDecimal(value.toString()).stripTrailingZeros().scale() <= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isFiniteNumber(Object value) {
         if (!(value instanceof java.lang.Number number)) {
             return false;
         }
         double asDouble = number.doubleValue();
-        return !Double.isNaN(asDouble) && !Double.isInfinite(asDouble) && asDouble == Math.floor(asDouble);
+        return !Double.isNaN(asDouble) && !Double.isInfinite(asDouble);
     }
 
     protected void addMessage(Map<String, String> attributes, Validator validator, Object action) {
         if (action == null) {
             return;
         }
+        // the type becomes part of the attribute name, which FreeMarker's auto-escaping does not cover
+        String type = validator.getValidatorType();
+        if (type == null || !ATTRIBUTE_NAME.matcher(type).matches()) {
+            return;
+        }
         String message = validator.getMessage(action);
         if (message != null && !message.isEmpty()) {
-            attributes.put("data-msg-" + validator.getValidatorType(), message);
+            attributes.put("data-msg-" + type, message);
         }
     }
 

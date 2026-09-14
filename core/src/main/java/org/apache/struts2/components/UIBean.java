@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
@@ -959,7 +960,10 @@ public abstract class UIBean extends Component {
                 return;
             }
             constraints = new LinkedHashMap<>(constraints);
-            constraints.keySet().removeIf(this::isAlreadyRendered);
+            // the template has already written type by the time the map renders; a second one is a
+            // duplicate attribute, of which the browser keeps the first
+            constraints.keySet().removeIf(attributeName ->
+                "type".equalsIgnoreCase(attributeName) || isAlreadyRendered(attributeName));
             if (!constraints.isEmpty()) {
                 addParameter("constraints", constraints);
             }
@@ -1039,10 +1043,20 @@ public abstract class UIBean extends Component {
      * {@code required} attribute the developer typed by hand as a dynamic attribute still wins.
      */
     private boolean isAlreadyRendered(String attributeName) {
-        if (dynamicAttributes.containsKey(attributeName)) {
+        // HTML attribute names are ASCII case-insensitive
+        if (containsIgnoreCase(dynamicAttributes.keySet(), attributeName)) {
             return true;
         }
-        return !"required".equals(attributeName) && getAttributes().containsKey(attributeName);
+        return !"required".equalsIgnoreCase(attributeName) && containsIgnoreCase(getAttributes().keySet(), attributeName);
+    }
+
+    private static boolean containsIgnoreCase(Set<String> names, String name) {
+        for (String candidate : names) {
+            if (candidate.equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1110,13 +1124,13 @@ public abstract class UIBean extends Component {
 
     /**
      * The kind of HTML control this component renders, used to decide which HTML5 constraint
-     * attributes are legal on it. Defaults to {@link HtmlControlType#OTHER}, which supports no
+     * attributes are legal on it. Defaults to {@link HtmlControlType#UNSUPPORTED}, which supports no
      * constraints — so a component that does not override this emits none.
      *
      * @since 7.4.0
      */
     protected HtmlControlType getControlType() {
-        return HtmlControlType.OTHER;
+        return HtmlControlType.UNSUPPORTED;
     }
 
     protected void evaluateExtraParams() {

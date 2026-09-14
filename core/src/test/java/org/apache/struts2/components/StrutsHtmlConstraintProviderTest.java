@@ -25,6 +25,7 @@ import org.apache.struts2.validator.validators.DateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.IntRangeFieldValidator;
+import org.apache.struts2.validator.validators.RangeValidatorSupport;
 import org.apache.struts2.validator.validators.RegexFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.validator.validators.RequiredStringValidator;
@@ -32,6 +33,7 @@ import org.apache.struts2.validator.validators.StringLengthFieldValidator;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -289,13 +291,89 @@ public class StrutsHtmlConstraintProviderTest {
 
     @Test
     public void unknownControlGetsNothing() {
-        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.OTHER)).isEmpty();
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.UNSUPPORTED)).isEmpty();
     }
 
     @Test
     public void emptyInputIsHandled() {
         assertThat(provider.constraintsFor(null, HtmlControlType.TEXT, null)).isEmpty();
         assertThat(provider.constraintsFor(List.of(), HtmlControlType.TEXT, null)).isEmpty();
+    }
+
+    @Test
+    public void messageIsNotEmittedOnAControlThatNeverSubmits() {
+        // s:label and unknown controls resolve to UNSUPPORTED; a message there decorates an element the
+        // browser never validates and no script has a submitted value to check it against
+        Validator validator = mock(Validator.class);
+        when(validator.getValidatorType()).thenReturn("requiredstring");
+        when(validator.getMessage(action)).thenReturn("required");
+
+        Map<String, String> result =
+            provider.constraintsFor(singletonList(validator), HtmlControlType.UNSUPPORTED, action);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void messageIsNotEmittedForAValidatorTypeThatCannotBeAnAttributeName() {
+        // validator types are free-form in validators.xml; FreeMarker escapes the value, not the name
+        Validator validator = mock(Validator.class);
+        when(validator.getValidatorType()).thenReturn("my type=\"x\"");
+        when(validator.getMessage(action)).thenReturn("nope");
+
+        Map<String, String> result =
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    public void messageIsEmittedForADottedValidatorType() {
+        // legal both as a validators.xml type name and as a data-* attribute suffix
+        Validator validator = mock(Validator.class);
+        when(validator.getValidatorType()).thenReturn("acme.required");
+        when(validator.getMessage(action)).thenReturn("needed");
+
+        Map<String, String> result =
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+
+        assertThat(result).containsEntry("data-msg-acme.required", "needed");
+    }
+
+    @Test
+    public void rangeOmitsAMaxThatIsNotANumber() {
+        // a date range on a control the developer declared numeric: min already fails the integral
+        // guard, max must not fall through as Date.toString()
+        DateRangeFieldValidator validator = new DateRangeFieldValidator();
+        validator.setMin(new Date(0));
+        validator.setMax(new Date(1_000_000L));
+
+        assertThat(constraints(validator, HtmlControlType.NUMBER)).isEmpty();
+    }
+
+    @Test
+    public void doubleRangeOmitsANonFiniteMax() {
+        DoubleRangeFieldValidator nan = new DoubleRangeFieldValidator();
+        nan.setMaxInclusive(Double.NaN);
+        DoubleRangeFieldValidator infinite = new DoubleRangeFieldValidator();
+        infinite.setMaxInclusive(Double.POSITIVE_INFINITY);
+
+        assertThat(constraints(nan, HtmlControlType.NUMBER)).doesNotContainKey("max");
+        assertThat(constraints(infinite, HtmlControlType.NUMBER)).doesNotContainKey("max");
+    }
+
+    @Test
+    public void rangeOmitsAMinThatIsOnlyIntegralAfterRoundingThroughDouble() {
+        // 1.0000000000000000001 collapses to 1.0 as a double but renders with its fraction, which
+        // would shift the HTML step base exactly like a fractional min
+        RangeValidatorSupport<BigDecimal> validator = new RangeValidatorSupport<>(BigDecimal.class) {
+        };
+        validator.setMin(new BigDecimal("1.0000000000000000001"));
+        validator.setMax(new BigDecimal("10"));
+
+        assertThat(constraints(validator, HtmlControlType.NUMBER))
+            .doesNotContainKey("min")
+            .containsEntry("max", "10");
     }
 
     @Test

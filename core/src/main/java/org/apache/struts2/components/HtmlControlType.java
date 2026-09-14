@@ -38,7 +38,12 @@ public enum HtmlControlType {
     DATE, MONTH, WEEK, TIME, DATETIME_LOCAL,
     CHECKBOX, RADIO, FILE, HIDDEN, SELECT,
     TEXTAREA,
-    OTHER;
+    /**
+     * A control no constraint applies to and no {@code data-msg-*} message is rendered for: a
+     * {@code type} the framework does not recognise, or a component with no
+     * {@code getControlType()} override ({@code <s:label>}, {@code <s:submit>} and the like).
+     */
+    UNSUPPORTED;
 
     private static final Set<HtmlControlType> TEXT_ENTRY = EnumSet.of(TEXT, SEARCH, TEL, PASSWORD, EMAIL, URL);
     private static final Set<HtmlControlType> NUMERIC = EnumSet.of(NUMBER, RANGE);
@@ -46,21 +51,21 @@ public enum HtmlControlType {
 
     /**
      * Resolves a raw {@code type} attribute value. Never throws: the attribute is OGNL-evaluated, so at
-     * runtime it can be any string. Anything unrecognised becomes {@link #OTHER}, which supports no
+     * runtime it can be any string. Anything unrecognised becomes {@link #UNSUPPORTED}, which supports no
      * constraints at all — so an unknown control degrades to emitting nothing.
      */
     public static HtmlControlType from(String type) {
         if (type == null) {
-            return OTHER;
+            return UNSUPPORTED;
         }
         String normalised = type.trim().toUpperCase(Locale.ROOT).replace('-', '_');
         if (normalised.isEmpty()) {
-            return OTHER;
+            return UNSUPPORTED;
         }
         try {
             return valueOf(normalised);
         } catch (IllegalArgumentException e) {
-            return OTHER;
+            return UNSUPPORTED;
         }
     }
 

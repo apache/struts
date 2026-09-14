@@ -44,6 +44,79 @@ public class EcmaScriptSafeRegexTest {
     }
 
     @Test
+    public void allowsAnEscapedHyphenOnlyInsideACharacterClass() {
+        // HTML compiles pattern with the Unicode flag, under which \- outside a class is a
+        // SyntaxError and the whole attribute is ignored — silently, so the allowlist must not admit it
+        assertThat(EcmaScriptSafeRegex.isSafe("[\\w\\-]+")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("\\d+\\-\\d+")).isFalse();
+    }
+
+    @Test
+    public void rejectsAClosingBracketThatOpensAClass() {
+        // Java reads []a] as a class holding ] and a; the browser's unicode-mode compiler throws
+        assertThat(EcmaScriptSafeRegex.isSafe("[]a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^]a]")).isFalse();
+    }
+
+    @Test
+    public void rejectsALoneClosingBracketOrBraceOutsideAClass() {
+        // literals in Java, "lone quantifier brackets" in the browser
+        assertThat(EcmaScriptSafeRegex.isSafe("a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("x}")).isFalse();
+    }
+
+    @Test
+    public void rejectsUnicodeSetsSyntaxCharactersUnescapedInsideAClass() {
+        // browsers compile pattern with the v flag, under which ( ) { } / | and a hyphen that is not
+        // a range operator must be escaped inside a class — verified on node 24
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z/]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("^[+-]?\\d+$")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[-a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[(]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[|]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[{]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z0-9._%+-]+@[a-z]+")).isFalse();
+        // the negation marker is not a literal a range can start from
+        assertThat(EcmaScriptSafeRegex.isSafe("[^-a]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("^[^-,]+$")).isFalse();
+    }
+
+    @Test
+    public void rejectsStackedQuantifiers() {
+        // Java compiles a{2}{3}; the browser throws "nothing to repeat"
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}{3}")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z]{2}{3}")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}*")).isFalse();
+    }
+
+    @Test
+    public void acceptsLazyQuantifiersAndNegatedClasses() {
+        assertThat(EcmaScriptSafeRegex.isSafe("a+?")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}?")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^a-z]+")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[^\\d]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("(?:ab){2}")).isTrue();
+    }
+
+    @Test
+    public void rejectsDoubledPunctuatorsInsideAClass() {
+        assertThat(EcmaScriptSafeRegex.isSafe("[a..z]")).isFalse();
+        assertThat(EcmaScriptSafeRegex.isSafe("[!!]")).isFalse();
+    }
+
+    @Test
+    public void acceptsUnicodeSetsSafeClasses() {
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a.z]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a\\-z]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[\\d\\-]")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("[a-z0-9._%+\\-]+@[a-z]+")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("a/b")).isTrue();
+        assertThat(EcmaScriptSafeRegex.isSafe("a{2}")).isTrue();
+    }
+
+    @Test
     public void rejectsPossessiveQuantifiers() {
         assertThat(EcmaScriptSafeRegex.isSafe("\\d++")).isFalse();
         assertThat(EcmaScriptSafeRegex.isSafe("a*+")).isFalse();

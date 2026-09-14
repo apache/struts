@@ -38,17 +38,17 @@ public class HtmlControlTypeTest {
 
     @Test
     public void neverThrowsOnUnusableInput() {
-        assertThat(HtmlControlType.from(null)).isEqualTo(HtmlControlType.OTHER);
-        assertThat(HtmlControlType.from("")).isEqualTo(HtmlControlType.OTHER);
-        assertThat(HtmlControlType.from("   ")).isEqualTo(HtmlControlType.OTHER);
-        assertThat(HtmlControlType.from("supercolor")).isEqualTo(HtmlControlType.OTHER);
+        assertThat(HtmlControlType.from(null)).isEqualTo(HtmlControlType.UNSUPPORTED);
+        assertThat(HtmlControlType.from("")).isEqualTo(HtmlControlType.UNSUPPORTED);
+        assertThat(HtmlControlType.from("   ")).isEqualTo(HtmlControlType.UNSUPPORTED);
+        assertThat(HtmlControlType.from("supercolor")).isEqualTo(HtmlControlType.UNSUPPORTED);
     }
 
     @Test
     public void otherSupportsNothing() {
-        assertThat(HtmlControlType.OTHER.supportsPattern()).isFalse();
-        assertThat(HtmlControlType.OTHER.supportsLength()).isFalse();
-        assertThat(HtmlControlType.OTHER.supportsRange()).isFalse();
+        assertThat(HtmlControlType.UNSUPPORTED.supportsPattern()).isFalse();
+        assertThat(HtmlControlType.UNSUPPORTED.supportsLength()).isFalse();
+        assertThat(HtmlControlType.UNSUPPORTED.supportsRange()).isFalse();
     }
 
     @Test

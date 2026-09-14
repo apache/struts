@@ -176,6 +176,51 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     }
 
     /**
+     * Validation resolves the visited object from the action. At render time an {@code <s:iterator>}
+     * or {@code <s:push>} frame above the action may expose the same property, and must not win.
+     */
+    public void testVisitedObjectIsResolvedFromTheActionNotTheTopOfTheStack() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.email";
+        ConstraintUser actionsUser = new ConstraintUser();
+        actionsUser.setLabel("Account");
+        ((ConstraintAction) action).setUser(actionsUser);
+        ConstraintAction shadow = new ConstraintAction();
+        ConstraintUser shadowsUser = new ConstraintUser();
+        shadowsUser.setLabel("Shadow");
+        shadow.setUser(shadowsUser);
+        stack.push(shadow);
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints(null);
+
+        assertNotNull(constraints);
+        assertEquals("Account: e-mail is required", constraints.get("data-msg-requiredstring"));
+    }
+
+    /**
+     * With {@code user} set but {@code user.address} still null there is no Address to validate
+     * against; the provider gets the action, as for any field whose visited object does not exist,
+     * rather than the User one level up.
+     */
+    public void testAPartialVisitedChainHandsTheProviderTheAction() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address.street";
+        ((ConstraintAction) action).setUser(new ConstraintUser());
+
+        TextFieldTag field = startField(null);
+        List<Object> captured = new ArrayList<>();
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
+            captured.add(derivedFrom);
+            return Collections.emptyMap();
+        });
+
+        finishField(field);
+
+        assertEquals(1, captured.size());
+        assertSame(action, captured.get(0));
+    }
+
+    /**
      * Pins the hook to running after {@code evaluateExtraParams()}. A {@code stringlength} validator on
      * a control the browser treats as numeric must not emit {@code minlength} at all — that attribute
      * is not legal there. This can only resolve correctly if the control type ({@code type="number"},

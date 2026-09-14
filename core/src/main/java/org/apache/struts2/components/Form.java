@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.RuntimeConfiguration;
@@ -385,8 +386,13 @@ public class Form extends ClosingUIBean {
      * @since 7.4.0
      */
     public Object getValidatedObject(String name) {
+        String path = visitedPaths.get(name);
+        if (path == null) {
+            return null;
+        }
         List<Object> chain = getVisitedObjects(name);
-        return chain.isEmpty() ? null : chain.get(chain.size() - 1);
+        // a partial chain (user set, user.address still null) has no object of the right type
+        return chain.size() == path.split("\\.").length ? chain.get(chain.size() - 1) : null;
     }
 
     /**
@@ -403,13 +409,36 @@ public class Form extends ClosingUIBean {
         StringBuilder prefix = new StringBuilder();
         for (String segment : path.split("\\.")) {
             prefix.append(prefix.isEmpty() ? "" : ".").append(segment);
-            Object visited = getStack().findValue(prefix.toString());
+            Object visited = findFromAction(prefix.toString());
             if (visited == null) {
                 break;
             }
             chain.add(visited);
         }
         return chain;
+    }
+
+    private Object currentAction() {
+        ActionInvocation invocation = getStack().getActionContext().getActionInvocation();
+        return invocation == null ? null : invocation.getAction();
+    }
+
+    /**
+     * Validation reads the visited object off the action. At render time an {@code <s:iterator>} or
+     * {@code <s:push>} frame above the action may expose the same property, so the action is put on
+     * top for the lookup.
+     */
+    private Object findFromAction(String path) {
+        Object action = currentAction();
+        if (action == null) {
+            return getStack().findValue(path);
+        }
+        getStack().push(action);
+        try {
+            return getStack().findValue(path);
+        } finally {
+            getStack().pop();
+        }
     }
 
     /**
@@ -420,8 +449,7 @@ public class Form extends ClosingUIBean {
      */
     private FieldValidator unwrap(FieldVisitorValidatorWrapper wrapper) {
         FieldValidator validator = wrapper.getFieldValidator();
-        Object action = getStack().getActionContext().getActionInvocation() == null
-            ? null : getStack().getActionContext().getActionInvocation().getAction();
+        Object action = currentAction();
         if (wrapper.getVisitedClasses().isEmpty() || action == null || textProviderFactory == null) {
             return validator;
         }
@@ -430,7 +458,7 @@ public class Form extends ClosingUIBean {
         List<Class<?>> classes = wrapper.getVisitedClasses();
         List<String> paths = wrapper.getVisitedPaths();
         for (int level = classes.size() - 1; level >= 0; level--) {
-            Object visited = getStack().findValue(paths.get(level));
+            Object visited = findFromAction(paths.get(level));
             providers.add(visited instanceof TextProvider textProvider
                 ? textProvider : textProviderFactory.createInstance(classes.get(level)));
         }

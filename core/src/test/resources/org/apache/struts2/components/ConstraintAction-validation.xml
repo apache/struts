@@ -53,6 +53,11 @@
             <message>pick one</message>
         </field-validator>
     </field>
+    <field name="priority">
+        <field-validator type="required">
+            <message>pick a priority</message>
+        </field-validator>
+    </field>
     <field name="attachment">
         <field-validator type="required">
             <message>attach a file</message>

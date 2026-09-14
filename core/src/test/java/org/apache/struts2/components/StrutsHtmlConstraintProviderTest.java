@@ -55,7 +55,11 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     private Map<String, String> constraints(Validator validator, HtmlControlType control) {
-        return provider.constraintsFor(singletonList(validator), control, null);
+        return constraints(validator, control, null);
+    }
+
+    private Map<String, String> constraints(Validator validator, HtmlControlType control, Object value) {
+        return provider.constraintsFor(singletonList(validator), control, null, value);
     }
 
     @Test
@@ -101,6 +105,33 @@ public class StrutsHtmlConstraintProviderTest {
     public void requiredFieldEmitsRequiredOnFileBecauseNoSelectionOmitsTheParameter() {
         // an empty file input omits the parameter entirely, agreeing with the server
         assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.FILE))
+            .containsEntry("required", "required");
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnRadioWhenTheBoundValueIsAlreadySet() {
+        // a primitive int renders as 0, which is not in the list, so no radio is checked while the
+        // server, seeing a non-null Integer, would accept the empty submit
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.RADIO, 0)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnFileWhenTheBoundValueIsAlreadySet() {
+        // prepare() populating the file property from an existing entity is the ordinary edit flow
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.FILE, "existing.pdf")).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsRequiredOnRadioWhenTheBoundValueIsAnEmptyArray() {
+        // RequiredFieldValidator fails an empty array, so the sides agree
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.RADIO, new String[0]))
+            .containsEntry("required", "required");
+    }
+
+    @Test
+    public void requiredStringIgnoresTheBoundValue() {
+        // requiredstring judges the submitted value, which a text input always sends
+        assertThat(constraints(new RequiredStringValidator(), HtmlControlType.TEXT, "prefilled"))
             .containsEntry("required", "required");
     }
 
@@ -172,7 +203,7 @@ public class StrutsHtmlConstraintProviderTest {
         regex.setCaseSensitive(true);
         regex.setTrim(false);
 
-        assertThat(provider.constraintsFor(List.of(new RequiredStringValidator(), regex), HtmlControlType.TEXT, null))
+        assertThat(provider.constraintsFor(List.of(new RequiredStringValidator(), regex), HtmlControlType.TEXT, null, null))
             .containsEntry("pattern", "[a-z]+");
     }
 
@@ -183,7 +214,7 @@ public class StrutsHtmlConstraintProviderTest {
         regex.setCaseSensitive(true);
         regex.setTrim(false);
 
-        assertThat(provider.constraintsFor(List.of(regex, new RequiredStringValidator()), HtmlControlType.TEXT, null))
+        assertThat(provider.constraintsFor(List.of(regex, new RequiredStringValidator()), HtmlControlType.TEXT, null, null))
             .containsEntry("pattern", "[a-z]+");
     }
 
@@ -198,7 +229,7 @@ public class StrutsHtmlConstraintProviderTest {
         RequiredStringValidator required = new RequiredStringValidator();
         required.setTrim(false);
 
-        assertThat(provider.constraintsFor(List.of(required, regex), HtmlControlType.TEXT, null))
+        assertThat(provider.constraintsFor(List.of(required, regex), HtmlControlType.TEXT, null, null))
             .containsEntry("pattern", "(?:[a-z]+)|[\\x00-\\x20]*");
     }
 
@@ -336,8 +367,8 @@ public class StrutsHtmlConstraintProviderTest {
 
     @Test
     public void emptyInputIsHandled() {
-        assertThat(provider.constraintsFor(null, HtmlControlType.TEXT, null)).isEmpty();
-        assertThat(provider.constraintsFor(List.of(), HtmlControlType.TEXT, null)).isEmpty();
+        assertThat(provider.constraintsFor(null, HtmlControlType.TEXT, null, null)).isEmpty();
+        assertThat(provider.constraintsFor(List.of(), HtmlControlType.TEXT, null, null)).isEmpty();
     }
 
     @Test
@@ -349,7 +380,7 @@ public class StrutsHtmlConstraintProviderTest {
         when(validator.getMessage(action)).thenReturn("required");
 
         Map<String, String> result =
-            provider.constraintsFor(singletonList(validator), HtmlControlType.UNSUPPORTED, action);
+            provider.constraintsFor(singletonList(validator), HtmlControlType.UNSUPPORTED, action, null);
 
         assertThat(result).isEmpty();
     }
@@ -362,7 +393,7 @@ public class StrutsHtmlConstraintProviderTest {
         when(validator.getMessage(action)).thenReturn("nope");
 
         Map<String, String> result =
-            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action, null);
 
         assertThat(result).isEmpty();
     }
@@ -375,7 +406,7 @@ public class StrutsHtmlConstraintProviderTest {
         when(validator.getMessage(action)).thenReturn("needed");
 
         Map<String, String> result =
-            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action, null);
 
         assertThat(result).containsEntry("data-msg-acme.required", "needed");
     }
@@ -423,7 +454,7 @@ public class StrutsHtmlConstraintProviderTest {
         when(validator.getMessage(action)).thenReturn("not an email");
 
         Map<String, String> result =
-            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action);
+            provider.constraintsFor(singletonList(validator), HtmlControlType.TEXT, action, null);
 
         assertThat(result).containsEntry("data-msg-email", "not an email");
     }

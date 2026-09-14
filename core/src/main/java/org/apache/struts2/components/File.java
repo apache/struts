@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.components;
 
+import ognl.NoSuchPropertyException;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -65,6 +67,33 @@ public class File extends UIBean {
     @Override
     protected HtmlControlType getControlType() {
         return HtmlControlType.FILE;
+    }
+
+    /**
+     * A file input never renders its value, so keep the raw property: converting null to a String
+     * yields "", which would hide a missing attachment from the constraint derivation.
+     */
+    @Override
+    protected Class<?> getValueClassType() {
+        return null;
+    }
+
+    /**
+     * Unlike the String conversion, the raw lookup honours {@code struts.el.throwExceptionOnFailure}.
+     * A file input is routinely bound to no property at all — an {@code UploadedFilesAware} action
+     * receives the part by name — so that one failure is not the misconfiguration the flag exists
+     * to surface.
+     */
+    @Override
+    protected void applyValueParameter(String translatedName) {
+        try {
+            super.applyValueParameter(translatedName);
+        } catch (StrutsException e) {
+            if (!(e.getCause() instanceof NoSuchPropertyException)) {
+                throw e;
+            }
+            LOG.debug("No property [{}] behind the file input, rendering it without a bound value", translatedName);
+        }
     }
 
     public void evaluateParams() {

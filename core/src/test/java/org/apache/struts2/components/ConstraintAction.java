@@ -32,6 +32,7 @@ public class ConstraintAction extends ActionSupport {
     private ConstraintUser contact = new ConstraintUser();
     private String code;
     private String choice;
+    private int priority;
     private Object attachment;
 
     public String getUsername() {
@@ -86,6 +87,15 @@ public class ConstraintAction extends ActionSupport {
     @StrutsParameter
     public void setChoice(String choice) {
         this.choice = choice;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    @StrutsParameter
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public Object getAttachment() {

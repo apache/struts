@@ -968,7 +968,7 @@ public abstract class UIBean extends Component {
                 }
             }
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-                validators, getControlType(), validated);
+                validators, getControlType(), validated, getAttributes().get(ATTR_NAME_VALUE));
             if (constraints.isEmpty()) {
                 return;
             }

@@ -152,14 +152,54 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
-    public void regexEmitsPatternWhenPortableAndCaseSensitive() {
+    public void regexAloneEmitsPatternThatAlsoAcceptsBlankInput() {
+        // RegexFieldValidator skips a value that trims to empty regardless of its trim param, so a
+        // bare pattern would block whitespace-only input the server lets through
         RegexFieldValidator validator = new RegexFieldValidator();
         validator.setRegex("[a-z]+");
         validator.setCaseSensitive(true);
         validator.setTrim(false);
 
         assertThat(constraints(validator, HtmlControlType.TEXT))
+            .containsEntry("pattern", "(?:[a-z]+)|[\\x00-\\x20]*");
+    }
+
+    @Test
+    public void regexWithTrimmingRequiredStringEmitsBarePattern() {
+        // a trimming requiredstring rejects blank input server-side, so the two sides agree again
+        RegexFieldValidator regex = new RegexFieldValidator();
+        regex.setRegex("[a-z]+");
+        regex.setCaseSensitive(true);
+        regex.setTrim(false);
+
+        assertThat(provider.constraintsFor(List.of(new RequiredStringValidator(), regex), HtmlControlType.TEXT, null))
             .containsEntry("pattern", "[a-z]+");
+    }
+
+    @Test
+    public void regexWithRequiredStringListedAfterItStillEmitsBarePattern() {
+        RegexFieldValidator regex = new RegexFieldValidator();
+        regex.setRegex("[a-z]+");
+        regex.setCaseSensitive(true);
+        regex.setTrim(false);
+
+        assertThat(provider.constraintsFor(List.of(regex, new RequiredStringValidator()), HtmlControlType.TEXT, null))
+            .containsEntry("pattern", "[a-z]+");
+    }
+
+    @Test
+    public void regexWithNonTrimmingRequiredStringKeepsTheBlankAlternative() {
+        // requiredstring with trim=false accepts " " as non-empty, so blank input still reaches the
+        // regex validator's unconditional skip
+        RegexFieldValidator regex = new RegexFieldValidator();
+        regex.setRegex("[a-z]+");
+        regex.setCaseSensitive(true);
+        regex.setTrim(false);
+        RequiredStringValidator required = new RequiredStringValidator();
+        required.setTrim(false);
+
+        assertThat(provider.constraintsFor(List.of(required, regex), HtmlControlType.TEXT, null))
+            .containsEntry("pattern", "(?:[a-z]+)|[\\x00-\\x20]*");
     }
 
     @Test

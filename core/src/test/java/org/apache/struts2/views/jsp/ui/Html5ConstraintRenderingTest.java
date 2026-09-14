@@ -86,10 +86,15 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
             output.contains("Contains \"quotes\" and <brackets>"));
     }
 
+    /**
+     * The field carries only a regex validator, so the pattern also has to admit the whitespace-only
+     * input the server skips; the suffix must survive FreeMarker's attribute escaping unchanged.
+     */
     public void testRendersPatternOnATextField() throws Exception {
         String output = render("true", "code", null);
 
-        assertTrue("expected pattern in: " + output, output.contains("pattern=\"^[A-Z]{3}\\d{2}$\""));
+        assertTrue("expected pattern in: " + output,
+            output.contains("pattern=\"(?:^[A-Z]{3}\\d{2}$)|[\\x00-\\x20]*\""));
     }
 
     /**

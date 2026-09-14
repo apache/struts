@@ -82,6 +82,23 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         assertFalse(validator.getValidatorContext().hasFieldErrors());
     }
 
+    public void testBlankValueIsSkippedEvenWithoutTrim() throws Exception {
+        // StrutsHtmlConstraintProvider mirrors this skip in the emitted HTML5 pattern; if the
+        // validator ever starts matching blank input, that mirror has to go too
+        MyTestPerson testPerson = new MyTestPerson();
+        testPerson.setUsername(" \t ");
+
+        RegexFieldValidator validator = new RegexFieldValidator();
+        validator.setTrim(false);
+        validator.setRegex("^\\d{5}$");
+        validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
+        validator.setFieldName("username");
+        validator.setValueStack(ActionContext.getContext().getValueStack());
+        validator.validate(testPerson);
+
+        assertFalse(validator.getValidatorContext().hasFieldErrors());
+    }
+
     public void testFail() throws Exception {
         MyTestPerson testPerson = new MyTestPerson();
         testPerson.setUsername("Superman");

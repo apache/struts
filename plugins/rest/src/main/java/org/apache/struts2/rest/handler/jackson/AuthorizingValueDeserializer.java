@@ -19,6 +19,7 @@
 package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -44,16 +45,39 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
 
     private final String propertyName;
     private final JavaType propertyType;
+    private final transient TypeDeserializer valueTypeDeserializer;
 
-    AuthorizingValueDeserializer(JsonDeserializer<?> delegate, String propertyName, JavaType propertyType) {
+    AuthorizingValueDeserializer(JsonDeserializer<?> delegate, String propertyName, JavaType propertyType,
+                                 TypeDeserializer valueTypeDeserializer) {
         super(delegate);
         this.propertyName = propertyName;
         this.propertyType = propertyType;
+        this.valueTypeDeserializer = valueTypeDeserializer;
     }
 
     @Override
     protected JsonDeserializer<?> newDelegatingInstance(JsonDeserializer<?> newDelegatee) {
-        return new AuthorizingValueDeserializer(newDelegatee, propertyName, propertyType);
+        return new AuthorizingValueDeserializer(newDelegatee, propertyName, propertyType, valueTypeDeserializer);
+    }
+
+    /**
+     * Merging into a non-null polymorphic value is Jackson's one path past both wrappers: the
+     * {@code final} {@code SettableBeanProperty#deserializeWith} deserializes in place through a
+     * deserializer resolved for the existing value's class. {@code BeanDeserializerBase.resolve()}
+     * asks the value deserializer first, whichever property wrapper it has built by then, so
+     * declining keeps the property on the ordinary authorized path: the value is replaced and the
+     * body must carry its type id. Jackson ignores the declined merge under
+     * {@code MapperFeature.IGNORE_MERGE_FOR_UNMERGEABLE} and reports a bad definition otherwise.
+     */
+    @Override
+    public Boolean supportsUpdate(DeserializationConfig config) {
+        if (valueTypeDeserializer == null) {
+            return super.supportsUpdate(config);
+        }
+        LOG.warn("Merge disabled for polymorphic REST body property [{}]: an in-place polymorphic merge"
+                + " cannot be authorized, so the value is replaced and the body must carry its type id",
+                propertyName);
+        return Boolean.FALSE;
     }
 
     @Override

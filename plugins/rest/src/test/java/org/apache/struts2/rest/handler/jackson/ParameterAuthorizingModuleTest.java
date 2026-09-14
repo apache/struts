@@ -19,16 +19,21 @@
 package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonMerge;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -36,6 +41,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -584,6 +590,56 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull("merged into an unauthorized property ?", result.address.city);
     }
 
+    public void testMergedPolymorphicPropertyWithInitialValueIsAuthorized() throws Exception {
+        // @JsonMerge into a non-null polymorphic value would otherwise deserialize in place through
+        // Jackson's typed merge, which reaches neither wrapper: the property is never authorized and
+        // the subtype's members are checked against the enclosing bean's grants.
+        bind((path, t, a) -> "owner".equals(path), new MergingKennel());
+        MergingKennel result = mapper.readValue("{\"pet\":{\"owner\":\"alice\"}}", MergingKennel.class);
+        assertNull("subtype member assigned through an unauthorized merged property ?",
+                ((Dog) result.pet).owner);
+    }
+
+    public void testMergedPolymorphicPropertyIsReplacedThroughTheAuthorizedPath() throws Exception {
+        MergingKennel bean = new MergingKennel();
+        Animal initial = bean.pet;
+        bind((path, t, a) -> "pet".equals(path) || "pet.owner".equals(path), bean);
+        mapper.readerForUpdating(bean).readValue("{\"pet\":{\"@type\":\"dog\",\"owner\":\"alice\"}}");
+        assertEquals("alice", ((Dog) bean.pet).owner);
+        assertNotSame("merge must be disabled for a polymorphic property", initial, bean.pet);
+    }
+
+    public void testMergedPolymorphicPropertyBehindObjectIdWrapperIsAuthorized() throws Exception {
+        // @JsonIdentityInfo makes resolve() copy the property into an ObjectIdReferenceProperty
+        // before it decides on merging; the merge must still be refused there.
+        bind((path, t, a) -> "owner".equals(path), new MergingIdentifiedKennel());
+        MergingIdentifiedKennel result = mapper.readValue("{\"pet\":{\"owner\":\"alice\"}}",
+                MergingIdentifiedKennel.class);
+        assertNull("subtype member assigned through an unauthorized merged property ?",
+                ((IdentifiedDog) result.pet).owner);
+    }
+
+    public void testMergedPolymorphicPropertyBehindManagedReferenceWrapperIsAuthorized() throws Exception {
+        bind((path, t, a) -> "owner".equals(path), new MergingManagedKennel());
+        MergingManagedKennel result = mapper.readValue("{\"pet\":{\"owner\":\"alice\"}}",
+                MergingManagedKennel.class);
+        assertNull("subtype member assigned through an unauthorized merged property ?",
+                ((ManagedDog) result.pet).owner);
+    }
+
+    public void testMergedPolymorphicPropertyIsRefusedWhenUnmergeableIsNotIgnored() throws Exception {
+        ObjectMapper strict = new ObjectMapper()
+                .disable(MapperFeature.IGNORE_MERGE_FOR_UNMERGEABLE)
+                .registerModule(new ParameterAuthorizingModule());
+        bind((path, t, a) -> true, new MergingKennel());
+        try {
+            strict.readValue("{\"pet\":{\"@type\":\"dog\",\"owner\":\"alice\"}}", MergingKennel.class);
+            fail("a polymorphic merge the module cannot authorize must be reported as a bad definition");
+        } catch (InvalidDefinitionException expected) {
+            assertTrue(expected.getMessage(), expected.getMessage().contains("cannot be merged"));
+        }
+    }
+
     public void testBufferedSetterInsideDynamicKeyScopeIsAuthorizedByDepth() throws Exception {
         // Inside a dynamic-key scope the buffered path must consult the same depth rule as the
         // direct path, not the annotation authorizer (which rejects everything here).
@@ -814,6 +870,46 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         public String name;
         @JsonMerge
         public Address address = new Address();
+    }
+
+    public static class MergingKennel {
+        @JsonMerge
+        public Animal pet = new Dog();
+        public String owner;
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+    @JsonSubTypes(@JsonSubTypes.Type(value = IdentifiedDog.class, name = "dog"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    public abstract static class IdentifiedAnimal {
+    }
+
+    public static class IdentifiedDog extends IdentifiedAnimal {
+        public String owner;
+    }
+
+    public static class MergingIdentifiedKennel {
+        @JsonMerge
+        public IdentifiedAnimal pet = new IdentifiedDog();
+        public String owner;
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+    @JsonSubTypes(@JsonSubTypes.Type(value = ManagedDog.class, name = "dog"))
+    public abstract static class ManagedAnimal {
+        @JsonBackReference
+        public MergingManagedKennel kennel;
+    }
+
+    public static class ManagedDog extends ManagedAnimal {
+        public String owner;
+    }
+
+    public static class MergingManagedKennel {
+        @JsonMerge
+        @JsonManagedReference
+        public ManagedAnimal pet = new ManagedDog();
+        public String owner;
     }
 
     public static class CreatorHolder {

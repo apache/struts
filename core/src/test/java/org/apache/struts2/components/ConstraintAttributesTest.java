@@ -200,24 +200,28 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     /**
      * With {@code user} set but {@code user.address} still null there is no Address to validate
      * against; the provider gets the action, as for any field whose visited object does not exist,
-     * rather than the User one level up.
+     * rather than the User one level up — and {@code ${...}} agrees with that, so the User's label
+     * does not leak into an Address message.
      */
     public void testAPartialVisitedChainHandsTheProviderTheAction() throws Exception {
         initDispatcherWith("true");
         fieldName = "user.address.street";
-        ((ConstraintAction) action).setUser(new ConstraintUser());
+        ConstraintUser user = new ConstraintUser();
+        user.setLabel("Account");
+        ((ConstraintAction) action).setUser(user);
 
         TextFieldTag field = startField(null);
         List<Object> captured = new ArrayList<>();
         ((UIBean) field.getComponent()).setHtmlConstraintProvider((validators, control, derivedFrom) -> {
             captured.add(derivedFrom);
+            captured.add(validators.get(0).getMessage(derivedFrom));
             return Collections.emptyMap();
         });
 
         finishField(field);
 
-        assertEquals(1, captured.size());
         assertSame(action, captured.get(0));
+        assertEquals(": street is required", captured.get(1));
     }
 
     /**

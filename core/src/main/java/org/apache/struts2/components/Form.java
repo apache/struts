@@ -137,6 +137,7 @@ public class Form extends ClosingUIBean {
     private boolean actionValidatorsResolved;
     private final Map<Class<?>, List<Validator>> cachedVisitorValidators = new HashMap<>();
     private final Map<String, String> visitedPaths = new HashMap<>();
+    private final Map<String, List<Object>> visitedObjects = new HashMap<>();
     protected TextProviderFactory textProviderFactory;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
@@ -371,6 +372,7 @@ public class Form extends ClosingUIBean {
         for (Validator validator : validators) {
             paths.add(validator instanceof FieldVisitorValidatorWrapper wrapper ? wrapper.getVisitedPath() : null);
         }
+        visitedObjects.remove(name);
         if (paths.size() == 1 && !paths.contains(null)) {
             visitedPaths.put(name, paths.iterator().next());
         } else {
@@ -405,6 +407,10 @@ public class Form extends ClosingUIBean {
         if (path == null) {
             return Collections.emptyList();
         }
+        return visitedObjects.computeIfAbsent(name, key -> resolveChain(path));
+    }
+
+    private List<Object> resolveChain(String path) {
         List<Object> chain = new ArrayList<>();
         StringBuilder prefix = new StringBuilder();
         for (String segment : path.split("\\.")) {

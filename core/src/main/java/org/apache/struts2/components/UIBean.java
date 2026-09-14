@@ -956,14 +956,16 @@ public abstract class UIBean extends Component {
         int stackDepth = stack.getRoot().size();
         try {
             List<Validator> validators = form.getFieldValidators(fieldName);
-            // validation resolves a nested message with every visited object on the stack
-            // (restoreStackDepth pops them); the provider gets the innermost only when it exists
-            for (Object visited : form.getVisitedObjects(fieldName)) {
-                stack.push(visited);
-            }
+            // validation resolves a nested message with every visited object on the stack; both
+            // happen only when the whole chain exists, so ${...} agrees with the object handed over
+            // (restoreStackDepth pops the pushes)
             Object validated = form.getValidatedObject(fieldName);
             if (validated == null) {
                 validated = resolveAction();
+            } else {
+                for (Object visited : form.getVisitedObjects(fieldName)) {
+                    stack.push(visited);
+                }
             }
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
                 validators, getControlType(), validated);

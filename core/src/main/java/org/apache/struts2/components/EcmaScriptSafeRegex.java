@@ -64,63 +64,110 @@ public final class EcmaScriptSafeRegex {
         if (regex == null || regex.isEmpty()) {
             return false;
         }
-        boolean inCharClass = false;
-        // true while the previous unit is a plain literal a range can start from
-        boolean rangeStartAvailable = false;
-        // true right after a quantifier: Java stacks them (a{2}{3}), the browser has nothing to repeat
-        boolean afterQuantifier = false;
-        int i = 0;
-        while (i < regex.length()) {
-            char current = regex.charAt(i);
-            if (current == '\\') {
-                if (!isAllowedEscape(regex, i, inCharClass)) {
-                    return false;
-                }
-                // an escape consumes the character it escapes, which must not be scanned again;
-                // in unicode-sets mode a class escape cannot bound a range either
-                rangeStartAvailable = false;
-                afterQuantifier = false;
-                i += 2;
-            } else if (inCharClass) {
-                if (current == ']') {
-                    inCharClass = false;
-                    i++;
-                } else if (current == '-') {
-                    if (!isRangeOperator(regex, i, rangeStartAvailable)) {
-                        return false;
-                    }
-                    rangeStartAvailable = false;
-                    i += 2;
-                } else {
-                    if (!isPortableInClass(regex, i, current)) {
-                        return false;
-                    }
-                    rangeStartAvailable = true;
-                    i++;
-                }
-            } else if (current == '{') {
-                int close = endOfQuantifier(regex, i);
-                if (afterQuantifier || close < 0 || isFollowedBy(regex, close, '+')) {
-                    return false;
-                }
-                afterQuantifier = true;
-                i = close + 1;
-            } else {
-                if (!isPortable(regex, i, current) || (afterQuantifier && (current == '*' || current == '+'))) {
-                    return false;
-                }
-                if (current == '[') {
-                    inCharClass = true;
-                    rangeStartAvailable = false;
-                    // the negation marker is part of the class opening, not a literal
-                    i += isFollowedBy(regex, i, '^') ? 2 : 1;
-                } else {
-                    i++;
-                }
-                afterQuantifier = current == '*' || current == '+' || current == '?';
+        Scanner scanner = new Scanner(regex);
+        while (scanner.hasMore()) {
+            if (!scanner.scanNext()) {
+                return false;
             }
         }
-        return !inCharClass;
+        return !scanner.inCharClass;
+    }
+
+    /**
+     * Walks the regex one unit at a time — a character, an escape pair, or a whole {@code {n,m}}
+     * quantifier — and refuses the first one the two engines disagree on.
+     */
+    private static final class Scanner {
+        private final String regex;
+        private int index;
+        private boolean inCharClass;
+        // true while the previous unit is a plain literal a range can start from
+        private boolean rangeStartAvailable;
+        // true right after a quantifier: Java stacks them (a{2}{3}), the browser has nothing to repeat
+        private boolean afterQuantifier;
+
+        Scanner(String regex) {
+            this.regex = regex;
+        }
+
+        boolean hasMore() {
+            return index < regex.length();
+        }
+
+        boolean scanNext() {
+            char current = regex.charAt(index);
+            if (current == '\\') {
+                return scanEscape();
+            }
+            if (inCharClass) {
+                return scanInClass(current);
+            }
+            if (current == '{') {
+                return scanQuantifier();
+            }
+            return scanOutsideClass(current);
+        }
+
+        private boolean scanEscape() {
+            if (!isAllowedEscape(regex, index, inCharClass)) {
+                return false;
+            }
+            // an escape consumes the character it escapes, which must not be scanned again;
+            // in unicode-sets mode a class escape cannot bound a range either
+            rangeStartAvailable = false;
+            afterQuantifier = false;
+            index += 2;
+            return true;
+        }
+
+        private boolean scanInClass(char current) {
+            if (current == ']') {
+                inCharClass = false;
+                index++;
+                return true;
+            }
+            if (current == '-') {
+                if (!isRangeOperator(regex, index, rangeStartAvailable)) {
+                    return false;
+                }
+                rangeStartAvailable = false;
+                index += 2;
+                return true;
+            }
+            if (!isPortableInClass(regex, index, current)) {
+                return false;
+            }
+            rangeStartAvailable = true;
+            index++;
+            return true;
+        }
+
+        private boolean scanQuantifier() {
+            int close = endOfQuantifier(regex, index);
+            if (afterQuantifier || close < 0 || isFollowedBy(regex, close, '+')) {
+                return false;
+            }
+            afterQuantifier = true;
+            index = close + 1;
+            return true;
+        }
+
+        private boolean scanOutsideClass(char current) {
+            boolean stacked = afterQuantifier && (current == '*' || current == '+');
+            if (stacked || !isPortable(regex, index, current)) {
+                return false;
+            }
+            if (current == '[') {
+                inCharClass = true;
+                rangeStartAvailable = false;
+                // the negation marker is part of the class opening, not a literal
+                index += isFollowedBy(regex, index, '^') ? 2 : 1;
+            } else {
+                index++;
+            }
+            afterQuantifier = current == '*' || current == '+' || current == '?';
+            return true;
+        }
     }
 
     /**

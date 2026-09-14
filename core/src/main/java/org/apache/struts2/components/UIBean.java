@@ -962,7 +962,8 @@ public abstract class UIBean extends Component {
             constraints = new LinkedHashMap<>(constraints);
             // the template has already written type by the time the map renders; a second one is a
             // duplicate attribute, of which the browser keeps the first
-            constraints.keySet().removeIf(name -> "type".equalsIgnoreCase(name) || isAlreadyRendered(name));
+            constraints.keySet().removeIf(attributeName ->
+                "type".equalsIgnoreCase(attributeName) || isAlreadyRendered(attributeName));
             if (!constraints.isEmpty()) {
                 addParameter("constraints", constraints);
             }

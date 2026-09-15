@@ -19,6 +19,9 @@
 package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.util.JsonParserSequence;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -26,6 +29,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
 import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 import com.fasterxml.jackson.databind.deser.std.DelegatingDeserializer;
+import com.fasterxml.jackson.databind.util.TokenBufferReadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
@@ -88,18 +92,83 @@ final class RedactionAwareDeserializer extends DelegatingDeserializer {
         return contextual;
     }
 
+    /**
+     * The context of the object or array about to be read, when the parser stands on its start token
+     * or already inside it; {@code null} for a scalar, which the failed read consumes whole.
+     */
+    private static JsonStreamContext structuredValue(JsonParser p) {
+        JsonToken token = p.currentToken();
+        if (token == null || !(token.isStructStart() || token == JsonToken.FIELD_NAME)) {
+            return null;
+        }
+        return p.getParsingContext();
+    }
+
+    /**
+     * Dropping the object must leave the parser on its end token, or the fields left unread land in
+     * the enclosing bean. The end is found by context identity, which every parser keeps, including
+     * the token buffers Jackson replays unwrapped and any-setter values from. The one value that
+     * cannot be followed is a polymorphic one Jackson reads from a parser spliced from a buffer and
+     * the real parser — a type id that is not the first key, or a visible one — because that value
+     * straddles the splice. The buffer holds no start token, so such a value is entered mid-object on
+     * a buffer context while the parser is a splice, and that is what is refused. The test also
+     * catches a type-id-first bean inside an outer value's buffer, which could have been followed;
+     * its drop escalates to the enclosing bean instead, which errs on the side of dropping more.
+     */
+    private static boolean canResync(JsonParser p, JsonToken entry, JsonStreamContext value) {
+        return value == null || !(p instanceof JsonParserSequence)
+                || !(value instanceof TokenBufferReadContext) || entry != JsonToken.FIELD_NAME;
+    }
+
+    private static void skipToEndOf(JsonParser p, JsonStreamContext value) throws IOException {
+        if (value == null) {
+            return;
+        }
+        JsonToken token = p.hasCurrentToken() ? p.currentToken() : p.nextToken();
+        while (token != null) {
+            if (token.isStructStart()) {
+                p.skipChildren();
+                token = p.currentToken();
+            }
+            if (token.isStructEnd() && !within(p.getParsingContext(), value)) {
+                return;
+            }
+            token = p.nextToken();
+        }
+    }
+
+    private static boolean within(JsonStreamContext context, JsonStreamContext value) {
+        for (JsonStreamContext current = context; current != null; current = current.getParent()) {
+            if (current == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         if (!ParameterAuthorizationContext.isActive()) {
             return super.deserialize(p, ctxt);
         }
         ParameterAuthorizationContext.pushRedactionScope();
+        JsonToken entry = p.currentToken();
+        JsonStreamContext value = structuredValue(p);
         boolean swallowed = false;
         try {
             try {
                 return super.deserialize(p, ctxt);
             } catch (JsonMappingException e) {
                 if (!ParameterAuthorizationContext.wasRedactedInCurrentScope()) {
+                    throw e;
+                }
+                if (!canResync(p, entry, value)) {
+                    // The nearest enclosing object that can leave its parser in order drops itself.
+                    LOG.warn("REST body object of type [{}] failed to construct after @StrutsParameter " +
+                                    "redaction dropped one of its properties and cannot be dropped in place; " +
+                                    "leaving it to the enclosing object: {}",
+                            handledType() != null ? handledType().getName() : "?", e.getMessage());
+                    swallowed = true;
                     throw e;
                 }
                 // If this object had a property redacted AND also hit an unrelated mapping error,
@@ -109,6 +178,7 @@ final class RedactionAwareDeserializer extends DelegatingDeserializer {
                 LOG.warn("REST body object of type [{}] failed to construct after @StrutsParameter " +
                                 "redaction dropped one of its properties; treating the object as unauthorized: {}",
                         handledType() != null ? handledType().getName() : "?", e.getMessage());
+                skipToEndOf(p, value);
                 swallowed = true;
                 return null;
             }

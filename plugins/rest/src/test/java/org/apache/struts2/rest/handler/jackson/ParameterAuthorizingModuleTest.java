@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -689,6 +690,116 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull("id member authorized by the referring bean's grant for [child.k] ?", result.child.id.k);
     }
 
+    public void testDroppedObjectLeavesTheParserAtItsEnd_nullObjectId() throws Exception {
+        // The id bean fails on a redacted member, so the null id fails Jackson's binding mid-object;
+        // the dropped object's remaining fields must not be read by the parent.
+        Set<String> granted = Set.of("child", "child.id", "child.name", "other", "name");
+        bind((path, t, a) -> granted.contains(path), new StrictHolder());
+        StrictHolder result = mapper.readValue(
+                "{\"child\":{\"id\":{\"k\":\"a\"},\"name\":\"x\"},\"other\":\"o\",\"name\":\"h\"}",
+                StrictHolder.class);
+        assertNull(result.child);
+        assertEquals("o", result.other);
+        assertEquals("child's name read into the parent ?", "h", result.name);
+    }
+
+    public void testDroppedObjectLeavesTheParserAtItsEnd_creatorFailure() throws Exception {
+        // A creator with one parameter constructs as soon as it arrives; a redacted primitive fails it
+        // with the rest of the object, including a nested one, still unread.
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        Set<String> granted = Set.of("money", "money.note", "money.name", "other", "name");
+        bind((path, t, a) -> granted.contains(path), new StrictHolder());
+        StrictHolder result = mapper.readValue(
+                "{\"money\":{\"amount\":5,\"detail\":{\"x\":1},\"name\":\"x\"},\"other\":\"o\",\"name\":\"h\"}",
+                StrictHolder.class);
+        assertNull(result.money);
+        assertEquals("o", result.other);
+        assertEquals("h", result.name);
+    }
+
+    public void testDroppedPolymorphicObjectWithLateTypeIdFailsTheRead() throws Exception {
+        // With the type id after other keys Jackson reads the subtype from a parser spliced from a
+        // buffer and the real parser; the value straddles the splice, so its drop cannot resync and
+        // is not swallowed. Read into an existing bean as the handlers do, so nothing above it can
+        // drop itself instead.
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        Set<String> granted = Set.of("pet", "pet.name");
+        bind((path, t, a) -> granted.contains(path), new StrictHolder());
+        try {
+            mapper.readerForUpdating(new StrictHolder())
+                    .readValue("{\"pet\":{\"legs\":4,\"@type\":\"strict\",\"name\":\"x\"},\"name\":\"h\"}");
+            fail("a drop that cannot resync the parser must fail the read");
+        } catch (JsonMappingException expected) {
+            assertTrue(expected.getMessage(), expected.getMessage().contains("legs"));
+        }
+    }
+
+    public void testDroppedObjectNestedInALateTypeIdValueStillResyncs() throws Exception {
+        // A bean nested inside the spliced value lies wholly on one side of the splice.
+        Set<String> granted = Set.of("pet", "pet.legs", "pet.name", "pet.owner", "name");
+        bind((path, t, a) -> granted.contains(path), new StrictHolder());
+        StrictHolder result = mapper.readValue(
+                "{\"pet\":{\"legs\":4,\"@type\":\"strict\",\"owner\":{\"k\":\"a\"},\"name\":\"x\"},\"name\":\"h\"}",
+                StrictHolder.class);
+        StrictPet pet = (StrictPet) result.pet;
+        assertNull(pet.owner);
+        assertEquals("x", pet.name);
+        assertEquals("h", result.name);
+    }
+
+    public void testDroppedLateTypeIdValueNestedInAnotherLateTypeIdValueDoesNotLeak() throws Exception {
+        // The inner splice is based on the outer value's buffer, so its root context has a buffer
+        // parent; it still straddles its own splice and must be refused, escalating the drop.
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        Set<String> granted = Set.of("mid", "mid.pet", "mid.pet.name", "mid.pet.owner", "mid.name", "name");
+        bind((path, t, a) -> granted.contains(path), new PolyOuter());
+        PolyOuter result = mapper.readValue(
+                "{\"mid\":{\"pet\":{\"legs\":4,\"@type\":\"strict\",\"owner\":{\"k\":\"a\"},\"name\":\"pet\"},"
+                        + "\"name\":\"midname\",\"@type\":\"mid\"},\"name\":\"outer\"}",
+                PolyOuter.class);
+        assertNull("a drop that cannot resync must escalate, not leak the pet's fields into mid", result);
+    }
+
+    public void testRefusedResyncDropsTheNearestEnclosingObject() throws Exception {
+        // The parent had no redaction of its own; the refused drop below it must still mark it.
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        Set<String> granted = Set.of("mid", "mid.secret", "mid.pet", "mid.pet.name", "name");
+        bind((path, t, a) -> granted.contains(path), new StrictOuter());
+        StrictOuter result = mapper.readValue(
+                "{\"mid\":{\"secret\":\"s\",\"pet\":{\"legs\":4,\"@type\":\"strict\",\"name\":\"pet\"}},\"name\":\"outer\"}",
+                StrictOuter.class);
+        assertNull(result.mid);
+        assertEquals("outer", result.name);
+    }
+
+    public void testDroppedObjectUnderADroppedPolymorphicChildLeavesTheParserAtItsEnd() throws Exception {
+        // Jackson clears the parser's current token before splicing for a late type id; when the
+        // subtype's drop is refused and the parent's own wrapper swallows, it must still resync.
+        mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        Set<String> granted = Set.of("mid", "mid.pet", "mid.pet.name", "name");
+        bind((path, t, a) -> granted.contains(path), new StrictOuter());
+        StrictOuter result = mapper.readValue(
+                "{\"mid\":{\"secret\":\"s\",\"pet\":{\"legs\":4,\"@type\":\"strict\",\"name\":\"pet\"}},\"name\":\"outer\"}",
+                StrictOuter.class);
+        assertNull(result.mid);
+        assertEquals("dropped pet's name read into the outer bean ?", "outer", result.name);
+    }
+
+    public void testDroppedObjectInsideAnUnwrappedReplayStopsAtItsEnd() throws Exception {
+        // Unwrapped properties are replayed from a token buffer whose contexts carry no nesting
+        // depth; a drop there must stop at the object's end, not drain the buffer.
+        Set<String> granted = Set.of("inner", "inner.keys", "inner.name", "other");
+        bind((path, t, a) -> granted.contains(path), new UnwrappedHolder());
+        UnwrappedHolder result = mapper.readValue(
+                "{\"keys\":[{\"k\":\"a\"},{\"k\":\"b\"}],\"name\":\"n\",\"other\":\"o\"}",
+                UnwrappedHolder.class);
+        assertNotNull("unwrapped bean dropped because the replay was drained ?", result.inner);
+        assertEquals(2, result.inner.keys.size());
+        assertNull(result.inner.keys.get(0));
+        assertEquals("n", result.inner.name);
+        assertEquals("o", result.other);
+    }
+
     public void testCreatorBoundObjectIdIsAssignedByTheCreatorOnly() throws Exception {
         // Jackson skips the post-construction write of a creator-bound id (records have no setter
         // for it); the wrapper must keep that skip and leave the id to the authorized creator path.
@@ -1102,6 +1213,89 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     public record IdentifiedRecord(int id, String name) {
+    }
+
+    public record StrictKey(String k) {
+        public StrictKey {
+            java.util.Objects.requireNonNull(k);
+        }
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class StrictIdentified {
+        public StrictKey id;
+        public String name;
+    }
+
+    public static class StrictMoney {
+        public final int amount;
+        public Address detail;
+        public String name;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public StrictMoney(@JsonProperty("amount") int amount) {
+            this.amount = amount;
+        }
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+    @JsonSubTypes(@JsonSubTypes.Type(value = StrictPet.class, name = "strict"))
+    public abstract static class StrictAnimal {
+    }
+
+    public static class StrictPet extends StrictAnimal {
+        public final int legs;
+        public StrictKey owner;
+        public String name;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public StrictPet(@JsonProperty("legs") int legs) {
+            this.legs = legs;
+        }
+    }
+
+    public static class StrictMid {
+        public String secret;
+        public StrictAnimal pet;
+    }
+
+    public static class StrictOuter {
+        public StrictMid mid;
+        public String name;
+    }
+
+    public static class UnwrappedInner {
+        public List<StrictKey> keys;
+        public String name;
+    }
+
+    public static class UnwrappedHolder {
+        @JsonUnwrapped
+        public UnwrappedInner inner;
+        public String other;
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
+    @JsonSubTypes(@JsonSubTypes.Type(value = StrictMidPoly.class, name = "mid"))
+    public abstract static class StrictContainer {
+    }
+
+    public static class StrictMidPoly extends StrictContainer {
+        public StrictAnimal pet;
+        public String name;
+    }
+
+    public static class PolyOuter {
+        public StrictContainer mid;
+        public String name;
+    }
+
+    public static class StrictHolder {
+        public StrictIdentified child;
+        public StrictMoney money;
+        public StrictAnimal pet;
+        public String other;
+        public String name;
     }
 
     public static class Key {

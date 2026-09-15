@@ -19,6 +19,8 @@
 package org.apache.struts2.rest.handler;
 
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.struts2.ActionInvocation;
@@ -44,8 +46,11 @@ public class JacksonXmlHandler implements AuthorizationAwareContentTypeHandler {
     private final ParameterAuthorizingModule parameterAuthorizingModule = new ParameterAuthorizingModule();
 
     public JacksonXmlHandler() {
-        mapper = new XmlMapper();
+        // Deserializer modifiers run in reverse registration order; Jackson XML's must see Jackson's
+        // own bean deserializer, so it is registered after the authorizing module.
+        mapper = new XmlMapper(new XmlFactory(), null);
         mapper.registerModule(parameterAuthorizingModule);
+        mapper.registerModule(new JacksonXmlModule());
     }
 
     @Override

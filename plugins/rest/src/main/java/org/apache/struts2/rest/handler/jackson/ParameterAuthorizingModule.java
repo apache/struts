@@ -43,7 +43,9 @@ import java.util.List;
  * external name a {@code @JsonProperty} or naming strategy puts on the wire, since the authorizer
  * resolves the path against the member.
  *
- * <p>Register this module once on each handler's mapper (e.g. in the constructor). All per-request
+ * <p>Register this module once on each handler's mapper (e.g. in the constructor), and before any
+ * format module whose deserializer modifier expects Jackson's own bean deserializer: modifiers run in
+ * reverse registration order, and this one wraps the bean deserializer it is given. All per-request
  * authorization state is read from the ThreadLocal context, so the module + mapper combination is
  * thread-safe and reusable across requests.</p>
  *

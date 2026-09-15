@@ -47,6 +47,8 @@ import com.fasterxml.jackson.databind.deser.impl.ReadableObjectId;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import junit.framework.TestCase;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
@@ -264,8 +266,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     public void testXmlAnySetterPreservesNumericTextRoundTrip() throws Exception {
         String number = "1.2345678901234567890123456789";
         for (boolean useBigDecimal : new boolean[]{false, true}) {
-            XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.registerModule(new ParameterAuthorizingModule(true));
+            XmlMapper xmlMapper = enforcingXmlMapper();
             xmlMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, useBigDecimal);
             bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
             DynamicScalarAnySetterBean result = xmlMapper.readValue(
@@ -408,8 +409,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     }
 
     public void testXmlAnySetterUsesSameOptIn() throws Exception {
-        XmlMapper xmlMapper = new XmlMapper();
-        xmlMapper.registerModule(new ParameterAuthorizingModule(true));
+        XmlMapper xmlMapper = enforcingXmlMapper();
 
         bind((path, t, a) -> false, new DynamicScalarAnySetterBean());
         DynamicScalarAnySetterBean allowed = xmlMapper.readValue(
@@ -1038,6 +1038,14 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     private ObjectMapper enforcingMapper() {
         return new ObjectMapper().registerModule(new ParameterAuthorizingModule(true));
+    }
+
+    /** Built the way {@code JacksonXmlHandler} builds its mapper: the XML module registered last. */
+    private XmlMapper enforcingXmlMapper() {
+        XmlMapper xmlMapper = new XmlMapper(new XmlFactory(), null);
+        xmlMapper.registerModule(new ParameterAuthorizingModule(true));
+        xmlMapper.registerModule(new JacksonXmlModule());
+        return xmlMapper;
     }
 
     public static class Person {

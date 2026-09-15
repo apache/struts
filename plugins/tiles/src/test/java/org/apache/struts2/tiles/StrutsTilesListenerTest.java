@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,17 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-	"https://struts.apache.org/dtds/struts-6.0.dtd">
+package org.apache.struts2.tiles;
 
-<struts>
-    <constant name="struts.tiles.ognl.legacy.enabled" value="false"/>
+import org.apache.struts2.dispatcher.DispatcherListener;
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
 
-    <package name="tiles-default" extends="struts-default">
-        <result-types>
-            <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
-        </result-types>
-    </package>
-</struts>
+public class StrutsTilesListenerTest {
+
+    @Test
+    public void doesNotParticipateInDispatcherLifecycle() {
+        assertFalse(DispatcherListener.class.isAssignableFrom(StrutsTilesListener.class));
+    }
+}

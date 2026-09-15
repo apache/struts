@@ -41,7 +41,9 @@ import java.io.IOException;
  * {@link #setAndReturn}, which apply the same authorization to the already-materialized value.</p>
  *
  * <p>When {@link ParameterAuthorizationContext#isActive()} is {@code false}, this wrapper is a
- * straight pass-through to the delegate — no overhead for default-config requests.</p>
+ * straight pass-through to the delegate — no overhead for default-config requests. The one decision
+ * taken regardless is made when the deserializer is built, not per request: a polymorphic property
+ * is never merged in place, see {@link AuthorizingValueDeserializer#supportsUpdate}.</p>
  *
  * @since 7.2.0
  */
@@ -79,13 +81,14 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
      * parameters, never reach {@link #deserializeAndSet}/{@link #deserializeSetAndReturn}: Jackson calls
      * the {@code final} {@code SettableBeanProperty#deserialize} directly, through this property's own
      * value deserializer. Wrap that deserializer with {@link AuthorizingValueDeserializer} for every
-     * property; it owns the path push for nested members on both the direct and the buffered path.
+     * property; it owns the path push for nested members on both the direct and the buffered path,
+     * and refuses the in-place merge of a polymorphic value that would otherwise skip both.
      */
     @Override
     public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
         JsonDeserializer<?> effective = deser;
         if (!(deser instanceof AuthorizingValueDeserializer)) {
-            effective = new AuthorizingValueDeserializer(deser, memberName, getType());
+            effective = new AuthorizingValueDeserializer(deser, memberName, getType(), getValueTypeDeserializer());
         }
         return _with(delegate.withValueDeserializer(effective));
     }

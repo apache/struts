@@ -81,15 +81,35 @@ final class RedactionAwareDeserializer extends DelegatingDeserializer {
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
             throws JsonMappingException {
         JsonDeserializer<?> contextual = super.createContextual(ctxt, property);
-        JsonDeserializer<?> bean = ((DelegatingDeserializer) contextual).getDelegatee();
-        if (bean instanceof BeanDeserializerBase beanDeserializer && beanDeserializer.getObjectIdReader() != null) {
-            ObjectIdReader reader = beanDeserializer.getObjectIdReader();
+        JsonDeserializer<?> delegatee = ((DelegatingDeserializer) contextual).getDelegatee();
+        JsonDeserializer<?> authorized = withAuthorizedObjectIdReader(ctxt, delegatee);
+        return authorized == delegatee ? contextual : new RedactionAwareDeserializer(authorized);
+    }
+
+    /**
+     * The bean deserializer may sit under further delegating wrappers by then, so the rebuilt one
+     * is put back through them.
+     */
+    private static JsonDeserializer<?> withAuthorizedObjectIdReader(DeserializationContext ctxt,
+                                                                   JsonDeserializer<?> deserializer)
+            throws JsonMappingException {
+        if (deserializer instanceof BeanDeserializerBase bean && bean.getObjectIdReader() != null) {
+            ObjectIdReader reader = bean.getObjectIdReader();
             ObjectIdReader authorized = ParameterAuthorizingModule.authorizedObjectIdReader(reader);
-            if (authorized != reader) {
-                return new RedactionAwareDeserializer(beanDeserializer.withObjectIdReader(authorized));
-            }
+            return authorized == reader ? bean : bean.withObjectIdReader(authorized);
         }
-        return contextual;
+        if (deserializer instanceof DelegatingDeserializer delegating) {
+            JsonDeserializer<?> inner = delegating.getDelegatee();
+            JsonDeserializer<?> authorized = withAuthorizedObjectIdReader(ctxt, inner);
+            if (authorized == inner) {
+                return delegating;
+            }
+            if (XmlWrapperSupport.isUnwrappedListWrapper(delegating)) {
+                return XmlWrapperSupport.rebuildAround(ctxt, (BeanDeserializerBase) authorized);
+            }
+            return delegating.replaceDelegatee(authorized);
+        }
+        return deserializer;
     }
 
     /**

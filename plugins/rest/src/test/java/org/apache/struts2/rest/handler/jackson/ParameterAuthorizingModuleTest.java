@@ -242,7 +242,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertEquals(1, summary.size());
         String sink = UnannotatedAnySetterBean.class.getName() + "#put";
         assertTrue(summary.get(0), summary.get(0).contains("[" + sink + "]"));
-        assertTrue(summary.get(0), summary.get(0).contains("[3]"));
+        assertTrue(summary.get(0), summary.get(0).contains("[3] dynamic key(s), logged at DEBUG;"));
         assertTrue(summary.get(0), summary.get(0).contains("@StrutsParameter(allowDynamicKeys = true)"));
 
         ParameterAuthorizingModule.clearRequestState();
@@ -265,7 +265,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
         List<String> summary = rejectionMessages(Level.WARN);
         assertEquals(1, summary.size());
-        assertTrue(summary.get(0), summary.get(0).contains("[2] dynamic key(s); value depth exceeds"));
+        assertTrue(summary.get(0), summary.get(0).contains("[2] dynamic key(s), logged at DEBUG; value depth exceeds"));
     }
 
     public void testRejectionsAreSummarizedPerSink() throws Exception {
@@ -423,6 +423,13 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         CreatorAnySetterBean result = enforcingMapper.readValue(
                 "{\"role\":\"admin\"}", CreatorAnySetterBean.class);
         assertTrue(result.values.isEmpty());
+
+        ParameterAuthorizingModule.clearRequestState();
+        List<String> summary = rejectionMessages(Level.WARN);
+        assertEquals(1, summary.size());
+        assertTrue(summary.get(0), summary.get(0).contains(
+                "[" + CreatorAnySetterBean.class.getName() + "#creator[0]] rejected [1]"));
+        assertTrue(summary.get(0), summary.get(0).contains("can only be declared on an any-setter method or field"));
     }
 
     public void testDeserializeWithoutCurrentNameRejectsAndClearsScope() throws Exception {
@@ -455,6 +462,13 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
         assertFalse(DynamicKeyAuthorizationContext.isActive());
         assertEquals("", ParameterAuthorizationContext.currentPathPrefix());
+
+        ParameterAuthorizingModule.clearRequestState();
+        List<String> summary = rejectionMessages(Level.WARN);
+        assertEquals(1, summary.size());
+        assertTrue(summary.get(0), summary.get(0).contains(
+                "[" + PropertyCreatorWithAnySetterBean.class.getName() + "#put] rejected [1]"));
+        assertTrue(summary.get(0), summary.get(0).contains("dynamic property name is unavailable"));
     }
 
     public void testJacksonHandlerClearsDynamicScopeAfterReadFailure() throws Exception {

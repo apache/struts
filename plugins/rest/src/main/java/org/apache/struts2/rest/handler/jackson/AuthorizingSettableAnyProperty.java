@@ -62,9 +62,11 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
     private static String sinkOf(SettableAnyProperty delegate) {
         AnnotatedMember member = memberOf(delegate.getProperty());
         if (member == null) {
-            return delegate.getPropertyName();
+            return "<any-setter>";
         }
-        return member.getDeclaringClass().getName() + "#" + member.getName();
+        int parameterIndex = delegate.getParameterIndex();
+        String memberName = parameterIndex >= 0 ? "creator[" + parameterIndex + "]" : member.getName();
+        return member.getDeclaringClass().getName() + "#" + memberName;
     }
 
     private static StrutsParameter permissionOf(BeanProperty property) {

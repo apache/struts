@@ -77,7 +77,7 @@ final class DynamicKeyRejections {
             return;
         }
         tallies.forEach((entry, count) ->
-                LOG.warn("REST body any-setter [{}] rejected [{}] dynamic key(s); {}",
+                LOG.warn("REST body any-setter [{}] rejected [{}] dynamic key(s), logged at DEBUG; {}",
                         entry.sink, count, entry.reason.summary));
     }
 

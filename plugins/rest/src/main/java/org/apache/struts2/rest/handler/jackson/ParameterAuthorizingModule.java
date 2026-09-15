@@ -103,18 +103,32 @@ public class ParameterAuthorizingModule extends SimpleModule {
      * Jackson builds the {@code ObjectIdReader} for a property-based {@code @JsonIdentityInfo} before
      * the deserializer modifiers run, capturing the id property as it was then, and the
      * {@code ObjectIdValueProperty} it adds at build time assigns the id through that captured
-     * property rather than through the builder's. Rebuild the reader around a wrapped one.
+     * property rather than through the builder's. Rebuild the reader around a wrapped one, and around
+     * a deserializer that puts a bean-typed id's members under the id property's path.
      */
     private static void authorizeObjectIdProperty(BeanDeserializerBuilder builder) {
         ObjectIdReader reader = builder.getObjectIdReader();
-        if (reader == null || reader.idProperty == null
-                || reader.idProperty instanceof AuthorizingSettableBeanProperty) {
-            return;
+        if (reader != null) {
+            builder.setObjectIdReader(authorizedObjectIdReader(reader));
         }
-        SettableBeanProperty idProperty = new AuthorizingSettableBeanProperty(
-                reader.idProperty, memberNameOf(reader.idProperty));
-        builder.setObjectIdReader(ObjectIdReader.construct(reader.getIdType(), reader.propertyName,
-                reader.generator, reader.getDeserializer(), idProperty, reader.resolver));
+    }
+
+    /**
+     * The same rebuild for a reader Jackson constructs later, in {@code createContextual}, for a
+     * {@code @JsonIdentityInfo} placed on the referring property; returns the reader itself when it
+     * carries no id property or is already rebuilt.
+     */
+    static ObjectIdReader authorizedObjectIdReader(ObjectIdReader reader) {
+        if (reader.idProperty == null || reader.getDeserializer() instanceof ObjectIdPathDeserializer) {
+            return reader;
+        }
+        String memberName = memberNameOf(reader.idProperty);
+        SettableBeanProperty idProperty = reader.idProperty instanceof AuthorizingSettableBeanProperty
+                ? reader.idProperty
+                : new AuthorizingSettableBeanProperty(reader.idProperty, memberName);
+        JsonDeserializer<?> idDeserializer = new ObjectIdPathDeserializer(reader.getDeserializer(), memberName);
+        return ObjectIdReader.construct(reader.getIdType(), reader.propertyName,
+                reader.generator, idDeserializer, idProperty, reader.resolver);
     }
 
     /**

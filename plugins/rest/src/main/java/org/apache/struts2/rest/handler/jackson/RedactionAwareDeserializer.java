@@ -19,9 +19,12 @@
 package org.apache.struts2.rest.handler.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 import com.fasterxml.jackson.databind.deser.std.DelegatingDeserializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,6 +63,29 @@ final class RedactionAwareDeserializer extends DelegatingDeserializer {
     @Override
     protected JsonDeserializer<?> newDelegatingInstance(JsonDeserializer<?> newDelegatee) {
         return new RedactionAwareDeserializer(newDelegatee);
+    }
+
+    /**
+     * A {@code @JsonIdentityInfo} on the referring property makes Jackson build a fresh
+     * {@code ObjectIdReader} here, after {@link ParameterAuthorizingModule#updateBuilder} rebuilt the
+     * class-level one; give it the same treatment. A bean serialized as an array keeps the properties
+     * it reads in an array of its own that {@code withObjectIdReader} does not rebuild and this wrapper
+     * cannot reach, so a bean-typed id declared on the referring property of such a bean stays on the
+     * enclosing path.
+     */
+    @Override
+    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
+            throws JsonMappingException {
+        JsonDeserializer<?> contextual = super.createContextual(ctxt, property);
+        JsonDeserializer<?> bean = ((DelegatingDeserializer) contextual).getDelegatee();
+        if (bean instanceof BeanDeserializerBase beanDeserializer && beanDeserializer.getObjectIdReader() != null) {
+            ObjectIdReader reader = beanDeserializer.getObjectIdReader();
+            ObjectIdReader authorized = ParameterAuthorizingModule.authorizedObjectIdReader(reader);
+            if (authorized != reader) {
+                return new RedactionAwareDeserializer(beanDeserializer.withObjectIdReader(authorized));
+            }
+        }
+        return contextual;
     }
 
     @Override

@@ -660,6 +660,35 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull(result.name);
     }
 
+    public void testBeanTypedObjectIdMembersAuthorizedUnderTheIdPath() throws Exception {
+        // The id value is read through the ObjectIdReader's own deserializer; a bean-typed id's
+        // members must be checked under id, not against the enclosing bean's same-named members.
+        Set<String> granted = Set.of("id", "k", "name");
+        bind((path, t, a) -> granted.contains(path), new KeyIdentified());
+        KeyIdentified result = mapper.readValue("{\"id\":{\"k\":\"x\"},\"name\":\"alice\"}", KeyIdentified.class);
+        assertEquals("alice", result.name);
+        assertNotNull(result.id);
+        assertNull("id member authorized by the enclosing bean's grant for [k] ?", result.id.k);
+    }
+
+    public void testBeanTypedObjectIdMembersBoundWhenGrantedUnderTheIdPath() throws Exception {
+        Set<String> granted = Set.of("id", "id.k");
+        bind((path, t, a) -> granted.contains(path), new KeyIdentified());
+        KeyIdentified result = mapper.readValue("{\"id\":{\"k\":\"x\"},\"name\":\"alice\"}", KeyIdentified.class);
+        assertEquals("x", result.id.k);
+        assertNull(result.name);
+    }
+
+    public void testBeanTypedObjectIdDeclaredOnTheReferencingPropertyAuthorizedUnderTheIdPath() throws Exception {
+        // A per-property @JsonIdentityInfo builds its reader in createContextual, after the module ran.
+        Set<String> granted = Set.of("child", "child.id", "child.k", "child.name");
+        bind((path, t, a) -> granted.contains(path), new KeyIdentifiedHolder());
+        KeyIdentifiedHolder result = mapper.readValue("{\"child\":{\"id\":{\"k\":\"x\"},\"name\":\"alice\"}}",
+                KeyIdentifiedHolder.class);
+        assertEquals("alice", result.child.name);
+        assertNull("id member authorized by the referring bean's grant for [child.k] ?", result.child.id.k);
+    }
+
     public void testCreatorBoundObjectIdIsAssignedByTheCreatorOnly() throws Exception {
         // Jackson skips the post-construction write of a creator-bound id (records have no setter
         // for it); the wrapper must keep that skip and leave the id to the authorized creator path.
@@ -1073,6 +1102,38 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     public record IdentifiedRecord(int id, String name) {
+    }
+
+    public static class Key {
+        public String k;
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof Key that && java.util.Objects.equals(k, that.k);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hashCode(k);
+        }
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class KeyIdentified {
+        public Key id;
+        public String k;
+        public String name;
+    }
+
+    public static class PlainKeyed {
+        public Key id;
+        public String k;
+        public String name;
+    }
+
+    public static class KeyIdentifiedHolder {
+        @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+        public PlainKeyed child;
     }
 
     public record PlainRecord(int id, String name) {

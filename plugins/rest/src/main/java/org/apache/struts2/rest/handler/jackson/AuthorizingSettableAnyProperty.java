@@ -26,10 +26,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.rest.handler.jackson.DynamicKeyRejections.Reason;
 
 import java.io.IOException;
 
@@ -40,12 +39,12 @@ import java.io.IOException;
 final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LogManager.getLogger(AuthorizingSettableAnyProperty.class);
     private static final Object REJECTED_VALUE = new Object();
 
     private final SettableAnyProperty delegate;
     private final StrutsParameter permission;
     private final boolean creatorParameter;
+    private final String sink;
 
     AuthorizingSettableAnyProperty(SettableAnyProperty delegate) {
         super(delegate.getProperty(), memberOf(delegate.getProperty()), delegate.getType(),
@@ -53,10 +52,19 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
         this.delegate = delegate;
         this.permission = permissionOf(delegate.getProperty());
         this.creatorParameter = delegate.getParameterIndex() >= 0;
+        this.sink = sinkOf(delegate);
     }
 
     private static AnnotatedMember memberOf(BeanProperty property) {
         return property == null ? null : property.getMember();
+    }
+
+    private static String sinkOf(SettableAnyProperty delegate) {
+        AnnotatedMember member = memberOf(delegate.getProperty());
+        if (member == null) {
+            return delegate.getPropertyName();
+        }
+        return member.getDeclaringClass().getName() + "#" + member.getName();
     }
 
     private static StrutsParameter permissionOf(BeanProperty property) {
@@ -214,24 +222,18 @@ final class AuthorizingSettableAnyProperty extends SettableAnyProperty {
     }
 
     private void rejectPermission(JsonParser parser, String path) throws IOException {
-        if (creatorParameter) {
-            LOG.warn("REST body creator-parameter any-setter [{}] rejected; dynamic-key consent "
-                    + "can only be declared on an any-setter method or field", path);
-        } else {
-            LOG.warn("REST body any-setter parameter [{}] rejected; dynamic keys require "
-                    + "@StrutsParameter(allowDynamicKeys = true) on a method or field", path);
-        }
+        DynamicKeyRejections.tally(creatorParameter ? Reason.CREATOR_PARAMETER : Reason.CONSENT_MISSING,
+                sink, path);
         redactAndSkip(parser);
     }
 
     private void rejectDepth(JsonParser parser, String path, int valueDepth, int allowedDepth) throws IOException {
-        LOG.warn("REST body any-setter parameter [{}] rejected; value depth [{}] exceeds "
-                + "@StrutsParameter depth [{}]", path, valueDepth, allowedDepth);
+        DynamicKeyRejections.tally(Reason.DEPTH_EXCEEDED, sink, path, valueDepth, allowedDepth);
         redactAndSkip(parser);
     }
 
     private void rejectMissingPropertyName(JsonParser parser) throws IOException {
-        LOG.warn("REST body any-setter parameter rejected; dynamic property name is unavailable");
+        DynamicKeyRejections.tally(Reason.PROPERTY_NAME_UNAVAILABLE, sink, null);
         redactAndSkip(parser);
     }
 

@@ -51,6 +51,12 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import junit.framework.TestCase;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
@@ -66,21 +72,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class ParameterAuthorizingModuleTest extends TestCase {
 
     private ObjectMapper mapper;
+    private Logger rejectionLogger;
+    private Level rejectionLoggerLevel;
+    private RecordingAppender rejectionLog;
 
     @Override
     protected void setUp() {
         mapper = new ObjectMapper().registerModule(new ParameterAuthorizingModule());
+        rejectionLogger = (Logger) LogManager.getLogger(DynamicKeyRejections.class);
+        rejectionLoggerLevel = rejectionLogger.getLevel();
+        Configurator.setLevel(rejectionLogger.getName(), Level.DEBUG);
+        rejectionLog = new RecordingAppender();
+        rejectionLog.start();
+        rejectionLogger.addAppender(rejectionLog);
     }
 
     @Override
     protected void tearDown() {
+        rejectionLogger.removeAppender(rejectionLog);
+        rejectionLog.stop();
+        Configurator.setLevel(rejectionLogger.getName(), rejectionLoggerLevel);
         ParameterAuthorizationContext.unbind();
-        DynamicKeyAuthorizationContext.clear();
-        AuthorizedForwardReferences.clear();
+        ParameterAuthorizingModule.clearRequestState();
+    }
+
+    private List<String> rejectionMessages(Level level) {
+        return rejectionLog.events.stream()
+                .filter(event -> event.getLevel() == level)
+                .map(event -> event.getMessage().getFormattedMessage())
+                .collect(Collectors.toList());
     }
 
     private void bind(ParameterAuthorizer authorizer, Object instance) {
@@ -196,6 +221,68 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         UnannotatedAnySetterBean result = enforcingMapper.readValue(
                 "{\"role\":\"admin\"}", UnannotatedAnySetterBean.class);
         assertTrue(result.values.isEmpty());
+    }
+
+    public void testAnySetterRejectionsAreLoggedOncePerRequest() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> true, new UnannotatedAnySetterBean());
+        enforcingMapper.readValue(
+                "{\"role\":\"admin\",\"level\":9,\"token\":\"x\"}", UnannotatedAnySetterBean.class);
+
+        assertEquals(List.of(), rejectionMessages(Level.WARN));
+        List<String> detail = rejectionMessages(Level.DEBUG);
+        assertEquals(3, detail.size());
+        assertTrue(detail.get(0), detail.get(0).contains("[role]"));
+        assertTrue(detail.get(1), detail.get(1).contains("[level]"));
+        assertTrue(detail.get(2), detail.get(2).contains("[token]"));
+
+        ParameterAuthorizingModule.clearRequestState();
+
+        List<String> summary = rejectionMessages(Level.WARN);
+        assertEquals(1, summary.size());
+        String sink = UnannotatedAnySetterBean.class.getName() + "#put";
+        assertTrue(summary.get(0), summary.get(0).contains("[" + sink + "]"));
+        assertTrue(summary.get(0), summary.get(0).contains("[3]"));
+        assertTrue(summary.get(0), summary.get(0).contains("@StrutsParameter(allowDynamicKeys = true)"));
+
+        ParameterAuthorizingModule.clearRequestState();
+        assertEquals(1, rejectionMessages(Level.WARN).size());
+    }
+
+    public void testDepthRejectionsAreSummarizedByReason() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> false, new DynamicDepthZeroAnySetterBean());
+        enforcingMapper.readValue(
+                "{\"home\":{\"city\":\"Warsaw\"},\"work\":{\"geo\":{\"country\":\"PL\"}}}",
+                DynamicDepthZeroAnySetterBean.class);
+
+        List<String> detail = rejectionMessages(Level.DEBUG);
+        assertEquals(2, detail.size());
+        assertTrue(detail.get(0), detail.get(0).contains("value depth [1] exceeds @StrutsParameter depth [0]"));
+        assertTrue(detail.get(1), detail.get(1).contains("value depth [2] exceeds @StrutsParameter depth [0]"));
+
+        ParameterAuthorizingModule.clearRequestState();
+
+        List<String> summary = rejectionMessages(Level.WARN);
+        assertEquals(1, summary.size());
+        assertTrue(summary.get(0), summary.get(0).contains("[2] dynamic key(s); value depth exceeds"));
+    }
+
+    public void testRejectionsAreSummarizedPerSink() throws Exception {
+        ObjectMapper enforcingMapper = enforcingMapper();
+        bind((path, t, a) -> "nested".equals(path), new NestedAnySettersBean());
+        enforcingMapper.readValue(
+                "{\"role\":\"admin\",\"nested\":{\"role\":\"admin\",\"level\":9}}",
+                NestedAnySettersBean.class);
+
+        ParameterAuthorizingModule.clearRequestState();
+
+        List<String> summary = rejectionMessages(Level.WARN);
+        assertEquals(2, summary.size());
+        assertTrue(summary.get(0), summary.get(0).contains(
+                "[" + NestedAnySettersBean.class.getName() + "#put] rejected [1]"));
+        assertTrue(summary.get(1), summary.get(1).contains(
+                "[" + UnannotatedAnySetterBean.class.getName() + "#put] rejected [2]"));
     }
 
     public void testAnySetterWithoutDynamicKeyOptInRejected() throws Exception {
@@ -1036,6 +1123,19 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     // --- Fixtures ---
 
+    private static final class RecordingAppender extends AbstractAppender {
+        private final List<LogEvent> events = new ArrayList<>();
+
+        private RecordingAppender() {
+            super("WW-5720", null, null, false, null);
+        }
+
+        @Override
+        public void append(LogEvent event) {
+            events.add(event.toImmutable());
+        }
+    }
+
     private ObjectMapper enforcingMapper() {
         return new ObjectMapper().registerModule(new ParameterAuthorizingModule(true));
     }
@@ -1413,6 +1513,16 @@ public class ParameterAuthorizingModuleTest extends TestCase {
 
     public static class UnannotatedAnySetterBean {
         public final Map<String, Object> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        public void put(String name, Object value) {
+            values.put(name, value);
+        }
+    }
+
+    public static class NestedAnySettersBean {
+        public final Map<String, Object> values = new LinkedHashMap<>();
+        public UnannotatedAnySetterBean nested;
 
         @JsonAnySetter
         public void put(String name, Object value) {

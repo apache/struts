@@ -171,9 +171,11 @@ public class ParameterAuthorizingModule extends SimpleModule {
 
     /**
      * Clears the request-scoped state this module keeps on the thread — the dynamic-key scopes of
-     * any-setters and the verdicts awaiting a forward reference — after a mapper read. A handler that
-     * registers this module on its own mapper must call it in a {@code finally} around every read;
-     * {@code ContentTypeInterceptor} clears the same state once more when it unbinds the context.
+     * any-setters, the verdicts awaiting a forward reference, and the tally of rejected dynamic keys,
+     * which is written to the log as one WARN per any-setter and reason — after a mapper read. A
+     * handler that registers this module on its own mapper must call it in a {@code finally} around
+     * every read; {@code ContentTypeInterceptor} clears the same state once more when it unbinds the
+     * context.
      *
      * @since 7.4.0
      */
@@ -187,5 +189,6 @@ public class ParameterAuthorizingModule extends SimpleModule {
     public static void clearRequestState() {
         DynamicKeyAuthorizationContext.clear();
         AuthorizedForwardReferences.clear();
+        DynamicKeyRejections.reportAndClear();
     }
 }

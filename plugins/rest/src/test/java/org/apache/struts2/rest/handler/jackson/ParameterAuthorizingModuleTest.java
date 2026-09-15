@@ -640,6 +640,69 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         }
     }
 
+    public void testObjectIdPropertyIsAuthorized() throws Exception {
+        // Jackson captures the id property in the ObjectIdReader before the module wraps it, and
+        // ObjectIdValueProperty assigns the id through that captured property.
+        bind((path, t, a) -> "name".equals(path), new PropertyIdentified());
+        PropertyIdentified result = mapper.readValue("{\"id\":7,\"name\":\"alice\"}", PropertyIdentified.class);
+        assertEquals("alice", result.name);
+        assertEquals("id assigned through the ObjectIdReader without authorization ?", 0, result.id);
+    }
+
+    public void testObjectIdPropertyAssignedWhenAuthorized() throws Exception {
+        bind((path, t, a) -> "id".equals(path), new PropertyIdentified());
+        PropertyIdentified result = mapper.readValue("{\"id\":7,\"name\":\"alice\"}", PropertyIdentified.class);
+        assertEquals(7, result.id);
+        assertNull(result.name);
+    }
+
+    public void testCreatorBoundObjectIdIsAssignedByTheCreatorOnly() throws Exception {
+        // Jackson skips the post-construction write of a creator-bound id (records have no setter
+        // for it); the wrapper must keep that skip and leave the id to the authorized creator path.
+        bind((path, t, a) -> true, new IdentifiedRecord(0, null));
+        IdentifiedRecord result = mapper.readValue("{\"id\":7,\"name\":\"alice\"}", IdentifiedRecord.class);
+        assertEquals(7, result.id());
+        assertEquals("alice", result.name());
+    }
+
+    public void testNoContext_passThroughCreatorBoundObjectId() throws Exception {
+        IdentifiedRecord result = mapper.readValue("{\"id\":7,\"name\":\"alice\"}", IdentifiedRecord.class);
+        assertEquals(7, result.id());
+    }
+
+    public void testCreatorBoundObjectIdRejectedAtTheCreator() throws Exception {
+        bind((path, t, a) -> "name".equals(path), new IdentifiedRecord(0, null));
+        IdentifiedRecord result = mapper.readValue("{\"id\":7,\"name\":\"alice\"}", IdentifiedRecord.class);
+        assertEquals("alice", result.name());
+        assertEquals(0, result.id());
+    }
+
+    public void testNoContext_passThroughCreatorBoundObjectIdDeclaredOnTheReferencingProperty() throws Exception {
+        // A per-property @JsonIdentityInfo builds its reader in createContextual from the already
+        // wrapped property; the creator-bound skip must hold there as well.
+        IdentifiedRecordHolder result = mapper.readValue("{\"rec\":{\"id\":7,\"name\":\"alice\"}}",
+                IdentifiedRecordHolder.class);
+        assertEquals(7, result.rec.id());
+    }
+
+    public void testCreatorBoundObjectIdDeclaredOnTheReferencingPropertyIsAuthorized() throws Exception {
+        bind((path, t, a) -> "rec".equals(path) || "rec.name".equals(path), new IdentifiedRecordHolder());
+        IdentifiedRecordHolder result = mapper.readValue("{\"rec\":{\"id\":7,\"name\":\"alice\"}}",
+                IdentifiedRecordHolder.class);
+        assertEquals("alice", result.rec.name());
+        assertEquals(0, result.rec.id());
+    }
+
+    public void testCreatorBoundObjectIdRepeatedAfterConstructionIsNotAssigned() throws Exception {
+        // Stock Jackson pushes the repeated key through the creator property's fallback field; the
+        // wrapper cannot tell that write from the one Jackson skips itself, so the creator's value stays.
+        bind((path, t, a) -> true, new IdentifiedFinalField(0, null));
+        IdentifiedFinalField result = mapper.readValue("{\"id\":1,\"name\":\"alice\",\"id\":7}",
+                IdentifiedFinalField.class);
+        assertEquals("alice", result.name);
+        assertEquals("repeated id written through the creator property's fallback field ?", 1, result.id);
+    }
+
     public void testBufferedSetterInsideDynamicKeyScopeIsAuthorizedByDepth() throws Exception {
         // Inside a dynamic-key scope the buffered path must consult the same depth rule as the
         // direct path, not the annotation authorizer (which rejects everything here).
@@ -876,6 +939,36 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         @JsonMerge
         public Animal pet = new Dog();
         public String owner;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class PropertyIdentified {
+        public int id;
+        public String name;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public record IdentifiedRecord(int id, String name) {
+    }
+
+    public record PlainRecord(int id, String name) {
+    }
+
+    public static class IdentifiedRecordHolder {
+        @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+        public PlainRecord rec;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class IdentifiedFinalField {
+        public final int id;
+        public String name;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public IdentifiedFinalField(@JsonProperty("id") int id, @JsonProperty("name") String name) {
+            this.id = id;
+            this.name = name;
+        }
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")

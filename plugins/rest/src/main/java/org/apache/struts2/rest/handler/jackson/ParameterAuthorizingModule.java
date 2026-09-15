@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
@@ -75,6 +76,7 @@ public class ParameterAuthorizingModule extends SimpleModule {
                     builder.addOrReplaceProperty(
                             new AuthorizingSettableBeanProperty(original, memberNameOf(original)), true);
                 }
+                authorizeObjectIdProperty(builder);
                 if (ParameterAuthorizingModule.this.requireAnySetterAnnotations) {
                     SettableAnyProperty anySetter = builder.getAnySetter();
                     if (anySetter != null && !(anySetter instanceof AuthorizingSettableAnyProperty)) {
@@ -95,6 +97,24 @@ public class ParameterAuthorizingModule extends SimpleModule {
                 return new RedactionAwareDeserializer(deserializer);
             }
         });
+    }
+
+    /**
+     * Jackson builds the {@code ObjectIdReader} for a property-based {@code @JsonIdentityInfo} before
+     * the deserializer modifiers run, capturing the id property as it was then, and the
+     * {@code ObjectIdValueProperty} it adds at build time assigns the id through that captured
+     * property rather than through the builder's. Rebuild the reader around a wrapped one.
+     */
+    private static void authorizeObjectIdProperty(BeanDeserializerBuilder builder) {
+        ObjectIdReader reader = builder.getObjectIdReader();
+        if (reader == null || reader.idProperty == null
+                || reader.idProperty instanceof AuthorizingSettableBeanProperty) {
+            return;
+        }
+        SettableBeanProperty idProperty = new AuthorizingSettableBeanProperty(
+                reader.idProperty, memberNameOf(reader.idProperty));
+        builder.setObjectIdReader(ObjectIdReader.construct(reader.getIdType(), reader.propertyName,
+                reader.generator, reader.getDeserializer(), idProperty, reader.resolver));
     }
 
     /**

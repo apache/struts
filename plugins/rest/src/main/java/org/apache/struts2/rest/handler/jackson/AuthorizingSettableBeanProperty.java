@@ -21,6 +21,7 @@ package org.apache.struts2.rest.handler.jackson;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,9 +42,10 @@ import java.io.IOException;
  * {@link #setAndReturn}, which apply the same authorization to the already-materialized value.</p>
  *
  * <p>When {@link ParameterAuthorizationContext#isActive()} is {@code false}, this wrapper is a
- * straight pass-through to the delegate — no overhead for default-config requests. The one decision
- * taken regardless is made when the deserializer is built, not per request: a polymorphic property
- * is never merged in place, see {@link AuthorizingValueDeserializer#supportsUpdate}.</p>
+ * straight pass-through to the delegate — no overhead for default-config requests — except that a
+ * creator parameter is never written after construction (see {@link #set}), and a polymorphic
+ * property is never merged in place, a decision taken when the deserializer is built, see
+ * {@link AuthorizingValueDeserializer#supportsUpdate}.</p>
  *
  * @since 7.2.0
  */
@@ -128,17 +130,30 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
 
     @Override
     public void set(Object instance, Object value) throws IOException {
-        if (isAuthorizedForSet(instance)) {
+        if (!assignedByCreator() && isAuthorizedForSet(instance)) {
             delegate.set(instance, value);
         }
     }
 
     @Override
     public Object setAndReturn(Object instance, Object value) throws IOException {
-        if (isAuthorizedForSet(instance)) {
+        if (!assignedByCreator() && isAuthorizedForSet(instance)) {
             return delegate.setAndReturn(instance, value);
         }
         return instance;
+    }
+
+    /**
+     * A creator parameter is authorized and assigned through its value deserializer. Jackson reaches
+     * {@link #set} on it only after construction: for the object id write it skips itself by an
+     * {@code instanceof CreatorProperty} check this wrapper hides (a record has no setter to write
+     * through), and for a key repeated after construction, which stock Jackson pushes through the
+     * creator property's fallback field. The wrapper cannot tell the two apart, so the creator's
+     * value stands in both cases, whether or not a context is bound — the one place this wrapper is
+     * not a pass-through.
+     */
+    private boolean assignedByCreator() {
+        return delegate instanceof CreatorProperty;
     }
 
     /**

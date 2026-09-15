@@ -35,10 +35,15 @@ import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.StrutsProxyCacheFactory;
+import org.apache.struts2.rest.handler.AuthorizationAwareContentTypeHandler;
+import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.JacksonJsonHandler;
+import org.apache.struts2.rest.handler.jackson.ForwardReferenceStateProbe;
 import org.apache.struts2.util.StrutsProxyService;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.Reader;
+import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -68,6 +73,12 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     }
 
     private void setupInterceptorWithAction(Object actionInstance, boolean requireAnySetterAnnotations) {
+        JacksonJsonHandler handler = new JacksonJsonHandler();
+        handler.setAnySetterRequireAnnotations(Boolean.toString(requireAnySetterAnnotations));
+        setupInterceptorWithHandler(actionInstance, handler);
+    }
+
+    private void setupInterceptorWithHandler(Object actionInstance, ContentTypeHandler handler) {
         var ognlUtil = new OgnlUtil(
                 new DefaultOgnlExpressionCacheFactory<>("1000", LRU.toString()),
                 new DefaultOgnlBeanInfoCacheFactory<>("1000", LRU.toString()),
@@ -89,8 +100,6 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("getAction", actionInstance);
         mockActionInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        JacksonJsonHandler handler = new JacksonJsonHandler();
-        handler.setAnySetterRequireAnnotations(Boolean.toString(requireAnySetterAnnotations));
         mockSelector.expectAndReturn("getHandlerForRequest", new AnyConstraintMatcher() {
             @Override
             public boolean matches(Object[] args) { return true; }
@@ -199,6 +208,15 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         assertEquals("admin", anySetterAction.getValues().get("role"));
     }
 
+    public void testInterceptorClearsModuleRequestStateLeftByTheHandler() throws Exception {
+        // A handler that registers the module on its own mapper may not clear after its read; the
+        // interceptor must, since the state is keyed on this thread.
+        setupInterceptorWithHandler(action, new StatePlantingHandler());
+        runWithBody("{\"name\":\"alice\"}");
+        assertFalse("module request state must not outlive the interceptor's context",
+                ForwardReferenceStateProbe.isActive());
+    }
+
     public void testAnnotatedMemberRenamedOnTheWireIsApplied() throws Exception {
         RenamedPropertiesAction renamed = new RenamedPropertiesAction();
         setupInterceptorWithAction(renamed);
@@ -220,6 +238,29 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         runWithBody("{\"name\":\"x\"}");
         assertNull("Jackson merges both setters into property [name] and invokes the explicitly named,"
                 + " unannotated setAdmin", merged.admin());
+    }
+
+    /** Stands in for a third-party handler that leaves the module's thread state behind. */
+    public static class StatePlantingHandler implements AuthorizationAwareContentTypeHandler {
+        @Override
+        public void toObject(ActionInvocation invocation, Reader in, Object target) {
+            ForwardReferenceStateProbe.plant();
+        }
+
+        @Override
+        public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) {
+            return null;
+        }
+
+        @Override
+        public String getContentType() {
+            return "application/json";
+        }
+
+        @Override
+        public String getExtension() {
+            return "json";
+        }
     }
 
     // --- Test fixtures for new path verification ---

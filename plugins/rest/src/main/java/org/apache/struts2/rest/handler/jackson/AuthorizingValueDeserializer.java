@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.deser.UnresolvedForwardReference;
 import com.fasterxml.jackson.databind.deser.std.DelegatingDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import org.apache.logging.log4j.LogManager;
@@ -96,6 +97,8 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
         ParameterAuthorizationContext.pushPath(prefixForNested(path));
         try {
             return super.deserialize(p, ctxt);
+        } catch (UnresolvedForwardReference reference) {
+            throw authorizedForwardReference(reference);
         } finally {
             ParameterAuthorizationContext.popPath();
         }
@@ -131,9 +134,26 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
         ParameterAuthorizationContext.pushPath(prefixForNested(path));
         try {
             return super.deserializeWithType(p, ctxt, typeDeserializer);
+        } catch (UnresolvedForwardReference reference) {
+            throw authorizedForwardReference(reference);
         } finally {
             ParameterAuthorizationContext.popPath();
         }
+    }
+
+    /**
+     * The property was authorized just now, but its value is an id whose object has not appeared
+     * yet: Jackson assigns it through the property's {@code set} once the object does, wherever in
+     * the body that is. That write is this read completing, so its verdict is recorded against the
+     * awaited id rather than taken again under whatever path and dynamic-key scope are current
+     * then. The aggregate exception Jackson raises at the end of a read for ids that never
+     * appeared carries no id and records nothing.
+     */
+    private UnresolvedForwardReference authorizedForwardReference(UnresolvedForwardReference reference) {
+        if (reference.getRoid() != null) {
+            AuthorizedForwardReferences.expect(reference.getRoid(), propertyName);
+        }
+        return reference;
     }
 
     private boolean authorize(String path, JsonParser p) throws IOException {

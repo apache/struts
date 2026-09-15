@@ -26,6 +26,7 @@ import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
+import org.apache.struts2.rest.handler.jackson.ParameterAuthorizingModule;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -175,6 +176,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             handler.toObject(invocation, reader, target);
         } finally {
             org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext.unbind();
+            ParameterAuthorizingModule.clearRequestState();
         }
     }
 

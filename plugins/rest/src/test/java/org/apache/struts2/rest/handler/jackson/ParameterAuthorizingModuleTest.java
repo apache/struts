@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
@@ -41,6 +42,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBuilder;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableAnyProperty;
+import com.fasterxml.jackson.databind.deser.impl.ReadableObjectId;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
@@ -59,6 +61,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ParameterAuthorizingModuleTest extends TestCase {
@@ -74,6 +77,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     protected void tearDown() {
         ParameterAuthorizationContext.unbind();
         DynamicKeyAuthorizationContext.clear();
+        AuthorizedForwardReferences.clear();
     }
 
     private void bind(ParameterAuthorizer authorizer, Object instance) {
@@ -703,6 +707,77 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertEquals("repeated id written through the creator property's fallback field ?", 1, result.id);
     }
 
+    public void testForwardReferenceIsAuthorizedUnderTheReferringPropertyPath() throws Exception {
+        // Jackson assigns a forward reference when the referenced object appears, wherever that is;
+        // the deferred write must be checked under the referring property's own path, not the
+        // target's.
+        Set<String> granted = Set.of("people", "people[0].id", "people[0].name", "people[0].friend",
+                "boss", "boss.id", "boss.name");
+        bind((path, t, a) -> granted.contains(path), new Office());
+        Office result = mapper.readValue(
+                "{\"people\":[{\"id\":1,\"name\":\"a\",\"friend\":2}],\"boss\":{\"id\":2,\"name\":\"b\"}}",
+                Office.class);
+        assertSame("forward reference rejected under the target's path ?", result.boss, result.people.get(0).friend);
+    }
+
+    public void testForwardReferenceRejectedUnderTheReferringPropertyPath() throws Exception {
+        Set<String> granted = Set.of("people", "people[0].id", "people[0].name",
+                "boss", "boss.id", "boss.name", "boss.friend");
+        bind((path, t, a) -> granted.contains(path), new Office());
+        Office result = mapper.readValue(
+                "{\"people\":[{\"id\":1,\"name\":\"a\",\"friend\":2}],\"boss\":{\"id\":2,\"name\":\"b\"}}",
+                Office.class);
+        assertNull("forward reference authorized under the target's path ?", result.people.get(0).friend);
+        assertEquals("b", result.boss.name);
+    }
+
+    public void testForwardReferenceResolvedInsideDynamicKeyScopeKeepsTheReadTimeVerdict() throws Exception {
+        // The target lands in an any-setter subtree, so the deferred write runs while that dynamic
+        // scope is active; the verdict taken when the reference was read must stand.
+        ObjectMapper enforcingMapper = enforcingMapper();
+        Set<String> granted = Set.of("people", "people[0].id", "people[0].name", "people[0].friend");
+        bind((path, t, a) -> granted.contains(path), new DynamicOffice());
+        DynamicOffice result = enforcingMapper.readValue(
+                "{\"people\":[{\"id\":1,\"name\":\"a\",\"friend\":2}],\"boss\":{\"id\":2,\"name\":\"b\"}}",
+                DynamicOffice.class);
+        assertSame("forward reference re-checked under the target's dynamic-key scope ?",
+                result.values.get("boss"), result.people.get(0).friend);
+    }
+
+    public void testForwardReferenceFromCreatorBoundReferrerIsAuthorizedUnderItsOwnPath() throws Exception {
+        // A creator-bound referrer is not constructed yet when its forward reference is read;
+        // Jackson buffers the reference and assigns it after construction.
+        Set<String> granted = Set.of("people", "people[0].id", "people[0].name", "people[0].friend",
+                "boss", "boss.id", "boss.name");
+        bind((path, t, a) -> granted.contains(path), new CreatorOffice());
+        CreatorOffice result = mapper.readValue(
+                "{\"people\":[{\"id\":1,\"friend\":2}],\"boss\":{\"id\":2,\"name\":\"b\"}}",
+                CreatorOffice.class);
+        assertSame("forward reference rejected under the target's path ?", result.boss, result.people.get(0).getFriend());
+    }
+
+    public void testNoContext_passThroughForwardReference() throws Exception {
+        Office result = mapper.readValue(
+                "{\"people\":[{\"id\":1,\"name\":\"a\",\"friend\":2}],\"boss\":{\"id\":2,\"name\":\"b\"}}",
+                Office.class);
+        assertSame(result.boss, result.people.get(0).friend);
+        assertFalse(AuthorizedForwardReferences.isActive());
+    }
+
+    public void testJacksonHandlerClearsAuthorizedForwardReferencesAfterReadFailure() throws Exception {
+        AuthorizedForwardReferences.expect(new ReadableObjectId(new ObjectIdGenerator.IdKey(Object.class, null, "stale")), "stale");
+        assertTrue(AuthorizedForwardReferences.isActive());
+
+        try {
+            new JacksonJsonHandler().toObject(null, new StringReader("{"), new Person());
+            fail("expected malformed JSON to fail");
+        } catch (Exception expected) {
+            // The handler's request-boundary cleanup must run even when Jackson aborts the read.
+        }
+
+        assertFalse(AuthorizedForwardReferences.isActive());
+    }
+
     public void testBufferedSetterInsideDynamicKeyScopeIsAuthorizedByDepth() throws Exception {
         // Inside a dynamic-key scope the buffered path must consult the same depth rule as the
         // direct path, not the annotation authorizer (which rejects everything here).
@@ -945,6 +1020,55 @@ public class ParameterAuthorizingModuleTest extends TestCase {
     public static class PropertyIdentified {
         public int id;
         public String name;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class Employee {
+        public int id;
+        public String name;
+        public Employee friend;
+    }
+
+    public static class Office {
+        public List<Employee> people;
+        public Employee boss;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    public static class CreatorEmployee {
+        public final int id;
+        public final String name;
+        private CreatorEmployee friend;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public CreatorEmployee(@JsonProperty("id") int id, @JsonProperty("name") String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public CreatorEmployee getFriend() {
+            return friend;
+        }
+
+        public void setFriend(CreatorEmployee friend) {
+            this.friend = friend;
+        }
+    }
+
+    public static class CreatorOffice {
+        public List<CreatorEmployee> people;
+        public CreatorEmployee boss;
+    }
+
+    public static class DynamicOffice {
+        public List<Employee> people;
+        public final Map<String, Employee> values = new LinkedHashMap<>();
+
+        @JsonAnySetter
+        @StrutsParameter(allowDynamicKeys = true, depth = 3)
+        public void put(String name, Employee value) {
+            values.put(name, value);
+        }
     }
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")

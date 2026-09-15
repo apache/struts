@@ -130,14 +130,14 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
 
     @Override
     public void set(Object instance, Object value) throws IOException {
-        if (!assignedByCreator() && isAuthorizedForSet(instance)) {
+        if (!assignedByCreator() && isAuthorizedForSet(instance, value)) {
             delegate.set(instance, value);
         }
     }
 
     @Override
     public Object setAndReturn(Object instance, Object value) throws IOException {
-        if (!assignedByCreator() && isAuthorizedForSet(instance)) {
+        if (!assignedByCreator() && isAuthorizedForSet(instance, value)) {
             return delegate.setAndReturn(instance, value);
         }
         return instance;
@@ -160,10 +160,15 @@ public class AuthorizingSettableBeanProperty extends SettableBeanProperty.Delega
      * Guards the already-materialized assignment path: Jackson buffers non-creator properties seen
      * before the last creator parameter and assigns them after construction via
      * {@code PropertyValue.Regular.assign} -> {@code set()}, which does not go through
-     * {@link #deserializeAndSet}.
+     * {@link #deserializeAndSet}; and it assigns a forward-referenced object through {@code set()}
+     * once that object appears, a write whose verdict was taken when the property was read, see
+     * {@link AuthorizedForwardReferences}.
      */
-    private boolean isAuthorizedForSet(Object instance) {
+    private boolean isAuthorizedForSet(Object instance, Object value) {
         if (!ParameterAuthorizationContext.isActive()) {
+            return true;
+        }
+        if (AuthorizedForwardReferences.consume(value, memberName)) {
             return true;
         }
         String path = ParameterAuthorizationContext.pathFor(memberName);

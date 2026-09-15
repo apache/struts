@@ -72,7 +72,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class ParameterAuthorizingModuleTest extends TestCase {
 
@@ -105,7 +104,7 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         return rejectionLog.events.stream()
                 .filter(event -> event.getLevel() == level)
                 .map(event -> event.getMessage().getFormattedMessage())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private void bind(ParameterAuthorizer authorizer, Object instance) {

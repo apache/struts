@@ -257,6 +257,9 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
 
     @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
+        if (obj == null) {
+            return null;
+        }
         LOG.debug("Converting an object of {} into string", obj.getClass().getName());
         try {
             serializer

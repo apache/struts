@@ -55,6 +55,14 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
         ((MockActionInvocation) ai).setInvocationContext(context);
     }
 
+    public void testNullTargetWritesNothing() throws Exception {
+        Writer stream = new StringWriter();
+
+        handler.fromObject(ai, null, null, stream);
+
+        assertThat(stream.toString()).isEmpty();
+    }
+
     public void testObjectToXml() throws Exception {
         // given
         SimpleBean obj = new SimpleBean();

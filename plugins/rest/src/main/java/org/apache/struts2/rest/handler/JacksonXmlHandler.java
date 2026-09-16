@@ -45,6 +45,9 @@ public class JacksonXmlHandler extends AbstractContentTypeHandler {
     }
 
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
+        if (obj == null) {
+            return null;
+        }
         LOG.debug("Converting an object of {} into string", obj.getClass().getName());
         mapper.writeValue(stream, obj);
         return null;

@@ -33,16 +33,20 @@ import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.HttpHeaderResult;
+import org.apache.struts2.rest.handler.JacksonJsonHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestActionInvocationTest extends TestCase {
 
@@ -203,6 +207,26 @@ public class RestActionInvocationTest extends TestCase {
         restActionInvocation.processResult();
         assertEquals(123, response.getStatus());
 
+    }
+
+    /**
+     * WW-5718: an interceptor that short-circuits with an HTTP status as the result code
+     * ({@code FetchMetadataInterceptor} returns {@code "403"}) must not be answered with 200
+     * and the unexecuted model once the REST stack carries it.
+     */
+    public void testHttpStatusResultCodeWithoutMappedResultIsAnsweredWithThatStatus() throws Exception {
+        DefaultContentTypeHandlerManager handlerManager = new DefaultContentTypeHandlerManager();
+        handlerManager.handlersByExtension.put("json", new JacksonJsonHandler());
+        restActionInvocation.setMimeTypeHandlerSelector(handlerManager);
+        request.setMethod("GET");
+        request.setRequestURI("/dogs.json");
+        ((RestAction) restActionInvocation.getAction()).model = Collections.singletonList("Item");
+        restActionInvocation.setResultCode("403");
+
+        restActionInvocation.processResult();
+
+        assertEquals(SC_FORBIDDEN, response.getStatus());
+        assertThat(response.getContentAsString()).doesNotContain("Item");
     }
 
     public void testNoResult() throws Exception {

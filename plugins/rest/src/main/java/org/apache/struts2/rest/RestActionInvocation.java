@@ -174,6 +174,11 @@ public class RestActionInvocation extends DefaultActionInvocation {
         // Get the httpHeaders
         if (httpHeaders == null) {
             httpHeaders = new DefaultHttpHeaders(resultCode);
+            if (isHttpStatus(resultCode)) {
+                // an interceptor short-circuited with a status, not a representation
+                httpHeaders.setStatus(Integer.parseInt(resultCode));
+                target = null;
+            }
         }
 
         // Apply headers
@@ -226,6 +231,10 @@ public class RestActionInvocation extends DefaultActionInvocation {
                 }
             }
         }
+    }
+
+    private static boolean isHttpStatus(String resultCode) {
+        return resultCode != null && resultCode.matches("[1-5]\\d\\d");
     }
 
     /**

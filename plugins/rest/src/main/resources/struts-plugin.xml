@@ -94,6 +94,19 @@
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="rest" />
                 <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="coep">
+                    <param name="disabled">false</param>
+                    <param name="enforcingMode">false</param>
+                    <param name="exemptedPaths"/>
+                </interceptor-ref>
+                <interceptor-ref name="coop">
+                    <param name="disabled">false</param>
+                    <param name="exemptedPaths"/>
+                    <param name="mode">same-origin</param>
+                </interceptor-ref>
+                <interceptor-ref name="fetchMetadata">
+                    <param name="disabled">false</param>
+                </interceptor-ref>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
                 </interceptor-ref>

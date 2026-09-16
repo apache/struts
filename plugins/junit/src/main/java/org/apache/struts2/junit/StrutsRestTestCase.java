@@ -136,10 +136,10 @@ public class StrutsRestTestCase<T> extends StrutsJUnit4TestCase<T> {
 
     @Override
     protected void initServletMockObjects() {
+        resourceLoader = new ConventionPluginResourceLoader();
         servletContext = new MockServletContext(resourceLoader);
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
         pageContext = new MockPageContext(servletContext, request, response);
-        resourceLoader = new ConventionPluginResourceLoader();
     }
 }

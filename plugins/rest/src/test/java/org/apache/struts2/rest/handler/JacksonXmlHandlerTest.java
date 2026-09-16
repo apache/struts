@@ -52,6 +52,14 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
         ai = new MockActionInvocation();
     }
 
+    public void testNullTargetWritesNothing() throws Exception {
+        Writer stream = new StringWriter();
+
+        handler.fromObject(ai, null, null, stream);
+
+        assertThat(stream.toString()).isEmpty();
+    }
+
     public void testObjectToXml() throws Exception {
         // given
         SimpleBean obj = new SimpleBean();

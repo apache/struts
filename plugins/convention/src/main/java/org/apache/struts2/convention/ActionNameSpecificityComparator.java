@@ -27,9 +27,10 @@ import java.util.Comparator;
  *
  * <p>Ordering keys, applied in order:</p>
  * <ol>
+ *   <li>fewer path-spanning {@code **} tokens first — {@code **} crosses {@code /} while {@code *}
+ *       and <code>{var}</code> never do, so any pattern relying on it is broader than one that does not;</li>
  *   <li>fewer wildcard tokens first (a {@code *}/{@code **} run, or a <code>{var}</code> group);</li>
  *   <li>more literal characters first;</li>
- *   <li>fewer path-spanning {@code **} tokens first;</li>
  *   <li>natural (alphabetical) order of the pattern, for deterministic tie-breaking.</li>
  * </ol>
  *
@@ -45,6 +46,10 @@ public class ActionNameSpecificityComparator implements Comparator<String> {
         Counts ca = count(a);
         Counts cb = count(b);
 
+        int byPathWildcards = Integer.compare(ca.pathWildcards, cb.pathWildcards);
+        if (byPathWildcards != 0) {
+            return byPathWildcards;
+        }
         int byWildcards = Integer.compare(ca.wildcards, cb.wildcards);
         if (byWildcards != 0) {
             return byWildcards;
@@ -52,10 +57,6 @@ public class ActionNameSpecificityComparator implements Comparator<String> {
         int byLiterals = Integer.compare(cb.literals, ca.literals); // more literals first
         if (byLiterals != 0) {
             return byLiterals;
-        }
-        int byPathWildcards = Integer.compare(ca.pathWildcards, cb.pathWildcards);
-        if (byPathWildcards != 0) {
-            return byPathWildcards;
         }
         return a.compareTo(b);
     }

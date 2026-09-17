@@ -150,3 +150,4 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] Addressed to **both** `dev@struts.apache.org` and `user@struts.apache.org`, Bcc `private@struts.apache.org`.
 - [ ] Risk clause matches reality: silent when there are no Breaking changes, "but it contains significant changes" when there are.
 - [ ] Tag underscored in the release link, version dotted in the dist path and page title.
+- [ ] Hand-over says to switch the From to `lukaszlenart@apache.org` — the draft tool cannot set it.

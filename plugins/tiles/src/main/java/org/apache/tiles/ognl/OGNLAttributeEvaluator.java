@@ -28,9 +28,9 @@ import org.apache.tiles.request.Request;
  * Evaluates attribute expressions and expressions with OGNL language.
  *
  * @since 2.2.0
- * @deprecated This legacy evaluator does not use the Struts OGNL controls used by {@code S2:} and is disabled by
- * default. Temporary use requires {@code struts.tiles.ognl.legacy.enabled=true}. Migrate to {@code S2:} or ordinary
- * Tiles mechanisms. This evaluator is targeted for removal in Struts 8.0.0.
+ * @deprecated since 7.4.0, this legacy evaluator does not use the Struts OGNL controls used by {@code S2:} and is
+ * disabled by default. Temporary use requires {@code struts.tiles.ognl.legacy.enabled=true}. Migrate to {@code S2:}
+ * or ordinary Tiles mechanisms.
  */
 @Deprecated(since = "7.4.0", forRemoval = true)
 public class OGNLAttributeEvaluator extends AbstractAttributeEvaluator {

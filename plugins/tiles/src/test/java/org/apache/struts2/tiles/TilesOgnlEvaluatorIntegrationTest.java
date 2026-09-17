@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.JspFactory;
 import java.io.PrintWriter;
@@ -188,7 +189,7 @@ public class TilesOgnlEvaluatorIntegrationTest {
     }
 
     @Test
-    public void nonServletRequestFailsClosedWithoutExposingEnvironmentFailure() {
+    public void nonServletRequestFailsClosedWithoutExposingExpression() {
         TrackingFactory factory = new TrackingFactory();
         AttributeEvaluatorFactory evaluators = createAttributeEvaluatorFactoryWithoutEl(
             factory, tilesRequest.getApplicationContext());
@@ -266,9 +267,9 @@ public class TilesOgnlEvaluatorIntegrationTest {
         private int legacyWarnings;
 
         @Override
-        boolean isLegacyOgnlEnabled(Request request) {
+        boolean isLegacyOgnlEnabled(ServletContext servletContext) {
             configurationResolutions++;
-            return super.isLegacyOgnlEnabled(request);
+            return super.isLegacyOgnlEnabled(servletContext);
         }
 
         @Override

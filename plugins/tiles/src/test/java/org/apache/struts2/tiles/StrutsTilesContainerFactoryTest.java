@@ -77,12 +77,14 @@ public class StrutsTilesContainerFactoryTest {
 
     private StrutsTilesContainerFactory factory;
     private ApplicationContext applicationContext;
+    private ApplicationContext servletApplicationContext;
     private JspFactory originalJspFactory;
 
     @Before
     public void setUp() throws Exception {
         originalJspFactory = JspFactory.getDefaultFactory();
         applicationContext = mock(ApplicationContext.class);
+        servletApplicationContext = new ServletApplicationContext(new MockServletContext());
         factory = new StrutsTilesContainerFactory();
     }
 
@@ -118,7 +120,8 @@ public class StrutsTilesContainerFactoryTest {
         // explicitly disables support for EL
         JspFactory.setDefaultFactory(null);
 
-        AttributeEvaluatorFactory attributeEvaluatorFactory = trackingFactory.createAttributeEvaluatorFactory(applicationContext, resolver);
+        AttributeEvaluatorFactory attributeEvaluatorFactory = trackingFactory.createAttributeEvaluatorFactory(
+            servletApplicationContext, resolver);
         assertTrue("The class of the evaluator is not correct",
                 attributeEvaluatorFactory.getAttributeEvaluator((String) null) instanceof DirectAttributeEvaluator);
         assertTrue("The class of the evaluator is not correct",
@@ -186,7 +189,7 @@ public class StrutsTilesContainerFactoryTest {
             trackingFactory.configuredLegacyOgnlEnabled = true;
             JspFactory.setDefaultFactory(null);
             AttributeEvaluatorFactory evaluators = trackingFactory.createAttributeEvaluatorFactory(
-                applicationContext, trackingFactory.createLocaleResolver(applicationContext));
+                servletApplicationContext, trackingFactory.createLocaleResolver(servletApplicationContext));
             AttributeEvaluator evaluator = evaluators.getAttributeEvaluator("OGNL");
 
             assertEquals(0, trackingFactory.configurationResolutions);
@@ -208,7 +211,7 @@ public class StrutsTilesContainerFactoryTest {
         trackingFactory.blockConfigurationResolution = true;
         JspFactory.setDefaultFactory(null);
         AttributeEvaluator evaluator = trackingFactory.createAttributeEvaluatorFactory(
-            applicationContext, trackingFactory.createLocaleResolver(applicationContext))
+            servletApplicationContext, trackingFactory.createLocaleResolver(servletApplicationContext))
             .getAttributeEvaluator("OGNL");
         ExecutorService executor = Executors.newFixedThreadPool(4);
         try {
@@ -232,10 +235,46 @@ public class StrutsTilesContainerFactoryTest {
     }
 
     @Test
-    public void requestScopedConfigurationUsesNormalBooleanParsing() {
+    public void configuredValueUsesNormalBooleanParsing() {
         assertResolvedConfiguration("false", false);
         assertResolvedConfiguration("TrUe", true);
         assertResolvedConfiguration("not-a-boolean", false);
+    }
+
+    @Test
+    public void nonServletApplicationContextFailsClosedWithoutLookup() {
+        TrackingFactory trackingFactory = new TrackingFactory();
+        JspFactory.setDefaultFactory(null);
+        AttributeEvaluator evaluator = trackingFactory.createAttributeEvaluatorFactory(
+            applicationContext, trackingFactory.createLocaleResolver(applicationContext))
+            .getAttributeEvaluator("OGNL");
+        org.apache.tiles.request.Request request = mock(org.apache.tiles.request.Request.class);
+
+        EvaluationException exception = assertThrows(EvaluationException.class,
+            () -> evaluator.evaluate("ignored", request));
+
+        assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, exception.getMessage());
+        assertEquals(0, trackingFactory.configurationResolutions);
+        assertEquals(0, trackingFactory.rawEvaluatorCreations);
+    }
+
+    @Test
+    public void flagIsReadFromTheOwningWebApplicationNotFromTheRequest() {
+        ApplicationContext owningApplicationContext = new ServletApplicationContext(
+            createServletContextWithConfiguredValue("false"));
+        ServletContext neighbourServletContext = createServletContextWithConfiguredValue("true");
+        org.apache.tiles.request.Request neighbourRequest = new ServletRequest(
+            new ServletApplicationContext(neighbourServletContext),
+            new MockHttpServletRequest(neighbourServletContext), mock(HttpServletResponse.class));
+        JspFactory.setDefaultFactory(null);
+        AttributeEvaluator evaluator = factory.createAttributeEvaluatorFactory(
+            owningApplicationContext, factory.createLocaleResolver(owningApplicationContext))
+            .getAttributeEvaluator("OGNL");
+
+        EvaluationException exception = assertThrows(EvaluationException.class,
+            () -> evaluator.evaluate("1", neighbourRequest));
+
+        assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -248,13 +287,15 @@ public class StrutsTilesContainerFactoryTest {
     public void noArgInitializerPreservesLazyWebApplicationConfiguration() throws OgnlException {
         PropertyAccessor originalAccessor = getRequestAccessorOrNull();
         try {
-            StrutsTilesContainerFactory initializedFactory = new ExposedInitializer().createFactory(applicationContext);
+            ApplicationContext legacyApplicationContext = new ServletApplicationContext(
+                createServletContextWithConfiguredValue("true"));
+            StrutsTilesContainerFactory initializedFactory = new ExposedInitializer().createFactory(legacyApplicationContext);
             JspFactory.setDefaultFactory(null);
             AttributeEvaluator evaluator = initializedFactory.createAttributeEvaluatorFactory(
-                applicationContext, initializedFactory.createLocaleResolver(applicationContext))
+                legacyApplicationContext, initializedFactory.createLocaleResolver(legacyApplicationContext))
                 .getAttributeEvaluator("OGNL");
 
-            assertEquals(1, evaluator.evaluate("1", createRequestWithConfiguredValue("true")));
+            assertEquals(1, evaluator.evaluate("1", mock(org.apache.tiles.request.Request.class)));
         } finally {
             OgnlRuntime.setPropertyAccessor(org.apache.tiles.request.Request.class, originalAccessor);
         }
@@ -315,10 +356,10 @@ public class StrutsTilesContainerFactoryTest {
     }
 
     private void assertResolvedConfiguration(String configuredValue, boolean expected) {
-        assertEquals(expected, factory.isLegacyOgnlEnabled(createRequestWithConfiguredValue(configuredValue)));
+        assertEquals(expected, factory.isLegacyOgnlEnabled(createServletContextWithConfiguredValue(configuredValue)));
     }
 
-    private ServletRequest createRequestWithConfiguredValue(String configuredValue) {
+    private ServletContext createServletContextWithConfiguredValue(String configuredValue) {
         MockServletContext servletContext = new MockServletContext();
         Dispatcher dispatcher = mock(Dispatcher.class);
         ConfigurationManager configurationManager = mock(ConfigurationManager.class);
@@ -330,9 +371,7 @@ public class StrutsTilesContainerFactoryTest {
         when(container.getInstance(String.class, TilesConstants.STRUTS_TILES_OGNL_LEGACY_ENABLED))
             .thenReturn(configuredValue);
         servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, dispatcher);
-        ServletApplicationContext servletApplicationContext = new ServletApplicationContext(servletContext);
-        return new ServletRequest(servletApplicationContext,
-            new MockHttpServletRequest(servletContext), mock(HttpServletResponse.class));
+        return servletContext;
     }
 
     private static class ExposedInitializer extends StrutsTilesInitializer {
@@ -362,7 +401,7 @@ public class StrutsTilesContainerFactoryTest {
         }
 
         @Override
-        boolean isLegacyOgnlEnabled(org.apache.tiles.request.Request request) {
+        boolean isLegacyOgnlEnabled(ServletContext servletContext) {
             configurationResolutions = resolutionCounter.incrementAndGet();
             configurationResolutionEntered.countDown();
             if (blockConfigurationResolution) {

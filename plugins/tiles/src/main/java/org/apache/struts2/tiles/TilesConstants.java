@@ -26,8 +26,7 @@ public final class TilesConstants {
     /**
      * Temporarily enables legacy raw Tiles OGNL evaluation.
      *
-     * @deprecated Migrate Tiles expressions to {@code S2:} or ordinary Tiles mechanisms. This compatibility
-     * constant and the legacy evaluator are targeted for removal in Struts 8.0.0.
+     * @deprecated since 7.4.0, migrate Tiles expressions to {@code S2:} or ordinary Tiles mechanisms.
      */
     @Deprecated(since = "7.4.0", forRemoval = true)
     public static final String STRUTS_TILES_OGNL_LEGACY_ENABLED = "struts.tiles.ognl.legacy.enabled";

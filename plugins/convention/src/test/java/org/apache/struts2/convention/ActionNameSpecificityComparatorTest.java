@@ -51,6 +51,18 @@ public class ActionNameSpecificityComparatorTest {
     }
 
     @Test
+    public void twoSingleStarsBeatOnePathStar() {
+        // "a/**" spans any depth, "a/*/*" exactly two segments -> the ** pattern is broader and must lose
+        assertTrue(comparator.compare("a/*/*", "a/**") < 0);
+    }
+
+    @Test
+    public void twoNamedVariablesBeatOnePathStar() {
+        // {var} matches a single segment like *, so the same rule applies for NamedVariablePatternMatcher users
+        assertTrue(comparator.compare("a/{x}/{y}", "a/**") < 0);
+    }
+
+    @Test
     public void namedVariablesCountAsWildcards() {
         assertTrue(comparator.compare("some/usefull/{id}", "some/{id}") < 0);
     }

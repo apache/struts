@@ -28,8 +28,7 @@ import org.apache.tiles.request.Request;
 final class DisabledOgnlAttributeEvaluator extends AbstractAttributeEvaluator {
 
     static final String DISABLED_MESSAGE = "The Tiles OGNL evaluator is disabled. Migrate the expression to S2:, "
-        + "or temporarily enable struts.tiles.ognl.legacy.enabled. Legacy Tiles OGNL support will be removed in "
-        + "Struts 8.0.0.";
+        + "or temporarily enable struts.tiles.ognl.legacy.enabled; legacy Tiles OGNL support is deprecated for removal.";
 
     @Override
     public Object evaluate(String expression, Request request) {

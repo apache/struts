@@ -71,7 +71,7 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.render.BasicRendererFactory;
 import org.apache.tiles.request.render.ChainedDelegateRenderer;
 import org.apache.tiles.request.render.Renderer;
-import org.apache.tiles.request.servlet.NotAServletEnvironmentException;
+import org.apache.tiles.request.servlet.ServletApplicationContext;
 import org.apache.tiles.request.servlet.ServletUtil;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     static final String LEGACY_OGNL_WARNING = "Legacy Tiles OGNL evaluation is enabled through "
         + "struts.tiles.ognl.legacy.enabled. Migrate expressions to S2: or ordinary Tiles mechanisms; the "
-        + "compatibility flag and legacy evaluator will be removed in Struts 8.0.0.";
+        + "compatibility flag and the legacy evaluator are deprecated for removal.";
 
     private final Boolean legacyOgnlEnabled;
     private final AtomicBoolean legacyOgnlWarningLogged = new AtomicBoolean();
@@ -178,7 +178,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(I18N, createI18NEvaluator());
-        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createConfiguredOgnlEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createConfiguredOgnlEvaluator(applicationContext));
 
         ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
         if (elEvaluator != null) {
@@ -275,11 +275,14 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         return new I18NAttributeEvaluator();
     }
 
-    private AttributeEvaluator createConfiguredOgnlEvaluator() {
-        if (legacyOgnlEnabled == null) {
-            return new ConfiguredOgnlAttributeEvaluator();
+    private AttributeEvaluator createConfiguredOgnlEvaluator(ApplicationContext applicationContext) {
+        if (legacyOgnlEnabled != null) {
+            return createOgnlEvaluator(legacyOgnlEnabled);
         }
-        return createOgnlEvaluator(legacyOgnlEnabled);
+        if (applicationContext instanceof ServletApplicationContext) {
+            return new ConfiguredOgnlAttributeEvaluator(ServletUtil.getServletContext(applicationContext));
+        }
+        return new DisabledOgnlAttributeEvaluator();
     }
 
     private AttributeEvaluator createOgnlEvaluator(boolean enabled) {
@@ -293,20 +296,14 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
     }
 
     @SuppressWarnings("removal")
-    boolean isLegacyOgnlEnabled(Request request) {
-        try {
-            ServletContext servletContext = ServletUtil.getServletRequest(request)
-                .getRequest().getServletContext();
-            Dispatcher dispatcher = Dispatcher.getInstance(servletContext);
-            if (dispatcher == null) {
-                return false;
-            }
-            String configuredValue = dispatcher.getConfigurationManager().getConfiguration().getContainer().getInstance(
-                String.class, TilesConstants.STRUTS_TILES_OGNL_LEGACY_ENABLED);
-            return BooleanUtils.toBoolean(configuredValue);
-        } catch (NotAServletEnvironmentException ignored) {
+    boolean isLegacyOgnlEnabled(ServletContext servletContext) {
+        Dispatcher dispatcher = Dispatcher.getInstance(servletContext);
+        if (dispatcher == null) {
             return false;
         }
+        String configuredValue = dispatcher.getConfigurationManager().getConfiguration().getContainer().getInstance(
+            String.class, TilesConstants.STRUTS_TILES_OGNL_LEGACY_ENABLED);
+        return BooleanUtils.toBoolean(configuredValue);
     }
 
     void logLegacyOgnlWarning() {
@@ -334,20 +331,25 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     private final class ConfiguredOgnlAttributeEvaluator extends AbstractAttributeEvaluator {
 
+        private final ServletContext servletContext;
         private volatile AttributeEvaluator delegate;
+
+        private ConfiguredOgnlAttributeEvaluator(ServletContext servletContext) {
+            this.servletContext = servletContext;
+        }
 
         @Override
         public Object evaluate(String expression, Request request) {
-            return getDelegate(request).evaluate(expression, request);
+            return getDelegate().evaluate(expression, request);
         }
 
-        private AttributeEvaluator getDelegate(Request request) {
+        private AttributeEvaluator getDelegate() {
             AttributeEvaluator result = delegate;
             if (result == null) {
                 synchronized (this) {
                     result = delegate;
                     if (result == null) {
-                        result = createOgnlEvaluator(isLegacyOgnlEnabled(request));
+                        result = createOgnlEvaluator(isLegacyOgnlEnabled(servletContext));
                         delegate = result;
                     }
                 }

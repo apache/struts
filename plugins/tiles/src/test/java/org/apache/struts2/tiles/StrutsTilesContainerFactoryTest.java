@@ -245,12 +245,13 @@ public class StrutsTilesContainerFactoryTest {
     public void nonServletApplicationContextFailsClosedWithoutLookup() {
         TrackingFactory trackingFactory = new TrackingFactory();
         JspFactory.setDefaultFactory(null);
-        AttributeEvaluatorFactory evaluators = trackingFactory.createAttributeEvaluatorFactory(
-            applicationContext, trackingFactory.createLocaleResolver(applicationContext));
+        AttributeEvaluator evaluator = trackingFactory.createAttributeEvaluatorFactory(
+            applicationContext, trackingFactory.createLocaleResolver(applicationContext))
+            .getAttributeEvaluator("OGNL");
+        org.apache.tiles.request.Request request = mock(org.apache.tiles.request.Request.class);
 
         EvaluationException exception = assertThrows(EvaluationException.class,
-            () -> evaluators.getAttributeEvaluator("OGNL").evaluate(
-                "ignored", mock(org.apache.tiles.request.Request.class)));
+            () -> evaluator.evaluate("ignored", request));
 
         assertEquals(DisabledOgnlAttributeEvaluator.DISABLED_MESSAGE, exception.getMessage());
         assertEquals(0, trackingFactory.configurationResolutions);

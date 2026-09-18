@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Decides whether a change needs a build. The one place that knows which
-# paths do not: .claude/ and the root process documents. Workflows call this
-# instead of filtering by path in their triggers, so the list is not repeated
-# per workflow and a required check still reports (see maven.yml).
+# Decides whether a change needs a build. The one place on GitHub that knows
+# which paths do not: .claude/ and the root process documents. Workflows call
+# this instead of filtering by path in their triggers, so the list is not
+# repeated per workflow and a required check still reports (see maven.yml).
+# The Jenkinsfile carries the same pattern for the ASF Jenkins build; keep
+# the two in step.
 
 name: Detect changes
 

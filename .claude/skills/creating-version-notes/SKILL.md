@@ -272,11 +272,12 @@ Kind regards
 
 Do not take the recipients from a previous announcement: 6.11.0 went to `dev@` alone and 7.3.0 to `user@` alone, and both were mistakes. Address every announcement to the two lists above.
 
-**It is sent from `lukaszlenart@apache.org`, and the draft cannot say so.** The Gmail draft tool has no
-sender field, so every draft it creates carries the account's personal default address. When handing
-the draft over, say in the same sentence that the From must be switched to the `@apache.org` identity
-before sending — a test build announced from a personal address reads as an outsider's mail in the
-list archive, and `creating-release-vote-mail` needs the same switch for the `[VOTE]`.
+**It is sent from the release manager's `@apache.org` address, and the draft cannot say so.** The
+Gmail draft tool has no sender field, so every draft it creates carries the account's default address,
+which may be a personal one. When handing the draft over, say in the same sentence that the From must be
+switched to the `@apache.org` identity before sending — a test build announced from a personal address
+reads as an outsider's mail in the list archive, and `creating-release-vote-mail` needs the same switch
+for the `[VOTE]`.
 
 Keep the security posture of the pages: the mail links the release notes, it does not summarise what is in them, so no severity, CVE or S2-XXX reaches it either.
 

@@ -440,6 +440,10 @@ authoritative list; §14 Q12.)*
   bounded cache reaching its ceiling and evicting is working as designed, and a cache
   keyed on a validated finite set — a locale restricted to the runtime's available
   locales, for instance — is not unbounded. *(documented — S2-074.)*
+- **"This was reported before and closed as hardening."** Not a ground to close. Check
+  whether a control was added since; if it was and the new report shows it does not
+  enforce, the report is `VALID: control-not-enforced`, not `DUPLICATE`. *(documented —
+  WW-5618 → S2-072.)*
 - **Duplicate of a disclosed S2-series bulletin/CVE** — closed by reference.
 - **Dependency-tail CVEs** (a transitive jar, e.g. a logging or XML library) from an
   SCA scan — triage upstream unless Struts' own code reaches the vulnerable path with
@@ -464,6 +468,7 @@ authoritative list; §14 Q12.)*
 | Disposition | Meaning | Licensed by |
 | --- | --- | --- |
 | `VALID` | A §8 property breaks via an untrusted HTTP client on a current-version, default-hardened app. | §8, §6, §7 |
+| `VALID: control-not-enforced` | A documented framework limit, filter, or policy does not hold for the inputs it targets. Independent of default-config arguments — the control's own documentation is the claim being broken. | §8 (esp. §8.4, §8.5, §8.7) |
 | `VALID-HARDENING` | A §11 misuse is too easy, or a default could be tightened. | §11/§5a |
 | `OUT-OF-MODEL: application-responsibility` | Requires a developer anti-pattern (unsafe setter, raw EL, forced eval, direct JSP) or the app's own authn/authz. | §3/§10 |
 | `OUT-OF-MODEL: non-default-config` | Only manifests with `devMode`, a dev-only plugin, DMI, or a disabled default protection — i.e. a setting the project documents as *unsafe*. **Not** a feature the project documents as optional and an application has enabled (§2). | §5a, §2 |

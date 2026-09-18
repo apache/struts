@@ -53,6 +53,27 @@ exactly that. What stays out of scope is the generic case above — where the co
 proportionate, no framework limit is missing or ineffective, and the defence belongs to your servlet
 container, reverse proxy, or network.
 
+### Hardening or vulnerability: the control test
+
+The question we ask is not "can this input hurt a server" but "does the framework claim a control
+here, and does that control do what it says".
+
+- **No control claimed.** Where the framework has never promised a bound or a check and the defence is
+  documented as the operator's or the application's (request-body size at the container, authentication,
+  CSRF tokens), a report that the framework does not supply it is handled as public hardening — a Jira
+  ticket, no bulletin, no CVE. The reporter is credited on the ticket.
+- **Control claimed but not enforced.** Where the framework documents a limit, a filter, or a policy and it
+  does not hold for the inputs it targets, that is a vulnerability regardless of how the operator has
+  configured anything else, and it is handled privately per this policy.
+
+A consequence worth stating: **adding a control moves the line.** The same request that was a hardening
+report before a limit existed becomes a vulnerability report if the limit, once added, can be bypassed.
+The JSON plugin's input limits were added as hardening in
+[WW-5618](https://issues.apache.org/jira/browse/WW-5618) (6.9.0 / 7.2.1); the later finding that the
+length limit could be bypassed was CVE-2026-73633
+([S2-072](https://cwiki.apache.org/confluence/display/WW/S2-072)). Those are two findings, not one, and
+they were credited separately.
+
 The mailing address is: [security@struts.apache.org](mailto:security@struts.apache.org)
 
 [General network server security tips](http://httpd.apache.org/docs/trunk/misc/security_tips.html)

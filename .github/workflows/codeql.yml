@@ -21,13 +21,7 @@ on:
       - 'main'
       - 'release/*'
       - 'support/*'
-    paths-ignore:
-      - '.claude/**'
-  # Safe to filter by path here: no check from this workflow is required in
-  # .asf.yaml, so a run that never happens blocks nothing.
   pull_request:
-    paths-ignore:
-      - '.claude/**'
 
 permissions:
   # Needed to upload the results to code-scanning dashboard.
@@ -38,8 +32,16 @@ permissions:
   id-token: write
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+    permissions:
+      contents: read
+      pull-requests: read
+
   analyze:
     name: Analyze
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     permissions:
       actions: read

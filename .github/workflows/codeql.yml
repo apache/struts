@@ -23,13 +23,10 @@ on:
       - 'support/*'
   pull_request:
 
+# Write permissions are granted per job below; a job-level block replaces
+# the workflow-level one, so nothing here would reach a job that has its own.
 permissions:
-  # Needed to upload the results to code-scanning dashboard.
-  security-events: write
-  actions: read
   contents: read
-  # Needed to access OIDC token.
-  id-token: write
 
 jobs:
   changes:
@@ -46,6 +43,7 @@ jobs:
     permissions:
       actions: read
       contents: read
+      # Needed to upload the results to the code-scanning dashboard.
       security-events: write
     strategy:
       fail-fast: false

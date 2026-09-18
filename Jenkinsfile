@@ -44,10 +44,12 @@ pipeline {
         stage('Detect changes') {
           steps {
             script {
-              // Skip the build when a change only touched .claude/ - agent
-              // instructions, not code. Fails open: anything unexpected (no
-              // baseline, an unreachable commit, a git error) reports true and
-              // the build runs as before.
+              // Skip the build when a change only touched .claude/ or the root
+              // process docs - agent instructions and policy, not code. The
+              // pattern mirrors .github/workflows/changes.yml; keep the two in
+              // step. Fails open: anything unexpected (no baseline, an
+              // unreachable commit, a git error) reports true and the build
+              // runs as before.
               //
               // On a pull request the baseline is the merge base with the
               // target branch, NOT GIT_PREVIOUS_SUCCESSFUL_COMMIT. That pointer
@@ -70,14 +72,14 @@ pipeline {
                   echo true
                   exit 0
                 fi
-                outside=$(git diff --name-only "$base" HEAD | grep -vE '^(\\.claude/|$)' || true)
+                outside=$(git diff --name-only "$base" HEAD | grep -vE '^(\\.claude/|CLAUDE\\.md$|AGENTS\\.md$|SECURITY\\.md$|THREAT_MODEL\\.md$|$)' || true)
                 if [ -n "$outside" ]; then
                   echo true
                 else
                   echo false
                 fi
               ''').trim()
-              echo "Changes outside .claude/: ${env.CODE_CHANGED}"
+              echo "Changes outside .claude/ and the process docs: ${env.CODE_CHANGED}"
             }
           }
         }

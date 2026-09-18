@@ -1,0 +1,93 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Decides whether a change needs a build. The one place on GitHub that knows
+# which paths do not: .claude/ and the root process documents. Workflows call
+# this instead of filtering by path in their triggers, so the list is not
+# repeated per workflow and a required check still reports (see maven.yml).
+# The Jenkinsfile carries the same pattern for the ASF Jenkins build; keep
+# the two in step.
+
+name: Detect changes
+
+on:
+  workflow_call:
+    outputs:
+      code:
+        description: "'true' when the change touches anything outside .claude/ and the root process docs"
+        value: ${{ jobs.changes.outputs.code }}
+
+jobs:
+  changes:
+    name: Detect changes outside .claude and the process docs
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Check which paths the change touches
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          # Anything not matched here needs a build. Every pattern is anchored
+          # to the repository root: a nested file of the same name still builds.
+          skip='^(\.claude/|CLAUDE\.md$|AGENTS\.md$|SECURITY\.md$|THREAT_MODEL\.md$|$)'
+          # When the file list cannot be fetched, build: the required check
+          # must still report, and building is the safe direction.
+          case "${{ github.event_name }}" in
+            pull_request)
+              files=$(gh api --paginate \
+                "repos/${{ github.repository }}/pulls/${{ github.event.number }}/files" \
+                --jq '.[].filename') || {
+                echo "Listing the pull request files failed - building."
+                echo "code=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              }
+              ;;
+            push)
+              # A new branch has no "before" to compare against. The compare API
+              # lists at most 300 files; a push that large is not docs-only.
+              before="${{ github.event.before }}"
+              if [ "$before" = "0000000000000000000000000000000000000000" ]; then
+                echo "New branch - building."
+                echo "code=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              files=$(gh api \
+                "repos/${{ github.repository }}/compare/${before}...${{ github.sha }}" \
+                --jq '.files[].filename') || {
+                echo "Compare failed - building."
+                echo "code=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              }
+              ;;
+            *)
+              echo "Event ${{ github.event_name }} - building."
+              echo "code=true" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+          esac
+          echo "Changed files:"
+          printf '%s\n' "$files"
+          # Tested by emptiness rather than with `grep -qv`, whose exit status
+          # is not reliable across grep implementations.
+          outside=$(printf '%s\n' "$files" | grep -vE "$skip" || true)
+          if [ -n "$outside" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Only .claude/ or the process docs changed - skipping the build."
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi

@@ -16,16 +16,10 @@
 name: SonarCloud
 
 on:
-  # Safe to filter by path here: no check from this workflow is required in
-  # .asf.yaml, so a run that never happens blocks nothing.
   pull_request:
-    paths-ignore:
-      - '.claude/**'
   push:
     branches:
       - 'main'
-    paths-ignore:
-      - '.claude/**'
 
 permissions: read-all
 
@@ -35,10 +29,14 @@ env:
   HAVE_SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN != '' }}
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   sonarcloud:
     name: Scan
+    needs: changes
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.base.repo.fork && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
+    if: ${{ needs.changes.outputs.code == 'true' && !github.event.pull_request.base.repo.fork && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v7
         with:

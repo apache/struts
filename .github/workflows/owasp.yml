@@ -16,19 +16,13 @@
 name: OWASP checkup
 
 on:
-  # Safe to filter by path here: no check from this workflow is required in
-  # .asf.yaml, so a run that never happens blocks nothing.
   pull_request:
-    paths-ignore:
-      - '.claude/**'
   push:
     branches:
       - 'main'
       - 'develop'
       - 'release/*'
       - 'support/*'
-    paths-ignore:
-      - '.claude/**'
   workflow_dispatch: #Allow manual triggers
 
 permissions: read-all
@@ -38,10 +32,13 @@ env:
   LANG: en_US.utf8
 
 jobs:
-
+  changes:
+    uses: ./.github/workflows/changes.yml
 
   owasp:
     name: OWASP
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

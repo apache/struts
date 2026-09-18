@@ -21,29 +21,29 @@ on:
       - 'main'
       - 'release/*'
       - 'support/*'
-    paths-ignore:
-      - '.claude/**'
-  # Safe to filter by path here: no check from this workflow is required in
-  # .asf.yaml, so a run that never happens blocks nothing.
   pull_request:
-    paths-ignore:
-      - '.claude/**'
 
+# Write permissions are granted per job below; a job-level block replaces
+# the workflow-level one, so nothing here would reach a job that has its own.
 permissions:
-  # Needed to upload the results to code-scanning dashboard.
-  security-events: write
-  actions: read
   contents: read
-  # Needed to access OIDC token.
-  id-token: write
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+    permissions:
+      contents: read
+      pull-requests: read
+
   analyze:
     name: Analyze
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
+      # Needed to upload the results to the code-scanning dashboard.
       security-events: write
     strategy:
       fail-fast: false

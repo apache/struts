@@ -230,7 +230,7 @@
                         <include>it.org.apache.struts2.showcase.*Test</include>
                     </includes>
                     <systemPropertyVariables>
-                        <http.port>8090</http.port>
+                        <http.port>${jetty.http.port}</http.port>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
@@ -245,6 +245,26 @@
                         <goals>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>reserve-jetty-ports</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>jetty.http.port</portName>
+                                <portName>jetty.stop.port</portName>
+                            </portNames>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -279,10 +299,14 @@
                         <id>start-jetty</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <!-- stop any previous instance to free up the port -->
-                            <goal>stop</goal>
                             <goal>start</goal>
                         </goals>
+                        <configuration>
+                            <stopPort>${jetty.stop.port}</stopPort>
+                            <httpConnector>
+                                <port>${jetty.http.port}</port>
+                            </httpConnector>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>stop-jetty</id>
@@ -290,6 +314,9 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
+                        <configuration>
+                            <stopPort>${jetty.stop.port}</stopPort>
+                        </configuration>
                     </execution>
                 </executions>
              </plugin>

@@ -31,9 +31,16 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Prepare') {
+    stage('JDK 17') {
       agent {
         label 'ubuntu'
+      }
+      tools {
+        jdk 'jdk_17_latest'
+        maven 'maven_3_latest'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx2048m"
       }
       stages {
         stage('Clean up') {
@@ -83,108 +90,57 @@ pipeline {
             }
           }
         }
-      }
-    }
-    stage('JDK 21') {
-      when {
-        expression { env.CODE_CHANGED != 'false' }
-      }
-      agent {
-        label 'ubuntu'
-      }
-      tools {
-        jdk 'jdk_21_latest'
-        maven 'maven_3_latest'
-      }
-      environment {
-        MAVEN_OPTS = "-Xmx1024m"
-      }
-      stages {
+        // Tests run once, on the baseline JDK. The other supported JDKs and
+        // the Jakarta EE 11 profile are covered by .github/workflows/maven.yml;
+        // Jenkins exists for what GitHub Actions cannot do: the snapshot deploy
+        // and the nightlies upload.
         stage('Test') {
-          steps {
-            sh './mvnw -B -DskipAssembly verify'
-          }
-          post {
-            always {
-              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
-          }
-        }
-      }
-      post {
-        always {
-          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-        }
-      }
-    }
-    stage('JDK 17') {
-      when {
-        expression { env.CODE_CHANGED != 'false' }
-      }
-      agent {
-        label 'ubuntu'
-      }
-      tools {
-        jdk 'jdk_17_latest'
-        maven 'maven_3_latest'
-      }
-      environment {
-        MAVEN_OPTS = "-Xmx2048m"
-      }
-      stages {
-        stage('Install') {
-          steps {
-            sh './mvnw -B install -DskipTests -DskipAssembly'
-          }
-        }
-        stage('Test') {
-          steps {
-            sh './mvnw -B verify -Pcoverage -DskipAssembly'
-          }
-          post {
-            always {
-              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
-          }
-        }
-        stage('Build Source & JavaDoc') {
           when {
-            anyOf {
-              branch 'main'
-              branch 'support/struts-6-x-x'
-            }
+            expression { env.CODE_CHANGED != 'false' }
           }
           steps {
-            dir("local-snapshots-dir/") {
-              deleteDir()
+            sh './mvnw -B -DskipAssembly verify --no-transfer-progress'
+          }
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
             }
-            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
           }
         }
+        // -DskipITs as well as -DskipTests: failsafe does not know skipTests,
+        // so without it the showcase integration tests boot Jetty again here.
         stage('Deploy Snapshot') {
           when {
-            anyOf {
-              branch 'main'
-              branch 'support/struts-6-x-x'
+            allOf {
+              expression { env.CODE_CHANGED != 'false' }
+              anyOf {
+                branch 'main'
+                branch 'support/struts-6-x-x'
+              }
             }
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
+              sh './mvnw -B -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipITs -DskipAssembly --no-transfer-progress'
             }
           }
         }
+        // The deploy above installed every module, so only the assembly
+        // module needs building; its descriptors read the sibling modules'
+        // target/ directories from this same workspace.
         stage('Upload nightlies') {
           when {
-            anyOf {
-              branch 'main'
-              branch 'support/struts-6-x-x'
+            allOf {
+              expression { env.CODE_CHANGED != 'false' }
+              anyOf {
+                branch 'main'
+                branch 'support/struts-6-x-x'
+              }
             }
           }
           steps {
-            sh './mvnw -B package -DskipTests'
+            sh './mvnw -B package -DskipTests -DskipITs -pl assembly --no-transfer-progress'
             sshPublisher(publishers: [
                 sshPublisherDesc(
                     configName: 'Nightlies',

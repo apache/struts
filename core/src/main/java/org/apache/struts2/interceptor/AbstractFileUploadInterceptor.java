@@ -152,7 +152,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (policy.getMaximumSize() != null && policy.getMaximumSize() >= 0 && policy.getMaximumSize() < file.length()) {
+        if (exceedsMaximumSize(policy, file)) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
             });
@@ -180,6 +180,16 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         }
 
         return errorMessages.isEmpty();
+    }
+
+    /**
+     * @param policy - the effective upload policy for this invocation.
+     * @param file   - proposed upload file.
+     * @return true if the file is larger than the policy allows; a null or negative maximum size means no limit.
+     */
+    protected boolean exceedsMaximumSize(UploadPolicy policy, UploadedFile file) {
+        Long maximumSize = policy.getMaximumSize();
+        return maximumSize != null && maximumSize >= 0 && maximumSize < file.length();
     }
 
     private String getMaximumSizeStr(Object action, Long maximumSize) {

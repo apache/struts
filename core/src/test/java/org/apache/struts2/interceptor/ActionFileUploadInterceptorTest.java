@@ -256,6 +256,26 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertThat(validation.hasErrors()).isFalse();
     }
 
+    public void testAcceptFileUsesOverriddenMaximumSizeCheck() throws Exception {
+        ActionFileUploadInterceptor lenient = new ActionFileUploadInterceptor() {
+            @Override
+            protected boolean exceedsMaximumSize(UploadPolicy policy, UploadedFile file) {
+                return false;
+            }
+        };
+        container.inject(lenient);
+        lenient.setMaximumSize(10L);
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
+        File file = new File(new URI(url.toString()));
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
+        boolean ok = lenient.acceptFile(lenient.copyConfiguredPolicy(), validation, uploadedFile, "filename", "text/html", "inputName");
+
+        assertThat(ok).isTrue();
+        assertThat(validation.hasErrors()).isFalse();
+    }
+
     public void testNoMultipartRequest() throws Exception {
         MyFileUploadAction action = new MyFileUploadAction();
 

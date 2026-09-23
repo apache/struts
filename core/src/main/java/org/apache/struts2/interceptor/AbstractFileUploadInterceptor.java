@@ -193,6 +193,9 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     }
 
     private String getMaximumSizeStr(Object action, Long maximumSize) {
+        if (maximumSize == null) {
+            return "";
+        }
         return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 

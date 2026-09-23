@@ -98,7 +98,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * effective policy for an invocation is a copy, see
      * {@link ActionFileUploadInterceptor#newLazyParams()}.
      *
-     * @param maximumSize The maximum size in bytes
+     * @param maximumSize The maximum size in bytes, or a negative value for no limit
      */
     public void setMaximumSize(Long maximumSize) {
         configuredPolicy.setMaximumSize(maximumSize);
@@ -152,7 +152,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (policy.getMaximumSize() != null && policy.getMaximumSize() < file.length()) {
+        if (policy.getMaximumSize() != null && policy.getMaximumSize() >= 0 && policy.getMaximumSize() < file.length()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
             });

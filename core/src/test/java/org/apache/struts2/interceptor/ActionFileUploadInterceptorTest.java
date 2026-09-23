@@ -243,6 +243,19 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .contains("The file is too large to be uploaded", "inputName", "log4j2.xml", "allowed mx size is 10");
     }
 
+    public void testAcceptFileWithNegativeMaxSizeHasNoLimit() throws Exception {
+        interceptor.setMaximumSize(-1L);
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
+        File file = new File(new URI(url.toString()));
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
+        boolean ok = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, uploadedFile, "filename", "text/html", "inputName");
+
+        assertThat(ok).isTrue();
+        assertThat(validation.hasErrors()).isFalse();
+    }
+
     public void testNoMultipartRequest() throws Exception {
         MyFileUploadAction action = new MyFileUploadAction();
 

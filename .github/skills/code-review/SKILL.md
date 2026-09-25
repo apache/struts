@@ -14,7 +14,7 @@ tend to go wrong in this codebase.
 
 Deeper references, when a review needs them:
 
-- [`CLAUDE.md`](../../../CLAUDE.md) — build commands, module layout, request lifecycle
+- [`CLAUDE.md`](../../../CLAUDE.md) — build commands, test style (JUnit 3 vs 4), PR conventions
 - [`SECURITY.md`](../../../SECURITY.md) — the vulnerability reporting process (source of truth)
 - [`THREAT_MODEL.md`](../../../THREAT_MODEL.md) — scope, trust boundaries, known non-findings
 - [`AGENTS.md`](../../../AGENTS.md) — rules for AI agents working on security findings

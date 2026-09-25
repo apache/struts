@@ -67,7 +67,7 @@ public class UploadPolicy extends DisableParams {
     }
 
     /**
-     * @param maximumSize the maximum size in bytes, or null for no limit
+     * @param maximumSize the maximum size in bytes, or null or a negative value for no limit
      */
     public void setMaximumSize(Long maximumSize) {
         this.maximumSize = maximumSize;

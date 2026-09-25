@@ -98,7 +98,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * effective policy for an invocation is a copy, see
      * {@link ActionFileUploadInterceptor#newLazyParams()}.
      *
-     * @param maximumSize The maximum size in bytes
+     * @param maximumSize The maximum size in bytes, or a negative value for no limit
      */
     public void setMaximumSize(Long maximumSize) {
         configuredPolicy.setMaximumSize(maximumSize);
@@ -152,7 +152,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
             return false;
         }
 
-        if (policy.getMaximumSize() != null && policy.getMaximumSize() < file.length()) {
+        if (exceedsMaximumSize(policy, file)) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
                 inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
             });
@@ -182,7 +182,20 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
         return errorMessages.isEmpty();
     }
 
+    /**
+     * @param policy - the effective upload policy for this invocation.
+     * @param file   - proposed upload file.
+     * @return true if the file is larger than the policy allows; a null or negative maximum size means no limit.
+     */
+    protected boolean exceedsMaximumSize(UploadPolicy policy, UploadedFile file) {
+        Long maximumSize = policy.getMaximumSize();
+        return maximumSize != null && maximumSize >= 0 && maximumSize < file.length();
+    }
+
     private String getMaximumSizeStr(Object action, Long maximumSize) {
+        if (maximumSize == null) {
+            return "";
+        }
         return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
     }
 

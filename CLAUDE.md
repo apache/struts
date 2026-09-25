@@ -23,31 +23,6 @@ mvn test -DskipAssembly -pl core -Dtest=MyClassTest#testMethodName
 mvn clean install -Pjakartaee11
 ```
 
-### Project Structure
-
-```
-struts/
-├── core/           # struts2-core - main framework
-├── plugins/        # Plugin modules (json, rest, spring, tiles, velocity, etc.)
-├── apps/           # Sample applications (showcase, rest-showcase)
-├── assembly/       # Distribution packaging
-├── bom/            # Bill of Materials for dependency management
-├── parent/         # Parent POM with shared configuration
-└── jakarta/        # Jakarta EE compatibility modules
-```
-
-### Core Architecture
-
-**Request Lifecycle**: `Dispatcher` → `ActionProxy` → `ActionInvocation` → Interceptor stack → `Action` → Result
-
-Key packages in `org.apache.struts2`:
-
-- `dispatcher` - Request handling, `Dispatcher`, servlet integration
-- `interceptor` - Built-in interceptors (params, validation, fileUpload)
-- `components` - UI tag components (form, textfield, submit)
-- `action` - Action interfaces (`UploadedFilesAware`, `SessionAware`, etc.)
-- `security` - Security utilities and OGNL member access policies
-
 ## Security-Critical Patterns
 
 Apache Struts has a history of security vulnerabilities (OGNL injection, temp file exploits). Apply these Struts-specific patterns:
@@ -76,8 +51,6 @@ recurring non-findings (§11a), and the triage dispositions (§13). Read it befo
 closed as application responsibility or non-default configuration rather than as framework bugs.
 
 ## Testing
-
-Run with `mvn test -DskipAssembly`.
 
 **Tests are JUnit 4 — there is no JUnit 5 anywhere in this repo.** `parent/pom.xml` declares
 `junit:junit:4.13.2`; there are zero `org.junit.jupiter` imports. Two styles coexist:

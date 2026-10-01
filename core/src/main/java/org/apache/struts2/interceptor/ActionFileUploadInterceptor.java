@@ -64,7 +64,7 @@ import java.util.List;
  * <ul>
  * <li>maximumSize (optional) - the maximum size (in bytes) that the interceptor will allow a file reference to be set
  * on the action. Note, this is <b>not</b> related to the various properties found in struts.properties.
- * Default to approximately 2MB.</li>
+ * Default to approximately 2MB. A negative value, e.g. -1, means no limit.</li>
  * <li>allowedTypes (optional) - a comma separated list of content types (ie: text/html) that the interceptor will allow
  * a file reference to be set on the action. If none is specified allow all types to be uploaded.</li>
  * <li>allowedExtensions (optional) - a comma separated list of file extensions (ie: .html) that the interceptor will allow

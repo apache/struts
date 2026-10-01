@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -863,6 +864,22 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         namespace = "/test_namespace/namespace.test/";
         assertEquals("/test_namespace/namespace.test/", mapper.cleanupActionName(namespace));
+    }
+
+    public void testRejectedNamesDoNotInjectLineBreaksIntoLog() {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+
+        try (LogCapture logs = new LogCapture(DefaultActionMapper.class)) {
+            mapper.cleanupNamespaceName("/ns\n12:00:00 ERROR forged");
+            mapper.cleanupActionName("action\r\n12:00:00 ERROR forged");
+            mapper.cleanupMethodName("method\n12:00:00 ERROR forged");
+
+            assertEquals(3, logs.messages().size());
+            for (String message : logs.messages()) {
+                assertTrue(message, message.contains("12:00:00 ERROR forged"));
+                assertFalse(message, message.contains("\n") || message.contains("\r"));
+            }
+        }
     }
 
     public void testAllowedActionNames() {

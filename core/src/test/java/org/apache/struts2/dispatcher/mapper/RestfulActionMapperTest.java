@@ -25,6 +25,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
 /**
@@ -119,6 +120,17 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
 
         ActionMapping am = mapper.getMapping(request, null);
         assertEquals("my-app.action", am.getName());
+    }
+
+    public void testRejectedActionNameDoesNotInjectLineBreaksIntoLog() {
+        try (LogCapture logs = new LogCapture(RestfulActionMapper.class)) {
+            mapper.cleanupActionName("action\r\n12:00:00 ERROR forged");
+
+            assertEquals(1, logs.messages().size());
+            String message = logs.messages().get(0);
+            assertTrue(message, message.contains("12:00:00 ERROR forged"));
+            assertFalse(message, message.contains("\n") || message.contains("\r"));
+        }
     }
 
     protected void setUp() throws Exception {

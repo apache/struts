@@ -634,9 +634,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 LOG.warn("Parameter [{}] is too long, allowed length is [{}]. Use Interceptor Parameter Overriding " +
                         "to override the limit, see more at\n" +
                         "https://struts.apache.org/core-developers/interceptors.html#interceptor-parameter-overriding",
-                    name, paramNameMaxLength);
+                    normalizeSpace(name), paramNameMaxLength);
             } else {
-                LOG.warn("Parameter [{}] is too long, allowed length is [{}]", name, paramNameMaxLength);
+                LOG.warn("Parameter [{}] is too long, allowed length is [{}]", normalizeSpace(name), paramNameMaxLength);
             }
         }
         return matchLength;
@@ -648,9 +648,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             if (devMode) {
                 LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
                          "https://struts.apache.org/security/#accepted--excluded-patterns",
-                        paramName, result.getAcceptedPattern());
+                        normalizeSpace(paramName), result.getAcceptedPattern());
             } else {
-                LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
+                LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", normalizeSpace(paramName), result.getAcceptedPattern());
             }
             return false;
         }
@@ -663,9 +663,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             if (devMode) {
                 LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
                          "https://struts.apache.org/security/#accepted--excluded-patterns",
-                        paramName, result.getExcludedPattern());
+                        normalizeSpace(paramName), result.getExcludedPattern());
             } else {
-                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
+                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", normalizeSpace(paramName), result.getExcludedPattern());
             }
             return true;
         }
@@ -682,9 +682,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 if (devMode) {
                     LOG.warn("Parameter value [{}] matches excluded pattern [{}]! See Accepting/Excluding parameter values at\n" +
                              "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
-                            value, excludedValuePatterns);
+                            normalizeSpace(value), excludedValuePatterns);
                 } else {
-                    LOG.debug("Parameter value [{}] matches excluded pattern [{}]", value, excludedValuePattern);
+                    LOG.debug("Parameter value [{}] matches excluded pattern [{}]", normalizeSpace(value), excludedValuePattern);
                 }
                 return true;
             }
@@ -705,9 +705,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (devMode) {
             LOG.warn("Parameter value [{}] didn't match accepted pattern [{}]! See Accepting/Excluding parameter values at\n" +
                      "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
-                    value, acceptedValuePatterns);
+                    normalizeSpace(value), acceptedValuePatterns);
         } else {
-            LOG.debug("Parameter value [{}] was not accepted!", value);
+            LOG.debug("Parameter value [{}] was not accepted!", normalizeSpace(value));
         }
         return false;
     }

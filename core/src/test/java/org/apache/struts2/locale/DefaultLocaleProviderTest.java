@@ -19,6 +19,7 @@
 package org.apache.struts2.locale;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.test.LogCapture;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,6 +49,21 @@ public class DefaultLocaleProviderTest {
     @AfterClass
     public static void afterClass() throws Exception {
         ActionContext.clear();
+    }
+
+    @Test
+    public void toLocaleRejectedValueDoesNotInjectLineBreaksIntoLog() {
+        try (LogCapture logs = new LogCapture(DefaultLocaleProvider.class)) {
+            // when
+            Locale actual = provider.toLocale("en\n12:00:00 ERROR forged");
+
+            // then
+            assertNull(actual);
+            assertEquals(1, logs.messages().size());
+            String message = logs.messages().get(0);
+            assertTrue(message, message.contains("12:00:00 ERROR forged"));
+            assertFalse(message, message.contains("\n") || message.contains("\r"));
+        }
     }
 
     @Test

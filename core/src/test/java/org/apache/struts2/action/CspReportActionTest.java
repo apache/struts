@@ -19,6 +19,7 @@
 package org.apache.struts2.action;
 
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.interceptor.csp.CspSettings;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -45,6 +46,17 @@ public class CspReportActionTest extends XWorkTestCase {
       );
 
       assertCorrectResponseStatusCode(cspReportAction);
+    }
+  }
+
+  public void testDefaultActionDoesNotInjectLineBreaksIntoLog() {
+    try (LogCapture logs = new LogCapture(DefaultCspReportAction.class)) {
+      new DefaultCspReportAction().processReport("{\"csp-report\":{}}\n12:00:00 ERROR forged");
+
+      assertEquals(1, logs.messages().size());
+      String message = logs.messages().get(0);
+      assertTrue(message, message.contains("12:00:00 ERROR forged"));
+      assertFalse(message, message.contains("\n") || message.contains("\r"));
     }
   }
 

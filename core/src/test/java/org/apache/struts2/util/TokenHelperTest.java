@@ -21,6 +21,7 @@ package org.apache.struts2.util;
 import org.apache.struts2.ActionContext;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.test.LogCapture;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +60,19 @@ public class TokenHelperTest extends TestCase {
         TokenHelper.setSessionToken(tokenName, token);
         final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
         assertEquals(token, session.get(sessionTokenName));
+    }
+
+    public void testMissingTokenNameDoesNotInjectLineBreaksIntoLog() {
+        ActionContext.getContext().withParameters(HttpParameters.create(new HashMap<String, String[]>()).build());
+
+        try (LogCapture logs = new LogCapture(TokenHelper.class)) {
+            assertNull(TokenHelper.getToken("token\n12:00:00 ERROR forged"));
+
+            assertEquals(1, logs.messages().size());
+            String message = logs.messages().get(0);
+            assertTrue(message, message.contains("12:00:00 ERROR forged"));
+            assertFalse(message, message.contains("\n") || message.contains("\r"));
+        }
     }
 
     public void testValidToken() {

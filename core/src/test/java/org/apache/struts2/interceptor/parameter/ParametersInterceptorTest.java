@@ -44,6 +44,7 @@ import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.OgnlContext;
 import org.apache.struts2.action.NoParameters;
@@ -1007,6 +1008,27 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final Map<String, Object> actual = new HashMap<>();
         interceptor.setValueStackFactory(createValueStackFactory(actual));
         return actual;
+    }
+
+    public void testRejectedParameterNamesAndValuesDoNotInjectLineBreaksIntoLog() {
+        for (String devMode : new String[]{"false", "true"}) {
+            ParametersInterceptor pi = createParametersInterceptor();
+            pi.setDevMode(devMode);
+            pi.setParamNameMaxLength(10);
+            pi.setAcceptedValuePatterns("fooValue");
+            pi.setExcludedValuePatterns("barValue");
+
+            try (LogCapture logs = new LogCapture(ParametersInterceptor.class)) {
+                pi.isAcceptableName("tooLongName\n12:00:00 ERROR forged");
+                pi.isAcceptableName("a\n12:00:00");
+                pi.isAcceptableValue("name", "bazValue\n12:00:00 ERROR forged");
+
+                assertFalse(logs.messages().isEmpty());
+                for (String message : logs.messages()) {
+                    assertFalse("devMode=" + devMode + ": " + message, message.contains("\n12:00:00"));
+                }
+            }
+        }
     }
 
     private ParametersInterceptor createParametersInterceptor() {

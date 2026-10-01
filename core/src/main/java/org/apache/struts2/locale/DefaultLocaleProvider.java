@@ -22,10 +22,11 @@ import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.ActionContext;
 
 import java.util.Locale;
+
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * Default implementation of {@link LocaleProvider}
@@ -62,7 +63,7 @@ public class DefaultLocaleProvider implements LocaleProvider {
         try {
             locale = LocaleUtils.toLocale(StringUtils.trimToNull(localeStr));
         } catch (IllegalArgumentException e) {
-            LOG.warn(new ParameterizedMessage("Cannot convert [{}] to proper locale", localeStr), e);
+            LOG.warn("Cannot convert [{}] to proper locale", normalizeSpace(localeStr));
         }
         return locale;
     }

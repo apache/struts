@@ -56,7 +56,7 @@ public final class StrutsResourceIsolationPolicy implements ResourceIsolationPol
         String mode = request.getHeader(SEC_FETCH_MODE_HEADER);
         String dest = request.getHeader(SEC_FETCH_DEST_HEADER);
 
-        boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equalsIgnoreCase(mode) || "GET".equalsIgnoreCase(request.getMethod());
+        boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equalsIgnoreCase(mode) && "GET".equalsIgnoreCase(request.getMethod());
         boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equalsIgnoreCase(dest) && !DEST_OBJECT.equalsIgnoreCase(dest);
 
         return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;

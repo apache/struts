@@ -39,14 +39,20 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_DOCUMENT;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_EMPTY;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_IMAGE;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_EMBED;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_OBJECT;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_SCRIPT;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.MODE_CORS;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.MODE_NO_CORS;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.MODE_NAVIGATE;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SEC_FETCH_USER_HEADER;
+import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_CROSS_SITE;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_NONE;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_SAME_ORIGIN;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_SAME_SITE;
@@ -95,6 +101,43 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         request.setMethod("GET");
 
         assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+    }
+
+    public void testCrossSiteTopLevelGetNavigationAllowed() throws Exception {
+        request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+        request.addHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+        request.addHeader(SEC_FETCH_DEST_HEADER, DEST_DOCUMENT);
+        request.setMethod("GET");
+
+        assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+    }
+
+    public void testCrossSiteNavigationWithUnsafeMethodRejected() throws Exception {
+        for (String method : Arrays.asList("POST", "PUT", "DELETE", "PATCH")) {
+            request.removeHeader(SEC_FETCH_SITE_HEADER);
+            request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+            request.removeHeader(SEC_FETCH_MODE_HEADER);
+            request.addHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+            request.removeHeader(SEC_FETCH_DEST_HEADER);
+            request.addHeader(SEC_FETCH_DEST_HEADER, DEST_DOCUMENT);
+            request.setMethod(method);
+
+            assertEquals("Expected interceptor to NOT accept cross-site " + method + " navigation", SC_FORBIDDEN, interceptor.intercept(mai));
+        }
+    }
+
+    public void testCrossSiteGetSubresourceRequestRejected() throws Exception {
+        for (String[] modeAndDest : new String[][]{{MODE_NO_CORS, DEST_SCRIPT}, {MODE_NO_CORS, DEST_IMAGE}, {MODE_CORS, DEST_EMPTY}}) {
+            request.removeHeader(SEC_FETCH_SITE_HEADER);
+            request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+            request.removeHeader(SEC_FETCH_MODE_HEADER);
+            request.addHeader(SEC_FETCH_MODE_HEADER, modeAndDest[0]);
+            request.removeHeader(SEC_FETCH_DEST_HEADER);
+            request.addHeader(SEC_FETCH_DEST_HEADER, modeAndDest[1]);
+            request.setMethod("GET");
+
+            assertEquals("Expected interceptor to NOT accept cross-site GET " + modeAndDest[0] + "/" + modeAndDest[1], SC_FORBIDDEN, interceptor.intercept(mai));
+        }
     }
 
     public void testInvalidTopLevelNavigation() throws Exception {

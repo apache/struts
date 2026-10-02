@@ -177,7 +177,7 @@ public class TokenHelper {
         String token = getToken(tokenName);
 
         if (token == null) {
-            LOG.debug("No token found for token name {} -> Invalid token ", tokenName);
+            LOG.debug("No token found for token name {} -> Invalid token ", normalizeSpace(tokenName));
             return false;
         }
 

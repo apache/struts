@@ -35,6 +35,7 @@ public interface CspSettings {
     String CSP_REPORT_HEADER = "Content-Security-Policy-Report-Only";
     String OBJECT_SRC = "object-src";
     String SCRIPT_SRC = "script-src";
+    String STYLE_SRC = "style-src";
     String BASE_URI = "base-uri";
     String REPORT_URI = "report-uri";
     String REPORT_TO = "report-to";

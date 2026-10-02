@@ -144,14 +144,15 @@ gh pr merge <N> --squash --subject "build(deps): WW-XXXX bump org.htmlunit:htmlu
 Without an explicit `--subject`, GitHub takes the subject from Dependabot's *commit*
 headline and the ticket ID is silently lost from git history.
 
-**5. Close the ticket as Fixed** — only after *every* PR on the ticket has merged:
+**5. Resolve the ticket as Fixed** — only after *every* PR on the ticket has merged:
 
 ```json
-{"issue_key": "WW-XXXX", "fields": "{\"status\": \"Closed\"}", "return_fields": "status"}
+{"issue_key": "WW-XXXX", "fields": "{\"status\": \"5\", \"resolution\": {\"name\": \"Fixed\"}}", "return_fields": "status,resolution"}
 ```
 
-The Jira MCP always resolves as *Fixed* and silently swallows any other resolution name —
-which is what is wanted here.
+`"5"` is the id of the *Resolve Issue* transition. The status name (`"Resolved"`, `"Closed"`)
+and the transition name (`"Resolve Issue"`) all fail with "Could not find transition"; only
+the id works. Verified on WW-5755.
 
 ## One dependency, two branches, one ticket
 
@@ -163,8 +164,8 @@ gh pr list --state open --author app/dependabot --json number,title,baseRefName
 ```
 
 If a twin exists, create **one** ticket, put it in both PR titles/bodies, and list **both**
-fix versions on it (WW-5649 carries 6.11.0 and 7.3.0 for PRs #1760 and #1763). Close it once
-both have merged.
+fix versions on it (WW-5649 carries 6.11.0 and 7.3.0 for PRs #1760 and #1763). Resolve it
+once both have merged.
 
 ## Scope of this skill
 

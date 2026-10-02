@@ -18,6 +18,13 @@
  */
 package org.apache.struts2.json;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.util.ValueStack;
@@ -31,6 +38,7 @@ import org.springframework.mock.web.MockServletContext;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class JSONInterceptorTest extends StrutsTestCase {
     private MockActionInvocationEx invocation;
@@ -712,6 +720,47 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
         assertEquals("a", action.getFoo());
         assertNull(action.getBar());
+    }
+
+    public void testRejectedKeysAndValuesDoNotInjectLineBreaksIntoLog() throws Exception {
+        this.request.setContent("{\"foo\":\"a\\n12:00:00 ERROR forged\", \"b\\n12:00:00 ERROR forged\":\"b\"}".getBytes());
+        this.request.addHeader("Content-Type", "application/json");
+
+        JSONInterceptor interceptor = createInterceptor();
+        org.apache.struts2.security.DefaultAcceptedPatternsChecker accepted =
+                new org.apache.struts2.security.DefaultAcceptedPatternsChecker();
+        interceptor.setAcceptedPatterns(accepted);
+        interceptor.setAcceptedValuePatterns("allowed");
+        TestAction action = new TestAction();
+
+        this.invocation.setAction(action);
+        this.invocation.getStack().push(action);
+
+        List<String> messages = new CopyOnWriteArrayList<>();
+        Logger logger = (Logger) LogManager.getLogger(JSONInterceptor.class);
+        AbstractAppender appender = new AbstractAppender("JSONInterceptorTest", null, null, false, Property.EMPTY_ARRAY) {
+            @Override
+            public void append(LogEvent event) {
+                messages.add(event.getMessage().getFormattedMessage());
+            }
+        };
+        appender.start();
+        logger.addAppender(appender);
+        Level previousLevel = logger.getLevel();
+        Configurator.setLevel(logger.getName(), Level.WARN);
+        try {
+            interceptor.intercept(this.invocation);
+        } finally {
+            Configurator.setLevel(logger.getName(), previousLevel);
+            logger.removeAppender(appender);
+            appender.stop();
+        }
+
+        assertFalse(messages.isEmpty());
+        for (String message : messages) {
+            assertFalse(message, message.contains("\n") || message.contains("\r"));
+        }
+        assertTrue(messages.stream().anyMatch(m -> m.contains("12:00:00 ERROR forged")));
     }
 
     public void testAcceptedNamePatternRejectsKey() throws Exception {

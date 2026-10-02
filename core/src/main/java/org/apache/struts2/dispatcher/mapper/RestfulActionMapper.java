@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
@@ -133,7 +135,7 @@ public class RestfulActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", rawActionName, allowedActionNames, defaultActionName);
+            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", normalizeSpace(rawActionName), allowedActionNames, defaultActionName);
             return defaultActionName;
         }
     }

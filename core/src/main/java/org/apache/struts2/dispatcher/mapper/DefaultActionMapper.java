@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>
@@ -410,7 +412,7 @@ public class DefaultActionMapper implements ActionMapper {
         } else {
             LOG.warn(
                 "{} did not match allowed namespace names {} - default namespace {} will be used!",
-                rawNamespace, allowedNamespaceNames, defaultNamespaceName
+                normalizeSpace(rawNamespace), allowedNamespaceNames, defaultNamespaceName
             );
             return defaultNamespaceName;
         }
@@ -426,7 +428,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", rawActionName, allowedActionNames, defaultActionName);
+            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", normalizeSpace(rawActionName), allowedActionNames, defaultActionName);
             return defaultActionName;
         }
     }
@@ -441,7 +443,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedMethodNames.matcher(rawMethodName).matches()) {
             return rawMethodName;
         } else {
-            LOG.warn("{} did not match allowed method names {} - default method {} will be used!", rawMethodName, allowedMethodNames, defaultMethodName);
+            LOG.warn("{} did not match allowed method names {} - default method {} will be used!", normalizeSpace(rawMethodName), allowedMethodNames, defaultMethodName);
             return defaultMethodName;
         }
     }

@@ -18,9 +18,14 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.struts2.ActionContext;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.test.LogCapture;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +64,40 @@ public class TokenHelperTest extends TestCase {
         TokenHelper.setSessionToken(tokenName, token);
         final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
         assertEquals(token, session.get(sessionTokenName));
+    }
+
+    public void testMissingTokenNameDoesNotInjectLineBreaksIntoLog() {
+        ActionContext.getContext().withParameters(HttpParameters.create(new HashMap<String, String[]>()).build());
+
+        try (LogCapture logs = new LogCapture(TokenHelper.class)) {
+            assertNull(TokenHelper.getToken("token\n12:00:00 ERROR forged"));
+
+            assertEquals(1, logs.messages().size());
+            String message = logs.messages().get(0);
+            assertTrue(message, message.contains("12:00:00 ERROR forged"));
+            assertFalse(message, message.contains("\n") || message.contains("\r"));
+        }
+    }
+
+    public void testMissingTokenForTokenNameDoesNotInjectLineBreaksIntoDebugLog() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{"token\n12:00:00 ERROR forged"});
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
+
+        Logger logger = (Logger) LogManager.getLogger(TokenHelper.class);
+        Level previousLevel = logger.getLevel();
+        Configurator.setLevel(logger.getName(), Level.DEBUG);
+        try (LogCapture logs = new LogCapture(TokenHelper.class)) {
+            assertFalse(TokenHelper.validToken());
+
+            assertFalse(logs.messages().isEmpty());
+            for (String message : logs.messages()) {
+                assertFalse(message, message.contains("\n") || message.contains("\r"));
+            }
+            assertTrue(logs.messages().stream().anyMatch(m -> m.contains("No token found for token name")));
+        } finally {
+            Configurator.setLevel(logger.getName(), previousLevel);
+        }
     }
 
     public void testValidToken() {

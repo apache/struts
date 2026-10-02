@@ -51,6 +51,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * Populates an action from a JSON string
  */
@@ -297,20 +299,20 @@ public class JSONInterceptor extends AbstractInterceptor {
      */
     private boolean isAcceptableNode(String fullPath, Object target, Object action) {
         if (fullPath.length() > paramNameMaxLength) {
-            LOG.warn("JSON body parameter [{}] is too long, allowed length is [{}]; rejected", fullPath, paramNameMaxLength);
+            LOG.warn("JSON body parameter [{}] is too long, allowed length is [{}]; rejected", normalizeSpace(fullPath), paramNameMaxLength);
             return false;
         }
         if (excludedPatterns != null && excludedPatterns.isExcluded(fullPath).isExcluded()) {
-            LOG.warn("JSON body parameter [{}] matches an excluded pattern; rejected", fullPath);
+            LOG.warn("JSON body parameter [{}] matches an excluded pattern; rejected", normalizeSpace(fullPath));
             return false;
         }
         if (!parameterAuthorizer.isAuthorized(fullPath, target, action)) {
             LOG.warn("JSON body parameter [{}] rejected by @StrutsParameter authorization on [{}]",
-                    fullPath, target.getClass().getName());
+                    normalizeSpace(fullPath), target.getClass().getName());
             return false;
         }
         if (applyPropertyFiltersToInput && !isAcceptedByPropertyFilters(fullPath)) {
-            LOG.debug("JSON body parameter [{}] rejected by excludeProperties/includeProperties on input", fullPath);
+            LOG.debug("JSON body parameter [{}] rejected by excludeProperties/includeProperties on input", normalizeSpace(fullPath));
             return false;
         }
         return true;
@@ -326,11 +328,11 @@ public class JSONInterceptor extends AbstractInterceptor {
      */
     private boolean isAcceptableLeafName(String fullPath, Object action) {
         if (acceptedPatterns != null && !acceptedPatterns.isAccepted(fullPath).isAccepted()) {
-            LOG.warn("JSON body parameter [{}] does not match any accepted pattern; rejected", fullPath);
+            LOG.warn("JSON body parameter [{}] does not match any accepted pattern; rejected", normalizeSpace(fullPath));
             return false;
         }
         if (action instanceof ParameterNameAware nameAware && !nameAware.acceptableParameterName(fullPath)) {
-            LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", fullPath);
+            LOG.debug("JSON body parameter [{}] rejected by ParameterNameAware action", normalizeSpace(fullPath));
             return false;
         }
         return true;
@@ -358,18 +360,18 @@ public class JSONInterceptor extends AbstractInterceptor {
     private boolean isAcceptableValue(String fullPath, Object value, Object action) {
         String stringValue = value == null ? null : String.valueOf(value);
         if (action instanceof ParameterValueAware valueAware && !valueAware.acceptableParameterValue(stringValue)) {
-            LOG.debug("JSON body value for parameter [{}] rejected by ParameterValueAware action", fullPath);
+            LOG.debug("JSON body value for parameter [{}] rejected by ParameterValueAware action", normalizeSpace(fullPath));
             return false;
         }
         if (stringValue == null || stringValue.isEmpty()) {
             return true;
         }
         if (isValueExcluded(stringValue)) {
-            LOG.warn("JSON body value [{}] for parameter [{}] matches an excluded value pattern; rejected", stringValue, fullPath);
+            LOG.warn("JSON body value [{}] for parameter [{}] matches an excluded value pattern; rejected", normalizeSpace(stringValue), normalizeSpace(fullPath));
             return false;
         }
         if (!isValueAccepted(stringValue)) {
-            LOG.warn("JSON body value [{}] for parameter [{}] does not match any accepted value pattern; rejected", stringValue, fullPath);
+            LOG.warn("JSON body value [{}] for parameter [{}] does not match any accepted value pattern; rejected", normalizeSpace(stringValue), normalizeSpace(fullPath));
             return false;
         }
         return true;

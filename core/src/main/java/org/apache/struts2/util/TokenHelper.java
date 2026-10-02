@@ -133,7 +133,7 @@ public class TokenHelper {
         Parameter parameter = params.get(tokenName);
 
         if (!parameter.isDefined()) {
-            LOG.warn("Could not find token mapped to token name: {}", tokenName);
+            LOG.warn("Could not find token mapped to token name: {}", normalizeSpace(tokenName));
             return null;
         }
         return parameter.getValue();
@@ -177,7 +177,7 @@ public class TokenHelper {
         String token = getToken(tokenName);
 
         if (token == null) {
-            LOG.debug("No token found for token name {} -> Invalid token ", tokenName);
+            LOG.debug("No token found for token name {} -> Invalid token ", normalizeSpace(tokenName));
             return false;
         }
 

@@ -21,6 +21,8 @@ package org.apache.struts2.action;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * The default implementation of {@link CspReportAction} that simply logs the JSON object
  * that contains the details of the CSP violation.
@@ -33,6 +35,6 @@ public class DefaultCspReportAction extends CspReportAction {
 
     @Override
     void processReport(String jsonCspReport) {
-        LOG.error(jsonCspReport);
+        LOG.error(normalizeSpace(jsonCspReport));
     }
 }

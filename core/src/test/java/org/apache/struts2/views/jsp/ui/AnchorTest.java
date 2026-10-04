@@ -114,6 +114,22 @@ public class AnchorTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    /**
+     * An explicit href naming an executable scheme must not reach the rendered attribute as-is: a
+     * javascript: URI runs its payload in the page's own origin the moment the link is activated, which
+     * {@link #testSimpleBadQuote()}'s quote-neutralization does nothing to stop (no quote is needed).
+     */
+    public void testHrefJavascriptSchemeRejected() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("javascript:alert(document.cookie)");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-7.txt");
+    }
+
     public void testDynamicAttribute() throws Exception {
         createAction();
 

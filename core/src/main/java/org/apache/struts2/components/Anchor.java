@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.SafeUriUtil;
 import org.apache.struts2.util.ValueStack;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -100,7 +101,7 @@ public class Anchor extends ClosingUIBean {
         super.evaluateExtraParams();
 
         if (href != null) {
-            addParameter("href", ensureAttributeSafelyNotEscaped(findString(href)));
+            addParameter("href", ensureAttributeSafelyNotEscaped(SafeUriUtil.rejectUnsafeScheme(findString(href))));
         } else {
             //no href, build it from URL attributes
             StringWriter sw = new StringWriter();
@@ -108,7 +109,7 @@ public class Anchor extends ClosingUIBean {
             urlRenderer.renderUrl(sw, urlProvider);
             String builtHref = sw.toString();
             if (StringUtils.isNotEmpty(builtHref)) {
-                addParameter("href", ensureAttributeSafelyNotEscaped(builtHref));
+                addParameter("href", ensureAttributeSafelyNotEscaped(SafeUriUtil.rejectUnsafeScheme(builtHref)));
             }
         }
 

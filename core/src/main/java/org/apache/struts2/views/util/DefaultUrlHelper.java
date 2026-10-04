@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.url.QueryStringBuilder;
+import org.apache.struts2.util.SafeUriUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -169,6 +170,10 @@ public class DefaultUrlHelper implements UrlHelper {
         if (StringUtils.containsIgnoreCase(result, "<script")) {
             result = StringEscapeUtils.escapeEcmaScript(result);
         }
+        // An explicitly supplied action/value (as opposed to one this method derived from the request
+        // or from a resolved action) is appended above with no scheme restriction of its own; reject an
+        // executable scheme such as javascript: before it can reach a link built from this URL.
+        result = SafeUriUtil.rejectUnsafeScheme(result);
         try {
             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {

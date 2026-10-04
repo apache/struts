@@ -136,6 +136,46 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.verify();
     }
 
+    /**
+     * An action/value passed straight through to {@code buildUrl} (as happens for {@code <s:a
+     * value="%{...}">} or {@code <s:url value="%{...}">}) is appended to the link with no scheme
+     * restriction of its own; a javascript: scheme must be rejected here rather than reaching a
+     * rendered href as-is.
+     */
+    public void testBuildUrlRejectsJavascriptScheme() {
+        String dangerousAction = "javascript:alert(document.cookie)";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getContextPath", "/");
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+
+        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
+        mockHttpServletResponse.expectAndReturn("encodeURL", "#", "#");
+
+        String actualUrl = urlHelper.buildUrl(dangerousAction, (HttpServletRequest) mockHttpServletRequest.proxy(),
+            (HttpServletResponse) mockHttpServletResponse.proxy(), new HashMap<>());
+        assertEquals("#", actualUrl);
+    }
+
+    /**
+     * Same scenario as {@link #testBuildUrlRejectsJavascriptScheme()}, but with a benign action value,
+     * to confirm the new check leaves ordinary links untouched.
+     */
+    public void testBuildUrlLeavesOrdinaryActionUnaffected() {
+        String expectedUrl = "/MyAction.action";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getContextPath", "/");
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+
+        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
+        mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
+
+        String actualUrl = urlHelper.buildUrl(expectedUrl, (HttpServletRequest) mockHttpServletRequest.proxy(),
+            (HttpServletResponse) mockHttpServletResponse.proxy(), new HashMap<>());
+        assertEquals(expectedUrl, actualUrl);
+    }
+
     public void testBuildWithRootContext() {
         String expectedUrl = "/MyAction.action";
 

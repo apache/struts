@@ -21,15 +21,21 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.AliasAuthorizationTestAction;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.SimpleFooAction;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.test.StubConfigurationProvider;
+import org.apache.struts2.util.location.LocatableProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +136,42 @@ public class AliasInterceptorTest extends XWorkTestCase {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", actionName, null, extraContext.getContextMap());
         proxy.execute();
         return (SimpleAction) proxy.getAction();
+    }
+
+    // An alias target that is not annotated with @StrutsParameter must not be set when the source value
+    // comes from AliasInterceptor's documented fallback to the raw HTTP parameter of the same name (used
+    // when the source name does not resolve on the stack) - that is the one path through which
+    // attacker-controlled, never-yet-authorized data reaches the target. An annotated target in the same
+    // aliases map, read through the exact same fallback, must still bind normally. A THIRD, unannotated
+    // target whose source name resolves directly on the stack (no HTTP parameter involved at all, the
+    // same category of copy ChainingInterceptor performs without an annotation requirement by default)
+    // must also still bind normally - the check must not reach that path.
+    public void testUnannotatedAliasTargetIsRejected() throws Exception {
+        Map<String, Object> httpParams = new HashMap<>();
+        httpParams.put("rawSourceAnnotated", "allowed-value");
+        httpParams.put("rawSourceUnannotated", "PWNED_VIA_ALIAS");
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(httpParams).build());
+
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-alias-authorization.xml");
+        container.inject(provider);
+        // loadConfigurationProviders tears down and rebuilds the whole configuration on every call, so the
+        // requireAnnotations property has to be registered in the SAME call as the XML provider, not a
+        // separate loadButSet() call beforehand - that call's provider would just be discarded.
+        StubConfigurationProvider requireAnnotationsOn = new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true");
+            }
+        };
+        loadConfigurationProviders(provider, requireAnnotationsOn);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasAuthorizationTest", null, extraContext.getContextMap());
+        proxy.execute();
+        AliasAuthorizationTestAction action = (AliasAuthorizationTestAction) proxy.getAction();
+
+        assertEquals("allowed-value", action.getAnnotatedTarget());
+        assertEquals("untouched", action.getUnannotatedTarget());
+        assertEquals("preset-value", action.getStackToStackTarget());
     }
 
     public void testNameNotAccepted() throws Exception {

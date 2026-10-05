@@ -28,6 +28,7 @@ import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 import org.apache.struts2.util.ClearableValueStack;
@@ -104,6 +105,7 @@ public class AliasInterceptor extends AbstractInterceptor {
 
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
+    private ParameterAuthorizer parameterAuthorizer;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
@@ -128,6 +130,11 @@ public class AliasInterceptor extends AbstractInterceptor {
     @Inject
     public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
         this.acceptedPatterns = acceptedPatterns;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
     }
 
     /**
@@ -161,6 +168,8 @@ public class AliasInterceptor extends AbstractInterceptor {
             Object obj = stack.findValue(aliasExpression);
 
             if (obj instanceof Map aliases) {
+                Object authorizationTarget = parameterAuthorizer.resolveTarget(action);
+
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
@@ -189,16 +198,30 @@ public class AliasInterceptor extends AbstractInterceptor {
                         continue;
                     }
                     Evaluated value = new Evaluated(stack.findValue(name));
+                    boolean fromRawRequestParameter = false;
                     if (!value.isDefined()) {
-                        // workaround
+                        // workaround: name did not resolve on the stack (e.g. no earlier action in a
+                        // chain set it), so fall back to the raw HTTP parameter of the same name - this
+                        // is the one path through which attacker-controlled, never-yet-authorized data
+                        // reaches newStack.setValue below, so it is the one path @StrutsParameter has to
+                        // gate. A name that DID resolve on the stack names something already on the
+                        // stack - typically state an earlier, properly-authorized bind already produced -
+                        // and copying that between properties is the same category of operation
+                        // ChainingInterceptor performs without requiring annotations by default.
                         HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
                             Parameter param = contextParameters.get(name);
                             if (param.isDefined()) {
                                 value = new Evaluated(param.getValue());
+                                fromRawRequestParameter = true;
                             }
                         }
+                    }
+                    if (fromRawRequestParameter && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
+                        LOG.debug("Alias target [{}] rejected by @StrutsParameter authorization on target [{}]",
+                                alias, action.getClass().getSimpleName());
+                        continue;
                     }
                     if (value.isDefined()) {
                         try {

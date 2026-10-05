@@ -22,6 +22,7 @@ import org.apache.struts2.ActionProxy;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.interceptor.ValidationAware;
+import org.apache.struts.beanvalidation.actions.CheckDigitAction;
 import org.apache.struts.beanvalidation.actions.FieldAction;
 import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;
@@ -128,7 +129,20 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertTrue(fieldErrors.get("test").size() > 0);
+        assertEquals("The test field can not be blank", fieldErrors.get("test").get(0));
+    }
+
+    public void testProviderMessageIsReportedLiterally() throws Exception {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "checkDigitAction", null, null);
+        CheckDigitAction action = (CheckDigitAction) baseActionProxy.getAction();
+        action.setCardNumber("%{1+1}79927398711");
+        baseActionProxy.execute();
+
+        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
+
+        assertEquals(1, fieldErrors.get("cardNumber").size());
+        String message = fieldErrors.get("cardNumber").get(0);
+        assertTrue(message, message.contains("%{1+1}79927398711"));
     }
 
     public void testFieldMatchAction() throws Exception {

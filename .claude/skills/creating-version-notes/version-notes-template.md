@@ -125,7 +125,7 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] `DONE` filter label and its `filter=` id are the same release.
 - [ ] Issue list reconciled against the release branch via each ticket's linked PR, not taken from JIRA alone.
 - [ ] Every ticket's **resolution** checked, not just its status — `Won't Do` goes under Rejected requests.
-- [ ] Sections ordered Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency; empty ones omitted.
+- [ ] Sections ordered Security → Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency; empty ones omitted. Security appears only once the bulletins are public.
 - [ ] Each Breaking changes and Deprecations item is one sentence plus its ticket link.
 - [ ] Staging Repository block present.
 - [ ] No unpublished severity, CVE, or S2-XXX reference anywhere on the page, and any security summary truncated at a clause boundary was reported to the release manager.

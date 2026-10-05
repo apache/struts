@@ -1,6 +1,6 @@
 ---
 name: creating-security-bulletins
-description: Use when drafting, updating, or reviewing an S2-XXX security bulletin on the Struts cwiki, when preparing bulletin text ahead of a CVE request, when publishing a bulletin and announcing it to the ASF lists, or when deciding how much detail about a fixed vulnerability is safe to publish.
+description: Use when drafting, updating, or reviewing an S2-XXX security bulletin on the Struts cwiki, when preparing bulletin text ahead of a CVE request, when filling a CVE record in the ASF CVE tool (cveprocess.apache.org / Vulnogram), when deciding when to publish, when publishing a bulletin and announcing it to the ASF lists, when wrapping up after the advisory mails, or when deciding how much detail about a fixed vulnerability is safe to publish.
 ---
 
 # Creating Security Bulletins
@@ -165,6 +165,70 @@ Publication is clearing them **completely** — read *and* update, both empty, m
 already-published bulletin. Verify with an unauthenticated fetch of the public URL, not with the
 API's response: the tool reporting success is not the page being readable.
 
+### Publish at the start of a working week
+
+**Never publish on a Friday, or on the day before a weekend or public holiday** — not the page, not
+the `READY` state, not the mails. A bulletin public on Friday afternoon gives attackers the weekend
+while operators are away; published on Monday it gives users the working week to upgrade.
+
+A release usually finishes late in the week. When the publication day would be a Friday, do
+everything that does not disclose — pages publication-ready but still restricted, CVE records
+filled and saved as `DRAFT` — then **stop and propose the next Monday** to the release manager.
+"Let's close this out before the weekend" is the exact pressure this rule exists for; the fix is
+already downloadable, so waiting costs nothing.
+
+## Filling the CVE record
+
+The record on `cveprocess.apache.org` is filled from the **finished bulletin**, field for field —
+never from the report, never re-derived. The generated advisory mails are rendered from it, so a
+range or a sentence that differs from the bulletin ships a contradiction to three lists.
+
+```json
+"containers": { "cna": {
+  "title": "<bulletin title, no 'Apache Struts: ' prefix — the tool adds it>",
+  "problemTypes": [{ "descriptions": [{ "lang": "en", "type": "CWE", "cweId": "CWE-NNN",
+                                        "description": "CWE-NNN <official CWE name>" }] }],
+  "source": { "discovery": "EXTERNAL" },
+  "affected": [{ "vendor": "Apache Software Foundation", "product": "Apache Struts",
+                 "packageURL": "pkg:maven/org.apache.struts/<struts2-core | struts2-xxx-plugin>",
+                 "defaultStatus": "unaffected",
+                 "versions": [{ "status": "affected", "version": "6.0.0",
+                                "lessThanOrEqual": "6.11.0", "versionType": "semver" }] }],
+  "descriptions": [{ "lang": "en", "value": "<text>",
+                     "supportingMedia": [{ "type": "text/html", "base64": false, "value": "<same text>" }] }],
+  "references": [{ "url": "https://cwiki.apache.org/confluence/display/WW/S2-0XX", "tags": ["vendor-advisory"] }],
+  "metrics": [{ "other": { "type": "Textual description of severity", "content": { "text": "moderate" } },
+                "scenarios": [{ "lang": "en", "value": "GENERAL" }] }],
+  "credits": [{ "lang": "en", "value": "<credit exactly as on the bulletin>", "type": "finder" }]
+}}
+```
+
+- **One `versions` entry per line of the bulletin's Affected Software**, with the same bounds —
+  2.x, 2.5.x, 6.x and 7.x separately. Never merge lines into one span: the generated mail then
+  prints a range the bulletin does not state. A conditional range ("only when the allowlist is
+  disabled") keeps its entry and gets its condition in the description.
+- **`packageURL` is a Maven purl** for the artifact that carries the defect — the plugin, when the
+  bulletin is scoped to a plugin. ASF Security rewrites `packageName` to this form.
+- **Severity is text only**, the bulletin's rating in lower case, with the `GENERAL` scenario. No
+  CVSS: the tool's CVSS widget silently replaces any vector with a CRITICAL 10.0.
+- **The description is four parts**, separated by a blank line (`<br><br>` in the HTML copy, which
+  must say the same): a sentence opening with the CWE name in lower case and naming Apache Struts,
+  the bulletin's Problem and not-affected scope in operator terms; `This issue affects Apache
+  Struts: from A through B, from C through D.`; `Users are recommended to upgrade to version
+  <6.x fix> or <7.x fix>, which fixes the issue.` The disclosure budget applies unchanged.
+- **The CWE is the one field the bulletin does not carry.** Choose it from the bulletin's Problem,
+  use the official CWE name verbatim, and name your choice to the release manager when handing over.
+- `CNA_private.userslist` = `user@struts.apache.org`, set in the same edit.
+
+**Write it through the JSON editor, never the visible form.** The description editor does not
+update the saved model. Click the *Editor* tab (with a real click — `docEditor` is empty until
+the tab renders), check `docEditor.getValue().cveMetadata.cveId` is the expected id, patch the
+whole record with `docEditor.setValue(...)`, `SAVE`, then re-read it from `/cve5/json/<id>`.
+Saving moves it to `DRAFT`; `READY` is the release manager's step on publication day.
+
+**`READY` is as far as the PMC goes.** ASF Security pushes the record to MITRE, and only after the
+announcement mail has gone out — a `READY` record with no mail sent waits, and they will ask.
+
 ## Announcing it: press the button on the CVE record
 
 Once the page is public the advisory goes out **from the CVE record**, not from a mailbox.
@@ -236,6 +300,21 @@ Copy the recipients and subject off the tool's tab rather than composing them. T
 `oss-security` copy is a separate mail with **no Cc and no Bcc** — not the ASF mail with an
 extra recipient — and `announcements@struts.apache.org` accepts only `@apache.org` senders.
 
+## After the advisory mails
+
+Publication is not finished when the button is pressed. Each of these is owed, in this order:
+
+| Step | Where | Notes |
+|---|---|---|
+| Version Notes `Security` section | cwiki, every fixed release's page | `creating-version-notes` owns the format |
+| Site announcement | `apache/struts-site` PR | `announce-YYYY.md` one dated entry per CVE, the `index.html` security box, the Prior Releases table in `releases.md` — the last batch's PR is the model |
+| Reporter notice | one reply **per report thread**, Cc `security@` | bulletin link, CVE id, credit as given, free to publish; a draft for the release manager, sent from `@apache.org` |
+| Threat-model check | `THREAT_MODEL.md` §12 / §8 / §16 | a bulletin whose class is not already a §8 property triggers a re-baseline — the check belongs here, not in the next triage |
+
+The reporter notice comes **after** the button: it tells them the announcement has gone out. A
+reporter who sent two reports gets two replies, each in its own thread. The bulletin index page
+needs nothing — it lists its children automatically.
+
 ## Start from the template, never from a previous bulletin
 
 **[`bulletin-template.md`](bulletin-template.md)** — the field reference, per-section guidance, pre-publication checklist, and a storage-format skeleton ready to POST to the Confluence API. **It is the source of truth.**
@@ -274,6 +353,10 @@ Read the whole page and rewrite it; do not patch the fields you happen to notice
 - A draft handed over without the plain-text-mode instruction and the body file
 - A severity rating chosen by feel, or by reachability alone, without checking it against the published scale
 - Rating something Low because the feature is opt-in — opt-in is the definition of Moderate
+- Unrestricting a page, setting `READY`, or pressing the button on a Friday or before a holiday
+- CVE `versions` that merge the bulletin's lines into one span, or a title carrying `Apache Struts: `
+- A CVSS vector on the record, or a description typed into the visible editor
+- Calling publication done with the Version Notes, the site, the reporters or the threat-model check outstanding
 
 ## Common Mistakes
 

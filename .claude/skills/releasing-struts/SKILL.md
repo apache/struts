@@ -35,7 +35,7 @@ fix them in a PR to `apache/struts-site`. Only what is genuinely agent-specific 
 | 4 | Vote | 72 h elapsed, three binding `+1`, result mail sent |
 | 5 | Promote | Nexus repo released, `dist/dev` → `dist/release`, 24 h rsync waited |
 | 6 | Publish | Site PR merged, GitHub release un-flagged, `[ANN]` mail delivered |
-| 7 | Advisories | Bulletins public, CVE records filled, advisory mails sent from the CVE tool |
+| 7 | Advisories | On a Monday–Thursday: bulletins public, CVE records `READY`, advisory mails sent from the CVE tool; then Version Notes `Security` section, site PR, reporter notices, threat-model check |
 
 Phase 7 only exists when the release carries a security fix, and *publishing* the advisory is
 **strictly after** phase 6 — see *Security work is a separate clock* below. Writing the bulletin
@@ -94,8 +94,12 @@ release process.
 The advisory follows the release, and the ordering is not negotiable:
 
 ```
-release GA  →  bulletin unrestricted  →  advisory mails  →  CVE pushed to MITRE
+release GA  →  bulletin unrestricted  →  advisory mails  →  CVE pushed to MITRE (by ASF Security)
 ```
+
+**Publish on a working day that is not followed by a weekend.** A release finishing on a Friday
+publishes its advisories the following Monday; everything up to the unrestrict is prepared and
+held. `creating-security-bulletins` carries the detail.
 
 A bulletin published before the fixed artifact is downloadable tells attackers what to look for
 and gives operators nothing to do about it.

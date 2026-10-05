@@ -82,9 +82,9 @@ This is the same discipline `creating-security-bulletins` applies to Affected So
 
 Beyond the boilerplate, sections appear in this order, each omitted when empty:
 
-**Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency → Issue Detail → Issue List → Other resources**
+**Security → Breaking changes → Deprecations → Rejected requests → Bug → New Feature → Improvement → Task → Dependency → Issue Detail → Issue List → Other resources**
 
-The first three are authored; the issue-type sections are derived from JIRA.
+Security, Breaking changes, Deprecations and Rejected requests are authored; the issue-type sections are derived from JIRA. Security exists only once the release's bulletins are public, so it is usually added after release.
 
 ## Breaking changes
 
@@ -128,13 +128,29 @@ A release usually ships before its bulletin publishes and before a CVE exists. T
 
 - List the ticket as you would any other. It is already public; omitting it under-reports the release.
 - **Do not add security framing the bulletin has not published yet** — no severity, no attack description, no S2-XXX or CVE number that has not been assigned and published.
-- Once the bulletin is public, the notes may link it.
+- **Once the bulletins are public, add a `Security` section** — see below.
 
 **Where the ticket's own summary describes the defect, list the neutral part of it.** "List the summary verbatim" assumes a neutrally-worded ticket, and security tickets often are not. WW-5643 reads *"StrutsJSONReader parse state shared across concurrent requests — maxDepth bypass and cross-request data leak"*; the page carried it up to "concurrent requests" and stopped. The trailing clause is the bulletin's job.
 
 Truncate at the clause boundary — never paraphrase into something the ticket does not say, and never alter the ticket link. Then **tell the release manager which summaries you cut and why**: whether an already-public JIRA summary should be reproduced in full is their call, not yours, and it has to be made before the page goes up rather than edited afterwards.
 
 **REQUIRED BACKGROUND:** where the wording of a security-relevant entry is in question, `creating-security-bulletins` governs what may be said and when.
+
+### The Security section, once the bulletins are public
+
+When the bulletins a release fixes are published, **every fixed release's page** — both lines, when both carry the fix — gets a `<h2>Security</h2>` section directly after *Maven users* and before *Breaking changes*: one intro sentence, then one item per bulletin.
+
+```xml
+<h2>Security</h2>
+<p>This release fixes the issues described in the following security bulletins.</p>
+<ul style="list-style-type: square;">
+<li><a href="https://cwiki.apache.org/confluence/display/WW/S2-0XX">S2-0XX</a> (CVE-YYYY-NNNNN) - <the CVE record's title> [<a href="https://issues.apache.org/jira/browse/WW-XXXX">WW-XXXX</a>]</li>
+</ul>
+```
+
+The ticket entries in the type sections stay exactly as they are — neutral summary, ticket link, no bulletin link. The Security section is where the security framing lives, and only once it is published.
+
+Add it with `confluence_update_page_section` on *Maven users*, re-supplying that section's body (its three code macros, with their existing `ac:macro-id`s) followed by the new `<h2>`. Then confirm *Breaking changes* and every later heading still appear exactly once.
 
 ## The Staging Repository block
 
@@ -304,6 +320,7 @@ After writing, diff against the version you meant to build on. The diff should s
 - Letting GitHub pick the previous tag instead of passing `previous_tag_name`
 - Regrouping release entries by retyping them instead of scripting the split and diffing the result
 - A severity, CVE, or S2-XXX reference on the page that has not been published
+- Bulletins public but no `Security` section, or bulletin links added inline to the type sections instead
 - Breaking changes assembled by pasting ticket summaries
 - Creating the page without adding it to the Migration Guide index
 - Trusting an empty version diff on the Migration Guide as proof the edit landed

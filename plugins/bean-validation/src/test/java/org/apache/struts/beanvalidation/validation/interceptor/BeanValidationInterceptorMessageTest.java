@@ -19,6 +19,7 @@
 package org.apache.struts.beanvalidation.validation.interceptor;
 
 import org.apache.struts.beanvalidation.actions.CheckDigitAction;
+import org.apache.struts.beanvalidation.actions.FieldAction;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.validator.DelegatingValidatorContext;
@@ -28,14 +29,16 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class BeanValidationInterceptorMessageTest extends XWorkTestCase {
+
+    private BeanValidationInterceptor interceptor;
 
     public void testDefaultProviderMessageIsNotLookedUpAsTextKey() {
         CheckDigitAction action = new CheckDigitAction();
         action.setCardNumber("79927398711");
-        ConstraintViolation<Object> violation = Validation.buildDefaultValidatorFactory().getValidator()
-                .validate((Object) action).iterator().next();
+        ConstraintViolation<Object> violation = violationOf(action);
         List<String> lookups = new ArrayList<>();
         ValidatorContext context = new DelegatingValidatorContext(action, container.getInstance(TextProviderFactory.class)) {
             @Override
@@ -51,9 +54,77 @@ public class BeanValidationInterceptorMessageTest extends XWorkTestCase {
             }
         };
 
-        String message = new BeanValidationInterceptor().resolveMessage(violation, context);
+        String message = interceptor.resolveMessage(violation, context);
 
         assertEquals(violation.getMessage(), message);
         assertTrue(lookups.toString(), lookups.isEmpty());
+    }
+
+    public void testBundleMessageIsConvertedToUtf8() {
+        interceptor.setConvertToUtf8("true");
+        FieldAction action = blankFieldAction();
+
+        String message = interceptor.resolveMessage(violationOf(action), contextWithText(action, () -> "Å¼"));
+
+        assertEquals("ż", message);
+    }
+
+    public void testBlankBundleMessageIsNotConverted() {
+        interceptor.setConvertToUtf8("true");
+        FieldAction action = blankFieldAction();
+
+        String message = interceptor.resolveMessage(violationOf(action), contextWithText(action, () -> " "));
+
+        assertEquals(" ", message);
+    }
+
+    public void testProviderMessageIsNotConvertedToUtf8() {
+        interceptor.setConvertToUtf8("true");
+        CheckDigitAction action = new CheckDigitAction();
+        action.setCardNumber("ż79927398711");
+
+        String message = interceptor.resolveMessage(violationOf(action), contextWithText(action, () -> "unused"));
+
+        assertTrue(message, message.contains("ż79927398711"));
+    }
+
+    public void testFailedBundleLookupFallsBackToTemplate() {
+        FieldAction action = blankFieldAction();
+
+        String message = interceptor.resolveMessage(violationOf(action), contextWithText(action, () -> {
+            throw new IllegalStateException("lookup failed");
+        }));
+
+        assertEquals("canNotBeBlank", message);
+    }
+
+    private static FieldAction blankFieldAction() {
+        FieldAction action = new FieldAction();
+        action.setTest(" ");
+        return action;
+    }
+
+    private static ConstraintViolation<Object> violationOf(Object action) {
+        return Validation.buildDefaultValidatorFactory().getValidator().validate(action).iterator().next();
+    }
+
+    private ValidatorContext contextWithText(Object action, Supplier<String> text) {
+        return new DelegatingValidatorContext(action, container.getInstance(TextProviderFactory.class)) {
+            @Override
+            public boolean hasKey(String key) {
+                return true;
+            }
+
+            @Override
+            public String getText(String key) {
+                return text.get();
+            }
+        };
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        interceptor = new BeanValidationInterceptor();
     }
 }

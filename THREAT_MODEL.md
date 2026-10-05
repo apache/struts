@@ -29,16 +29,19 @@
   superset of the existing [`SECURITY.md`](SECURITY.md) and the published
   [Struts security guidance](https://struts.apache.org/security/); every
   load-bearing claim is tagged for provenance (see §14 for open questions).
-- **Last revised:** 2026-08-15 — re-baselined against Security Bulletins
-  **S2-070 … S2-074**, published 2026-08-14. This fired the §12 trigger twice over:
-  those bulletins added default-hardening controls (7.3.0 / 6.11.0, §5a) and named two
-  vulnerability classes the v0 draft did not carry as properties at all (§8.6, §8.7).
-  Bulletin-to-section map in §16.
+- **Last revised:** 2026-10-05 — re-baselined against Security Bulletins
+  **S2-075 … S2-078**, published 2026-10-05. The §12 trigger fired again on both counts:
+  7.4.0 / 6.12.0 added default controls (§5a), and S2-076 named a consumption class §8.7
+  did not carry — amplification, where a small input drives unbounded output. The pass
+  also corrected the FetchMetadata / COOP / COEP interceptors from "opt-in" to on by
+  default in `defaultStack` (§5a, §8.5). The previous revision, 2026-08-15, re-baselined
+  against S2-070 … S2-074 and added §8.6 and §8.7. Bulletin-to-section map in §16.
 - **Version binding:** versioned with the project; a report against version *N*
   is triaged against the model as it stood at *N*. The security envelope changed
   materially at **7.0** (several hardening knobs flipped to secure-by-default) and
-  again at **7.3.0 / 6.11.0** (the first resource-bound controls — §5a), so the version
-  is itself load-bearing.
+  again at **7.3.0 / 6.11.0** (the first resource-bound controls — §5a) and at
+  **7.4.0 / 6.12.0** (a bounded REST body read, and isolation interceptors in the plugin
+  stacks), so the version is itself load-bearing.
 - **Reporting cross-reference:** §8-property violations → report privately per
   [`SECURITY.md`](SECURITY.md) (`security@struts.apache.org`); §3/§9/§11a findings
   are closed citing this document and the existing `SECURITY.md` "Before
@@ -75,8 +78,8 @@ First, injection containment is not the only thing the framework owes its own
 machinery: it also owes **isolation between concurrently-served requests** and
 **bounds on what a single client can make it allocate or retain** (§8.6, §8.7).
 Second, OGNL remains the highest-*severity* class but is no longer the high-*volume*
-one — S2-070 through S2-074 are five consecutive bulletins with no OGNL among them
-(§16). A triager who expects every real finding to be OGNL-shaped will misroute the
+one — of the nine bulletins S2-070 through S2-078, one is OGNL, and it needs an opt-in
+legacy component (§16). A triager who expects every real finding to be OGNL-shaped will misroute the
 ones that are not.
 
 ## §2 Scope and intended use
@@ -230,11 +233,18 @@ reproduced here.** Only the triage-load-bearing facts:
   ignored and the default kept). `struts.locale.validateRequestLocale` (default `false`)
   is the one opt-in of the set: it restricts request-derived locales to the runtime's
   available-locale set. *(documented — S2-073, S2-074.)*
+- **7.4.0 / 6.12.0** extended both: the REST plugin bounds the request body it reads
+  (`struts.rest.content.maxLength`, default 2097152 characters, on by default), the REST
+  and Bean Validation plugins' default stacks gained the COOP / COEP / FetchMetadata
+  interceptors core's `defaultStack` already carries, and the legacy `restful` action
+  mapper applies `struts.allowed.action.names` like the default mapper. *(documented —
+  S2-075, S2-077.)*
 - `struts.devMode` (must be `false` in production) and Dynamic Method Invocation
   (gated by Strict Method Invocation since 2.5) are the two settings whose *insecure*
   value most often turns a non-finding into an apparent finding.
-- The **FetchMetadata / COOP / COEP** interceptors (6.0+) are opt-in cross-origin
-  defences (§8.5).
+- The **FetchMetadata / COOP / COEP** interceptors are in core's `defaultStack` and
+  enabled since 6.0, COEP in report-only mode; an application opts *out*, per action or
+  stack (§8.5).
 
 **Insecure-default question (wave 1).** Because the secure posture is the **7.0
 default set**, the triage rule needs ratifying: is "a finding that only works with a
@@ -321,29 +331,35 @@ Struts' security work.)*
 4. **Expression-length and node-type bounds.** OGNL expressions over the configured
    length (default 256) and forbidden node types are rejected before evaluation.
    *Violation:* bypass of these bounds. *Severity:* high. *(documented.)*
-5. **Cross-origin / fetch-metadata defences (opt-in).** When the FetchMetadata, COOP,
-   and COEP interceptors are enabled, the framework emits/enforces the corresponding
-   `Sec-Fetch-*` and cross-origin isolation behaviour. *Violation:* the interceptor
-   failing to enforce its documented behaviour when enabled. *Severity:* medium–high.
-   *(documented — opt-in since 6.0.)*
+5. **Cross-origin / fetch-metadata defences.** Where the FetchMetadata, COOP, and COEP
+   interceptors are in the stack — core's `defaultStack` since 6.0, the REST and Bean
+   Validation plugin stacks since 7.4.0 / 6.12.0 — the framework emits/enforces the
+   corresponding `Sec-Fetch-*` and cross-origin isolation behaviour. *Violation:* the
+   interceptor failing to enforce its documented behaviour while in the stack.
+   *Severity:* medium–high. *(documented — on by default since 6.0.)*
 6. **Per-request state isolation.** A framework component holding per-request state —
-   parse state, serialization state, buffers — is not shared between requests being
-   served concurrently. *Violation:* data associated with one request becoming
+   parse state, serialization state, buffers, and the mutable helper objects (such as
+   formatters) a framework cache hands out for reuse — is not shared between requests
+   being served concurrently. *Violation:* data associated with one request becoming
    observable in another, or a limit that holds for a single request being defeated by
    racing two. *Severity:* high — it is a disclosure and integrity failure at once, and
    it can void another §8 control rather than merely leaking. *Note:* this property is
    violated by an ordinary concurrency bug, with no attacker sophistication required;
-   the same defect harms honest concurrent users. *(documented — S2-070, S2-071.)*
+   the same defect harms honest concurrent users. *(documented — S2-070, S2-071,
+   S2-078.)*
 7. **Bounded consumption of request-derived input.** Framework code that reads a request
-   body reads it under a limit, and framework-managed state keyed on request-derived
-   values (caches, maps) is bounded. A limit the framework advertises bounds the
-   operation it appears to govern. *Violation:* a single request making the framework
-   allocate in proportion to its size with no ceiling; unbounded retention accumulated
-   across requests; or a configured limit that does not constrain the read it names.
+   body reads it under a limit, framework-managed state keyed on request-derived values
+   (caches, maps) is bounded, and the work the framework does with a request-derived
+   value — the output it renders from it, the computation it spends on it — is bounded
+   too. A limit the framework advertises bounds the operation it appears to govern.
+   *Violation:* a single request making the framework allocate in proportion to its size
+   with no ceiling; unbounded retention accumulated across requests; a small input
+   driving output or computation with no ceiling (amplification); or a configured limit
+   that does not constrain the read it names.
    *Severity:* moderate–high (denial of service). *Note:* **linear growth is a
    violation.** The test is whether a bound exists, not whether the curve bends — see
    §3, and `SECURITY.md`'s paragraph on the linear cases. *(documented — S2-072,
-   S2-073, S2-074.)*
+   S2-073, S2-074, S2-076, S2-077.)*
 
 ## §9 Security properties the framework does *not* provide
 
@@ -460,8 +476,8 @@ authoritative list; §14 Q12.)*
 - **A published bulletin whose vulnerability class is not already a §8 property** — the
   clearest signal that the model under-describes what the framework actually guarantees,
   and the strongest one, because the PMC has already decided the question by issuing the
-  CVE. S2-070 … S2-074 triggered exactly this re-baseline (§16); the check belongs in
-  the release routine, not in the next report's triage.
+  CVE. S2-070 … S2-074 triggered exactly this re-baseline, and S2-076 triggered it again
+  (§16); the check belongs in the release routine, not in the next report's triage.
 
 ## §13 Triage dispositions
 
@@ -502,7 +518,9 @@ so what remains is ratifying the *wording*, not the substance.
 - **Q-default.** Confirm the triage baseline is "current supported version (7.x/6.x)
   with the documented default hardening on, `devMode` off, dev-only plugins
   restricted" — and that a finding requiring a pre-7.0 default or a disabled hardening
-  knob is `OUT-OF-MODEL: non-default-config`. (§5a/§13.)
+  knob is `OUT-OF-MODEL: non-default-config`. (§5a/§13.) *Evidence against a blanket
+  rule:* S2-075 was issued with a CVE for an opt-in legacy component that affects 7.x
+  only with the allowlist disabled, and the 6.x line at its own defaults (§16).
 - **Q-scope.** Confirm the in-scope surface is the framework in `apache/struts`
   (core + interceptors + tags + bundled plugins), with the embedding application's own
   actions/JSPs/config, and examples/showcase, out of scope. (§2/§3.)
@@ -574,7 +592,9 @@ sections:
 | "Before Reporting" duplicate/known-config checks | §3, §11a, §13 (`DUPLICATE`) |
 | Supported versions (2.x EOL) | §5, §13 (`OUT-OF-MODEL: unsupported-version`) |
 
-## §16 Appendix — recent-bulletin back-map (S2-070 … S2-074)
+## §16 Appendix — recent-bulletin back-map (S2-070 … S2-078)
+
+### S2-070 … S2-074 (published 2026-08-14)
 
 The five bulletins published on **2026-08-14** are the evidence base for the 2026-08-15
 revision, and the reason §8 grew two properties. Each is a published
@@ -594,3 +614,21 @@ S2-073 under §11a's "I streamed a huge body," S2-074 under §3's super-linear-o
 and the remaining two had no §8 property to violate. That is the honest summary of what
 this revision fixes, and the reason §12 now carries a bulletin-driven re-baseline
 trigger.
+
+### S2-075 … S2-078 (published 2026-10-05)
+
+The four bulletins published on **2026-10-05**, all fixed in 7.4.0 and 6.12.0, are the
+evidence base for the 2026-10-05 revision. Three fall inside properties §8 already
+carried; one widened §8.7.
+
+| Bulletin | Rating | What it establishes for the model | § |
+| --- | --- | --- | --- |
+| **S2-075** (CVE-2026-104711) — OGNL injection in the legacy RESTful action mapper | Moderate | The one OGNL bulletin of the nine. It needs the opt-in legacy `restful` mapper, and on 7.x the allowlist disabled; the 6.x line, which has no allowlist on by default, is affected at its own defaults. Evidence on the open Q-default question, not an answer to it | §8.1, §5a, §14 |
+| **S2-076** (CVE-2026-104712) — disproportionate response size when rendering BigDecimal request parameters | Moderate | A small parameter driving a response orders of magnitude larger, with no large read and no retention: **amplification**, a third consumption shape alongside unbounded reads and unbounded retention. The §12 trigger | §8.7 |
+| **S2-077** (CVE-2026-104713) — unbounded request body read in the REST plugin | Important | The S2-072 class in a plugin that fix did not reach, exposed in the plugin's default configuration; rated a level above S2-072 because no setting gates it | §8.7, §2 |
+| **S2-078** (CVE-2026-104714) — shared message formatter across concurrent requests | Moderate | The §8.6 class held not as per-request state but as a mutable object a framework cache reuses; it needs no attacker — ordinary concurrent traffic is enough — and harms the application's own users | §8.6 |
+
+The 2026-08-15 revision would have routed all four correctly except S2-076, which
+§8.7's read-or-retain wording did not describe. The pass also found §5a and §8.5
+describing the FetchMetadata / COOP / COEP interceptors as opt-in; they have been in
+core's `defaultStack`, enabled, since 6.0.

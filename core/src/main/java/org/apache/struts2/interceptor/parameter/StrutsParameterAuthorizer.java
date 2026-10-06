@@ -30,6 +30,7 @@ import org.apache.struts2.util.ProxyService;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.AnnotatedElement;
@@ -37,6 +38,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -132,7 +134,7 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
                     parameterName);
             return false;
         }
-        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
+        String normalisedRootProperty = Introspector.decapitalize(rootProperty);
 
         // Transition mode: depth-0 (non-nested) parameters are exempt. Checked before the ModelDriven
         // exemption so that it also covers a ModelDriven action's own members, which would otherwise
@@ -213,37 +215,54 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * The method OGNL would go through to bind {@code property} on {@code target} at this depth: the setter for a
      * depth-0 parameter, the getter for a nested one.
      * <p>
-     * The setter is matched the way OGNL matches it - a public instance method named {@code set} plus the
-     * capitalised property name, taking one argument - and not through {@link PropertyDescriptor#getWriteMethod()},
-     * which {@link java.beans.Introspector} only fills in for a {@code void} setter. A fluent setter returning
-     * {@code this} is just as bindable to OGNL, so it has to be just as visible here, both to carry a
-     * {@link StrutsParameter} annotation and to count as declared on a {@link ModelDriven} action.
+     * The accessor is matched the way OGNL matches it - a public instance method named {@code set}, or {@code is}
+     * then {@code get}, plus each of {@link #accessorBaseNames}, taking one argument or none, the first name with a
+     * match winning - and not through a {@link PropertyDescriptor}. {@link java.beans.Introspector} only fills in
+     * the write method for a {@code void} setter, and names the property of {@code getURL} {@code URL} where OGNL
+     * reaches it as {@code uRL} too. A fluent setter returning {@code this} is just as bindable to OGNL, so it has
+     * to be just as visible here, both to carry a {@link StrutsParameter} annotation and to count as declared on a
+     * {@link ModelDriven} action.
      * <p>
-     * Where several setters qualify, the one declared furthest down the hierarchy wins - an override is what OGNL
-     * invokes and what the developer annotated, while the erased setter of a generic superclass is listed
-     * alongside it and carries no annotation - and among overloads declared at that level an annotated one, since
-     * annotating any overload declares the property request surface.
+     * Where several methods of the winning name qualify, the one declared furthest down the hierarchy wins - an
+     * override is what OGNL invokes and what the developer annotated, while the erased setter of a generic
+     * superclass is listed alongside it and carries no annotation - and among overloads declared at that level an
+     * annotated one, since annotating any overload declares the property request surface.
      */
     protected Optional<Method> findBindableAccessor(Object target, String property, long paramDepth) {
         BeanInfo beanInfo = getBeanInfo(target);
         if (beanInfo == null) {
             return Optional.empty();
         }
-        if (paramDepth == 0) {
-            String setterName = "set" + Character.toUpperCase(property.charAt(0)) + property.substring(1);
-            return Arrays.stream(beanInfo.getMethodDescriptors())
-                    .map(MethodDescriptor::getMethod)
-                    .filter(method -> method.getName().equals(setterName)
-                            && method.getParameterCount() == 1
-                            && !Modifier.isStatic(method.getModifiers()))
-                    .max(comparingInt((Method method) -> inheritanceDepth(method.getDeclaringClass()))
-                            .thenComparing(method -> getParameterAnnotation(method) != null));
+        List<String> prefixes = paramDepth == 0 ? List.of("set") : List.of("is", "get");
+        int parameterCount = paramDepth == 0 ? 1 : 0;
+        for (String baseName : accessorBaseNames(property)) {
+            for (String prefix : prefixes) {
+                String accessorName = prefix + baseName;
+                Optional<Method> accessor = Arrays.stream(beanInfo.getMethodDescriptors())
+                        .map(MethodDescriptor::getMethod)
+                        .filter(method -> method.getName().equals(accessorName)
+                                && method.getParameterCount() == parameterCount
+                                && !Modifier.isStatic(method.getModifiers()))
+                        .max(comparingInt((Method method) -> inheritanceDepth(method.getDeclaringClass()))
+                                .thenComparing(method -> getParameterAnnotation(method) != null));
+                if (accessor.isPresent()) {
+                    return accessor;
+                }
+            }
         }
-        return Arrays.stream(beanInfo.getPropertyDescriptors())
-                .filter(desc -> desc.getName().equals(property))
-                .map(PropertyDescriptor::getReadMethod)
-                .filter(Objects::nonNull)
-                .findFirst();
+        return Optional.empty();
+    }
+
+    /**
+     * The accessor base names OGNL tries for {@code property}, in its order: for a name like {@code uRange} the
+     * JavaBeans {@code uRange} before the capitalised {@code URange}, otherwise the capitalised name alone.
+     */
+    private static List<String> accessorBaseNames(String property) {
+        String capitalised = Character.toUpperCase(property.charAt(0)) + property.substring(1);
+        if (property.length() > 1 && Character.isLowerCase(property.charAt(0)) && Character.isUpperCase(property.charAt(1))) {
+            return List.of(property, capitalised);
+        }
+        return List.of(capitalised);
     }
 
     private static int inheritanceDepth(Class<?> type) {
@@ -353,6 +372,7 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     }
 
     protected Class<?> ultimateClass(Object target) {
+        Objects.requireNonNull(target, "target");
         if (proxyService.isProxy(target)) {
             return proxyService.ultimateTargetClass(target);
         }

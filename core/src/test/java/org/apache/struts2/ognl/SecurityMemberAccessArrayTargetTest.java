@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import ognl.OgnlContext;
 import org.apache.struts2.util.StrutsProxyService;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,18 +65,18 @@ public class SecurityMemberAccessArrayTargetTest {
             Object[][].class,
             SecurityMemberAccess[].class);
 
-    private OgnlContext context;
+    private StrutsContext context;
     private SecurityMemberAccess sma;
 
     @Before
     public void setUp() {
-        context = ognl.Ognl.createDefaultContext(null);
         ProviderAllowlist providerAllowlist = mock(ProviderAllowlist.class);
         ThreadAllowlist threadAllowlist = mock(ThreadAllowlist.class);
         when(providerAllowlist.getProviderAllowlist()).thenReturn(new HashSet<>());
         when(threadAllowlist.getAllowlist()).thenReturn(new HashSet<>());
         sma = new SecurityMemberAccess(providerAllowlist, threadAllowlist);
         sma.setProxyService(new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic")));
+        context = new StrutsContext(sma);
     }
 
     /**

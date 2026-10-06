@@ -102,6 +102,7 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected ValueStackFactory valueStackFactory;
     protected LocalizedTextProvider localizedTextProvider;
     protected boolean devMode = false;
+    private boolean requireChainingAnnotations = false;
 
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
@@ -110,6 +111,11 @@ public class AliasInterceptor extends AbstractInterceptor {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = Boolean.parseBoolean(mode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireChainingAnnotations(String requireChainingAnnotations) {
+        this.requireChainingAnnotations = Boolean.parseBoolean(requireChainingAnnotations);
     }
 
     @Inject
@@ -200,14 +206,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                     Evaluated value = new Evaluated(stack.findValue(name));
                     boolean fromRawRequestParameter = false;
                     if (!value.isDefined()) {
-                        // workaround: name did not resolve on the stack (e.g. no earlier action in a
-                        // chain set it), so fall back to the raw HTTP parameter of the same name - this
-                        // is the one path through which attacker-controlled, never-yet-authorized data
-                        // reaches newStack.setValue below, so it is the one path @StrutsParameter has to
-                        // gate. A name that DID resolve on the stack names something already on the
-                        // stack - typically state an earlier, properly-authorized bind already produced -
-                        // and copying that between properties is the same category of operation
-                        // ChainingInterceptor performs without requiring annotations by default.
+                        // workaround
                         HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
@@ -218,9 +217,15 @@ public class AliasInterceptor extends AbstractInterceptor {
                             }
                         }
                     }
-                    if (fromRawRequestParameter && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
-                        LOG.debug("Alias target [{}] rejected by @StrutsParameter authorization on target [{}]",
-                                alias, action.getClass().getSimpleName());
+                    // The request-parameter fallback always requires @StrutsParameter authorization
+                    // (struts.parameters.requireAnnotations, true by default). A name that resolved
+                    // directly on the stack is the chaining case - aliasing is documented mainly as glue
+                    // for action chaining - so it follows struts.chaining.requireAnnotations instead,
+                    // the same split ChainingInterceptor already uses (WW-5631).
+                    if ((fromRawRequestParameter || requireChainingAnnotations)
+                            && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
+                        LOG.warn("Alias: property [{}] not copied to [{}] because it is not annotated with @StrutsParameter",
+                                alias, action.getClass().getName());
                         continue;
                     }
                     if (value.isDefined()) {

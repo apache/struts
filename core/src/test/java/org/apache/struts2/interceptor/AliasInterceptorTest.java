@@ -174,6 +174,32 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertEquals("preset-value", action.getStackToStackTarget());
     }
 
+    // WW-5631 gave ChainingInterceptor an opt-in struts.chaining.requireAnnotations flag for copying
+    // values already resolved on the stack, since aliasing is documented mainly as glue for action
+    // chaining. AliasInterceptor's stack-resolved branch follows the same flag: off by default (proven
+    // above), but once an application turns it on, an unannotated target must be rejected here too, not
+    // just on the raw-parameter fallback.
+    public void testUnannotatedStackToStackAliasTargetIsRejectedWhenChainingAnnotationsRequired() throws Exception {
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(Map.of()).build());
+
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-alias-authorization.xml");
+        container.inject(provider);
+        StubConfigurationProvider requireAnnotationsOn = new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true");
+                props.setProperty(StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, "true");
+            }
+        };
+        loadConfigurationProviders(provider, requireAnnotationsOn);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasAuthorizationTest", null, extraContext.getContextMap());
+        proxy.execute();
+        AliasAuthorizationTestAction action = (AliasAuthorizationTestAction) proxy.getAction();
+
+        assertEquals("untouched", action.getStackToStackTarget());
+    }
+
     public void testNameNotAccepted() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("aliasSource", "source here");

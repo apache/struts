@@ -32,7 +32,7 @@ import ognl.TypeConverter;
  * Future phases will promote stringly-typed map entries (e.g. {@code DENY_METHOD_EXECUTION},
  * {@code CREATE_NULL_OBJECTS}) to proper typed fields.</p>
  *
- * @since 7.2.0
+ * @since 8.0.0
  */
 public class StrutsContext extends OgnlContext<StrutsContext> {
 

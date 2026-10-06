@@ -8,7 +8,8 @@ For detailed procedures, use the specialized skills in `.claude/skills/`.
 
 Apache Struts is a mature MVC web application framework for Java (originally WebWork 2). Uses OGNL for value stack expressions and FreeMarker for UI tag templates.
 
-**Version**: read it from the root `pom.xml` — it is `7.4.0-SNAPSHOT` as of 2026-08-23. Do not treat the `-SNAPSHOT` value as the next release number: the release version is chosen at release time from the semver impact of the accumulated changes, so `7.4.0-SNAPSHOT` may well ship as something else. Released versions are git tags like `STRUTS_7_2_1`.
+**Version**: the `-SNAPSHOT` in the root `pom.xml` is a placeholder — the release version is chosen at
+release time from the semver impact of the accumulated changes. Released versions are git tags like `STRUTS_7_2_1`.
 
 ### Build Commands
 

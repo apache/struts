@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -371,6 +372,7 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     }
 
     protected Class<?> ultimateClass(Object target) {
+        Objects.requireNonNull(target, "target");
         if (proxyService.isProxy(target)) {
             return proxyService.ultimateTargetClass(target);
         }

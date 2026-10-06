@@ -324,7 +324,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
      * OGNL resolves {@code uRange} to the JavaBeans setter {@code setuRange} before {@code setURange}, so that is the
      * method which has to carry the annotation. The model property alongside proves the parameters were applied.
      */
-    public void testModelDrivenJavaBeansStyleSetterOnActionRequiresAnnotation() throws Exception {
+    public void testModelDrivenJavaBeansStyleSetterOnActionRequiresAnnotation() {
         loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
         ParametersInterceptor pi = createParametersInterceptor();
 
@@ -349,7 +349,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
      * A nested parameter goes through the getter OGNL resolves, {@code getURL} for {@code uRL}, which
      * introspection names property {@code URL}.
      */
-    public void testModelDrivenUppercaseGetterOnActionRequiresAnnotation() throws Exception {
+    public void testModelDrivenUppercaseGetterOnActionRequiresAnnotation() {
         loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
         ParametersInterceptor pi = createParametersInterceptor();
 
@@ -372,7 +372,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     /**
      * The annotation counts only on the setter OGNL actually invokes for the parameter name as written.
      */
-    public void testAnnotationOnlyCountsOnTheSetterOgnlInvokes() throws Exception {
+    public void testAnnotationOnlyCountsOnTheSetterOgnlInvokes() {
         loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
         ParametersInterceptor pi = createParametersInterceptor();
 
@@ -395,7 +395,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
      * Names differing from an accessor's property only in case resolve to no accessor on either object, so they
      * take the "declared on neither" route - which is safe only as long as OGNL does not bind them either.
      */
-    public void testModelDrivenCaseVariantsBindNothingOnAction() throws Exception {
+    public void testModelDrivenCaseVariantsBindNothingOnAction() {
         loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
         ParametersInterceptor pi = createParametersInterceptor();
 
@@ -1238,16 +1238,16 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         public String getxCoord() { return xCoord; }
 
         // NO @StrutsParameter - OGNL prefers it to the annotated setURange for "uRange"
-        public void setuRange(String uRange) { invoked.add("setuRange"); }
+        public void setuRange(String uRange) { invoked.add("setuRange=" + uRange); }
 
         @StrutsParameter
-        public void setURange(String uRange) { invoked.add("setURange"); }
+        public void setURange(String uRange) { invoked.add("setURange=" + uRange); }
 
         @StrutsParameter
-        public void setvRange(String vRange) { invoked.add("setvRange"); }
+        public void setvRange(String vRange) { invoked.add("setvRange=" + vRange); }
 
         // NO @StrutsParameter - the only setter OGNL considers for "VRange"
-        public void setVRange(String vRange) { invoked.add("setVRange"); }
+        public void setVRange(String vRange) { invoked.add("setVRange=" + vRange); }
 
         public List<String> getInvoked() { return invoked; }
     }

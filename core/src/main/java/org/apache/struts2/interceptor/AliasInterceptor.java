@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
@@ -115,7 +116,7 @@ public class AliasInterceptor extends AbstractInterceptor {
 
     @Inject(value = StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, required = false)
     public void setRequireChainingAnnotations(String requireChainingAnnotations) {
-        this.requireChainingAnnotations = Boolean.parseBoolean(requireChainingAnnotations);
+        this.requireChainingAnnotations = BooleanUtils.toBoolean(requireChainingAnnotations);
     }
 
     @Inject
@@ -206,7 +207,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                     Evaluated value = new Evaluated(stack.findValue(name));
                     boolean fromRawRequestParameter = false;
                     if (!value.isDefined()) {
-                        // workaround
+                        // name did not resolve on the stack, fall back to the request parameter
                         HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
@@ -217,18 +218,15 @@ public class AliasInterceptor extends AbstractInterceptor {
                             }
                         }
                     }
-                    // The request-parameter fallback always requires @StrutsParameter authorization
-                    // (struts.parameters.requireAnnotations, true by default). A name that resolved
-                    // directly on the stack is the chaining case - aliasing is documented mainly as glue
-                    // for action chaining - so it follows struts.chaining.requireAnnotations instead,
-                    // the same split ChainingInterceptor already uses (WW-5631).
-                    if ((fromRawRequestParameter || requireChainingAnnotations)
-                            && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
-                        LOG.warn("Alias: property [{}] not copied to [{}] because it is not annotated with @StrutsParameter",
-                                alias, action.getClass().getName());
-                        continue;
-                    }
                     if (value.isDefined()) {
+                        // split follows ChainingInterceptor/WW-5631: parameters.requireAnnotations gates
+                        // the request-parameter fallback, chaining.requireAnnotations gates the rest
+                        if ((fromRawRequestParameter || requireChainingAnnotations)
+                                && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
+                            LOG.warn("Alias: property [{}] not set on [{}] because it is not annotated with @StrutsParameter",
+                                    alias, action.getClass().getName());
+                            continue;
+                        }
                         try {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {

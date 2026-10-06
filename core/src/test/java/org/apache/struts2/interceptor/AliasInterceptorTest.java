@@ -34,6 +34,7 @@ import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.util.location.LocatableProperties;
 
@@ -138,25 +139,16 @@ public class AliasInterceptorTest extends XWorkTestCase {
         return (SimpleAction) proxy.getAction();
     }
 
-    // An alias target that is not annotated with @StrutsParameter must not be set when the source value
-    // comes from AliasInterceptor's documented fallback to the raw HTTP parameter of the same name (used
-    // when the source name does not resolve on the stack) - that is the one path through which
-    // attacker-controlled, never-yet-authorized data reaches the target. An annotated target in the same
-    // aliases map, read through the exact same fallback, must still bind normally. A THIRD, unannotated
-    // target whose source name resolves directly on the stack (no HTTP parameter involved at all, the
-    // same category of copy ChainingInterceptor performs without an annotation requirement by default)
-    // must also still bind normally - the check must not reach that path.
     public void testUnannotatedAliasTargetIsRejected() throws Exception {
         Map<String, Object> httpParams = new HashMap<>();
         httpParams.put("rawSourceAnnotated", "allowed-value");
-        httpParams.put("rawSourceUnannotated", "PWNED_VIA_ALIAS");
+        httpParams.put("rawSourceUnannotated", "value-from-request");
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(httpParams).build());
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-alias-authorization.xml");
         container.inject(provider);
-        // loadConfigurationProviders tears down and rebuilds the whole configuration on every call, so the
-        // requireAnnotations property has to be registered in the SAME call as the XML provider, not a
-        // separate loadButSet() call beforehand - that call's provider would just be discarded.
+        // loadConfigurationProviders rebuilds the whole configuration each call, so this property has to
+        // be registered in the same call as the XML provider, not a separate loadButSet() call before it.
         StubConfigurationProvider requireAnnotationsOn = new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
@@ -174,11 +166,6 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertEquals("preset-value", action.getStackToStackTarget());
     }
 
-    // WW-5631 gave ChainingInterceptor an opt-in struts.chaining.requireAnnotations flag for copying
-    // values already resolved on the stack, since aliasing is documented mainly as glue for action
-    // chaining. AliasInterceptor's stack-resolved branch follows the same flag: off by default (proven
-    // above), but once an application turns it on, an unannotated target must be rejected here too, not
-    // just on the raw-parameter fallback.
     public void testUnannotatedStackToStackAliasTargetIsRejectedWhenChainingAnnotationsRequired() throws Exception {
         ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(Map.of()).build());
 
@@ -198,6 +185,33 @@ public class AliasInterceptorTest extends XWorkTestCase {
         AliasAuthorizationTestAction action = (AliasAuthorizationTestAction) proxy.getAction();
 
         assertEquals("untouched", action.getStackToStackTarget());
+    }
+
+    // unannotatedTarget's source (rawSourceUnannotated) never resolves at all here: not on the stack, and
+    // no matching HTTP parameter either. The authorization check must not run for it, so it must not be
+    // warned about - only stackToStackTarget's source actually resolves and is legitimately rejected.
+    public void testNoWarningWhenAliasSourceNeverResolvesAtAll() throws Exception {
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(Map.of()).build());
+
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("struts-alias-authorization.xml");
+        container.inject(provider);
+        StubConfigurationProvider requireAnnotationsOn = new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true");
+                props.setProperty(StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, "true");
+            }
+        };
+        loadConfigurationProviders(provider, requireAnnotationsOn);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasAuthorizationTest", null, extraContext.getContextMap());
+        try (LogCapture logCapture = new LogCapture(AliasInterceptor.class)) {
+            proxy.execute();
+            for (String message : logCapture.messages()) {
+                assertFalse("unannotatedTarget's source never resolved, so it must not be warned about: " + message,
+                        message.contains("unannotatedTarget"));
+            }
+        }
     }
 
     public void testNameNotAccepted() throws Exception {

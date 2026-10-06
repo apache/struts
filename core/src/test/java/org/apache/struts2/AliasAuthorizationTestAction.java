@@ -28,18 +28,8 @@ import org.apache.struts2.interceptor.parameter.StrutsParameter;
 public class AliasAuthorizationTestAction extends ActionSupport {
 
     private String annotatedTarget;
-
-    // Deliberately NOT annotated with @StrutsParameter: an alias may not use this as a copy target
-    // when the source value comes from a raw HTTP request parameter.
     private String unannotatedTarget = "untouched";
-
-    // Already has a value before the interceptor runs, simulating stack state an earlier, properly
-    // authorized bind already produced (e.g. an earlier action in a chain) - never a raw HTTP parameter.
     private String preExistingSource = "preset-value";
-
-    // NOT annotated, but a legitimate alias target here: aliasing FROM a name that already resolves on
-    // the stack must not require @StrutsParameter, the same category of copy ChainingInterceptor
-    // performs without an annotation requirement by default.
     private String stackToStackTarget = "untouched";
 
     @StrutsParameter

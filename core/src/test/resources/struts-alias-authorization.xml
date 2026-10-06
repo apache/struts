@@ -26,11 +26,6 @@
     <include file="xwork-test-default.xml"/>
     <package name="alias-authorization" extends="xwork-test-default">
 
-        <!-- Neither raw source name resolves on the stack, forcing AliasInterceptor's documented
-             fallback to the raw HTTP parameter of the same name - the attacker-reachable path.
-             preExistingSource DOES resolve directly (it already has a value), so stackToStackTarget is
-             reached without ever touching a raw HTTP parameter - the legitimate, non-attacker-reachable
-             path that must stay unaffected by the @StrutsParameter check added for the other two. -->
         <action name="aliasAuthorizationTest" class="org.apache.struts2.AliasAuthorizationTestAction">
             <param name="aliases">#{ "rawSourceAnnotated" : "annotatedTarget", "rawSourceUnannotated" : "unannotatedTarget", "preExistingSource" : "stackToStackTarget" }</param>
             <interceptor-ref name="alias"/>

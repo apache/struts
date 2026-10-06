@@ -418,6 +418,29 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertTrue(action.getURL().isEmpty());
     }
 
+    /**
+     * A final field cannot take the parameter, so the object holding it is not offered the name
+     * (OGNL 3.4.15, orphan-oss/ognl#660).
+     */
+    public void testModelDrivenFinalFieldDoesNotTakeParameter() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        FinalFieldModelDrivenAction action = new FinalFieldModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("urange", "not bound");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertNull(action.getuRange());
+    }
+
     public void testParametersDoesNotAffectSession() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
@@ -1227,6 +1250,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // NO @StrutsParameter
         public Map<String, String> getURL() { return url; }
+    }
+
+    public static class FinalFieldModelDrivenAction implements ModelDriven<TestBean> {
+        private final TestBean model = new TestBean();
+        public final String urange = "constant";
+        private String uRange;
+
+        @Override
+        public TestBean getModel() { return model; }
+
+        // NO @StrutsParameter
+        public void setuRange(String uRange) { this.uRange = uRange; }
+        public String getuRange() { return uRange; }
     }
 
     public static class JavaBeansNamedAction {

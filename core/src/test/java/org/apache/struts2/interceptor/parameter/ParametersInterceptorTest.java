@@ -320,6 +320,104 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         }
     }
 
+    /**
+     * OGNL resolves {@code uRange} to the JavaBeans setter {@code setuRange} before {@code setURange}, so that is the
+     * method which has to carry the annotation. The model property alongside proves the parameters were applied.
+     */
+    public void testModelDrivenJavaBeansStyleSetterOnActionRequiresAnnotation() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        JavaBeansNamedModelDrivenAction action = new JavaBeansNamedModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("uRange", "leaked through the unannotated setter");
+        params.put("xCoord", "bound through the annotated setter");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertEquals("bound through the annotated setter", action.getxCoord());
+        assertNull(action.getuRange());
+    }
+
+    /**
+     * A nested parameter goes through the getter OGNL resolves, {@code getURL} for {@code uRL}, which
+     * introspection names property {@code URL}.
+     */
+    public void testModelDrivenUppercaseGetterOnActionRequiresAnnotation() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        JavaBeansNamedModelDrivenAction action = new JavaBeansNamedModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("uRL.host", "leaked through the unannotated getter");
+        params.put("URL.path", "leaked through the unannotated getter");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertTrue(action.getURL().isEmpty());
+    }
+
+    /**
+     * The annotation counts only on the setter OGNL actually invokes for the parameter name as written.
+     */
+    public void testAnnotationOnlyCountsOnTheSetterOgnlInvokes() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        JavaBeansNamedAction action = new JavaBeansNamedAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("xCoord", "bound through the annotated setter");
+        params.put("uRange", "leaked through the unannotated setuRange");
+        params.put("VRange", "leaked through the unannotated setVRange");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound through the annotated setter", action.getxCoord());
+        assertEquals(List.of(), action.getInvoked());
+    }
+
+    /**
+     * Names differing from an accessor's property only in case resolve to no accessor on either object, so they
+     * take the "declared on neither" route - which is safe only as long as OGNL does not bind them either.
+     */
+    public void testModelDrivenCaseVariantsBindNothingOnAction() {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        JavaBeansNamedModelDrivenAction action = new JavaBeansNamedModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("urange", "not bound");
+        params.put("URANGE", "not bound");
+        params.put("url.host", "not bound");
+        params.put("Url.path", "not bound");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertNull(action.getuRange());
+        assertTrue(action.getURL().isEmpty());
+    }
+
     public void testParametersDoesNotAffectSession() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
@@ -1108,6 +1206,50 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         @StrutsParameter(depth = 1)
         public Address getAddress() { return address; }
+    }
+
+    public static class JavaBeansNamedModelDrivenAction implements ModelDriven<TestBean> {
+        private final TestBean model = new TestBean();
+        private final Map<String, String> url = new HashMap<>();
+        private String uRange;
+        private String xCoord;
+
+        @Override
+        public TestBean getModel() { return model; }
+
+        // NO @StrutsParameter
+        public void setuRange(String uRange) { this.uRange = uRange; }
+        public String getuRange() { return uRange; }
+
+        @StrutsParameter
+        public void setxCoord(String xCoord) { this.xCoord = xCoord; }
+        public String getxCoord() { return xCoord; }
+
+        // NO @StrutsParameter
+        public Map<String, String> getURL() { return url; }
+    }
+
+    public static class JavaBeansNamedAction {
+        private final List<String> invoked = new ArrayList<>();
+        private String xCoord;
+
+        @StrutsParameter
+        public void setxCoord(String xCoord) { this.xCoord = xCoord; }
+        public String getxCoord() { return xCoord; }
+
+        // NO @StrutsParameter - OGNL prefers it to the annotated setURange for "uRange"
+        public void setuRange(String uRange) { invoked.add("setuRange=" + uRange); }
+
+        @StrutsParameter
+        public void setURange(String uRange) { invoked.add("setURange=" + uRange); }
+
+        @StrutsParameter
+        public void setvRange(String vRange) { invoked.add("setvRange=" + vRange); }
+
+        // NO @StrutsParameter - the only setter OGNL considers for "VRange"
+        public void setVRange(String vRange) { invoked.add("setVRange=" + vRange); }
+
+        public List<String> getInvoked() { return invoked; }
     }
 
     public static class Address {

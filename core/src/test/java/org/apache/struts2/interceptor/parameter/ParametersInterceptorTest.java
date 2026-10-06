@@ -391,6 +391,33 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(List.of(), action.getInvoked());
     }
 
+    /**
+     * Names differing from an accessor's property only in case resolve to no accessor on either object, so they
+     * take the "declared on neither" route - which is safe only as long as OGNL does not bind them either.
+     */
+    public void testModelDrivenCaseVariantsBindNothingOnAction() throws Exception {
+        loadButSet(Map.of(StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, "true"));
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        JavaBeansNamedModelDrivenAction action = new JavaBeansNamedModelDrivenAction();
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.push(action);
+        stack.push(action.getModel());
+        ActionContext.of().withContainer(container).withValueStack(stack).bind();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("urange", "not bound");
+        params.put("URANGE", "not bound");
+        params.put("url.host", "not bound");
+        params.put("Url.path", "not bound");
+        params.put("name", "bound on the model");
+        pi.applyParameters(action, stack, HttpParameters.create(params).build());
+
+        assertEquals("bound on the model", action.getModel().getName());
+        assertNull(action.getuRange());
+        assertTrue(action.getURL().isEmpty());
+    }
+
     public void testParametersDoesNotAffectSession() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");

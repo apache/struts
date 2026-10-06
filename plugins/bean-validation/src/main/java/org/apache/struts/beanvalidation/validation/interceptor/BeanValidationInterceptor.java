@@ -41,6 +41,7 @@ import javax.validation.groups.Default;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -56,6 +57,7 @@ import java.util.Set;
 public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(BeanValidationInterceptor.class);
+    private static final Pattern PROVIDER_MESSAGE_KEY = Pattern.compile("\\{[^{}]+}");
 
     protected BeanValidationManager beanValidationManager;
     protected TextProviderFactory textProviderFactory;
@@ -135,16 +137,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
         if (constraintViolations != null) {
             ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
             for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
-                String key = constraintViolation.getMessage();
-                String message = key;
-                try {
-                    message = validatorContext.getText(key);
-                    if (convertToUtf8 && StringUtils.isNotBlank(message)) {
-                        message = new String(message.getBytes(convertFromEncoding), "UTF-8");
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while trying to fetch message: {}", key, e);
-                }
+                String message = resolveMessage(constraintViolation, validatorContext);
 
                 if (isActionError(constraintViolation)) {
                     LOG.debug("Adding action error [{}]", message);
@@ -160,6 +153,34 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
                 }
             }
         }
+    }
+
+    /**
+     * Resolves the constraint's message template as a Struts text key, or falls back to the message
+     * produced by the Bean Validation provider, which is used as-is. A template that only references
+     * a provider message key, like {@code {javax.validation.constraints.NotNull.message}}, is never
+     * looked up as a Struts text key.
+     *
+     * @param violation the constraint violation
+     * @param validatorContext the context used to look up the text key
+     * @return the error message
+     */
+    protected String resolveMessage(ConstraintViolation<Object> violation, ValidatorContext validatorContext) {
+        String key = violation.getMessageTemplate();
+        if (PROVIDER_MESSAGE_KEY.matcher(key).matches() || !validatorContext.hasKey(key)) {
+            return violation.getMessage();
+        }
+
+        String message = key;
+        try {
+            message = validatorContext.getText(key);
+            if (convertToUtf8 && StringUtils.isNotBlank(message)) {
+                message = new String(message.getBytes(convertFromEncoding), "UTF-8");
+            }
+        } catch (Exception e) {
+            LOG.error("Error while trying to fetch message: {}", key, e);
+        }
+        return message;
     }
 
     protected ValidationError buildBeanValidationError(ConstraintViolation<Object> violation, String message) {

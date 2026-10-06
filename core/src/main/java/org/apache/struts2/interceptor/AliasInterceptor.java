@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ActionContext;
@@ -28,6 +29,7 @@ import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizer;
 import org.apache.struts2.security.AcceptedPatternsChecker;
 import org.apache.struts2.security.ExcludedPatternsChecker;
 import org.apache.struts2.util.ClearableValueStack;
@@ -101,13 +103,20 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected ValueStackFactory valueStackFactory;
     protected LocalizedTextProvider localizedTextProvider;
     protected boolean devMode = false;
+    private boolean requireChainingAnnotations = false;
 
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
+    private ParameterAuthorizer parameterAuthorizer;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = Boolean.parseBoolean(mode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireChainingAnnotations(String requireChainingAnnotations) {
+        this.requireChainingAnnotations = BooleanUtils.toBoolean(requireChainingAnnotations);
     }
 
     @Inject
@@ -128,6 +137,11 @@ public class AliasInterceptor extends AbstractInterceptor {
     @Inject
     public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
         this.acceptedPatterns = acceptedPatterns;
+    }
+
+    @Inject
+    public void setParameterAuthorizer(ParameterAuthorizer parameterAuthorizer) {
+        this.parameterAuthorizer = parameterAuthorizer;
     }
 
     /**
@@ -161,6 +175,8 @@ public class AliasInterceptor extends AbstractInterceptor {
             Object obj = stack.findValue(aliasExpression);
 
             if (obj instanceof Map aliases) {
+                Object authorizationTarget = parameterAuthorizer.resolveTarget(action);
+
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
@@ -189,18 +205,28 @@ public class AliasInterceptor extends AbstractInterceptor {
                         continue;
                     }
                     Evaluated value = new Evaluated(stack.findValue(name));
+                    boolean fromRawRequestParameter = false;
                     if (!value.isDefined()) {
-                        // workaround
+                        // name did not resolve on the stack, fall back to the request parameter
                         HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
                             Parameter param = contextParameters.get(name);
                             if (param.isDefined()) {
                                 value = new Evaluated(param.getValue());
+                                fromRawRequestParameter = true;
                             }
                         }
                     }
                     if (value.isDefined()) {
+                        // split follows ChainingInterceptor/WW-5631: parameters.requireAnnotations gates
+                        // the request-parameter fallback, chaining.requireAnnotations gates the rest
+                        if ((fromRawRequestParameter || requireChainingAnnotations)
+                                && !parameterAuthorizer.isAuthorized(alias, authorizationTarget, action)) {
+                            LOG.warn("Alias: property [{}] not set on [{}] because it is not annotated with @StrutsParameter",
+                                    alias, action.getClass().getName());
+                            continue;
+                        }
                         try {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {

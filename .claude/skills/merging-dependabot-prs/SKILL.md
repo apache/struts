@@ -112,9 +112,11 @@ Five steps, in order. All five are required.
 - Issue type is **Dependency** — not Task, not Bug.
 - Component is the module that declares the dep: `Core`, `Plugin - REST`, `Plugin - JSON`,
   `Unit Tests`, `Build Management`, …
-- Fix version comes from the target branch's SNAPSHOT with `-SNAPSHOT` dropped
-  (`grep -m1 SNAPSHOT pom.xml`): `main` → 7.4.0, `support/struts-6-x-x` → 6.12.0. This is a
-  placeholder the release process may revise; do not treat it as a release commitment.
+- Fix version is the one the latest tickets on the same line already carry:
+  `project = WW AND fixVersion in unreleasedVersions() ORDER BY created DESC`.
+  Not the pom SNAPSHOT: after 6.12.0, `support/struts-6-x-x` read `6.12.1-SNAPSHOT` while
+  its next release was 6.13.0. Not the lowest unreleased Jira version either: a shipped
+  version can stay unreleased in Jira for days.
 
 **2. Retitle the PR** — insert the ticket after the conventional-commit prefix, leave every
 other character alone:
@@ -124,8 +126,9 @@ gh pr edit <N> --title "build(deps): WW-XXXX bump org.htmlunit:htmlunit from 4.2
 #                                    ^^^^^^^^ inserted; prefix and remainder verbatim
 ```
 
-**3. Add the Closes line to the body** — its own paragraph, after the leading `Bumps …`
-block and before the first `<details>`. Preserve the rest of Dependabot's body exactly:
+**3. Add the Closes line to the body** — its own paragraph, directly after the first line
+(`Bumps …`). Some bodies have no release notes and so no `<details>` before the commands
+footer; anchor on the `Bumps` line, never on `<details>`. Preserve the rest exactly:
 
 ```
 Bumps [org.htmlunit:htmlunit](https://github.com/HtmlUnit/htmlunit) from 4.21.0 to 5.1.0.
@@ -144,7 +147,9 @@ gh pr merge <N> --squash --subject "build(deps): WW-XXXX bump org.htmlunit:htmlu
 Without an explicit `--subject`, GitHub takes the subject from Dependabot's *commit*
 headline and the ticket ID is silently lost from git history.
 
-**5. Resolve the ticket as Fixed** — only after *every* PR on the ticket has merged:
+**5. Hand the ticket back, still Open** — list it under the merge report as ready to
+resolve once *every* PR on it has merged. The ticket workflow belongs to the release
+manager; do not transition it unless asked. When asked:
 
 ```json
 {"issue_key": "WW-XXXX", "fields": "{\"status\": \"5\", \"resolution\": {\"name\": \"Fixed\"}}", "return_fields": "status,resolution"}
@@ -164,8 +169,12 @@ gh pr list --state open --author app/dependabot --json number,title,baseRefName
 ```
 
 If a twin exists, create **one** ticket, put it in both PR titles/bodies, and list **both**
-fix versions on it (WW-5649 carries 6.11.0 and 7.3.0 for PRs #1760 and #1763). Resolve it
-once both have merged.
+fix versions on it (WW-5649 carries 6.11.0 and 7.3.0 for PRs #1760 and #1763). It is ready
+to resolve once both have merged.
+
+The twin may already have merged in an earlier run, so `--state open` will not show it. Search
+Jira too: `project = WW AND issuetype = Dependency AND summary ~ "<artifact>" ORDER BY created DESC`.
+If the same bump already has a ticket, reuse it and add this branch's fix version to it.
 
 ## Scope of this skill
 
@@ -173,8 +182,12 @@ Triage and land the queue. Do **not**, as part of it, open follow-up PRs — `de
 ignore rules, license-header restorations, test-harness fixes. Report such findings in one
 line under the table and let the decision be made separately.
 
-A ticket-worthy bump with a red build is real compatibility work, not a merge. Report the
-failure and stop; it needs its own ticket and its own branch. Never push a fix onto a
+Any bump with a red build is real compatibility work, not a merge. Report the root cause
+(first `[ERROR]` lines of the failing `Build and Test` job) and stop. If asked to defer it:
+file a `Dependency` ticket at the next major with the root cause, then close the PR with a
+comment that gives the cause, links the ticket, and ends in `@dependabot ignore this major
+version` — Dependabot replies "OK, I won't notify you…" (Hibernate 7 on #1905, Weld 7 on
+#1998). That is the ignore rule; no `dependabot.yml` PR. Never push a fix onto a
 Dependabot branch — Dependabot stops rebasing it, and a source change lands under a
 ticketless `build(deps):` title.
 
@@ -188,6 +201,7 @@ ticketless `build(deps):` title.
 | "git log shows no `WW-` on dependency commits, so titles aren't rewritten" | The squash *subject* historically came from Dependabot's commit headline while the *PR title* carried the ticket. Compare `gh pr view 1746 --json title` against `1f1674411`. Step 4 above exists to close that gap. |
 | "A red check means don't merge" | Only `Build and Test *` counts. The ASF Jenkins context is not required and flakes red. |
 | "Both branches need their own ticket" | One dependency, one ticket, two fix versions. |
+| "The pom says `6.12.1-SNAPSHOT`, so the fix version is 6.12.1" | The pom is a placeholder. Jira's latest tickets on the line carry the real next version. |
 | "The build is green, so I can just merge it" | Green is necessary, not sufficient. Classify first, and stop at the checkpoint. |
 
 ## Red flags — stop and re-read
@@ -198,6 +212,8 @@ ticketless `build(deps):` title.
 - Creating a second ticket for a dependency that already has an open twin PR
 - Opening a follow-up PR that nobody asked for
 - Creating a Jira issue whose type is anything other than `Dependency`
+- Transitioning a ticket nobody asked you to resolve
+- Reading the fix version off the pom
 
 ## Related
 

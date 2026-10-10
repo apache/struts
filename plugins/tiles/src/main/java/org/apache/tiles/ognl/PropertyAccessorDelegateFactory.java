@@ -28,6 +28,7 @@ import ognl.PropertyAccessor;
  * @param <T> The type of the root object to evaluate.
  * @since 2.2.0
  */
+@SuppressWarnings("rawtypes")
 public interface PropertyAccessorDelegateFactory<T> {
 
     /**

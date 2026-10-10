@@ -19,8 +19,8 @@
 package org.apache.struts2.util;
 
 import org.apache.struts2.ognl.SecurityMemberAccess;
+import org.apache.struts2.ognl.StrutsContext;
 import jakarta.servlet.jsp.tagext.TagSupport;
-import ognl.OgnlContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
@@ -28,12 +28,12 @@ import java.lang.reflect.Member;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
-    private OgnlContext context;
+    private StrutsContext context;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        context = ognl.Ognl.createDefaultContext(null);
+        context = new StrutsContext(new SecurityMemberAccess(null, null));
     }
 
     public void testJavaxServletPackageAccess() throws Exception {

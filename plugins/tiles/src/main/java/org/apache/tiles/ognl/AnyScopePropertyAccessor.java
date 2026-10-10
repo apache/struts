@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * Accesses attributes in any scope.
  */
+@SuppressWarnings("rawtypes")
 public class AnyScopePropertyAccessor implements PropertyAccessor {
 
     @Override

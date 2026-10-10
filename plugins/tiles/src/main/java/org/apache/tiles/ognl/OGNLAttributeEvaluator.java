@@ -18,11 +18,17 @@
  */
 package org.apache.tiles.ognl;
 
+import ognl.AbstractMemberAccess;
+import ognl.MemberAccess;
 import ognl.Ognl;
 import ognl.OgnlException;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.core.evaluator.EvaluationException;
 import org.apache.tiles.request.Request;
+
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 
 /**
  * Evaluates attribute expressions and expressions with OGNL language.
@@ -35,6 +41,13 @@ import org.apache.tiles.request.Request;
 @Deprecated(since = "7.4.0", forRemoval = true)
 public class OGNLAttributeEvaluator extends AbstractAttributeEvaluator {
 
+    private static final MemberAccess<StrutsContext> PUBLIC_MEMBERS_ONLY = new AbstractMemberAccess<>() {
+        @Override
+        public boolean isAccessible(StrutsContext context, Object target, Member member, String propertyName) {
+            return Modifier.isPublic(member.getModifiers());
+        }
+    };
+
     /** {@inheritDoc} */
     @Override
     public Object evaluate(String expression, Request request) {
@@ -42,7 +55,8 @@ public class OGNLAttributeEvaluator extends AbstractAttributeEvaluator {
             throw new IllegalArgumentException("The expression parameter cannot be null");
         }
         try {
-            return Ognl.getValue(expression, request);
+            // the Struts accessors registered globally in OgnlRuntime only accept a StrutsContext
+            return Ognl.getValue(expression, new StrutsContext(PUBLIC_MEMBERS_ONLY), request);
         } catch (OgnlException e) {
             throw new EvaluationException("Cannot evaluate OGNL expression '" + expression + "'", e);
         }

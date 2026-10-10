@@ -29,6 +29,7 @@ import ognl.PropertyAccessor;
  * @param <T> The type of the accessed root object.
  * @since 2.2.0
  */
+@SuppressWarnings("rawtypes")
 public class DelegatePropertyAccessor<T> implements PropertyAccessor {
 
     /**

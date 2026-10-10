@@ -34,6 +34,7 @@
 
     <constant name="struts.json.writer" value="struts"/>
     <constant name="struts.json.reader" value="struts"/>
+    <constant name="struts.json.writer.useTypeConverters" value="false"/>
     <constant name="struts.json.maxElements" value="10000"/>
     <constant name="struts.json.maxDepth" value="64"/>
     <constant name="struts.json.maxLength" value="2097152"/>

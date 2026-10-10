@@ -43,7 +43,7 @@ public class ScopedConstantsValidationTest {
 
     @Test
     public void registeredNameLoads() {
-        Configuration configuration = load("scoped-constants-registered.xml");
+        Configuration configuration = load("struts-scoped-constants-registered.xml");
 
         assertThat(configuration.getPackageConfig("registered").getScopedConstants())
                 .isEqualTo(Map.of("sample.scopable", "x"));
@@ -51,7 +51,7 @@ public class ScopedConstantsValidationTest {
 
     @Test
     public void unregisteredNameFails() {
-        assertThatThrownBy(() -> load("scoped-constants-unregistered.xml"))
+        assertThatThrownBy(() -> load("struts-scoped-constants-unregistered.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .hasStackTraceContaining("Package [unregistered] declares scoped constant [sample.unknown], which is not scopable. "
                         + "Scopable constants: [sample.scopable, sample.unset].");
@@ -59,14 +59,14 @@ public class ScopedConstantsValidationTest {
 
     @Test
     public void abstractPackageIsValidatedToo() {
-        assertThatThrownBy(() -> load("scoped-constants-abstract-unregistered.xml"))
+        assertThatThrownBy(() -> load("struts-scoped-constants-abstract-unregistered.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .hasStackTraceContaining("Package [abstractBase] declares scoped constant [sample.unknown], which is not scopable.");
     }
 
     @Test
     public void anyScopedConstantFailsWhenNothingIsScopable() {
-        assertThatThrownBy(() -> load("scoped-constants-no-registry.xml"))
+        assertThatThrownBy(() -> load("struts-scoped-constants-no-registry.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .hasStackTraceContaining("Package [unregistered] declares scoped constant [sample.scopable], which is not scopable. "
                         + "No constants are scopable in this configuration.");
@@ -74,7 +74,7 @@ public class ScopedConstantsValidationTest {
 
     @Test
     public void namesFromAllBeansAreScopable() {
-        Configuration configuration = load("scoped-constants-two-beans.xml");
+        Configuration configuration = load("struts-scoped-constants-two-beans.xml");
 
         assertThat(configuration.getPackageConfig("both").getScopedConstants())
                 .isEqualTo(Map.of("sample.scopable", "x", "second.scopable", "y"));

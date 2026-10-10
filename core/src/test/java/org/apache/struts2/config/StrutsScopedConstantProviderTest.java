@@ -34,7 +34,7 @@ public class StrutsScopedConstantProviderTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        loadConfigurationProviders(new StrutsXmlConfigurationProvider("org/apache/struts2/config/scoped-constants-provider.xml"));
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("org/apache/struts2/config/struts-scoped-constants-provider.xml"));
         provider = container.getInstance(ScopedConstantProvider.class);
     }
 

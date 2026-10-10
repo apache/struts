@@ -201,7 +201,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
     }
 
     public void testScopedConstantsLoadAndInherit() throws ConfigurationException {
-        buildConfigurationProvider(getXmlConfigFilePath("scoped-constants-inheritance.xml"));
+        buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-inheritance.xml"));
 
         PackageConfig parent = configuration.getPackageConfig("parent");
         PackageConfig child = configuration.getPackageConfig("child");
@@ -213,7 +213,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
 
     public void testDuplicateScopedConstantInOnePackageFails() {
         try {
-            buildConfigurationProvider(getXmlConfigFilePath("scoped-constants-duplicate.xml"));
+            buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-duplicate.xml"));
             fail("Should have thrown a ConfigurationException");
         } catch (ConfigurationException e) {
             assertThat(e).hasStackTraceContaining("Package [dup] declares scoped constant [first] more than once");
@@ -222,7 +222,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
 
     public void testScopedConstantIsRejectedUnderOlderDtd() {
         try {
-            buildConfigurationProvider(getXmlConfigFilePath("scoped-constants-old-dtd.xml"));
+            buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-old-dtd.xml"));
             fail("Should have thrown a ConfigurationException");
         } catch (ConfigurationException e) {
             assertThat(e).hasStackTraceContaining("\"scoped-constant\" must be declared");

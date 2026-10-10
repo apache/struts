@@ -362,5 +362,23 @@
         </action>
     </package>
 
+    <package name="wildcardOrderCatchAllFirst" extends="default" namespace="/wildcard-order-catch-all-first">
+        <action name="**" class="org.apache.struts2.SimpleAction" method="execute">
+            <result name="success" type="mock"/>
+        </action>
+        <action name="Project**" class="org.apache.struts2.SimpleAction" method="input">
+            <result name="success" type="mock"/>
+        </action>
+    </package>
+
+    <package name="wildcardOrderCatchAllLast" extends="default" namespace="/wildcard-order-catch-all-last">
+        <action name="Project**" class="org.apache.struts2.SimpleAction" method="input">
+            <result name="success" type="mock"/>
+        </action>
+        <action name="**" class="org.apache.struts2.SimpleAction" method="execute">
+            <result name="success" type="mock"/>
+        </action>
+    </package>
+
     <include file="includeTest.xml"/>
 </struts>

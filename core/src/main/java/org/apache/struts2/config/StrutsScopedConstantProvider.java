@@ -35,21 +35,18 @@ public class StrutsScopedConstantProvider implements ScopedConstantProvider {
 
     private Container container;
     private Configuration configuration;
-    private volatile Set<String> scopableNames;
+    private Set<String> scopableNames;
 
     @Inject
     public void setContainer(Container container) {
         this.container = container;
-    }
-
-    @Inject
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+        this.configuration = container.getInstance(Configuration.class);
+        this.scopableNames = ScopableConstants.collectNames(container);
     }
 
     @Override
     public String getValue(String name) {
-        if (!getScopableNames().contains(name)) {
+        if (!scopableNames.contains(name)) {
             throw new IllegalArgumentException(String.format(
                     "Constant [%s] is not scopable; register it through a %s bean", name, ScopableConstants.class.getName()));
         }
@@ -66,14 +63,5 @@ public class StrutsScopedConstantProvider implements ScopedConstantProvider {
             return Optional.empty();
         }
         return Optional.ofNullable(configuration.getPackageConfig(proxy.getConfig().getPackageName()));
-    }
-
-    private Set<String> getScopableNames() {
-        Set<String> names = scopableNames;
-        if (names == null) {
-            names = ScopableConstants.collectNames(container);
-            scopableNames = names;
-        }
-        return names;
     }
 }

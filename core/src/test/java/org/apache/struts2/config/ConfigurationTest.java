@@ -115,6 +115,24 @@ public class ConfigurationTest extends XWorkTestCase {
         assertEquals("Wrong parameter, " + p.get("1"), "dog", p.get("1"));
     }
 
+    public void testFirstMatchingWildcardWinsWhenCatchAllIsFirst() {
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        ActionConfig config = configuration.getActionConfig("/wildcard-order-catch-all-first", "ProjectStatus");
+
+        assertNotNull(config);
+        assertEquals("execute", config.getMethodName());
+    }
+
+    public void testFirstMatchingWildcardWinsWhenCatchAllIsLast() {
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        ActionConfig config = configuration.getActionConfig("/wildcard-order-catch-all-last", "ProjectStatus");
+
+        assertNotNull(config);
+        assertEquals("input", config.getMethodName());
+    }
+
     public void testGlobalResults() {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", "Foo", null, null);

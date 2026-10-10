@@ -241,17 +241,21 @@ public class StrutsJSONWriter implements JSONWriter {
         } else if (object instanceof Enum<?> enumValue) {
             this.enumeration(enumValue);
         } else {
-            String converted = this.convertToString(object);
-            if (converted != null) {
-                this.string(converted);
-            } else if (object.getClass().isRecord()) {
-                this.record(object);
-            } else {
-                processCustom(object, method);
-            }
+            processObject(object, method);
         }
 
         this.stack.pop();
+    }
+
+    private void processObject(Object object, Method method) throws JSONException {
+        String converted = this.convertToString(object);
+        if (converted != null) {
+            this.string(converted);
+        } else if (object.getClass().isRecord()) {
+            this.record(object);
+        } else {
+            processCustom(object, method);
+        }
     }
 
     /**

@@ -629,7 +629,8 @@ public final class StrutsConstants {
     public static final String STRUTS_PARAMETER_ALLOWLISTER = "struts.parameterAllowlister";
 
     /**
-     * The {@link org.apache.struts2.config.ScopedConstantProvider} implementation class.
+     * Name of the Struts bean implementing {@link org.apache.struts2.config.ScopedConstantProvider}, selected by
+     * {@link org.apache.struts2.config.StrutsBeanSelectionProvider}.
      *
      * @since 7.5.0
      */

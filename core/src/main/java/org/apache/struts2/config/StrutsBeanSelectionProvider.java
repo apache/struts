@@ -359,6 +359,12 @@ import org.apache.struts2.webjars.WebJarUrlProvider;
  *     <td>singleton</td>
  *     <td>Provides access to resource bundles used to localise messages (since 2.5.11)</td>
  *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.config.ScopedConstantProvider</td>
+ *     <td>struts.scopedConstantProvider</td>
+ *     <td>singleton</td>
+ *     <td>Resolves package-scoped constants declared with &lt;scoped-constant&gt; (since 7.5.0)</td>
+ *   </tr>
  * </table>
  * <p>
  * <!-- END SNIPPET: extensionPoints -->

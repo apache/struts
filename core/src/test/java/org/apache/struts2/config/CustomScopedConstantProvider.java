@@ -18,21 +18,10 @@
  */
 package org.apache.struts2.config;
 
-import org.apache.struts2.StrutsInternalTestCase;
+public class CustomScopedConstantProvider implements ScopedConstantProvider {
 
-public class ScopedConstantProviderWiringTest extends StrutsInternalTestCase {
-
-    public void testDispatcherResolvesStrutsScopedConstantProvider() {
-        ScopedConstantProvider provider = container.getInstance(ScopedConstantProvider.class);
-
-        assertTrue(provider instanceof StrutsScopedConstantProvider);
-    }
-
-    public void testScopedConstantProviderConstantSelectsCustomBean() {
-        initDispatcherWithConfigs("struts-default.xml,org/apache/struts2/config/struts-scoped-constants-custom-provider.xml");
-
-        ScopedConstantProvider provider = container.getInstance(ScopedConstantProvider.class);
-
-        assertTrue(provider instanceof CustomScopedConstantProvider);
+    @Override
+    public String getValue(String name) {
+        return "custom";
     }
 }

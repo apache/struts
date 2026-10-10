@@ -18,30 +18,24 @@
  */
 package org.apache.struts2.config;
 
-import org.apache.struts2.inject.Container;
+import org.apache.struts2.mock.MockContainer;
+import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Declares constants a package may override with {@code <scoped-constant>}. Register implementations as named beans;
- * the scopable set is the union over all of them.
- *
- * @since 7.5.0
- */
-public interface ScopableConstants {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    Set<String> getNames();
+public class ScopableConstantsTest {
 
-    static Set<String> collectNames(Container container) {
-        Set<String> names = new HashSet<>();
-        for (String beanName : container.getInstanceNames(ScopableConstants.class)) {
-            ScopableConstants scopableConstants = container.getInstance(ScopableConstants.class, beanName);
-            if (scopableConstants != null) {
-                names.addAll(scopableConstants.getNames());
+    @Test
+    public void beanNameWithoutInstanceContributesNoNames() {
+        MockContainer container = new MockContainer() {
+            @Override
+            public Set<String> getInstanceNames(Class<?> type) {
+                return Set.of("unresolvable");
             }
-        }
-        return Collections.unmodifiableSet(names);
+        };
+
+        assertThat(ScopableConstants.collectNames(container)).isEmpty();
     }
 }

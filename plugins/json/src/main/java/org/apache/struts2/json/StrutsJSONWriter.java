@@ -20,6 +20,9 @@ package org.apache.struts2.json;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.conversion.TypeConverter;
+import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.json.annotations.JSON;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
@@ -32,6 +35,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -103,10 +107,26 @@ public class StrutsJSONWriter implements JSONWriter {
     private boolean excludeNullProperties;
     private boolean excludeProxyProperties;
     private ProxyService proxyService;
+    private XWorkConverter xworkConverter;
+    private boolean useTypeConverters;
 
     @Inject
     public void setProxyService(ProxyService proxyService) {
         this.proxyService = proxyService;
+    }
+
+    @Inject
+    public void setXWorkConverter(XWorkConverter xworkConverter) {
+        this.xworkConverter = xworkConverter;
+    }
+
+    @Inject(value = JSONConstants.JSON_WRITER_USE_TYPE_CONVERTERS, required = false)
+    public void setUseTypeConverters(String useTypeConverters) {
+        setUseTypeConverters(Boolean.parseBoolean(useTypeConverters));
+    }
+
+    public void setUseTypeConverters(boolean useTypeConverters) {
+        this.useTypeConverters = useTypeConverters;
     }
 
     @Inject(value = JSONConstants.RESULT_EXCLUDE_PROXY_PROPERTIES, required = false)
@@ -220,13 +240,44 @@ public class StrutsJSONWriter implements JSONWriter {
             this.string(object);
         } else if (object instanceof Enum<?> enumValue) {
             this.enumeration(enumValue);
-        } else if (object.getClass().isRecord()) {
-            this.record(object);
         } else {
-            processCustom(object, method);
+            String converted = this.convertToString(object);
+            if (converted != null) {
+                this.string(converted);
+            } else if (object.getClass().isRecord()) {
+                this.record(object);
+            } else {
+                processCustom(object, method);
+            }
         }
 
         this.stack.pop();
+    }
+
+    /**
+     * Converts the object with a type converter registered for its class, when
+     * {@link JSONConstants#JSON_WRITER_USE_TYPE_CONVERTERS} is enabled.
+     *
+     * @param object object
+     * @return converted value, or null when no registered converter produced a String
+     */
+    protected String convertToString(Object object) {
+        if (!useTypeConverters || xworkConverter == null || object instanceof File) {
+            return null;
+        }
+        TypeConverter typeConverter = xworkConverter.lookup(object.getClass());
+        if (typeConverter == null) {
+            return null;
+        }
+        try {
+            ActionContext actionContext = ActionContext.getContext();
+            Map<String, Object> context = actionContext != null ? actionContext.getContextMap() : new HashMap<>();
+            Object converted = typeConverter.convertValue(context, null, null, null, object, String.class);
+            return converted instanceof String string ? string : null;
+        } catch (RuntimeException e) {
+            LOG.debug("Type converter {} failed to convert {}, serializing it as a bean", typeConverter, object.getClass(), e);
+            return null;
+        }
     }
 
     /**

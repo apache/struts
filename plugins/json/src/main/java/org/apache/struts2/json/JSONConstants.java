@@ -30,6 +30,7 @@ public class JSONConstants {
 
     public static final String JSON_WRITER = "struts.json.writer";
     public static final String JSON_READER = "struts.json.reader";
+    public static final String JSON_WRITER_USE_TYPE_CONVERTERS = "struts.json.writer.useTypeConverters";
     public static final String RESULT_EXCLUDE_PROXY_PROPERTIES = "struts.json.result.excludeProxyProperties";
     public static final String DATE_FORMAT = "struts.json.dateformat";
     public static final String JSON_MAX_ELEMENTS = "struts.json.maxElements";

@@ -36,7 +36,6 @@ mechanism that fits 7.x.
 - No Convention-plugin annotation. Convention-built packages extend an XML parent package and inherit its
   overrides.
 - No typed conversion — values are `String`, as with `container.getInstance(String.class, name)`.
-- No user-overridable provider (no `StrutsBeanSelectionProvider` alias / new constant) until there is a need.
 
 ## Inherently non-scopable constants
 
@@ -120,8 +119,11 @@ public interface ScopedConstantProvider {
 }
 ```
 
-Default implementation `StrutsScopedConstantProvider`, bound in `struts-beans.xml`. It injects `Container` and
-`Configuration` (the latter is a container factory, `DefaultConfiguration.java:291`). `getValue(name)`:
+Default implementation `StrutsScopedConstantProvider`, wired like every other pluggable core service
+(`ParameterAuthorizer`, `OgnlGuard`): `name="struts"` in `struts-beans.xml`, aliased in `StrutsBeanSelectionProvider`
+through a new `StrutsConstants.STRUTS_SCOPED_CONSTANT_PROVIDER = "struts.scopedConstantProvider"`, and registered
+in `StrutsDefaultConfigurationProvider` for the test harness. It injects `Container` and `Configuration` (the
+latter is a container factory, `DefaultConfiguration.java:291`). `getValue(name)`:
 
 1. `name` not in the registry → `IllegalArgumentException`. Only an adopter's coding error reaches this; user
    configuration cannot.
@@ -167,7 +169,8 @@ JUnit 3/4 only — match each target file's existing style; no Jupiter.
 
 ## Compatibility
 
-Additive only: a new DTD, a new element, two new interfaces, one new default bean, new `PackageConfig` methods.
+Additive only: a new DTD, a new element, two new interfaces, one new default bean with its selection constant,
+new `PackageConfig` methods.
 Existing constructors, builders, interfaces and published DTDs are untouched — suitable for the 7.x line.
 
 ## Delivery

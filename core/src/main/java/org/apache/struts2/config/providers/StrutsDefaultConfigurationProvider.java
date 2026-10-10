@@ -26,6 +26,8 @@ import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
+import org.apache.struts2.config.ScopedConstantProvider;
+import org.apache.struts2.config.StrutsScopedConstantProvider;
 import org.apache.struts2.config.impl.DefaultConfiguration;
 import org.apache.struts2.conversion.NullHandler;
 import org.apache.struts2.conversion.impl.ArrayConverter;
@@ -129,6 +131,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(PropertyAccessor.class, Enumeration.class.getName(), XWorkEnumerationAccessor.class, Scope.SINGLETON)
 
                 .factory(UnknownHandlerManager.class, DefaultUnknownHandlerManager.class, Scope.SINGLETON)
+
+                .factory(ScopedConstantProvider.class, StrutsScopedConstantProvider.class, Scope.SINGLETON)
 
                 // silly workarounds for ognl since there is no way to flush its caches
                 .factory(PropertyAccessor.class, List.class.getName(), XWorkListPropertyAccessor.class, Scope.SINGLETON)

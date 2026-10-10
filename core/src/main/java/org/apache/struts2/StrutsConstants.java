@@ -629,6 +629,13 @@ public final class StrutsConstants {
     public static final String STRUTS_PARAMETER_ALLOWLISTER = "struts.parameterAllowlister";
 
     /**
+     * The {@link org.apache.struts2.config.ScopedConstantProvider} implementation class.
+     *
+     * @since 7.5.0
+     */
+    public static final String STRUTS_SCOPED_CONSTANT_PROVIDER = "struts.scopedConstantProvider";
+
+    /**
      * Enables evaluation of OGNL expressions
      *
      * @since 6.0.0

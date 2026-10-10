@@ -454,6 +454,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(ProxyService.class, StrutsConstants.STRUTS_PROXYSERVICE, builder, props, Scope.SINGLETON);
         alias(ParameterAuthorizer.class, StrutsConstants.STRUTS_PARAMETER_AUTHORIZER, builder, props, Scope.SINGLETON);
         alias(ParameterAllowlister.class, StrutsConstants.STRUTS_PARAMETER_ALLOWLISTER, builder, props, Scope.SINGLETON);
+        alias(ScopedConstantProvider.class, StrutsConstants.STRUTS_SCOPED_CONSTANT_PROVIDER, builder, props, Scope.SINGLETON);
 
         alias(SecurityMemberAccess.class, StrutsConstants.STRUTS_MEMBER_ACCESS, builder, props, Scope.PROTOTYPE);
         alias(OgnlGuard.class, StrutsConstants.STRUTS_OGNL_GUARD, builder, props, Scope.SINGLETON);

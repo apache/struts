@@ -92,6 +92,7 @@ import org.apache.struts2.convention.actions.transactions.TransNameAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.dontfind.DontFindMeAction;
+import org.apache.struts2.convention.flags.alwaysmapexecute.MixedAction;
 import org.apache.struts2.factory.DefaultInterceptorFactory;
 import org.apache.struts2.factory.StrutsResultFactory;
 import org.apache.struts2.inject.Container;
@@ -114,6 +115,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static org.apache.struts2.convention.ReflectionTools.getAnnotation;
 import static org.easymock.EasyMock.checkOrder;
@@ -127,6 +129,11 @@ import static org.easymock.EasyMock.verify;
  * </p>
  */
 public class PackageBasedActionConfigBuilderTest extends TestCase {
+
+    private static final String FLAGS_PACKAGE = "org.apache.struts2.convention.flags";
+    private static final String ALWAYS_MAP_EXECUTE_PACKAGE = FLAGS_PACKAGE + ".alwaysmapexecute";
+    private static final String CHECK_IMPLEMENTS_PACKAGE = FLAGS_PACKAGE + ".checkimplements";
+    private static final String MAP_ALL_MATCHES_PACKAGE = FLAGS_PACKAGE + ".mapallmatches";
 
     @Override
     public void setUp() throws Exception {
@@ -347,6 +354,89 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         }
     }
 
+    public void testAlwaysMapExecuteDisabledSkipsExecuteNextToAnnotatedMethods() {
+        Map<String, ActionConfig> actions = buildActions(ALWAYS_MAP_EXECUTE_PACKAGE, builder -> {});
+
+        assertEquals(Set.of("other"), actions.keySet());
+    }
+
+    public void testAlwaysMapExecuteEnabledMapsExecuteNextToAnnotatedMethods() {
+        Map<String, ActionConfig> actions = buildActions(ALWAYS_MAP_EXECUTE_PACKAGE,
+                builder -> builder.setAlwaysMapExecute("true"));
+
+        assertEquals(Set.of("other", "mixed"), actions.keySet());
+        assertEquals("execute", actions.get("mixed").getMethodName());
+    }
+
+    public void testCheckImplementsActionEnabledMapsActionImplementorsWithoutSuffix() {
+        Map<String, ActionConfig> actions = buildActions(CHECK_IMPLEMENTS_PACKAGE, builder -> {});
+
+        assertEquals(Set.of("implements-action-only"), actions.keySet());
+    }
+
+    public void testCheckImplementsActionDisabledIgnoresActionImplementorsWithoutSuffix() {
+        Map<String, ActionConfig> actions = buildActions(CHECK_IMPLEMENTS_PACKAGE,
+                builder -> builder.setCheckImplementsAction("false"));
+
+        assertTrue(actions.isEmpty());
+    }
+
+    public void testMapAllMatchesDisabledSkipsActionWithoutExecute() {
+        Map<String, ActionConfig> actions = buildActions(MAP_ALL_MATCHES_PACKAGE, builder -> {});
+
+        assertTrue(actions.isEmpty());
+    }
+
+    public void testMapAllMatchesEnabledMapsActionWithoutExecute() {
+        Map<String, ActionConfig> actions = buildActions(MAP_ALL_MATCHES_PACKAGE,
+                builder -> builder.setMapAllMatches("true"));
+
+        assertEquals(Set.of("no-execute"), actions.keySet());
+        assertNull(actions.get("no-execute").getMethodName());
+    }
+
+    public void testDisableScanningSkipsConfiguredActionPackages() {
+        Map<String, ActionConfig> actions = buildActions(ALWAYS_MAP_EXECUTE_PACKAGE,
+                builder -> builder.setDisableActionScanning("true"));
+
+        assertTrue(actions.isEmpty());
+    }
+
+    public void testPackageLocatorsScanFlagsPackages() {
+        Map<String, ActionConfig> actions = buildActions(null, builder -> {
+            builder.setPackageLocators("flags");
+            builder.setPackageLocatorsBase(FLAGS_PACKAGE);
+        });
+
+        assertEquals(Set.of("other", "implements-action-only"), actions.keySet());
+    }
+
+    public void testPackageLocatorsDisableIgnoresPackageLocators() {
+        Map<String, ActionConfig> actions = buildActions(null, builder -> {
+            builder.setPackageLocators("flags");
+            builder.setPackageLocatorsBase(FLAGS_PACKAGE);
+            builder.setDisablePackageLocatorsScanning("true");
+        });
+
+        assertTrue(actions.isEmpty());
+    }
+
+    public void testEagerLoadingDisabledDoesNotLoadActionClasses() {
+        RecordingObjectFactory objectFactory = new RecordingObjectFactory();
+
+        buildActions(ALWAYS_MAP_EXECUTE_PACKAGE, objectFactory, builder -> {});
+
+        assertTrue(objectFactory.loadedClassNames.isEmpty());
+    }
+
+    public void testEagerLoadingEnabledLoadsActionClassesThroughObjectFactory() {
+        RecordingObjectFactory objectFactory = new RecordingObjectFactory();
+
+        buildActions(ALWAYS_MAP_EXECUTE_PACKAGE, objectFactory, builder -> builder.setEagerLoading("true"));
+
+        assertEquals(List.of(MixedAction.class.getName()), objectFactory.loadedClassNames);
+    }
+
     public void testActionPackages() throws MalformedURLException {
         run("org.apache.struts2.convention.actions", null, null);
     }
@@ -442,6 +532,58 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         boolean includeUnrelated = builder.includeClassNameInActionScan("com.example.actions.MyAction");
         assertTrue("Classes in unrelated packages should not be excluded",
                 includeUnrelated);
+    }
+
+    private Map<String, ActionConfig> buildActions(String actionPackages, Consumer<PackageBasedActionConfigBuilder> flags) {
+        return buildActions(actionPackages, new ObjectFactory(), flags);
+    }
+
+    private Map<String, ActionConfig> buildActions(String actionPackages, ObjectFactory objectFactory,
+                                                   Consumer<PackageBasedActionConfigBuilder> flags) {
+        ResultTypeConfig defaultResult = new ResultTypeConfig.Builder("dispatcher",
+                ServletDispatcherResult.class.getName()).defaultResultParam("location").build();
+        PackageConfig strutsDefault = makePackageConfig("struts-default", null, null, "dispatcher",
+                new ResultTypeConfig[]{defaultResult}, null, null, null, true);
+
+        final DummyContainer mockContainer = new DummyContainer();
+        mockContainer.setActionNameBuilder(new SEOActionNameBuilder("true", "-"));
+        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setResultMapBuilder((actionClass, annotation, actionName, packageConfig) -> new HashMap<>());
+        mockContainer.setInterceptorMapBuilder((actionClass, builder, actionName, annotation) -> new ArrayList<>());
+        Configuration configuration = new DefaultConfiguration() {
+            @Override
+            public Container getContainer() {
+                return mockContainer;
+            }
+        };
+        configuration.addPackageConfig("struts-default", strutsDefault);
+        objectFactory.setContainer(mockContainer);
+
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
+                configuration, mockContainer, objectFactory, "false", "struts-default", "false");
+        builder.setActionPackages(actionPackages);
+        builder.setActionSuffix("Action");
+        builder.setFileManagerFactory(mockContainer.getInstance(FileManagerFactory.class));
+        builder.setProviderAllowlist(new ProviderAllowlist());
+        flags.accept(builder);
+
+        builder.buildActionConfigs();
+
+        Map<String, ActionConfig> actions = new HashMap<>();
+        configuration.getPackageConfigs().values().stream()
+                .filter(pkg -> pkg != strutsDefault)
+                .forEach(pkg -> actions.putAll(pkg.getActionConfigs()));
+        return actions;
+    }
+
+    private static class RecordingObjectFactory extends ObjectFactory {
+        private final List<String> loadedClassNames = new ArrayList<>();
+
+        @Override
+        public Class<?> getClassInstance(String className) throws ClassNotFoundException {
+            loadedClassNames.add(className);
+            return super.getClassInstance(className);
+        }
     }
 
     private void run(String actionPackages, String packageLocators, String excludePackages) throws MalformedURLException {

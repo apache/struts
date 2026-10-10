@@ -38,4 +38,9 @@ public class ScopableConstantsTest {
 
         assertThat(ScopableConstants.collectNames(container)).isEmpty();
     }
+
+    @Test
+    public void containerWithoutScopableBeansContributesNoNames() {
+        assertThat(ScopableConstants.collectNames(new MockContainer())).isEmpty();
+    }
 }

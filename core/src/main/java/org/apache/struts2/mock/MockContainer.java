@@ -21,6 +21,7 @@ package org.apache.struts2.mock;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Scope;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -45,7 +46,7 @@ public class MockContainer implements Container {
     }
 
     public Set<String> getInstanceNames(Class<?> type) {
-        return null;
+        return Collections.emptySet();
     }
 
     public void setScopeStrategy(Scope.Strategy scopeStrategy) {

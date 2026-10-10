@@ -24,7 +24,9 @@ import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.PackageConfig;
 
 import java.util.List;
+import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -196,6 +198,35 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertEquals(2, configuration.getPackageConfigs().size());
         assertEquals(expectedDefaultClassRefPackage, configuration.getPackageConfig(hasDefaultClassRefPkgName));
         assertEquals(expectedNoDefaultClassRefPackage, configuration.getPackageConfig(noDefaultClassRefPkgName));
+    }
+
+    public void testScopedConstantsLoadAndInherit() throws ConfigurationException {
+        buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-inheritance.xml"));
+
+        PackageConfig parent = configuration.getPackageConfig("parent");
+        PackageConfig child = configuration.getPackageConfig("child");
+
+        assertEquals(Map.of("first", "parent-first", "second", "parent-second"), parent.getScopedConstants());
+        assertEquals(Map.of("second", "child-second"), child.getScopedConstants());
+        assertEquals(Map.of("first", "parent-first", "second", "child-second"), child.getAllScopedConstants());
+    }
+
+    public void testDuplicateScopedConstantInOnePackageFails() {
+        try {
+            buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-duplicate.xml"));
+            fail("Should have thrown a ConfigurationException");
+        } catch (ConfigurationException e) {
+            assertThat(e).hasStackTraceContaining("Package [dup] declares scoped constant [first] more than once");
+        }
+    }
+
+    public void testScopedConstantIsRejectedUnderOlderDtd() {
+        try {
+            buildConfigurationProvider(getXmlConfigFilePath("struts-scoped-constants-old-dtd.xml"));
+            fail("Should have thrown a ConfigurationException");
+        } catch (ConfigurationException e) {
+            assertThat(e).hasStackTraceContaining("\"scoped-constant\" must be declared");
+        }
     }
 
     private String getXmlConfigFilePath(String fileName) {

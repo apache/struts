@@ -16,50 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.mock;
+package org.apache.struts2.config;
 
 import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Scope;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Mock implementation to be used in unittests
+ * Declares constants a package may override with {@code <scoped-constant>}. Register implementations as named beans;
+ * the scopable set is the union over all of them.
+ *
+ * @since 7.5.0
  */
-public class MockContainer implements Container {
+public interface ScopableConstants {
 
-    public void inject(Object o) {
+    Set<String> getNames();
 
+    static Set<String> collectNames(Container container) {
+        Set<String> names = new HashSet<>();
+        for (String beanName : container.getInstanceNames(ScopableConstants.class)) {
+            ScopableConstants scopableConstants = container.getInstance(ScopableConstants.class, beanName);
+            if (scopableConstants != null) {
+                names.addAll(scopableConstants.getNames());
+            }
+        }
+        return Collections.unmodifiableSet(names);
     }
-
-    public <T> T inject(Class<T> implementation) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type, String name) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type) {
-        return null;
-    }
-
-    public Set<String> getInstanceNames(Class<?> type) {
-        return Collections.emptySet();
-    }
-
-    public void setScopeStrategy(Scope.Strategy scopeStrategy) {
-
-    }
-
-    public void removeScopeStrategy() {
-
-    }
-
-    @Override
-    public void destroy() {
-        // no-op in mock
-    }
-
 }

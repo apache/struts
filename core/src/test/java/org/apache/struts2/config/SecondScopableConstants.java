@@ -16,50 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.mock;
+package org.apache.struts2.config;
 
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Scope;
-
-import java.util.Collections;
 import java.util.Set;
 
-/**
- * Mock implementation to be used in unittests
- */
-public class MockContainer implements Container {
-
-    public void inject(Object o) {
-
-    }
-
-    public <T> T inject(Class<T> implementation) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type, String name) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type) {
-        return null;
-    }
-
-    public Set<String> getInstanceNames(Class<?> type) {
-        return Collections.emptySet();
-    }
-
-    public void setScopeStrategy(Scope.Strategy scopeStrategy) {
-
-    }
-
-    public void removeScopeStrategy() {
-
-    }
+public class SecondScopableConstants implements ScopableConstants {
 
     @Override
-    public void destroy() {
-        // no-op in mock
+    public Set<String> getNames() {
+        return Set.of("second.scopable");
     }
-
 }

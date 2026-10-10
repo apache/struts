@@ -16,50 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.mock;
+package org.apache.struts2.config;
 
-import org.apache.struts2.inject.Container;
-import org.apache.struts2.inject.Scope;
+import org.apache.struts2.mock.MockContainer;
+import org.junit.Test;
 
-import java.util.Collections;
 import java.util.Set;
 
-/**
- * Mock implementation to be used in unittests
- */
-public class MockContainer implements Container {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public void inject(Object o) {
+public class ScopableConstantsTest {
 
+    @Test
+    public void beanNameWithoutInstanceContributesNoNames() {
+        MockContainer container = new MockContainer() {
+            @Override
+            public Set<String> getInstanceNames(Class<?> type) {
+                return Set.of("unresolvable");
+            }
+        };
+
+        assertThat(ScopableConstants.collectNames(container)).isEmpty();
     }
 
-    public <T> T inject(Class<T> implementation) {
-        return null;
+    @Test
+    public void containerWithoutScopableBeansContributesNoNames() {
+        assertThat(ScopableConstants.collectNames(new MockContainer())).isEmpty();
     }
-
-    public <T> T getInstance(Class<T> type, String name) {
-        return null;
-    }
-
-    public <T> T getInstance(Class<T> type) {
-        return null;
-    }
-
-    public Set<String> getInstanceNames(Class<?> type) {
-        return Collections.emptySet();
-    }
-
-    public void setScopeStrategy(Scope.Strategy scopeStrategy) {
-
-    }
-
-    public void removeScopeStrategy() {
-
-    }
-
-    @Override
-    public void destroy() {
-        // no-op in mock
-    }
-
 }

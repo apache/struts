@@ -59,8 +59,8 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     protected boolean isFinal = false; // a final package is unextendable
     protected boolean needsRefresh;
     protected boolean strictMethodInvocation = true;
-    protected Map<String, String> scopedConstants;
-    protected Map<String, String> allScopedConstants;
+    private Map<String, String> scopedConstants;
+    private Map<String, String> allScopedConstants;
 
     protected PackageConfig(String name) {
         this.name = name;

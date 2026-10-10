@@ -22,6 +22,7 @@ import org.apache.struts2.XWorkTestCase;
 
 import java.util.Map;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
 
 public class PackageConfigTest extends XWorkTestCase {
@@ -163,15 +164,18 @@ public class PackageConfigTest extends XWorkTestCase {
                 .addScopedConstant("first", "value")
                 .build();
 
-        assertThrows(UnsupportedOperationException.class, () -> config.getScopedConstants().put("x", "y"));
-        assertThrows(UnsupportedOperationException.class, () -> config.getAllScopedConstants().put("x", "y"));
+        Map<String, String> own = config.getScopedConstants();
+        Map<String, String> all = config.getAllScopedConstants();
+
+        assertThrows(UnsupportedOperationException.class, () -> own.put("x", "y"));
+        assertThrows(UnsupportedOperationException.class, () -> all.put("x", "y"));
     }
 
     public void testScopedConstantsTakePartInEquality() {
         PackageConfig plain = new PackageConfig.Builder("pkg").build();
         PackageConfig scoped = new PackageConfig.Builder("pkg").addScopedConstant("first", "value").build();
 
-        assertFalse(plain.equals(scoped));
+        assertNotEquals(plain, scoped);
     }
 
 }

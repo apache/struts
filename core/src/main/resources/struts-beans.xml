@@ -259,7 +259,7 @@
           class="org.apache.struts2.interceptor.parameter.OgnlParameterAllowlister" scope="singleton"/>
 
     <bean type="org.apache.struts2.config.ScopedConstantProvider" name="struts"
-          class="org.apache.struts2.config.StrutsScopedConstantProvider" scope="singleton"/>
+          class="org.apache.struts2.config.providers.StrutsScopedConstantProvider" scope="singleton"/>
 
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>

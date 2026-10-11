@@ -16,11 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.config;
+package org.apache.struts2.config.providers;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.ScopableConstants;
+import org.apache.struts2.config.ScopedConstantProvider;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;

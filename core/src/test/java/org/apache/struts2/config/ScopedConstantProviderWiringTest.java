@@ -19,6 +19,7 @@
 package org.apache.struts2.config;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.config.providers.StrutsScopedConstantProvider;
 
 public class ScopedConstantProviderWiringTest extends StrutsInternalTestCase {
 

@@ -27,7 +27,6 @@ import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.ScopedConstantProvider;
-import org.apache.struts2.config.StrutsScopedConstantProvider;
 import org.apache.struts2.config.impl.DefaultConfiguration;
 import org.apache.struts2.conversion.NullHandler;
 import org.apache.struts2.conversion.impl.ArrayConverter;

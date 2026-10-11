@@ -51,7 +51,8 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd",
             "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd",
             "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN", "struts-6.0.dtd",
-            "-//Apache Software Foundation//DTD Struts Configuration 6.5//EN", "struts-6.5.dtd");
+            "-//Apache Software Foundation//DTD Struts Configuration 6.5//EN", "struts-6.5.dtd",
+            "-//Apache Software Foundation//DTD Struts Configuration 7.5//EN", "struts-7.5.dtd");
 
     private File baseDir = null;
     private final String filename;

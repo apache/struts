@@ -59,6 +59,8 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     protected boolean isFinal = false; // a final package is unextendable
     protected boolean needsRefresh;
     protected boolean strictMethodInvocation = true;
+    private Map<String, String> scopedConstants;
+    private Map<String, String> allScopedConstants;
 
     protected PackageConfig(String name) {
         this.name = name;
@@ -69,6 +71,8 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         resultTypeConfigs = new LinkedHashMap<>();
         globalExceptionMappingConfigs = new ArrayList<>();
         parents = new ArrayList<>();
+        scopedConstants = new LinkedHashMap<>();
+        allScopedConstants = Collections.emptyMap();
     }
 
     protected PackageConfig(PackageConfig orig) {
@@ -90,6 +94,8 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         this.parents = new ArrayList<>(orig.parents);
         this.location = orig.location;
         this.strictMethodInvocation = orig.strictMethodInvocation;
+        this.scopedConstants = new LinkedHashMap<>(orig.scopedConstants);
+        this.allScopedConstants = orig.allScopedConstants;
     }
 
     public boolean isAbstract() {
@@ -187,6 +193,22 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         retMap.putAll(getResultTypeConfigs());
 
         return retMap;
+    }
+
+    /**
+     * @return scoped constants declared by this package itself, without inherited ones
+     * @since 7.5.0
+     */
+    public Map<String, String> getScopedConstants() {
+        return scopedConstants;
+    }
+
+    /**
+     * @return scoped constants in effect for this package: inherited ones, overridden by its own
+     * @since 7.5.0
+     */
+    public Map<String, String> getAllScopedConstants() {
+        return allScopedConstants;
     }
 
     /**
@@ -391,6 +413,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         if (!Objects.equals(globalExceptionMappingConfigs, that.globalExceptionMappingConfigs))
             return false;
         if (!Objects.equals(parents, that.parents)) return false;
+        if (!Objects.equals(scopedConstants, that.scopedConstants)) return false;
         if (!Objects.equals(defaultInterceptorRef, that.defaultInterceptorRef))
             return false;
         if (!Objects.equals(defaultActionRef, that.defaultActionRef))
@@ -412,6 +435,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         result = 31 * result + (resultTypeConfigs != null ? resultTypeConfigs.hashCode() : 0);
         result = 31 * result + (globalExceptionMappingConfigs != null ? globalExceptionMappingConfigs.hashCode() : 0);
         result = 31 * result + (parents != null ? parents.hashCode() : 0);
+        result = 31 * result + (scopedConstants != null ? scopedConstants.hashCode() : 0);
         result = 31 * result + (defaultInterceptorRef != null ? defaultInterceptorRef.hashCode() : 0);
         result = 31 * result + (defaultActionRef != null ? defaultActionRef.hashCode() : 0);
         result = 31 * result + (defaultResultType != null ? defaultResultType.hashCode() : 0);
@@ -605,6 +629,14 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
             return this;
         }
 
+        /**
+         * @since 7.5.0
+         */
+        public Builder addScopedConstant(String name, String value) {
+            target.scopedConstants.put(name, value);
+            return this;
+        }
+
         public Builder location(Location loc) {
             target.location = loc;
             return this;
@@ -655,9 +687,20 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
             target.resultTypeConfigs = Collections.unmodifiableMap(target.resultTypeConfigs);
             target.globalExceptionMappingConfigs = Collections.unmodifiableList(target.globalExceptionMappingConfigs);
             target.parents = Collections.unmodifiableList(target.parents);
+            target.scopedConstants = Collections.unmodifiableMap(target.scopedConstants);
+            target.allScopedConstants = mergeScopedConstants(target);
             PackageConfig result = target;
             target = new PackageConfig(result);
             return result;
+        }
+
+        private static Map<String, String> mergeScopedConstants(PackageConfig config) {
+            Map<String, String> merged = new LinkedHashMap<>();
+            for (PackageConfig parent : config.parents) {
+                merged.putAll(parent.getAllScopedConstants());
+            }
+            merged.putAll(config.scopedConstants);
+            return Collections.unmodifiableMap(merged);
         }
 
         @Override

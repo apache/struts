@@ -36,6 +36,7 @@ import org.apache.struts2.config.FileManagerFactoryProvider;
 import org.apache.struts2.config.FileManagerProvider;
 import org.apache.struts2.config.PackageProvider;
 import org.apache.struts2.config.RuntimeConfiguration;
+import org.apache.struts2.config.ScopableConstants;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.PackageConfig;
@@ -449,6 +450,8 @@ public class DefaultConfiguration implements Configuration {
      * @throws ConfigurationException in case of any configuration errors
      */
     protected synchronized RuntimeConfiguration buildRuntimeConfiguration() throws ConfigurationException {
+        validateScopedConstants();
+
         Map<String, Map<String, ActionConfig>> namespaceActionConfigs = new LinkedHashMap<>();
         Map<String, String> namespaceConfigs = new LinkedHashMap<>();
 
@@ -486,6 +489,28 @@ public class DefaultConfiguration implements Configuration {
 
         return new RuntimeConfigurationImpl(Collections.unmodifiableMap(namespaceActionConfigs),
                 Collections.unmodifiableMap(namespaceConfigs), matcher, appendNamedParameters, fallbackToEmptyNamespace);
+    }
+
+    /**
+     * @since 7.5.0
+     */
+    protected void validateScopedConstants() throws ConfigurationException {
+        Set<String> scopableNames = ScopableConstants.collectNames(container);
+        for (PackageConfig packageConfig : packageContexts.values()) {
+            for (String name : packageConfig.getScopedConstants().keySet()) {
+                if (!scopableNames.contains(name)) {
+                    throw new ConfigurationException(String.format("Package [%s] declares scoped constant [%s], which is not scopable. %s",
+                            packageConfig.getName(), name, describeScopable(scopableNames)), packageConfig);
+                }
+            }
+        }
+    }
+
+    private static String describeScopable(Set<String> scopableNames) {
+        if (scopableNames.isEmpty()) {
+            return "No constants are scopable in this configuration.";
+        }
+        return "Scopable constants: " + new TreeSet<>(scopableNames) + ".";
     }
 
     private void setDefaultResults(Map<String, ResultConfig> results, PackageConfig packageContext) {

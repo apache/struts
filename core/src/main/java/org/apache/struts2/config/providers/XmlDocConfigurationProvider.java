@@ -424,6 +424,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
         LOG.debug("Loaded {}", newPackage);
 
+        loadScopedConstants(newPackage, packageElement);
+
         // add result types (and default result) to this package
         addResultTypes(newPackage, packageElement);
 
@@ -837,6 +839,21 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             Element defaultRefElement = (Element) resultTypeList.item(0);
             packageContext.defaultActionRef(defaultRefElement.getAttribute("name"));
         }
+    }
+
+    /**
+     * @since 7.5.0
+     */
+    protected void loadScopedConstants(PackageConfig.Builder packageContext, Element packageElement) {
+        Set<String> declared = new HashSet<>();
+        iterateChildrenByTagName(packageElement, "scoped-constant", constantElement -> {
+            String name = constantElement.getAttribute("name");
+            if (!declared.add(name)) {
+                throw new ConfigurationException(format("Package [%s] declares scoped constant [%s] more than once",
+                        packageContext.getName(), name), constantElement);
+            }
+            packageContext.addScopedConstant(name, constantElement.getAttribute("value"));
+        });
     }
 
     /**

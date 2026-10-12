@@ -21,6 +21,7 @@ package org.apache.struts2.config.entities;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.CustomScopedConstantProvider;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.junit.Assert;
 import org.junit.Test;
@@ -67,6 +68,19 @@ public class ConstantConfigTest {
         Assert.assertEquals(expectedActionExtensions, map.get(StrutsConstants.STRUTS_ACTION_EXTENSION));
         Assert.assertNull(map.get(StrutsConstants.STRUTS_I18N_RELOAD));
         Assert.assertEquals(expectedLanguage, map.get(StrutsConstants.STRUTS_LOCALE));
+    }
+
+    @Test
+    public void testScopedConstantProviderToString() {
+        ConstantConfig constantConfig = new ConstantConfig();
+        Assert.assertNull(constantConfig.getAllAsStringsMap().get(StrutsConstants.STRUTS_SCOPED_CONSTANT_PROVIDER));
+
+        constantConfig.setScopedConstantProvider(new BeanConfig(CustomScopedConstantProvider.class, "custom"));
+        Assert.assertEquals("custom", constantConfig.getAllAsStringsMap().get(StrutsConstants.STRUTS_SCOPED_CONSTANT_PROVIDER));
+
+        constantConfig.setScopedConstantProvider(CustomScopedConstantProvider.class);
+        Assert.assertEquals(CustomScopedConstantProvider.class.getName(),
+                constantConfig.getAllAsStringsMap().get(StrutsConstants.STRUTS_SCOPED_CONSTANT_PROVIDER));
     }
 
     @Test

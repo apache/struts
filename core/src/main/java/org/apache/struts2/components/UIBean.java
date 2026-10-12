@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ScopedConstantProvider;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.TextParseUtil;
 import org.apache.struts2.util.ValueStack;
@@ -528,10 +529,14 @@ public abstract class UIBean extends Component {
     // dynamic attributes
     protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
+    @Deprecated(since = "7.5.0", forRemoval = true)
     protected String defaultTemplateDir;
+    @Deprecated(since = "7.5.0", forRemoval = true)
     protected String defaultUITheme;
     protected String uiThemeExpansionToken;
     protected String uiStaticContentPath;
+
+    protected ScopedConstantProvider scopedConstantProvider;
 
     protected TemplateEngineManager templateEngineManager;
 
@@ -540,14 +545,25 @@ public abstract class UIBean extends Component {
     protected HtmlConstraintProvider htmlConstraintProvider;
     protected boolean html5ConstraintsEnabled;
 
-    @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
+    /**
+     * @deprecated no longer read; set {@code struts.ui.templateDir} globally or per package with {@code <scoped-constant>}
+     */
+    @Deprecated(since = "7.5.0", forRemoval = true)
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
     }
 
-    @Inject(StrutsConstants.STRUTS_UI_THEME)
+    /**
+     * @deprecated no longer read; set {@code struts.ui.theme} globally or per package with {@code <scoped-constant>}
+     */
+    @Deprecated(since = "7.5.0", forRemoval = true)
     public void setDefaultUITheme(String theme) {
         this.defaultUITheme = theme;
+    }
+
+    @Inject
+    public void setScopedConstantProvider(ScopedConstantProvider scopedConstantProvider) {
+        this.scopedConstantProvider = scopedConstantProvider;
     }
 
     @Inject(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN)
@@ -643,7 +659,7 @@ public abstract class UIBean extends Component {
 
         // Default template set
         if (isBlank(result)) {
-            result = defaultTemplateDir;
+            result = scopedConstantProvider.getValue(StrutsConstants.STRUTS_UI_TEMPLATEDIR);
         }
 
         // Defaults to 'template'
@@ -675,7 +691,7 @@ public abstract class UIBean extends Component {
 
         // Default theme set
         if (isBlank(result)) {
-            result = defaultUITheme;
+            result = scopedConstantProvider.getValue(StrutsConstants.STRUTS_UI_THEME);
         }
 
         return result;

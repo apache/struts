@@ -106,5 +106,6 @@ public class LinkTest extends AbstractTest {
         super.setUp();
         this.tag = new Link(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 }

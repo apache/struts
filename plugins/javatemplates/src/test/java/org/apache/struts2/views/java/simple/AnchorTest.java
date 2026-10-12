@@ -114,6 +114,7 @@ public class AnchorTest extends AbstractTest {
         this.tag.setUrlRenderer(new ServletUrlRenderer());
         this.tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

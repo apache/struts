@@ -93,6 +93,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         tag = new Checkbox(stack, request, response);
         tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

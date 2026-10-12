@@ -52,6 +52,7 @@ public class HiddenTest extends AbstractTest {
         super.setUp();
         this.tag = new Hidden(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

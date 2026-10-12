@@ -74,6 +74,7 @@ public class PasswordTest extends AbstractCommonAttributesTest {
         super.setUp();
         this.tag = new Password(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

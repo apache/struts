@@ -117,6 +117,7 @@ public class SelectTest extends AbstractCommonAttributesTest {
         super.setUp();
         this.tag = new Select(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

@@ -83,5 +83,6 @@ public class FormTest extends AbstractCommonAttributesTest {
         EasyMock.replay(renderer);
         tag.setUrlRenderer(renderer);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 }

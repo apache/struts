@@ -74,6 +74,7 @@ public class TextAreaTest extends AbstractCommonAttributesTest {
         super.setUp();
         this.tag = new TextArea(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

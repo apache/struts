@@ -55,6 +55,7 @@ public class TextFieldTest extends AbstractCommonAttributesTest {
         super.setUp();
         this.tag = new TextField(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

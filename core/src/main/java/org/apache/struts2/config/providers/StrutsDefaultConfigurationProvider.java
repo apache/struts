@@ -23,9 +23,11 @@ import org.apache.struts2.DefaultActionProxyFactory;
 import org.apache.struts2.DefaultUnknownHandlerManager;
 import org.apache.struts2.FileManagerFactory;
 import org.apache.struts2.UnknownHandlerManager;
+import org.apache.struts2.components.StrutsUiScopableConstants;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
+import org.apache.struts2.config.ScopableConstants;
 import org.apache.struts2.config.ScopedConstantProvider;
 import org.apache.struts2.config.impl.DefaultConfiguration;
 import org.apache.struts2.conversion.NullHandler;
@@ -132,6 +134,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(UnknownHandlerManager.class, DefaultUnknownHandlerManager.class, Scope.SINGLETON)
 
                 .factory(ScopedConstantProvider.class, StrutsScopedConstantProvider.class, Scope.SINGLETON)
+                .factory(ScopableConstants.class, StrutsUiScopableConstants.class, Scope.SINGLETON)
 
                 // silly workarounds for ognl since there is no way to flush its caches
                 .factory(PropertyAccessor.class, List.class.getName(), XWorkListPropertyAccessor.class, Scope.SINGLETON)

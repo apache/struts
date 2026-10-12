@@ -277,14 +277,16 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     protected void registerConstant(Element child, LocatableProperties props) {
         String name = child.getAttribute("name");
-        String value = child.getAttribute("value");
-
-        if (valueSubstitutor != null) {
-            LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
-            value = valueSubstitutor.substitute(value);
-        }
-
+        String value = substituteValue(child.getAttribute("value"));
         props.setProperty(name, value, child);
+    }
+
+    private String substituteValue(String value) {
+        if (valueSubstitutor == null) {
+            return value;
+        }
+        LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
+        return valueSubstitutor.substitute(value);
     }
 
     protected void registerUnknownHandlerStack(Element child) {
@@ -852,7 +854,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 throw new ConfigurationException(format("Package [%s] declares scoped constant [%s] more than once",
                         packageContext.getName(), name), constantElement);
             }
-            packageContext.addScopedConstant(name, constantElement.getAttribute("value"));
+            packageContext.addScopedConstant(name, substituteValue(constantElement.getAttribute("value")));
         });
     }
 

@@ -24,10 +24,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.entities.BeanConfig;
 import org.apache.struts2.config.entities.BeanSelectionConfig;
 import org.apache.struts2.config.entities.ConstantConfig;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,6 +42,9 @@ import org.apache.struts2.inject.Scope;
 import org.apache.struts2.util.location.LocatableProperties;
 
 public class StrutsJavaConfigurationProviderTest {
+
+    private ConfigurationManager configurationManager;
+
     @Test
     public void testRegister() throws Exception {
         final ConstantConfig constantConfig = new ConstantConfig();
@@ -150,6 +155,68 @@ public class StrutsJavaConfigurationProviderTest {
         props.put(CodeCoverageTestClass1.ALIAS_KEY, CodeCoverageTestClass1.ALIAS_VALUE);
         TestBeanSelectionProvider testBeanSelectionProvider = new TestBeanSelectionProvider();
         testBeanSelectionProvider.aliasCallCoverage(CodeCoverageTestClass1.class, builder, props, CodeCoverageTestClass1.ALIAS_KEY, Scope.THREAD);
+    }
+
+    @Test
+    public void testScopedConstantProviderSelectedThroughConstantConfig() {
+        ConstantConfig constantConfig = new ConstantConfig();
+        constantConfig.setScopedConstantProvider(new BeanConfig(CustomScopedConstantProvider.class, "custom"));
+        StrutsJavaConfiguration javaConfig = javaConfiguration(constantConfig,
+                new BeanConfig(CustomScopedConstantProvider.class, "custom", ScopedConstantProvider.class));
+
+        Container container = load(javaConfig).getContainer();
+
+        Assert.assertTrue(container.getInstance(ScopedConstantProvider.class) instanceof CustomScopedConstantProvider);
+    }
+
+    @Test
+    public void testScopableConstantsBeanSatisfiesScopedConstantValidation() {
+        StrutsJavaConfiguration javaConfig = javaConfiguration(new ConstantConfig(),
+                new BeanConfig(SampleScopableConstants.class, "sample", ScopableConstants.class));
+
+        Configuration configuration = load(javaConfig, "org/apache/struts2/config/struts-scoped-constants-no-registry.xml");
+
+        Assert.assertEquals(Collections.singletonMap("sample.scopable", "x"),
+                configuration.getPackageConfig("unregistered").getScopedConstants());
+    }
+
+    @After
+    public void tearDown() {
+        if (configurationManager != null) {
+            configurationManager.destroyConfiguration();
+        }
+        ActionContext.clear();
+    }
+
+    private Configuration load(StrutsJavaConfiguration javaConfig, String... xmlConfigs) {
+        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(new DefaultPropertiesProvider());
+        configurationManager.addContainerProvider(new StrutsXmlConfigurationProvider("struts-default.xml"));
+        for (String xmlConfig : xmlConfigs) {
+            configurationManager.addContainerProvider(new StrutsXmlConfigurationProvider(xmlConfig));
+        }
+        configurationManager.addContainerProvider(new StrutsJavaConfigurationProvider(javaConfig));
+        configurationManager.addContainerProvider(new StrutsBeanSelectionProvider());
+        return configurationManager.getConfiguration();
+    }
+
+    private static StrutsJavaConfiguration javaConfiguration(ConstantConfig constantConfig, BeanConfig... beans) {
+        return new StrutsJavaConfiguration() {
+            @Override
+            public List<BeanConfig> beans() {
+                return Arrays.asList(beans);
+            }
+
+            @Override
+            public List<ConstantConfig> constants() {
+                return Collections.singletonList(constantConfig);
+            }
+
+            @Override
+            public List<String> unknownHandlerStack() {
+                return null;
+            }
+        };
     }
 
     final class CodeCoverageTestClass1 extends Object {

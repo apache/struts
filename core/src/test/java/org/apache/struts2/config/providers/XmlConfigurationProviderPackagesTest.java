@@ -21,8 +21,12 @@ package org.apache.struts2.config.providers;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.RuntimeConfiguration;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.PackageConfig;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.List;
 import java.util.Map;
 
@@ -227,6 +231,20 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         } catch (ConfigurationException e) {
             assertThat(e).hasStackTraceContaining("\"scoped-constant\" must be declared");
         }
+    }
+
+    public void testScopedConstantIsKeptAsWrittenWithoutValueSubstitutor() throws Exception {
+        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        Element packageElement = document.createElement("package");
+        Element scopedConstant = document.createElement("scoped-constant");
+        scopedConstant.setAttribute("name", "first");
+        scopedConstant.setAttribute("value", "${ww5767.value}");
+        packageElement.appendChild(scopedConstant);
+        PackageConfig.Builder packageContext = new PackageConfig.Builder("raw");
+
+        new StrutsXmlConfigurationProvider("unused.xml").loadScopedConstants(packageContext, packageElement);
+
+        assertEquals(Map.of("first", "${ww5767.value}"), packageContext.build().getScopedConstants());
     }
 
     private String getXmlConfigFilePath(String fileName) {

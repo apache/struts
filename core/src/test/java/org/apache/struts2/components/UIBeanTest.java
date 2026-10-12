@@ -183,6 +183,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
 
         Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
         Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
@@ -203,7 +204,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setTemplateDir(explicitTemplateDir);
-        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+        txtFld.setScopedConstantProvider(name -> defaultTemplateDir);
 
         assertEquals(explicitTemplateDir, txtFld.getTemplateDir());
     }
@@ -215,7 +216,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         TextField txtFld = new TextField(stack, req, res);
-        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+        txtFld.setScopedConstantProvider(name -> defaultTemplateDir);
 
         assertEquals(defaultTemplateDir, txtFld.getTemplateDir());
     }
@@ -226,6 +227,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         TextField txtFld = new TextField(stack, req, res);
+        txtFld.setScopedConstantProvider(name -> null);
 
         assertEquals("template", txtFld.getTemplateDir());
     }

@@ -75,5 +75,6 @@ public class ScriptTest extends AbstractTest {
         this.tag = new Script(stack, request, response);
         tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 }

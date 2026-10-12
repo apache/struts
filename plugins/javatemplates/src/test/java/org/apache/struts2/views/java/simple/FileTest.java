@@ -53,6 +53,7 @@ public class FileTest extends AbstractCommonAttributesTest {
         super.setUp();
         this.tag = new File(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
     }
 
     @Override

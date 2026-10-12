@@ -260,6 +260,8 @@
 
     <bean type="org.apache.struts2.config.ScopedConstantProvider" name="struts"
           class="org.apache.struts2.config.providers.StrutsScopedConstantProvider" scope="singleton"/>
+    <bean type="org.apache.struts2.config.ScopableConstants" name="struts"
+          class="org.apache.struts2.components.StrutsUiScopableConstants" scope="singleton"/>
 
     <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
           class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>

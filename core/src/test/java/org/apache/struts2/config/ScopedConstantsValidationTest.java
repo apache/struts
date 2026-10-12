@@ -19,8 +19,14 @@
 package org.apache.struts2.config;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.FileManagerFactory;
+import org.apache.struts2.config.impl.DefaultConfiguration;
 import org.apache.struts2.config.providers.StrutsDefaultConfigurationProvider;
 import org.apache.struts2.inject.Container;
+import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Scope;
+import org.apache.struts2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.util.location.LocatableProperties;
 import org.junit.After;
 import org.junit.Test;
 
@@ -50,11 +56,19 @@ public class ScopedConstantsValidationTest {
     }
 
     @Test
+    public void uiThemeAndTemplateDirAreScopable() {
+        Configuration configuration = load("struts-scoped-constants-ui.xml");
+
+        assertThat(configuration.getPackageConfig("ui").getScopedConstants())
+                .isEqualTo(Map.of("struts.ui.theme", "css_xhtml", "struts.ui.templateDir", "admin-template"));
+    }
+
+    @Test
     public void unregisteredNameFails() {
         assertThatThrownBy(() -> load("struts-scoped-constants-unregistered.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .hasStackTraceContaining("Package [unregistered] declares scoped constant [sample.unknown], which is not scopable. "
-                        + "Scopable constants: [sample.scopable, sample.unset].");
+                        + "Scopable constants: [sample.scopable, sample.unset, struts.ui.templateDir, struts.ui.theme].");
     }
 
     @Test
@@ -66,7 +80,7 @@ public class ScopedConstantsValidationTest {
 
     @Test
     public void anyScopedConstantFailsWhenNothingIsScopable() {
-        assertThatThrownBy(() -> load("struts-scoped-constants-no-registry.xml"))
+        assertThatThrownBy(() -> loadWithBootstrapBeansOnly("struts-scoped-constants-no-registry.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .hasStackTraceContaining("Package [unregistered] declares scoped constant [sample.scopable], which is not scopable. "
                         + "No constants are scopable in this configuration.");
@@ -83,6 +97,20 @@ public class ScopedConstantsValidationTest {
     private Configuration load(String fixture) {
         configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
+        configurationManager.addContainerProvider(new StrutsXmlConfigurationProvider("org/apache/struts2/config/" + fixture));
+        return configurationManager.getConfiguration();
+    }
+
+    private Configuration loadWithBootstrapBeansOnly(String fixture) {
+        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) {
+                DefaultConfiguration.bootstrapFactories(builder)
+                        .factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON);
+                DefaultConfiguration.BOOTSTRAP_CONSTANTS.forEach((name, value) -> props.setProperty(name, String.valueOf(value)));
+            }
+        });
         configurationManager.addContainerProvider(new StrutsXmlConfigurationProvider("org/apache/struts2/config/" + fixture));
         return configurationManager.getConfiguration();
     }

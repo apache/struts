@@ -52,6 +52,7 @@ public class TokenTest extends AbstractTest {
         super.setUp();
         this.tag = new Token(stack, request, response);
         this.tag.setCspNonceReader(new StrutsCspNonceReader(CspNonceSource.SESSION.name()));
+        this.tag.setScopedConstantProvider(name -> null);
 
         ActionContext.of()
             .withSession(new HashMap<>())

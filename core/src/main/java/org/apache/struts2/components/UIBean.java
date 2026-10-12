@@ -529,8 +529,10 @@ public abstract class UIBean extends Component {
     // dynamic attributes
     protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
+    /** @deprecated no longer read; use {@link #scopedConstantProvider} */
     @Deprecated(since = "7.5.0", forRemoval = true)
     protected String defaultTemplateDir;
+    /** @deprecated no longer read; use {@link #scopedConstantProvider} */
     @Deprecated(since = "7.5.0", forRemoval = true)
     protected String defaultUITheme;
     protected String uiThemeExpansionToken;

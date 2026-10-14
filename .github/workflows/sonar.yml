@@ -23,37 +23,42 @@ on:
 
 permissions: read-all
 
+# Pull requests cancel superseded runs; pushes get unique groups so none is dropped.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 env:
   MAVEN_OPTS: -Xmx2048m -Xms1024m
   LANG: en_US.utf8
   HAVE_SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN != '' }}
 
 jobs:
-  changes:
-    uses: ./.github/workflows/changes.yml
-
   sonarcloud:
     name: Scan
-    needs: changes
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.code == 'true' && !github.event.pull_request.base.repo.fork && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
+    if: ${{ !github.event.pull_request.base.repo.fork && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: Detect changes
+        id: changes
+        uses: ./.github/actions/detect-changes
       - uses: actions/setup-java@v6
+        if: steps.changes.outputs.code == 'true'
         with:
           distribution: temurin
           java-version: 21
           cache: 'maven'
       - name: SonarCloud Scan
-        if: ${{ env.HAVE_SONARCLOUD_TOKEN == 'true' }}
+        if: ${{ steps.changes.outputs.code == 'true' && env.HAVE_SONARCLOUD_TOKEN == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
         run: ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -DskipAssembly
       - name: SonarCloud Scan -- SKIPPED
-        if: ${{ env.HAVE_SONARCLOUD_TOKEN != 'true' }}
+        if: ${{ steps.changes.outputs.code == 'true' && env.HAVE_SONARCLOUD_TOKEN != 'true' }}
         run: |
           echo "### SonarCloud not configured" >> $GITHUB_STEP_SUMMARY
           echo "secrets.SONARCLOUD_TOKEN not existing, cannot push coverage checks" >> $GITHUB_STEP_SUMMARY

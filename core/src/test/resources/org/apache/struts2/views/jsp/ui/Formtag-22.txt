@@ -10,9 +10,9 @@
 <input type="hidden" id="__multiselect_doubleValidationAction_myUpDownSelectTag" name="__multiselect_myUpDownSelectTag"value=""/>
 </td></tr>
 <tr><td>
-		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('doubleValidationAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
-		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('doubleValidationAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
-		&nbsp;<input type="button" value="*" onclick="selectAllOptions(document.getElementById('doubleValidationAction_myUpDownSelectTag'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="^" data-struts-updownselect="moveUp" data-struts-target="doubleValidationAction_myUpDownSelectTag" />&nbsp;
+		&nbsp;<input type="button" value="v" data-struts-updownselect="moveDown" data-struts-target="doubleValidationAction_myUpDownSelectTag" />&nbsp;
+		&nbsp;<input type="button" value="*" data-struts-updownselect="selectAll" data-struts-target="doubleValidationAction_myUpDownSelectTag" />&nbsp;
 </td></tr>
 </table>
 </td>

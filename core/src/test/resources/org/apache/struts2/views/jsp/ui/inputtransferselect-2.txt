@@ -7,11 +7,11 @@
         <td><input type="text" name="collection_input" id="collection_input" collection-name="inputName" /></td>
         <td class="tdTransferSelect">
           <input type="button" value="-&gt;"
-            onclick="addOption(document.getElementById('collection_input'),document.getElementById('collection'))" />
+            data-struts-inputtransferselect="add" data-struts-target="collection" />
           <br /><br />
-          <input type="button" value="&lt;-" onclick="removeOptions(document.getElementById('collection'))" />
+          <input type="button" value="&lt;-" data-struts-inputtransferselect="remove" data-struts-target="collection" />
           <br /><br />
-          <input type="button" value="&lt;&lt;--" onclick="removeAllOptions(document.getElementById('collection'))" />
+          <input type="button" value="&lt;&lt;--" data-struts-inputtransferselect="removeAll" data-struts-target="collection" />
           <br />
           <br />
         </td>
@@ -21,8 +21,8 @@
             <option value="ItemTwo" selected="selected">ItemTwo</option>
           </select>
           <input type="hidden" id="__multiselect_collection" name="__multiselect_collection" value="" />
-          <input type="button" onclick="moveOptionDown(document.getElementById('collection'),'key','');" value="v" />
-          <input type="button" onclick="moveOptionUp(document.getElementById('collection'),'key','');" value="^" />
+          <input type="button" data-struts-inputtransferselect="moveDown" data-struts-target="collection" value="v" />
+          <input type="button" data-struts-inputtransferselect="moveUp" data-struts-target="collection" value="^" />
         </td>
       </tr>
     </table>

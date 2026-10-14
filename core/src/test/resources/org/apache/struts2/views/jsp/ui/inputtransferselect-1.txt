@@ -4,11 +4,11 @@
   <script src="/static/inputtransferselect.js" nonce="r4nd0m"></script>
   <table>
   <tr><td><input type="text" name="collection_input" id="collection_input"/></td>
-      <td class="tdTransferSelect"><inputtype="button"value="-&gt;"onclick="addOption(document.getElementById('collection_input'),document.getElementById('collection'))"/>
+      <td class="tdTransferSelect"><inputtype="button"value="-&gt;"data-struts-inputtransferselect="add" data-struts-target="collection"/>
       <br/><br/>
-      <input type="button"value="&lt;-"onclick="removeOptions(document.getElementById('collection'))"/>
+      <input type="button"value="&lt;-"data-struts-inputtransferselect="remove" data-struts-target="collection"/>
       <br/><br/>
-      <inputtype="button"value="&lt;&lt;--"onclick="removeAllOptions(document.getElementById('collection'))"/>
+      <inputtype="button"value="&lt;&lt;--"data-struts-inputtransferselect="removeAll" data-struts-target="collection"/>
       <br/>
       <br/>
   </td>
@@ -17,8 +17,8 @@
       <optionvalue="ItemOne"selected="selected">ItemOne</option>
       <optionvalue="ItemTwo"selected="selected">ItemTwo</option></select>
       <inputtype="hidden"id="__multiselect_collection"name="__multiselect_collection"value=""/>
-      <inputtype="button"onclick="moveOptionDown(document.getElementById('collection'),'key','');"value="v"/>
-      <inputtype="button"onclick="moveOptionUp(document.getElementById('collection'),'key','');"value="^"/>
+      <inputtype="button"data-struts-inputtransferselect="moveDown" data-struts-target="collection"value="v"/>
+      <inputtype="button"data-struts-inputtransferselect="moveUp" data-struts-target="collection"value="^"/>
   </td></tr>
   </table>
 </td></tr>

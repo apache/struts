@@ -30,25 +30,25 @@
 <#if attributes.allowMoveUp!true><#t/>
 	<#assign defMoveUpLabel="${attributes.moveUpLabel!'^'}" /><#t/>
 	<#if attributes.headerKey??><#t/>
-		&nbsp;<input type="button" value="${defMoveUpLabel}" onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');" />&nbsp;
+		&nbsp;<input type="button" value="${defMoveUpLabel}" data-struts-updownselect="moveUp" data-struts-target="${attributes.id}" data-struts-header-key="${attributes.headerKey}" />&nbsp;
 	<#else><#t/>
-		&nbsp;<input type="button" value="${defMoveUpLabel}" onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="${defMoveUpLabel}" data-struts-updownselect="moveUp" data-struts-target="${attributes.id}" />&nbsp;
 	</#if><#t/>
 </#if><#t/>
 <#if attributes.allowMoveDown!true><#t/>
 	<#assign defMoveDownLabel="${attributes.moveDownLabel!'v'}" /><#t/>
 	<#if attributes.headerKey??><#t/>
-		&nbsp;<input type="button" value="${defMoveDownLabel}" onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');" />&nbsp;
+		&nbsp;<input type="button" value="${defMoveDownLabel}" data-struts-updownselect="moveDown" data-struts-target="${attributes.id}" data-struts-header-key="${attributes.headerKey}" />&nbsp;
 	<#else><#t/>
-		&nbsp;<input type="button" value="${defMoveDownLabel}" onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="${defMoveDownLabel}" data-struts-updownselect="moveDown" data-struts-target="${attributes.id}" />&nbsp;
 	</#if><#t/>
 </#if><#t/>
 <#if attributes.allowSelectAll!true><#t/>
 	<#assign defSelectAllLabel="${attributes.selectAllLabel!'*'}" /><#t/>
 	<#if attributes.headerKey??><#t/>
-		&nbsp;<input type="button" value="${defSelectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');" />&nbsp;
+		&nbsp;<input type="button" value="${defSelectAllLabel}" data-struts-updownselect="selectAll" data-struts-target="${attributes.id}" data-struts-header-key="${attributes.headerKey}" />&nbsp;
 	<#else><#t/>
-		&nbsp;<input type="button" value="${defSelectAllLabel}" onclick="selectAllOptions(document.getElementById('${attributes.id}'), 'key', '');" />&nbsp;
+		&nbsp;<input type="button" value="${defSelectAllLabel}" data-struts-updownselect="selectAll" data-struts-target="${attributes.id}" />&nbsp;
 	</#if><#t/>
 </#if><#t/>
 </td></tr>

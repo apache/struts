@@ -14,20 +14,20 @@
     	<option value="Left3">Left3</option>
 	</select>
 	<input type="hidden" id="__multiselect_id" name="__multiselect_collection" value=""/>
-	<input type="button" onclick="moveOptionDown(document.getElementById('id'), 'key', 'Header Key');" value="v" />
-	<input type="button" onclick="moveOptionUp(document.getElementById('id'), 'key', 'Header Key');" value="^" />
+	<input type="button" data-struts-optiontransferselect="leftDown" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" value="v" />
+	<input type="button" data-struts-optiontransferselect="leftUp" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" value="^" />
 </td>
 <td class="tdTransferSelect">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, '');" /><br/><br/>
+			value="Left" data-struts-optiontransferselect="addToLeft" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>
+			value="Right" data-struts-optiontransferselect="addToRight" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="All Left" onclick="moveAllOptions(document.getElementById('doubleId'), document.getElementById('id'), false, '');" /><br/><br/>
+			value="All Left" data-struts-optiontransferselect="addAllToLeft" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="All Right" onclick="moveAllOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>
+			value="All Right" data-struts-optiontransferselect="addAllToRight" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Select All" onclick="selectAllOptionsExceptSome(document.getElementById('id'), 'key', 'Header Key');selectAllOptions(document.getElementById('doubleId'));" /><br/><br/>
+			value="Select All" data-struts-optiontransferselect="selectAll" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" /><br/><br/>
 </td>
 <td>
 	<label for="rightTitle">Title Right</label><br/>
@@ -43,8 +43,8 @@
     	<option value="Right3">Right3</option>
 	</select>
 	<input type="hidden" id="__multiselect_doubleId" name="__multiselect_list2" value=""/>
-	<input type="button" onclick="moveOptionDown(document.getElementById('doubleId'), 'key', '');" value="v" />
-	<input type="button" onclick="moveOptionUp(document.getElementById('doubleId'), 'key', '');" value="^" />
+	<input type="button" data-struts-optiontransferselect="rightDown" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" value="v" />
+	<input type="button" data-struts-optiontransferselect="rightUp" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" value="^" />
 
 </td>
 </tr>

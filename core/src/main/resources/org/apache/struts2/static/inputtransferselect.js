@@ -133,3 +133,46 @@ function swapOptions(objTargetElement, first, second) {
     opt[first] = temp2;
     opt[second] = temp;
 }
+
+/*
+ * Buttons rendered by the inputtransferselect tag carry their action and target select id in data-* attributes
+ * instead of inline onclick handlers, so the tag works under a Content-Security-Policy without 'unsafe-inline':
+ *   data-struts-inputtransferselect="add|remove|removeAll|moveUp|moveDown", data-struts-target, optional
+ *   data-struts-header-key
+ * The listener is registered once per page, in the capture phase, so it is not stopped by an ancestor's
+ * stopPropagation().
+ */
+(function () {
+    if (window.strutsInputTransferSelectListener) {
+        return;
+    }
+    window.strutsInputTransferSelectListener = true;
+
+    document.addEventListener('click', function (event) {
+        var button = event.target;
+        if (!button || !button.getAttribute) {
+            return;
+        }
+        var action = button.getAttribute('data-struts-inputtransferselect');
+        if (!action) {
+            return;
+        }
+        var targetId = button.getAttribute('data-struts-target');
+        var target = document.getElementById(targetId);
+        if (!target) {
+            return;
+        }
+        var headerKey = button.getAttribute('data-struts-header-key') || '';
+        if (action === 'add') {
+            addOption(document.getElementById(targetId + '_input'), target);
+        } else if (action === 'remove') {
+            removeOptions(target);
+        } else if (action === 'removeAll') {
+            removeAllOptions(target);
+        } else if (action === 'moveUp') {
+            moveOptionUp(target, 'key', headerKey);
+        } else if (action === 'moveDown') {
+            moveOptionDown(target, 'key', headerKey);
+        }
+    }, true);
+})();

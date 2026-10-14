@@ -189,3 +189,96 @@ function swapOptions(objTargetElement, first, second) {
     opt[first] = temp2;
     opt[second] = temp;
 }
+
+/*
+ * Buttons rendered by the optiontransferselect and updownselect tags carry their action, target select ids and header
+ * keys in data-* attributes instead of inline onclick handlers, so the tags work under a Content-Security-Policy
+ * without 'unsafe-inline':
+ *   data-struts-updownselect="moveUp|moveDown|selectAll", data-struts-target, optional data-struts-header-key
+ *   data-struts-optiontransferselect="leftUp|leftDown|rightUp|rightDown|addToLeft|addToRight|addAllToLeft|
+ *     addAllToRight|selectAll", data-struts-left, data-struts-right, optional data-struts-header-key and
+ *     data-struts-double-header-key
+ * The listener is registered once per page, in the capture phase, so the framework action still runs before a
+ * developer-supplied onclick attribute on the same button and is not stopped by an ancestor's stopPropagation().
+ */
+(function () {
+    if (window.strutsOptionTransferSelectListener) {
+        return;
+    }
+    window.strutsOptionTransferSelectListener = true;
+
+    function headerKey(button, name) {
+        return button.hasAttribute(name) ? button.getAttribute(name) : undefined;
+    }
+
+    function selectAll(target, key) {
+        if (key === undefined) {
+            selectAllOptions(target);
+        } else {
+            selectAllOptionsExceptSome(target, 'key', key);
+        }
+    }
+
+    function transfer(move, source, target, key) {
+        if (key === undefined) {
+            move(source, target, false, '');
+        } else {
+            move(source, target, false, key, '');
+        }
+    }
+
+    function updownselect(button, action) {
+        var target = document.getElementById(button.getAttribute('data-struts-target'));
+        var key = headerKey(button, 'data-struts-header-key');
+        if (action === 'moveUp') {
+            moveOptionUp(target, 'key', key === undefined ? '' : key);
+        } else if (action === 'moveDown') {
+            moveOptionDown(target, 'key', key === undefined ? '' : key);
+        } else if (action === 'selectAll') {
+            selectAll(target, key);
+        }
+    }
+
+    function optiontransferselect(button, action) {
+        var left = document.getElementById(button.getAttribute('data-struts-left'));
+        var right = document.getElementById(button.getAttribute('data-struts-right'));
+        var leftKey = headerKey(button, 'data-struts-header-key');
+        var rightKey = headerKey(button, 'data-struts-double-header-key');
+        if (action === 'leftDown') {
+            moveOptionDown(left, 'key', leftKey === undefined ? '' : leftKey);
+        } else if (action === 'leftUp') {
+            moveOptionUp(left, 'key', leftKey === undefined ? '' : leftKey);
+        } else if (action === 'rightDown') {
+            moveOptionDown(right, 'key', rightKey === undefined ? '' : rightKey);
+        } else if (action === 'rightUp') {
+            moveOptionUp(right, 'key', rightKey === undefined ? '' : rightKey);
+        } else if (action === 'addToLeft') {
+            transfer(moveSelectedOptions, right, left, rightKey);
+        } else if (action === 'addToRight') {
+            transfer(moveSelectedOptions, left, right, leftKey);
+        } else if (action === 'addAllToLeft') {
+            transfer(moveAllOptions, right, left, rightKey);
+        } else if (action === 'addAllToRight') {
+            transfer(moveAllOptions, left, right, leftKey);
+        } else if (action === 'selectAll') {
+            selectAll(left, leftKey);
+            selectAll(right, rightKey);
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        var button = event.target;
+        if (!button || !button.getAttribute) {
+            return;
+        }
+        var action = button.getAttribute('data-struts-updownselect');
+        if (action) {
+            updownselect(button, action);
+            return;
+        }
+        action = button.getAttribute('data-struts-optiontransferselect');
+        if (action) {
+            optiontransferselect(button, action);
+        }
+    }, true);
+})();

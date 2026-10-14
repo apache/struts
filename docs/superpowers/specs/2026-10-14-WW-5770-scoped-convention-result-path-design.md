@@ -52,10 +52,10 @@ WW-3476 added `<scoped-constant>`; WW-5768 made the UI theme its first adopter. 
   (all of `DefaultResultMapBuilderTest`) inject a lambda provider through a helper.
 - **The new provider method is `default`.** `ScopedConstantProvider` is stubbed as a lambda in 23 test sites
   (`name -> null`); an abstract method would break them and any lambda-based user provider. The default returns
-  the package's value when it declares one, else `getValue(name)`. For Convention's call sites this equals the
-  global value: there is no invocation at startup or for an action-less request, and in `handleUnknownResult` the
-  invocation's package is the package passed. A strict "`null` package means global" contract was rejected for
-  the churn.
+  the package's value when it declares one, else `getValue(name)`. `StrutsScopedConstantProvider` overrides it:
+  a non-null package without the constant gives the global value, never the current invocation's package — a
+  nested request (`<s:action>`, chain) reaches `handleUnknownAction` with the caller's invocation still bound.
+  A `null` package still means `getValue(name)`.
 
 ## Design
 
@@ -64,8 +64,8 @@ WW-3476 added `<scoped-constant>`; WW-5768 made the UI theme its first adopter. 
 - `ScopedConstantProvider` gains `default String getValue(String name, PackageConfig packageConfig)`,
   `@since 7.5.0`: the package's `getAllScopedConstants()` value when present, else `getValue(name)`. A `null`
   package goes straight to `getValue(name)`. The interface stays functional.
-- `StrutsScopedConstantProvider` is unchanged. A package can only hold names `validateScopedConstants` accepted,
-  and the fallback performs `getValue(name)`'s own name check, so the `IllegalArgumentException` contract holds.
+- `StrutsScopedConstantProvider` overrides it: name check, then the package's value or the global value; a `null`
+  package delegates to `getValue(name)`.
 
 ### Convention plugin
 
@@ -116,4 +116,6 @@ Each test goes into the existing file, in that file's style.
 - **struts-site:** list the constant in the scoped-constants section of `core-developers/package-configuration.md`;
   add a section to the Convention plugin page showing the precedence.
 - **7.5.0 migration notes:** new default method `ScopedConstantProvider.getValue(String, PackageConfig)` (custom
-  providers may override it); `ConventionUnknownHandler.determinePath` signature change.
+  providers may override it); `ConventionUnknownHandler.determinePath` signature change (an override without
+  `@Override` silently stops being called); subclasses of `ConventionsServiceImpl` overriding the one-argument
+  `determineResultPath` methods must override the two-argument forms, which the framework now calls.

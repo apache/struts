@@ -132,10 +132,10 @@ public class StrutsScopedConstantProviderTest extends XWorkTestCase {
         assertEquals("base", provider.getValue("sample.scopable", configuration.getPackageConfig("child")));
     }
 
-    public void testExplicitPackageWithoutOverrideFallsBackToInvocation() {
+    public void testExplicitPackageWithoutOverrideIgnoresInvocationPackage() {
         enterPackage("override");
 
-        assertEquals("override", provider.getValue("sample.scopable", configuration.getPackageConfig("plain")));
+        assertEquals("global", provider.getValue("sample.scopable", configuration.getPackageConfig("plain")));
     }
 
     public void testExplicitPackageWithoutOverrideGivesGlobalOutsideInvocation() {

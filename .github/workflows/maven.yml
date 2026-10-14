@@ -20,7 +20,7 @@ on:
   # status check in .asf.yaml, and a workflow skipped by path filtering never
   # reports its checks - they stay Pending and the pull request can never be
   # merged. The build job always runs instead, and its steps are skipped by
-  # condition when changes.yml says nothing needs building.
+  # condition when the detect-changes action says nothing needs building.
   pull_request:
   push:
     branches:
@@ -33,17 +33,18 @@ on:
 
 permissions: read-all
 
+# Pull requests cancel superseded runs; pushes get unique groups so none is dropped.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 env:
   MAVEN_OPTS: -Xmx2048m -Xms1024m
   LANG: en_US.utf8
 
 jobs:
-  changes:
-    uses: ./.github/workflows/changes.yml
-
   build:
     name: Build and Test (JDK ${{ matrix.java }})${{ matrix.profile == '-Pjakartaee11' && ' (Jakarta EE 11 + Spring 7)' || matrix.profile }}
-    needs: changes
     # No job-level `if:` here on purpose. A matrix job whose condition is false
     # is skipped *before* the matrix expands, so it reports a single check run
     # named after the raw `${{ matrix.* }}` template - never "Build and Test
@@ -67,23 +68,25 @@ jobs:
             profile: '-Pjakartaee11'
     steps:
       - name: Checkout code
-        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v7
+      - name: Detect changes
+        id: changes
+        uses: ./.github/actions/detect-changes
       - name: Setup Java ${{ matrix.java }}
-        if: needs.changes.outputs.code == 'true'
+        if: steps.changes.outputs.code == 'true'
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: 'maven'
       - name: Maven Verify on Java ${{ matrix.java }}${{ matrix.profile == '-Pjakartaee11' && ' (Jakarta EE 11 + Spring 7)' || matrix.profile }}
-        if: needs.changes.outputs.code == 'true'
+        if: steps.changes.outputs.code == 'true'
         run: mvn -B -V -DskipAssembly verify ${{ matrix.profile }} --no-transfer-progress
 
       - name: Test Summary ${{ matrix.java }} ${{ matrix.profile }}
         uses: mikepenz/action-junit-report@a9170d5795813c01ab4901ffb045b52bab4ab09d #v6.5.0
         continue-on-error: true
-        if: always() && needs.changes.outputs.code == 'true'
+        if: always() && steps.changes.outputs.code == 'true'
         with:
           annotate_only: true # forked repo cannot write to checks so just do annotations
           report_paths: |

@@ -27,18 +27,18 @@ on:
 
 permissions: read-all
 
+# Pull requests cancel superseded runs; pushes get unique groups so none is dropped.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 env:
   MAVEN_OPTS: -Xmx2048m -Xms1024m
   LANG: en_US.utf8
 
 jobs:
-  changes:
-    uses: ./.github/workflows/changes.yml
-
   owasp:
     name: OWASP
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -46,7 +46,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+      - name: Detect changes
+        id: changes
+        uses: ./.github/actions/detect-changes
       - name: Setup Java 25
+        if: steps.changes.outputs.code == 'true'
         uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -55,6 +59,7 @@ jobs:
 
       - name: Cache NVD Database
         id: cache-nvd
+        if: steps.changes.outputs.code == 'true'
         uses: actions/cache/restore@v6
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
@@ -65,35 +70,36 @@ jobs:
 
       - name: OWASP Dependency check update cache via NIST_NVD_API_KEY
         id: nvd-api-update
-        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'true' }}
+        if: ${{ steps.changes.outputs.code == 'true' && env.HAVE_NIST_NVD_API_KEY == 'true' }}
         continue-on-error: true
         run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-api -Pdependency-update-only --no-transfer-progress
         env:
           NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY}}
 
       - name: OWASP Dependency check update cache via Mirror
-        if: ${{ env.HAVE_NIST_NVD_API_KEY == 'false' || steps.nvd-api-update.outcome == 'failure' }}
+        if: ${{ steps.changes.outputs.code == 'true' && (env.HAVE_NIST_NVD_API_KEY == 'false' || steps.nvd-api-update.outcome == 'failure') }}
         run:  mvn -N -V -DskipAssembly -Dmaven.test.skip=true -Powasp-nvd-mirror -Pdependency-update-only --no-transfer-progress
 
       - name: Cache NVD Database
         uses: actions/cache/save@v6
-        if: ${{ always() }}
+        if: ${{ always() && steps.changes.outputs.code == 'true' }}
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
           key: nvd-cache-${{ runner.os }}-owasp-${{ github.run_id }}
 
       - name: OWASP check (Without running tests)
+        if: steps.changes.outputs.code == 'true'
         run: mvn -B org.owasp:dependency-check-maven:aggregate -Pdependency-check -Pjakartaee11 -DautoUpdate=false --no-transfer-progress
 
       - name: Upload Dependency Check reports
         uses: actions/upload-artifact@v7
-        if: always()
+        if: always() && steps.changes.outputs.code == 'true'
         with:
           name: dependency-check
           path: target/dependency-check*
 
       - name: Add OWASP summary
-        if: always()
+        if: always() && steps.changes.outputs.code == 'true'
         run: |
           {
             echo "## OWASP Dependency Check"

@@ -53,7 +53,7 @@ pipeline {
             script {
               // Skip the build when a change only touched .claude/ or the root
               // process docs - agent instructions and policy, not code. The
-              // pattern mirrors .github/workflows/changes.yml; keep the two in
+              // pattern mirrors .github/actions/detect-changes; keep the two in
               // step. Fails open: anything unexpected (no baseline, an
               // unreachable commit, a git error) reports true and the build
               // runs as before.

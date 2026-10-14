@@ -28,21 +28,20 @@ on:
 permissions:
   contents: read
 
-jobs:
-  changes:
-    uses: ./.github/workflows/changes.yml
-    permissions:
-      contents: read
-      pull-requests: read
+# Pull requests cancel superseded runs; pushes get unique groups so none is dropped.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
+jobs:
   analyze:
     name: Analyze
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
+      # Read by the detect-changes action to list the pull request files.
+      pull-requests: read
       # Needed to upload the results to the code-scanning dashboard.
       security-events: write
     strategy:
@@ -52,19 +51,26 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v7
+    - name: Detect changes
+      id: changes
+      uses: ./.github/actions/detect-changes
     - name: Setup Java JDK
+      if: steps.changes.outputs.code == 'true'
       uses: actions/setup-java@v6
       with:
         distribution: temurin
         java-version: 17
         cache: 'maven'
     - name: Initialize CodeQL
+      if: steps.changes.outputs.code == 'true'
       uses: github/codeql-action/init@v4.38.2
       with:
         languages: ${{ matrix.language }}
     - name: Autobuild
+      if: steps.changes.outputs.code == 'true'
       uses: github/codeql-action/autobuild@v4.38.2
     - name: Perform CodeQL Analysis
+      if: steps.changes.outputs.code == 'true'
       uses: github/codeql-action/analyze@v4.38.2
       with:
         category: "/language:${{matrix.language}}"

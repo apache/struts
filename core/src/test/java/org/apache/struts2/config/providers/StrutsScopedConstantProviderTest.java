@@ -24,6 +24,7 @@ import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.ScopedConstantProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 
@@ -119,6 +120,52 @@ public class StrutsScopedConstantProviderTest extends XWorkTestCase {
         provider.getValue("sample.scopable");
 
         assertEquals("global", container.getInstance(String.class, "sample.scopable"));
+    }
+
+    public void testExplicitPackageResolvesInheritedValue() {
+        assertEquals("base", provider.getValue("sample.scopable", configuration.getPackageConfig("child")));
+    }
+
+    public void testExplicitPackageWinsOverInvocationPackage() {
+        enterPackage("override");
+
+        assertEquals("base", provider.getValue("sample.scopable", configuration.getPackageConfig("child")));
+    }
+
+    public void testExplicitPackageWithoutOverrideFallsBackToInvocation() {
+        enterPackage("override");
+
+        assertEquals("override", provider.getValue("sample.scopable", configuration.getPackageConfig("plain")));
+    }
+
+    public void testExplicitPackageWithoutOverrideGivesGlobalOutsideInvocation() {
+        assertEquals("global", provider.getValue("sample.scopable", configuration.getPackageConfig("plain")));
+    }
+
+    public void testNullPackageFallsBackToInvocation() {
+        enterPackage("override");
+
+        assertEquals("override", provider.getValue("sample.scopable", null));
+    }
+
+    public void testExplicitPackageEmptyOverrideIsReturnedAsIs() {
+        assertEquals("", provider.getValue("sample.scopable", configuration.getPackageConfig("empty")));
+    }
+
+    public void testExplicitPackageRejectsUnregisteredName() {
+        PackageConfig plain = configuration.getPackageConfig("plain");
+
+        assertThatThrownBy(() -> provider.getValue("sample.unknown", plain))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[sample.unknown]");
+    }
+
+    public void testLambdaProviderGetsPackageLookup() {
+        ScopedConstantProvider lambda = name -> "fallback";
+
+        assertEquals("base", lambda.getValue("sample.scopable", configuration.getPackageConfig("child")));
+        assertEquals("fallback", lambda.getValue("sample.scopable", configuration.getPackageConfig("plain")));
+        assertEquals("fallback", lambda.getValue("sample.scopable", null));
     }
 
     private void enterPackage(String packageName) {

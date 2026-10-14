@@ -18,8 +18,10 @@
  */
 package org.apache.struts2.config;
 
+import org.apache.struts2.config.entities.PackageConfig;
+
 /**
- * Resolves a scopable constant for the current action invocation: the package's {@code <scoped-constant>}, inherited
+ * Resolves a scopable constant for the current action invocation or a given package: the package's {@code <scoped-constant>}, inherited
  * through {@code extends}, or else the global constant.
  *
  * @since 7.5.0
@@ -32,4 +34,17 @@ public interface ScopedConstantProvider {
      * @throws IllegalArgumentException when {@code name} is not scopable
      */
     String getValue(String name);
+
+    /**
+     * @param name          a constant registered through a {@link ScopableConstants} bean
+     * @param packageConfig the package whose scoped constants, inherited ones included, take precedence; may be
+     *                      {@code null}
+     * @return the package's scoped value, or else {@link #getValue(String)}
+     * @throws IllegalArgumentException when {@code name} is not scopable
+     * @since 7.5.0
+     */
+    default String getValue(String name, PackageConfig packageConfig) {
+        String value = packageConfig != null ? packageConfig.getAllScopedConstants().get(name) : null;
+        return value != null ? value : getValue(name);
+    }
 }

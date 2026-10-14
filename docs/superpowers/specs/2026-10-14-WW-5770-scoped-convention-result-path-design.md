@@ -3,7 +3,7 @@
 **Ticket:** [WW-5770](https://issues.apache.org/jira/browse/WW-5770) — *Make struts.convention.result.path scopable per package*
 **Target:** 7.5.0 (ticket fix version)
 **Date:** 2026-10-14
-**Status:** Design approved, pending implementation plan
+**Status:** Implemented — [PR #2009](https://github.com/apache/struts/pull/2009)
 
 ## Problem
 

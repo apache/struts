@@ -40,7 +40,8 @@ public interface ScopedConstantProvider {
      * @param packageConfig the package whose scoped constants, inherited ones included, take precedence; may be
      *                      {@code null}
      * @return the package's scoped value, or else {@link #getValue(String)}
-     * @throws IllegalArgumentException when {@code name} is not scopable
+     * @throws IllegalArgumentException when {@code name} is not scopable; this default checks only on the
+     *                                  {@link #getValue(String)} fallback, as package values were validated at startup
      * @since 7.5.0
      */
     default String getValue(String name, PackageConfig packageConfig) {

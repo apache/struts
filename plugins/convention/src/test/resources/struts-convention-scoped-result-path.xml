@@ -28,8 +28,6 @@
     <constant name="struts.convention.result.path" value="/"/>
     <constant name="struts.convention.default.parent.package" value="scoped-default"/>
 
-    <package name="convention-default" extends="struts-default"/>
-
     <package name="scoped-default" extends="convention-default">
         <scoped-constant name="struts.convention.result.path" value="/scoped/"/>
     </package>

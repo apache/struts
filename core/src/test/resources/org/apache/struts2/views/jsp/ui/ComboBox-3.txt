@@ -13,7 +13,7 @@
 	}
 </script>
 <input type="text" name="myFavouriteFruit" value="banana" id="myFavouriteFruit"/><br/>
-<select onChange="autoPopulate_myFavouriteFruit(this);">
+<select data-struts-combobox="myFavouriteFruit">
 	<option value="-1">--- Please Select ---</option>
 	<option value=""></option>
     <option value="apple">apple</option>
@@ -21,5 +21,18 @@
     <option value="pineaple">pineaple</option>
     <option value="grapes">grapes</option>
 </select>
+<script>
+    (function () {
+        var selects = document.querySelectorAll('select[data-struts-combobox="myFavouriteFruit"]');
+        for (var i = 0; i < selects.length; i++) {
+            if (!selects[i].strutsComboboxBound) {
+                selects[i].strutsComboboxBound = true;
+                selects[i].addEventListener('change', function () {
+                    autoPopulate_myFavouriteFruit(this);
+                });
+            }
+        }
+    })();
+</script>
     </td>
 </tr>

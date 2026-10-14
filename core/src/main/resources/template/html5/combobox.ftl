@@ -37,7 +37,7 @@ function autoPopulate_${attributes.escapedId}(targetElement) {
 
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#if attributes.list??>
-<select onChange="autoPopulate_${attributes.escapedId}(this);"<#rt/>
+<select data-struts-combobox="${attributes.escapedId}"<#rt/>
  <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#if attributes.disabled!false>
  disabled="disabled"<#rt/>
@@ -97,5 +97,18 @@ function autoPopulate_${attributes.escapedId}(targetElement) {
 >${tmpListValue}</option><#rt/>
 </@s.iterator>
 </select><#rt/>
+<@s.script>
+	(function () {
+		var selects = document.querySelectorAll('select[data-struts-combobox="${attributes.escapedId}"]');
+		for (var i = 0; i < selects.length; i++) {
+			if (!selects[i].strutsComboboxBound) {
+				selects[i].strutsComboboxBound = true;
+				selects[i].addEventListener('change', function () {
+					autoPopulate_${attributes.escapedId}(this);
+				});
+			}
+		}
+	})();
+</@s.script>
 </#if>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

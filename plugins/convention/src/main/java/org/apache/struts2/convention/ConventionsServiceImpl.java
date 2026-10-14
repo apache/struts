@@ -19,6 +19,7 @@
 package org.apache.struts2.convention;
 
 import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ScopedConstantProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultTypeConfig;
@@ -39,6 +40,7 @@ import java.util.ResourceBundle;
  */
 public class ConventionsServiceImpl implements ConventionsService {
     private String resultPath;
+    private ScopedConstantProvider scopedConstantProvider;
 
     /**
      * Constructs a new instance.
@@ -51,51 +53,81 @@ public class ConventionsServiceImpl implements ConventionsService {
         this.resultPath = resultPath;
     }
 
+    @Inject
+    public void setScopedConstantProvider(ScopedConstantProvider scopedConstantProvider) {
+        this.scopedConstantProvider = scopedConstantProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
     public String determineResultPath(Class<?> actionClass) {
-        String localResultPath = resultPath;
-        ResultPath resultPathAnnotation = AnnotationUtils.findAnnotation(actionClass, ResultPath.class);
-        if (resultPathAnnotation != null) {
-            if (resultPathAnnotation.value().equals("") && resultPathAnnotation.property().equals("")) {
-                throw new ConfigurationException("The ResultPath annotation must have either" +
-                    " a value or property specified.");
-            }
+        return determineResultPath(actionClass, null);
+    }
 
-            String property = resultPathAnnotation.property();
-            if (property.equals("")) {
-                localResultPath = resultPathAnnotation.value();
-            } else {
-                try {
-                    ResourceBundle strutsBundle = ResourceBundle.getBundle("struts");
-                    localResultPath = strutsBundle.getString(property);
-                } catch (Exception e) {
-                    throw new ConfigurationException("The action class [" + actionClass + "] defines" +
-                        " a @ResultPath annotation and a property definition however the" +
-                        " struts.properties could not be found in the classpath using ResourceBundle" +
-                        " OR the bundle exists but the property [" + property + "] is not defined" +
-                        " in the file.", e);
-                }
-            }
-        }
-
-        return localResultPath;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String determineResultPath(Class<?> actionClass, PackageConfig packageConfig) {
+        String annotatedResultPath = findAnnotatedResultPath(actionClass);
+        return annotatedResultPath != null ? annotatedResultPath : scopedResultPath(packageConfig);
     }
 
     /**
      * {@inheritDoc}
      */
     public String determineResultPath(ActionConfig actionConfig) {
+        return determineResultPath(actionConfig, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String determineResultPath(ActionConfig actionConfig, PackageConfig packageConfig) {
         if (actionConfig == null) {
-            return resultPath;
+            return scopedResultPath(packageConfig);
         }
 
         try {
-            return  determineResultPath(ClassLoaderUtil.loadClass(actionConfig.getClassName(), this.getClass()));
+            return determineResultPath(ClassLoaderUtil.loadClass(actionConfig.getClassName(), this.getClass()), packageConfig);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Invalid action class configuration that references an unknown " +
                 "class named [" + actionConfig.getClassName() + "]", e);
+        }
+    }
+
+    private String scopedResultPath(PackageConfig packageConfig) {
+        if (packageConfig == null) {
+            return resultPath;
+        }
+        return scopedConstantProvider.getValue(ConventionConstants.CONVENTION_RESULT_PATH, packageConfig);
+    }
+
+    private String findAnnotatedResultPath(Class<?> actionClass) {
+        ResultPath resultPathAnnotation = AnnotationUtils.findAnnotation(actionClass, ResultPath.class);
+        if (resultPathAnnotation == null) {
+            return null;
+        }
+        if (resultPathAnnotation.value().equals("") && resultPathAnnotation.property().equals("")) {
+            throw new ConfigurationException("The ResultPath annotation must have either" +
+                " a value or property specified.");
+        }
+
+        String property = resultPathAnnotation.property();
+        if (property.equals("")) {
+            return resultPathAnnotation.value();
+        }
+        try {
+            ResourceBundle strutsBundle = ResourceBundle.getBundle("struts");
+            return strutsBundle.getString(property);
+        } catch (Exception e) {
+            throw new ConfigurationException("The action class [" + actionClass + "] defines" +
+                " a @ResultPath annotation and a property definition however the" +
+                " struts.properties could not be found in the classpath using ResourceBundle" +
+                " OR the bundle exists but the property [" + property + "] is not defined" +
+                " in the file.", e);
         }
     }
 

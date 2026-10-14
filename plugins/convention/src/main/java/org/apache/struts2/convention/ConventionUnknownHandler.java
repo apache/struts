@@ -131,7 +131,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         }
 
         Map<String, ResultTypeConfig> resultsByExtension = conventionsService.getResultTypesByExtension(parentPackage);
-        String pathPrefix = determinePath(null, namespace);
+        String pathPrefix = determinePath(null, parentPackage, namespace);
         ActionConfig actionConfig = null;
 
         // Try /idx/action.jsp if actionName is not empty, otherwise it will just be /.jsp
@@ -279,7 +279,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
 
         PackageConfig pkg = configuration.getPackageConfig(actionConfig.getPackageName());
         String ns = pkg.getNamespace();
-        String pathPrefix = determinePath(actionConfig, ns);
+        String pathPrefix = determinePath(actionConfig, pkg, ns);
 
         Result result = scanResultsByExtension(ns, actionName, pathPrefix, resultCode, actionContext);
 
@@ -379,11 +379,13 @@ public class ConventionUnknownHandler implements UnknownHandler {
      *
      * @param actionConfig (Optional) The might be a ConventionActionConfig, from which we can get the
      *                     default base result location of that specific action.
+     * @param packageConfig The package whose scoped result path applies: the action's package, or the default
+     *                      parent package when there is no action.
      * @param namespace    The current URL namespace.
      * @return The path prefix and never null.
      */
-    protected String determinePath(ActionConfig actionConfig, String namespace) {
-        String finalPrefix = conventionsService.determineResultPath(actionConfig);
+    protected String determinePath(ActionConfig actionConfig, PackageConfig packageConfig, String namespace) {
+        String finalPrefix = conventionsService.determineResultPath(actionConfig, packageConfig);
 
         if (!finalPrefix.endsWith("/")) {
             finalPrefix += "/";

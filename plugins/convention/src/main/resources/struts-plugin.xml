@@ -38,6 +38,8 @@
           class="org.apache.struts2.convention.DefaultInterceptorMapBuilder"/>
     <bean type="org.apache.struts2.convention.ConventionsService" name="convention"
           class="org.apache.struts2.convention.ConventionsServiceImpl"/>
+    <bean type="org.apache.struts2.config.ScopableConstants" name="convention"
+          class="org.apache.struts2.convention.ConventionScopableConstants"/>
 
     <bean type="org.apache.struts2.config.PackageProvider" name="convention.packageProvider"
           class="org.apache.struts2.convention.ClasspathPackageProvider"/>

@@ -49,13 +49,29 @@ public class StrutsScopedConstantProvider implements ScopedConstantProvider {
 
     @Override
     public String getValue(String name) {
+        requireScopable(name);
+        return resolve(name, currentPackage().orElse(null));
+    }
+
+    @Override
+    public String getValue(String name, PackageConfig packageConfig) {
+        if (packageConfig == null) {
+            return getValue(name);
+        }
+        requireScopable(name);
+        return resolve(name, packageConfig);
+    }
+
+    private void requireScopable(String name) {
         if (!scopableNames.contains(name)) {
             throw new IllegalArgumentException(String.format(
                     "Constant [%s] is not scopable; register it through a %s bean", name, ScopableConstants.class.getName()));
         }
-        return currentPackage()
-                .map(packageConfig -> packageConfig.getAllScopedConstants().get(name))
-                .orElseGet(() -> container.getInstance(String.class, name));
+    }
+
+    private String resolve(String name, PackageConfig packageConfig) {
+        String value = packageConfig != null ? packageConfig.getAllScopedConstants().get(name) : null;
+        return value != null ? value : container.getInstance(String.class, name);
     }
 
     private Optional<PackageConfig> currentPackage() {

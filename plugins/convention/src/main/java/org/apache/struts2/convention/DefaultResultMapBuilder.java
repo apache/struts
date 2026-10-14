@@ -156,7 +156,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
                                            PackageConfig packageConfig) {
 
         // Get the default result location from the annotation or configuration
-        String defaultResultPath = conventionsService.determineResultPath(actionClass);
+        String defaultResultPath = conventionsService.determineResultPath(actionClass, packageConfig);
 
         // Add a slash
         if (!defaultResultPath.endsWith("/")) {

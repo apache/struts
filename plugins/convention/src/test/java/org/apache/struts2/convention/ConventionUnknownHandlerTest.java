@@ -23,20 +23,25 @@ import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultTypeConfig;
+import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.result.ServletDispatcherResult;
 
 import jakarta.servlet.ServletContext;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.easymock.EasyMock.*;
 
 public class ConventionUnknownHandlerTest extends TestCase {
+
+    private static final String DEFAULT_PARENT = "convention-default";
 
     private PackageConfig packageConfiguration;
 
@@ -130,6 +135,93 @@ public class ConventionUnknownHandlerTest extends TestCase {
         assertEquals("/canonicalized/path.default_extension", resource.path);
     }
 
+    public void testUnknownActionUsesScopedResultPathOfDefaultParentPackage() throws Exception {
+        List<String> requested = new ArrayList<>();
+        ConventionUnknownHandler handler = scopedHandler(recordingServletContext(requested),
+                packageWithResultPath(DEFAULT_PARENT, "", "/WEB-INF/scoped/"), null);
+
+        handler.handleUnknownAction("", "does-not-exist");
+
+        assertFalse(requested.isEmpty());
+        for (String path : requested) {
+            assertTrue(path, path.startsWith("/WEB-INF/scoped/does-not-exist"));
+        }
+    }
+
+    public void testUnknownActionWithoutOverrideUsesGlobalResultPath() throws Exception {
+        List<String> requested = new ArrayList<>();
+        ConventionUnknownHandler handler = scopedHandler(recordingServletContext(requested),
+                new PackageConfig.Builder(DEFAULT_PARENT).build(), null);
+
+        handler.handleUnknownAction("", "does-not-exist");
+
+        assertFalse(requested.isEmpty());
+        for (String path : requested) {
+            assertTrue(path, path.startsWith("/WEB-INF/content/does-not-exist"));
+        }
+    }
+
+    public void testUnknownResultUsesScopedResultPathOfActionPackage() throws Exception {
+        List<String> requested = new ArrayList<>();
+        PackageConfig actionPackage = packageWithResultPath("admin", "/admin", "/WEB-INF/scoped/");
+        ConventionUnknownHandler handler = scopedHandler(recordingServletContext(requested),
+                new PackageConfig.Builder(DEFAULT_PARENT).build(), actionPackage);
+        ActionConfig actionConfig = new ActionConfig.Builder("admin", "foo", NoAnnotationAction.class.getName()).build();
+
+        handler.handleUnknownResult(null, "foo", actionConfig, "success");
+
+        assertFalse(requested.isEmpty());
+        for (String path : requested) {
+            assertTrue(path, path.startsWith("/WEB-INF/scoped/admin/"));
+        }
+    }
+
+    public void testDeterminePathAppendsSlashToScopedResultPath() {
+        PackageConfig parent = packageWithResultPath(DEFAULT_PARENT, "", "/WEB-INF/scoped");
+        ConventionUnknownHandler handler = scopedHandler(null, parent, null);
+
+        assertEquals("/WEB-INF/scoped/admin/", handler.determinePath(null, parent, "/admin"));
+    }
+
+    private ServletContext recordingServletContext(List<String> requested) throws Exception {
+        ServletContext servletContext = createNiceMock(ServletContext.class);
+        expect(servletContext.getResource(anyString())).andAnswer(() -> {
+            requested.add((String) getCurrentArguments()[0]);
+            return null;
+        }).anyTimes();
+        replay(servletContext);
+        return servletContext;
+    }
+
+    private static PackageConfig packageWithResultPath(String name, String namespace, String resultPath) {
+        PackageConfig parent = new PackageConfig.Builder(name + "-base")
+                .addScopedConstant(ConventionConstants.CONVENTION_RESULT_PATH, resultPath)
+                .build();
+        return new PackageConfig.Builder(name).namespace(namespace).addParent(parent).build();
+    }
+
+    private ConventionUnknownHandler scopedHandler(ServletContext servletContext, PackageConfig defaultParent,
+                                                   PackageConfig actionPackage) {
+        Configuration configuration = createNiceMock(Configuration.class);
+        expect(configuration.getPackageConfig(DEFAULT_PARENT)).andStubReturn(defaultParent);
+        if (actionPackage != null) {
+            expect(configuration.getPackageConfig(actionPackage.getName())).andStubReturn(actionPackage);
+        }
+        RuntimeConfiguration runtime = createNiceMock(RuntimeConfiguration.class);
+        expect(configuration.getRuntimeConfiguration()).andStubReturn(runtime);
+
+        ConventionsServiceImpl service = new ConventionsServiceImpl("/WEB-INF/content/");
+        service.setScopedConstantProvider(name -> "/WEB-INF/content/");
+        Container container = createNiceMock(Container.class);
+        expect(container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE)).andStubReturn("test");
+        expect(container.getInstance(ConventionsService.class, "test")).andStubReturn(service);
+
+        replay(configuration, runtime, container);
+
+        return new ConventionUnknownHandler(configuration, null, servletContext, container, DEFAULT_PARENT,
+                "false", "-");
+    }
+
     private Configuration configuration(final String packageName) {
         final Configuration mock = createNiceMock(Configuration.class);
 
@@ -151,8 +243,7 @@ public class ConventionUnknownHandlerTest extends TestCase {
         expect(mock.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE)).andReturn("test");
         expect(mock.getInstance(ConventionsService.class, "test")).andStubReturn(service);
 
-        ActionConfig actionConfig = null;
-        expect(service.determineResultPath(actionConfig)).andReturn("");
+        expect(service.determineResultPath((ActionConfig) null, packageConfiguration)).andReturn("");
         Map<String, ResultTypeConfig> results = new HashMap<>();
         results.put("jsp", new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName()).build());
         expect(service.getResultTypesByExtension(packageConfiguration)).andReturn(results);

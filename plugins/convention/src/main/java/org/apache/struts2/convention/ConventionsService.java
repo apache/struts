@@ -55,6 +55,32 @@ public interface ConventionsService {
     String determineResultPath(ActionConfig actionConfig);
 
     /**
+     * Locates the result location like {@link #determineResultPath(Class)}, using the package's scoped
+     * {@code struts.convention.result.path} when the action carries no {@code @ResultPath}.
+     *
+     * @param   actionClass The action class.
+     * @param   packageConfig The package the action belongs to, or null for the global default.
+     * @return  The result location.
+     * @since 7.5.0
+     */
+    default String determineResultPath(Class<?> actionClass, PackageConfig packageConfig) {
+        return determineResultPath(actionClass);
+    }
+
+    /**
+     * Locates the result location like {@link #determineResultPath(ActionConfig)}, using the package's scoped
+     * {@code struts.convention.result.path} when the action carries no {@code @ResultPath}.
+     *
+     * @param   actionConfig (Optional) The configuration for the action, or null when there is no action.
+     * @param   packageConfig The package whose scoped value applies, or null for the global default.
+     * @return  The result location.
+     * @since 7.5.0
+     */
+    default String determineResultPath(ActionConfig actionConfig, PackageConfig packageConfig) {
+        return determineResultPath(actionConfig);
+    }
+
+    /**
      * Returns a mapping between the result type strings and the {@link ResultTypeConfig} instances
      * based on the {@link PackageConfig} given.
      *

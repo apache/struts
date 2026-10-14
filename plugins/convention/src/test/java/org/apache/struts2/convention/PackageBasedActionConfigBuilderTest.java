@@ -173,7 +173,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         of.setContainer(mockContainer);
 
         mockContainer.setActionNameBuilder(actionNameBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         // Create the builder with a package that will trigger NoClassDefFoundError simulation
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
@@ -229,7 +229,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         of.setContainer(mockContainer);
 
         mockContainer.setActionNameBuilder(actionNameBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
                 configuration, mockContainer, of, "false", "struts-default", "false");
@@ -284,7 +284,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         of.setContainer(mockContainer);
 
         mockContainer.setActionNameBuilder(actionNameBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
                 configuration, mockContainer, of, "false", "struts-default", "false");
@@ -332,7 +332,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         of.setContainer(mockContainer);
 
         mockContainer.setActionNameBuilder(actionNameBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
                 configuration, mockContainer, of, "false", "struts-default", "false");
@@ -495,7 +495,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         of.setContainer(mockContainer);
 
         mockContainer.setActionNameBuilder(actionNameBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(
                 configuration, mockContainer, of, "false", "struts-default", "false");
@@ -547,7 +547,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         final DummyContainer mockContainer = new DummyContainer();
         mockContainer.setActionNameBuilder(new SEOActionNameBuilder("true", "-"));
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
         mockContainer.setResultMapBuilder((actionClass, annotation, actionName, packageConfig) -> new HashMap<>());
         mockContainer.setInterceptorMapBuilder((actionClass, builder, actionName, annotation) -> new ArrayList<>());
         Configuration configuration = new DefaultConfiguration() {
@@ -839,7 +839,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         mockContainer.setActionNameBuilder(actionNameBuilder);
         mockContainer.setInterceptorMapBuilder(interceptorBuilder);
         mockContainer.setResultMapBuilder(resultMapBuilder);
-        mockContainer.setConventionsService(new ConventionsServiceImpl(""));
+        mockContainer.setConventionsService(newConventionsService());
 
         PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer, of, "false", "struts-default", enableSmiInheritance);
         builder.setFileProtocols("jar");
@@ -1268,6 +1268,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     private InterceptorConfig makeInterceptorConfig(String name) {
         InterceptorConfig.Builder builder = new InterceptorConfig.Builder(name, "org.apache.struts2.convention.TestInterceptor");
         return builder.build();
+    }
+
+    private ConventionsService newConventionsService() {
+        ConventionsServiceImpl service = new ConventionsServiceImpl("");
+        service.setScopedConstantProvider(name -> "");
+        return service;
     }
 
     private InterceptorStackConfig makeInterceptorStackConfig(String name, InterceptorMapping... interceptors) {

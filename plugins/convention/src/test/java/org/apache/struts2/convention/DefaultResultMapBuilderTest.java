@@ -64,7 +64,7 @@ public class DefaultResultMapBuilderTest {
 
         // Test with a slash
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "action", packageConfig);
         verify(context, "/WEB-INF/location", results, false);
@@ -72,7 +72,7 @@ public class DefaultResultMapBuilderTest {
         // Test without a slash
         context = mockServletContext("/WEB-INF/location");
         packageConfig = createPackageConfigBuilder("namespace");
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         results = builder.build(NoAnnotationAction.class, null, "action", packageConfig);
         verify(context, "/WEB-INF/location", results, false);
@@ -84,7 +84,7 @@ public class DefaultResultMapBuilderTest {
 
         // Test with a slash
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Action actionAnn = OverrideResultAction.class.getMethod("execute").getAnnotation(Action.class);
         Map<String, ResultConfig> results = builder.build(OverrideResultAction.class, actionAnn, "action100", packageConfig);
@@ -97,7 +97,7 @@ public class DefaultResultMapBuilderTest {
     public void testGlobalResult() {
 
         ServletContext context = mockServletContext("/WEB-INF/location");
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
 
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName()).
@@ -131,7 +131,7 @@ public class DefaultResultMapBuilderTest {
         EasyMock.expect(context.getResourcePaths(resultPath + "/namespace/")).andReturn(resources);
         EasyMock.replay(context);
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
 
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName()).
@@ -161,7 +161,7 @@ public class DefaultResultMapBuilderTest {
 
         // Test with a slash
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "action", packageConfig);
         assertEquals(0, results.size());
@@ -174,7 +174,40 @@ public class DefaultResultMapBuilderTest {
 
         // Test with a result path
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
-        this.conventionsService = new ConventionsServiceImpl("/not-used");
+        this.conventionsService = newConventionsService("/not-used");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(ClassLevelResultPathAction.class, null, "action", packageConfig);
+        verify(context, "/class-level", results, false);
+    }
+
+    @Test
+    public void testScopedResultPathFromParentPackage() {
+        ServletContext context = mockServletContext("/WEB-INF/admin");
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace", "/WEB-INF/admin/");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "action", packageConfig);
+        verify(context, "/WEB-INF/admin", results, false);
+    }
+
+    @Test
+    public void testScopedResultPathWithoutTrailingSlash() {
+        ServletContext context = mockServletContext("/WEB-INF/admin");
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace", "/WEB-INF/admin");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
+        DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
+        Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "action", packageConfig);
+        verify(context, "/WEB-INF/admin", results, false);
+    }
+
+    @Test
+    public void testResultPathAnnotationWinsOverScopedResultPath() {
+        ServletContext context = mockServletContext("/class-level");
+
+        PackageConfig packageConfig = createPackageConfigBuilder("/namespace", "/WEB-INF/admin/");
+        this.conventionsService = newConventionsService("/not-used");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ClassLevelResultPathAction.class, null, "action", packageConfig);
         verify(context, "/class-level", results, false);
@@ -193,7 +226,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "no-annotation", packageConfig);
         assertEquals(0, results.size());
@@ -215,7 +248,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "no-annotation", packageConfig);
         assertEquals(4, results.size());
@@ -250,7 +283,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         builder.setFlatResultLayout("false");
 
@@ -286,7 +319,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "no-annotation", packageConfig);
         assertEquals(1, results.size());
@@ -309,7 +342,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ClassLevelResultAction.class, null, "class-level-result", packageConfig);
         assertEquals(1, results.size());
@@ -333,7 +366,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(InheritedResultExtends.class, null, "result-inheritance-extends", packageConfig);
         assertEquals(1, results.size());
@@ -357,7 +390,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(OverrideInheritedResultExtends.class, null, "result-inheritance-extends", packageConfig);
         assertEquals(1, results.size());
@@ -383,7 +416,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ClassLevelResultsAction.class, null, "class-level-results", packageConfig);
         assertEquals(4, results.size());
@@ -423,7 +456,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(InheritedResultsExtends.class, null, "class-level-results", packageConfig);
         assertEquals(4, results.size());
@@ -463,7 +496,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ActionLevelResultAction.class, getAnnotation(ActionLevelResultAction.class, "execute", Action.class), "action-level-result", packageConfig);
         assertEquals(1, results.size());
@@ -487,7 +520,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ActionLevelResultsAction.class, getAnnotation(ActionLevelResultsAction.class, "execute", Action.class), "action-level-results", packageConfig);
         assertEquals(4, results.size());
@@ -523,7 +556,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "execute", Action.class), "action-level-results", packageConfig);
         assertEquals(4, results.size());
@@ -559,7 +592,7 @@ public class DefaultResultMapBuilderTest {
 
         PackageConfig packageConfig = createPackageConfigBuilder("/namespace");
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/location");
+        this.conventionsService = newConventionsService("/WEB-INF/location");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(ActionLevelResultsNamesAction.class, getAnnotation(ActionLevelResultsNamesAction.class, "noname", Action.class), "action-level-results", packageConfig);
         assertEquals(1, results.size());
@@ -581,7 +614,7 @@ public class DefaultResultMapBuilderTest {
         PackageConfig packageConfig = new PackageConfig.Builder("package").
                 defaultResultType("dispatcher").addResultTypeConfig(resultType).build();
 
-        this.conventionsService = new ConventionsServiceImpl("/WEB-INF/component");
+        this.conventionsService = newConventionsService("/WEB-INF/component");
         DefaultResultMapBuilder builder = new DefaultResultMapBuilder(context, container, "dispatcher,velocity,freemarker");
         Map<String, ResultConfig> results = builder.build(NoAnnotationAction.class, null, "no-annotation", packageConfig);
         assertEquals(4, results.size());
@@ -599,7 +632,17 @@ public class DefaultResultMapBuilderTest {
         assertEquals("/WEB-INF/component/no-annotation-foo.ftl", results.get("foo").getParams().get("location"));
     }
 
+    private ConventionsService newConventionsService(String resultPath) {
+        ConventionsServiceImpl service = new ConventionsServiceImpl(resultPath);
+        service.setScopedConstantProvider(name -> resultPath);
+        return service;
+    }
+
     private PackageConfig createPackageConfigBuilder(String namespace) {
+        return createPackageConfigBuilder(namespace, null);
+    }
+
+    private PackageConfig createPackageConfigBuilder(String namespace, String scopedResultPath) {
         ResultTypeConfig resultType = new ResultTypeConfig.Builder("dispatcher", "org.apache.struts2.result.ServletDispatcherResult").
                 addParam("key", "value").addParam("key1", "value1").defaultResultParam("location").build();
 
@@ -609,12 +652,18 @@ public class DefaultResultMapBuilderTest {
         ResultTypeConfig ftlResultType = new ResultTypeConfig.Builder("freemarker",
                 "org.apache.struts2.views.freemarker.FreemarkerResult").defaultResultParam("location").build();
 
-        return new PackageConfig.Builder("package").
+        PackageConfig.Builder builder = new PackageConfig.Builder("package").
                 namespace(namespace).
                 defaultResultType("dispatcher").
                 addResultTypeConfig(resultType).
                 addResultTypeConfig(redirect).
-                addResultTypeConfig(ftlResultType).build();
+                addResultTypeConfig(ftlResultType);
+        if (scopedResultPath != null) {
+            builder.addParent(new PackageConfig.Builder("scoped-parent")
+                    .addScopedConstant(ConventionConstants.CONVENTION_RESULT_PATH, scopedResultPath)
+                    .build());
+        }
+        return builder.build();
     }
 
     private ServletContext mockServletContext(String resultPath) {

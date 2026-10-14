@@ -16,7 +16,12 @@
 name: OWASP checkup
 
 on:
+  # Not a required check, so path filtering cannot leave a pull request blocked.
   pull_request:
+    paths:
+      - '**/pom.xml'
+      - 'src/etc/project-suppression.xml'
+      - '.github/workflows/owasp.yml'
   push:
     branches:
       - 'main'

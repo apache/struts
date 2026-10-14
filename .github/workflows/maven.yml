@@ -54,17 +54,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
+        java: [ '17', '21', '25' ]
+        profile: [ '', '-Pjakartaee11' ]
+        exclude:
           - java: '17'
-            profile: ''
-          - java: '21'
-            profile: ''
-          - java: '21'
             profile: '-Pjakartaee11'
-          - java: '25'
+          # Pull requests build the oldest JDK and the newest on Jakarta EE 11; pushes build everything.
+          - java: ${{ github.event_name == 'pull_request' && '21' || 'none' }}
+          - java: ${{ github.event_name == 'pull_request' && '25' || 'none' }}
             profile: ''
-          - java: '25'
-            profile: '-Pjakartaee11'
     steps:
       - name: Checkout code
         if: needs.changes.outputs.code == 'true'

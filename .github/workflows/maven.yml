@@ -82,7 +82,7 @@ jobs:
         run: mvn -B -V -DskipAssembly verify ${{ matrix.profile }} --no-transfer-progress
 
       - name: Test Summary ${{ matrix.java }} ${{ matrix.profile }}
-        uses: mikepenz/action-junit-report@a9170d5795813c01ab4901ffb045b52bab4ab09d #v6.5.0
+        uses: mikepenz/action-junit-report@6ef3fdcfcd5f0b5d14df3e659ef19b8c6820f93d #v6.6.1
         continue-on-error: true
         if: always() && steps.changes.outputs.code == 'true'
         with:

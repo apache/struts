@@ -34,6 +34,7 @@ import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.mock.MockResult;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.util.location.LocatableProperties;
 import jakarta.servlet.http.HttpSession;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -64,6 +65,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
     private Map<String, Object> session;
     private ExecuteAndWaitInterceptor waitInterceptor;
     private ParametersInterceptor parametersInterceptor;
+    private TokenInterceptor tokenInterceptor;
+    private TokenSessionStoreInterceptor tokenSessionInterceptor;
 
     public void testOneWait() throws Exception {
         waitInterceptor.setDelay(0);
@@ -219,6 +222,63 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         assertEquals("success", result3);
     }
 
+    public void testWaitWithoutTokenCheckLeavesSessionTokensUnchanged() throws Exception {
+        waitInterceptor.setDelay(0);
+        waitInterceptor.setDelaySleepInterval(0);
+        String customTokenSessionName = TokenHelper.buildTokenSessionAttributeName("custom");
+        session.put(customTokenSessionName, "server-generated");
+
+        for (String tokenName : new String[]{TokenHelper.DEFAULT_TOKEN_NAME, "custom"}) {
+            Map<String, String[]> requestParams = new HashMap<>();
+            requestParams.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+            requestParams.put(TokenHelper.DEFAULT_TOKEN_NAME, new String[]{"request-supplied"});
+            requestParams.put("custom", new String[]{"request-supplied"});
+            withRequestParams(requestParams);
+
+            assertEquals("wait", buildProxy("plainWait").execute());
+
+            assertNull(session.get(TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME)));
+            assertEquals("server-generated", session.get(customTokenSessionName));
+        }
+    }
+
+    public void testTokenAndWaitAcceptsWaitPageRefreshWithValidatedToken() throws Exception {
+        assertWaitPageRefreshAccepted("tokenWait");
+    }
+
+    public void testTokenSessionAndWaitAcceptsWaitPageRefreshWithValidatedToken() throws Exception {
+        assertWaitPageRefreshAccepted("tokenSessionWait");
+    }
+
+    private void assertWaitPageRefreshAccepted(String actionName) throws Exception {
+        waitInterceptor.setDelay(0);
+        waitInterceptor.setDelaySleepInterval(0);
+        String tokenSessionName = TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME);
+        session.put(tokenSessionName, "server-generated");
+
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{TokenHelper.DEFAULT_TOKEN_NAME});
+        requestParams.put(TokenHelper.DEFAULT_TOKEN_NAME, new String[]{"server-generated"});
+        withRequestParams(requestParams);
+
+        assertEquals("wait", buildProxy(actionName).execute());
+        assertEquals("server-generated", session.get(tokenSessionName));
+
+        Thread.sleep(300);
+
+        assertEquals("wait", buildProxy(actionName).execute());
+        assertEquals("server-generated", session.get(tokenSessionName));
+
+        Thread.sleep(500);
+
+        assertEquals("success", buildProxy(actionName).execute());
+        assertNull(session.get(tokenSessionName));
+    }
+
+    private void withRequestParams(Map<String, String[]> requestParams) {
+        context = ActionContext.of(context).withParameters(HttpParameters.create(requestParams).build()).getContextMap();
+    }
+
     protected ActionProxy buildProxy(String actionName) throws Exception {
         return actionProxyFactory.createActionProxy("", actionName, null, context);
     }
@@ -244,9 +304,13 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
         container.inject(waitInterceptor);
         container.inject(parametersInterceptor);
+        container.inject(tokenInterceptor);
+        container.inject(tokenSessionInterceptor);
 
         waitInterceptor.init();
         parametersInterceptor.init();
+        tokenInterceptor.init();
+        tokenSessionInterceptor.init();
     }
 
     protected void tearDown() throws Exception {
@@ -273,6 +337,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
             // interceptors
             waitInterceptor = new ExecuteAndWaitInterceptor();
             parametersInterceptor = new ParametersInterceptor();
+            tokenInterceptor = new TokenInterceptor();
+            tokenSessionInterceptor = new TokenSessionStoreInterceptor();
             PackageConfig wait = new PackageConfig.Builder("")
                 .addActionConfig("action1", new ActionConfig.Builder("", "action1", ExecuteAndWaitDelayAction.class.getName())
                     .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
@@ -280,8 +346,24 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
                     .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
                     .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
                     .build())
+                .addActionConfig("plainWait", waitActionConfig("plainWait"))
+                .addActionConfig("tokenWait", waitActionConfig("tokenWait", new InterceptorMapping("token", tokenInterceptor)))
+                .addActionConfig("tokenSessionWait", waitActionConfig("tokenSessionWait", new InterceptorMapping("tokenSession", tokenSessionInterceptor)))
                 .build();
             configuration.addPackageConfig("", wait);
+        }
+
+        private ActionConfig waitActionConfig(String name, InterceptorMapping... tokenInterceptors) {
+            ActionConfig.Builder builder = new ActionConfig.Builder("", name, ExecuteAndWaitDelayAction.class.getName())
+                .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build());
+            for (InterceptorMapping tokenInterceptor : tokenInterceptors) {
+                builder.addInterceptor(tokenInterceptor);
+            }
+            return builder
+                .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
+                .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
+                .build();
         }
 
         public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {

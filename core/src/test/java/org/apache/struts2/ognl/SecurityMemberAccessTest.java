@@ -19,7 +19,6 @@
 package org.apache.struts2.ognl;
 
 import ognl.MemberAccess;
-import ognl.OgnlContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.TestBean;
 import org.apache.struts2.config.ConfigurationException;
@@ -55,7 +54,7 @@ import static org.mockito.Mockito.when;
 
 public class SecurityMemberAccessTest {
 
-    private OgnlContext context;
+    private StrutsContext context;
     private FooBar target;
     protected SecurityMemberAccess sma;
     protected ProviderAllowlist mockedProviderAllowlist;
@@ -64,12 +63,12 @@ public class SecurityMemberAccessTest {
 
     @Before
     public void setUp() {
-        context = ognl.Ognl.createDefaultContext(null);
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
         mockedThreadAllowlist = mock(ThreadAllowlist.class);
         proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         assignNewSma(true);
+        context = new StrutsContext(sma);
     }
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {

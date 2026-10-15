@@ -54,6 +54,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     @Inject
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void setCompoundRootAccessor(RootAccessor compoundRootAccessor) {
         this.compoundRootAccessor = compoundRootAccessor;
         OgnlRuntime.setPropertyAccessor(CompoundRoot.class, compoundRootAccessor);
@@ -110,6 +111,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
      * {@link #setMethodAccessor} and can be configured using the extension point
      * {@link StrutsConstants#STRUTS_METHOD_ACCESSOR}.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void registerAdditionalMethodAccessors() {
         Set<String> names = container.getInstanceNames(MethodAccessor.class);
         for (String name : names) {
@@ -145,6 +147,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void registerPropertyAccessors() throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(PropertyAccessor.class);
         for (String name : names) {

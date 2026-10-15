@@ -18,8 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import ognl.Ognl;
-import ognl.OgnlContext;
 import org.apache.struts2.cdi.CdiProxyService;
 import org.apache.struts2.cdi.ProxiedFooService;
 import org.apache.struts2.util.ProxyService;
@@ -41,7 +39,7 @@ public class CdiSecurityMemberAccessProxyTest {
 
     private static WeldContainer container;
 
-    private OgnlContext context;
+    private StrutsContext context;
     private SecurityMemberAccess sma;
     private ProxiedFooService proxy;
     private Member proxyMember;   // WeldClientProxy#getMetadata — a proxy member
@@ -63,7 +61,7 @@ public class CdiSecurityMemberAccessProxyTest {
         sma = new SecurityMemberAccess(null, null);
         sma.setProxyService(proxyService);
 
-        context = (OgnlContext) Ognl.createDefaultContext(null);
+        context = new StrutsContext(sma);
         proxy = container.select(ProxiedFooService.class).get();
         proxyMember = proxy.getClass().getMethod("getMetadata");
         realMember = proxy.getClass().getMethod("getHello");

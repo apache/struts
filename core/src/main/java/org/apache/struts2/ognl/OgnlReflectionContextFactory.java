@@ -29,6 +29,7 @@ import ognl.Ognl;
 public class OgnlReflectionContextFactory implements ReflectionContextFactory {
 
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public OgnlContext createDefaultContext(Object root) {
         return Ognl.createDefaultContext(root);
     }

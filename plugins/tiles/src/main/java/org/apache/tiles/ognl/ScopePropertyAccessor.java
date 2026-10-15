@@ -25,6 +25,7 @@ import org.apache.tiles.request.Request;
 /**
  * Accesses a scope.
  */
+@SuppressWarnings("rawtypes")
 public class ScopePropertyAccessor implements PropertyAccessor {
 
     /**

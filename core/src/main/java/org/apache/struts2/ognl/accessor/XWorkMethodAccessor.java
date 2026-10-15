@@ -23,9 +23,9 @@ import ognl.MethodFailedException;
 import ognl.OgnlException;
 import ognl.ObjectMethodAccessor;
 import ognl.ObjectIndexedPropertyDescriptor;
-import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,12 +44,13 @@ import java.util.List;
  * @author Patrick Lightbody
  * @author tmjee
  */
-public class XWorkMethodAccessor extends ObjectMethodAccessor {
+public class XWorkMethodAccessor extends ObjectMethodAccessor<StrutsContext> {
 
     private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
     @Override
-    public Object callMethod(OgnlContext context, Object object, String string, Object[] objects) throws MethodFailedException {
+    @SuppressWarnings("unchecked")
+    public Object callMethod(StrutsContext context, Object object, String string, Object[] objects) throws MethodFailedException {
 
         //Collection property accessing
         //this if statement ensures that ognl
@@ -99,7 +100,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
     }
 
     @SuppressWarnings("removal") // the constant is deprecated for removal in 8.0.0 (WW-5699); until then it is still honoured
-    private static boolean isIndexedAccessDenied(OgnlContext context) {
+    private static boolean isIndexedAccessDenied(StrutsContext context) {
         Boolean denied = (Boolean) context.get(ReflectionContextState.DENY_INDEXED_ACCESS_EXECUTION);
         return denied != null && denied;
     }
@@ -170,7 +171,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
                         .count() == 1;
     }
 
-    private Object callMethodWithDebugInfo(OgnlContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {
+    private Object callMethodWithDebugInfo(StrutsContext context, Object object, String methodName, Object[] objects) throws MethodFailedException {
         try {
             return super.callMethod(context, object, methodName, objects);
         } catch (MethodFailedException e) {
@@ -185,7 +186,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
     }
 
     @Override
-    public Object callStaticMethod(OgnlContext context, Class aClass, String string, Object[] objects) throws MethodFailedException {
+    public Object callStaticMethod(StrutsContext context, Class aClass, String string, Object[] objects) throws MethodFailedException {
         boolean e = ReflectionContextState.isDenyMethodExecution(context);
 
         if (!e) {
@@ -195,7 +196,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
         }
     }
 
-    private Object callStaticMethodWithDebugInfo(OgnlContext context, Class aClass, String methodName,
+    private Object callStaticMethodWithDebugInfo(StrutsContext context, Class aClass, String methodName,
                                                  Object[] objects) throws MethodFailedException {
         try {
             return super.callStaticMethod(context, aClass, methodName, objects);

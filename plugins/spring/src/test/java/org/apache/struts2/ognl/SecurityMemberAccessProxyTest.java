@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
-import ognl.OgnlContext;
+import org.apache.struts2.ognl.StrutsContext;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
     private static final String PROXY_MEMBER_METHOD = "isExposeProxy";
     private static final String TEST_SUB_BEAN_CLASS_METHOD = "getIssueId";
 
-    private OgnlContext context;
+    private StrutsContext context;
     private ActionProxy proxy;
     private SecurityMemberAccess sma;
     private ProxyService proxyService;
@@ -57,14 +57,13 @@ public class SecurityMemberAccessProxyTest extends XWorkJUnit4TestCase {
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("org/apache/struts2/spring/actionContext-xwork.xml");
         loadConfigurationProviders(provider);
 
-        context = ognl.Ognl.createDefaultContext(null);
-        proxy = actionProxyFactory.createActionProxy(null, "chaintoAOPedTestSubBeanAction", null, context);
-        proxyObjectProxyMember = proxy.getAction().getClass().getMethod(PROXY_MEMBER_METHOD);
-        proxyObjectNonProxyMember = proxy.getAction().getClass().getMethod(TEST_SUB_BEAN_CLASS_METHOD);
-
         proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
         sma = new SecurityMemberAccess(null, null);
         sma.setProxyService(proxyService);
+        context = new StrutsContext(sma);
+        proxy = actionProxyFactory.createActionProxy(null, "chaintoAOPedTestSubBeanAction", null, context);
+        proxyObjectProxyMember = proxy.getAction().getClass().getMethod(PROXY_MEMBER_METHOD);
+        proxyObjectNonProxyMember = proxy.getAction().getClass().getMethod(TEST_SUB_BEAN_CLASS_METHOD);
     }
 
     /**

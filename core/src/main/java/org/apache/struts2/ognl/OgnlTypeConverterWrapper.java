@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.ognl;
 
-import ognl.OgnlContext;
 import org.apache.struts2.conversion.TypeConverter;
 
 import java.lang.reflect.Member;
@@ -26,7 +25,7 @@ import java.lang.reflect.Member;
 /**
  * Wraps an XWork type conversion class for as an OGNL TypeConverter
  */
-public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
+public class OgnlTypeConverterWrapper implements ognl.TypeConverter<StrutsContext> {
 
     private final TypeConverter typeConverter;
 
@@ -38,7 +37,7 @@ public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
     }
 
     @Override
-    public Object convertValue(OgnlContext context, Object target, Member member, String propertyName, Object value, Class<?> toType) {
+    public Object convertValue(StrutsContext context, Object target, Member member, String propertyName, Object value, Class<?> toType) {
         return typeConverter.convertValue(context, target, member, propertyName, value, toType);
     }
 

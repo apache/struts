@@ -37,7 +37,6 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.Ognl;
-import ognl.OgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +56,8 @@ public class SetPropertiesTest extends XWorkTestCase {
 
     public void testOgnlUtilEmptyStringAsLong() {
         Bar bar = new Bar();
-        OgnlContext context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(null, null));
+        StrutsContext context = new StrutsContext(new SecurityMemberAccess(null, null));
+        context.withRoot(bar);
         context.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         bar.setId(null);
 
@@ -81,7 +81,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         ValueStack vs = ActionContext.getContext().getValueStack();
         vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) Ognl.getTypeConverter((OgnlContext) vs.getContext())).getTarget();
+        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) ((StrutsContext) vs.getContext()).getTypeConverter()).getTarget();
         c.registerConverter(Cat.class.getName(), new FooBarConverter());
         vs.push(foo);
 
@@ -97,7 +97,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         ValueStack vs = ActionContext.getContext().getValueStack();
         vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) Ognl.getTypeConverter((OgnlContext) vs.getContext())).getTarget();
+        XWorkConverter c = (XWorkConverter) ((OgnlTypeConverterWrapper) ((StrutsContext) vs.getContext()).getTypeConverter()).getTarget();
         c.registerConverter(Cat.class.getName(), new FooBarConverter());
         vs.push(foo);
 

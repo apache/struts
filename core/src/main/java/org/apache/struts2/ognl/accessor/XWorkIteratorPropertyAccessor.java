@@ -20,15 +20,15 @@ package org.apache.struts2.ognl.accessor;
 
 import ognl.IteratorPropertyAccessor;
 import ognl.ObjectPropertyAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlException;
+import org.apache.struts2.ognl.StrutsContext;
 
-public class XWorkIteratorPropertyAccessor extends IteratorPropertyAccessor {
+public class XWorkIteratorPropertyAccessor extends IteratorPropertyAccessor<StrutsContext> {
 
-    private final ObjectPropertyAccessor opa = new ObjectPropertyAccessor();
+    private final ObjectPropertyAccessor<StrutsContext> opa = new ObjectPropertyAccessor<>();
 
     @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) throws OgnlException {
+    public void setProperty(StrutsContext context, Object target, Object name, Object value) throws OgnlException {
         opa.setProperty(context, target, name, value);
     }
 }

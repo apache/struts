@@ -61,7 +61,7 @@ public class OgnlUtil {
 
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
-    private TypeConverter defaultConverter;
+    private TypeConverter<StrutsContext> defaultConverter;
     private final OgnlGuard ognlGuard;
 
     private boolean devMode;
@@ -211,14 +211,14 @@ public class OgnlUtil {
      * @return an OgnlContext instance
      * @since 7.2.0
      */
-    private OgnlContext ensureOgnlContext(Map<String, Object> context) {
-        if (context instanceof OgnlContext ognlContext) {
-            return ognlContext;
+    private StrutsContext ensureOgnlContext(Map<String, Object> context) {
+        if (context instanceof StrutsContext strutsContext) {
+            return strutsContext;
         }
-        // Create a new OgnlContext and copy the Map contents
-        OgnlContext ognlContext = createDefaultContext(null);
-        ognlContext.putAll(context);
-        return ognlContext;
+        // Create a new StrutsContext and copy the Map contents
+        StrutsContext strutsContext = createDefaultContext(null);
+        strutsContext.putAll(context);
+        return strutsContext;
     }
 
     /**
@@ -247,9 +247,9 @@ public class OgnlUtil {
             return;
         }
 
-        OgnlContext ognlContext = ensureOgnlContext(context);
+        StrutsContext strutsContext = ensureOgnlContext(context);
         try {
-            withRoot(ognlContext, o, () -> {
+            withRoot(strutsContext, o, () -> {
                 for (Map.Entry<String, ?> entry : props.entrySet()) {
                     String expression = entry.getKey();
                     internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
@@ -309,9 +309,9 @@ public class OgnlUtil {
      *                                problems setting the property
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
-        OgnlContext ognlContext = ensureOgnlContext(context);
+        StrutsContext strutsContext = ensureOgnlContext(context);
         try {
-            withRoot(ognlContext, o, () -> internalSetProperty(name, value, o, context, throwPropertyExceptions));
+            withRoot(strutsContext, o, () -> internalSetProperty(name, value, o, context, throwPropertyExceptions));
         } catch (OgnlException e) {
             // Should never happen as internalSetProperty catches OgnlException
             throw new IllegalStateException("Unexpected OgnlException in setProperty", e);
@@ -424,7 +424,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        OgnlContext ognlContext = (OgnlContext) context;
+        StrutsContext ognlContext = (StrutsContext) context;
         withRoot(ognlContext, root, () -> Ognl.setValue(tree, ognlContext, root, value));
     }
 
@@ -434,7 +434,7 @@ public class OgnlUtil {
         for (TreeValidator validator : treeValidators) {
             validator.validate(tree, checkContext);
         }
-        OgnlContext ognlContext = (OgnlContext) context;
+        StrutsContext ognlContext = (StrutsContext) context;
         return withRoot(ognlContext, root, () -> (T) Ognl.getValue(tree, ognlContext, root, resultType));
     }
 
@@ -548,8 +548,8 @@ public class OgnlUtil {
             return;
         }
 
-        final Map<String, Object> contextFrom = createDefaultContext(from);
-        final Map<String, Object> contextTo = createDefaultContext(to);
+        final StrutsContext contextFrom = createDefaultContext(from);
+        final StrutsContext contextTo = createDefaultContext(to);
 
         PropertyDescriptor[] fromPds;
         PropertyDescriptor[] toPds;
@@ -654,7 +654,7 @@ public class OgnlUtil {
      */
     public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
         Map<String, Object> beanMap = new HashMap<>();
-        final Map<String, Object> sourceMap = createDefaultContext(source);
+        final StrutsContext sourceMap = createDefaultContext(source);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             final String propertyName = propertyDescriptor.getDisplayName();
@@ -724,18 +724,21 @@ public class OgnlUtil {
         }
     }
 
-    protected OgnlContext createDefaultContext(Object root) {
+    protected StrutsContext createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
 
-    protected OgnlContext createDefaultContext(Object root, ClassResolver resolver) {
+    protected StrutsContext createDefaultContext(Object root, ClassResolver<StrutsContext> resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }
         }
-        return Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
+        StrutsContext context = new StrutsContext(
+                container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
+        context.withRoot(root);
+        return context;
     }
 
     @FunctionalInterface
@@ -762,13 +765,13 @@ public class OgnlUtil {
      * @param action  the action to execute
      * @throws OgnlException if the action throws an OgnlException
      */
-    private void withRoot(OgnlContext context, Object root, OgnlAction action) throws OgnlException {
-        Object oldRoot = Ognl.getRoot(context);
+    private void withRoot(StrutsContext context, Object root, OgnlAction action) throws OgnlException {
+        Object oldRoot = context.getRoot();
         try {
-            Ognl.setRoot(context, root);
+            context.withRoot(root);
             action.run();
         } finally {
-            Ognl.setRoot(context, oldRoot);
+            context.withRoot(oldRoot);
         }
     }
 
@@ -783,13 +786,13 @@ public class OgnlUtil {
      * @return the result of the supplier
      * @throws OgnlException if the supplier throws an OgnlException
      */
-    private <T> T withRoot(OgnlContext context, Object root, OgnlSupplier<T> supplier) throws OgnlException {
-        Object oldRoot = Ognl.getRoot(context);
+    private <T> T withRoot(StrutsContext context, Object root, OgnlSupplier<T> supplier) throws OgnlException {
+        Object oldRoot = context.getRoot();
         try {
-            Ognl.setRoot(context, root);
+            context.withRoot(root);
             return supplier.get();
         } finally {
-            Ognl.setRoot(context, oldRoot);
+            context.withRoot(oldRoot);
         }
     }
 }

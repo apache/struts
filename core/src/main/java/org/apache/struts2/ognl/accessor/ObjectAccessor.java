@@ -21,12 +21,12 @@ package org.apache.struts2.ognl.accessor;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 import ognl.ObjectPropertyAccessor;
-import ognl.OgnlContext;
 import ognl.OgnlException;
+import org.apache.struts2.ognl.StrutsContext;
 
-public class ObjectAccessor extends ObjectPropertyAccessor {
+public class ObjectAccessor extends ObjectPropertyAccessor<StrutsContext> {
     @Override
-    public Object getProperty(OgnlContext map, Object o, Object o1) throws OgnlException {
+    public Object getProperty(StrutsContext map, Object o, Object o1) throws OgnlException {
         Object obj = super.getProperty(map, o, o1);
 
         map.put(XWorkConverter.LAST_BEAN_CLASS_ACCESSED, o.getClass());

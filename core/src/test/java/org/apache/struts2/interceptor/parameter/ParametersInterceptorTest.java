@@ -46,7 +46,7 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.util.reflection.ReflectionContextState;
-import ognl.OgnlContext;
+import org.apache.struts2.ognl.StrutsContext;
 import org.apache.struts2.action.NoParameters;
 import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
@@ -540,7 +540,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
         Field field = ReflectionContextState.class.getField("DENY_METHOD_EXECUTION");
-        boolean allowStaticFieldAccess = ((OgnlContext) stack.getContext()).getMemberAccess().isAccessible((OgnlContext) stack.getContext(), ReflectionContextState.class, field, "");
+        boolean allowStaticFieldAccess = ((StrutsContext) stack.getContext()).getMemberAccess().isAccessible((StrutsContext) stack.getContext(), ReflectionContextState.class, field, "");
         assertFalse(allowStaticFieldAccess);
     }
 

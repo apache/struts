@@ -10,28 +10,28 @@
             <option value="Left2" selected="selected">Left2</option>
           </select>
           <input type="hidden" id="__multiselect_collection" name="__multiselect_collection" value="" />
-          <input type="button" onclick="moveOptionDown(document.getElementById('collection'),'key',''); " value="v" />
-          <input type="button" onclick="moveOptionUp(document.getElementById('collection'),'key',''); " value="^" />
+          <input type="button" data-struts-optiontransferselect="leftDown" data-struts-left="collection" data-struts-right="list2" value="v" />
+          <input type="button" data-struts-optiontransferselect="leftUp" data-struts-left="collection" data-struts-right="list2" value="^" />
         </td>
         <td class="tdTransferSelect">
           <input type="button" value="&lt;-"
-            onclick="moveSelectedOptions(document.getElementById('list2'),document.getElementById('collection'),false,'');" />
+            data-struts-optiontransferselect="addToLeft" data-struts-left="collection" data-struts-right="list2" />
           <br />
           <br />
           <input type="button" value="-&gt;"
-            onclick="moveSelectedOptions(document.getElementById('collection'),document.getElementById('list2'),false,'');" />
+            data-struts-optiontransferselect="addToRight" data-struts-left="collection" data-struts-right="list2" />
           <br />
           <br />
           <input type="button" value="&lt;&lt;--"
-            onclick="moveAllOptions(document.getElementById('list2'),document.getElementById('collection'),false,'');" />
+            data-struts-optiontransferselect="addAllToLeft" data-struts-left="collection" data-struts-right="list2" />
           <br />
           <br />
           <input type="button" value="--&gt;&gt;"
-            onclick="moveAllOptions(document.getElementById('collection'),document.getElementById('list2'),false,'');" />
+            data-struts-optiontransferselect="addAllToRight" data-struts-left="collection" data-struts-right="list2" />
           <br />
           <br />
           <input type="button" value="&lt;*&gt;"
-            onclick="selectAllOptions(document.getElementById('collection'));selectAllOptions(document.getElementById('list2'));" />
+            data-struts-optiontransferselect="selectAll" data-struts-left="collection" data-struts-right="list2" />
           <br />
           <br />
         </td>
@@ -41,8 +41,8 @@
             <option value="Right2" selected="selected">Right2</option>
           </select>
           <input type="hidden" id="__multiselect_list2" name="__multiselect_list2" value="" />
-          <input type="button" onclick="moveOptionDown(document.getElementById('list2'),'key','');" value="v" />
-          <input type="button" onclick="moveOptionUp(document.getElementById('list2'),'key','');" value="^" />
+          <input type="button" data-struts-optiontransferselect="rightDown" data-struts-left="collection" data-struts-right="list2" value="v" />
+          <input type="button" data-struts-optiontransferselect="rightUp" data-struts-left="collection" data-struts-right="list2" value="^" />
         </td>
       </tr>
     </table>

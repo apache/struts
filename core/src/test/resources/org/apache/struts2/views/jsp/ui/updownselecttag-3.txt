@@ -13,9 +13,9 @@
 <input type="hidden" id="__multiselect_myId" name="__multiselect_myName" value=""/>
 </td></tr>
 <tr><td>
-		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myId'), 'key', '-1');" />&nbsp;
-		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myId'), 'key', '-1');" />&nbsp;
-		&nbsp;<input type="button" value="*" onclick="selectAllOptionsExceptSome(document.getElementById('myId'), 'key', '-1');" />&nbsp;
+		&nbsp;<input type="button" value="^" data-struts-updownselect="moveUp" data-struts-target="myId" data-struts-header-key="-1" />&nbsp;
+		&nbsp;<input type="button" value="v" data-struts-updownselect="moveDown" data-struts-target="myId" data-struts-header-key="-1" />&nbsp;
+		&nbsp;<input type="button" value="*" data-struts-updownselect="selectAll" data-struts-target="myId" data-struts-header-key="-1" />&nbsp;
 </td></tr>
 </table>
 </td> </tr>

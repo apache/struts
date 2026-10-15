@@ -69,7 +69,7 @@
 		<#if attributes.buttonCssStyle?has_content>
 		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${addLabel}" onclick="addOption(document.getElementById('${attributes.id}_input'), document.getElementById('${attributes.id}'))" /><br /><br />
+		 value="${addLabel}" data-struts-inputtransferselect="add" data-struts-target="${attributes.id}" /><br /><br />
 	<#t/>
 	<#assign removeLabel=(attributes.removeLabel!"<-") /><#t/>
 	<input type="button"
@@ -79,7 +79,7 @@
 		<#if attributes.buttonCssStyle?has_content>
 		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${attributes.id}'))" /><br /><br />
+		 value="${removeLabel}" data-struts-inputtransferselect="remove" data-struts-target="${attributes.id}" /><br /><br />
 	<#t/>
 	<#assign removeAllLabel=(attributes.removeAllLabel!"<<--") /><#t/>
 	<input type="button"
@@ -89,7 +89,7 @@
 		<#if attributes.buttonCssStyle?has_content>
 		 style="${attributes.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${attributes.id}'))" /><br /><br />
+		 value="${removeAllLabel}" data-struts-inputtransferselect="removeAll" data-struts-target="${attributes.id}" /><br /><br />
 </td>
 <td>
 <#if attributes.rightTitle?has_content><#t/>
@@ -99,20 +99,18 @@
 <#include "/${attributes.templateDir}/simple/select.ftl" />
 <#if attributes.allowUpDown!true>
 <input type="button"
+	data-struts-inputtransferselect="moveDown" data-struts-target="${attributes.id}"
 <#if attributes.headerKey?has_content>
-	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');"
-<#else>
-	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', '');"
+	data-struts-header-key="${attributes.headerKey}"
 </#if>
 <#if attributes.downLabel?has_content>
 	value="${attributes.downLabel}"
 </#if>
 />
 <input type="button"
+	data-struts-inputtransferselect="moveUp" data-struts-target="${attributes.id}"
 <#if attributes.headerKey?has_content>
-	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');"
-<#else>
-	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', '');"
+	data-struts-header-key="${attributes.headerKey}"
 </#if>
 <#if attributes.upLabel?has_content>
 	value="${attributes.upLabel}"

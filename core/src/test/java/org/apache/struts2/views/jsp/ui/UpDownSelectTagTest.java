@@ -161,6 +161,24 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testButtonsCarryHeaderKeyAsDataAttributeWithoutInlineHandlers() throws Exception {
+        UpDownSelectTag tag = new UpDownSelectTag();
+        tag.setPageContext(pageContext);
+        tag.setId("myId");
+        tag.setName("myName");
+        tag.setList("myMap");
+        tag.setValue("mySelectedMapIds");
+        tag.setHeaderKey("it's-a-key");
+        tag.setHeaderValue("--- Please Order ---");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        String output = writer.toString();
+        assertFalse("framework buttons must not need inline event handlers", output.contains("onclick="));
+        assertTrue(output.contains("data-struts-updownselect=\"selectAll\" data-struts-target=\"myId\" data-struts-header-key=\"it&#39;s-a-key\""));
+    }
+
     public void testWithHeaderAndEmptyOption_clearTagStateSet() throws Exception {
 
         UpDownSelectTag tag = new UpDownSelectTag();

@@ -22,6 +22,18 @@
 	<@s.script src="${base}${attributes.staticContentPath}/optiontransferselect.js" />
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
+<#--
+  Buttons carry their action, both select ids and the header keys in data-* attributes; optiontransferselect.js binds
+  them, so the tag needs no framework-generated inline JavaScript under a Content-Security-Policy. A developer-supplied
+  *Onclick attribute is still rendered as onclick and runs after the framework action. The attribute line uses <#rt/>,
+  not <#t/>, to keep the space that separates it from the preceding attribute.
+-->
+<#macro transferButton action onclick><#t/>
+ data-struts-optiontransferselect="${action}" data-struts-left="${attributes.id}" data-struts-right="${attributes.doubleId!}"<#rt/>
+<#if attributes.headerKey??> data-struts-header-key="${attributes.headerKey}"</#if><#t/>
+<#if attributes.doubleHeaderKey??> data-struts-double-header-key="${attributes.doubleHeaderKey}"</#if><#t/>
+<#if onclick?has_content> onclick="<#outputformat 'JavaScript'>${onclick}</#outputformat>;"</#if><#t/>
+</#macro>
 <table>
 <tr>
 <td>
@@ -32,13 +44,13 @@
 <#include "/${attributes.templateDir}/simple/select.ftl" />
 <#if attributes.allowUpDownOnLeft!true>
 <input type="button"
-	onclick="moveOptionDown(document.getElementById('${attributes.id}'), 'key', <#if attributes.headerKey??>'${attributes.headerKey}'<#else>''</#if>);<#if attributes.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnLeftOnclick}</#outputformat>;</#if>"
+	<@transferButton action="leftDown" onclick=attributes.upDownOnLeftOnclick!""/>
 <#if attributes.leftDownLabel??>
 	value="${attributes.leftDownLabel}"
 </#if>
 />
 <input type="button"
-	onclick="moveOptionUp(document.getElementById('${attributes.id}'), 'key', <#if attributes.headerKey??>'${attributes.headerKey}'<#else>''</#if>);<#if attributes.upDownOnLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnLeftOnclick}</#outputformat>;</#if>"
+	<@transferButton action="leftUp" onclick=attributes.upDownOnLeftOnclick!""/>
 <#if attributes.leftUpLabel??>
 	value="${attributes.leftUpLabel}"
 </#if>
@@ -48,132 +60,59 @@
 </td>
 <td class="tdTransferSelect">
 	<#if attributes.allowAddToLeft!true><#t/>
-		<#assign addToLeftLabel = attributes.addToLeftLabel!"<-"/><#t/>
-		<#if attributes.doubleHeaderKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '${attributes.doubleHeaderKey}', '');<#if attributes.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#else><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '');<#if attributes.addToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+		<#assign addToLeftLabel=attributes.addToLeftLabel!"<-" /><#t/>
+		<input type="button"
+		<#if attributes.buttonCssClass??><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
+		<#if attributes.buttonCssStyle??><#t/>
+		 style="${attributes.buttonCssStyle}"
+		</#if><#t/>
+		 value="${addToLeftLabel}"<@transferButton action="addToLeft" onclick=attributes.addToLeftOnclick!""/> /><br /><br />
 	</#if><#t/>
 	<#if attributes.allowAddToRight!true><#t/>
 		<#assign addToRightLabel=attributes.addToRightLabel!"->" /><#t/>
-		<#if attributes.headerKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '${attributes.headerKey}', '');<#if attributes.addToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#else><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '');<#if attributes.addToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+		<input type="button"
+		<#if attributes.buttonCssClass??><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
+		<#if attributes.buttonCssStyle??><#t/>
+		 style="${attributes.buttonCssStyle}"
+		</#if><#t/>
+		 value="${addToRightLabel}"<@transferButton action="addToRight" onclick=attributes.addToRightOnclick!""/> /><br /><br />
 	</#if><#t/>
 	<#if attributes.allowAddAllToLeft!true><#t/>
 		<#assign addAllToLeftLabel=attributes.addAllToLeftLabel!"<<--" /><#t/>
-		<#if attributes.doubleHeaderKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '${attributes.doubleHeaderKey}', '');<#if attributes.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#else><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${attributes.doubleId}'), document.getElementById('${attributes.id}'), false, '');<#if attributes.addAllToLeftOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToLeftOnclick}</#outputformat>;</#if>" /><br /><br />
+		<input type="button"
+		<#if attributes.buttonCssClass??><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
+		<#if attributes.buttonCssStyle??><#t/>
+		 style="${attributes.buttonCssStyle}"
+		</#if><#t/>
+		 value="${addAllToLeftLabel}"<@transferButton action="addAllToLeft" onclick=attributes.addAllToLeftOnclick!""/> /><br /><br />
 	</#if><#t/>
 	<#if attributes.allowAddAllToRight!true><#t/>
 		<#assign addAllToRightLabel=attributes.addAllToRightLabel!"-->>" /><#t/>
-		<#if attributes.headerKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '${attributes.headerKey}', '');<#if attributes.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#else><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${attributes.id}'), document.getElementById('${attributes.doubleId}'), false, '');<#if attributes.addAllToRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.addAllToRightOnclick}</#outputformat>;</#if>" /><br /><br />
+		<input type="button"
+		<#if attributes.buttonCssClass??><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
+		<#if attributes.buttonCssStyle??><#t/>
+		 style="${attributes.buttonCssStyle}"
+		</#if><#t/>
+		 value="${addAllToRightLabel}"<@transferButton action="addAllToRight" onclick=attributes.addAllToRightOnclick!""/> /><br /><br />
 	</#if><#t/>
 	<#if attributes.allowSelectAll!true><#t/>
 		<#assign selectAllLabel=attributes.selectAllLabel!"<*>" /><#t/>
-		<#if attributes.headerKey?? && attributes.doubleHeaderKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');selectAllOptionsExceptSome(document.getElementById('${attributes.doubleId}'), 'key', '${attributes.doubleHeaderKey}');<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#elseif attributes.headerKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${attributes.id}'), 'key', '${attributes.headerKey}');selectAllOptions(document.getElementById('${attributes.doubleId}'));<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#elseif attributes.doubleHeaderKey??><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${attributes.id}'));selectAllOptionsExceptSome(document.getElementById('${attributes.doubleId}'), 'key', '${attributes.doubleHeaderKey}');<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
-		<#else><#t/>
-			<input type="button"
-			<#if attributes.buttonCssClass??><#t/>
-			 class="${attributes.buttonCssClass}"
-			</#if><#t/>
-			<#if attributes.buttonCssStyle??><#t/>
-			 style="${attributes.buttonCssStyle}"
-			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${attributes.id}'));selectAllOptions(document.getElementById('${attributes.doubleId}'));<#if attributes.selectAllOnclick?has_content><#outputformat 'JavaScript'>${attributes.selectAllOnclick}</#outputformat>;</#if>" /><br /><br />
+		<input type="button"
+		<#if attributes.buttonCssClass??><#t/>
+		 class="${attributes.buttonCssClass}"
 		</#if><#t/>
+		<#if attributes.buttonCssStyle??><#t/>
+		 style="${attributes.buttonCssStyle}"
+		</#if><#t/>
+		 value="${selectAllLabel}"<@transferButton action="selectAll" onclick=attributes.selectAllOnclick!""/> /><br /><br />
 	</#if><#t/>
 </td>
 <td>
@@ -285,13 +224,13 @@
 </#if>
 <#if attributes.allowUpDownOnRight!true>
 <input type="button"
-	onclick="moveOptionDown(document.getElementById('${attributes.doubleId}'), 'key', <#if attributes.doubleHeaderKey??>'${attributes.doubleHeaderKey}'<#else>''</#if>);<#if attributes.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnRightOnclick}</#outputformat>;</#if>"
+	<@transferButton action="rightDown" onclick=attributes.upDownOnRightOnclick!""/>
 <#if attributes.rightDownLabel??>
 	value="${attributes.rightDownLabel}"
 </#if>
 />
 <input type="button"
-	onclick="moveOptionUp(document.getElementById('${attributes.doubleId}'), 'key', <#if attributes.doubleHeaderKey??>'${attributes.doubleHeaderKey}'<#else>''</#if>);<#if attributes.upDownOnRightOnclick?has_content><#outputformat 'JavaScript'>${attributes.upDownOnRightOnclick}</#outputformat>;</#if>"
+	<@transferButton action="rightUp" onclick=attributes.upDownOnRightOnclick!""/>
 <#if attributes.rightUpLabel??>
 	value="${attributes.rightUpLabel}"
 </#if>

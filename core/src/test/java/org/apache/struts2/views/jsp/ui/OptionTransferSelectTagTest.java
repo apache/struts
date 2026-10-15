@@ -1142,6 +1142,34 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testButtonsCarryHeaderKeysAsDataAttributesWithoutInlineHandlers() throws Exception {
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(new ArrayList<>(List.of("Left1")));
+        testaction.setList2(new ArrayList<>(List.of("Right1")));
+
+        OptionTransferSelectTag tag = new OptionTransferSelectTag();
+        tag.setPageContext(pageContext);
+        tag.setId("id");
+        tag.setName("collection");
+        tag.setList("collection");
+        tag.setHeaderKey("it's-left");
+        tag.setHeaderValue("Left");
+        tag.setDoubleId("doubleId");
+        tag.setDoubleName("list2");
+        tag.setDoubleList("list2");
+        tag.setDoubleHeaderKey("it's-right");
+        tag.setDoubleHeaderValue("Right");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        String output = writer.toString();
+        assertFalse("framework buttons must not need inline event handlers", output.contains("onclick="));
+        assertFalse("data-* attributes must be separated from the preceding attribute", output.contains("\"data-struts-"));
+        assertTrue(output.contains("value=\"&lt;-\" data-struts-optiontransferselect=\"addToLeft\" data-struts-left=\"id\" data-struts-right=\"doubleId\""
+                + " data-struts-header-key=\"it&#39;s-left\" data-struts-double-header-key=\"it&#39;s-right\""));
+    }
+
     public void testDynamicAttributes() throws Exception {
         List left = new ArrayList();
         left.add("Left1");

@@ -98,6 +98,7 @@
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
 <#global evaluate_dynamic_attributes = true/><#t/>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+/><#rt/>
 <label<#rt/>
 <#if attributes.id?has_content>
  for="${attributes.id}-${itemCount}"<#rt/>

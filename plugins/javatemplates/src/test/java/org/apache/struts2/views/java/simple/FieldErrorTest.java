@@ -87,6 +87,41 @@ public class FieldErrorTest extends AbstractTest {
         assertEquals("", output);
     }
 
+    public void testRenderFieldErrorWithRegex() {
+        this.errors.put("field10", Arrays.asList("too long"));
+        tag.setRegex(true);
+        tag.setFieldName("field1.*");
+        tag.setFieldName("field1");
+
+        tag.evaluateParams();
+        map.putAll(tag.getAttributes());
+        theme.renderTag(getTagName(), context);
+        String output = writer.getBuffer().toString();
+        String expected = s("<ul class='errorMessage'><li><span>not good</span></li><li><span>bad</span></li><li><span>too long</span></li></ul>");
+        assertEquals(expected, output);
+    }
+
+    public void testRenderFieldErrorWithRegexWithoutMatch() {
+        tag.setRegex(true);
+        tag.setFieldName("field");
+
+        tag.evaluateParams();
+        map.putAll(tag.getAttributes());
+        theme.renderTag(getTagName(), context);
+        String output = writer.getBuffer().toString();
+        assertEquals(s("<ul class='errorMessage'></ul>"), output);
+    }
+
+    public void testRenderFieldErrorWithoutRegexMatchesLiterally() {
+        tag.setFieldName("field.");
+
+        tag.evaluateParams();
+        map.putAll(tag.getAttributes());
+        theme.renderTag(getTagName(), context);
+        String output = writer.getBuffer().toString();
+        assertEquals(s("<ul class='errorMessage'></ul>"), output);
+    }
+
     @Override
     protected void setUp() throws Exception {
         this.errors = new LinkedHashMap<String, List<String>>() {

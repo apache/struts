@@ -36,6 +36,7 @@ public class FieldErrorTag extends AbstractUITag {
 
     protected String fieldName;
     protected boolean escape = true;
+    protected boolean regex = false;
 
 
     @Override
@@ -50,6 +51,7 @@ public class FieldErrorTag extends AbstractUITag {
         FieldError fieldError = ((FieldError) component);
         fieldError.setFieldName(this.fieldName);
         fieldError.setEscape(escape);
+        fieldError.setRegex(regex);
     }
 
     public void setFieldName(String fieldName) {
@@ -58,6 +60,10 @@ public class FieldErrorTag extends AbstractUITag {
 
     public void setEscape(boolean escape) {
         this.escape = escape;
+    }
+
+    public void setRegex(boolean regex) {
+        this.regex = regex;
     }
 
     /**
@@ -76,6 +82,7 @@ public class FieldErrorTag extends AbstractUITag {
         super.clearTagStateForTagPoolingServers();
         this.fieldName = null;
         this.escape = true;
+        this.regex = false;
      }
 
 }

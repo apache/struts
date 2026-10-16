@@ -898,6 +898,86 @@ public class FieldErrorTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testRegexMatchesAllFieldsOfOneRow() throws Exception {
+        String output = renderLedgerErrors(null, true, "ledger\\.records\\[1\\]\\..*");
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span>amount 1</span></li><li><span>date 1</span></li></ul>", true),
+                normalize(output, true));
+    }
+
+    public void testRegexMatchesAllFieldsOfOneRow_html5() throws Exception {
+        String output = renderLedgerErrors("html5", true, "ledger\\.records\\[1\\]\\..*");
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span>amount 1</span></li><li><span>date 1</span></li></ul>", true),
+                normalize(output, true));
+    }
+
+    public void testRegexWithoutMatchRendersNothing() throws Exception {
+        assertEquals("", normalize(renderLedgerErrors(null, true, "ledger\\.records\\[7\\]\\..*"), true));
+        assertEquals("", normalize(renderLedgerErrors("html5", true, "ledger\\.records\\[7\\]\\..*"), true));
+    }
+
+    public void testRegexMatchesWholeFieldName() throws Exception {
+        assertEquals("", normalize(renderLedgerErrors(null, true, "ledger\\.records\\[1\\]"), true));
+        assertEquals("", normalize(renderLedgerErrors("html5", true, "ledger\\.records\\[1\\]"), true));
+    }
+
+    public void testRegexFieldMatchedByTwoPatternsIsRenderedOnce() throws Exception {
+        String expected = normalize("<ul class=\"errorMessage\"><li><span>amount 0</span></li><li><span>amount 1</span></li><li><span>date 1</span></li></ul>", true);
+
+        assertEquals(expected, normalize(renderLedgerErrors(null, true, ".*\\.amount", "ledger\\.records\\[1\\]\\..*"), true));
+        assertEquals(expected, normalize(renderLedgerErrors("html5", true, ".*\\.amount", "ledger\\.records\\[1\\]\\..*"), true));
+    }
+
+    public void testWithoutRegexPatternIsMatchedLiterally() throws Exception {
+        assertEquals("", normalize(renderLedgerErrors(null, false, "ledger\\.records\\[1\\]\\..*"), true));
+        assertEquals("", normalize(renderLedgerErrors("html5", false, "ledger\\.records\\[1\\]\\..*"), true));
+    }
+
+    public void testRegexIsClearedForTagPoolingServers() throws Exception {
+        FieldErrorTag tag = new FieldErrorTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);
+        tag.setRegex(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);
+        tag.doEndTag();
+
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    private String renderLedgerErrors(String theme, boolean regex, String... fieldNames) throws Exception {
+        TestAction testAction = new TestAction();
+        testAction.addFieldError("ledger.records[0].amount", "amount 0");
+        testAction.addFieldError("ledger.records[1].amount", "amount 1");
+        testAction.addFieldError("ledger.records[1].date", "date 1");
+        stack.pop();
+        stack.push(testAction);
+        writer.getBuffer().setLength(0);
+
+        FieldErrorTag tag = new FieldErrorTag();
+        if (theme != null) {
+            tag.setTheme(theme);
+        }
+        tag.setRegex(regex);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        for (String fieldName : fieldNames) {
+            ParamTag paramTag = new ParamTag();
+            paramTag.setPageContext(pageContext);
+            paramTag.setValue("%{'" + fieldName.replace("\\", "\\\\") + "'}");
+            paramTag.doStartTag();
+            paramTag.doEndTag();
+        }
+        tag.doEndTag();
+        return writer.toString();
+    }
+
     @Override
     public Action getAction() {
         return new InternalAction();

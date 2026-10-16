@@ -24,6 +24,8 @@ import org.apache.struts2.views.java.TagGenerator;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class FieldErrorHandler extends AbstractTagHandler implements TagGenerator {
     public void generate() throws IOException {
@@ -34,8 +36,12 @@ public class FieldErrorHandler extends AbstractTagHandler implements TagGenerato
         if (fieldErrorFieldNames != null && !fieldErrorFieldNames.isEmpty() && errors != null && !errors.isEmpty()) {
             startUL(params);
 
+            List<String> matchedFieldNames = Boolean.TRUE.equals(params.get("regex"))
+                    ? matchFieldNames(fieldErrorFieldNames, errors.keySet())
+                    : fieldErrorFieldNames;
+
             //iterate over field error names
-            for (String fieldErrorFieldName : fieldErrorFieldNames) {
+            for (String fieldErrorFieldName : matchedFieldNames) {
                 List<String> fieldErrors = errors.get(fieldErrorFieldName);
                 if (fieldErrors != null) {
                     for (String fieldError : fieldErrors) {
@@ -56,6 +62,13 @@ public class FieldErrorHandler extends AbstractTagHandler implements TagGenerato
 
             endUL();
         }
+    }
+
+    private List<String> matchFieldNames(List<String> fieldNamePatterns, Set<String> fieldNames) {
+        List<Pattern> patterns = fieldNamePatterns.stream().map(Pattern::compile).toList();
+        return fieldNames.stream()
+                .filter(fieldName -> patterns.stream().anyMatch(pattern -> pattern.matcher(fieldName).matches()))
+                .toList();
     }
 
     private void endUL() throws IOException {

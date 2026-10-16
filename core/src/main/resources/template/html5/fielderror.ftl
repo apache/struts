@@ -25,7 +25,19 @@
 <#assign doneEndUlTag=false><#t/>
 <#assign haveMatchedErrorField=false>
 <#if (fieldErrorFieldNames?size > 0) >
-<#list fieldErrorFieldNames as fieldErrorFieldName>
+<#if attributes.regex>
+<#assign matchedFieldNames = []>
+<#list eKeys as eKey>
+<#list fieldErrorFieldNames as fieldNamePattern>
+<#if eKey?matches(fieldNamePattern)>
+<#assign matchedFieldNames = matchedFieldNames + [eKey]><#break>
+</#if>
+</#list>
+</#list>
+<#else>
+<#assign matchedFieldNames = fieldErrorFieldNames>
+</#if>
+<#list matchedFieldNames as fieldErrorFieldName>
 <#list eKeys as eKey>
 <#if (eKey = fieldErrorFieldName)>
 <#assign haveMatchedErrorField=true>

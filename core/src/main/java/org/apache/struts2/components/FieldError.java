@@ -67,6 +67,11 @@ import java.util.List;
  *
  *    &lt;s:fielderror fieldName="field1" /&gt;
  *
+ *    &lt;!-- example 3 --&gt;
+ *    &lt;s:fielderror regex="true"&gt;
+ *         &lt;s:param&gt;ledger\.records\[&lt;s:property value="#row.index" /&gt;\]\..*&lt;/s:param&gt;
+ *    &lt;/s:fielderror&gt;
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -78,6 +83,7 @@ import java.util.List;
  *
  * Example 1: display all field errors<br>
  * Example 2: display field errors only for 'field1' and 'field2'<br>
+ * Example 3: display field errors of all fields of one iterated row, matched by a regular expression<br>
  *
  * <!-- END SNIPPET: description -->
  * </pre>
@@ -89,6 +95,7 @@ public class FieldError extends UIBean implements UnnamedParametric {
 
     private final List<String> errorFieldNames = new ArrayList<>();
     private boolean escape = true;
+    private boolean regex = false;
 
     public FieldError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -108,6 +115,7 @@ public class FieldError extends UIBean implements UnnamedParametric {
             addParameter("errorFieldNames", errorFieldNames);
 
         addParameter("escape", escape);
+        addParameter("regex", regex);
     }
 
     public void addParameter(Object value) {
@@ -128,6 +136,12 @@ public class FieldError extends UIBean implements UnnamedParametric {
     @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
     public void setEscape(boolean escape) {
         this.escape = escape;
+    }
+
+    @StrutsTagAttribute(description="Whether field names are regular expressions matched against the whole name of a field error",
+            type="Boolean", defaultValue="false")
+    public void setRegex(boolean regex) {
+        this.regex = regex;
     }
 }
 

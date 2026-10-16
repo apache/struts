@@ -38,7 +38,8 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  * <p>
  * A tag that creates a HTML &lt;a &gt;.This tag supports the same attributes as the "url" tag,
- * including nested parameters using the "param" tag.
+ * including nested parameters using the "param" tag. Nested parameters are applied only when the URL is built
+ * from the "value" or "action" attributes; they are ignored when "href" is set.
  * </p>
  * <!-- END SNIPPET: javadoc -->
  *
@@ -46,7 +47,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;s:a id="link1" href="/do-it.action"&gt;
+ * &lt;s:a id="link1" value="/do-it.action"&gt;
  *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
  *     &lt;s:param name="id" value="1"/&gt;
  * &lt;/s:a&gt;
@@ -101,6 +102,10 @@ public class Anchor extends ClosingUIBean {
 
         if (href != null) {
             addParameter("href", ensureAttributeSafelyNotEscaped(findString(href)));
+            if (devMode && !urlParameters.isEmpty()) {
+                LOG.warn("Nested params {} are ignored because <s:a> has href [{}], use value or action to build a URL with params",
+                        urlParameters.keySet(), href);
+            }
         } else {
             //no href, build it from URL attributes
             StringWriter sw = new StringWriter();
@@ -189,7 +194,7 @@ public class Anchor extends ClosingUIBean {
         return urlProvider;
     }
 
-    @StrutsTagAttribute(description = "The URL.")
+    @StrutsTagAttribute(description = "The URL. Nested param tags are not applied, use value or action to build a URL with params")
     public void setHref(String href) {
         this.href = href;
     }

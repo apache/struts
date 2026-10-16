@@ -28,9 +28,14 @@ import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test case for FreeMarkerResult.
@@ -111,6 +116,42 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         assertNull(response.getContentType());
         result.execute(invocation);
         assertEquals("text/xml", response.getContentType());
+    }
+
+    public void testEmptyLocationDoesNotLoadRequestUriAsTemplate() throws Exception {
+        request.setRequestURI("/com/acme/actions/Action.class/");
+        request.setServletPath("/com/acme/actions/Action.class/");
+
+        List<String> requestedTemplates = new ArrayList<>();
+        StringTemplateLoader loader = new StringTemplateLoader() {
+            @Override
+            public Object findTemplateSource(String name) {
+                requestedTemplates.add(name);
+                return super.findTemplateSource(name);
+            }
+        };
+        loader.putTemplate("com/acme/actions/Action.class/", "CLASS-FILE-BYTES");
+        Configuration recordingConfiguration = new Configuration(Configuration.VERSION_2_3_34);
+        recordingConfiguration.setLocalizedLookup(false);
+        recordingConfiguration.setTemplateLoader(loader);
+
+        FreemarkerResult result = new FreemarkerResult() {
+            @Override
+            protected Configuration getConfiguration() {
+                return recordingConfiguration;
+            }
+        };
+        result.setLocation("");
+        result.setFreemarkerManager(mgr);
+
+        try {
+            result.execute(invocation);
+        } catch (Exception expected) {
+            // a missing template is acceptable, serving the request URI is not
+        }
+
+        assertFalse(stringWriter.toString().contains("CLASS-FILE-BYTES"));
+        assertTrue(requestedTemplates.toString(), requestedTemplates.stream().noneMatch(name -> name.contains("Action.class")));
     }
 
     protected void setUp() throws Exception {

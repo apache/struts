@@ -78,12 +78,7 @@
 <#if attributes.tabindex?has_content>
  tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if itemCssClass?has_content>
- class="${itemCssClass}"<#rt/>
-</#if>
-<#if itemCssStyle?has_content>
- style="${itemCssStyle}"<#rt/>
-</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/list-item-css.ftl" />
 <#if itemTitle?has_content>
  title="${itemTitle}"<#rt/>
 <#else>
@@ -91,7 +86,6 @@
  title="${attributes.title}"<#rt/>
     </#if>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" />
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" />
 <#global evaluate_dynamic_attributes = true/>

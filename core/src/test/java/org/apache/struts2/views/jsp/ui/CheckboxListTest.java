@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
@@ -382,5 +383,68 @@ public class CheckboxListTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testCssClassAndStyleRenderedOnce() throws Exception {
+        CheckboxListTag tag = createStyledTag("simple");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxListTag.class.getResource("CheckboxList-5.txt"));
+    }
+
+    public void testListCssClassAndStyleReplaceTagCss() throws Exception {
+        CheckboxListTag tag = createStyledTag("simple");
+        tag.setListCssClass("'itemClass'");
+        tag.setListCssStyle("'itemstyle'");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxListTag.class.getResource("CheckboxList-6.txt"));
+    }
+
+    public void testCssErrorClassAndStyleWithFieldErrors() throws Exception {
+        ((TestAction) action).addFieldError("collection", "collection error");
+        CheckboxListTag tag = createStyledTag("simple");
+        tag.setCssErrorClass("errclass");
+        tag.setCssErrorStyle("errstyle");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxListTag.class.getResource("CheckboxList-7.txt"));
+    }
+
+    public void testCssClassAndStyleRenderedOnceHtml5() throws Exception {
+        CheckboxListTag tag = createStyledTag("html5");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        String output = writer.toString();
+        assertEquals(2, StringUtils.countMatches(output, "class=\"myClass\""));
+        assertEquals(2, StringUtils.countMatches(output, "style=\"mystyle\""));
+    }
+
+    private CheckboxListTag createStyledTag(String theme) {
+        TestAction testAction = (TestAction) action;
+        testAction.setCollection(List.of("hello"));
+        testAction.setList(new String[][]{
+                {"hello", "world"},
+                {"foo", "bar"}
+        });
+
+        CheckboxListTag tag = new CheckboxListTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme(theme);
+        tag.setName("collection");
+        tag.setList("list");
+        tag.setListKey("top[0]");
+        tag.setListValue("top[1]");
+        tag.setCssClass("myClass");
+        tag.setCssStyle("mystyle");
+        return tag;
     }
 }

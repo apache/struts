@@ -79,12 +79,7 @@ file for it's localized value.  This is then used as a label -->
 <#if attributes.tabindex?has_content>
  tabindex="${attributes.tabindex}"<#rt/>
 </#if>
-<#if itemCssClass?has_content>
- class="${itemCssClass}"<#rt/>
-</#if>
-<#if itemCssStyle?has_content>
- style="${itemCssStyle}"<#rt/>
-</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/list-item-css.ftl" /><#rt/>
 <#if itemTitle?has_content>
  title="${itemTitle}"<#rt/>
 <#else>
@@ -92,7 +87,6 @@ file for it's localized value.  This is then used as a label -->
  title="${attributes.title}"<#rt/>
 </#if>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
 <#global evaluate_dynamic_attributes = true/><#t/>

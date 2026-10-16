@@ -191,6 +191,54 @@ public class RadioTest extends AbstractUITagTest {
             strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testListCssClassAndStyleReplaceTagCss() throws Exception {
+        RadioTag tag = createStyledTag("simple");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-12.txt"));
+    }
+
+    public void testListCssClassAndStyleReplaceTagCssHtml5() throws Exception {
+        RadioTag tag = createStyledTag("html5");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-12.txt"));
+    }
+
+    public void testCssErrorClassAndStyleWithListCssClass() throws Exception {
+        ((TestAction) action).addFieldError("status", "status error");
+        RadioTag tag = createStyledTag("simple");
+        tag.setCssErrorClass("errclass");
+        tag.setCssErrorStyle("errstyle");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-13.txt"));
+    }
+
+    private RadioTag createStyledTag(String theme) {
+        TestAction testAction = (TestAction) action;
+        testAction.setEnumList(new ArrayList<>(Arrays.asList(SomeEnum.values())));
+        testAction.setStatus(SomeEnum.INIT);
+
+        RadioTag tag = new RadioTag();
+        tag.setTheme(theme);
+        tag.setPageContext(pageContext);
+        tag.setName("status");
+        tag.setValue("status");
+        tag.setList("enumList");
+        tag.setCssClass("myClass");
+        tag.setCssStyle("mystyle");
+        tag.setListCssClass("'itemClass'");
+        tag.setListCssStyle("'itemstyle'");
+        return tag;
+    }
+
     public void testMapCheckedUsingEnum() throws Exception {
         TestAction testAction = (TestAction) action;
 

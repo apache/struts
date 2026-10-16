@@ -134,6 +134,10 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         file = new File(ClassLoaderUtil.getResource("template/simple/radiomap.ftl", getClass()).toURI());
         EasyMock.expect(servletContext.getRealPath("/template/simple/radiomap.ftl")).andReturn(file.getAbsolutePath());
 
+        file = new File(ClassLoaderUtil.getResource("template/simple/list-item-css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/list-item-css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/list-item-css.ftl")).andReturn(file.getAbsolutePath());
+
         file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
         EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
         EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());

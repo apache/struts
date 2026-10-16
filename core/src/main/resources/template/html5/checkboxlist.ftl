@@ -72,20 +72,7 @@
 <#if attributes.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
-<#if itemCssClass??>
- class="${itemCssClass}"<#rt/>
-<#else>
-<#if attributes.cssClass?has_content>
- class="${attributes.cssClass}"<#rt/>
-</#if>
-</#if>
-<#if itemCssStyle??>
- style="${itemCssStyle}"<#rt/>
-<#else>
-<#if attributes.cssStyle?has_content>
- style="${attributes.cssStyle}"<#rt/>
-</#if>
-</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/list-item-css.ftl" /><#rt/>
 <#if itemTitle??>
  title="${itemTitle}"<#rt/>
 <#else>
@@ -93,7 +80,6 @@
  title="${attributes.title}"<#rt/>
 </#if>
 </#if>
-<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
 <#global evaluate_dynamic_attributes = true/><#t/>

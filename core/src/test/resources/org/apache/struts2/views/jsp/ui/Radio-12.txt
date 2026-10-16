@@ -1,0 +1,4 @@
+<input type="radio" name="status" id="statusINIT" checked="checked" value="INIT" class="itemClass" style="itemstyle"/>
+<label for="statusINIT" class="myClass" style="mystyle">INIT</label>
+<input type="radio" name="status" id="statusCOMPLETED" value="COMPLETED" class="itemClass" style="itemstyle"/>
+<label for="statusCOMPLETED" class="myClass" style="mystyle">COMPLETED</label>

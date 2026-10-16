@@ -22,7 +22,6 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.config.entities.ActionConfig;
-import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.util.AnnotationUtils;
 import org.apache.logging.log4j.LogManager;
@@ -86,13 +85,6 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(HttpMethodInterceptor.class);
 
     private String badRequestResultName = "bad-request";
-
-    private UnknownHandlerManager unknownHandlerManager;
-
-    @Inject
-    public void setUnknownHandlerManager(UnknownHandlerManager unknownHandlerManager) {
-        this.unknownHandlerManager = unknownHandlerManager;
-    }
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -182,6 +174,7 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         if (config.getResults().containsKey(resultName) || config.getResults().containsKey("*")) {
             return true;
         }
+        UnknownHandlerManager unknownHandlerManager = invocation.getInvocationContext().getContainer().getInstance(UnknownHandlerManager.class);
         return unknownHandlerManager.hasUnknownHandlers()
             && unknownHandlerManager.handleUnknownResult(invocation.getInvocationContext(),
                 invocation.getProxy().getActionName(), config, resultName) != null;

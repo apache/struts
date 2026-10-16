@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.result.Result;
+import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.ResultConfig;
@@ -35,6 +37,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
@@ -280,12 +287,18 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
     }
 
     private void prepareActionInvocation(Object action, ActionConfig config) {
-        interceptor = new HttpMethodInterceptor();
+        interceptor = newInterceptor();
         invocation = new MockActionInvocation();
         invocation.setAction(action);
         actionProxy = new MockActionProxy();
         actionProxy.setConfig(config);
         invocation.setProxy(actionProxy);
+    }
+
+    private HttpMethodInterceptor newInterceptor() {
+        HttpMethodInterceptor httpMethodInterceptor = new HttpMethodInterceptor();
+        container.inject(httpMethodInterceptor);
+        return httpMethodInterceptor;
     }
 
     private ActionConfig actionConfig(String... resultNames) {
@@ -367,7 +380,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals("execute", proxy.getMethod());
         assertTrue("Wildcard-resolved method must report isMethodSpecified()=true", proxy.isMethodSpecified());
 
-        HttpMethodInterceptor realInterceptor = new HttpMethodInterceptor();
+        HttpMethodInterceptor realInterceptor = newInterceptor();
         String result = realInterceptor.intercept(proxy.getInvocation());
 
         // class-level @AllowedHttpMethod(POST) must still be enforced even though the resolved
@@ -404,6 +417,34 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals("bad-request", interceptor.intercept(invocation));
     }
 
+    public void testAnnotationNarrowsConfig() throws Exception {
+        ActionConfig config = new ActionConfig.Builder(actionConfig("bad-request"))
+            .addHttpMethods(List.of(HttpMethod.GET, HttpMethod.POST))
+            .build();
+        prepareActionInvocation(new HttpMethodsTestAction(), config);
+        invocation.setResultCode("success");
+
+        prepareRequest("post");
+        assertEquals("success", interceptor.intercept(invocation));
+
+        prepareRequest("get");
+        assertEquals("bad-request", interceptor.intercept(invocation));
+    }
+
+    public void testUnknownHandlerResultIsUsedInsteadOf405() throws Exception {
+        prepareActionInvocation(new HttpMethodsTestAction(), actionConfig());
+        UnknownHandlerManager unknownHandlerManager = mock(UnknownHandlerManager.class);
+        when(unknownHandlerManager.hasUnknownHandlers()).thenReturn(true);
+        when(unknownHandlerManager.handleUnknownResult(any(), any(), any(), eq("bad-request"))).thenReturn(mock(Result.class));
+        interceptor.setUnknownHandlerManager(unknownHandlerManager);
+        MockHttpServletResponse response = prepareRequest("get");
+
+        String resultName = interceptor.intercept(invocation);
+
+        assertEquals("bad-request", resultName);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
     public void testConfigRestrictsMethodWithoutAnnotation() throws Exception {
         ActionConfig config = new ActionConfig.Builder(actionConfig("bad-request"))
             .addHttpMethods(List.of(HttpMethod.GET))
@@ -436,7 +477,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("", "PostOnly", "GET", response);
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals(Action.NONE, result);
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
@@ -446,7 +487,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
     public void testHttpMethodAttributeAllowsListedMethod() throws Exception {
         ActionProxy proxy = proxyFor("", "PostOnly", "POST", new MockHttpServletResponse());
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals(Action.SUCCESS, result);
     }
@@ -455,7 +496,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("", "GetOrPost", "PUT", response);
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals(Action.NONE, result);
         assertEquals("GET, POST", response.getHeader("Allow"));
@@ -465,7 +506,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("", "PostOnlyWithResult", "GET", response);
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals("bad-request", result);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -475,7 +516,17 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("/global", "PostOnly", "GET", response);
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
+
+        assertEquals("bad-request", result);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testHttpMethodAttributeUsesCatchAllResult() throws Exception {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        ActionProxy proxy = proxyFor("", "PostOnlyWithCatchAllResult", "GET", response);
+
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals("bad-request", result);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -485,7 +536,7 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("", "PostWild-execute", "GET", response);
 
-        String result = new HttpMethodInterceptor().intercept(proxy.getInvocation());
+        String result = newInterceptor().intercept(proxy.getInvocation());
 
         assertEquals(Action.NONE, result);
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());

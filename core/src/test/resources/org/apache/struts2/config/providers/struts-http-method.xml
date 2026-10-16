@@ -46,6 +46,11 @@
             <result name="bad-request">/bad-request.jsp</result>
         </action>
 
+        <action name="PostOnlyWithCatchAllResult" class="org.apache.struts2.TestAction" http-method="post">
+            <interceptor-ref name="httpMethod"/>
+            <result name="*">/any.jsp</result>
+        </action>
+
         <action name="PostWild-*" class="org.apache.struts2.TestAction" method="{1}" http-method="post">
             <interceptor-ref name="httpMethod"/>
             <allowed-methods>regex:.*</allowed-methods>

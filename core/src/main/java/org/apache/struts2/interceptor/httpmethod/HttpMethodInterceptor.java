@@ -19,7 +19,10 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.action.Action;
+import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.util.AnnotationUtils;
 import org.apache.logging.log4j.LogManager;
@@ -55,7 +58,7 @@ import java.util.stream.Collectors;
  * The allowed methods can also be declared on the action in XML with the {@code http-method} attribute.
  * When both the attribute and annotations are present, the request method must satisfy both.
  * <p>
- * If the action has no result mapped under the bad request result name, the response is
+ * If no result can be resolved under the bad request result name, the response is
  * {@code 405 Method Not Allowed} with an {@code Allow} header listing the accepted methods.
  *
  * @see HttpMethodAware
@@ -83,6 +86,13 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(HttpMethodInterceptor.class);
 
     private String badRequestResultName = "bad-request";
+
+    private UnknownHandlerManager unknownHandlerManager;
+
+    @Inject
+    public void setUnknownHandlerManager(UnknownHandlerManager unknownHandlerManager) {
+        this.unknownHandlerManager = unknownHandlerManager;
+    }
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -155,7 +165,7 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
      */
     protected String rejectRequest(ActionInvocation invocation, Collection<HttpMethod> allowedMethods) throws Exception {
         String resultName = getBadRequestResultName(invocation);
-        if (invocation.getProxy().getConfig().getResults().containsKey(resultName)) {
+        if (canResolveResult(invocation, resultName)) {
             return resultName;
         }
 
@@ -165,6 +175,16 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         response.setHeader("Allow", allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", ")));
         response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         return Action.NONE;
+    }
+
+    private boolean canResolveResult(ActionInvocation invocation, String resultName) {
+        ActionConfig config = invocation.getProxy().getConfig();
+        if (config.getResults().containsKey(resultName) || config.getResults().containsKey("*")) {
+            return true;
+        }
+        return unknownHandlerManager.hasUnknownHandlers()
+            && unknownHandlerManager.handleUnknownResult(invocation.getInvocationContext(),
+                invocation.getProxy().getActionName(), config, resultName) != null;
     }
 
     protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {

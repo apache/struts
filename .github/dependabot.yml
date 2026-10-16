@@ -4,10 +4,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
     cooldown:
       default-days: 3
     target-branch: "main"
@@ -15,6 +25,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
     cooldown:
       default-days: 4
     target-branch: "support/struts-6-x-x"

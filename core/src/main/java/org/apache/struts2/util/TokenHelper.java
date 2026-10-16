@@ -52,6 +52,7 @@ public class TokenHelper {
     public static final String TOKEN_NAME_FIELD = "struts.token.name";
     private static final Logger LOG = LogManager.getLogger(TokenHelper.class);
     private static final Random RANDOM = new SecureRandom();
+    private static final String VALIDATED_TOKEN_KEY = TokenHelper.class.getName() + ".validatedToken";
 
 
     /**
@@ -196,11 +197,33 @@ public class TokenHelper {
 
         // remove the token so it won't be used again
         session.remove(tokenSessionName);
+        ActionContext.getContext().put(VALIDATED_TOKEN_KEY, new ValidatedToken(tokenName, token));
 
         return true;
     }
 
+    /**
+     * Puts back into the session the token accepted by {@link #validToken()} earlier in the current request, so the
+     * same token stays valid for a follow-up request. Does nothing if no token was accepted in the current request.
+     */
+    public static void restoreValidatedToken() {
+        ValidatedToken validated = (ValidatedToken) ActionContext.getContext().get(VALIDATED_TOKEN_KEY);
+        if (validated != null) {
+            setSessionToken(validated.name, validated.value);
+        }
+    }
+
     public static String generateGUID() {
         return new BigInteger(165, RANDOM).toString(36).toUpperCase();
+    }
+
+    private static final class ValidatedToken {
+        private final String name;
+        private final String value;
+
+        private ValidatedToken(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
     }
 }

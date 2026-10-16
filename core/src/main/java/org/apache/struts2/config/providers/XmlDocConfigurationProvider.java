@@ -39,6 +39,7 @@ import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.inject.Scope;
+import org.apache.struts2.interceptor.httpmethod.HttpMethod;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.DomHelper;
 import org.apache.struts2.util.location.LocatableProperties;
@@ -58,10 +59,12 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -499,6 +502,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         List<InterceptorMapping> interceptorList = buildInterceptorList(actionElement, packageContext);
         List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement);
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
+        Set<HttpMethod> httpMethods = buildHttpMethods(actionElement, location);
 
         return new ActionConfig.Builder(packageContext.getName(), actionName, className)
                 .methodName(methodName)
@@ -508,8 +512,25 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .addParams(XmlHelper.getParams(actionElement))
                 .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
                 .addAllowedMethod(allowedMethods)
+                .addHttpMethods(httpMethods)
                 .location(location)
                 .build();
+    }
+
+    /**
+     * @since 7.5.0
+     */
+    protected Set<HttpMethod> buildHttpMethods(Element actionElement, Location location) {
+        Set<HttpMethod> httpMethods = EnumSet.noneOf(HttpMethod.class);
+        for (String value : commaDelimitedStringToSet(actionElement.getAttribute("http-method"))) {
+            try {
+                httpMethods.add(HttpMethod.valueOf(value.toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException e) {
+                throw new ConfigurationException(format("Invalid http-method [%s] on action [%s], allowed values: %s",
+                        value, actionElement.getAttribute("name"), Arrays.toString(HttpMethod.values())), e, location);
+            }
+        }
+        return httpMethods;
     }
 
     protected void verifyAction(String className, Location loc) {

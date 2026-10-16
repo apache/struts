@@ -93,6 +93,7 @@ import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.ognl.accessor.XWorkMethodAccessor;
+import org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor;
 import org.apache.struts2.interceptor.parameter.OgnlParameterAllowlister;
 import org.apache.struts2.interceptor.parameter.ParameterAllowlister;
 import org.apache.struts2.interceptor.parameter.StrutsParameterAuthorizer;
@@ -559,6 +560,8 @@ public class DefaultConfiguration implements Configuration {
             }
         }
 
+        warnIfHttpMethodNotEnforced(baseConfig, interceptors);
+
         String methodRegex = container.getInstance(String.class, StrutsConstants.STRUTS_SMI_METHOD_REGEX);
         if (methodRegex == null) {
             methodRegex = ActionConfig.DEFAULT_METHOD_REGEX;
@@ -577,6 +580,13 @@ public class DefaultConfiguration implements Configuration {
                 .build();
     }
 
+    private void warnIfHttpMethodNotEnforced(ActionConfig baseConfig, List<InterceptorMapping> interceptors) {
+        if (!baseConfig.getHttpMethods().isEmpty()
+                && interceptors.stream().noneMatch(mapping -> mapping.getInterceptor() instanceof HttpMethodInterceptor)) {
+            LOG.warn("Action [{}] in package [{}] declares http-method {} but its interceptors do not include {}, the restriction will not be enforced",
+                    baseConfig.getName(), baseConfig.getPackageName(), baseConfig.getHttpMethods(), HttpMethodInterceptor.class.getSimpleName());
+        }
+    }
 
     private static class RuntimeConfigurationImpl implements RuntimeConfiguration {
 

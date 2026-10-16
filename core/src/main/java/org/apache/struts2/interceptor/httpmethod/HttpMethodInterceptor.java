@@ -19,19 +19,25 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.action.Action;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.util.AnnotationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Interceptor is used to control with what http methods action can be called,
@@ -45,6 +51,12 @@ import java.util.List;
  * {@link HttpPut}, {@link HttpDelete} and {@link HttpGetOrPost}
  * <p>
  * You can combine any of these annotations to achieve required allowed methods' filtering.
+ * <p>
+ * The allowed methods can also be declared on the action in XML with the {@code http-method} attribute.
+ * When both the attribute and annotations are present, the request method must satisfy both.
+ * <p>
+ * If the action has no result mapped under the bad request result name, the response is
+ * {@code 405 Method Not Allowed} with an {@code Allow} header listing the accepted methods.
  *
  * @see HttpMethodAware
  * @see HttpMethod
@@ -97,21 +109,62 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
             return doIntercept(invocation, action.getClass());
         }
 
+        Set<HttpMethod> configuredMethods = invocation.getProxy().getConfig().getHttpMethods();
+        if (!configuredMethods.isEmpty()) {
+            LOG.debug("Action: {} declares http-method: {}, checking if request: {} meets allowed methods!",
+                action, configuredMethods, request.getMethod());
+            return checkAllowedMethods(invocation, configuredMethods);
+        }
+
         return invocation.invoke();
     }
 
     protected String doIntercept(ActionInvocation invocation, AnnotatedElement element) throws Exception {
-        List<HttpMethod> allowedMethods = readAllowedMethods(element);
-        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        HttpMethod requestedMethod = HttpMethod.parse(request.getMethod());
+        Set<HttpMethod> allowedMethods = EnumSet.noneOf(HttpMethod.class);
+        allowedMethods.addAll(readAllowedMethods(element));
 
-        if (allowedMethods.contains(requestedMethod)) {
+        Set<HttpMethod> configuredMethods = invocation.getProxy().getConfig().getHttpMethods();
+        if (!configuredMethods.isEmpty()) {
+            allowedMethods.retainAll(configuredMethods);
+        }
+
+        return checkAllowedMethods(invocation, allowedMethods);
+    }
+
+    private String checkAllowedMethods(ActionInvocation invocation, Set<HttpMethod> allowedMethods) throws Exception {
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
+        String requestedMethod = request.getMethod();
+
+        if (isAllowed(requestedMethod, allowedMethods)) {
             LOG.trace("Request method: {} matches allowed methods: {}, continuing invocation!", requestedMethod, allowedMethods);
             return invocation.invoke();
         } else {
-            LOG.trace("Request method: {} doesn't match allowed methods: {}, continuing invocation!", requestedMethod, allowedMethods);
-            return getBadRequestResultName(invocation);
+            LOG.trace("Request method: {} doesn't match allowed methods: {}, rejecting request!", requestedMethod, allowedMethods);
+            return rejectRequest(invocation, allowedMethods);
         }
+    }
+
+    private boolean isAllowed(String requestedMethod, Set<HttpMethod> allowedMethods) {
+        return allowedMethods.stream().anyMatch(method -> method.name().equalsIgnoreCase(requestedMethod));
+    }
+
+    /**
+     * @return the bad request result name when the action maps that result, otherwise {@link Action#NONE}
+     * after sending {@code 405 Method Not Allowed} with an {@code Allow} header
+     * @since 7.5.0
+     */
+    protected String rejectRequest(ActionInvocation invocation, Collection<HttpMethod> allowedMethods) throws Exception {
+        String resultName = getBadRequestResultName(invocation);
+        if (invocation.getProxy().getConfig().getResults().containsKey(resultName)) {
+            return resultName;
+        }
+
+        LOG.debug("No result mapped for: {}, sending: {} with allowed methods: {}",
+            resultName, HttpServletResponse.SC_METHOD_NOT_ALLOWED, allowedMethods);
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+        response.setHeader("Allow", allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", ")));
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        return Action.NONE;
     }
 
     protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {

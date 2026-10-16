@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.config.entities;
 
+import org.apache.struts2.interceptor.httpmethod.HttpMethod;
 import org.apache.struts2.util.location.Located;
 import org.apache.struts2.util.location.Location;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,6 +68,7 @@ public class ActionConfig extends Located implements Serializable {
     protected String name;
     protected boolean strictMethodInvocation = true;
     protected AllowedMethods allowedMethods;
+    protected Set<HttpMethod> httpMethods;
 
     protected ActionConfig(String packageName, String name, String className) {
         this.packageName = packageName;
@@ -75,6 +78,7 @@ public class ActionConfig extends Located implements Serializable {
         results = new LinkedHashMap<>();
         interceptors = new ArrayList<>();
         exceptionMappings = new ArrayList<>();
+        httpMethods = EnumSet.noneOf(HttpMethod.class);
     }
 
     /**
@@ -92,6 +96,8 @@ public class ActionConfig extends Located implements Serializable {
         this.results = new LinkedHashMap<>(orig.results);
         this.exceptionMappings = new ArrayList<>(orig.exceptionMappings);
         this.allowedMethods = orig.allowedMethods;
+        this.httpMethods = EnumSet.noneOf(HttpMethod.class);
+        this.httpMethods.addAll(orig.httpMethods);
         this.location = orig.location;
         this.strictMethodInvocation = orig.strictMethodInvocation;
     }
@@ -114,6 +120,14 @@ public class ActionConfig extends Located implements Serializable {
 
     public Set<String> getAllowedMethods() {
         return allowedMethods.list();
+    }
+
+    /**
+     * @return HTTP methods this action accepts, empty when it accepts any
+     * @since 7.5.0
+     */
+    public Set<HttpMethod> getHttpMethods() {
+        return httpMethods;
     }
 
     /**
@@ -186,6 +200,10 @@ public class ActionConfig extends Located implements Serializable {
             return false;
         }
 
+        if (!Objects.equals(httpMethods, actionConfig.httpMethods)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -201,6 +219,7 @@ public class ActionConfig extends Located implements Serializable {
         result = 31 * result + (packageName != null ? packageName.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (allowedMethods != null ? allowedMethods.hashCode() : 0);
+        result = 31 * result + (httpMethods != null ? httpMethods.hashCode() : 0);
         return result;
     }
 
@@ -216,6 +235,9 @@ public class ActionConfig extends Located implements Serializable {
         sb.append(")");
         sb.append(" - ").append(location);
         sb.append(" - ").append(allowedMethods);
+        if (!httpMethods.isEmpty()) {
+            sb.append(" - ").append(httpMethods);
+        }
         sb.append("}");
         return sb.toString();
     }
@@ -342,6 +364,14 @@ public class ActionConfig extends Located implements Serializable {
             return this;
         }
 
+        /**
+         * @since 7.5.0
+         */
+        public Builder addHttpMethods(Collection<HttpMethod> methods) {
+            target.httpMethods.addAll(methods);
+            return this;
+        }
+
         public Builder location(Location loc) {
             target.location = loc;
             return this;
@@ -362,6 +392,7 @@ public class ActionConfig extends Located implements Serializable {
             target.results = Collections.unmodifiableMap(target.results);
             target.interceptors = Collections.unmodifiableList(target.interceptors);
             target.exceptionMappings = Collections.unmodifiableList(target.exceptionMappings);
+            target.httpMethods = Collections.unmodifiableSet(target.httpMethods);
             target.allowedMethods = AllowedMethods.build(target.strictMethodInvocation, allowedMethods, methodRegex != null ? methodRegex : DEFAULT_METHOD_REGEX);
 
             ActionConfig result = target;

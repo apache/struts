@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.views.jsp;
 
+import org.apache.struts2.components.Anchor;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.views.jsp.ui.AnchorTag;
 import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 
@@ -1644,6 +1646,54 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         JspWriter jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
+    }
+
+    public void testHrefIgnoresNestedParams() throws Exception {
+        tag.setHref("/do-it.action");
+
+        try (LogCapture logs = new LogCapture(Anchor.class)) {
+            renderWithParam("id", "%{'1'}");
+
+            assertEquals(wrapWithAnchor("/do-it.action"), writer.toString());
+            assertTrue(logs.messages().toString(), logs.messages().isEmpty());
+        }
+    }
+
+    public void testHrefWithNestedParamsWarnsInDevMode() throws Exception {
+        setDevMode(true);
+        tag.setHref("/do-it.action");
+
+        try (LogCapture logs = new LogCapture(Anchor.class)) {
+            renderWithParam("id", "%{'1'}");
+
+            assertEquals(wrapWithAnchor("/do-it.action"), writer.toString());
+            assertEquals(1, logs.messages().size());
+            assertTrue(logs.messages().get(0), logs.messages().get(0).contains("[id]"));
+        }
+    }
+
+    public void testValueWithNestedParamsDoesNotWarnInDevMode() throws Exception {
+        setDevMode(true);
+        tag.setValue("/do-it.action");
+
+        try (LogCapture logs = new LogCapture(Anchor.class)) {
+            renderWithParam("id", "%{'1'}");
+
+            assertEquals(wrapWithAnchor("/do-it.action?id=1"), writer.toString());
+            assertTrue(logs.messages().toString(), logs.messages().isEmpty());
+        }
+    }
+
+    private void renderWithParam(String name, String value) throws JspException {
+        ParamTag param = new ParamTag();
+        param.setPageContext(pageContext);
+        param.setName(name);
+        param.setValue(value);
+
+        tag.doStartTag();
+        param.doStartTag();
+        param.doEndTag();
+        tag.doEndTag();
     }
 
 }

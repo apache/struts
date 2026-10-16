@@ -115,6 +115,50 @@ public class TokenHelperTest extends TestCase {
         assertTrue(TokenHelper.validToken());
     }
 
+    public void testRestoreValidatedTokenPutsBackTheValidatedToken() {
+        String tokenName = "restoreTokenTest";
+        String token = TokenHelper.setToken(tokenName);
+        final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+        withTokenParams(tokenName, token);
+
+        assertTrue(TokenHelper.validToken());
+        assertNull(session.get(sessionTokenName));
+
+        TokenHelper.restoreValidatedToken();
+
+        assertEquals(token, session.get(sessionTokenName));
+    }
+
+    public void testRestoreValidatedTokenAfterRejectedTokenLeavesSessionUnchanged() {
+        String tokenName = "rejectedTokenTest";
+        String token = TokenHelper.setToken(tokenName);
+        final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+        Map<String, String[]> params = new HashMap<>();
+        params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
+
+        assertFalse(TokenHelper.validToken());
+        TokenHelper.restoreValidatedToken();
+
+        assertEquals(token, session.get(sessionTokenName));
+    }
+
+    public void testRestoreValidatedTokenWithoutValidationLeavesSessionUnchanged() {
+        String tokenName = "unvalidatedTokenTest";
+        withTokenParams(tokenName, "request-supplied");
+
+        TokenHelper.restoreValidatedToken();
+
+        assertTrue(session.isEmpty());
+    }
+
+    private void withTokenParams(String tokenName, String token) {
+        Map<String, String[]> params = new HashMap<>();
+        params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+        params.put(tokenName, new String[]{token});
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
+    }
+
     public void testGetTokenDoesNotNpe() {
         String token = TokenHelper.getToken(null);
         assertNull(token);

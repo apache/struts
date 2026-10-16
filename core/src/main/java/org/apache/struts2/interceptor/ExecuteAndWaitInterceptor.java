@@ -310,10 +310,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 LOG.trace("BackgroundProcess instance is not done (wait processing) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 actionInvocation.getStack().push(bp.getAction());
 
-                final String token = TokenHelper.getToken();
-                if (token != null) {
-                    TokenHelper.setSessionToken(TokenHelper.getTokenName(), token);
-                }
+                TokenHelper.restoreValidatedToken();
 
                 Map<String, ResultConfig> results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {

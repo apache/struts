@@ -23,6 +23,7 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -70,6 +71,29 @@ public class CheckboxListTest extends AbstractUITagTest {
         tag.setPerformClearTagStateForTagPoolingServers(true);
         prepareTagGeneric(tag);
         verifyGenericProperties(tag, "html5", new String[]{"tabindex","cssClass","cssStyle","id"});
+    }
+
+    public void testMultipleHtml5() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setCollection(List.of("hello", "foo"));
+        testAction.setList(new String[][]{
+                {"hello", "world"},
+                {"foo", "bar"},
+                {"cat", "dog"}
+        });
+
+        CheckboxListTag tag = new CheckboxListTag();
+        tag.setPageContext(pageContext);
+        tag.setTheme("html5");
+        tag.setName("collection");
+        tag.setList("list");
+        tag.setListKey("top[0]");
+        tag.setListValue("top[1]");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxListTag.class.getResource("CheckboxList-2-html5.txt"));
     }
 
     private void prepareTagGeneric(CheckboxListTag tag) {

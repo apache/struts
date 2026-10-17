@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -83,6 +84,8 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             return value;
         }
 
+        value = trimSurroundingWhitespace(value, toType);
+
         if (toType == String.class) {
             /* the code below has been disabled as it causes sideffects in Struts2 (XW-512)
             // if input (value) is a number then use special conversion method (XW-490)
@@ -98,7 +101,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         } else if (toType == boolean.class) {
             result = doConvertToBoolean(value);
         } else if (toType == Boolean.class) {
-            result = doConvertToBoolean(value);
+            result = "".equals(value) ? null : doConvertToBoolean(value);
         } else if (toType.isArray()) {
             result = doConvertToArray(context, o, member, propertyName, value, toType);
         } else if (Date.class.isAssignableFrom(toType)) {
@@ -159,9 +162,24 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         return result;
     }
 
+    private Object trimSurroundingWhitespace(Object value, Class toType) {
+        if (toType.isArray() || Collection.class.isAssignableFrom(toType) || toType == Character.class || toType == char.class) {
+            return value;
+        }
+        if (value instanceof String str) {
+            return str.trim();
+        }
+        if (value instanceof String[] values) {
+            return Arrays.stream(values).map(item -> item == null ? null : item.trim()).toArray(String[]::new);
+        }
+        return value;
+    }
+
     private Object doConvertToCharacter(Object value) {
         if (value instanceof String cStr) {
-            return !cStr.isEmpty() ? cStr.charAt(0) : null;
+            String trimmed = cStr.trim();
+            String source = trimmed.isEmpty() ? cStr : trimmed;
+            return !source.isEmpty() ? source.charAt(0) : null;
         }
         return null;
     }

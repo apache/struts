@@ -29,6 +29,7 @@ import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.config.entities.InterceptorStackConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.interceptor.LoggingInterceptor;
+import org.apache.struts2.interceptor.MethodFilterInterceptor;
 import org.apache.struts2.mock.MockInterceptor;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.interceptor.NoOpInterceptor;
@@ -36,6 +37,7 @@ import org.apache.struts2.interceptor.NoOpInterceptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -229,6 +231,19 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         ActionConfig ac2 = (ActionConfig) actionConfigs.get("TestInterceptorParam");
         assertEquals(defaultStack2.getInterceptors(), ac2.getInterceptors());
 
+    }
+
+    public void testMultiLineCommaDelimitedParam() throws Exception {
+        buildConfigurationProvider("org/apache/struts2/config/providers/xwork-test-interceptor-multiline-params.xml");
+
+        PackageConfig pkg = configuration.getPackageConfig("default");
+
+        assertEquals(Set.of("input", "back", "cancel"), excludeMethodsOf(pkg.getActionConfigs().get("Defined")));
+        assertEquals(Set.of("browse", "list"), excludeMethodsOf(pkg.getActionConfigs().get("Overridden")));
+    }
+
+    private static Set<String> excludeMethodsOf(ActionConfig actionConfig) {
+        return ((MethodFilterInterceptor) actionConfig.getInterceptors().get(0).getInterceptor()).getExcludeMethodsSet();
     }
 
 }

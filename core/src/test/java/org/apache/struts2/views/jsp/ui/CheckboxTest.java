@@ -25,6 +25,8 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CheckboxTest extends AbstractUITagTest {
 
@@ -231,6 +233,41 @@ public class CheckboxTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
             strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testCssXhtmlLeftLabelPositionWrapsLikeTextfield() throws Exception {
+        TextFieldTag textfield = new TextFieldTag();
+        textfield.setPageContext(pageContext);
+        textfield.setId("textId");
+        textfield.setLabel("mylabel");
+        textfield.setName("foo");
+        textfield.setTheme("css_xhtml");
+        textfield.setLabelPosition("left");
+        textfield.doStartTag();
+        textfield.doEndTag();
+        String textfieldOutput = writer.toString();
+        writer.getBuffer().setLength(0);
+
+        CheckboxTag checkbox = new CheckboxTag();
+        checkbox.setPageContext(pageContext);
+        checkbox.setId("checkboxId");
+        checkbox.setLabel("mylabel");
+        checkbox.setName("foo");
+        checkbox.setFieldValue("baz");
+        checkbox.setTheme("css_xhtml");
+        checkbox.setLabelPosition("left");
+        checkbox.doStartTag();
+        checkbox.doEndTag();
+        String checkboxOutput = writer.toString();
+
+        assertEquals(wrapperElement(textfieldOutput, "wwlbl_textId"), wrapperElement(checkboxOutput, "wwlbl_checkboxId"));
+        assertEquals(wrapperElement(textfieldOutput, "wwctrl_textId"), wrapperElement(checkboxOutput, "wwctrl_checkboxId"));
+    }
+
+    private static String wrapperElement(String html, String id) {
+        Matcher matcher = Pattern.compile("<(\\w+)\\s+id=\"" + id + "\"").matcher(html);
+        assertTrue("No element with id " + id + " in: " + html, matcher.find());
+        return matcher.group(1);
     }
 
     public void testCheckedWithError() throws Exception {

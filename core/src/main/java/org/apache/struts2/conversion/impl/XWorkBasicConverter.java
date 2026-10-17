@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -83,6 +84,8 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             return value;
         }
 
+        Object input = trimSurroundingWhitespace(value, toType);
+
         if (toType == String.class) {
             /* the code below has been disabled as it causes sideffects in Struts2 (XW-512)
             // if input (value) is a number then use special conversion method (XW-490)
@@ -94,54 +97,54 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
                 }
             }*/
             // okay use default string conversion
-            result = doConvertToString(context, value);
+            result = doConvertToString(context, input);
         } else if (toType == boolean.class) {
-            result = doConvertToBoolean(value);
+            result = doConvertToBoolean(input);
         } else if (toType == Boolean.class) {
-            result = doConvertToBoolean(value);
+            result = "".equals(input) ? null : doConvertToBoolean(input);
         } else if (toType.isArray()) {
-            result = doConvertToArray(context, o, member, propertyName, value, toType);
+            result = doConvertToArray(context, o, member, propertyName, input, toType);
         } else if (Date.class.isAssignableFrom(toType)) {
-            result = doConvertToDate(context, value, toType);
+            result = doConvertToDate(context, input, toType);
         } else if (LocalDate.class.isAssignableFrom(toType)) {
-            result = doConvertToDate(context, value, toType);
+            result = doConvertToDate(context, input, toType);
         } else if (LocalDateTime.class.isAssignableFrom(toType)) {
-            result = doConvertToDate(context, value, toType);
+            result = doConvertToDate(context, input, toType);
         } else if (LocalTime.class.isAssignableFrom(toType)) {
-            result = doConvertToDate(context, value, toType);
+            result = doConvertToDate(context, input, toType);
         } else if (OffsetDateTime.class.isAssignableFrom(toType)) {
-            result = doConvertToDate(context, value, toType);
+            result = doConvertToDate(context, input, toType);
         } else if (Calendar.class.isAssignableFrom(toType)) {
-            result = doConvertToCalendar(context, value);
+            result = doConvertToCalendar(context, input);
         } else if (Collection.class.isAssignableFrom(toType)) {
-            result = doConvertToCollection(context, o, member, propertyName, value, toType);
+            result = doConvertToCollection(context, o, member, propertyName, input, toType);
         } else if (toType == Character.class) {
-            result = doConvertToCharacter(value);
+            result = doConvertToCharacter(input);
         } else if (toType == char.class) {
-            result = doConvertToCharacter(value);
+            result = doConvertToCharacter(input);
         } else if (Number.class.isAssignableFrom(toType) || toType.isPrimitive()) {
-            result = doConvertToNumber(context, value, toType);
+            result = doConvertToNumber(context, input, toType);
         } else if (toType == Class.class) {
-            result = doConvertToClass(value);
+            result = doConvertToClass(input);
         }
 
         if (result == null) {
-            if (value instanceof Object[] array) {
+            if (input instanceof Object[] array) {
 
                 if (array.length >= 1) {
-                    value = array[0];
+                    input = array[0];
                 } else {
-                    value = null;
+                    input = null;
                 }
 
                 // let's try to convert the first element only
-                result = convertValue(context, o, member, propertyName, value, toType);
-            } else if (!"".equals(value)) { // we've already tried the types we know
-                result = super.convertValue(context, value, toType);
+                result = convertValue(context, o, member, propertyName, input, toType);
+            } else if (!"".equals(input)) { // we've already tried the types we know
+                result = super.convertValue(context, input, toType);
             }
 
-            if (result == null && value != null && !"".equals(value)) {
-                throw new TypeConversionException("Cannot create type " + toType + " from value " + value);
+            if (result == null && input != null && !"".equals(input)) {
+                throw new TypeConversionException("Cannot create type " + toType + " from value " + input);
             }
         }
 
@@ -159,9 +162,24 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         return result;
     }
 
+    private Object trimSurroundingWhitespace(Object value, Class toType) {
+        if (toType.isArray() || Collection.class.isAssignableFrom(toType) || toType == Character.class || toType == char.class) {
+            return value;
+        }
+        if (value instanceof String str) {
+            return str.trim();
+        }
+        if (value instanceof String[] values) {
+            return Arrays.stream(values).map(item -> item == null ? null : item.trim()).toArray(String[]::new);
+        }
+        return value;
+    }
+
     private Object doConvertToCharacter(Object value) {
         if (value instanceof String cStr) {
-            return !cStr.isEmpty() ? cStr.charAt(0) : null;
+            String trimmed = cStr.trim();
+            String source = trimmed.isEmpty() ? cStr : trimmed;
+            return !source.isEmpty() ? source.charAt(0) : null;
         }
         return null;
     }

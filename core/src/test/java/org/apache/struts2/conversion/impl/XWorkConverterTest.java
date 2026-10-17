@@ -719,6 +719,72 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "red", FurColor.class));
     }
 
+    public void testStringToNumberIgnoresSurroundingWhitespace() {
+        assertEquals(42L, converter.convertValue(context, null, null, null, " 42 ", Long.class));
+        assertEquals(42L, converter.convertValue(context, null, null, null, new String[]{"\t42\n"}, Long.class));
+        assertEquals(42, converter.convertValue(context, null, null, null, " 42 ", Integer.class));
+        assertEquals((short) 42, converter.convertValue(context, null, null, null, " 42 ", Short.class));
+        assertEquals(4.2f, converter.convertValue(context, null, null, null, " 4.2 ", Float.class));
+        assertEquals(4.2, converter.convertValue(context, null, null, null, " 4.2 ", Double.class));
+        assertEquals(4.2, converter.convertValue(context, null, null, null, " 4.2 ", double.class));
+        assertEquals(new BigInteger("42"), converter.convertValue(context, null, null, null, " 42 ", BigInteger.class));
+        assertEquals(new BigDecimal("4.2"), converter.convertValue(context, null, null, null, " 4.2 ", BigDecimal.class));
+    }
+
+    public void testStringToEnumIgnoresSurroundingWhitespace() {
+        assertEquals(FurColor.BLACK, converter.convertValue(context, null, null, null, " BLACK ", FurColor.class));
+        assertEquals(FurColor.BLACK, converter.convertValue(context, null, null, null, new String[]{"BLACK\t"}, FurColor.class));
+    }
+
+    public void testStringToBooleanIgnoresSurroundingWhitespace() {
+        assertEquals(Boolean.TRUE, converter.convertValue(context, null, null, null, " true ", Boolean.class));
+        assertEquals(Boolean.TRUE, converter.convertValue(context, null, null, null, " true ", boolean.class));
+    }
+
+    public void testStringToCharacterIgnoresSurroundingWhitespace() {
+        assertEquals('x', converter.convertValue(context, null, null, null, " x", Character.class));
+        assertEquals('x', converter.convertValue(context, null, null, null, " x", char.class));
+    }
+
+    public void testStringToJavaTimeIgnoresSurroundingWhitespace() {
+        assertEquals(LocalDate.of(2001, 1, 10), converter.convertValue(context, null, null, null, " 2001-01-10 ", LocalDate.class));
+        assertEquals(LocalDateTime.of(2001, 1, 10, 1, 2, 3),
+                converter.convertValue(context, null, null, null, " 2001-01-10T01:02:03 ", LocalDateTime.class));
+    }
+
+    public void testStringArrayToArrayIgnoresSurroundingWhitespace() {
+        assertArrayEquals(new Long[]{1L, 2L}, (Long[]) converter.convertValue(context, null, null, null, new String[]{" 1 ", "2 "}, Long[].class));
+    }
+
+    public void testWhitespaceOnlyConvertsToNullForBoxedTypes() {
+        assertNull(converter.convertValue(context, null, null, null, "   ", Long.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", Integer.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", Double.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", BigDecimal.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", FurColor.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", Boolean.class));
+        assertNull(converter.convertValue(context, null, null, null, "   ", LocalDate.class));
+    }
+
+    public void testWhitespaceOnlyIsConversionErrorForIntegralPrimitives() {
+        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "   ", long.class));
+        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "   ", int.class));
+    }
+
+    public void testStringTargetsKeepSurroundingWhitespace() {
+        assertEquals(" keep ", converter.convertValue(context, null, null, null, " keep ", String.class));
+        assertEquals(" keep ", converter.convertValue(context, null, null, null, " keep ", Object.class));
+        assertArrayEquals(new String[]{" keep "}, (String[]) converter.convertValue(context, null, null, null, new String[]{" keep "}, String[].class));
+    }
+
+    public void testCustomTypeConverterReceivesUntrimmedValue() {
+        XWorkConverter freshConverter = container.inject(XWorkConverter.class);
+        freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());
+        freshConverter.registerConverter(FurColor.class.getName(), (ctx, target, member, property, value, toType) -> value);
+
+        assertEquals(" BLACK ", freshConverter.convertValue(context, null, null, null, " BLACK ", FurColor.class));
+    }
+
     // Testing for null result on non-primitive Number types supplied as empty String or
     public void testNotPrimitiveDefaultsToNull() {
         assertNull(converter.convertValue(context, null, null, null, null, Double.class));

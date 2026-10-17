@@ -430,7 +430,8 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         prepareActionInvocation(new HttpMethodsTestAction(), actionConfig());
         UnknownHandlerManager unknownHandlerManager = mock(UnknownHandlerManager.class);
         when(unknownHandlerManager.hasUnknownHandlers()).thenReturn(true);
-        when(unknownHandlerManager.handleUnknownResult(any(), any(), any(), eq("bad-request"))).thenReturn(mock(Result.class));
+        Result unknownResult = mock(Result.class);
+        when(unknownHandlerManager.handleUnknownResult(any(), any(), any(), eq("bad-request"))).thenReturn(unknownResult);
         Container mockContainer = mock(Container.class);
         when(mockContainer.getInstance(UnknownHandlerManager.class)).thenReturn(unknownHandlerManager);
         MockHttpServletResponse response = prepareRequest("get");

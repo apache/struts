@@ -64,7 +64,8 @@ public class XmlConfigurationProviderHttpMethodTest extends StrutsInternalTestCa
     }
 
     public void testInvalidHttpMethodFailsConfiguration() {
-        assertThatThrownBy(() -> loadConfigurationProviders(new StrutsXmlConfigurationProvider(INVALID_CONFIG)))
+        StrutsXmlConfigurationProvider provider = new StrutsXmlConfigurationProvider(INVALID_CONFIG);
+        assertThatThrownBy(() -> loadConfigurationProviders(provider))
             .isInstanceOf(ConfigurationException.class)
             .hasStackTraceContaining("Invalid http-method [fetch] on action [Fetch]");
     }

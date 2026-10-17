@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -155,7 +156,7 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
      * after sending {@code 405 Method Not Allowed} with an {@code Allow} header
      * @since 7.5.0
      */
-    protected String rejectRequest(ActionInvocation invocation, Collection<HttpMethod> allowedMethods) throws Exception {
+    protected String rejectRequest(ActionInvocation invocation, Collection<HttpMethod> allowedMethods) throws IOException {
         String resultName = getBadRequestResultName(invocation);
         if (canResolveResult(invocation, resultName)) {
             return resultName;

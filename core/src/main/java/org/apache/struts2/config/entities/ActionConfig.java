@@ -68,7 +68,7 @@ public class ActionConfig extends Located implements Serializable {
     protected String name;
     protected boolean strictMethodInvocation = true;
     protected AllowedMethods allowedMethods;
-    protected Set<HttpMethod> httpMethods;
+    private Set<HttpMethod> httpMethods;
 
     protected ActionConfig(String packageName, String name, String className) {
         this.packageName = packageName;
@@ -200,11 +200,7 @@ public class ActionConfig extends Located implements Serializable {
             return false;
         }
 
-        if (!Objects.equals(httpMethods, actionConfig.httpMethods)) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(httpMethods, actionConfig.httpMethods);
     }
 
     @Override

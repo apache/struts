@@ -105,6 +105,7 @@
     class CDATA #IMPLIED
     method CDATA #IMPLIED
     converter CDATA #IMPLIED
+    http-method CDATA #IMPLIED
 >
 
 <!ELEMENT param (#PCDATA)>

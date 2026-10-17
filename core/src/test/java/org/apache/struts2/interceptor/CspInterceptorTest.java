@@ -240,23 +240,26 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     public void checkHeader(String reportUri, String reportTo, boolean enforcingMode) {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {
-            expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
+            expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
                     CspSettings.OBJECT_SRC, CspSettings.NONE,
                     CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                    CspSettings.STYLE_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
                     CspSettings.BASE_URI, CspSettings.NONE
             );
         } else {
             if (Strings.isEmpty(reportTo)) {
-                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; ",
+                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; ",
                         CspSettings.OBJECT_SRC, CspSettings.NONE,
                         CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                        CspSettings.STYLE_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
                         CspSettings.BASE_URI, CspSettings.NONE,
                         CspSettings.REPORT_URI, reportUri
                 );
             } else {
-                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; %s %s; ",
+                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; %s %s; ",
                         CspSettings.OBJECT_SRC, CspSettings.NONE,
                         CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                        CspSettings.STYLE_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
                         CspSettings.BASE_URI, CspSettings.NONE,
                         CspSettings.REPORT_URI, reportUri,
                         CspSettings.REPORT_TO, reportTo

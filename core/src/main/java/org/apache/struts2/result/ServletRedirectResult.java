@@ -34,6 +34,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.url.QueryStringBuilder;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.IOException;
 import java.io.Serial;
 import java.net.MalformedURLException;

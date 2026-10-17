@@ -233,8 +233,8 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
     }
 
-    public void testMultiLineCommaDelimitedParam() throws Exception {
-        buildConfigurationProvider("org/apache/struts2/config/providers/xwork-test-interceptor-multiline-params.xml");
+    public void testMultiLineCommaDelimitedParam() {
+        buildConfigurationProvider("org/apache/struts2/config/providers/struts-interceptor-multiline-params.xml");
 
         PackageConfig pkg = configuration.getPackageConfig("default");
 

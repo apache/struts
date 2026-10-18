@@ -65,7 +65,8 @@ when that session dies (request threads), and one map that is stale *by design* 
 - **Detached at request end (decided after the final review):** the request cleanup in the dispatcher
   detaches every `SessionMap` built for that request (each registers itself on the request at
   construction), not only the bound context's: this covers the original map left behind when
-  `createSession` replaces `ActionContext.SESSION`, and the maps of a nested forward. A detached map never calls its request again: with a live
+  `createSession` replaces `ActionContext.SESSION`, and the maps of a nested forward. Detach is deferred while the request is in async mode, until the
+  async dispatch's cleanup. A detached map never calls its request again: with a live
   pinned session it keeps working (async `Callable`s, stored `SessionAware` fields); a `put` with no live
   pinned session throws `IllegalStateException`. Reason: a background thread (sandbox escape, custom
   `BackgroundProcess`) reaching `request.getSession(true)` after the request was recycled would write

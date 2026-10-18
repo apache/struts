@@ -75,16 +75,20 @@ public class PrepareOperations {
             try {
                 dispatcher.cleanUpRequest(request);
             } finally {
-                if (!request.isAsyncStarted()) {
-                    SessionMap.detachAll(request);
-                }
-                detachSessionMap();
+                detachSessionMaps(request);
                 ActionContext.clear();
                 Dispatcher.clearInstance();
                 ContainerHolder.clear();
                 devModeOverride.remove();
             }
         });
+    }
+
+    private static void detachSessionMaps(HttpServletRequest request) {
+        if (!request.isAsyncStarted()) {
+            SessionMap.detachAll(request);
+            detachSessionMap();
+        }
     }
 
     private static void detachSessionMap() {

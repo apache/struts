@@ -135,6 +135,38 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         assertNull(req.getSession(false));
     }
 
+    public void testRequestCleanupKeepsTheBoundSessionMapAttachedWhileAsyncStarted() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        sessionMap.put("key", "value");
+        assertNotNull(req.getSession(false));
+    }
+
+    public void testBoundSessionMapIsDetachedByTheAsyncDispatchCleanup() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+        prepare.cleanupRequest(req);
+        req.setAsyncStarted(false);
+        ActionContext.of().withSession(sessionMap).bind();
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> sessionMap.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
     public void testRequestCleanupWithoutActionContext() {
         HttpServletRequest req = new MockHttpServletRequest();
         PrepareOperations prepare = new PrepareOperations(dispatcher);

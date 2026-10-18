@@ -296,12 +296,13 @@ public class SessionMapTest extends TestCase {
         request.setSession(session);
         SessionMap sessionMap = new SessionMap(request);
         AtomicReference<Throwable> failure = new AtomicReference<>();
+        AtomicReference<Object> read = new AtomicReference<>();
 
         Thread invalidator = new Thread(sessionMap::invalidate);
         invalidator.start();
         invalidating.await();
         Thread reader = new Thread(() -> {
-            try { sessionMap.get("key"); } catch (Throwable t) { failure.set(t); }
+            try { read.set(sessionMap.get("key")); } catch (Throwable t) { failure.set(t); }
         });
         reader.start();
         long deadline = System.currentTimeMillis() + 5000;
@@ -313,7 +314,9 @@ public class SessionMapTest extends TestCase {
         invalidator.join(5000);
         reader.join(5000);
 
-        assertNull("get() concurrent with invalidate() threw", failure.get());
+        assertFalse("reader did not finish", reader.isAlive());
+        assertNull("get() concurrent with invalidate() threw: " + failure.get(), failure.get());
+        assertEquals("value", read.get());
     }
 
     @Override

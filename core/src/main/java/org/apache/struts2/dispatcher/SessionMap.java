@@ -157,10 +157,11 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         HttpSession current = session;
         if (current == null) {
             synchronized (this) {
-                if (session == null) {
-                    session = request.getSession(true);
-                }
                 current = session;
+                if (current == null) {
+                    current = request.getSession(true);
+                    session = current;
+                }
             }
         }
 

@@ -38,4 +38,12 @@ public interface BackgroundProcess extends Runnable {
     Exception getException();
 
     boolean isDone();
+
+    default BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
+        return this;
+    }
+
+    default SandboxedSessionMap getSessionSandbox() {
+        return null;
+    }
 }

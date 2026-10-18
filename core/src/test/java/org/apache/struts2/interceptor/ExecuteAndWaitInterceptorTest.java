@@ -39,10 +39,14 @@ import org.apache.struts2.util.location.LocatableProperties;
 import jakarta.servlet.http.HttpSession;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.interceptor.exec.BackgroundProcess;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
+import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
 import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,6 +71,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
     private ParametersInterceptor parametersInterceptor;
     private TokenInterceptor tokenInterceptor;
     private TokenSessionStoreInterceptor tokenSessionInterceptor;
+    private ServletConfigInterceptor servletConfigInterceptor;
 
     public void testOneWait() throws Exception {
         waitInterceptor.setDelay(0);
@@ -275,6 +280,74 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         assertNull(session.get(tokenSessionName));
     }
 
+    public void testBackgroundWritesReachTheRealSession() throws Exception {
+        useLiveSession();
+
+        assertEquals("wait", buildProxy("sessionAction").execute());
+        awaitDone("sessionAction");
+
+        assertEquals("success", buildProxy("sessionAction").execute());
+        assertEquals("done", httpSession.getAttribute("result"));
+        assertEquals("yes", httpSession.getAttribute("aware"));
+    }
+
+    public void testBackgroundWritesAreInvisibleUntilPolled() throws Exception {
+        useLiveSession();
+
+        assertEquals("wait", buildProxy("sessionAction").execute());
+        awaitDone("sessionAction");
+
+        assertNull(httpSession.getAttribute("result"));
+        assertNull(httpSession.getAttribute("aware"));
+    }
+
+    public void testWritesOfAFailedActionAreApplied() throws Exception {
+        useLiveSession();
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put("failWith", new String[]{"boom"});
+        withRequestParams(requestParams);
+
+        assertEquals("wait", buildProxy("sessionAction").execute());
+        awaitDone("sessionAction");
+
+        ActionProxy poll = buildProxy("sessionAction");
+        try {
+            poll.execute();
+            fail("the background failure should be rethrown by the polling request");
+        } catch (IllegalStateException failure) {
+            assertEquals("boom", failure.getMessage());
+        }
+        assertEquals("done", httpSession.getAttribute("result"));
+    }
+
+    public void testSessionAwareGetsTheLiveMapBackAfterWriteBack() throws Exception {
+        useLiveSession();
+
+        assertEquals("wait", buildProxy("sessionAction").execute());
+        SessionWritingWaitAction action = (SessionWritingWaitAction) awaitDone("sessionAction").getAction();
+
+        assertEquals("success", buildProxy("sessionAction").execute());
+        assertFalse(action.getSession() instanceof SandboxedSessionMap);
+        assertSame(session, action.getSession());
+    }
+
+    private void useLiveSession() {
+        httpSession = new MockHttpSession();
+        request.setSession(httpSession);
+        session = new SessionMap(request);
+        context = ActionContext.of(context).withSession(session).getContextMap();
+    }
+
+    private BackgroundProcess awaitDone(String actionName) throws InterruptedException {
+        BackgroundProcess process = (BackgroundProcess) httpSession.getAttribute(ExecuteAndWaitInterceptor.KEY + actionName);
+        long deadline = System.currentTimeMillis() + 5000;
+        while (!process.isDone() && System.currentTimeMillis() < deadline) {
+            Thread.sleep(20);
+        }
+        assertTrue("background process did not finish in time", process.isDone());
+        return process;
+    }
+
     private void withRequestParams(Map<String, String[]> requestParams) {
         context = ActionContext.of(context).withParameters(HttpParameters.create(requestParams).build()).getContextMap();
     }
@@ -306,6 +379,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         container.inject(parametersInterceptor);
         container.inject(tokenInterceptor);
         container.inject(tokenSessionInterceptor);
+        container.inject(servletConfigInterceptor);
 
         waitInterceptor.init();
         parametersInterceptor.init();
@@ -339,6 +413,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
             parametersInterceptor = new ParametersInterceptor();
             tokenInterceptor = new TokenInterceptor();
             tokenSessionInterceptor = new TokenSessionStoreInterceptor();
+            servletConfigInterceptor = new ServletConfigInterceptor();
             PackageConfig wait = new PackageConfig.Builder("")
                 .addActionConfig("action1", new ActionConfig.Builder("", "action1", ExecuteAndWaitDelayAction.class.getName())
                     .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
@@ -347,6 +422,13 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
                     .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
                     .build())
                 .addActionConfig("plainWait", waitActionConfig("plainWait"))
+                .addActionConfig("sessionAction", new ActionConfig.Builder("", "sessionAction", SessionWritingWaitAction.class.getName())
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                    .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build())
+                    .addInterceptor(new InterceptorMapping("servletConfig", servletConfigInterceptor))
+                    .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
+                    .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
+                    .build())
                 .addActionConfig("tokenWait", waitActionConfig("tokenWait", new InterceptorMapping("token", tokenInterceptor)))
                 .addActionConfig("tokenSessionWait", waitActionConfig("tokenSessionWait", new InterceptorMapping("tokenSession", tokenSessionInterceptor)))
                 .build();

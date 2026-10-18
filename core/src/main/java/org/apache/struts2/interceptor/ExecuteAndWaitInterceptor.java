@@ -22,6 +22,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
+import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
@@ -31,6 +32,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.exec.BackgroundProcess;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
+import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
+import org.apache.struts2.interceptor.exec.SessionSandboxReconciler;
 import org.apache.struts2.interceptor.exec.StrutsBackgroundProcess;
 import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.util.TokenHelper;
@@ -295,7 +298,8 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
                 LOG.trace("BackgroundProcess instance is null (create new instance) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
-                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).prepare();
+                SandboxedSessionMap sandbox = new SandboxedSessionMap(httpSession, name);
+                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).withSessionSandbox(sandbox).prepare();
                 session.put(bp_SessionKey, bp);
                 if (executor == null || executor.isShutdown()) {
                     LOG.warn("Executor is shutting down (or null), cannot execute a new process, invoke next ActionInvocation step and return.");
@@ -334,6 +338,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 LOG.trace("BackgroundProcess instance is done (remove key, return result) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 session.remove(bp_SessionKey);
                 actionInvocation.getStack().push(bp.getAction());
+                writeBackSessionSandbox(bp, context);
 
                 // if an exception occurred during action execution, throw it here
                 if (bp.getException() != null) {
@@ -349,6 +354,17 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 // this interceptor
                 return actionInvocation.invoke();
             }
+        }
+    }
+
+    private void writeBackSessionSandbox(BackgroundProcess bp, ActionContext context) {
+        SandboxedSessionMap sandbox = bp.getSessionSandbox();
+        if (sandbox == null) {
+            return;
+        }
+        SessionSandboxReconciler.reconcile(sandbox, ServletActionContext.getRequest(), bp.getAction());
+        if (bp.getAction() instanceof SessionAware sessionAware) {
+            sessionAware.withSession(context.getSession());
         }
     }
 

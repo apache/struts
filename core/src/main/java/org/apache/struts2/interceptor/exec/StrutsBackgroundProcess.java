@@ -22,9 +22,11 @@ import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.SessionAware;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
@@ -43,6 +45,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     //WW-4900 transient since 2.5.15
     protected transient ActionInvocation invocation;
     protected transient Exception exception;
+    private transient SandboxedSessionMap sessionSandbox;
 
     protected String result;
     protected boolean done;
@@ -66,6 +69,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
             processThread = new Thread(() -> {
                 try {
                     beforeInvocation();
+                    installSessionSandbox();
                     result = invocation.invokeActionOnly();
                 } catch (Exception e) {
                     LOG.warn("Exception during invokeActionOnly() execution", e);
@@ -89,6 +93,28 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
             exception = e;
         }
         return this;
+    }
+
+    @Override
+    public BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
+        this.sessionSandbox = sandbox;
+        return this;
+    }
+
+    @Override
+    public SandboxedSessionMap getSessionSandbox() {
+        return sessionSandbox;
+    }
+
+    private void installSessionSandbox() {
+        if (sessionSandbox == null) {
+            return;
+        }
+        ActionContext.bind(ActionContext.of(new HashMap<>(invocation.getInvocationContext().getContextMap()))
+                .withSession(sessionSandbox));
+        if (invocation.getAction() instanceof SessionAware sessionAware) {
+            sessionAware.withSession(sessionSandbox);
+        }
     }
 
     @Override

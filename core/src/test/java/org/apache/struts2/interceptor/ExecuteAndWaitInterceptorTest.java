@@ -295,8 +295,10 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         useLiveSession();
 
         assertEquals("wait", buildProxy("sessionAction").execute());
-        awaitDone("sessionAction");
+        BackgroundProcess process = awaitDone("sessionAction");
 
+        assertNull(process.getException());
+        assertEquals("done", process.getSessionSandbox().get("result"));
         assertNull(httpSession.getAttribute("result"));
         assertNull(httpSession.getAttribute("aware"));
     }

@@ -81,11 +81,6 @@ import java.util.Map;
  * millis we ensure the user is presented fast search results immediately and for the slow results a wait page is used.
  * </p>
  *
- * <p><b>Important</b>: Because the action will be running in a separate thread, you can't use ActionContext because it
- * is a ThreadLocal. This means if you need to access, for example, session data, you need to implement SessionAware
- * rather than calling ActionContext.getSession().
- * </p>
- *
  * <p>The background process works on a session sandbox, a snapshot of the session taken when the process starts. Use
  * <code>ActionContext.getContext().getSession()</code> or {@link SessionAware} to reach it. Its writes are applied to
  * the real session by the polling request that sees the process finish, only if the session id is unchanged.

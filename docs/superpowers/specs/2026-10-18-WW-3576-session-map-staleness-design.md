@@ -61,7 +61,14 @@ when that session dies (request threads), and one map that is stale *by design* 
 - **Invalidation is detected, not hidden:** an `IllegalStateException` from the pinned session means it
   was invalidated (by another request or directly); the map un-pins it and answers as "no session"
   (`null` / `false` / empty set / no-op). A later `put` obtains a session through
-  `request.getSession(true)` — the same path, and the same trust in the request, as a first `put` today.
+  `request.getSession(true)` — **only while the request is live**.
+- **Detached at request end (decided after the final review):** the request cleanup in the dispatcher
+  marks the request's `SessionMap` detached. A detached map never calls its request again: with a live
+  pinned session it keeps working (async `Callable`s, stored `SessionAware` fields); a `put` with no live
+  pinned session throws `IllegalStateException`. Reason: a background thread (sandbox escape, custom
+  `BackgroundProcess`) reaching `request.getSession(true)` after the request was recycled would write
+  into another user's session. This also closes the same path for a never-pinned map used after its
+  request ended, which predates this change. Detach is package-private.
 - The pinned reference is read once per call into a local (no check-then-reread), so a concurrent
   `invalidate()` on the same map cannot NPE; how it is published (`volatile`) is the builder's.
 - **No `entries` cache:** `entrySet()` is built fresh on every call; an entry's `setValue` writes

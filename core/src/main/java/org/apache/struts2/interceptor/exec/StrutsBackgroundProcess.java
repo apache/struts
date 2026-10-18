@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.interceptor.exec;
 
+import ognl.Ognl;
+import ognl.OgnlContext;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +29,7 @@ import org.apache.struts2.action.SessionAware;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
@@ -46,9 +49,10 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     protected transient ActionInvocation invocation;
     protected transient Exception exception;
     private transient SandboxedSessionMap sessionSandbox;
+    private transient Map<String, Object> sandboxContext;
 
     protected String result;
-    protected boolean done;
+    protected volatile boolean done;
 
     /**
      * Constructs a background process
@@ -98,6 +102,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     @Override
     public BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
         this.sessionSandbox = sandbox;
+        this.sandboxContext = copyOf(invocation.getInvocationContext().getContextMap());
         return this;
     }
 
@@ -117,11 +122,30 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
         if (sessionSandbox == null) {
             return;
         }
-        ActionContext.bind(ActionContext.of(new HashMap<>(invocation.getInvocationContext().getContextMap()))
-                .withSession(sessionSandbox));
+        ActionContext.bind(ActionContext.of(backgroundContextMap()).withSession(sessionSandbox));
         if (invocation.getAction() instanceof SessionAware sessionAware) {
             sessionAware.withSession(sessionSandbox);
         }
+    }
+
+    private Map<String, Object> backgroundContextMap() {
+        ActionContext bound = ActionContext.getContext();
+        if (bound == null || bound.getContextMap() == invocation.getInvocationContext().getContextMap()) {
+            return sandboxContext;
+        }
+        return copyOf(bound.getContextMap());
+    }
+
+    private static Map<String, Object> copyOf(Map<String, Object> context) {
+        if (context instanceof OgnlContext ognlContext) {
+            OgnlContext copy = Ognl.createDefaultContext(ognlContext.getRoot(), ognlContext.getMemberAccess(),
+                    ognlContext.getClassResolver(), ognlContext.getTypeConverter());
+            copy.setTraceEvaluations(ognlContext.isTraceEvaluations());
+            copy.setKeepLastEvaluation(ognlContext.isKeepLastEvaluation());
+            copy.putAll(ognlContext.getValues());
+            return copy;
+        }
+        return new HashMap<>(context);
     }
 
     @Override

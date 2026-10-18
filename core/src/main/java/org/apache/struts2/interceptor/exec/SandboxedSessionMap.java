@@ -19,6 +19,8 @@
 package org.apache.struts2.interceptor.exec;
 
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.SessionMap;
 
 import java.io.Serial;
@@ -31,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The session view an execAndWait background process works on: a shallow snapshot of the session taken at
@@ -41,11 +44,15 @@ public class SandboxedSessionMap extends SessionMap {
     @Serial
     private static final long serialVersionUID = 2907451127739228064L;
 
+    private static final Logger LOG = LogManager.getLogger(SandboxedSessionMap.class);
+    private static final ThreadLocal<SandboxedSessionMap> CURRENT = new ThreadLocal<>();
+
     private final transient Map<String, Object> snapshot = new LinkedHashMap<>();
     private final transient Map<String, Object> view = new LinkedHashMap<>();
     private final transient List<SessionOperation> operations = new ArrayList<>();
     private final transient String startSessionId;
     private final transient String processName;
+    private final transient AtomicBoolean escapeWarned = new AtomicBoolean();
 
     public SandboxedSessionMap(HttpSession session, String processName) {
         super();
@@ -57,6 +64,26 @@ public class SandboxedSessionMap extends SessionMap {
             snapshot.put(name, session.getAttribute(name));
         }
         view.putAll(snapshot);
+    }
+
+    public static SandboxedSessionMap current() {
+        return CURRENT.get();
+    }
+
+    public static void runInSandbox(SandboxedSessionMap sandbox, Runnable work) {
+        CURRENT.set(sandbox);
+        try {
+            work.run();
+        } finally {
+            CURRENT.remove();
+        }
+    }
+
+    public void warnEscapeOnce() {
+        if (escapeWarned.compareAndSet(false, true)) {
+            LOG.warn("Background process [{}] wrote to the request session, bypassing its session sandbox; "
+                + "use ActionContext.getContext().getSession() or SessionAware", processName);
+        }
     }
 
     public String getStartSessionId() {

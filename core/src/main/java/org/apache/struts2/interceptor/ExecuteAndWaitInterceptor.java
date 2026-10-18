@@ -86,6 +86,16 @@ import java.util.Map;
  * rather than calling ActionContext.getSession().
  * </p>
  *
+ * <p>The background process works on a session sandbox, a snapshot of the session taken when the process starts. Use
+ * <code>ActionContext.getContext().getSession()</code> or {@link SessionAware} to reach it. Its writes are applied to
+ * the real session by the polling request that sees the process finish, only if the session id is unchanged.
+ * Conflicts keep the real session's value by default and can be resolved per action with
+ * {@link org.apache.struts2.action.BackgroundSessionConflictAware}. OGNL <code>#session</code> and
+ * <code>invocation.getInvocationContext().getSession()</code> bypass the sandbox, write to the live session and log a
+ * warning. A custom {@link BackgroundProcess} that does not extend {@link StrutsBackgroundProcess}, or a subclass
+ * overriding <code>prepare()</code>, does not get a sandbox.
+ * </p>
+ *
  * <p>The thread kicked off by this interceptor will be named in the form <b><u>actionName</u>BackgroundProcess</b>.
  * For example, the <i>search</i> action would run as a thread named <i>searchBackgroundProcess</i>.
  * </p>

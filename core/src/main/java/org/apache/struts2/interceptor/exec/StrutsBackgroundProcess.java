@@ -70,7 +70,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
                 try {
                     beforeInvocation();
                     installSessionSandbox();
-                    result = invocation.invokeActionOnly();
+                    result = invokeAction();
                 } catch (Exception e) {
                     LOG.warn("Exception during invokeActionOnly() execution", e);
                     exception = e;
@@ -104,6 +104,25 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     @Override
     public SandboxedSessionMap getSessionSandbox() {
         return sessionSandbox;
+    }
+
+    private String invokeAction() throws Exception {
+        if (sessionSandbox == null) {
+            return invocation.invokeActionOnly();
+        }
+        String[] outcome = new String[1];
+        Exception[] failure = new Exception[1];
+        SandboxedSessionMap.runInSandbox(sessionSandbox, () -> {
+            try {
+                outcome[0] = invocation.invokeActionOnly();
+            } catch (Exception e) {
+                failure[0] = e;
+            }
+        });
+        if (failure[0] != null) {
+            throw failure[0];
+        }
+        return outcome[0];
     }
 
     private void installSessionSandbox() {

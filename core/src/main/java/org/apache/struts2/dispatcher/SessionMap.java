@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -69,6 +70,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Invalidate the http session.
      */
     public void invalidate() {
+        warnIfSandboxBypassed();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -87,6 +89,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public void clear() {
+        warnIfSandboxBypassed();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -171,6 +174,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object put(final String key, final Object value) {
+        warnIfSandboxBypassed();
         HttpSession current = session;
         if (current == null) {
             current = pin();
@@ -185,6 +189,13 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return null;
         }
         return oldValue;
+    }
+
+    private void warnIfSandboxBypassed() {
+        SandboxedSessionMap sandbox = SandboxedSessionMap.current();
+        if (sandbox != null && !(this instanceof SandboxedSessionMap)) {
+            sandbox.warnEscapeOnce();
+        }
     }
 
     private HttpSession pin() {
@@ -217,6 +228,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object remove(final Object key) {
+        warnIfSandboxBypassed();
         HttpSession current = session;
         if (current == null) {
             return null;

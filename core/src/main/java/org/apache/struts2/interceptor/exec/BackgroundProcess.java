@@ -23,7 +23,15 @@ import org.apache.struts2.interceptor.ExecuteAndWaitInterceptor;
 
 /**
  * Interface used to create a background process which will be executed by
- * {@link ExecuteAndWaitInterceptor}
+ * {@link ExecuteAndWaitInterceptor}.
+ *
+ * <p>A process built on {@link StrutsBackgroundProcess} works on a session sandbox, a snapshot of the session taken
+ * when the process starts, and receives it through {@link #withSessionSandbox(SandboxedSessionMap)}. Its writes are
+ * applied to the real session by the polling request that sees the process finish, and only if the session id is
+ * unchanged; conflicts keep the real session's value unless the action implements
+ * {@link org.apache.struts2.action.BackgroundSessionConflictAware}. A custom implementation that does not extend
+ * {@link StrutsBackgroundProcess}, or a subclass overriding {@link StrutsBackgroundProcess#prepare()}, gets no
+ * sandbox.</p>
  */
 public interface BackgroundProcess extends Runnable {
 

@@ -19,6 +19,9 @@
 package org.apache.struts2.interceptor.exec;
 
 import junit.framework.TestCase;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.test.LogCapture;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.HashMap;
@@ -88,5 +91,29 @@ public class SandboxedSessionMapTest extends TestCase {
         assertTrue(sandbox.getOperations().contains(new SessionOperation.Remove("a")));
         assertTrue(sandbox.getOperations().contains(new SessionOperation.Remove("b")));
         assertEquals("1", live.getAttribute("a"));
+    }
+
+    public void testWriteThroughRequestMapFromBackgroundThreadWarnsOnce() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession live = new MockHttpSession();
+        request.setSession(live);
+        SessionMap requestMap = new SessionMap(request);
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(live, "longJob");
+
+        try (LogCapture logs = new LogCapture(SandboxedSessionMap.class)) {
+            Thread background = new Thread(() -> SandboxedSessionMap.runInSandbox(sandbox, () -> {
+                requestMap.put("a", "1");
+                requestMap.put("b", "2");
+                sandbox.put("c", "3");
+            }));
+            background.start();
+            background.join(5000);
+
+            assertEquals("1", live.getAttribute("a"));
+            assertEquals(1, logs.messages().size());
+            assertTrue(logs.messages().get(0).contains("longJob"));
+            assertFalse(logs.messages().get(0).contains("1"));
+        }
+        assertNull(SandboxedSessionMap.current());
     }
 }

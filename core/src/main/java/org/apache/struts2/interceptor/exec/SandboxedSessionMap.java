@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.SessionMap;
 
 import java.io.Serial;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;

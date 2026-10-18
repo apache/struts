@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,8 @@ import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
 import com.mockobjects.dynamic.Mock;
 import java.util.AbstractMap;
+
+import static org.awaitility.Awaitility.await;
 
 
 /**
@@ -305,11 +308,8 @@ public class SessionMapTest extends TestCase {
             try { read.set(sessionMap.get("key")); } catch (Throwable t) { failure.set(t); }
         });
         reader.start();
-        long deadline = System.currentTimeMillis() + 5000;
-        while (reader.getState() != Thread.State.BLOCKED && reader.getState() != Thread.State.TERMINATED) {
-            assertTrue("reader neither blocked nor finished", System.currentTimeMillis() < deadline);
-            Thread.sleep(1);
-        }
+        await().atMost(5, TimeUnit.SECONDS)
+                .until(() -> reader.getState() == Thread.State.BLOCKED || reader.getState() == Thread.State.TERMINATED);
         release.countDown();
         invalidator.join(5000);
         reader.join(5000);

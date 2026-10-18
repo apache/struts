@@ -56,6 +56,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
 
 /**
  * Test case for ExecuteAndWaitInterceptor.
@@ -342,11 +345,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
     private BackgroundProcess awaitDone(String actionName) throws InterruptedException {
         BackgroundProcess process = (BackgroundProcess) httpSession.getAttribute(ExecuteAndWaitInterceptor.KEY + actionName);
-        long deadline = System.currentTimeMillis() + 5000;
-        while (!process.isDone() && System.currentTimeMillis() < deadline) {
-            Thread.sleep(20);
-        }
-        assertTrue("background process did not finish in time", process.isDone());
+        await().atMost(5, TimeUnit.SECONDS).until(process::isDone);
         return process;
     }
 

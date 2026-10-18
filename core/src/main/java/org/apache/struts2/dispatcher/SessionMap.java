@@ -46,6 +46,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     private static final ThreadLocal<Runnable> LIVE_WRITE_LISTENER = new ThreadLocal<>();
 
+    // volatile only publishes the pinned reference; HttpSession itself is thread-safe per the Servlet spec
+    @SuppressWarnings("java:S3077")
     protected volatile HttpSession session;
     /**
      * @deprecated no longer read or written; {@link #entrySet()} builds a fresh set on every call.

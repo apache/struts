@@ -75,6 +75,37 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         assertNull(req.getSession(false));
     }
 
+    public void testRequestCleanupDetachesTheHelperSessionMapAfterCreateSession() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap original = new SessionMap(req);
+        ActionContext context = ActionContext.getContext()
+            .withSession(original)
+            .with(DispatcherConstants.SESSION, original)
+            .withSession(new SessionMap(req));
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        SessionMap helper = (SessionMap) context.get(DispatcherConstants.SESSION);
+        assertThrows(IllegalStateException.class, () -> helper.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupDetachesEveryRequestSessionMap() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap first = new SessionMap(req);
+        SessionMap second = new SessionMap(req);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> first.put("key", "value"));
+        assertThrows(IllegalStateException.class, () -> second.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
     public void testRequestCleanupWithoutActionContext() {
         HttpServletRequest req = new MockHttpServletRequest();
         PrepareOperations prepare = new PrepareOperations(dispatcher);

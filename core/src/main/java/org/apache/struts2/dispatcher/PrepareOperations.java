@@ -75,6 +75,7 @@ public class PrepareOperations {
             try {
                 dispatcher.cleanUpRequest(request);
             } finally {
+                SessionMap.detachAll(request);
                 detachSessionMap();
                 ActionContext.clear();
                 Dispatcher.clearInstance();

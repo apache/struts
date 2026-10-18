@@ -471,6 +471,8 @@ public class SessionMapTest extends TestCase {
         sessionMock.matchAndReturn("getId", "1");
         requestMock = new Mock(HttpServletRequest.class);
         requestMock.matchAndReturn("getSession", new Constraint[]{new IsEqual(Boolean.FALSE)}, sessionMock.proxy());
+        requestMock.matchAndReturn("getAttribute", new Constraint[]{new IsAnything()}, null);
+        requestMock.matchAndReturn("setAttribute", new Constraint[]{new IsAnything(), new IsAnything()}, null);
     }
 
 

@@ -29,6 +29,8 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of HTTP session
@@ -39,6 +41,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     @Serial
     private static final long serialVersionUID = 4678843241638046854L;
+
+    private static final String REQUEST_MAPS = SessionMap.class.getName() + ".maps";
 
     private static final ThreadLocal<Runnable> LIVE_WRITE_LISTENER = new ThreadLocal<>();
 
@@ -66,10 +70,36 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         // "execAndWait" interceptor
         this.request = request;
         this.session = request.getSession(false);
+        register(request);
     }
 
     void detach() {
         detached = true;
+    }
+
+    private void register(HttpServletRequest request) {
+        RequestMaps registered = request.getAttribute(REQUEST_MAPS) instanceof RequestMaps existing ? existing : null;
+        if (registered == null) {
+            registered = new RequestMaps();
+            request.setAttribute(REQUEST_MAPS, registered);
+        }
+        registered.maps.add(this);
+    }
+
+    static void detachAll(HttpServletRequest request) {
+        if (request.getAttribute(REQUEST_MAPS) instanceof RequestMaps registered) {
+            registered.maps.forEach(SessionMap::detach);
+            request.removeAttribute(REQUEST_MAPS);
+        }
+    }
+
+    private static final class RequestMaps {
+        private final Queue<SessionMap> maps = new ConcurrentLinkedQueue<>();
+
+        @Override
+        public String toString() {
+            return "RequestMaps";
+        }
     }
 
     /**

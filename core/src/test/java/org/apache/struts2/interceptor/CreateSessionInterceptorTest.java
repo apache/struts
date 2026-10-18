@@ -25,6 +25,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.jmock.Mock;
 import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
+import org.jmock.core.stub.ReturnStub;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,6 +49,8 @@ public class CreateSessionInterceptorTest extends StrutsInternalTestCase {
         httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.FALSE));
         httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.TRUE));
         httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.FALSE));
+        httpServletRequestMock.stubs().method("getAttribute").will(new ReturnStub(null));
+        httpServletRequestMock.stubs().method("setAttribute");
         HttpServletRequest request = (HttpServletRequest) httpServletRequestMock.proxy();
 
         ServletActionContext.setRequest(request);

@@ -167,6 +167,58 @@ public class SessionSandboxReconcilerTest extends TestCase {
         }
     }
 
+    public void testSessionInvalidatedAfterTheIdCheckDiscardsTheWrites() {
+        InvalidatedOnIdCheck session = new InvalidatedOnIdCheck();
+        request.setSession(session);
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(session, "p");
+        sandbox.put("a", "bg");
+        session.armed = true;
+
+        SessionSandboxReconciler.reconcile(sandbox, request, new Object());
+
+        assertTrue(session.isInvalid());
+        assertNull(request.getSession(false));
+    }
+
+    public void testBackgroundInvalidateOfASessionInvalidatedAfterTheIdCheckDiscardsTheWrites() {
+        InvalidatedOnIdCheck session = new InvalidatedOnIdCheck();
+        request.setSession(session);
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(session, "p");
+        sandbox.invalidate();
+        sandbox.put("user", "u");
+        session.armed = true;
+
+        SessionSandboxReconciler.reconcile(sandbox, request, new Object());
+
+        assertNull(request.getSession(false));
+    }
+
+    public void testSessionInvalidatedByTheHookDiscardsTheRemainingWrites() {
+        SandboxedSessionMap sandbox = conflictOnA();
+        sandbox.put("b", "2");
+
+        SessionSandboxReconciler.reconcile(sandbox, request, resolving(conflict -> {
+            live.invalidate();
+            return SessionConflictResolution.useBackground();
+        }));
+
+        assertNull(request.getSession(false));
+    }
+
+    public void testHookIllegalStateExceptionPropagates() {
+        SandboxedSessionMap sandbox = conflictOnA();
+        IllegalStateException thrown = new IllegalStateException("hook");
+
+        try {
+            SessionSandboxReconciler.reconcile(sandbox, request, resolving(conflict -> {
+                throw thrown;
+            }));
+            fail("expected the hook's exception");
+        } catch (IllegalStateException e) {
+            assertSame(thrown, e);
+        }
+    }
+
     private SandboxedSessionMap conflictOnA() {
         live.setAttribute("a", "1");
         SandboxedSessionMap sandbox = new SandboxedSessionMap(live, "p");
@@ -177,5 +229,19 @@ public class SessionSandboxReconcilerTest extends TestCase {
 
     private static BackgroundSessionConflictAware resolving(Function<SessionConflict, SessionConflictResolution> resolver) {
         return resolver::apply;
+    }
+
+    private static class InvalidatedOnIdCheck extends MockHttpSession {
+        private boolean armed;
+
+        @Override
+        public String getId() {
+            String id = super.getId();
+            if (armed) {
+                armed = false;
+                invalidate();
+            }
+            return id;
+        }
     }
 }

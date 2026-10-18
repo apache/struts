@@ -73,8 +73,10 @@ public class SandboxedSessionMapTest extends TestCase {
         live.setAttribute("a", "1");
         SandboxedSessionMap sandbox = new SandboxedSessionMap(live, "p");
 
-        sandbox.entrySet().iterator().next().setValue("2");
+        Map.Entry<String, Object> entry = sandbox.entrySet().iterator().next();
 
+        assertEquals("1", entry.setValue("2"));
+        assertEquals("2", entry.getValue());
         assertEquals("2", sandbox.get("a"));
         assertEquals(List.of(new SessionOperation.Put("a", "2")), sandbox.getOperations());
     }

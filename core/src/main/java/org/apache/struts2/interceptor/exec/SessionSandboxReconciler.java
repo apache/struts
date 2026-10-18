@@ -60,34 +60,59 @@ public final class SessionSandboxReconciler {
         List<SessionOperation> operations = sandbox.getOperations();
         int lastInvalidate = lastInvalidateIndex(operations);
         if (lastInvalidate >= 0) {
-            real.invalidate();
-            HttpSession fresh = request.getSession(true);
-            for (String key : touchedKeys(operations.subList(lastInvalidate + 1, operations.size()))) {
-                write(fresh, key, sandbox.get(key));
-            }
+            replaceSession(sandbox, request, real, operations.subList(lastInvalidate + 1, operations.size()));
             return;
         }
         for (String key : touchedKeys(operations)) {
-            reconcileKey(sandbox, real, key, action);
+            if (!reconcileKey(sandbox, real, key, action)) {
+                discardRemaining(sandbox);
+                return;
+            }
         }
     }
 
-    private static void reconcileKey(SandboxedSessionMap sandbox, HttpSession real, String key, Object action) {
-        Object current = real.getAttribute(key);
+    private static void replaceSession(SandboxedSessionMap sandbox, HttpServletRequest request, HttpSession real,
+                                       List<SessionOperation> operationsAfterInvalidate) {
+        try {
+            real.invalidate();
+        } catch (IllegalStateException e) {
+            discardRemaining(sandbox);
+            return;
+        }
+        HttpSession fresh = request.getSession(true);
+        for (String key : touchedKeys(operationsAfterInvalidate)) {
+            if (!write(fresh, key, sandbox.get(key))) {
+                discardRemaining(sandbox);
+                return;
+            }
+        }
+    }
+
+    private static boolean reconcileKey(SandboxedSessionMap sandbox, HttpSession real, String key, Object action) {
+        Object current;
+        try {
+            current = real.getAttribute(key);
+        } catch (IllegalStateException e) {
+            return false;
+        }
         Object snapshot = sandbox.getSnapshotValue(key);
         Object background = sandbox.get(key);
         if (Objects.equals(current, snapshot)) {
-            write(real, key, background);
-        } else if (action instanceof BackgroundSessionConflictAware aware) {
+            return write(real, key, background);
+        }
+        if (action instanceof BackgroundSessionConflictAware aware) {
             SessionConflict conflict = new SessionConflict(key, snapshot, current, background);
             Object resolved = aware.resolveSessionConflict(conflict).resolve(conflict);
-            if (resolved != current) {
-                write(real, key, resolved);
-            }
-        } else {
-            LOG.debug("Background process [{}] keeps the current value of session key [{}] changed by another request",
-                    sandbox.getProcessName(), key);
+            return resolved == current || write(real, key, resolved);
         }
+        LOG.debug("Background process [{}] keeps the current value of session key [{}] changed by another request",
+                sandbox.getProcessName(), key);
+        return true;
+    }
+
+    private static void discardRemaining(SandboxedSessionMap sandbox) {
+        LOG.debug("Discarding the remaining session writes of background process [{}]: its session was invalidated",
+                sandbox.getProcessName());
     }
 
     private static int lastInvalidateIndex(List<SessionOperation> operations) {
@@ -111,11 +136,16 @@ public final class SessionSandboxReconciler {
         return keys;
     }
 
-    private static void write(HttpSession session, String key, Object value) {
-        if (value == null) {
-            session.removeAttribute(key);
-        } else {
-            session.setAttribute(key, value);
+    private static boolean write(HttpSession session, String key, Object value) {
+        try {
+            if (value == null) {
+                session.removeAttribute(key);
+            } else {
+                session.setAttribute(key, value);
+            }
+            return true;
+        } catch (IllegalStateException e) {
+            return false;
         }
     }
 }

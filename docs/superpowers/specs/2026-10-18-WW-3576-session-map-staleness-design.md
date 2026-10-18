@@ -119,8 +119,9 @@ never touches the request:
   `BackgroundProcess`** — a fluent `withSessionSandbox(…)` (no-op by default) called by the interceptor
   on whatever the overridable `getNewBackgroundProcess(…)` factory returns, and `getSessionSandbox()`
   (null by default). Installing it happens in `StrutsBackgroundProcess`'s private thread body, *after*
-  the overridable `beforeInvocation()` (whose default binds the original context), so neither `super`
-  nor a subclass that skips it can undo it. A custom `BackgroundProcess` not
+  the overridable `beforeInvocation()` (whose default binds the handoff copy, so a super-calling
+  override edits the context the action will use), so neither `super` nor a subclass that skips it can
+  undo it. A custom `BackgroundProcess` not
   extending `StrutsBackgroundProcess` keeps today's shared-map behaviour — migration-notes line.
 - Not serialized: held `transient` by the background process. A deserialized process already has a
   null invocation and is restarted (WW-4900), so the snapshot is lost with it.
@@ -137,6 +138,10 @@ never touches the request:
 - After write-back, a `SessionAware` action is re-injected with the request's session map so the
   result rendering writes to the live session.
 - If nobody polls after completion, the writes are never applied (the session expires with them).
+- If another request invalidates the session during write-back, the remaining writes are discarded and
+  no replacement session is created; an exception from the conflict hook still propagates.
+- When write-back replaces the session (logged `invalidate()`), the polling context gets a new request
+  `SessionMap` (and `DispatcherConstants.SESSION` helper) before re-injection.
 - *(Builder-check call)* Write-back runs **before** `throw bp.getException()`: a failed background
   action's writes are applied, matching today's behaviour where its writes were already live.
 - *(Builder-check call)* The write log is an **ordered operation list** (put / remove / invalidate).

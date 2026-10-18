@@ -141,6 +141,7 @@ public class SandboxedSessionMap extends SessionMap {
             result.add(new SimpleEntry<>(key, current.getValue()) {
                 @Override
                 public Object setValue(Object value) {
+                    super.setValue(value);
                     return put(key, value);
                 }
             });

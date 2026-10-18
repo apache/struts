@@ -21,6 +21,7 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.action.SessionAware;
+import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Map;
@@ -32,11 +33,15 @@ public class SessionWritingWaitAction implements Action, SessionAware {
 
     private Map<String, Object> session;
     private String failWith;
+    private boolean invalidateFirst;
 
     @Override
     @SuppressWarnings("java:S2925") // simulates the long-running work execAndWait exists for
     public String execute() throws Exception {
         Thread.sleep(200);
+        if (invalidateFirst) {
+            ((SessionMap) session).invalidate();
+        }
         ActionContext.getContext().getSession().put("result", "done");
         session.put("aware", "yes");
         if (failWith != null) {
@@ -57,5 +62,10 @@ public class SessionWritingWaitAction implements Action, SessionAware {
     @StrutsParameter
     public void setFailWith(String failWith) {
         this.failWith = failWith;
+    }
+
+    @StrutsParameter
+    public void setInvalidateFirst(boolean invalidateFirst) {
+        this.invalidateFirst = invalidateFirst;
     }
 }

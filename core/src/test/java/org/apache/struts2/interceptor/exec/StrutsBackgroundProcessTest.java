@@ -219,6 +219,32 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
         assertSame(sandbox, ActionContext.of(seen.get()).getSession());
     }
 
+    public void testSandboxKeepsEditsOfASuperCallingBeforeInvocation() {
+        AtomicReference<Map<String, Object>> seen = new AtomicReference<>();
+        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> {
+            seen.set(ActionContext.getContext().getContextMap());
+            return "done";
+        });
+        ActionContext requestContext = ActionContext.of();
+        invocation.setInvocationContext(requestContext);
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(new MockHttpSession(), "edited");
+
+        BackgroundProcess bp = new StrutsBackgroundProcess(invocation, "edited", Thread.NORM_PRIORITY) {
+            @Override
+            protected void beforeInvocation() throws Exception {
+                super.beforeInvocation();
+                ActionContext.getContext().with("edited", "yes");
+            }
+        }.withSessionSandbox(sandbox).prepare();
+        executor.execute(bp);
+        await().atMost(5, TimeUnit.SECONDS).until(bp::isDone);
+
+        assertNull(bp.getException());
+        assertEquals("yes", seen.get().get("edited"));
+        assertSame(sandbox, ActionContext.of(seen.get()).getSession());
+        assertFalse(requestContext.getContextMap().containsKey("edited"));
+    }
+
     private static class MockActionInvocationWithActionInvoker extends MockActionInvocation {
         private final Callable<String> actionInvoker;
 

@@ -26,10 +26,13 @@ import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.DispatcherConstants;
+import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.exec.BackgroundProcess;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
@@ -364,7 +367,13 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private void writeBackSessionSandbox(BackgroundProcess bp, ActionContext context) {
         bp.getSessionSandbox().ifPresent(sandbox -> {
-            SessionSandboxReconciler.reconcile(sandbox, ServletActionContext.getRequest(), bp.getAction());
+            HttpServletRequest request = ServletActionContext.getRequest();
+            HttpSession before = request.getSession(false);
+            SessionSandboxReconciler.reconcile(sandbox, request, bp.getAction());
+            if (request.getSession(false) != before) {
+                SessionMap sessionMap = new SessionMap(request);
+                context.withSession(sessionMap).with(DispatcherConstants.SESSION, sessionMap);
+            }
             if (bp.getAction() instanceof SessionAware sessionAware) {
                 sessionAware.withSession(context.getSession());
             }

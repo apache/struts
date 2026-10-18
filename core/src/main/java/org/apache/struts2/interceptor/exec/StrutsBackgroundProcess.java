@@ -131,7 +131,8 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
 
     private Map<String, Object> backgroundContextMap() {
         ActionContext bound = ActionContext.getContext();
-        if (bound == null || bound.getContextMap() == invocation.getInvocationContext().getContextMap()) {
+        if (bound == null || bound.getContextMap() == sandboxContext
+                || bound.getContextMap() == invocation.getInvocationContext().getContextMap()) {
             return sandboxContext;
         }
         return copyOf(bound.getContextMap());
@@ -166,7 +167,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void beforeInvocation() throws Exception {
-        ActionContext.bind(invocation.getInvocationContext());
+        ActionContext.bind(sandboxContext != null ? ActionContext.of(sandboxContext) : invocation.getInvocationContext());
     }
 
     /**

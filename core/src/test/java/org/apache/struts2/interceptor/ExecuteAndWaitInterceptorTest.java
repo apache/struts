@@ -38,6 +38,7 @@ import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.util.location.LocatableProperties;
 import jakarta.servlet.http.HttpSession;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.exec.BackgroundProcess;
@@ -334,6 +335,24 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         assertEquals("success", buildProxy("sessionAction").execute());
         assertFalse(action.getSession() instanceof SandboxedSessionMap);
         assertSame(session, action.getSession());
+    }
+
+    public void testPollingContextSeesTheSessionStartedByABackgroundInvalidate() throws Exception {
+        useLiveSession();
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put("invalidateFirst", new String[]{"true"});
+        withRequestParams(requestParams);
+
+        assertEquals("wait", buildProxy("sessionAction").execute());
+        SessionWritingWaitAction action = (SessionWritingWaitAction) awaitDone("sessionAction").getAction();
+
+        ActionProxy poll = buildProxy("sessionAction");
+        assertEquals("success", poll.execute());
+        ActionContext pollContext = poll.getInvocation().getInvocationContext();
+        assertTrue(((MockHttpSession) httpSession).isInvalid());
+        assertEquals("done", pollContext.getSession().get("result"));
+        assertEquals("yes", action.getSession().get("aware"));
+        assertSame(pollContext.getSession(), pollContext.get(DispatcherConstants.SESSION));
     }
 
     private void useLiveSession() {

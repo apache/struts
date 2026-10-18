@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * construction plus an ordered log of the process's own writes. It never touches the live session; the writes are
  * applied to it later by {@link SessionSandboxReconciler}.
  */
+@SuppressWarnings("java:S2160") // equal by contents, as every Map
 public class SandboxedSessionMap extends SessionMap {
 
     @Serial

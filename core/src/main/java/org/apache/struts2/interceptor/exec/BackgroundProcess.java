@@ -21,6 +21,8 @@ package org.apache.struts2.interceptor.exec;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.interceptor.ExecuteAndWaitInterceptor;
 
+import java.util.Optional;
+
 /**
  * Interface used to create a background process which will be executed by
  * {@link ExecuteAndWaitInterceptor}.
@@ -61,9 +63,9 @@ public interface BackgroundProcess extends Runnable {
     /**
      * Returns the sandbox whose writes are applied to the session once the process is done.
      *
-     * @return the sandbox, or {@code null} when the process runs without one
+     * @return the sandbox, or empty when the process runs without one
      */
-    default SandboxedSessionMap getSessionSandbox() {
-        return null;
+    default Optional<SandboxedSessionMap> getSessionSandbox() {
+        return Optional.empty();
     }
 }

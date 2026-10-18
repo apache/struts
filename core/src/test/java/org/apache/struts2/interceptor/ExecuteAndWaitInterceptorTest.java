@@ -301,7 +301,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         BackgroundProcess process = awaitDone("sessionAction");
 
         assertNull(process.getException());
-        assertEquals("done", process.getSessionSandbox().get("result"));
+        assertEquals("done", process.getSessionSandbox().orElseThrow().get("result"));
         assertNull(httpSession.getAttribute("result"));
         assertNull(httpSession.getAttribute("aware"));
     }
@@ -343,7 +343,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         context = ActionContext.of(context).withSession(session).getContextMap();
     }
 
-    private BackgroundProcess awaitDone(String actionName) throws InterruptedException {
+    private BackgroundProcess awaitDone(String actionName) {
         BackgroundProcess process = (BackgroundProcess) httpSession.getAttribute(ExecuteAndWaitInterceptor.KEY + actionName);
         await().atMost(5, TimeUnit.SECONDS).until(process::isDone);
         return process;

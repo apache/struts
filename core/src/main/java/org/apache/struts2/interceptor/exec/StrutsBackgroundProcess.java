@@ -30,6 +30,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
@@ -107,8 +108,8 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     }
 
     @Override
-    public SandboxedSessionMap getSessionSandbox() {
-        return sessionSandbox;
+    public Optional<SandboxedSessionMap> getSessionSandbox() {
+        return Optional.ofNullable(sessionSandbox);
     }
 
     private String invokeAction() throws Exception {

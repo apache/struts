@@ -34,6 +34,7 @@ public class SessionWritingWaitAction implements Action, SessionAware {
     private String failWith;
 
     @Override
+    @SuppressWarnings("java:S2925") // simulates the long-running work execAndWait exists for
     public String execute() throws Exception {
         Thread.sleep(200);
         ActionContext.getContext().getSession().put("result", "done");

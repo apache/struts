@@ -363,14 +363,12 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     }
 
     private void writeBackSessionSandbox(BackgroundProcess bp, ActionContext context) {
-        SandboxedSessionMap sandbox = bp.getSessionSandbox();
-        if (sandbox == null) {
-            return;
-        }
-        SessionSandboxReconciler.reconcile(sandbox, ServletActionContext.getRequest(), bp.getAction());
-        if (bp.getAction() instanceof SessionAware sessionAware) {
-            sessionAware.withSession(context.getSession());
-        }
+        bp.getSessionSandbox().ifPresent(sandbox -> {
+            SessionSandboxReconciler.reconcile(sandbox, ServletActionContext.getRequest(), bp.getAction());
+            if (bp.getAction() instanceof SessionAware sessionAware) {
+                sessionAware.withSession(context.getSession());
+            }
+        });
     }
 
     /**

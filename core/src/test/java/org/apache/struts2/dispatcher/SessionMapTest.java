@@ -24,11 +24,14 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import junit.framework.TestCase;
 
@@ -275,6 +278,42 @@ public class SessionMapTest extends TestCase {
         assertNull("Removed attribute still present in SessionMap ?", abstractMap.get("KEY"));
         assertNull("Removed attribute still present in HttpSessionMock ?", httpSessionMock.getAttribute("KEY"));
         sessionMock.verify();
+    }
+
+    public void testGetConcurrentWithInvalidateNeverThrows() throws Exception {
+        CountDownLatch invalidating = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        MockHttpSession session = new MockHttpSession() {
+            @Override
+            public void invalidate() {
+                invalidating.countDown();
+                try { release.await(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                super.invalidate();
+            }
+        };
+        session.setAttribute("key", "value");
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(session);
+        SessionMap sessionMap = new SessionMap(request);
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+
+        Thread invalidator = new Thread(sessionMap::invalidate);
+        invalidator.start();
+        invalidating.await();
+        Thread reader = new Thread(() -> {
+            try { sessionMap.get("key"); } catch (Throwable t) { failure.set(t); }
+        });
+        reader.start();
+        long deadline = System.currentTimeMillis() + 5000;
+        while (reader.getState() != Thread.State.BLOCKED && reader.getState() != Thread.State.TERMINATED) {
+            assertTrue("reader neither blocked nor finished", System.currentTimeMillis() < deadline);
+            Thread.sleep(1);
+        }
+        release.countDown();
+        invalidator.join(5000);
+        reader.join(5000);
+
+        assertNull("get() concurrent with invalidate() threw", failure.get());
     }
 
     @Override

@@ -43,9 +43,10 @@ when that session dies (request threads), and one map that is stale *by design* 
 
 ## Anti-goals
 
-- Catching `IllegalStateException` and carrying on as if the session were alive (PR #1577 retried the
-  write into a new session inside the catch). Catching it to *detect* invalidation and answer
-  "no session" is the design.
+- Catching `IllegalStateException` and carrying on as if the session were alive (PR #1577 swallowed it in
+  every method and kept the dead reference). Catching it to *detect* invalidation, un-pin, and answer
+  "no session" is the design — including a `put` that discovers the invalidation, un-pins, and pins a
+  new session once through the normal `request.getSession(true)` path (no loop).
 - Any request-thread map that resolves its session through a request after that request has ended.
 - Any path by which background writes land in a session other than the one the process started in.
 

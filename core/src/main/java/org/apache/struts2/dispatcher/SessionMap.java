@@ -47,7 +47,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     @Deprecated(since = "7.5.0", forRemoval = true)
     protected Set<Entry<String, Object>> entries;
     protected HttpServletRequest request;
-
+    private volatile boolean detached;
 
     protected SessionMap() {
     }
@@ -64,6 +64,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         // "execAndWait" interceptor
         this.request = request;
         this.session = request.getSession(false);
+    }
+
+    void detach() {
+        detached = true;
     }
 
     /**
@@ -202,6 +206,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         synchronized (this) {
             HttpSession current = session;
             if (current == null) {
+                if (detached) {
+                    throw new IllegalStateException("The request of this session map has ended and its session is gone; "
+                        + "it cannot resolve a new session");
+                }
                 current = request.getSession(true);
                 session = current;
             }

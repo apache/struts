@@ -416,6 +416,55 @@ public class SessionMapTest extends TestCase {
         assertEquals("value", sessionMap.remove("key"));
     }
 
+    public void testDetachedPutAfterInvalidationNeverReachesTheRecycledRequest() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession pinned = new MockHttpSession();
+        request.setSession(pinned);
+        SessionMap sessionMap = new SessionMap(request);
+        pinned.invalidate();
+        MockHttpSession otherUsers = new MockHttpSession();
+        request.setSession(otherUsers);
+        sessionMap.detach();
+
+        try {
+            sessionMap.put("key", "value");
+            fail("a detached map with no live session must not resolve a session through its request");
+        } catch (IllegalStateException expected) {
+            assertFalse(expected.getMessage().contains("value"));
+        }
+        assertFalse(otherUsers.getAttributeNames().hasMoreElements());
+        assertSame(otherUsers, request.getSession(false));
+    }
+
+    public void testDetachedNeverPinnedPutThrows() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        SessionMap sessionMap = new SessionMap(request);
+        sessionMap.detach();
+
+        try {
+            sessionMap.put("key", "value");
+            fail("a detached map with no pinned session must not create one through its request");
+        } catch (IllegalStateException expected) {
+            assertNull(request.getSession(false));
+        }
+    }
+
+    public void testDetachedMapKeepsWorkingOnItsLivePinnedSession() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession pinned = new MockHttpSession();
+        request.setSession(pinned);
+        SessionMap sessionMap = new SessionMap(request);
+        sessionMap.detach();
+
+        sessionMap.put("key", "value");
+
+        assertEquals("value", pinned.getAttribute("key"));
+        assertEquals("value", sessionMap.get("key"));
+        assertTrue(sessionMap.containsKey("key"));
+        assertEquals(1, sessionMap.entrySet().size());
+        assertEquals("value", sessionMap.remove("key"));
+    }
+
     @Override
     protected void setUp() throws Exception {
         sessionMock = new Mock(HttpSession.class);

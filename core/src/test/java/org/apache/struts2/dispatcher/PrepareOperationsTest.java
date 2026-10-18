@@ -28,6 +28,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.IntStream;
 
+import static org.junit.Assert.assertThrows;
+
 public class PrepareOperationsTest extends StrutsInternalTestCase {
     public void testCreateActionContextWhenRequestHasOne() {
         HttpServletRequest req = new MockHttpServletRequest();
@@ -56,6 +58,31 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         prepare.cleanupRequest(req);
 
         assertNull(ActionContext.getContext());
+        assertNull(Dispatcher.getInstance());
+        assertNull(ContainerHolder.get());
+    }
+
+    public void testRequestCleanupDetachesTheContextSessionMap() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> sessionMap.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupWithoutActionContext() {
+        HttpServletRequest req = new MockHttpServletRequest();
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+        ActionContext.clear();
+
+        prepare.cleanupRequest(req);
+
         assertNull(Dispatcher.getInstance());
         assertNull(ContainerHolder.get());
     }

@@ -75,12 +75,20 @@ public class PrepareOperations {
             try {
                 dispatcher.cleanUpRequest(request);
             } finally {
+                detachSessionMap();
                 ActionContext.clear();
                 Dispatcher.clearInstance();
                 ContainerHolder.clear();
                 devModeOverride.remove();
             }
         });
+    }
+
+    private static void detachSessionMap() {
+        ActionContext context = ActionContext.getContext();
+        if (context != null && context.getSession() instanceof SessionMap sessionMap) {
+            sessionMap.detach();
+        }
     }
 
     /**

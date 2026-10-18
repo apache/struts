@@ -40,6 +40,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     private static final long serialVersionUID = 4678843241638046854L;
 
     protected volatile HttpSession session;
+    /**
+     * @deprecated no longer read or written; {@link #entrySet()} builds a fresh set on every call.
+     */
+    @Deprecated(since = "7.5.0", forRemoval = true)
     protected Set<Entry<String, Object>> entries;
     protected HttpServletRequest request;
 
@@ -67,14 +71,16 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return;
         }
 
-        current.invalidate();
-        session = null;
-        entries = null;
+        try {
+            current.invalidate();
+        } catch (IllegalStateException e) {
+            // already invalidated elsewhere
+        }
+        unpin(current);
     }
 
     /**
-     * Removes all attributes from the session as well as clears entries in this
-     * map.
+     * Removes all attributes from the session.
      */
     @Override
     public void clear() {
@@ -83,15 +89,18 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return;
         }
 
-        entries = null;
-        final Enumeration<String> attributeNamesEnum = current.getAttributeNames();
-        while (attributeNamesEnum.hasMoreElements()) {
-            current.removeAttribute(attributeNamesEnum.nextElement());
+        try {
+            final Enumeration<String> attributeNamesEnum = current.getAttributeNames();
+            while (attributeNamesEnum.hasMoreElements()) {
+                current.removeAttribute(attributeNamesEnum.nextElement());
+            }
+        } catch (IllegalStateException e) {
+            unpin(current);
         }
     }
 
     /**
-     * Returns a Set of attributes from the http session.
+     * Returns a Set of attributes from the http session, built fresh on every call.
      *
      * @return a Set of attributes from the http session.
      */
@@ -102,10 +111,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return Collections.emptySet();
         }
 
-        Set<Entry<String, Object>> result = entries;
-        if (result == null) {
-            result = new HashSet<>();
-
+        final Set<Entry<String, Object>> result = new HashSet<>();
+        try {
             final Enumeration<String> enumeration = current.getAttributeNames();
 
             while (enumeration.hasMoreElements()) {
@@ -120,7 +127,9 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                     }
                 });
             }
-            entries = result;
+        } catch (IllegalStateException e) {
+            unpin(current);
+            return Collections.emptySet();
         }
 
         return result;
@@ -142,7 +151,12 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return null;
         }
 
-        return current.getAttribute(key != null ? key.toString() : null);
+        try {
+            return current.getAttribute(key != null ? key.toString() : null);
+        } catch (IllegalStateException e) {
+            unpin(current);
+            return null;
+        }
     }
 
     /**
@@ -156,19 +170,37 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     public Object put(final String key, final Object value) {
         HttpSession current = session;
         if (current == null) {
-            synchronized (this) {
-                current = session;
-                if (current == null) {
-                    current = request.getSession(true);
-                    session = current;
-                }
-            }
+            current = pin();
         }
 
         final Object oldValue = get(key);
-        entries = null;
-        current.setAttribute(key, value);
+        try {
+            current.setAttribute(key, value);
+        } catch (IllegalStateException e) {
+            unpin(current);
+            pin().setAttribute(key, value);
+            return null;
+        }
         return oldValue;
+    }
+
+    private HttpSession pin() {
+        synchronized (this) {
+            HttpSession current = session;
+            if (current == null) {
+                current = request.getSession(true);
+                session = current;
+            }
+            return current;
+        }
+    }
+
+    private void unpin(final HttpSession stale) {
+        synchronized (this) {
+            if (session == stale) {
+                session = null;
+            }
+        }
     }
 
     /**
@@ -187,11 +219,14 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return null;
         }
 
-        entries = null;
-
         final String keyAsString = (key != null ? key.toString() : null);
         final Object value = get(keyAsString);
-        current.removeAttribute(keyAsString);
+        try {
+            current.removeAttribute(keyAsString);
+        } catch (IllegalStateException e) {
+            unpin(current);
+            return null;
+        }
 
         return value;
     }
@@ -214,6 +249,11 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         }
 
         final String keyAsString = (key != null ? key.toString() : null);
-        return (current.getAttribute(keyAsString) != null);
+        try {
+            return current.getAttribute(keyAsString) != null;
+        } catch (IllegalStateException e) {
+            unpin(current);
+            return false;
+        }
     }
 }

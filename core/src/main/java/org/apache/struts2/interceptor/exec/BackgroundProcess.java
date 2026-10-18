@@ -47,10 +47,22 @@ public interface BackgroundProcess extends Runnable {
 
     boolean isDone();
 
+    /**
+     * Hands the process the session sandbox to run against. Called on the request thread before {@link #prepare()};
+     * the default ignores the sandbox.
+     *
+     * @param sandbox the snapshot of the request's session
+     * @return this process
+     */
     default BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
         return this;
     }
 
+    /**
+     * Returns the sandbox whose writes are applied to the session once the process is done.
+     *
+     * @return the sandbox, or {@code null} when the process runs without one
+     */
     default SandboxedSessionMap getSessionSandbox() {
         return null;
     }

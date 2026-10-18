@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor.exec;
 
-public sealed interface SessionOperation {
+sealed interface SessionOperation {
 
     record Put(String key, Object value) implements SessionOperation {
     }

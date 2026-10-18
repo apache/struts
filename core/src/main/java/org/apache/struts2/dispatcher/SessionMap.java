@@ -20,7 +20,6 @@ package org.apache.struts2.dispatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -29,6 +28,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of HTTP session
@@ -39,6 +39,8 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     @Serial
     private static final long serialVersionUID = 4678843241638046854L;
+
+    private static final ThreadLocal<Runnable> LIVE_WRITE_LISTENER = new ThreadLocal<>();
 
     protected volatile HttpSession session;
     /**
@@ -74,7 +76,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Invalidate the http session.
      */
     public void invalidate() {
-        warnIfSandboxBypassed();
+        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -93,7 +95,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public void clear() {
-        warnIfSandboxBypassed();
+        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -131,6 +133,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                 result.add(new StringObjectEntry(key, value) {
                     @Override
                     public Object setValue(final Object obj) {
+                        notifyLiveWrite();
                         current.setAttribute(key, obj);
 
                         return value;
@@ -178,7 +181,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object put(final String key, final Object value) {
-        warnIfSandboxBypassed();
+        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             current = pin();
@@ -195,10 +198,29 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         return oldValue;
     }
 
-    private void warnIfSandboxBypassed() {
-        SandboxedSessionMap sandbox = SandboxedSessionMap.current();
-        if (sandbox != null && !(this instanceof SandboxedSessionMap)) {
-            sandbox.warnEscapeOnce();
+    /**
+     * Runs the work with a listener notified, on the calling thread, whenever a {@link SessionMap} writes to the live
+     * session. A subclass that overrides the write methods without calling them here never notifies it.
+     *
+     * @param listener notified on each live write made while the work runs
+     * @param work     the work to run
+     * @param <T>      the type of the work's result
+     * @return the work's result
+     * @throws Exception whatever the work throws
+     */
+    protected static <T> T callWithLiveWriteListener(final Runnable listener, final Callable<T> work) throws Exception {
+        LIVE_WRITE_LISTENER.set(listener);
+        try {
+            return work.call();
+        } finally {
+            LIVE_WRITE_LISTENER.remove();
+        }
+    }
+
+    private static void notifyLiveWrite() {
+        Runnable listener = LIVE_WRITE_LISTENER.get();
+        if (listener != null) {
+            listener.run();
         }
     }
 
@@ -236,7 +258,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object remove(final Object key) {
-        warnIfSandboxBypassed();
+        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return null;

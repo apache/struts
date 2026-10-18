@@ -43,6 +43,14 @@ public final class SessionSandboxReconciler {
     private SessionSandboxReconciler() {
     }
 
+    /**
+     * Applies the sandbox's writes to the session of the given request. Must be called on that request's thread.
+     *
+     * @param sandbox the sandbox the background process worked on
+     * @param request the polling request that saw the process finish
+     * @param action  the background process's action, consulted when it implements
+     *                {@link BackgroundSessionConflictAware}
+     */
     public static void reconcile(SandboxedSessionMap sandbox, HttpServletRequest request, Object action) {
         HttpSession real = request.getSession(false);
         if (real == null || !real.getId().equals(sandbox.getStartSessionId())) {

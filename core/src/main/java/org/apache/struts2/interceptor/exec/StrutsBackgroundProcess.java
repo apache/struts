@@ -110,19 +110,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
         if (sessionSandbox == null) {
             return invocation.invokeActionOnly();
         }
-        String[] outcome = new String[1];
-        Exception[] failure = new Exception[1];
-        SandboxedSessionMap.runInSandbox(sessionSandbox, () -> {
-            try {
-                outcome[0] = invocation.invokeActionOnly();
-            } catch (Exception e) {
-                failure[0] = e;
-            }
-        });
-        if (failure[0] != null) {
-            throw failure[0];
-        }
-        return outcome[0];
+        return sessionSandbox.runInSandbox(invocation::invokeActionOnly);
     }
 
     private void installSessionSandbox() {

@@ -27,6 +27,7 @@ import org.springframework.mock.web.MockHttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SandboxedSessionMapTest extends TestCase {
 
@@ -99,21 +100,47 @@ public class SandboxedSessionMapTest extends TestCase {
         request.setSession(live);
         SessionMap requestMap = new SessionMap(request);
         SandboxedSessionMap sandbox = new SandboxedSessionMap(live, "longJob");
+        SandboxedSessionMap finished = new SandboxedSessionMap(live, "finishedJob");
+        AtomicReference<Exception> failure = new AtomicReference<>();
 
         try (LogCapture logs = new LogCapture(SandboxedSessionMap.class)) {
-            Thread background = new Thread(() -> SandboxedSessionMap.runInSandbox(sandbox, () -> {
-                requestMap.put("a", "1");
-                requestMap.put("b", "2");
-                sandbox.put("c", "3");
-            }));
+            Thread background = new Thread(() -> {
+                try {
+                    sandbox.runInSandbox(() -> {
+                        requestMap.put("a", "s3cr3t");
+                        requestMap.put("b", "s3cr3t");
+                        sandbox.put("c", "3");
+                        return null;
+                    });
+                    finished.runInSandbox(() -> null);
+                    requestMap.put("d", "s3cr3t");
+                } catch (Exception e) {
+                    failure.set(e);
+                }
+            });
             background.start();
             background.join(5000);
 
-            assertEquals("1", live.getAttribute("a"));
+            assertNull(failure.get());
+            assertEquals("s3cr3t", live.getAttribute("a"));
+            assertEquals("s3cr3t", live.getAttribute("d"));
             assertEquals(1, logs.messages().size());
             assertTrue(logs.messages().get(0).contains("longJob"));
-            assertFalse(logs.messages().get(0).contains("1"));
+            assertFalse(logs.messages().get(0).contains("s3cr3t"));
         }
-        assertNull(SandboxedSessionMap.current());
+    }
+
+    public void testRunInSandboxReturnsTheResultAndPropagatesFailures() throws Exception {
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(new MockHttpSession(), "p");
+
+        assertEquals("done", sandbox.runInSandbox(() -> "done"));
+        try {
+            sandbox.runInSandbox(() -> {
+                throw new IllegalStateException("boom");
+            });
+            fail("the work's failure should propagate");
+        } catch (IllegalStateException expected) {
+            assertEquals("boom", expected.getMessage());
+        }
     }
 }

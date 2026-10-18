@@ -33,11 +33,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The session view an execAndWait background process works on: a shallow snapshot of the session taken at
- * construction plus an ordered log of the process's own writes. It never touches the live session.
+ * construction plus an ordered log of the process's own writes. It never touches the live session; the writes are
+ * applied to it later by {@link SessionSandboxReconciler}.
  */
 public class SandboxedSessionMap extends SessionMap {
 
@@ -45,7 +47,6 @@ public class SandboxedSessionMap extends SessionMap {
     private static final long serialVersionUID = 2907451127739228064L;
 
     private static final Logger LOG = LogManager.getLogger(SandboxedSessionMap.class);
-    private static final ThreadLocal<SandboxedSessionMap> CURRENT = new ThreadLocal<>();
 
     private final transient Map<String, Object> snapshot = new LinkedHashMap<>();
     private final transient Map<String, Object> view = new LinkedHashMap<>();
@@ -54,6 +55,12 @@ public class SandboxedSessionMap extends SessionMap {
     private final transient String processName;
     private final transient AtomicBoolean escapeWarned = new AtomicBoolean();
 
+    /**
+     * Snapshots the attributes of the given session. Must be called on the request thread that owns the session.
+     *
+     * @param session     the live session to snapshot
+     * @param processName the name of the background process, used in log messages
+     */
     public SandboxedSessionMap(HttpSession session, String processName) {
         super();
         this.startSessionId = session.getId();
@@ -66,39 +73,30 @@ public class SandboxedSessionMap extends SessionMap {
         view.putAll(snapshot);
     }
 
-    public static SandboxedSessionMap current() {
-        return CURRENT.get();
+    <T> T runInSandbox(Callable<T> work) throws Exception {
+        return callWithLiveWriteListener(this::warnEscapeOnce, work);
     }
 
-    public static void runInSandbox(SandboxedSessionMap sandbox, Runnable work) {
-        CURRENT.set(sandbox);
-        try {
-            work.run();
-        } finally {
-            CURRENT.remove();
-        }
-    }
-
-    public void warnEscapeOnce() {
+    private void warnEscapeOnce() {
         if (escapeWarned.compareAndSet(false, true)) {
             LOG.warn("Background process [{}] wrote to the request session, bypassing its session sandbox; "
                 + "use ActionContext.getContext().getSession() or SessionAware", processName);
         }
     }
 
-    public String getStartSessionId() {
+    String getStartSessionId() {
         return startSessionId;
     }
 
-    public String getProcessName() {
+    String getProcessName() {
         return processName;
     }
 
-    public synchronized List<SessionOperation> getOperations() {
+    synchronized List<SessionOperation> getOperations() {
         return Collections.unmodifiableList(new ArrayList<>(operations));
     }
 
-    public synchronized Object getSnapshotValue(String key) {
+    synchronized Object getSnapshotValue(String key) {
         return snapshot.get(key);
     }
 
@@ -107,6 +105,13 @@ public class SandboxedSessionMap extends SessionMap {
         return view.get(asKey(key));
     }
 
+    /**
+     * Records the write in the sandbox; a {@code null} value is recorded as a removal.
+     *
+     * @param key   the name of the session attribute
+     * @param value the value to set
+     * @return the previous value in the sandbox
+     */
     @Override
     public synchronized Object put(String key, Object value) {
         if (value == null) {
@@ -150,6 +155,10 @@ public class SandboxedSessionMap extends SessionMap {
         }
     }
 
+    /**
+     * Empties the sandbox and records the invalidation; the live session is invalidated only when the writes are
+     * applied.
+     */
     @Override
     public synchronized void invalidate() {
         view.clear();

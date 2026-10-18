@@ -57,7 +57,7 @@ when that session dies (request threads), and one map that is stale *by design* 
 - **Pins the session it first sees (decided)**, as today: `request.getSession(false)` at construction,
   `request.getSession(true)` on the first `put` when none is pinned. It does **not** re-resolve through
   the request on every call — code holding the map past its request (async-plugin `Callable`s, stored
-  `SessionAware` fields) must never resolve through a recycled request, which may be another user's.
+  `SessionAware` fields) must never resolve a session through a request that has already ended.
 - **Invalidation is detected, not hidden:** an `IllegalStateException` from the pinned session means it
   was invalidated (by another request or directly); the map un-pins it and answers as "no session"
   (`null` / `false` / empty set / no-op). A later `put` obtains a session through
@@ -70,9 +70,8 @@ when that session dies (request threads), and one map that is stale *by design* 
   async dispatch's cleanup. A detached map never calls its request again: with a live pinned session it
   keeps working (async `Callable`s, stored `SessionAware` fields); a `put` with no live pinned session
   throws `IllegalStateException`. Reason: a background thread (sandbox escape, custom
-  `BackgroundProcess`) reaching `request.getSession(true)` after the request was recycled would write
-  into another user's session. This also closes the same path for a never-pinned map used after its
-  request ended, which predates this change. Detach is package-private.
+  `BackgroundProcess`) must not resolve a session through a request that has already ended; this applies
+  equally to a never-pinned map used after its request ended. Detach is package-private.
 - The pinned reference is read once per call into a local (no check-then-reread), so a concurrent
   `invalidate()` on the same map cannot NPE; how it is published (`volatile`) is the builder's.
 - **No `entries` cache:** `entrySet()` is built fresh on every call; an entry's `setValue` writes

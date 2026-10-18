@@ -104,10 +104,12 @@ never touches the request:
   pointing to the sandbox entry points. Documented as dangerous in the `ExecuteAndWaitInterceptor` /
   `BackgroundProcess` Javadoc, the `execAndWait` docs on struts-site, and the 7.5.0 migration notes. How
   the map recognises a background thread is the builder's.
-- *(Builder-check call)* Handed over through a new **default method on `BackgroundProcess`**
-  (returning no snapshot by default) and a `StrutsBackgroundProcess` constructor taking it. Installing it
-  happens in `StrutsBackgroundProcess`'s private thread body, *before* the overridable
-  `beforeInvocation()`, so a subclass that skips `super` keeps it. A custom `BackgroundProcess` not
+- *(Builder-check call, refined while planning)* Handed over through **default methods on
+  `BackgroundProcess`** — a fluent `withSessionSandbox(…)` (no-op by default) called by the interceptor
+  on whatever the overridable `getNewBackgroundProcess(…)` factory returns, and `getSessionSandbox()`
+  (null by default). Installing it happens in `StrutsBackgroundProcess`'s private thread body, *after*
+  the overridable `beforeInvocation()` (whose default binds the original context), so neither `super`
+  nor a subclass that skips it can undo it. A custom `BackgroundProcess` not
   extending `StrutsBackgroundProcess` keeps today's shared-map behaviour — migration-notes line.
 - Not serialized: held `transient` by the background process. A deserialized process already has a
   null invocation and is restarted (WW-4900), so the snapshot is lost with it.

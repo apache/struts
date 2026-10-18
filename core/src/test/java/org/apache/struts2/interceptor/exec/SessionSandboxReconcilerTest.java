@@ -19,6 +19,8 @@
 package org.apache.struts2.interceptor.exec;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 import junit.framework.TestCase;
 import org.apache.struts2.action.BackgroundSessionConflictAware;
 import org.apache.struts2.action.SessionConflict;
@@ -203,6 +205,24 @@ public class SessionSandboxReconcilerTest extends TestCase {
         }));
 
         assertNull(request.getSession(false));
+    }
+
+    public void testListenerIllegalStateExceptionOnALiveSessionPropagates() {
+        IllegalStateException thrown = new IllegalStateException("listener");
+        SandboxedSessionMap sandbox = new SandboxedSessionMap(live, "p");
+        sandbox.put("a", new HttpSessionBindingListener() {
+            @Override
+            public void valueBound(HttpSessionBindingEvent event) {
+                throw thrown;
+            }
+        });
+
+        try {
+            SessionSandboxReconciler.reconcile(sandbox, request, new Object());
+            fail("expected the listener's exception");
+        } catch (IllegalStateException e) {
+            assertSame(thrown, e);
+        }
     }
 
     public void testHookIllegalStateExceptionPropagates() {

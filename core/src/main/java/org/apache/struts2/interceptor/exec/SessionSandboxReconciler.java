@@ -76,6 +76,7 @@ public final class SessionSandboxReconciler {
         try {
             real.invalidate();
         } catch (IllegalStateException e) {
+            requireInvalidated(real, e);
             discardRemaining(sandbox);
             return;
         }
@@ -93,6 +94,7 @@ public final class SessionSandboxReconciler {
         try {
             current = real.getAttribute(key);
         } catch (IllegalStateException e) {
+            requireInvalidated(real, e);
             return false;
         }
         Object snapshot = sandbox.getSnapshotValue(key);
@@ -145,7 +147,17 @@ public final class SessionSandboxReconciler {
             }
             return true;
         } catch (IllegalStateException e) {
+            requireInvalidated(session, e);
             return false;
         }
+    }
+
+    private static void requireInvalidated(HttpSession session, IllegalStateException failure) {
+        try {
+            session.getCreationTime();
+        } catch (IllegalStateException invalidated) {
+            return;
+        }
+        throw failure;
     }
 }

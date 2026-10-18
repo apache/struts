@@ -48,6 +48,9 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     protected HttpServletRequest request;
 
 
+    protected SessionMap() {
+    }
+
     /**
      * Creates a new session map given a http servlet request. Note, the enumeration of request
      * attributes will occur when the map entries are asked for.

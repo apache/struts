@@ -1,0 +1,135 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2.interceptor.exec;
+
+import jakarta.servlet.http.HttpSession;
+import org.apache.struts2.dispatcher.SessionMap;
+
+import java.io.Serial;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * The session view an execAndWait background process works on: a shallow snapshot of the session taken at
+ * construction plus an ordered log of the process's own writes. It never touches the live session.
+ */
+public class SandboxedSessionMap extends SessionMap {
+
+    @Serial
+    private static final long serialVersionUID = 2907451127739228064L;
+
+    private final transient Map<String, Object> snapshot = new LinkedHashMap<>();
+    private final transient Map<String, Object> view = new LinkedHashMap<>();
+    private final transient List<SessionOperation> operations = new ArrayList<>();
+    private final transient String startSessionId;
+    private final transient String processName;
+
+    public SandboxedSessionMap(HttpSession session, String processName) {
+        super();
+        this.startSessionId = session.getId();
+        this.processName = processName;
+        Enumeration<String> names = session.getAttributeNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            snapshot.put(name, session.getAttribute(name));
+        }
+        view.putAll(snapshot);
+    }
+
+    public String getStartSessionId() {
+        return startSessionId;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public synchronized List<SessionOperation> getOperations() {
+        return Collections.unmodifiableList(new ArrayList<>(operations));
+    }
+
+    public synchronized Object getSnapshotValue(String key) {
+        return snapshot.get(key);
+    }
+
+    @Override
+    public synchronized Object get(Object key) {
+        return view.get(asKey(key));
+    }
+
+    @Override
+    public synchronized Object put(String key, Object value) {
+        if (value == null) {
+            return remove(key);
+        }
+        operations.add(new SessionOperation.Put(key, value));
+        return view.put(key, value);
+    }
+
+    @Override
+    public synchronized Object remove(Object key) {
+        String name = asKey(key);
+        operations.add(new SessionOperation.Remove(name));
+        return view.remove(name);
+    }
+
+    @Override
+    public synchronized boolean containsKey(Object key) {
+        return view.get(asKey(key)) != null;
+    }
+
+    @Override
+    public synchronized Set<Entry<String, Object>> entrySet() {
+        Set<Entry<String, Object>> result = new HashSet<>();
+        for (Map.Entry<String, Object> current : view.entrySet()) {
+            String key = current.getKey();
+            result.add(new SimpleEntry<>(key, current.getValue()) {
+                @Override
+                public Object setValue(Object value) {
+                    return put(key, value);
+                }
+            });
+        }
+        return result;
+    }
+
+    @Override
+    public synchronized void clear() {
+        for (String key : new ArrayList<>(view.keySet())) {
+            remove(key);
+        }
+    }
+
+    @Override
+    public synchronized void invalidate() {
+        view.clear();
+        operations.add(new SessionOperation.Invalidate());
+    }
+
+    private static String asKey(Object key) {
+        return key != null ? key.toString() : null;
+    }
+}

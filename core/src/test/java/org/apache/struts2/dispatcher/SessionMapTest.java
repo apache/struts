@@ -319,21 +319,62 @@ public class SessionMapTest extends TestCase {
         assertEquals("value", read.get());
     }
 
-    public void testSessionInvalidatedElsewhereReadsAsNoSession() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("key", "value");
-        request.setSession(session);
-        SessionMap sessionMap = new SessionMap(request);
+    private MockHttpSession invalidatedSession;
+    private MockHttpServletRequest invalidatedRequest;
 
-        session.invalidate();
+    private SessionMap sessionMapOverInvalidatedSession() {
+        invalidatedRequest = new MockHttpServletRequest();
+        invalidatedSession = new MockHttpSession();
+        invalidatedSession.setAttribute("key", "value");
+        invalidatedRequest.setSession(invalidatedSession);
+        SessionMap sessionMap = new SessionMap(invalidatedRequest);
+        invalidatedSession.invalidate();
+        return sessionMap;
+    }
 
+    private void assertPutLandsInNewSession(SessionMap sessionMap) {
+        sessionMap.put("other", "fresh");
+
+        HttpSession current = invalidatedRequest.getSession(false);
+        assertNotNull(current);
+        assertNotSame(invalidatedSession, current);
+        assertEquals("fresh", current.getAttribute("other"));
+    }
+
+    public void testGetOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         assertNull(sessionMap.get("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testContainsKeyOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         assertFalse(sessionMap.containsKey("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testEntrySetOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         assertTrue(sessionMap.entrySet().isEmpty());
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testRemoveOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         assertNull(sessionMap.remove("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testClearOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         sessionMap.clear();
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testInvalidateOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
         sessionMap.invalidate();
+        assertPutLandsInNewSession(sessionMap);
     }
 
     public void testPutAfterInvalidationElsewhereUsesANewSession() {

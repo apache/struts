@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class HttpMethodTest {
 
@@ -53,6 +54,60 @@ public class HttpMethodTest {
         // then
         assertNotNull(expected);
         assertEquals(expected.getClass(), IllegalArgumentException.class);
+    }
+
+
+    @Test
+    public void shouldParseUnknownRequestMethod_asNull_notRaise() {
+        // given : a request method this enum does not know about, e.g. a WebDAV verb
+        String httpRequestMethod = "PROPFIND";
+
+        // when
+        HttpMethod httpMethod = HttpMethod.parseOrNull(httpRequestMethod);
+
+        // then
+        assertNull(httpMethod);
+    }
+
+    @Test
+    public void shouldParseKnownRequestMethod_regardlessOfCase() {
+        // given
+        String httpRequestMethod = "get";
+
+        // when
+        HttpMethod httpMethod = HttpMethod.parseOrNull(httpRequestMethod);
+
+        // then
+        assertEquals(HttpMethod.GET, httpMethod);
+    }
+
+    @Test
+    public void shouldParseNullRequestMethod_asNull() {
+        // given
+        String httpRequestMethod = null;
+
+        // when
+        HttpMethod httpMethod = HttpMethod.parseOrNull(httpRequestMethod);
+
+        // then
+        assertNull(httpMethod);
+    }
+
+    @Test
+    public void shouldStillRejectUnknownMethodInConfiguration() {
+        // given : configuration is trusted input, an unknown name there is a real error
+        String configuredMethod = "PROPFIND";
+
+        // when
+        Throwable expected = null;
+        try {
+            HttpMethod.parse(configuredMethod);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // then
+        assertNotNull(expected);
     }
 
 }

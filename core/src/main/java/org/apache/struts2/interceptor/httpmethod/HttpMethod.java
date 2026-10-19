@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.interceptor.httpmethod;
 
+import java.util.Locale;
+
 /**
  * Enum represents possible http request types
  *
@@ -36,8 +38,28 @@ public enum HttpMethod {
     CONNECT,
     PATCH;
 
+    /**
+     * Returns the {@link HttpMethod} for the given request method, or {@code null} if it is not
+     * one of the methods this enum knows about.
+     *
+     * <p>Use this for the method of an incoming request. The client chooses that token freely,
+     * so an unrecognised value is ordinary input rather than a programming error, and must not
+     * raise.</p>
+     */
+    public static HttpMethod parseOrNull(String httpRequestMethod) {
+        if (httpRequestMethod == null) {
+            return null;
+        }
+
+        try {
+            return valueOf(httpRequestMethod.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     public static HttpMethod parse(String httpRequestMethod) {
-        return valueOf(httpRequestMethod.toUpperCase());
+        return valueOf(httpRequestMethod.toUpperCase(Locale.ROOT));
     }
 
 }

@@ -24,9 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -36,14 +34,9 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
-import ognl.OgnlContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.util.ValueStack;
-import org.apache.struts2.util.ValueStackFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
@@ -166,83 +159,6 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
         // then
         assertTrue(bp.isDone());
         assertEquals("Background thread Unprepared has not been prepared!", bp.getException().getMessage());
-    }
-
-    public void testSandboxContextIsCopiedAtHandoverAndStaysAnOgnlContext() {
-        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        ActionContext requestContext = ActionContext.of(stack.getContext()).withSession(new HashMap<>());
-        AtomicReference<Map<String, Object>> seen = new AtomicReference<>();
-        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> {
-            seen.set(ActionContext.getContext().getContextMap());
-            return "done";
-        });
-        invocation.setInvocationContext(requestContext);
-        SandboxedSessionMap sandbox = new SandboxedSessionMap(new MockHttpSession(), "copy");
-
-        BackgroundProcess bp = new StrutsBackgroundProcess(invocation, "copy", Thread.NORM_PRIORITY)
-                .withSessionSandbox(sandbox)
-                .prepare();
-        requestContext.put("afterHandover", "x");
-        executor.execute(bp);
-        await().atMost(5, TimeUnit.SECONDS).until(bp::isDone);
-
-        assertNull(bp.getException());
-        Map<String, Object> background = seen.get();
-        assertTrue(background instanceof OgnlContext);
-        assertNotSame(requestContext.getContextMap(), background);
-        assertFalse(background.containsKey("afterHandover"));
-        assertSame(sandbox, ActionContext.of(background).getSession());
-        assertSame(stack, ActionContext.of(background).getValueStack());
-        assertNotSame(sandbox, requestContext.getSession());
-    }
-
-    public void testSandboxHonoursTheContextBoundByBeforeInvocation() {
-        AtomicReference<Map<String, Object>> seen = new AtomicReference<>();
-        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> {
-            seen.set(ActionContext.getContext().getContextMap());
-            return "done";
-        });
-        invocation.setInvocationContext(ActionContext.of());
-        SandboxedSessionMap sandbox = new SandboxedSessionMap(new MockHttpSession(), "custom");
-
-        BackgroundProcess bp = new StrutsBackgroundProcess(invocation, "custom", Thread.NORM_PRIORITY) {
-            @Override
-            protected void beforeInvocation() {
-                ActionContext.bind(ActionContext.of().with("custom", "yes"));
-            }
-        }.withSessionSandbox(sandbox).prepare();
-        executor.execute(bp);
-        await().atMost(5, TimeUnit.SECONDS).until(bp::isDone);
-
-        assertNull(bp.getException());
-        assertEquals("yes", seen.get().get("custom"));
-        assertSame(sandbox, ActionContext.of(seen.get()).getSession());
-    }
-
-    public void testSandboxKeepsEditsOfASuperCallingBeforeInvocation() {
-        AtomicReference<Map<String, Object>> seen = new AtomicReference<>();
-        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> {
-            seen.set(ActionContext.getContext().getContextMap());
-            return "done";
-        });
-        ActionContext requestContext = ActionContext.of();
-        invocation.setInvocationContext(requestContext);
-        SandboxedSessionMap sandbox = new SandboxedSessionMap(new MockHttpSession(), "edited");
-
-        BackgroundProcess bp = new StrutsBackgroundProcess(invocation, "edited", Thread.NORM_PRIORITY) {
-            @Override
-            protected void beforeInvocation() throws Exception {
-                super.beforeInvocation();
-                ActionContext.getContext().with("edited", "yes");
-            }
-        }.withSessionSandbox(sandbox).prepare();
-        executor.execute(bp);
-        await().atMost(5, TimeUnit.SECONDS).until(bp::isDone);
-
-        assertNull(bp.getException());
-        assertEquals("yes", seen.get().get("edited"));
-        assertSame(sandbox, ActionContext.of(seen.get()).getSession());
-        assertFalse(requestContext.getContextMap().containsKey("edited"));
     }
 
     private static class MockActionInvocationWithActionInvoker extends MockActionInvocation {

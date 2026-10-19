@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Queue;
 
@@ -44,8 +43,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     private static final String REQUEST_MAPS = SessionMap.class.getName() + ".maps";
 
-    private static final ThreadLocal<Runnable> LIVE_WRITE_LISTENER = new ThreadLocal<>();
-
     // volatile only publishes the pinned reference (HttpSession is thread-safe per the Servlet spec);
     // non-transient as before, so subclass serialization is unchanged
     @SuppressWarnings({"java:S3077", "java:S1948"})
@@ -57,9 +54,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     protected Set<Entry<String, Object>> entries;
     protected HttpServletRequest request;
     private volatile boolean detached;
-
-    protected SessionMap() {
-    }
 
     /**
      * Creates a new session map given a http servlet request. Note, the enumeration of request
@@ -109,7 +103,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Invalidate the http session.
      */
     public void invalidate() {
-        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -128,7 +121,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public void clear() {
-        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return;
@@ -166,7 +158,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                 result.add(new StringObjectEntry(key, value) {
                     @Override
                     public Object setValue(final Object obj) {
-                        notifyLiveWrite();
                         current.setAttribute(key, obj);
 
                         return value;
@@ -214,7 +205,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object put(final String key, final Object value) {
-        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             current = pin();
@@ -229,32 +219,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             return null;
         }
         return oldValue;
-    }
-
-    /**
-     * Runs the work with a listener notified, on the calling thread, whenever a {@link SessionMap} writes to the live
-     * session. A subclass that overrides the write methods without calling them here never notifies it.
-     *
-     * @param listener notified on each live write made while the work runs
-     * @param work     the work to run
-     * @param <T>      the type of the work's result
-     * @return the work's result
-     * @throws Exception whatever the work throws
-     */
-    protected static <T> T callWithLiveWriteListener(final Runnable listener, final Callable<T> work) throws Exception {
-        LIVE_WRITE_LISTENER.set(listener);
-        try {
-            return work.call();
-        } finally {
-            LIVE_WRITE_LISTENER.remove();
-        }
-    }
-
-    private static void notifyLiveWrite() {
-        Runnable listener = LIVE_WRITE_LISTENER.get();
-        if (listener != null) {
-            listener.run();
-        }
     }
 
     private HttpSession pin() {
@@ -291,7 +255,6 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      */
     @Override
     public Object remove(final Object key) {
-        notifyLiveWrite();
         HttpSession current = session;
         if (current == null) {
             return null;

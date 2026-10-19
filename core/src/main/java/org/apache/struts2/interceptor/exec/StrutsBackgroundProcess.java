@@ -18,19 +18,13 @@
  */
 package org.apache.struts2.interceptor.exec;
 
-import ognl.Ognl;
-import ognl.OgnlContext;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.action.SessionAware;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
@@ -49,8 +43,6 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     //WW-4900 transient since 2.5.15
     protected transient ActionInvocation invocation;
     protected transient Exception exception;
-    private transient SandboxedSessionMap sessionSandbox;
-    private transient Map<String, Object> sandboxContext;
 
     protected String result;
     protected volatile boolean done;
@@ -74,8 +66,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
             processThread = new Thread(() -> {
                 try {
                     beforeInvocation();
-                    installSessionSandbox();
-                    result = invokeAction();
+                    result = invocation.invokeActionOnly();
                 } catch (Exception e) {
                     LOG.warn("Exception during invokeActionOnly() execution", e);
                     exception = e;
@@ -101,56 +92,6 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     }
 
     @Override
-    public BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
-        this.sessionSandbox = sandbox;
-        this.sandboxContext = copyOf(invocation.getInvocationContext().getContextMap());
-        return this;
-    }
-
-    @Override
-    public Optional<SandboxedSessionMap> getSessionSandbox() {
-        return Optional.ofNullable(sessionSandbox);
-    }
-
-    private String invokeAction() throws Exception {
-        if (sessionSandbox == null) {
-            return invocation.invokeActionOnly();
-        }
-        return sessionSandbox.runInSandbox(invocation::invokeActionOnly);
-    }
-
-    private void installSessionSandbox() {
-        if (sessionSandbox == null) {
-            return;
-        }
-        ActionContext.bind(ActionContext.of(backgroundContextMap()).withSession(sessionSandbox));
-        if (invocation.getAction() instanceof SessionAware sessionAware) {
-            sessionAware.withSession(sessionSandbox);
-        }
-    }
-
-    private Map<String, Object> backgroundContextMap() {
-        ActionContext bound = ActionContext.getContext();
-        if (bound == null || bound.getContextMap() == sandboxContext
-                || bound.getContextMap() == invocation.getInvocationContext().getContextMap()) {
-            return sandboxContext;
-        }
-        return copyOf(bound.getContextMap());
-    }
-
-    private static Map<String, Object> copyOf(Map<String, Object> context) {
-        if (context instanceof OgnlContext ognlContext) {
-            OgnlContext copy = Ognl.createDefaultContext(ognlContext.getRoot(), ognlContext.getMemberAccess(),
-                    ognlContext.getClassResolver(), ognlContext.getTypeConverter());
-            copy.setTraceEvaluations(ognlContext.isTraceEvaluations());
-            copy.setKeepLastEvaluation(ognlContext.isKeepLastEvaluation());
-            copy.putAll(ognlContext.getValues());
-            return copy;
-        }
-        return new HashMap<>(context);
-    }
-
-    @Override
     public void run() {
         if (processThread == null) {
             done = true;
@@ -167,7 +108,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void beforeInvocation() throws Exception {
-        ActionContext.bind(sandboxContext != null ? ActionContext.of(sandboxContext) : invocation.getInvocationContext());
+        ActionContext.bind(invocation.getInvocationContext());
     }
 
     /**

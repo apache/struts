@@ -22,21 +22,15 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
-import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.DispatcherConstants;
-import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.exec.BackgroundProcess;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
-import org.apache.struts2.interceptor.exec.SandboxedSessionMap;
-import org.apache.struts2.interceptor.exec.SessionSandboxReconciler;
 import org.apache.struts2.interceptor.exec.StrutsBackgroundProcess;
 import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.util.TokenHelper;
@@ -84,14 +78,9 @@ import java.util.Map;
  * millis we ensure the user is presented fast search results immediately and for the slow results a wait page is used.
  * </p>
  *
- * <p>The background process works on a session sandbox, a snapshot of the session taken when the process starts. Use
- * <code>ActionContext.getContext().getSession()</code> or {@link SessionAware} to reach it. Its writes are applied to
- * the real session by the polling request that sees the process finish, only if the session id is unchanged.
- * Conflicts keep the real session's value by default and can be resolved per action with
- * {@link org.apache.struts2.action.BackgroundSessionConflictAware}. OGNL <code>#session</code> and
- * <code>invocation.getInvocationContext().getSession()</code> bypass the sandbox, write to the live session and log a
- * warning. A custom {@link BackgroundProcess} that does not extend {@link StrutsBackgroundProcess}, or a subclass
- * overriding <code>prepare()</code>, does not get a sandbox.
+ * <p><b>Important</b>: Because the action will be running in a separate thread, you can't use ActionContext because it
+ * is a ThreadLocal. This means if you need to access, for example, session data, you need to implement SessionAware
+ * rather than calling ActionContext.getSession().
  * </p>
  *
  * <p>The thread kicked off by this interceptor will be named in the form <b><u>actionName</u>BackgroundProcess</b>.
@@ -306,8 +295,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
                 LOG.trace("BackgroundProcess instance is null (create new instance) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
-                SandboxedSessionMap sandbox = new SandboxedSessionMap(httpSession, name);
-                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).withSessionSandbox(sandbox).prepare();
+                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).prepare();
                 session.put(bp_SessionKey, bp);
                 if (executor == null || executor.isShutdown()) {
                     LOG.warn("Executor is shutting down (or null), cannot execute a new process, invoke next ActionInvocation step and return.");
@@ -346,7 +334,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 LOG.trace("BackgroundProcess instance is done (remove key, return result) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 session.remove(bp_SessionKey);
                 actionInvocation.getStack().push(bp.getAction());
-                writeBackSessionSandbox(bp, context);
 
                 // if an exception occurred during action execution, throw it here
                 if (bp.getException() != null) {
@@ -363,21 +350,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 return actionInvocation.invoke();
             }
         }
-    }
-
-    private void writeBackSessionSandbox(BackgroundProcess bp, ActionContext context) {
-        bp.getSessionSandbox().ifPresent(sandbox -> {
-            HttpServletRequest request = ServletActionContext.getRequest();
-            HttpSession before = request.getSession(false);
-            SessionSandboxReconciler.reconcile(sandbox, request, bp.getAction());
-            if (request.getSession(false) != before) {
-                SessionMap sessionMap = new SessionMap(request);
-                context.withSession(sessionMap).with(DispatcherConstants.SESSION, sessionMap);
-            }
-            if (bp.getAction() instanceof SessionAware sessionAware) {
-                sessionAware.withSession(context.getSession());
-            }
-        });
     }
 
     /**

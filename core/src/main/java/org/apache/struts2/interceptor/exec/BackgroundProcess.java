@@ -21,19 +21,9 @@ package org.apache.struts2.interceptor.exec;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.interceptor.ExecuteAndWaitInterceptor;
 
-import java.util.Optional;
-
 /**
  * Interface used to create a background process which will be executed by
- * {@link ExecuteAndWaitInterceptor}.
- *
- * <p>A process built on {@link StrutsBackgroundProcess} works on a session sandbox, a snapshot of the session taken
- * when the process starts, and receives it through {@link #withSessionSandbox(SandboxedSessionMap)}. Its writes are
- * applied to the real session by the polling request that sees the process finish, and only if the session id is
- * unchanged; conflicts keep the real session's value unless the action implements
- * {@link org.apache.struts2.action.BackgroundSessionConflictAware}. A custom implementation that does not extend
- * {@link StrutsBackgroundProcess}, or a subclass overriding {@link StrutsBackgroundProcess#prepare()}, gets no
- * sandbox.</p>
+ * {@link ExecuteAndWaitInterceptor}
  */
 public interface BackgroundProcess extends Runnable {
 
@@ -48,24 +38,4 @@ public interface BackgroundProcess extends Runnable {
     Exception getException();
 
     boolean isDone();
-
-    /**
-     * Hands the process the session sandbox to run against. Called on the request thread before {@link #prepare()};
-     * the default ignores the sandbox.
-     *
-     * @param sandbox the snapshot of the request's session
-     * @return this process
-     */
-    default BackgroundProcess withSessionSandbox(SandboxedSessionMap sandbox) {
-        return this;
-    }
-
-    /**
-     * Returns the sandbox whose writes are applied to the session once the process is done.
-     *
-     * @return the sandbox, or empty when the process runs without one
-     */
-    default Optional<SandboxedSessionMap> getSessionSandbox() {
-        return Optional.empty();
-    }
 }

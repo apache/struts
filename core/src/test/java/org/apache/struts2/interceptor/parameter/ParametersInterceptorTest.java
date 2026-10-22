@@ -100,6 +100,21 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(expected, actual);
     }
 
+    public void testParameterNameAwareCannotAcceptExcludedName() {
+        ParametersInterceptor pi = createParametersInterceptor();
+        pi.setExcludeParams("blockedKey");
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = createStubValueStack(actual);
+        ParameterNameAware acceptsEverything = name -> true;
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("allowedKey", "allowedValue");
+        parameters.put("blockedKey", "blockedValue");
+
+        pi.applyParameters(acceptsEverything, stack, HttpParameters.create(parameters).build());
+
+        assertEquals(Map.of("allowedKey", "allowedValue"), actual);
+    }
+
     public void testInsecureParameters() throws Exception {
         // given
         loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));

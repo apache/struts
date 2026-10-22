@@ -45,7 +45,7 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     protected transient Exception exception;
 
     protected String result;
-    protected boolean done;
+    protected volatile boolean done;
 
     /**
      * Constructs a background process

@@ -68,7 +68,11 @@ public class DebuggingInterceptorTest extends StrutsJUnit4InternalTestCase {
                 <debug>
                   <parameters/>
                   <context/>
-                  <request/>
+                  <request>
+                    <org.apache.struts2.dispatcher.SessionMap.maps>
+                      <class>class org.apache.struts2.dispatcher.SessionMap$RequestMaps</class>
+                    </org.apache.struts2.dispatcher.SessionMap.maps>
+                  </request>
                   <session/>
                   <valueStack>
                     <value>
@@ -171,7 +175,11 @@ public class DebuggingInterceptorTest extends StrutsJUnit4InternalTestCase {
                     &amp;lt;debug&amp;gt;
                   &amp;lt;parameters/&amp;gt;
                   &amp;lt;context/&amp;gt;
-                  &amp;lt;request/&amp;gt;
+                  &amp;lt;request&amp;gt;
+                    &amp;lt;org.apache.struts2.dispatcher.SessionMap.maps&amp;gt;
+                      &amp;lt;class&amp;gt;class org.apache.struts2.dispatcher.SessionMap$RequestMaps&amp;lt;/class&amp;gt;
+                    &amp;lt;/org.apache.struts2.dispatcher.SessionMap.maps&amp;gt;
+                  &amp;lt;/request&amp;gt;
                   &amp;lt;session/&amp;gt;
                   &amp;lt;valueStack&amp;gt;
                     &amp;lt;value&amp;gt;

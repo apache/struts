@@ -28,6 +28,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.IntStream;
 
+import static org.junit.Assert.assertThrows;
+
 public class PrepareOperationsTest extends StrutsInternalTestCase {
     public void testCreateActionContextWhenRequestHasOne() {
         HttpServletRequest req = new MockHttpServletRequest();
@@ -56,6 +58,123 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         prepare.cleanupRequest(req);
 
         assertNull(ActionContext.getContext());
+        assertNull(Dispatcher.getInstance());
+        assertNull(ContainerHolder.get());
+    }
+
+    public void testRequestCleanupDetachesTheContextSessionMap() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> sessionMap.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupDetachesTheHelperSessionMapAfterCreateSession() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap original = new SessionMap(req);
+        ActionContext context = ActionContext.getContext()
+            .withSession(original)
+            .with(DispatcherConstants.SESSION, original)
+            .withSession(new SessionMap(req));
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        SessionMap helper = (SessionMap) context.get(DispatcherConstants.SESSION);
+        assertThrows(IllegalStateException.class, () -> helper.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupDetachesEveryRequestSessionMap() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        SessionMap first = new SessionMap(req);
+        SessionMap second = new SessionMap(req);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> first.put("key", "value"));
+        assertThrows(IllegalStateException.class, () -> second.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupKeepsSessionMapsAttachedWhileAsyncStarted() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        sessionMap.put("key", "value");
+        assertNotNull(req.getSession(false));
+    }
+
+    public void testAsyncDispatchCleanupDetachesTheSessionMapsKeptAttached() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+        prepare.cleanupRequest(req);
+        req.setAsyncStarted(false);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> sessionMap.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupKeepsTheBoundSessionMapAttachedWhileAsyncStarted() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        sessionMap.put("key", "value");
+        assertNotNull(req.getSession(false));
+    }
+
+    public void testBoundSessionMapIsDetachedByTheAsyncDispatchCleanup() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setAsyncStarted(true);
+        SessionMap sessionMap = new SessionMap(req);
+        ActionContext.getContext().withSession(sessionMap);
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+        prepare.cleanupRequest(req);
+        req.setAsyncStarted(false);
+        ActionContext.of().withSession(sessionMap).bind();
+        prepare.trackRecursion(req);
+
+        prepare.cleanupRequest(req);
+
+        assertThrows(IllegalStateException.class, () -> sessionMap.put("key", "value"));
+        assertNull(req.getSession(false));
+    }
+
+    public void testRequestCleanupWithoutActionContext() {
+        HttpServletRequest req = new MockHttpServletRequest();
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        prepare.trackRecursion(req);
+        ActionContext.clear();
+
+        prepare.cleanupRequest(req);
+
         assertNull(Dispatcher.getInstance());
         assertNull(ContainerHolder.get());
     }

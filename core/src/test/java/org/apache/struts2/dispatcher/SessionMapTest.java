@@ -24,11 +24,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import junit.framework.TestCase;
 
@@ -37,6 +41,8 @@ import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
 import com.mockobjects.dynamic.Mock;
 import java.util.AbstractMap;
+
+import static org.awaitility.Awaitility.await;
 
 
 /**
@@ -277,12 +283,196 @@ public class SessionMapTest extends TestCase {
         sessionMock.verify();
     }
 
+    public void testGetConcurrentWithInvalidateNeverThrows() throws Exception {
+        CountDownLatch invalidating = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        MockHttpSession session = new MockHttpSession() {
+            @Override
+            public void invalidate() {
+                invalidating.countDown();
+                try { release.await(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                super.invalidate();
+            }
+        };
+        session.setAttribute("key", "value");
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(session);
+        SessionMap sessionMap = new SessionMap(request);
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        AtomicReference<Object> read = new AtomicReference<>();
+
+        Thread invalidator = new Thread(sessionMap::invalidate);
+        invalidator.start();
+        invalidating.await();
+        Thread reader = new Thread(() -> {
+            try { read.set(sessionMap.get("key")); } catch (Throwable t) { failure.set(t); }
+        });
+        reader.start();
+        await().atMost(5, TimeUnit.SECONDS)
+                .until(() -> reader.getState() == Thread.State.BLOCKED || reader.getState() == Thread.State.TERMINATED);
+        release.countDown();
+        invalidator.join(5000);
+        reader.join(5000);
+
+        assertFalse("reader did not finish", reader.isAlive());
+        assertNull("get() concurrent with invalidate() threw: " + failure.get(), failure.get());
+        assertEquals("value", read.get());
+    }
+
+    private MockHttpSession invalidatedSession;
+    private MockHttpServletRequest invalidatedRequest;
+
+    private SessionMap sessionMapOverInvalidatedSession() {
+        invalidatedRequest = new MockHttpServletRequest();
+        invalidatedSession = new MockHttpSession();
+        invalidatedSession.setAttribute("key", "value");
+        invalidatedRequest.setSession(invalidatedSession);
+        SessionMap sessionMap = new SessionMap(invalidatedRequest);
+        invalidatedSession.invalidate();
+        return sessionMap;
+    }
+
+    private void assertPutLandsInNewSession(SessionMap sessionMap) {
+        sessionMap.put("other", "fresh");
+
+        HttpSession current = invalidatedRequest.getSession(false);
+        assertNotNull(current);
+        assertNotSame(invalidatedSession, current);
+        assertEquals("fresh", current.getAttribute("other"));
+    }
+
+    public void testGetOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        assertNull(sessionMap.get("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testContainsKeyOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        assertFalse(sessionMap.containsKey("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testEntrySetOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        assertTrue(sessionMap.entrySet().isEmpty());
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testRemoveOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        assertNull(sessionMap.remove("key"));
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testClearOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        sessionMap.clear();
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testInvalidateOnSessionInvalidatedElsewhere() {
+        SessionMap sessionMap = sessionMapOverInvalidatedSession();
+        sessionMap.invalidate();
+        assertPutLandsInNewSession(sessionMap);
+    }
+
+    public void testPutAfterInvalidationElsewhereUsesANewSession() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        request.setSession(session);
+        SessionMap sessionMap = new SessionMap(request);
+
+        session.invalidate();
+        sessionMap.put("key", "value");
+
+        HttpSession current = request.getSession(false);
+        assertNotNull(current);
+        assertNotSame(session, current);
+        assertEquals("value", current.getAttribute("key"));
+    }
+
+    public void testAttributeSetDirectlyIsVisibleThroughEntrySet() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        request.setSession(session);
+        SessionMap sessionMap = new SessionMap(request);
+        assertTrue(sessionMap.entrySet().isEmpty());
+
+        session.setAttribute("key", "value");
+
+        assertEquals(1, sessionMap.entrySet().size());
+    }
+
+    public void testPinnedSessionNeverTouchesTheRequestAgain() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
+        SessionMap sessionMap = new SessionMap(request);
+        request.close();
+
+        sessionMap.put("key", "value");
+        assertEquals("value", sessionMap.get("key"));
+        assertEquals(1, sessionMap.entrySet().size());
+        assertEquals("value", sessionMap.remove("key"));
+    }
+
+    public void testDetachedPutAfterInvalidationNeverReachesTheRecycledRequest() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession pinned = new MockHttpSession();
+        request.setSession(pinned);
+        SessionMap sessionMap = new SessionMap(request);
+        pinned.invalidate();
+        MockHttpSession otherUsers = new MockHttpSession();
+        request.setSession(otherUsers);
+        sessionMap.detach();
+
+        try {
+            sessionMap.put("key", "value");
+            fail("a detached map with no live session must not resolve a session through its request");
+        } catch (IllegalStateException expected) {
+            assertFalse(expected.getMessage().contains("value"));
+        }
+        assertFalse(otherUsers.getAttributeNames().hasMoreElements());
+        assertSame(otherUsers, request.getSession(false));
+    }
+
+    public void testDetachedNeverPinnedPutThrows() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        SessionMap sessionMap = new SessionMap(request);
+        sessionMap.detach();
+
+        try {
+            sessionMap.put("key", "value");
+            fail("a detached map with no pinned session must not create one through its request");
+        } catch (IllegalStateException expected) {
+            assertNull(request.getSession(false));
+        }
+    }
+
+    public void testDetachedMapKeepsWorkingOnItsLivePinnedSession() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession pinned = new MockHttpSession();
+        request.setSession(pinned);
+        SessionMap sessionMap = new SessionMap(request);
+        sessionMap.detach();
+
+        sessionMap.put("key", "value");
+
+        assertEquals("value", pinned.getAttribute("key"));
+        assertEquals("value", sessionMap.get("key"));
+        assertTrue(sessionMap.containsKey("key"));
+        assertEquals(1, sessionMap.entrySet().size());
+        assertEquals("value", sessionMap.remove("key"));
+    }
+
     @Override
     protected void setUp() throws Exception {
         sessionMock = new Mock(HttpSession.class);
         sessionMock.matchAndReturn("getId", "1");
         requestMock = new Mock(HttpServletRequest.class);
         requestMock.matchAndReturn("getSession", new Constraint[]{new IsEqual(Boolean.FALSE)}, sessionMock.proxy());
+        requestMock.matchAndReturn("getAttribute", new Constraint[]{new IsAnything()}, null);
+        requestMock.matchAndReturn("setAttribute", new Constraint[]{new IsAnything(), new IsAnything()}, null);
     }
 
 

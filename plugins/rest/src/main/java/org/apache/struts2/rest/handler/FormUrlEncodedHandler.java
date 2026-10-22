@@ -31,10 +31,12 @@ import java.io.Writer;
  *
  * This handler is intended for requests only, not for responses
  *
+ * Binds nothing from the body, so it is trivially {@link AuthorizationAwareContentTypeHandler}.
+ *
  * @see <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4">http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4</a>
  *
  */
-public class FormUrlEncodedHandler implements ContentTypeHandler {
+public class FormUrlEncodedHandler implements AuthorizationAwareContentTypeHandler {
 
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
 

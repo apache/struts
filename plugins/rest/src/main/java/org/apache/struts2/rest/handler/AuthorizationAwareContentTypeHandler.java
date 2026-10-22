@@ -38,6 +38,12 @@ package org.apache.struts2.rest.handler;
  * interface but its parser does not honor the context, authorization will silently do nothing —
  * a serious security bug. The marker interface is the contract; implementations must uphold it.</p>
  *
+ * <p>A handler whose {@code toObject} binds nothing from the body, such as {@link FormUrlEncodedHandler},
+ * upholds the contract trivially and declares the interface so that the two-phase copy, which would
+ * write a fresh instance's constructor defaults over values already bound, does not run for it. A
+ * subclass that overrides {@code toObject} to deserialize inherits the declaration and must honor the
+ * context itself.</p>
+ *
  * @since 7.2.0
  */
 public interface AuthorizationAwareContentTypeHandler extends ContentTypeHandler {

@@ -26,8 +26,10 @@ import java.io.Writer;
 
 /**
  * Handles HTML content, usually just a simple passthrough to the framework
+ *
+ * Binds nothing from the body, so it is trivially {@link AuthorizationAwareContentTypeHandler}.
  */
-public class HtmlHandler implements ContentTypeHandler {
+public class HtmlHandler implements AuthorizationAwareContentTypeHandler {
 
     @Override
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {

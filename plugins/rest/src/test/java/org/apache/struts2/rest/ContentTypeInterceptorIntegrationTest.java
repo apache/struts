@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDriven;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
@@ -37,9 +38,13 @@ import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.StrutsProxyCacheFactory;
 import org.apache.struts2.rest.handler.AuthorizationAwareContentTypeHandler;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
+import org.apache.struts2.rest.handler.FormUrlEncodedHandler;
+import org.apache.struts2.rest.handler.HtmlHandler;
 import org.apache.struts2.rest.handler.JacksonJsonHandler;
+import org.apache.struts2.rest.handler.MultipartFormDataHandler;
 import org.apache.struts2.rest.handler.jackson.ForwardReferenceStateProbe;
 import org.apache.struts2.util.StrutsProxyService;
+import org.apache.struts2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.Reader;
@@ -58,6 +63,7 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
 
     private ContentTypeInterceptor interceptor;
     private SecureRestAction action;
+    private Object configuredAction;
     private Mock mockActionInvocation;
     private Mock mockSelector;
 
@@ -79,6 +85,7 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     }
 
     private void setupInterceptorWithHandler(Object actionInstance, ContentTypeHandler handler) {
+        configuredAction = actionInstance;
         var ognlUtil = new OgnlUtil(
                 new DefaultOgnlExpressionCacheFactory<>("1000", LRU.toString()),
                 new DefaultOgnlBeanInfoCacheFactory<>("1000", LRU.toString()),
@@ -108,14 +115,23 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
     }
 
     private void runWithBody(String body) throws Exception {
+        runWithBody(body, "application/json");
+    }
+
+    private void runWithBody(String body, String contentType) throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setContent(body.getBytes());
-        request.setContentType("application/json");
+        request.setContentType(contentType);
 
-        ActionContext.of()
+        ActionContext context = ActionContext.of()
                 .withActionMapping(new ActionMapping())
-                .withServletRequest(request)
-                .bind();
+                .withServletRequest(request);
+        if (configuredAction instanceof ModelDriven<?> modelDriven) {
+            Mock mockStack = new Mock(ValueStack.class);
+            mockStack.matchAndReturn("peek", modelDriven.getModel());
+            context.withValueStack((ValueStack) mockStack.proxy());
+        }
+        context.bind();
 
         interceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
         mockSelector.verify();
@@ -157,6 +173,32 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
                 action.getShallowAddress().getCity());
         assertNull("nested zip must be rejected (depth-1 not authorized)",
                 action.getShallowAddress().getZip());
+    }
+
+    // --- WW-5789: a handler that binds nothing must leave the model as the params interceptor left it ---
+
+    public void testFormUrlEncodedBodyKeepsValuesBoundOnTheModel() throws Exception {
+        assertNoOpHandlerKeepsBoundModelValues(new FormUrlEncodedHandler());
+    }
+
+    public void testMultipartFormDataBodyKeepsValuesBoundOnTheModel() throws Exception {
+        assertNoOpHandlerKeepsBoundModelValues(new MultipartFormDataHandler());
+    }
+
+    public void testHtmlBodyKeepsValuesBoundOnTheModel() throws Exception {
+        assertNoOpHandlerKeepsBoundModelValues(new HtmlHandler());
+    }
+
+    private void assertNoOpHandlerKeepsBoundModelValues(ContentTypeHandler handler) throws Exception {
+        ModelDrivenRestAction modelDriven = new ModelDrivenRestAction();
+        DefaultedModel model = modelDriven.getModel();
+        model.setStatus("bound-by-params");
+        setupInterceptorWithHandler(modelDriven, handler);
+
+        runWithBody("status=bound-by-params", handler.getContentType());
+
+        assertEquals("a constructor default must not overwrite a value the params interceptor bound",
+                "bound-by-params", model.getStatus());
     }
 
     // --- Tests proving the new Jackson authorization path is in use ---
@@ -372,5 +414,23 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
 
         @JsonProperty("name")
         public void setAdmin(String admin) { this.admin = admin; }
+    }
+
+    /**
+     * WW-5789: a model whose constructor sets a default, the shape on which a fresh-instance copy shows up.
+     */
+    public static class DefaultedModel {
+        private String status = "new";
+
+        public String getStatus() { return status; }
+
+        public void setStatus(String status) { this.status = status; }
+    }
+
+    public static class ModelDrivenRestAction extends ActionSupport implements ModelDriven<DefaultedModel> {
+        private final DefaultedModel model = new DefaultedModel();
+
+        @Override
+        public DefaultedModel getModel() { return model; }
     }
 }

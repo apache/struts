@@ -152,7 +152,7 @@ public class RegistryConfigurationProviderTest {
     }
 
     @Test
-    public void testNoStackMeansPackageDefault() throws Exception {
+    public void testNoStackMeansPackageDefault() {
         Configuration configuration = load(usersRegistry());
 
         assertThat(action(configuration, "struts-boot/admin", "users").getInterceptors()).isEmpty();
@@ -246,13 +246,14 @@ public class RegistryConfigurationProviderTest {
 
     @Test
     public void testClashWithXmlThrows() {
-        assertThatThrownBy(() -> load(usersRegistry(), "struts-boot-clash.xml"))
+        ActionRegistry registry = usersRegistry();
+        assertThatThrownBy(() -> load(registry, "struts-boot-clash.xml"))
                 .isInstanceOf(ConfigurationException.class)
                 .rootCause().hasMessageContaining("xml-pkg").hasMessageContaining("users");
     }
 
     @Test
-    public void testSameNamespaceAsXmlWithDistinctNamesLoads() throws Exception {
+    public void testSameNamespaceAsXmlWithDistinctNamesLoads() {
         ActionRegistry registry = new ActionRegistry();
         registry.namespace("/admin", ns -> ns.action("list", UserAction.class).method("list").success("admin/users.ftl"));
 

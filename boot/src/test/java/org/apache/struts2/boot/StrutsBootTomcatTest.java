@@ -38,8 +38,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -168,7 +170,8 @@ public class StrutsBootTomcatTest {
     public void testBusyPortFailsCleanly() throws Exception {
         Set<Path> before = bootTempDirs();
         try (ServerSocket busy = new ServerSocket(0)) {
-            assertThatThrownBy(() -> StrutsBoot.start(HelloApp.class, "--struts.boot.port=" + busy.getLocalPort()))
+            String portArgument = "--struts.boot.port=" + busy.getLocalPort();
+            assertThatThrownBy(() -> StrutsBoot.start(HelloApp.class, portArgument))
                     .isInstanceOf(ConfigurationException.class);
         }
 
@@ -197,6 +200,14 @@ public class StrutsBootTomcatTest {
         other.close();
 
         assertThat(Files.exists(baseDir)).isFalse();
+    }
+
+    @Test
+    public void testBaseDirIsOwnerOnly() throws IOException {
+        assumeTrue(FileSystems.getDefault().supportedFileAttributeViews().contains("posix"));
+
+        assertThat(Files.getPosixFilePermissions(server.baseDir()))
+                .isEqualTo(PosixFilePermissions.fromString("rwx------"));
     }
 
     private static HttpResponse<String> get(String url) throws IOException, InterruptedException {

@@ -28,9 +28,9 @@ import java.util.Properties;
 public final class BootSettings {
 
     private static final String PREFIX = "struts.boot.";
-    private static final String PORT = PREFIX + "port";
-    private static final String CONTEXT_PATH = PREFIX + "context-path";
-    private static final String ADDRESS = PREFIX + "address";
+    private static final String PORT_KEY = PREFIX + "port";
+    private static final String CONTEXT_PATH_KEY = PREFIX + "context-path";
+    private static final String ADDRESS_KEY = PREFIX + "address";
     private static final String ARGUMENT_PREFIX = "--";
 
     private final int port;
@@ -54,9 +54,9 @@ public final class BootSettings {
             applyArgument(merged, arg);
         }
         return new BootSettings(
-                parsePort(merged.getProperty(PORT, "8080")),
-                normaliseContextPath(merged.getProperty(CONTEXT_PATH, "")),
-                blankToNull(merged.getProperty(ADDRESS)));
+                parsePort(merged.getProperty(PORT_KEY, "8080")),
+                normaliseContextPath(merged.getProperty(CONTEXT_PATH_KEY, "")),
+                blankToNull(merged.getProperty(ADDRESS_KEY)));
     }
 
     public int port() {
@@ -101,7 +101,7 @@ public final class BootSettings {
         try {
             return Integer.parseInt(value.trim());
         } catch (NumberFormatException e) {
-            throw new ConfigurationException("Invalid " + PORT + ": '" + value + "' is not a number", e);
+            throw new ConfigurationException("Invalid " + PORT_KEY + ": '" + value + "' is not a number", e);
         }
     }
 

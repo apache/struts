@@ -33,6 +33,7 @@
     <modules>
         <module>showcase</module>
         <module>rest-showcase</module>
+        <module>boot-hello</module>
     </modules>
 
     <properties>

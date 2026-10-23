@@ -22,6 +22,7 @@ import org.apache.struts2.config.ConfigurationException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 public final class BootSettings {
@@ -29,14 +30,17 @@ public final class BootSettings {
     private static final String PREFIX = "struts.boot.";
     private static final String PORT = PREFIX + "port";
     private static final String CONTEXT_PATH = PREFIX + "context-path";
+    private static final String ADDRESS = PREFIX + "address";
     private static final String ARGUMENT_PREFIX = "--";
 
     private final int port;
     private final String contextPath;
+    private final String address;
 
-    private BootSettings(int port, String contextPath) {
+    private BootSettings(int port, String contextPath, String address) {
         this.port = port;
         this.contextPath = contextPath;
+        this.address = address;
     }
 
     public static BootSettings load(String[] args) {
@@ -51,7 +55,8 @@ public final class BootSettings {
         }
         return new BootSettings(
                 parsePort(merged.getProperty(PORT, "8080")),
-                merged.getProperty(CONTEXT_PATH, ""));
+                normaliseContextPath(merged.getProperty(CONTEXT_PATH, "")),
+                blankToNull(merged.getProperty(ADDRESS)));
     }
 
     public int port() {
@@ -60,6 +65,10 @@ public final class BootSettings {
 
     public String contextPath() {
         return contextPath;
+    }
+
+    public Optional<String> address() {
+        return Optional.ofNullable(address);
     }
 
     private static void applyArgument(Properties target, String arg) {
@@ -71,6 +80,21 @@ public final class BootSettings {
             return;
         }
         target.setProperty(arg.substring(ARGUMENT_PREFIX.length(), equals), arg.substring(equals + 1));
+    }
+
+    private static String normaliseContextPath(String value) {
+        String path = value.trim();
+        while (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+        if (path.isEmpty()) {
+            return "";
+        }
+        return path.startsWith("/") ? path : "/" + path;
+    }
+
+    private static String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
     private static int parsePort(String value) {

@@ -70,6 +70,49 @@ public class BootSettingsTest {
     }
 
     @Test
+    public void testAddressDefaultsToAllInterfaces() {
+        assertThat(BootSettings.load(new Properties(), new String[0]).address()).isEmpty();
+    }
+
+    @Test
+    public void testAddressFromFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.address", "127.0.0.1");
+
+        assertThat(BootSettings.load(file, new String[0]).address()).contains("127.0.0.1");
+    }
+
+    @Test
+    public void testAddressArgumentBeatsFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.address", "0.0.0.0");
+
+        BootSettings settings = BootSettings.load(file, new String[]{"--struts.boot.address=127.0.0.1"});
+
+        assertThat(settings.address()).contains("127.0.0.1");
+    }
+
+    @Test
+    public void testBlankAddressMeansAllInterfaces() {
+        assertThat(BootSettings.load(new Properties(), new String[]{"--struts.boot.address= "}).address()).isEmpty();
+    }
+
+    @Test
+    public void testContextPathNormalised() {
+        assertThat(contextPath("ctx")).isEqualTo("/ctx");
+        assertThat(contextPath("/")).isEmpty();
+        assertThat(contextPath("")).isEmpty();
+        assertThat(contextPath("  ")).isEmpty();
+        assertThat(contextPath("/ctx/")).isEqualTo("/ctx");
+        assertThat(contextPath(" /ctx ")).isEqualTo("/ctx");
+        assertThat(contextPath("/a/b")).isEqualTo("/a/b");
+    }
+
+    private static String contextPath(String value) {
+        return BootSettings.load(new Properties(), new String[]{"--struts.boot.context-path=" + value}).contextPath();
+    }
+
+    @Test
     public void testNonNumericPortThrows() {
         assertThatThrownBy(() -> BootSettings.load(new Properties(), new String[]{"--struts.boot.port=abc"}))
                 .isInstanceOf(ConfigurationException.class);

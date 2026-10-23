@@ -27,19 +27,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assume.assumeTrue;
 
 public class StrutsBootTomcatTest {
 
@@ -95,6 +103,42 @@ public class StrutsBootTomcatTest {
     }
 
     @Test
+    public void testUnregisteredMethodNotInvokableViaMethodPrefix() throws Exception {
+        UserAction.deleteInvoked = false;
+        get(server.baseUrl() + "/xml/legacyUsers.action?method:delete=");
+        assertThat(UserAction.deleteInvoked).isTrue();
+
+        UserAction.deleteInvoked = false;
+        HttpResponse<String> response = get(server.baseUrl() + "/admin/users.action?method:delete=");
+
+        assertThat(UserAction.deleteInvoked).isFalse();
+        assertThat(response.statusCode()).isNotEqualTo(200);
+    }
+
+    @Test
+    public void testErrorPageHidesStackTraceAndServerInfo() throws Exception {
+        HttpResponse<String> response = get(server.baseUrl() + "/boom.action");
+
+        assertThat(response.statusCode()).isEqualTo(500);
+        assertThat(response.body()).doesNotContain("at org.apache").doesNotContain("Apache Tomcat/");
+    }
+
+    @Test
+    public void testAddressRestrictsListeningInterface() throws Exception {
+        try (StrutsBootServer local = StrutsBoot.start(HelloApp.class, "--struts.boot.port=0", "--struts.boot.address=127.0.0.1")) {
+            assertThat(get("http://127.0.0.1:" + local.port() + "/hello.action").statusCode()).isEqualTo(200);
+
+            Optional<InetAddress> external = nonLoopbackIpv4Address();
+            assumeTrue("no non-loopback IPv4 interface to probe", external.isPresent());
+            assertThatThrownBy(() -> {
+                try (Socket socket = new Socket()) {
+                    socket.connect(new InetSocketAddress(external.get(), local.port()), 2000);
+                }
+            }).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
     public void testXmlAndRegistryCoexist() throws Exception {
         assertThat(get(server.baseUrl() + "/xml/legacy.action").statusCode()).isEqualTo(200);
         assertThat(get(server.baseUrl() + "/hello.action").statusCode()).isEqualTo(200);
@@ -102,8 +146,10 @@ public class StrutsBootTomcatTest {
 
     @Test
     public void testBaseDirFilesAreNotServed() throws Exception {
+        Files.writeString(server.baseDir().resolve("webapp").resolve("doc-base-file.txt"), "public");
         Files.writeString(server.baseDir().resolve("base-dir-file.txt"), "not public");
 
+        assertThat(get(server.baseUrl() + "/doc-base-file.txt").statusCode()).isEqualTo(200);
         assertThat(get(server.baseUrl() + "/base-dir-file.txt").statusCode()).isNotEqualTo(200);
     }
 
@@ -163,6 +209,22 @@ public class StrutsBootTomcatTest {
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
         return CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private static Optional<InetAddress> nonLoopbackIpv4Address() throws SocketException {
+        return NetworkInterface.networkInterfaces()
+                .filter(StrutsBootTomcatTest::isUp)
+                .flatMap(NetworkInterface::inetAddresses)
+                .filter(address -> address instanceof Inet4Address && !address.isLoopbackAddress())
+                .findFirst();
+    }
+
+    private static boolean isUp(NetworkInterface networkInterface) {
+        try {
+            return networkInterface.isUp() && !networkInterface.isLoopback();
+        } catch (SocketException e) {
+            return false;
+        }
     }
 
     private static Set<Path> bootTempDirs() throws IOException {

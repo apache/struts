@@ -63,7 +63,8 @@ public final class StrutsBootServer implements AutoCloseable {
         try {
             tomcat.setBaseDir(baseDir.toString());
             tomcat.setPort(settings.port());
-            Context context = tomcat.addContext(settings.contextPath(), baseDir.toString());
+            Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
+            Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
             context.addServletContainerInitializer(
                     (classes, servletContext) -> servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry),
                     null);
@@ -77,12 +78,11 @@ public final class StrutsBootServer implements AutoCloseable {
             ConfigurationException failure = e instanceof ConfigurationException configurationException
                     ? configurationException
                     : new ConfigurationException("Struts Boot failed to start: " + e.getMessage(), e);
-            try {
-                server.close();
-            } catch (RuntimeException closeFailure) {
-                failure.addSuppressed(closeFailure);
-            }
+            server.closeAfterFailure(failure);
             throw failure;
+        } catch (Error e) {
+            server.closeAfterFailure(e);
+            throw e;
         }
         Runtime.getRuntime().addShutdownHook(server.shutdownHook);
         return server;
@@ -117,6 +117,14 @@ public final class StrutsBootServer implements AutoCloseable {
         } finally {
             deleteRecursively(baseDir);
             removeShutdownHook();
+        }
+    }
+
+    private void closeAfterFailure(Throwable failure) {
+        try {
+            close();
+        } catch (RuntimeException closeFailure) {
+            failure.addSuppressed(closeFailure);
         }
     }
 
@@ -197,7 +205,7 @@ public final class StrutsBootServer implements AutoCloseable {
         public void init(FilterConfig filterConfig) throws ServletException {
             try {
                 super.init(filterConfig);
-            } catch (RuntimeException | ServletException e) {
+            } catch (Throwable e) {
                 failure.set(e);
                 throw e;
             }

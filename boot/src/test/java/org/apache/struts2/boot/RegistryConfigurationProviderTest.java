@@ -29,6 +29,7 @@ import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.boot.fixture.UserAction;
 import org.apache.struts2.inject.Container;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ActionContext;
 import org.junit.After;
 import org.junit.Test;
@@ -84,6 +85,14 @@ public class RegistryConfigurationProviderTest {
         assertThat(pkg.getNamespace()).isEqualTo("/admin");
         assertThat(pkg.getParents()).extracting(PackageConfig::getName).containsExactly("struts-default");
         assertThat(pkg.isStrictMethodInvocation()).isTrue();
+    }
+
+    @Test
+    public void testActionClassesAreAllowlisted() {
+        Configuration configuration = load(usersRegistry());
+
+        assertThat(configuration.getContainer().getInstance(ProviderAllowlist.class).getProviderAllowlist())
+                .contains(UserAction.class);
     }
 
     @Test

@@ -20,6 +20,8 @@ package org.apache.struts2.boot.fixture;
 
 public class UserAction {
 
+    public static volatile boolean deleteInvoked;
+
     public String execute() {
         return "success";
     }
@@ -33,6 +35,7 @@ public class UserAction {
     }
 
     public String delete() {
+        deleteInvoked = true;
         return "success";
     }
 }

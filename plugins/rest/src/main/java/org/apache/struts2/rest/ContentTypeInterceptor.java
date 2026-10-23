@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -196,7 +197,8 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             return;
         }
         handler.toObject(invocation, reader, freshInstance);
-        copyAuthorizedProperties(freshInstance, target, invocation.getAction(), target, "");
+        Object baseline = createFreshInstance(target.getClass());
+        copyAuthorizedProperties(freshInstance, baseline, target, invocation.getAction(), target, "");
     }
 
     private Object createFreshInstance(Class<?> clazz) {
@@ -215,9 +217,12 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
      * <p>{@code authTarget} is always the root action/model passed unchanged through all levels.
      * {@code isAuthorized} uses the full dot/bracket path against the root class, so the root
      * target must be used — not the nested object being visited at the current recursion depth.
+     *
+     * <p>{@code baseline} is an untouched fresh instance of the same class as {@code source}, or null when
+     * none could be built; with a baseline, a property the handler left at its constructor value is not copied.
      */
     private void copyAuthorizedProperties(
-            Object source, Object target, Object action, Object authTarget, String prefix) throws Exception {
+            Object source, Object baseline, Object target, Object action, Object authTarget, String prefix) throws Exception {
         BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass(), Object.class);
         for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
             Method readMethod = pd.getReadMethod();
@@ -236,16 +241,17 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             }
 
             Object sourceValue = readMethod.invoke(source);
-            if (sourceValue == null) {
-                // Intentionally skip null values: in two-phase deserialization, properties NOT present in the
-                // request body will be null in the fresh instance. Copying null would clear pre-initialized
-                // fields on the target. This is the safer default — an explicit JSON null and a missing field
-                // are indistinguishable after deserialization into a fresh POJO.
+            Object baselineValue = baseline == null ? null : readMethod.invoke(baseline);
+            // A null, or a value equal to the baseline's constructor default, reads as "not in the body":
+            // copying it would overwrite what params or prepare() put on the target. The cost is that an
+            // explicit null, or a body value equal to the constructor default, is not applied either.
+            if (sourceValue == null || (baseline != null && Objects.deepEquals(sourceValue, baselineValue))) {
                 continue;
             }
 
             if (isNestedBeanType(sourceValue.getClass())) {
                 // Complex bean: recurse to authorize nested fields, passing authTarget unchanged
+                Object nestedBaseline = baselineValue != null ? baselineValue : createFreshInstance(sourceValue.getClass());
                 Object targetValue = readMethod.invoke(target);
                 if (targetValue == null) {
                     Object newTarget = createFreshInstance(sourceValue.getClass());
@@ -262,7 +268,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                         continue;
                     }
                 }
-                copyAuthorizedProperties(sourceValue, targetValue, action, authTarget, fullPath);
+                copyAuthorizedProperties(sourceValue, nestedBaseline, targetValue, action, authTarget, fullPath);
             } else if (sourceValue instanceof Collection) {
                 writeMethod.invoke(target,
                         deepCopyAuthorizedCollection((Collection<?>) sourceValue, fullPath, authTarget, action));
@@ -305,7 +311,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
                 Object newElement = createFreshInstance(element.getClass());
                 if (newElement != null) {
-                    copyAuthorizedProperties(element, newElement, action, authTarget, elementPath);
+                    copyAuthorizedProperties(element, null, newElement, action, authTarget, elementPath);
                     result.add(newElement);
                 } else {
                     // No no-arg constructor: skip element rather than copy an unfiltered object graph
@@ -344,7 +350,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
                 Object newValue = createFreshInstance(value.getClass());
                 if (newValue != null) {
-                    copyAuthorizedProperties(value, newValue, action, authTarget, valuePath);
+                    copyAuthorizedProperties(value, null, newValue, action, authTarget, valuePath);
                     result.put(entry.getKey(), newValue);
                 } else {
                     LOG.warn("REST map value [{}] skipped — no no-arg constructor for [{}]",
@@ -376,7 +382,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
                 Object newElement = createFreshInstance(element.getClass());
                 if (newElement != null) {
-                    copyAuthorizedProperties(element, newElement, action, authTarget, elementPath);
+                    copyAuthorizedProperties(element, null, newElement, action, authTarget, elementPath);
                     Array.set(result, i, newElement);
                 } else {
                     LOG.warn("REST array element [{}] skipped — no no-arg constructor for [{}]",

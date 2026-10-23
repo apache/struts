@@ -49,8 +49,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 
@@ -199,6 +202,66 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
 
         assertEquals("a constructor default must not overwrite a value the params interceptor bound",
                 "bound-by-params", model.getStatus());
+    }
+
+    // --- WW-5790: the two-phase copy copies only what the handler changed ---
+
+    public void testTwoPhaseCopyKeepsAnOmittedScalarDefault() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setStatus("approved"), m -> m.setName("alice"));
+
+        assertEquals("approved", model.getStatus());
+        assertEquals("alice", model.getName());
+    }
+
+    public void testTwoPhaseCopyAppliesAScalarTheBodySets() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setStatus("approved"), m -> m.setStatus("rejected"));
+
+        assertEquals("rejected", model.getStatus());
+    }
+
+    public void testTwoPhaseCopyKeepsAnOmittedCollectionDefault() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setTags(new ArrayList<>(List.of("kept"))), m -> m.setName("alice"));
+
+        assertEquals(List.of("kept"), model.getTags());
+    }
+
+    public void testTwoPhaseCopyKeepsAnOmittedNestedDefault() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.getAddress().setCountry("DE"), m -> m.setName("alice"));
+
+        assertEquals("DE", model.getAddress().getCountry());
+    }
+
+    public void testTwoPhaseCopyAppliesOnlyTheNestedLeafTheBodySets() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.getAddress().setCountry("DE"), m -> m.getAddress().setCity("Warsaw"));
+
+        assertEquals("Warsaw", model.getAddress().getCity());
+        assertEquals("DE", model.getAddress().getCountry());
+    }
+
+    public void testTwoPhaseCopyWithoutNestedNoArgConstructorStillAppliesTheSetLeaf() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> {
+            m.setPinned(new PinnedAddress("Gdansk"));
+            m.getPinned().setCountry("DE");
+        }, m -> m.setPinned(new PinnedAddress("Warsaw")));
+
+        assertEquals("Warsaw", model.getPinned().getCity());
+        assertEquals("fallback keeps today's copy-non-null rule for this subtree", "PL", model.getPinned().getCountry());
+    }
+
+    public void testTwoPhaseCopyDoesNotApplyABodyValueEqualToTheConstructorDefault() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setStatus("approved"), m -> m.setStatus("new"));
+
+        assertEquals("documented limit of the baseline comparison", "approved", model.getStatus());
+    }
+
+    private DefaultedModel runScriptedBody(Consumer<DefaultedModel> alreadyOnTheModel, Consumer<DefaultedModel> body) throws Exception {
+        ModelDrivenRestAction modelDriven = new ModelDrivenRestAction();
+        DefaultedModel model = modelDriven.getModel();
+        alreadyOnTheModel.accept(model);
+        setupInterceptorWithHandler(modelDriven, new ScriptedHandler(body));
+
+        runWithBody("ignored", "application/x-scripted");
+        return model;
     }
 
     // --- Tests proving the new Jackson authorization path is in use ---
@@ -421,10 +484,82 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
      */
     public static class DefaultedModel {
         private String status = "new";
+        private String name;
+        private List<String> tags = new ArrayList<>();
+        private DefaultedAddress address = new DefaultedAddress();
+        private PinnedAddress pinned;
 
         public String getStatus() { return status; }
 
         public void setStatus(String status) { this.status = status; }
+
+        public String getName() { return name; }
+
+        public void setName(String name) { this.name = name; }
+
+        public List<String> getTags() { return tags; }
+
+        public void setTags(List<String> tags) { this.tags = tags; }
+
+        public DefaultedAddress getAddress() { return address; }
+
+        public void setAddress(DefaultedAddress address) { this.address = address; }
+
+        public PinnedAddress getPinned() { return pinned; }
+
+        public void setPinned(PinnedAddress pinned) { this.pinned = pinned; }
+    }
+
+    public static class DefaultedAddress {
+        private String country = "PL";
+        private String city;
+
+        public String getCountry() { return country; }
+
+        public void setCountry(String country) { this.country = country; }
+
+        public String getCity() { return city; }
+
+        public void setCity(String city) { this.city = city; }
+    }
+
+    /**
+     * WW-5790: no no-arg constructor, so the copy cannot build a baseline for this subtree.
+     */
+    public static class PinnedAddress {
+        private String country = "PL";
+        private String city;
+
+        public PinnedAddress(String city) { this.city = city; }
+
+        public String getCountry() { return country; }
+
+        public void setCountry(String country) { this.country = country; }
+
+        public String getCity() { return city; }
+
+        public void setCity(String city) { this.city = city; }
+    }
+
+    /**
+     * WW-5790: a handler without the authorization-aware marker; what it sets stands in for the body.
+     */
+    public static class ScriptedHandler implements ContentTypeHandler {
+        private final Consumer<DefaultedModel> body;
+
+        ScriptedHandler(Consumer<DefaultedModel> body) { this.body = body; }
+
+        @Override
+        public void toObject(ActionInvocation invocation, Reader in, Object target) { body.accept((DefaultedModel) target); }
+
+        @Override
+        public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) { return null; }
+
+        @Override
+        public String getContentType() { return "application/x-scripted"; }
+
+        @Override
+        public String getExtension() { return null; }
     }
 
     public static class ModelDrivenRestAction extends ActionSupport implements ModelDriven<DefaultedModel> {

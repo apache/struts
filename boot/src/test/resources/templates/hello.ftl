@@ -1,1 +1,1 @@
-<h1>hello</h1>
+<h1><@s.property value="message"/></h1>

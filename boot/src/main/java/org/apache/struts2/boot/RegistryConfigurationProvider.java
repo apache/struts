@@ -22,19 +22,23 @@ import jakarta.servlet.ServletContext;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationException;
+import org.apache.struts2.config.ConfigurationUtil;
 import org.apache.struts2.config.ServletContextAwareConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.providers.InterceptorBuilder;
 import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.location.LocatableProperties;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class RegistryConfigurationProvider implements ServletContextAwareConfigurationProvider {
 
@@ -43,6 +47,7 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
 
     private ActionRegistry registry;
     private Configuration configuration;
+    private ProviderAllowlist providerAllowlist;
 
     public RegistryConfigurationProvider() {
     }
@@ -77,6 +82,9 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
 
     @Override
     public void destroy() {
+        if (providerAllowlist != null) {
+            providerAllowlist.clearAllowlist(this);
+        }
     }
 
     @Override
@@ -86,6 +94,7 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
         String freemarker = strutsDefault.getAllResultTypeConfigs().get("freemarker").getClassName();
         String redirectAction = strutsDefault.getAllResultTypeConfigs().get("redirectAction").getClassName();
         List<PackageConfig> existing = new ArrayList<>(configuration.getPackageConfigs().values());
+        Set<Class<?>> allowlist = new HashSet<>();
 
         for (NamespaceActions namespace : registry.namespaces()) {
             String packageName = namespace.namespace().isEmpty() ? PACKAGE_PREFIX : PACKAGE_PREFIX + namespace.namespace();
@@ -95,11 +104,14 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
 
             for (ActionDefinition definition : namespace.actions()) {
                 assertNoClash(existing, namespace.namespace(), definition.name());
+                allowlist.addAll(ConfigurationUtil.getAllClassTypes(definition.actionClass()));
                 pkg.addActionConfig(definition.name(),
                         actionConfig(packageName, namespace, definition, pkg, objectFactory, freemarker, redirectAction));
             }
             configuration.addPackageConfig(packageName, pkg.build());
         }
+        providerAllowlist = configuration.getContainer().getInstance(ProviderAllowlist.class);
+        providerAllowlist.registerAllowlist(this, allowlist);
     }
 
     private ActionConfig actionConfig(String packageName, NamespaceActions namespace, ActionDefinition definition,

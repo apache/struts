@@ -28,6 +28,7 @@ public class HelloApp implements StrutsBootApplication {
     @Override
     public void actions(ActionRegistry actions) {
         actions.action("hello", HelloAction.class).success("hello.ftl");
+        actions.action("boom", ThrowingAction.class).success("hello.ftl");
         actions.namespace("/admin", admin -> {
             admin.action("users", UserAction.class).method("list").success("admin/users.ftl");
             admin.action("saveUser", UserAction.class).method("save").httpMethods(POST).redirectAction("success", "users");

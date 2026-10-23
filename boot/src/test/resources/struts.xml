@@ -27,5 +27,8 @@
         <action name="legacy" class="org.apache.struts2.boot.fixture.HelloAction">
             <result type="freemarker">/templates/hello.ftl</result>
         </action>
+        <action name="legacyUsers" class="org.apache.struts2.boot.fixture.UserAction">
+            <result type="freemarker">/templates/hello.ftl</result>
+        </action>
     </package>
 </struts>

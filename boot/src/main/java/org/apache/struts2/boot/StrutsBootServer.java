@@ -22,8 +22,10 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleState;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.valves.ErrorReportValve;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
@@ -45,24 +47,25 @@ public final class StrutsBootServer implements AutoCloseable {
 
     private final Tomcat tomcat;
     private final Path baseDir;
-    private final String contextPath;
+    private final BootSettings settings;
     private final AtomicBoolean closed = new AtomicBoolean();
     private final Thread shutdownHook = new Thread(this::close, "struts-boot-shutdown");
+    private Connector connector;
 
-    private StrutsBootServer(Tomcat tomcat, Path baseDir, String contextPath) {
+    private StrutsBootServer(Tomcat tomcat, Path baseDir, BootSettings settings) {
         this.tomcat = tomcat;
         this.baseDir = baseDir;
-        this.contextPath = contextPath;
+        this.settings = settings;
     }
 
     static StrutsBootServer start(ActionRegistry registry, BootSettings settings) {
         Path baseDir = createBaseDir();
         Tomcat tomcat = new Tomcat();
-        StrutsBootServer server = new StrutsBootServer(tomcat, baseDir, settings.contextPath());
+        StrutsBootServer server = new StrutsBootServer(tomcat, baseDir, settings);
         CapturingStrutsFilter filter = new CapturingStrutsFilter();
         try {
             tomcat.setBaseDir(baseDir.toString());
-            tomcat.setPort(settings.port());
+            hideErrorReportDetails(tomcat);
             Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
             Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
             context.addServletContainerInitializer(
@@ -73,7 +76,8 @@ public final class StrutsBootServer implements AutoCloseable {
             addStrutsFilter(context, filter);
 
             tomcat.start();
-            server.assertStarted(context, filter);
+            assertContextStarted(context, filter);
+            server.openConnector();
         } catch (Exception e) {
             ConfigurationException failure = e instanceof ConfigurationException configurationException
                     ? configurationException
@@ -89,11 +93,11 @@ public final class StrutsBootServer implements AutoCloseable {
     }
 
     public int port() {
-        return tomcat.getConnector().getLocalPort();
+        return connector.getLocalPort();
     }
 
     public String baseUrl() {
-        return "http://127.0.0.1:" + port() + contextPath;
+        return "http://" + urlHost() + ":" + port() + settings.contextPath();
     }
 
     public Path baseDir() {
@@ -128,16 +132,27 @@ public final class StrutsBootServer implements AutoCloseable {
         }
     }
 
-    private void assertStarted(Context context, CapturingStrutsFilter filter) {
-        Throwable initFailure = filter.failure.get();
-        if (initFailure != null || context.getState() != LifecycleState.STARTED) {
-            String reason = initFailure == null ? "context state " + context.getState() : rootMessage(initFailure);
-            throw new ConfigurationException("Struts Boot failed to start: " + reason, initFailure);
-        }
-        if (tomcat.getConnector().getState() != LifecycleState.STARTED || port() < 0) {
+    private void openConnector() {
+        Connector created = new Connector();
+        created.setPort(settings.port());
+        settings.address().ifPresent(address -> {
+            if (!created.setProperty("address", address)) {
+                throw new ConfigurationException("Invalid struts.boot.address: '" + address + "'");
+            }
+        });
+        connector = created;
+        tomcat.setConnector(created);
+        if (created.getState() != LifecycleState.STARTED || created.getLocalPort() < 0) {
             throw new ConfigurationException("Struts Boot failed to start: connector state "
-                    + tomcat.getConnector().getState() + " on port " + tomcat.getConnector().getPort());
+                    + created.getState() + " on port " + settings.port());
         }
+    }
+
+    private String urlHost() {
+        return settings.address()
+                .filter(address -> !address.equals("0.0.0.0") && !address.equals("::"))
+                .map(address -> address.contains(":") ? "[" + address + "]" : address)
+                .orElse("127.0.0.1");
     }
 
     private void removeShutdownHook() {
@@ -146,9 +161,24 @@ public final class StrutsBootServer implements AutoCloseable {
         }
         try {
             Runtime.getRuntime().removeShutdownHook(shutdownHook);
-        } catch (IllegalStateException | IllegalArgumentException ignored) {
-            // JVM already shutting down, or the hook was never registered
+        } catch (IllegalStateException ignored) {
+            // the JVM is already shutting down
         }
+    }
+
+    private static void assertContextStarted(Context context, CapturingStrutsFilter filter) {
+        Throwable initFailure = filter.failure.get();
+        if (initFailure != null || context.getState() != LifecycleState.STARTED) {
+            String reason = initFailure == null ? "context state " + context.getState() : rootMessage(initFailure);
+            throw new ConfigurationException("Struts Boot failed to start: " + reason, initFailure);
+        }
+    }
+
+    private static void hideErrorReportDetails(Tomcat tomcat) {
+        ErrorReportValve valve = new ErrorReportValve();
+        valve.setShowReport(false);
+        valve.setShowServerInfo(false);
+        tomcat.getHost().getPipeline().addValve(valve);
     }
 
     private static void addStrutsFilter(Context context, CapturingStrutsFilter filter) {

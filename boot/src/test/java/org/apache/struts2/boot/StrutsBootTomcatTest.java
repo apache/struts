@@ -86,6 +86,7 @@ public class StrutsBootTomcatTest {
     @Test
     public void testUnregisteredMethodNotInvokable() throws Exception {
         UserAction.deleteInvoked = false;
+        assertThat(get(server.baseUrl() + "/admin/users!list.action").statusCode()).isEqualTo(200);
 
         HttpResponse<String> response = get(server.baseUrl() + "/admin/users!delete.action");
 
@@ -97,6 +98,13 @@ public class StrutsBootTomcatTest {
     public void testXmlAndRegistryCoexist() throws Exception {
         assertThat(get(server.baseUrl() + "/xml/legacy.action").statusCode()).isEqualTo(200);
         assertThat(get(server.baseUrl() + "/hello.action").statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    public void testBaseDirFilesAreNotServed() throws Exception {
+        Files.writeString(server.baseDir().resolve("base-dir-file.txt"), "not public");
+
+        assertThat(get(server.baseUrl() + "/base-dir-file.txt").statusCode()).isNotEqualTo(200);
     }
 
     @Test

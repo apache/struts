@@ -33,6 +33,7 @@ import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.location.LocatableProperties;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -104,6 +105,9 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
 
             for (ActionDefinition definition : namespace.actions()) {
                 assertNoClash(existing, namespace.namespace(), definition.name());
+                if (objectFactory.isNoArgConstructorRequired()) {
+                    verifyActionClass(namespace.namespace(), definition);
+                }
                 allowlist.addAll(ConfigurationUtil.getAllClassTypes(definition.actionClass()));
                 pkg.addActionConfig(definition.name(),
                         actionConfig(packageName, namespace, definition, pkg, objectFactory, freemarker, redirectAction));
@@ -147,6 +151,20 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
             case REDIRECT_ACTION -> new ResultConfig.Builder(resultName, redirectAction)
                     .addParam("actionName", result.value()).build();
         };
+    }
+
+    private static void verifyActionClass(String namespace, ActionDefinition definition) {
+        Class<?> actionClass = definition.actionClass();
+        String subject = "Action class [" + actionClass.getName() + "] of action '" + definition.name()
+                + "' in namespace '" + namespace + "'";
+        if (!Modifier.isPublic(actionClass.getModifiers())) {
+            throw new ConfigurationException(subject + " is not public");
+        }
+        try {
+            actionClass.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new ConfigurationException(subject + " does not have a public no-arg constructor", e);
+        }
     }
 
     private void assertNoClash(List<PackageConfig> existing, String namespace, String actionName) {

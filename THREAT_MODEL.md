@@ -91,6 +91,14 @@ perimeter. Struts is **in-process** with the application; it has no daemon, no
 listening socket of its own, and no trust boundary against the application code
 it runs inside. *(documented — it is a framework, not a server.)*
 
+**Second deployment shape — Struts Boot (`struts2-boot-starter`, since 7.5.0).** The
+application is a plain `main()` that calls `StrutsBoot.run(...)`; the starter starts an
+embedded Tomcat, registers the Struts filter itself, and opens one HTTP listening socket.
+Actions come from a Java `ActionRegistry` instead of (or alongside) `struts.xml`. The
+request pipeline behind the filter is unchanged, so everything in §4–§9 applies as-is.
+What moves is the **container's defaults** (§5, §5a): with Boot they are chosen by the
+framework, not by the operator. *(documented — `boot/`, `apps/boot-hello/README.md`.)*
+
 **Caller roles.**
 
 - **Untrusted HTTP client** — sends requests (parameters, headers, cookies,
@@ -105,6 +113,9 @@ it runs inside. *(documented — it is a framework, not a server.)*
   section of the security guidance.)*
 - **Operator** — deploys the WAR, sets `devMode` off, restricts dev-only plugins,
   configures the container and JVM. **Trusted.** *(documented.)*
+  With Boot, the operator still owns the JVM, the host, the network perimeter and the
+  `struts.boot.*` settings (port, bind address, context path); the container defaults
+  the starter applies are Struts' (§5).
 
 **Component families.**
 
@@ -149,7 +160,8 @@ links to them and assigns each a triage disposition (§13):
 - **Findings that only manifest with a documented-insecure / non-default setting**
   (`devMode=true`, Config Browser Plugin exposed in production, DMI enabled, or a
   §5a hardening knob turned off) → `OUT-OF-MODEL: non-default-config`. *(documented.)*
-- **The servlet container, JVM, JDK, and OS**, and the application's own
+- **The servlet container, JVM, JDK, and OS** — except the embedded-container defaults
+  the Boot starter itself applies (§5), which are in model — and the application's own
   authentication, authorization, session management, CSRF token storage, and
   transport (TLS). Struts is "a pure web framework," not a security framework.
   *(documented / inferred — §14 Q-env.)*
@@ -210,8 +222,21 @@ documented anti-pattern is `OUT-OF-MODEL`. *(documented/inferred — §14 Q-defa
   Versions table.)*
 - The operator runs production with `devMode=false` and dev-only diagnostics (Config
   Browser Plugin) disabled or access-controlled. *(documented.)*
-- Struts opens no sockets and makes no outbound connections of its own; any network
-  egress is the application's. *(inferred — §14 Q-egress.)*
+- Struts makes no outbound connections of its own; any network egress is the
+  application's. In the WAR shape it opens no sockets. The Boot starter opens exactly
+  one inbound HTTP listener (§2); it makes no outbound connections either.
+  *(inferred — §14 Q-egress, Q-boot.)*
+- **Boot container defaults are in model.** When `struts2-boot-starter` starts Tomcat,
+  the framework owns these defaults:
+  - listens on all interfaces, port 8080 (override `struts.boot.address` /
+    `struts.boot.port`)
+  - error responses render without exception report or server version
+  - `DefaultServlet` serves only an empty per-run docBase
+  - Tomcat's base directory is a fresh owner-only temp directory, deleted on shutdown
+  - `devMode` is never switched on
+
+  A deviation from these defaults is a Struts finding. Anything the developer adds on
+  top (TLS, proxies, a different container) is theirs. *(documented — §14 Q-boot.)*
 
 ## §5a Build-time and configuration variants — **the central knob set**
 
@@ -245,6 +270,12 @@ reproduced here.** Only the triage-load-bearing facts:
 - The **FetchMetadata / COOP / COEP** interceptors are in core's `defaultStack` and
   enabled since 6.0, COEP in report-only mode; an application opts *out*, per action or
   stack (§8.5).
+- **Registry-defined actions (Boot) are never broader than the `struts.xml`
+  equivalent.** They extend `struts-default`, keep Strict Method Invocation on, are
+  added to the OGNL allowlist exactly as XML-declared action classes are, and allow
+  only their registered method — narrower than XML, which also inherits the package's
+  global allowed methods. A registry action reachable where the XML equivalent would
+  not be is a finding. *(documented — WW-5791 spec.)*
 
 **Insecure-default question (wave 1).** Because the secure posture is the **7.0
 default set**, the triage rule needs ratifying: is "a finding that only works with a
@@ -386,7 +417,9 @@ Struts' security work.)*
   permanently disabled in JDK 24; see §5a). *(documented.)*
 - **Auto-generated error pages do not escape action names** (historical S2-006) — the
   app must define custom error pages; XSS in the default error page is a documented
-  hardening item, not a defended property. *(documented.)*
+  hardening item, not a defended property. *(documented.)* Boot apps have no
+  `web.xml`, so the starter suppresses Tomcat's exception report and server info itself
+  (§5); custom error *content* is still the application's.
 - **Well-known classes (framework):** OGNL/expression injection, multipart/file-upload
   parsing bugs, and parameter-pollution are the highest-severity recurring classes — but
   the recent record adds two more that are currently the *more frequent* ones:
@@ -464,6 +497,10 @@ authoritative list; §14 Q12.)*
 - **Dependency-tail CVEs** (a transitive jar, e.g. a logging or XML library) from an
   SCA scan — triage upstream unless Struts' own code reaches the vulnerable path with
   untrusted input.
+- **"Boot listens on 0.0.0.0."** That's the documented default, matching standalone
+  Tomcat and Spring Boot. `struts.boot.address` restricts it. →
+  `OUT-OF-MODEL: non-default-config` only if the operator set a wider exposure; the
+  default itself is by design.
 
 ## §12 Conditions that would change this model
 
@@ -533,6 +570,10 @@ so what remains is ratifying the *wording*, not the substance.
 - **Q-egress.** Confirm Struts opens no sockets and makes no outbound connections of
   its own, so any network egress (and the SSRF surface it implies) is the
   application's. (§5/§7.)
+- **Q-boot.** Confirm the Boot starter's embedded-container defaults (§5) are in model
+  — a framework-shipped container default that leaks or exposes is a Struts finding,
+  not `OUT-OF-MODEL: environment` — and that the example app `apps/boot-hello` stays
+  out of scope like the other showcase apps. (§2/§3/§5.)
 
 **Wave 2 — mechanism confirmations**
 

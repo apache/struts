@@ -242,16 +242,21 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
 
             Object sourceValue = readMethod.invoke(source);
             Object baselineValue = baseline == null ? null : readMethod.invoke(baseline);
-            // A null, or a value equal to the baseline's constructor default, reads as "not in the body":
-            // copying it would overwrite what params or prepare() put on the target. The cost is that an
-            // explicit null, or a body value equal to the constructor default, is not applied either.
-            if (sourceValue == null || (baseline != null && Objects.deepEquals(sourceValue, baselineValue))) {
+            // A null, or a leaf or collection equal to the baseline's constructor default, reads as "not in
+            // the body": copying it would overwrite what params or prepare() put on the target. The cost is
+            // that an explicit null, a primitive at its zero value, an empty collection, or any body value
+            // equal to the constructor default is not applied either. A nested bean is compared leaf by leaf
+            // below, never through its own equals.
+            if (sourceValue == null) {
+                continue;
+            }
+            boolean nestedBean = isNestedBeanType(sourceValue.getClass());
+            if (!nestedBean && baseline != null && Objects.deepEquals(sourceValue, baselineValue)) {
                 continue;
             }
 
-            if (isNestedBeanType(sourceValue.getClass())) {
+            if (nestedBean) {
                 // Complex bean: recurse to authorize nested fields, passing authTarget unchanged
-                Object nestedBaseline = baselineValue != null ? baselineValue : createFreshInstance(sourceValue.getClass());
                 Object targetValue = readMethod.invoke(target);
                 if (targetValue == null) {
                     Object newTarget = createFreshInstance(sourceValue.getClass());
@@ -268,6 +273,11 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                         continue;
                     }
                 }
+                // The baseline must be the handler's runtime type: a constructor default of the declared
+                // supertype cannot answer for a subtype's own properties.
+                Object nestedBaseline = baselineValue != null && baselineValue.getClass() == sourceValue.getClass()
+                        ? baselineValue
+                        : createFreshInstance(sourceValue.getClass());
                 copyAuthorizedProperties(sourceValue, nestedBaseline, targetValue, action, authTarget, fullPath);
             } else if (sourceValue instanceof Collection) {
                 writeMethod.invoke(target,

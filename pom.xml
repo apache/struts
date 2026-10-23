@@ -87,6 +87,7 @@
         <module>jakarta</module>
         <module>core</module>
         <module>plugins</module>
+        <module>boot</module>
         <module>apps</module>
     </modules>
 
@@ -129,6 +130,7 @@
         <ognl.version>3.4.16</ognl.version>
         <spring.version>6.2.19</spring.version>
         <struts-annotations.version>2.0</struts-annotations.version>
+        <tomcat-embed.version>10.1.59</tomcat-embed.version>
         <velocity-tools.version>3.1</velocity-tools.version>
         <webjars-bootstrap.version>5.3.8</webjars-bootstrap.version>
         <webjars-bootstrap-icons.version>1.13.2</webjars-bootstrap-icons.version>
@@ -166,6 +168,7 @@
             <properties>
                 <jakarta-ee.version>11.0.0</jakarta-ee.version>
                 <spring.version>7.0.9</spring.version>
+                <tomcat-embed.version>11.0.27</tomcat-embed.version>
             </properties>
         </profile>
         <profile>

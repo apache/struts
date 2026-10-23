@@ -241,15 +241,15 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
             }
 
             Object sourceValue = readMethod.invoke(source);
-            Object baselineValue = baseline == null ? null : readMethod.invoke(baseline);
-            // A null, or a leaf or collection equal to the baseline's constructor default, reads as "not in
-            // the body": copying it would overwrite what params or prepare() put on the target. The cost is
-            // that an explicit null, a primitive at its zero value, an empty collection, or any body value
-            // equal to the constructor default is not applied either. A nested bean is compared leaf by leaf
-            // below, never through its own equals.
+            // A null, or a non-nested value (leaf, collection, map, array) equal to the baseline's constructor
+            // default, reads as "not in the body": copying it would overwrite what params or prepare() put on
+            // the target. The cost is that an explicit null, a primitive at its zero value, an empty collection,
+            // or any body value equal to the constructor default is not applied either. A nested bean is
+            // compared leaf by leaf below, never through its own equals.
             if (sourceValue == null) {
                 continue;
             }
+            Object baselineValue = baseline == null ? null : readMethod.invoke(baseline);
             boolean nestedBean = isNestedBeanType(sourceValue.getClass());
             if (!nestedBean && baseline != null && Objects.deepEquals(sourceValue, baselineValue)) {
                 continue;

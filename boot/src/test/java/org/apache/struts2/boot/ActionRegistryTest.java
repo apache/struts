@@ -73,8 +73,8 @@ public class ActionRegistryTest {
 
     @Test
     public void testNonFtlTemplateThrows() {
-        ActionRegistry r = new ActionRegistry();
-        assertThatThrownBy(() -> r.action("hello", Object.class).success("hello.jsp"))
+        ActionDefinition hello = new ActionRegistry().action("hello", Object.class);
+        assertThatThrownBy(() -> hello.success("hello.jsp"))
                 .isInstanceOf(ConfigurationException.class).hasMessageContaining("FreeMarker");
     }
 

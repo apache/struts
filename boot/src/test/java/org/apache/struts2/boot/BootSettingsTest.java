@@ -114,7 +114,9 @@ public class BootSettingsTest {
 
     @Test
     public void testNonNumericPortThrows() {
-        assertThatThrownBy(() -> BootSettings.load(new Properties(), new String[]{"--struts.boot.port=abc"}))
+        Properties fileProperties = new Properties();
+        String[] args = {"--struts.boot.port=abc"};
+        assertThatThrownBy(() -> BootSettings.load(fileProperties, args))
                 .isInstanceOf(ConfigurationException.class);
     }
 }

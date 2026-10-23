@@ -74,6 +74,7 @@ public class RegistryConfigurationProvider implements ServletContextAwareConfigu
 
     @Override
     public void register(ContainerBuilder builder, LocatableProperties props) {
+        // the registry contributes packages only, no beans or constants
     }
 
     @Override

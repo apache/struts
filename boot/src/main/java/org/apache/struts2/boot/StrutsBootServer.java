@@ -33,8 +33,10 @@ import org.apache.tomcat.util.descriptor.web.FilterMap;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -78,6 +80,7 @@ public final class StrutsBootServer implements AutoCloseable {
             tomcat.start();
             assertContextStarted(context, filter);
             server.openConnector();
+            Runtime.getRuntime().addShutdownHook(server.shutdownHook);
         } catch (Exception e) {
             ConfigurationException failure = e instanceof ConfigurationException configurationException
                     ? configurationException
@@ -88,7 +91,6 @@ public final class StrutsBootServer implements AutoCloseable {
             server.closeAfterFailure(e);
             throw e;
         }
-        Runtime.getRuntime().addShutdownHook(server.shutdownHook);
         return server;
     }
 
@@ -196,7 +198,11 @@ public final class StrutsBootServer implements AutoCloseable {
 
     private static Path createBaseDir() {
         try {
-            return Files.createTempDirectory("struts-boot-" + UUID.randomUUID());
+            String prefix = "struts-boot-" + UUID.randomUUID();
+            if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
+                return Files.createTempDirectory(prefix, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+            }
+            return Files.createTempDirectory(prefix);
         } catch (IOException e) {
             throw new ConfigurationException("Cannot create the Tomcat base directory", e);
         }

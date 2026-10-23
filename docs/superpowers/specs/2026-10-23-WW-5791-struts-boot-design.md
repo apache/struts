@@ -44,7 +44,11 @@ self-contained jar is a later step.
   `ResultConfig` objects that `struts.xml` produces. Whatever a registered action does must match
   what the equivalent XML would do, including security defaults: strict method invocation,
   `@StrutsParameter` enforcement and the allowlist. If Boot quietly relaxes any of these to make
-  the first page easier, it has failed, even if it works.
+  the first page easier, it has failed, even if it works. The invariant: registry config is never
+  broader than the equivalent `struts.xml`. Where the two differ, the registry is narrower: a
+  registry action allows only its registered method, while an XML action also inherits the
+  package's global allowed methods (`execute,input,back,cancel,browse,save,delete,list,index` in
+  `struts-default`).
 - **A Spring Boot look-alike that pulls in Spring.**
 - **Core changes for Boot's convenience.** Boot uses only existing extension points (see
   "Wiring"). If something can't be done that way, stop and raise it. Don't patch `Dispatcher`.
@@ -89,7 +93,7 @@ The template lives at `src/main/resources/templates/hello.ftl`. Running `HelloAp
 | top-level `actions.action(...)` | an action in a Boot-owned package with namespace `""` |
 | `namespace(ns, consumer)` | one `PackageConfig` with that namespace, extending `struts-default` |
 | `action(name, Class)` | `ActionConfig` with `className`; method defaults to `execute` |
-| `.method(name)` | `methodName`, **and** adds it to the allowed methods. `struts-default` packages run with strict method invocation, so without this the call would be rejected |
+| `.method(name)` | `methodName`, and adds it to the allowed methods. `ActionConfig#isAllowedMethod` already accepts the configured method, so the explicit entry only makes it visible in `getAllowedMethods()`. No other method is added: a registry action does not inherit the package's global allowed methods |
 | `.success(path)` | shorthand for `.result("success", path)` |
 | `.result(name, path)` | a `freemarker` result whose location is `/templates/` + `path` |
 | `.redirectAction(name, actionName)` | a `redirectAction` result |

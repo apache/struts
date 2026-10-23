@@ -254,6 +254,34 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         assertEquals("documented limit of the baseline comparison", "approved", model.getStatus());
     }
 
+    public void testTwoPhaseCopyLimitAPrimitiveAtItsZeroValueIsNotApplied() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setEnabled(true), m -> m.setEnabled(false));
+
+        assertTrue("documented limit: a primitive zero value equals the constructor default", model.isEnabled());
+    }
+
+    public void testTwoPhaseCopyLimitAnEmptyCollectionDoesNotClearTheTarget() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setTags(new ArrayList<>(List.of("kept"))), m -> m.setTags(new ArrayList<>()));
+
+        assertEquals("documented limit: an empty collection equals the constructor default", List.of("kept"), model.getTags());
+    }
+
+    public void testTwoPhaseCopyAppliesALeafOfANestedSubtypeTheBodySets() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> m.setAddress(new HomeAddress()), m -> {
+            HomeAddress home = new HomeAddress();
+            home.setFloor("3");
+            m.setAddress(home);
+        });
+
+        assertEquals("3", ((HomeAddress) model.getAddress()).getFloor());
+    }
+
+    public void testTwoPhaseCopyRecursesIntoANestedBeanWhoseEqualsIgnoresTheChangedLeaf() throws Exception {
+        DefaultedModel model = runScriptedBody(m -> { }, m -> m.getBilling().setCity("Warsaw"));
+
+        assertEquals("Warsaw", model.getBilling().getCity());
+    }
+
     private DefaultedModel runScriptedBody(Consumer<DefaultedModel> alreadyOnTheModel, Consumer<DefaultedModel> body) throws Exception {
         ModelDrivenRestAction modelDriven = new ModelDrivenRestAction();
         DefaultedModel model = modelDriven.getModel();
@@ -488,8 +516,18 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         private List<String> tags = new ArrayList<>();
         private DefaultedAddress address = new DefaultedAddress();
         private PinnedAddress pinned;
+        private IdEqualAddress billing = new IdEqualAddress();
+        private boolean enabled;
 
         public String getStatus() { return status; }
+
+        public boolean isEnabled() { return enabled; }
+
+        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
+        public IdEqualAddress getBilling() { return billing; }
+
+        public void setBilling(IdEqualAddress billing) { this.billing = billing; }
 
         public void setStatus(String status) { this.status = status; }
 
@@ -521,6 +559,38 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         public String getCity() { return city; }
 
         public void setCity(String city) { this.city = city; }
+    }
+
+    public static class HomeAddress extends DefaultedAddress {
+        private String floor;
+
+        public String getFloor() { return floor; }
+
+        public void setFloor(String floor) { this.floor = floor; }
+    }
+
+    /**
+     * WW-5790: equals by id only, the shape of a JPA entity; a leaf-blind equals must not hide a changed leaf.
+     */
+    public static class IdEqualAddress {
+        private Long id;
+        private String city;
+
+        public Long getId() { return id; }
+
+        public void setId(Long id) { this.id = id; }
+
+        public String getCity() { return city; }
+
+        public void setCity(String city) { this.city = city; }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof IdEqualAddress that && java.util.Objects.equals(id, that.id);
+        }
+
+        @Override
+        public int hashCode() { return java.util.Objects.hashCode(id); }
     }
 
     /**

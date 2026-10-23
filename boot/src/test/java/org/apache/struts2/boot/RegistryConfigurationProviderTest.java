@@ -34,6 +34,9 @@ import org.apache.struts2.ActionContext;
 import org.junit.After;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.apache.struts2.boot.HttpMethods.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -193,6 +196,52 @@ public class RegistryConfigurationProviderTest {
         assertThatThrownBy(() -> load(registry))
                 .isInstanceOf(ConfigurationException.class)
                 .rootCause().hasMessageContaining("templates/missing.ftl");
+    }
+
+    @Test
+    public void testNonPublicActionClassThrows() {
+        ActionRegistry registry = new ActionRegistry();
+        registry.namespace("/admin", ns -> ns.action("hidden", NonPublicAction.class).success("admin/users.ftl"));
+
+        assertThatThrownBy(() -> load(registry))
+                .isInstanceOf(ConfigurationException.class)
+                .rootCause().hasMessageContaining(NonPublicAction.class.getName())
+                .hasMessageContaining("hidden").hasMessageContaining("not public");
+    }
+
+    @Test
+    public void testActionClassWithoutNoArgConstructorThrows() {
+        ActionRegistry registry = new ActionRegistry();
+        registry.namespace("/admin", ns -> ns.action("needsArgs", NoDefaultConstructorAction.class).success("admin/users.ftl"));
+
+        assertThatThrownBy(() -> load(registry))
+                .isInstanceOf(ConfigurationException.class)
+                .satisfies(e -> assertThat(messagesOf(e)).anyMatch(message ->
+                        message.contains(NoDefaultConstructorAction.class.getName())
+                                && message.contains("needsArgs") && message.contains("no-arg constructor")));
+    }
+
+    private static List<String> messagesOf(Throwable throwable) {
+        List<String> messages = new ArrayList<>();
+        for (Throwable current = throwable; current != null; current = current.getCause()) {
+            messages.add(String.valueOf(current.getMessage()));
+        }
+        return messages;
+    }
+
+    static class NonPublicAction {
+        public String execute() {
+            return "success";
+        }
+    }
+
+    public static class NoDefaultConstructorAction {
+        public NoDefaultConstructorAction(String name) {
+        }
+
+        public String execute() {
+            return "success";
+        }
     }
 
     @Test

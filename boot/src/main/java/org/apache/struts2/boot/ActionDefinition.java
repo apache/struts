@@ -68,6 +68,10 @@ public final class ActionDefinition {
     }
 
     public ActionDefinition redirectAction(String resultName, String actionName) {
+        if (actionName == null || actionName.isEmpty()) {
+            throw new ConfigurationException("Action '" + name + "' result '" + resultName
+                    + "' redirects to an action, so the target action name must not be empty");
+        }
         results.put(resultName, new ResultDefinition(ResultDefinition.Kind.REDIRECT_ACTION, actionName));
         return this;
     }

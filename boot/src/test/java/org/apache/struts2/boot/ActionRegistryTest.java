@@ -79,6 +79,22 @@ public class ActionRegistryTest {
     }
 
     @Test
+    public void testNullActionClassThrows() {
+        ActionRegistry r = new ActionRegistry();
+        assertThatThrownBy(() -> r.action("hello", null))
+                .isInstanceOf(ConfigurationException.class).hasMessageContaining("hello").hasMessageContaining("class");
+    }
+
+    @Test
+    public void testRedirectActionWithoutTargetThrows() {
+        ActionDefinition a = new ActionRegistry().action("save", Object.class);
+        assertThatThrownBy(() -> a.redirectAction("success", null))
+                .isInstanceOf(ConfigurationException.class).hasMessageContaining("save").hasMessageContaining("success");
+        assertThatThrownBy(() -> a.redirectAction("success", ""))
+                .isInstanceOf(ConfigurationException.class).hasMessageContaining("save").hasMessageContaining("success");
+    }
+
+    @Test
     public void testFluentCallsAreRecorded() {
         ActionDefinition a = new ActionRegistry().action("save", Object.class)
                 .method("save").httpMethods(HttpMethods.POST)

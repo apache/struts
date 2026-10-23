@@ -42,6 +42,9 @@ public final class NamespaceActions {
         if (name.contains("/")) {
             throw new ConfigurationException("Action name '" + name + "' contains a slash; declare the path with namespace(...) instead");
         }
+        if (actionClass == null) {
+            throw new ConfigurationException("Action '" + name + "' in namespace '" + namespace + "' has no action class");
+        }
         for (ActionDefinition existing : actions) {
             if (existing.name().equals(name)) {
                 throw new ConfigurationException("Action '" + name + "' is declared twice in namespace '" + namespace + "'");

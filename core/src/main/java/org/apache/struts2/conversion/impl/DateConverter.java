@@ -30,10 +30,12 @@ import java.lang.reflect.Member;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
@@ -147,10 +149,27 @@ public class DateConverter extends DefaultTypeConverter {
                 throw new TypeConversionException("Could not parse date", e);
             }
 
-        } else if (Date.class.isAssignableFrom(value.getClass())) {
-            result = (Date) value;
+        } else if (value instanceof Date date) {
+            return convertDate(date, toType);
         }
         return result;
+    }
+
+    /**
+     * {@code DateTextFieldInterceptor} binds a {@link Date} object, so a {@code java.time} property needs it converted
+     * in the zone the interceptor parsed it in.
+     */
+    protected Object convertDate(Date date, Class<?> toType) {
+        // java.sql.Date#toInstant() throws, so go through the epoch millis
+        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+        if (LocalDate.class == toType) {
+            return dateTime.toLocalDate();
+        } else if (LocalDateTime.class == toType) {
+            return dateTime;
+        } else if (LocalTime.class == toType) {
+            return dateTime.toLocalTime();
+        }
+        return date;
     }
 
     /**

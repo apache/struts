@@ -23,6 +23,7 @@ import org.apache.struts2.components.ConstraintAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -59,6 +60,26 @@ public class DateTextFieldTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(DateTextFieldTag.class.getResource("DateTextField-1-html5.txt"));
+    }
+
+    public void testHtml5RendersALocalDateAsIso() throws Exception {
+        ((ConstraintAction) action).setDueDate(LocalDate.of(2026, 10, 24));
+
+        DateTextFieldTag tag = html5Tag("dueDate");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(DateTextFieldTag.class.getResource("DateTextField-5-html5.txt"));
+    }
+
+    public void testHtml5RendersTheDatePartOfALocalDateTime() throws Exception {
+        ((ConstraintAction) action).setMeetingAt(LocalDateTime.of(2026, 10, 24, 10, 15));
+
+        DateTextFieldTag tag = html5Tag("meetingAt");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(DateTextFieldTag.class.getResource("DateTextField-6-html5.txt"));
     }
 
     public void testHtml5RendersNoValueWithoutADate() throws Exception {
@@ -109,10 +130,14 @@ public class DateTextFieldTest extends AbstractUITagTest {
     }
 
     private DateTextFieldTag html5Tag() {
+        return html5Tag("birthday");
+    }
+
+    private DateTextFieldTag html5Tag(String name) {
         DateTextFieldTag tag = new DateTextFieldTag();
         tag.setPageContext(pageContext);
         tag.setTheme("html5");
-        tag.setName("birthday");
+        tag.setName(name);
         return tag;
     }
 }

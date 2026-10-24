@@ -31,6 +31,7 @@ import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystems;
@@ -61,10 +62,10 @@ public final class StrutsBootServer implements AutoCloseable {
     }
 
     static StrutsBootServer start(ActionRegistry registry, BootSettings settings) {
-        Path baseDir = createBaseDir();
-        Tomcat tomcat = new Tomcat();
-        StrutsBootServer server = new StrutsBootServer(tomcat, baseDir, settings);
         CapturingStrutsFilter filter = new CapturingStrutsFilter();
+        Tomcat tomcat = new Tomcat();
+        Path baseDir = createBaseDir();
+        StrutsBootServer server = new StrutsBootServer(tomcat, baseDir, settings);
         try {
             tomcat.setBaseDir(baseDir.toString());
             hideErrorReportDetails(tomcat);
@@ -85,10 +86,10 @@ public final class StrutsBootServer implements AutoCloseable {
             ConfigurationException failure = e instanceof ConfigurationException configurationException
                     ? configurationException
                     : new ConfigurationException("Struts Boot failed to start: " + e.getMessage(), e);
-            server.closeAfterFailure(failure);
+            closeAfterFailure(server, failure);
             throw failure;
         } catch (Error e) {
-            server.closeAfterFailure(e);
+            closeAfterFailure(server, e);
             throw e;
         }
         return server;
@@ -126,9 +127,9 @@ public final class StrutsBootServer implements AutoCloseable {
         }
     }
 
-    private void closeAfterFailure(Throwable failure) {
+    private static void closeAfterFailure(StrutsBootServer server, Throwable failure) {
         try {
-            close();
+            server.close();
         } catch (RuntimeException closeFailure) {
             failure.addSuppressed(closeFailure);
         }
@@ -202,7 +203,12 @@ public final class StrutsBootServer implements AutoCloseable {
             if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
                 return Files.createTempDirectory(prefix, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
             }
-            return Files.createTempDirectory(prefix);
+            File dir = Files.createTempDirectory(prefix).toFile();
+            if (!dir.setReadable(true, true) || !dir.setWritable(true, true) || !dir.setExecutable(true, true)) {
+                Files.delete(dir.toPath());
+                throw new ConfigurationException("Cannot restrict the Tomcat base directory to its owner: " + dir);
+            }
+            return dir.toPath();
         } catch (IOException e) {
             throw new ConfigurationException("Cannot create the Tomcat base directory", e);
         }

@@ -18,4 +18,33 @@
  * under the License.
  */
 -->
-<div>Tag <pre style="display: inline-block">&lt;s:datetextfield/&gt;</pre> works only with the JavaTemplates Plugin!</div>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" /><#rt/>
+<input<#rt/>
+ type="date"<#rt/>
+ name="${(attributes.name!"")}"<#rt/>
+<#if attributes.isoDate??>
+ value="${attributes.isoDate}"<#rt/>
+<#elseif attributes.nameValue??>
+ value="${attributes.nameValue}"<#rt/>
+</#if>
+<#if attributes.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+<#if attributes.readonly!false>
+ readonly="readonly"<#rt/>
+</#if>
+<#if attributes.tabindex?has_content>
+ tabindex="${attributes.tabindex}"<#rt/>
+</#if>
+<#if attributes.id?has_content>
+ id="${attributes.id}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" />
+<#if attributes.title?has_content>
+ title="${attributes.title}"<#rt/>
+</#if>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/scripting-events.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/common-attributes.ftl" /><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
+/><#rt/>
+<#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

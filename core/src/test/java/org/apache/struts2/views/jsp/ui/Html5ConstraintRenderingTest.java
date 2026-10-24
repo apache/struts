@@ -143,6 +143,21 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
         assertFalse("expected no required in: " + output, output.contains("required=\"required\""));
     }
 
+    /**
+     * An empty date input submits "", which only fails {@code required} when the bound type converts it to null.
+     */
+    public void testRendersNoRequiredOnADateTextField() throws Exception {
+        String output = renderTag("true", () -> {
+            DateTextFieldTag date = new DateTextFieldTag();
+            date.setName("birthday");
+            return date;
+        });
+
+        assertTrue("expected the required message in: " + output,
+            output.contains("type=\"date\" name=\"birthday\"") && output.contains("data-msg-required=\"pick a date\""));
+        assertFalse("expected no required in: " + output, output.contains("required=\"required\""));
+    }
+
     public void testRendersRequiredOnAFileInput() throws Exception {
         String output = renderTag("true", () -> {
             FileTag file = new FileTag();

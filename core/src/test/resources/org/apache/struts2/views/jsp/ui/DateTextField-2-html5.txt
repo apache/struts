@@ -1,0 +1,1 @@
+<input type="date" name="birthday" id="birthday"/>

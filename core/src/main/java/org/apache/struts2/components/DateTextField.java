@@ -24,10 +24,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+
 @StrutsTag(
     name="datetextfield",
     tldTagClass="org.apache.struts2.views.jsp.ui.DateTextFieldTag",
-    description="Render an HTML input fields with the date time",
+    description="Render an HTML input for a date: a native input type=\"date\" in the html5 theme,"
+        + " split input fields with the JavaTemplates plugin",
     allowDynamicAttributes=true)
 public class DateTextField extends UIBean {
     /**
@@ -51,9 +58,19 @@ public class DateTextField extends UIBean {
         if (format != null) {
             addParameter("format", findValue(format, String.class));
         }
+
+        if (getAttributes().get(ATTR_NAME_VALUE) instanceof Date date) {
+            addParameter("isoDate", ISO_LOCAL_DATE.format(Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault())));
+        }
     }
 
-    @StrutsTagAttribute(description="Date format attribute", required=true)
+    @Override
+    protected HtmlControlType getControlType() {
+        return HtmlControlType.DATE;
+    }
+
+    @StrutsTagAttribute(description="Date format used to lay out the split input fields of the JavaTemplates plugin;"
+        + " ignored by the html5 theme, which always uses yyyy-MM-dd")
     public void setFormat(String format) {
         this.format = format;
     }

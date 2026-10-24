@@ -187,6 +187,63 @@ public class DateConverterTest extends StrutsInternalTestCase {
         assertTrue(value.toString().startsWith(LOCALTIME_STR));
     }
 
+    public void testIsoDateUnderALocaleWithDashSeparators() {
+        Object value = convertToDate("2026-10-24", Locale.forLanguageTag("nl-NL"), null);
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 0, 0), toLocalDateTime(value));
+    }
+
+    public void testIsoDateUnderADateOnlyGlobalFormat() {
+        Object value = convertToDate("2026-10-24", Locale.US, "dd-MM-yyyy");
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 0, 0), toLocalDateTime(value));
+    }
+
+    public void testIsoDateTimeUnderADateOnlyGlobalFormat() {
+        Object value = convertToDate("2026-10-24T10:15:30", Locale.US, "dd-MM-yyyy");
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
+    }
+
+    public void testDateTimeKeepsItsTimeUnderADateOnlyGlobalFormat() {
+        Object value = convertToDate("24-10-2026 10:15:30", Locale.forLanguageTag("nl-NL"), "dd-MM-yyyy");
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
+    }
+
+    public void testInvalidTimeIsStillRejected() {
+        try {
+            convertToDate("24-10-2026 25:00:00", Locale.forLanguageTag("nl-NL"), null);
+            fail("TypeConversionException expected");
+        } catch (TypeConversionException e) {
+            assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
+        }
+    }
+
+    public void testSqlTimestampUnderALocaleWithDashSeparators() {
+        ActionContext context = ActionContext.of().withLocale(Locale.forLanguageTag("nl-NL"));
+
+        Object value = new DateConverter().convertValue(context.getContextMap(), null, null, null, "24-10-2026 10:15:30.123", Timestamp.class);
+
+        assertEquals(Timestamp.valueOf("2026-10-24 10:15:30.123"), value);
+    }
+
+    private Object convertToDate(String input, Locale locale, String globalFormat) {
+        ValueStack stack = new StubValueStack();
+        Map<String, String> texts = new HashMap<>();
+        if (globalFormat != null) {
+            texts.put(org.apache.struts2.components.Date.DATETAG_PROPERTY, globalFormat);
+        }
+        stack.push(new StubTextProvider(texts));
+        ActionContext context = ActionContext.of().withLocale(locale).withValueStack(stack);
+
+        return new DateConverter().convertValue(context.getContextMap(), null, null, null, input, Date.class);
+    }
+
+    private static LocalDateTime toLocalDateTime(Object date) {
+        return LocalDateTime.ofInstant(((Date) date).toInstant(), ZoneId.systemDefault());
+    }
+
     public void testDateObjectToLocalDate() {
         Date date = Date.from(LocalDateTime.of(2020, 3, 20, 10, 15).atZone(ZoneId.systemDefault()).toInstant());
 

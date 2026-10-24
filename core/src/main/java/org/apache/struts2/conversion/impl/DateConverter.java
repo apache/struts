@@ -29,6 +29,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -59,38 +60,15 @@ public class DateConverter extends DefaultTypeConverter {
             if (java.sql.Time.class == toType) {
                 df = DateFormat.getTimeInstance(DateFormat.MEDIUM, locale);
             } else if (java.sql.Timestamp.class == toType) {
-                Date check;
                 SimpleDateFormat dtfmt = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT,
                         DateFormat.MEDIUM, locale);
                 SimpleDateFormat fullfmt = new SimpleDateFormat(dtfmt.toPattern() + MILLISECOND_FORMAT, locale);
 
                 SimpleDateFormat dfmt = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
 
-                SimpleDateFormat[] fmts = { fullfmt, dtfmt, dfmt };
-                for (SimpleDateFormat fmt : fmts) {
-                    try {
-                        check = fmt.parse(sa);
-                        df = fmt;
-                        if (check != null) {
-                            break;
-                        }
-                    } catch (ParseException ignore) {
-                    }
-                }
+                df = selectFormat(new DateFormat[] { fullfmt, dtfmt, dfmt }, sa);
             } else if (java.util.Date.class == toType) {
-                Date check;
-                DateFormat[] dfs = getDateFormats(ActionContext.of(context), locale);
-
-                for (DateFormat df1 : dfs) {
-                    try {
-                        check = df1.parse(sa);
-                        df = df1;
-                        if (check != null) {
-                            break;
-                        }
-                    } catch (ParseException ignore) {
-                    }
-                }
+                df = selectFormat(getDateFormats(ActionContext.of(context), locale), sa);
             } else if (java.time.LocalDateTime.class == toType || java.time.LocalDate.class == toType
                     || java.time.LocalTime.class == toType) {
                 DateTimeFormatter dtf = null;
@@ -153,6 +131,38 @@ public class DateConverter extends DefaultTypeConverter {
             return convertDate(date, toType);
         }
         return result;
+    }
+
+    /**
+     * Picks the first format that strictly parses the whole input, so a format that only matches leniently, or only
+     * matches a prefix, does not hide a later one that fits (an ISO date under a {@code dd-MM-y} locale, for example).
+     * Without such a format it falls back to the first lenient match, which the caller then re-parses strictly.
+     */
+    protected DateFormat selectFormat(DateFormat[] formats, String input) {
+        for (DateFormat format : formats) {
+            if (parsesWholeInputStrictly(format, input)) {
+                return format;
+            }
+        }
+        for (DateFormat format : formats) {
+            try {
+                format.parse(input);
+                return format;
+            } catch (ParseException ignore) {
+            }
+        }
+        return null;
+    }
+
+    private static boolean parsesWholeInputStrictly(DateFormat format, String input) {
+        boolean lenient = format.isLenient();
+        format.setLenient(false);
+        try {
+            ParsePosition position = new ParsePosition(0);
+            return format.parse(input, position) != null && position.getIndex() == input.length();
+        } finally {
+            format.setLenient(lenient);
+        }
     }
 
     /**

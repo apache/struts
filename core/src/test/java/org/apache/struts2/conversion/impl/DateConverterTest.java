@@ -31,6 +31,7 @@ import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -184,6 +185,45 @@ public class DateConverterTest extends StrutsInternalTestCase {
         Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALTIME_STR,
                 LocalTime.class);
         assertTrue(value.toString().startsWith(LOCALTIME_STR));
+    }
+
+    public void testDateObjectToLocalDate() {
+        Date date = Date.from(LocalDateTime.of(2020, 3, 20, 10, 15).atZone(ZoneId.systemDefault()).toInstant());
+
+        Object value = new DateConverter().convertValue(ActionContext.of().getContextMap(), null, null, null, date, LocalDate.class);
+
+        assertEquals(LocalDate.of(2020, 3, 20), value);
+    }
+
+    public void testSqlDateObjectToLocalDate() {
+        Object value = new DateConverter().convertValue(ActionContext.of().getContextMap(), null, null, null,
+            java.sql.Date.valueOf(LocalDate.of(2020, 3, 20)), LocalDate.class);
+
+        assertEquals(LocalDate.of(2020, 3, 20), value);
+    }
+
+    public void testDateObjectToLocalDateTime() {
+        Date date = Date.from(LocalDateTime.of(2020, 3, 20, 10, 15).atZone(ZoneId.systemDefault()).toInstant());
+
+        Object value = new DateConverter().convertValue(ActionContext.of().getContextMap(), null, null, null, date, LocalDateTime.class);
+
+        assertEquals(LocalDateTime.of(2020, 3, 20, 10, 15), value);
+    }
+
+    public void testDateObjectToLocalTime() {
+        Date date = Date.from(LocalDateTime.of(2020, 3, 20, 10, 15).atZone(ZoneId.systemDefault()).toInstant());
+
+        Object value = new DateConverter().convertValue(ActionContext.of().getContextMap(), null, null, null, date, LocalTime.class);
+
+        assertEquals(LocalTime.of(10, 15), value);
+    }
+
+    public void testDateObjectToDateIsUnchanged() {
+        Date date = new Date();
+
+        Object value = new DateConverter().convertValue(ActionContext.of().getContextMap(), null, null, null, date, Date.class);
+
+        assertSame(date, value);
     }
 
     @Override

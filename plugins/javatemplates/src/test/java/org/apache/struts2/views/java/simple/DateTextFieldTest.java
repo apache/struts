@@ -25,6 +25,12 @@ import org.apache.struts2.components.UIBean;
 import org.apache.struts2.interceptor.csp.CspNonceSource;
 import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 public class DateTextFieldTest extends AbstractCommonAttributesTest {
 
     private DateTextField tag;
@@ -43,6 +49,70 @@ public class DateTextFieldTest extends AbstractCommonAttributesTest {
         		"-<input type='text' class='date_month' size='2' maxlength='2' id='__month_id' name='__month_name'></input>" +
         		"-<input type='text' class='date_day' size='2' maxlength='2' id='__day_id' name='__day_name'></input></div>");
         assertEquals(expected, output);
+    }
+
+    public void testRenderDateValue() {
+        Date date = Date.from(LocalDate.of(2026, 10, 24).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        String output = render("yyyy-MM-dd", date);
+
+        assertEquals(s("<div id='id'>" + year("2026") + "-" + month("10") + "-" + day("24") + "</div>"), output);
+    }
+
+    public void testRenderLocalDateValue() {
+        String output = render("yyyy-MM-dd", LocalDate.of(2026, 10, 24));
+
+        assertEquals(s("<div id='id'>" + year("2026") + "-" + month("10") + "-" + day("24") + "</div>"), output);
+    }
+
+    public void testRenderLocalDateTimeValue() {
+        String output = render("yyyy-MM-dd HH:mm", LocalDateTime.of(2026, 10, 24, 9, 5));
+
+        assertEquals(s("<div id='id'>" + year("2026") + "-" + month("10") + "-" + day("24") + " "
+            + "<input type='text' class='date_hour' size='2' maxlength='2' id='__hour_id' name='__hour_name' value='09'></input>"
+            + ":<input type='text' class='date_minute' size='2' maxlength='2' id='__minute_id' name='__minute_name' value='05'></input>"
+            + "</div>"), output);
+    }
+
+    public void testRenderLocalTimeValue() {
+        String output = render("HH:mm", LocalTime.of(9, 5));
+
+        assertEquals(s("<div id='id'>"
+            + "<input type='text' class='date_hour' size='2' maxlength='2' id='__hour_id' name='__hour_name' value='09'></input>"
+            + ":<input type='text' class='date_minute' size='2' maxlength='2' id='__minute_id' name='__minute_name' value='05'></input>"
+            + "</div>"), output);
+    }
+
+    public void testRenderLocalDateLeavesTimeFieldsEmpty() {
+        String output = render("yyyy-MM-dd HH", LocalDate.of(2026, 10, 24));
+
+        assertEquals(s("<div id='id'>" + year("2026") + "-" + month("10") + "-" + day("24") + " "
+            + "<input type='text' class='date_hour' size='2' maxlength='2' id='__hour_id' name='__hour_name'></input>"
+            + "</div>"), output);
+    }
+
+    private String render(String format, Object value) {
+        tag.setId("id");
+        tag.setName("name");
+        tag.setFormat(format);
+
+        tag.evaluateParams();
+        map.putAll(tag.getAttributes());
+        map.put("nameValue", value);
+        theme.renderTag(getTagName(), context);
+        return writer.getBuffer().toString();
+    }
+
+    private static String year(String value) {
+        return "<input type='text' class='date_year' size='4' maxlength='4' id='__year_id' name='__year_name' value='" + value + "'></input>";
+    }
+
+    private static String month(String value) {
+        return "<input type='text' class='date_month' size='2' maxlength='2' id='__month_id' name='__month_name' value='" + value + "'></input>";
+    }
+
+    private static String day(String value) {
+        return "<input type='text' class='date_day' size='2' maxlength='2' id='__day_id' name='__day_name' value='" + value + "'></input>";
     }
 
     @Override

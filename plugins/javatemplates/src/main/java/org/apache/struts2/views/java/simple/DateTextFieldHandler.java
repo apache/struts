@@ -20,6 +20,9 @@ package org.apache.struts2.views.java.simple;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,7 +45,7 @@ public class DateTextFieldHandler extends AbstractTagHandler implements TagGener
         if (id == null) {
         	id = name;
         }
-        Date date = (Date)params.get("nameValue");
+        Object value = params.get("nameValue");
         
         if (format != null) {
         	// Verify if it's correct
@@ -83,10 +86,7 @@ public class DateTextFieldHandler extends AbstractTagHandler implements TagGener
             	        } else {
                 	        attr.addDefaultToEmpty("name", dateWord.getDescription());
             	        }
-            	        if (date != null) {
-            	        	SimpleDateFormat formatter = new SimpleDateFormat(dateWord.getDateType());
-            	        	attr.addIfExists("value", formatter.format(date), false);
-            	        }
+            	        attr.addIfExists("value", formatValue(value, dateWord), false);
             	        
             	        super.start("input", attr);
             	        super.end("input");
@@ -101,6 +101,20 @@ public class DateTextFieldHandler extends AbstractTagHandler implements TagGener
             super.end("div");
         }
         
+    }
+
+    protected String formatValue(Object value, DateWord dateWord) {
+        if (value instanceof Date date) {
+            return new SimpleDateFormat(dateWord.getDateType()).format(date);
+        }
+        if (value instanceof TemporalAccessor temporal) {
+            try {
+                return DateTimeFormatter.ofPattern(dateWord.getDateType()).format(temporal);
+            } catch (UnsupportedTemporalTypeException e) {
+                return null;
+            }
+        }
+        return null;
     }
     
     

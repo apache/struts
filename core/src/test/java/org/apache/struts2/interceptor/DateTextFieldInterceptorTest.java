@@ -19,6 +19,7 @@
 package org.apache.struts2.interceptor;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.util.ValueStack;
 
 /**
  * Unit test for DateTextFieldInterceptor.
@@ -76,6 +78,34 @@ public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 		assertEquals(1, parameters.keySet().size());
 		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2000-06-15");
 		assertEquals(date, parameters.get("name").getObject());
+	}
+
+	public void testBindsToALocalDateProperty() throws Exception {
+		param.put("__year_birthday", new String[]{"2000"});
+		param.put("__month_birthday", new String[]{"06"});
+		param.put("__day_birthday", new String[]{"15"});
+		ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+
+		interceptor.intercept(ai);
+
+		Person person = new Person();
+		ValueStack stack = ActionContext.getContext().getValueStack();
+		stack.push(person);
+		stack.setValue("birthday", ai.getInvocationContext().getParameters().get("birthday").getObject());
+
+		assertEquals(LocalDate.of(2000, 6, 15), person.getBirthday());
+	}
+
+	public static class Person {
+		private LocalDate birthday;
+
+		public LocalDate getBirthday() {
+			return birthday;
+		}
+
+		public void setBirthday(LocalDate birthday) {
+			this.birthday = birthday;
+		}
 	}
 
 }

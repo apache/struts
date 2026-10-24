@@ -21,6 +21,8 @@ package org.apache.struts2.components;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ConstraintAction extends ActionSupport {
@@ -37,6 +39,8 @@ public class ConstraintAction extends ActionSupport {
     private int priority;
     private Object attachment;
     private Date birthday;
+    private LocalDate dueDate;
+    private LocalDateTime meetingAt;
 
     public String getUsername() {
         return username;
@@ -116,6 +120,24 @@ public class ConstraintAction extends ActionSupport {
     @StrutsParameter
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    @StrutsParameter
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public LocalDateTime getMeetingAt() {
+        return meetingAt;
+    }
+
+    @StrutsParameter
+    public void setMeetingAt(LocalDateTime meetingAt) {
+        this.meetingAt = meetingAt;
     }
 
     public ConstraintUser getOwner() {

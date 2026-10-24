@@ -26,6 +26,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -59,8 +61,11 @@ public class DateTextField extends UIBean {
             addParameter("format", findValue(format, String.class));
         }
 
-        if (getAttributes().get(ATTR_NAME_VALUE) instanceof Date date) {
+        Object value = getAttributes().get(ATTR_NAME_VALUE);
+        if (value instanceof Date date) {
             addParameter("isoDate", ISO_LOCAL_DATE.format(Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault())));
+        } else if (value instanceof TemporalAccessor temporal && temporal.isSupported(ChronoField.EPOCH_DAY)) {
+            addParameter("isoDate", ISO_LOCAL_DATE.format(temporal));
         }
     }
 

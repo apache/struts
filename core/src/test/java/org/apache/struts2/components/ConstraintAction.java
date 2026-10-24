@@ -21,6 +21,8 @@ package org.apache.struts2.components;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
+import java.util.Date;
+
 public class ConstraintAction extends ActionSupport {
 
     private String username;
@@ -34,6 +36,7 @@ public class ConstraintAction extends ActionSupport {
     private String choice;
     private int priority;
     private Object attachment;
+    private Date birthday;
 
     public String getUsername() {
         return username;
@@ -104,6 +107,15 @@ public class ConstraintAction extends ActionSupport {
 
     public void setAttachment(Object attachment) {
         this.attachment = attachment;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    @StrutsParameter
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public ConstraintUser getOwner() {

@@ -63,6 +63,11 @@
             <message>attach a file</message>
         </field-validator>
     </field>
+    <field name="birthday">
+        <field-validator type="required">
+            <message>pick a date</message>
+        </field-validator>
+    </field>
     <field name="user">
         <field-validator type="visitor">
             <message/>

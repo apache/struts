@@ -1,0 +1,1 @@
+<input type="date" name="birthday" id="birthday" min="2026-01-01" max="2026-12-31"/>

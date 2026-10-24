@@ -1,0 +1,1 @@
+<input type="date" name="birthday" value="2026-10-24" disabled="disabled" tabindex="3" id="dob" class="date" style="width: 10em" title="Date of birth" onchange="check()"/>

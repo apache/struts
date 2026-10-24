@@ -20,9 +20,12 @@ package org.apache.struts2.views.java.simple;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
-import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Date;
 import java.util.Map;
 
@@ -104,17 +107,40 @@ public class DateTextFieldHandler extends AbstractTagHandler implements TagGener
     }
 
     protected String formatValue(Object value, DateWord dateWord) {
+        Date date = toDate(value);
+        if (date == null || (value instanceof TemporalAccessor temporal && !temporal.isSupported(toField(dateWord)))) {
+            return null;
+        }
+        // DateTextFieldInterceptor parses with SimpleDateFormat, so render in its calendar (Buddhist under th-TH)
+        return new SimpleDateFormat(dateWord.getDateType()).format(date);
+    }
+
+    private static Date toDate(Object value) {
+        LocalDateTime dateTime;
         if (value instanceof Date date) {
-            return new SimpleDateFormat(dateWord.getDateType()).format(date);
+            return date;
+        } else if (value instanceof LocalDate localDate) {
+            dateTime = localDate.atStartOfDay();
+        } else if (value instanceof LocalDateTime localDateTime) {
+            dateTime = localDateTime;
+        } else if (value instanceof LocalTime localTime) {
+            dateTime = localTime.atDate(LocalDate.EPOCH);
+        } else {
+            return null;
         }
-        if (value instanceof TemporalAccessor temporal) {
-            try {
-                return DateTimeFormatter.ofPattern(dateWord.getDateType()).format(temporal);
-            } catch (UnsupportedTemporalTypeException e) {
-                return null;
-            }
-        }
-        return null;
+        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private static ChronoField toField(DateWord dateWord) {
+        return switch (dateWord) {
+            case S -> ChronoField.MILLI_OF_SECOND;
+            case s -> ChronoField.SECOND_OF_MINUTE;
+            case m -> ChronoField.MINUTE_OF_HOUR;
+            case H -> ChronoField.HOUR_OF_DAY;
+            case d -> ChronoField.DAY_OF_MONTH;
+            case M -> ChronoField.MONTH_OF_YEAR;
+            case y -> ChronoField.YEAR;
+        };
     }
     
     

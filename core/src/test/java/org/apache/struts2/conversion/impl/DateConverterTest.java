@@ -54,6 +54,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     private final static String LOCALTIME_STR = "01:59:10";
 
     private final static String INVALID_LOCALDATETIME = "2010-99-99T00:00";
+    private final static Locale DUTCH = Locale.forLanguageTag("nl-NL");
     private final static String MESSAGE_PARSE_ERROR = "Could not parse date";
     private final static String MESSAGE_DEFAULT_CONSTRUCTOR_ERROR = "Couldn't create class null using default (long) constructor";
 
@@ -188,7 +189,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     }
 
     public void testIsoDateUnderALocaleWithDashSeparators() {
-        Object value = convertToDate("2026-10-24", Locale.forLanguageTag("nl-NL"), null);
+        Object value = convertToDate("2026-10-24", DUTCH, null);
 
         assertEquals(LocalDateTime.of(2026, 10, 24, 0, 0), toLocalDateTime(value));
     }
@@ -206,14 +207,14 @@ public class DateConverterTest extends StrutsInternalTestCase {
     }
 
     public void testDateTimeKeepsItsTimeUnderADateOnlyGlobalFormat() {
-        Object value = convertToDate("24-10-2026 10:15:30", Locale.forLanguageTag("nl-NL"), "dd-MM-yyyy");
+        Object value = convertToDate(dutchDateTime("10:15:30"), DUTCH, "dd-MM-yyyy");
 
         assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
     }
 
     public void testInvalidTimeIsStillRejected() {
         try {
-            convertToDate("24-10-2026 25:00:00", Locale.forLanguageTag("nl-NL"), null);
+            convertToDate(dutchDateTime("25:00:00"), DUTCH, null);
             fail("TypeConversionException expected");
         } catch (TypeConversionException e) {
             assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
@@ -221,9 +222,9 @@ public class DateConverterTest extends StrutsInternalTestCase {
     }
 
     public void testSqlTimestampUnderALocaleWithDashSeparators() {
-        ActionContext context = ActionContext.of().withLocale(Locale.forLanguageTag("nl-NL"));
+        ActionContext context = ActionContext.of().withLocale(DUTCH);
 
-        Object value = new DateConverter().convertValue(context.getContextMap(), null, null, null, "24-10-2026 10:15:30.123", Timestamp.class);
+        Object value = new DateConverter().convertValue(context.getContextMap(), null, null, null, dutchDateTime("10:15:30") + ".123", Timestamp.class);
 
         assertEquals(Timestamp.valueOf("2026-10-24 10:15:30.123"), value);
     }
@@ -238,6 +239,11 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ActionContext context = ActionContext.of().withLocale(locale).withValueStack(stack);
 
         return new DateConverter().convertValue(context.getContextMap(), null, null, null, input, Date.class);
+    }
+
+    private static String dutchDateTime(String time) {
+        Date date = Date.from(LocalDateTime.of(2026, 10, 24, 10, 15, 30).atZone(ZoneId.systemDefault()).toInstant());
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, DUTCH).format(date).replace("10:15:30", time);
     }
 
     private static LocalDateTime toLocalDateTime(Object date) {

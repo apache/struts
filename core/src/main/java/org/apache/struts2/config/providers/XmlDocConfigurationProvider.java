@@ -542,7 +542,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             Class<?> clazz = allowAndLoadClass(className);
             if (objectFactory.isNoArgConstructorRequired()) {
                 if (!Modifier.isPublic(clazz.getModifiers())) {
-                    throw new ConfigurationException("Action class [" + className + "] is not public", loc);
+                    LOG.warn("Action class [{}] is not public, this will fail at startup in Struts 8.0.0 - {}", className, loc);
+                    return;
                 }
                 clazz.getConstructor();
             }

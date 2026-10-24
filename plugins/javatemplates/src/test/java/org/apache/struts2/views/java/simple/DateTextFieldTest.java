@@ -20,7 +20,12 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import org.apache.struts2.ActionContext;
 import org.apache.struts2.components.DateTextField;
+import org.apache.struts2.conversion.impl.DateConverter;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.DateTextFieldInterceptor;
+import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.interceptor.csp.CspNonceSource;
 import org.apache.struts2.interceptor.csp.StrutsCspNonceReader;
@@ -30,6 +35,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateTextFieldTest extends AbstractCommonAttributesTest {
 
@@ -89,6 +99,34 @@ public class DateTextFieldTest extends AbstractCommonAttributesTest {
         assertEquals(s("<div id='id'>" + year("2026") + "-" + month("10") + "-" + day("24") + " "
             + "<input type='text' class='date_hour' size='2' maxlength='2' id='__hour_id' name='__hour_name'></input>"
             + "</div>"), output);
+    }
+
+    public void testLocalDateRoundTripsUnderABuddhistCalendarLocale() throws Exception {
+        Locale previous = Locale.getDefault(Locale.Category.FORMAT);
+        Locale.setDefault(Locale.Category.FORMAT, Locale.forLanguageTag("th-TH"));
+        try {
+            String output = render("yyyy-MM-dd", LocalDate.of(2026, 10, 24));
+
+            assertEquals(LocalDate.of(2026, 10, 24), submit(output, LocalDate.class));
+        } finally {
+            Locale.setDefault(Locale.Category.FORMAT, previous);
+        }
+    }
+
+    private Object submit(String output, Class<?> toType) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        Matcher field = Pattern.compile("name=\"(__[a-z]+_name)\" value=\"([^\"]*)\"").matcher(output);
+        while (field.find()) {
+            params.put(field.group(1), new String[]{field.group(2)});
+        }
+        ActionContext actionContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setInvocationContext(actionContext);
+
+        new DateTextFieldInterceptor().intercept(invocation);
+
+        Object bound = actionContext.getParameters().get("name").getObject();
+        return new DateConverter().convertValue(actionContext.getContextMap(), null, null, null, bound, toType);
     }
 
     private String render(String format, Object value) {

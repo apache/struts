@@ -18,6 +18,11 @@
  */
 package org.apache.struts2.config.providers;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.SimpleAction;
 import org.apache.struts2.config.ConfigurationException;
@@ -161,6 +166,24 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         }
     }
 
+    public void testNonPublicActionWarnsAndLoads() {
+        final String filename = "org/apache/struts2/config/providers/xwork-test-action-non-public.xml";
+        LogCapture logCapture = new LogCapture();
+        Logger logger = (Logger) LogManager.getLogger(XmlConfigurationProvider.class);
+        logger.addAppender(logCapture);
+        logCapture.start();
+        try {
+            buildConfigurationProvider(filename);
+        } finally {
+            logCapture.stop();
+            logger.removeAppender(logCapture);
+        }
+
+        assertNotNull(configuration.getPackageConfig("default").getActionConfigs().get("NonPublic"));
+        assertTrue(logCapture.events.stream().anyMatch(event -> event.getLevel() == Level.WARN
+                && event.getMessage().getFormattedMessage().contains("Action class [" + NonPublicAction.class.getName() + "] is not public")));
+    }
+
     public void testPackageDefaultClassRef() {
         final String filename = "org/apache/struts2/config/providers/xwork-test-actions-packagedefaultclassref.xml";
 
@@ -220,5 +243,18 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         interceptors = new ArrayList<>();
         exceptionMappings = new ArrayList<>();
         this.objectFactory = container.getInstance(ObjectFactory.class);
+    }
+
+    private static class LogCapture extends AbstractAppender {
+        private final List<LogEvent> events = new ArrayList<>();
+
+        LogCapture() {
+            super("LogCapture", null, null, false, null);
+        }
+
+        @Override
+        public void append(LogEvent event) {
+            events.add(event.toImmutable());
+        }
     }
 }

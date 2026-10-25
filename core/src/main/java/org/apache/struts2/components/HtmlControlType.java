@@ -80,4 +80,11 @@ public enum HtmlControlType {
     public boolean supportsRange() {
         return NUMERIC.contains(this) || TEMPORAL.contains(this);
     }
+
+    /**
+     * @since 7.5.0
+     */
+    public boolean isTemporal() {
+        return TEMPORAL.contains(this);
+    }
 }

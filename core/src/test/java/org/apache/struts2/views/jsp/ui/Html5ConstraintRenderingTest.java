@@ -144,17 +144,58 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
     }
 
     /**
-     * An empty date input submits "", which only fails {@code required} when the bound type converts it to null.
+     * An empty date input submits "", which the converter turns into null for a {@code java.util.Date},
+     * so {@code required} fails on both sides.
      */
-    public void testRendersNoRequiredOnADateTextField() throws Exception {
+    public void testRendersRequiredOnADateTextFieldBoundToADate() throws Exception {
         String output = renderTag("true", () -> {
             DateTextFieldTag date = new DateTextFieldTag();
             date.setName("birthday");
             return date;
         });
 
+        assertTrue("expected required in: " + output,
+            output.contains("type=\"date\" name=\"birthday\"") && output.contains("required=\"required\""));
+    }
+
+    public void testRendersRequiredAndTheIsoRangeOnADateTextFieldBoundToALocalDate() throws Exception {
+        String output = renderTag("true", () -> {
+            DateTextFieldTag date = new DateTextFieldTag();
+            date.setName("startDate");
+            return date;
+        });
+
+        assertTrue("expected required, min and max in: " + output, output.contains("type=\"date\" name=\"startDate\"")
+            && output.contains("required=\"required\"") && output.contains("min=\"2026-01-01\"")
+            && output.contains("max=\"2026-12-31\""));
+    }
+
+    public void testRendersRequiredAndTheIsoRangeOnATextFieldOfTypeDate() throws Exception {
+        String output = renderTag("true", () -> {
+            TextFieldTag field = new TextFieldTag();
+            field.setName("startDate");
+            field.setType("date");
+            return field;
+        });
+
+        assertTrue("expected required, min and max in: " + output, output.contains("type=\"date\" name=\"startDate\"")
+            && output.contains("required=\"required\"") && output.contains("min=\"2026-01-01\"")
+            && output.contains("max=\"2026-12-31\""));
+    }
+
+    /**
+     * A String property keeps the "" an empty date input submits, which {@code required} accepts.
+     */
+    public void testRendersNoRequiredOnADateInputBoundToAString() throws Exception {
+        String output = renderTag("true", () -> {
+            TextFieldTag field = new TextFieldTag();
+            field.setName("dateText");
+            field.setType("date");
+            return field;
+        });
+
         assertTrue("expected the required message in: " + output,
-            output.contains("type=\"date\" name=\"birthday\"") && output.contains("data-msg-required=\"pick a date\""));
+            output.contains("type=\"date\" name=\"dateText\"") && output.contains("data-msg-required=\"type a date\""));
         assertFalse("expected no required in: " + output, output.contains("required=\"required\""));
     }
 

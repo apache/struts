@@ -417,6 +417,96 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
             depthBeforeRendering, stack.getRoot().size());
     }
 
+    public void testTheProviderReceivesTheDeclaredTypeOfTheBoundProperty() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "birthday";
+
+        assertEquals(java.util.Date.class, propertyTypeHandedToTheProvider());
+    }
+
+    /**
+     * Parameter binding creates the missing {@code user} and {@code address}, so their being null at
+     * render time must not hide the type of the property the field ends up in.
+     */
+    public void testANestedPropertyTypeIsResolvedThroughNullIntermediateObjects() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address.street";
+
+        assertEquals(String.class, propertyTypeHandedToTheProvider());
+    }
+
+    public void testThePropertyTypeIsReadFromTheModelWhenTheModelDrivenInterceptorPushedIt() throws Exception {
+        actionOverride = new TemporalModelDrivenAction();
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "startDate";
+        stack.push(((TemporalModelDrivenAction) action).getModel());
+
+        assertEquals(java.time.LocalDate.class, propertyTypeHandedToTheProvider());
+    }
+
+    public void testAnIndexedFieldHandsTheProviderNoType() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.address[0].street";
+
+        assertNull(propertyTypeHandedToTheProvider());
+    }
+
+    public void testAnUnknownFieldHandsTheProviderNoType() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "user.nothing";
+
+        assertNull(propertyTypeHandedToTheProvider());
+    }
+
+    private Class<?> propertyTypeHandedToTheProvider() throws Exception {
+        List<Class<?>> received = new ArrayList<>();
+        TextFieldTag field = startField(null);
+        ((UIBean) field.getComponent()).setHtmlConstraintProvider(new HtmlConstraintProvider() {
+            @Override
+            public Map<String, String> constraintsFor(List<org.apache.struts2.validator.Validator> validators,
+                                                      HtmlControlType control, Object action, Object value) {
+                throw new AssertionError("the framework must call the overload carrying the property type");
+            }
+
+            @Override
+            public Map<String, String> constraintsFor(List<org.apache.struts2.validator.Validator> validators,
+                                                      HtmlControlType control, Object action, Object value,
+                                                      Class<?> propertyType) {
+                received.add(propertyType);
+                return Collections.emptyMap();
+            }
+        });
+
+        finishField(field);
+
+        assertEquals("the provider must be called exactly once", 1, received.size());
+        return received.get(0);
+    }
+
+    public static class TemporalModelDrivenAction extends ModelDrivenConstraintAction {
+
+        private final TemporalModel model = new TemporalModel();
+
+        @Override
+        public ConstraintAction getModel() {
+            return model;
+        }
+    }
+
+    public static class TemporalModel extends ConstraintAction {
+
+        private java.time.LocalDate startDate;
+
+        public java.time.LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(java.time.LocalDate startDate) {
+            this.startDate = startDate;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private Map<String, String> renderFieldAndReturnConstraints(String type) throws Exception {
         TextFieldTag field = startField(type);

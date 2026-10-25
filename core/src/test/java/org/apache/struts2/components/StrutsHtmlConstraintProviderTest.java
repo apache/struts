@@ -25,18 +25,29 @@ import org.apache.struts2.validator.validators.DateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.IntRangeFieldValidator;
+import org.apache.struts2.validator.validators.LocalDateRangeFieldValidator;
 import org.apache.struts2.validator.validators.RangeValidatorSupport;
 import org.apache.struts2.validator.validators.RegexFieldValidator;
 import org.apache.struts2.validator.validators.RequiredFieldValidator;
 import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.StringLengthFieldValidator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,13 +56,26 @@ import static org.mockito.Mockito.when;
 
 public class StrutsHtmlConstraintProviderTest {
 
+    private static final TimeZone TOKYO = TimeZone.getTimeZone("Asia/Tokyo");
+
     private StrutsHtmlConstraintProvider provider;
     private Object action;
+    private TimeZone defaultTimeZone;
 
     @Before
     public void setUp() {
         provider = new StrutsHtmlConstraintProvider();
         action = new ActionSupport();
+        defaultTimeZone = TimeZone.getDefault();
+    }
+
+    @After
+    public void tearDown() {
+        TimeZone.setDefault(defaultTimeZone);
+    }
+
+    private static Date tokyo(LocalDateTime dateTime) {
+        return Date.from(dateTime.atZone(ZoneId.of("Asia/Tokyo")).toInstant());
     }
 
     private Map<String, String> constraints(Validator validator, HtmlControlType control) {
@@ -334,12 +358,89 @@ public class StrutsHtmlConstraintProviderTest {
     }
 
     @Test
-    public void dateRangeEmitsNothingBecauseTemporalFormattingIsDeferred() {
+    public void localDateRangeEmitsIsoBoundsOnADateControl() {
+        LocalDateRangeFieldValidator validator = new LocalDateRangeFieldValidator();
+        validator.setMin(LocalDate.of(2026, 1, 1));
+        validator.setMax(LocalDate.of(2026, 12, 31));
+
+        assertThat(constraints(validator, HtmlControlType.DATE))
+            .containsEntry("min", "2026-01-01")
+            .containsEntry("max", "2026-12-31");
+    }
+
+    @Test
+    public void dateRangeEmitsTheCalendarDateOfItsBoundsInTheServerZone() {
+        TimeZone.setDefault(TOKYO);
         DateRangeFieldValidator validator = new DateRangeFieldValidator();
-        validator.setMin(new Date(0));
-        validator.setMax(new Date(1_000_000L));
+        validator.setMin(tokyo(LocalDateTime.of(2026, 1, 1, 5, 0)));
+        validator.setMax(tokyo(LocalDateTime.of(2026, 12, 31, 23, 30)));
+
+        assertThat(constraints(validator, HtmlControlType.DATE))
+            .containsEntry("min", "2026-01-01")
+            .containsEntry("max", "2026-12-31");
+    }
+
+    @Test
+    public void dateRangeEmitsNothingOnTheOtherTemporalControls() {
+        LocalDateRangeFieldValidator validator = new LocalDateRangeFieldValidator();
+        validator.setMin(LocalDate.of(2026, 1, 1));
+        validator.setMax(LocalDate.of(2026, 12, 31));
+
+        for (HtmlControlType control : List.of(HtmlControlType.MONTH, HtmlControlType.WEEK,
+                HtmlControlType.TIME, HtmlControlType.DATETIME_LOCAL)) {
+            assertThat(constraints(validator, control)).as(control.name()).isEmpty();
+        }
+    }
+
+    @Test
+    public void localDateRangeOmitsABoundOutsideTheYearsHtmlCanWrite() {
+        LocalDateRangeFieldValidator validator = new LocalDateRangeFieldValidator();
+        validator.setMin(LocalDate.of(0, 1, 1));
+        validator.setMax(LocalDate.of(10000, 1, 1));
 
         assertThat(constraints(validator, HtmlControlType.DATE)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsRequiredOnATemporalControlBoundToATypeThatConvertsBlankToNull() {
+        List<Class<?>> types = List.of(Date.class, java.sql.Date.class, Timestamp.class, Calendar.class,
+            GregorianCalendar.class, LocalDate.class, LocalDateTime.class, LocalTime.class, OffsetDateTime.class);
+        for (HtmlControlType control : List.of(HtmlControlType.DATE, HtmlControlType.MONTH, HtmlControlType.WEEK,
+                HtmlControlType.TIME, HtmlControlType.DATETIME_LOCAL)) {
+            for (Class<?> type : types) {
+                assertThat(provider.constraintsFor(singletonList(new RequiredFieldValidator()), control, null, null, type))
+                    .as(control + " bound to " + type.getName())
+                    .containsEntry("required", "required");
+            }
+        }
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnADateControlBoundToAString() {
+        // an empty date input submits "", which a String property keeps and the validator accepts
+        assertThat(provider.constraintsFor(singletonList(new RequiredFieldValidator()), HtmlControlType.DATE, null,
+            null, String.class)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnADateControlWhenThePropertyTypeIsUnknown() {
+        assertThat(provider.constraintsFor(singletonList(new RequiredFieldValidator()), HtmlControlType.DATE, null,
+            null, null)).isEmpty();
+        assertThat(constraints(new RequiredFieldValidator(), HtmlControlType.DATE)).isEmpty();
+    }
+
+    @Test
+    public void requiredFieldEmitsNothingOnATextControlBoundToADate() {
+        assertThat(provider.constraintsFor(singletonList(new RequiredFieldValidator()), HtmlControlType.TEXT, null,
+            null, Date.class)).isEmpty();
+    }
+
+    @Test
+    public void aProviderImplementingOnlyTheOriginalMethodStillReceivesTheCall() {
+        HtmlConstraintProvider original = (validators, control, validated, value) -> Map.of("data-original", "yes");
+
+        assertThat(original.constraintsFor(List.of(), HtmlControlType.DATE, null, null, Date.class))
+            .containsEntry("data-original", "yes");
     }
 
     @Test

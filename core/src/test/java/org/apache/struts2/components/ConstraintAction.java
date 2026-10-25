@@ -41,6 +41,24 @@ public class ConstraintAction extends ActionSupport {
     private Date birthday;
     private LocalDate dueDate;
     private LocalDateTime meetingAt;
+    private LocalDate startDate;
+    private String dateText;
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getDateText() {
+        return dateText;
+    }
+
+    public void setDateText(String dateText) {
+        this.dateText = dateText;
+    }
 
     public String getUsername() {
         return username;

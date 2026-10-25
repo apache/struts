@@ -21,6 +21,7 @@ package org.apache.struts2.validator.validators;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ObjectFactory;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.text.StubTextProvider;
 import org.apache.struts2.text.TextProviderFactory;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
@@ -95,6 +96,21 @@ public class LocalDateRangeFieldValidatorTest extends XWorkTestCase {
 
         assertEquals(MIN, validator.getMin());
         assertEquals(MAX, validator.getMax());
+    }
+
+    public void testReadsConfigurationBoundsAsIsoWhateverTheGlobalDateFormat() throws Exception {
+        ActionContext.getContext().getValueStack()
+                .push(new StubTextProvider(Map.of(org.apache.struts2.components.Date.DATETAG_PROPERTY, "yyyy-dd-MM")));
+        Map<String, Object> context = ActionContext.getContext().getContextMap();
+        Map<String, Object> params = new HashMap<>();
+        params.put("min", "2026-01-02");
+        params.put("max", "2026-03-04");
+
+        LocalDateRangeFieldValidator validator = (LocalDateRangeFieldValidator) container.getInstance(ObjectFactory.class)
+                .buildValidator(LocalDateRangeFieldValidator.class.getName(), params, context);
+
+        assertEquals(LocalDate.of(2026, 1, 2), validator.getMin());
+        assertEquals(LocalDate.of(2026, 3, 4), validator.getMax());
     }
 
     private ValidatorContext validate(LocalDate birthday) {

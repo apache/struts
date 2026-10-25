@@ -974,6 +974,7 @@ public abstract class UIBean extends Component {
         int stackDepth = stack.getRoot().size();
         try {
             List<Validator> validators = form.getFieldValidators(fieldName);
+            Class<?> propertyType = form.getPropertyType(fieldName);
             // validation resolves a nested message with every visited object on the stack; both
             // happen only when the whole chain exists, so ${...} agrees with the object handed over
             // (restoreStackDepth pops the pushes)
@@ -986,7 +987,7 @@ public abstract class UIBean extends Component {
                 }
             }
             Map<String, String> constraints = htmlConstraintProvider.constraintsFor(
-                validators, getControlType(), validated, getAttributes().get(ATTR_NAME_VALUE));
+                validators, getControlType(), validated, getAttributes().get(ATTR_NAME_VALUE), propertyType);
             if (constraints.isEmpty()) {
                 return;
             }

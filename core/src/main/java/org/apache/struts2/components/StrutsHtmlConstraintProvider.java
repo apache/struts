@@ -29,6 +29,14 @@ import org.apache.struts2.validator.validators.RequiredStringValidator;
 import org.apache.struts2.validator.validators.StringLengthFieldValidator;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +50,8 @@ import java.util.regex.Pattern;
  * an input's {@code type}</em> — switching a field to {@code type="number"} would reject
  * {@code 1234,50}, which the framework's locale-aware conversion accepts in a comma-decimal locale,
  * and the browsers' {@code email}/{@code url} grammars differ from the framework's validators.
- * Range constraints are therefore emitted only on a control the developer already made numeric.
+ * Range constraints are therefore emitted only on a control the developer already made numeric, or
+ * {@code date}.
  *
  * @since 7.4.0
  */
@@ -67,12 +76,21 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     @Override
     public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action,
                                               Object value) {
+        return constraintsFor(validators, control, action, value, null);
+    }
+
+    @Override
+    public Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action,
+                                              Object value, Class<?> propertyType) {
         Map<String, String> attributes = new LinkedHashMap<>();
         if (validators == null || validators.isEmpty() || control == null) {
             return attributes;
         }
         for (Validator validator : validators) {
             addConstraints(attributes, validator, control, value);
+            if (validator instanceof RequiredFieldValidator) {
+                addTemporalRequired(attributes, control, propertyType);
+            }
             if (control != HtmlControlType.UNSUPPORTED) {
                 addMessage(attributes, validator, action);
             }
@@ -119,7 +137,11 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         } else if (validator instanceof DoubleRangeFieldValidator doubleValidator) {
             addDoubleRange(attributes, doubleValidator, control);
         } else if (validator instanceof RangeValidatorSupport<?> rangeValidator) {
-            addRange(attributes, rangeValidator, control);
+            if (control == HtmlControlType.DATE) {
+                addDateRange(attributes, rangeValidator);
+            } else {
+                addRange(attributes, rangeValidator, control);
+            }
         }
     }
 
@@ -139,7 +161,8 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
      * an empty string rather than omitting the parameter therefore passes server-side while the browser
      * blocks it — an empty text input, a select with an empty-valued header option, and an unticked
      * checkbox (CheckboxInterceptor substitutes "false") are all in that group. Only RADIO and FILE omit
-     * the parameter entirely when empty, so only they agree with the browser.
+     * the parameter entirely when empty, so only they agree with the browser here; temporal controls are
+     * decided by property type in {@link #addTemporalRequired}.
      * <p>
      * An omitted parameter leaves the property at whatever it already holds, which is the value being
      * rendered — a primitive's 0, or what {@code prepare()} loaded. The validator itself decides whether
@@ -153,6 +176,63 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (validator.isMissing(value)) {
             attributes.put(REQUIRED_ATTRIBUTE, REQUIRED_ATTRIBUTE);
         }
+    }
+
+    /**
+     * An empty temporal input submits {@code ""}, which the built-in converters turn into null for the
+     * types {@link #convertsBlankToNull(Class)} accepts, so {@code required} then fails on both sides.
+     *
+     * @since 7.5.0
+     */
+    protected void addTemporalRequired(Map<String, String> attributes, HtmlControlType control, Class<?> propertyType) {
+        if (control.isTemporal() && convertsBlankToNull(propertyType)) {
+            attributes.put(REQUIRED_ATTRIBUTE, REQUIRED_ATTRIBUTE);
+        }
+    }
+
+    /**
+     * A property with its own converter that maps {@code ""} to a value needs a provider overriding this.
+     *
+     * @since 7.5.0
+     */
+    protected boolean convertsBlankToNull(Class<?> propertyType) {
+        if (propertyType == null) {
+            return false;
+        }
+        return Date.class.isAssignableFrom(propertyType)
+            || Calendar.class.isAssignableFrom(propertyType)
+            || LocalDate.class.isAssignableFrom(propertyType)
+            || LocalDateTime.class.isAssignableFrom(propertyType)
+            || LocalTime.class.isAssignableFrom(propertyType)
+            || OffsetDateTime.class.isAssignableFrom(propertyType);
+    }
+
+    /**
+     * A {@code java.util.Date} bound becomes its calendar date in the default time zone, the zone the
+     * submitted {@code yyyy-MM-dd} is parsed in. Dropping the time leaves the browser no stricter than the
+     * server: a min of 10:00 on the 1st still lets the 1st through client-side.
+     *
+     * @since 7.5.0
+     */
+    protected void addDateRange(Map<String, String> attributes, RangeValidatorSupport<?> validator) {
+        putIfPresent(attributes, "min", toHtmlDate(validator.getMin()));
+        putIfPresent(attributes, "max", toHtmlDate(validator.getMax()));
+    }
+
+    private String toHtmlDate(Object bound) {
+        LocalDate date;
+        if (bound instanceof LocalDate localDate) {
+            date = localDate;
+        } else if (bound instanceof Date utilDate) {
+            date = Instant.ofEpochMilli(utilDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        } else {
+            return null;
+        }
+        // a valid HTML date needs a positive year, and LocalDate writes years past 9999 with a sign
+        if (date.getYear() < 1 || date.getYear() > 9999) {
+            return null;
+        }
+        return date.toString();
     }
 
     protected void addLength(Map<String, String> attributes, StringLengthFieldValidator validator, HtmlControlType control) {
@@ -193,9 +273,6 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
 
     protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator, HtmlControlType control) {
         if (!isNumericRange(control)) {
-            // Temporal controls support ranges too, but min/max there need per-control ISO
-            // formatting (date -> yyyy-MM-dd, month -> yyyy-MM, week -> yyyy-'W'ww, time -> HH:mm).
-            // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
             return;
         }
         // min is guarded by isIntegral; see the comment on that method. The shipped Integer/Short/Long
@@ -212,9 +289,6 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
 
     protected void addDoubleRange(Map<String, String> attributes, DoubleRangeFieldValidator validator, HtmlControlType control) {
         if (!isNumericRange(control)) {
-            // Temporal controls support ranges too, but min/max there need per-control ISO
-            // formatting (date -> yyyy-MM-dd, month -> yyyy-MM, week -> yyyy-'W'ww, time -> HH:mm).
-            // Deliberately deferred; DateRangeFieldValidator therefore emits nothing for now.
             return;
         }
         // exclusive bounds have no HTML equivalent; omitting them leaves the browser more

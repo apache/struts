@@ -51,4 +51,18 @@ public interface HtmlConstraintProvider {
      * @return attribute name to value; never null, possibly empty
      */
     Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action, Object value);
+
+    /**
+     * What the framework calls. The default ignores {@code propertyType} and delegates to
+     * {@link #constraintsFor(List, HtmlControlType, Object, Object)}, so a provider written against 7.4.0
+     * keeps working unchanged.
+     *
+     * @param propertyType the declared type of the property the field binds to; null when it cannot be
+     *                     resolved
+     * @since 7.5.0
+     */
+    default Map<String, String> constraintsFor(List<Validator> validators, HtmlControlType control, Object action,
+                                               Object value, Class<?> propertyType) {
+        return constraintsFor(validators, control, action, value);
+    }
 }

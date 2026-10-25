@@ -30,6 +30,8 @@ import org.apache.struts2.config.entities.InterceptorMapping;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.interceptor.MethodFilterInterceptorUtil;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.util.reflection.ReflectionException;
+import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.text.CompositeTextProvider;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.text.TextProviderFactory;
@@ -48,6 +50,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,6 +147,7 @@ public class Form extends ClosingUIBean {
     private final Map<String, List<Object>> visitedObjects = new HashMap<>();
     private Boolean modelDrivenConfigured;
     protected TextProviderFactory textProviderFactory;
+    private ReflectionProvider reflectionProvider;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -186,6 +191,11 @@ public class Form extends ClosingUIBean {
     @Inject
     public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
+    }
+
+    @Inject
+    public void setReflectionProvider(ReflectionProvider reflectionProvider) {
+        this.reflectionProvider = reflectionProvider;
     }
 
 
@@ -426,6 +436,51 @@ public class Form extends ClosingUIBean {
             chain.add(visited);
         }
         return chain;
+    }
+
+    /**
+     * The declared type of the property a field binds to, found on the object parameter binding would
+     * write to and then walked through declared types rather than values, so a null intermediate object
+     * (which binding creates) does not hide it. Null for an indexed or unknown path.
+     */
+    Class<?> getPropertyType(String name) {
+        if (name == null || name.isEmpty() || StringUtils.containsAny(name, '[', '(')) {
+            return null;
+        }
+        String[] segments = name.split("\\.");
+        for (Object root : bindingRoots()) {
+            Class<?> type = declaredType(root.getClass(), segments[0]);
+            if (type != null) {
+                for (int i = 1; i < segments.length && type != null; i++) {
+                    type = declaredType(type, segments[i]);
+                }
+                return type;
+            }
+        }
+        return null;
+    }
+
+    private List<Object> bindingRoots() {
+        Object invoked = currentAction();
+        if (invoked == null) {
+            return new ArrayList<>(getStack().getRoot());
+        }
+        List<Object> roots = new ArrayList<>(2);
+        Object model = modelPushedAbove(invoked, getStack().getRoot());
+        if (model != null) {
+            roots.add(model);
+        }
+        roots.add(invoked);
+        return roots;
+    }
+
+    private Class<?> declaredType(Class<?> owner, String property) {
+        try {
+            PropertyDescriptor descriptor = reflectionProvider.getPropertyDescriptor(owner, property);
+            return descriptor == null ? null : descriptor.getPropertyType();
+        } catch (IntrospectionException | ReflectionException e) {
+            return null;
+        }
     }
 
     private Object currentAction() {

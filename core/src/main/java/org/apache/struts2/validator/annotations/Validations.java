@@ -67,6 +67,11 @@ import java.lang.annotation.Target;
  * <td class='confluenceTd'> Add list of DateRangeFieldValidators </td>
  * </tr>
  * <tr>
+ * <td class='confluenceTd'> localDateRangeFields </td>
+ * <td class='confluenceTd'> no </td>
+ * <td class='confluenceTd'> Add list of LocalDateRangeFieldValidators </td>
+ * </tr>
+ * <tr>
  * <td class='confluenceTd'> emails </td>
  * <td class='confluenceTd'> no </td>
  * <td class='confluenceTd'> Add list of EmailValidators </td>
@@ -185,6 +190,8 @@ public @interface Validations {
     ConversionErrorFieldValidator[] conversionErrorFields() default {};
 
     DateRangeFieldValidator[] dateRangeFields() default {};
+
+    LocalDateRangeFieldValidator[] localDateRangeFields() default {};
 
     EmailValidator[] emails() default {};
 

@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.validator;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionSupport;
@@ -36,6 +37,7 @@ import org.apache.struts2.validator.validators.ConditionalVisitorFieldValidator;
 import org.apache.struts2.validator.validators.ConversionErrorFieldValidator;
 import org.apache.struts2.validator.validators.CreditCardValidator;
 import org.apache.struts2.validator.validators.DateRangeFieldValidator;
+import org.apache.struts2.validator.validators.LocalDateRangeFieldValidator;
 import org.apache.struts2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.validator.validators.EmailValidator;
 import org.apache.struts2.validator.validators.ExpressionValidator;
@@ -53,6 +55,8 @@ import org.apache.struts2.StrutsConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -353,6 +357,38 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
 
         assertEquals(2, doubleValidators);
         assertEquals(2, shortValidators);
+    }
+
+    public void testLocalDateRangeAnnotations() throws Exception {
+        AnnotationActionValidatorManager manager = createValidationManager(AnnotationLocalDateRangeAction.class, Locale.US);
+
+        List<Validator> validators = manager.getValidators(AnnotationLocalDateRangeAction.class, null);
+
+        assertEquals(2, validators.size());
+        for (Validator validator : validators) {
+            assertEquals("localdate", validator.getValidatorType());
+            LocalDateRangeFieldValidator localDateValidator = (LocalDateRangeFieldValidator) validator;
+            if ("birthday".equals(localDateValidator.getFieldName())) {
+                assertEquals(LocalDate.of(2026, 1, 1), localDateValidator.getMin());
+                assertEquals(LocalDate.of(2026, 12, 31), localDateValidator.getMax());
+                assertEquals("Birthday must be between ${min} and ${max}", localDateValidator.getDefaultMessage());
+            } else {
+                assertEquals("holiday", localDateValidator.getFieldName());
+                assertEquals(LocalDate.of(2026, 7, 1), localDateValidator.getMin());
+                assertEquals(LocalDate.of(2026, 8, 31), localDateValidator.getMax());
+            }
+        }
+    }
+
+    public void testLocalDateRangeAnnotationRejectsANonIsoBound() throws Exception {
+        AnnotationActionValidatorManager manager = createValidationManager(AnnotationMalformedLocalDateRangeAction.class, Locale.US);
+
+        try {
+            manager.getValidators(AnnotationMalformedLocalDateRangeAction.class, null);
+            fail("A non-ISO min must fail when the validators are built");
+        } catch (Exception e) {
+            assertTrue(ExceptionUtils.getRootCause(e) instanceof DateTimeParseException);
+        }
     }
 
     private AnnotationActionValidatorManager createValidationManager(final Class<? extends ActionSupport> actionClass, Locale locale) throws Exception {

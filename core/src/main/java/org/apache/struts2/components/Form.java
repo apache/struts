@@ -467,7 +467,7 @@ public class Form extends ClosingUIBean {
             return Collections.emptyList();
         }
         Object invoked = currentAction();
-        if (!actionClass.isInstance(invoked)) {
+        if (invoked == null || !actionClass.isInstance(invoked)) {
             return ModelDriven.class.isAssignableFrom(actionClass)
                 ? Collections.emptyList() : Collections.singletonList(actionClass);
         }

@@ -29,6 +29,7 @@ import org.apache.struts2.validator.annotations.EmailValidator;
 import org.apache.struts2.validator.annotations.ExpressionValidator;
 import org.apache.struts2.validator.annotations.FieldExpressionValidator;
 import org.apache.struts2.validator.annotations.IntRangeFieldValidator;
+import org.apache.struts2.validator.annotations.LocalDateRangeFieldValidator;
 import org.apache.struts2.validator.annotations.LongRangeFieldValidator;
 import org.apache.struts2.validator.annotations.RegexFieldValidator;
 import org.apache.struts2.validator.annotations.RequiredFieldValidator;
@@ -46,6 +47,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,6 +126,10 @@ public class AnnotationValidationConfigurationBuilder {
                         result.add(temp);
                     }
 
+                }
+                // Process LocalDateRangeFieldValidator
+                else if (a instanceof LocalDateRangeFieldValidator v) {
+                    result.add(processLocalDateRangeFieldValidatorAnnotation(v, fieldName, methodName));
                 }
                 // Process EmailValidator
                 else if (a instanceof EmailValidator v) {
@@ -266,6 +272,9 @@ public class AnnotationValidationConfigurationBuilder {
                     result.add(temp);
                 }
             }
+        }
+        for (LocalDateRangeFieldValidator v : validations.localDateRangeFields()) {
+            result.add(processLocalDateRangeFieldValidatorAnnotation(v, fieldName, methodName));
         }
         EmailValidator[] emv = validations.emails();
         if (emv != null) {
@@ -878,6 +887,40 @@ public class AnnotationValidationConfigurationBuilder {
             params.put("fieldName", fieldName);
         } else if (StringUtils.isNotEmpty(v.fieldName())) {
             params.put("fieldName", v.fieldName());
+        }
+
+        validatorFactory.lookupRegisteredValidatorType(validatorType);
+        return new ValidatorConfig.Builder(validatorType)
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
+    }
+
+    private ValidatorConfig processLocalDateRangeFieldValidatorAnnotation(LocalDateRangeFieldValidator v, String fieldName, String methodName) {
+        String validatorType = "localdate";
+
+        Map<String, Object> params = new HashMap<>();
+
+        if (fieldName != null) {
+            params.put("fieldName", fieldName);
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
+            params.put("fieldName", v.fieldName());
+        }
+        if (StringUtils.isNotEmpty(v.min())) {
+            params.put("min", LocalDate.parse(v.min()));
+        }
+        if (StringUtils.isNotEmpty(v.max())) {
+            params.put("max", LocalDate.parse(v.max()));
+        }
+        if (StringUtils.isNotEmpty(v.minExpression())) {
+            params.put("minExpression", v.minExpression());
+        }
+        if (StringUtils.isNotEmpty(v.maxExpression())) {
+            params.put("maxExpression", v.maxExpression());
         }
 
         validatorFactory.lookupRegisteredValidatorType(validatorType);

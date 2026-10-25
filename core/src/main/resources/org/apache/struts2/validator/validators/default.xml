@@ -32,6 +32,7 @@
     <validator name="short" class="org.apache.struts2.validator.validators.ShortRangeFieldValidator"/>
     <validator name="double" class="org.apache.struts2.validator.validators.DoubleRangeFieldValidator"/>
     <validator name="date" class="org.apache.struts2.validator.validators.DateRangeFieldValidator"/>
+    <validator name="localdate" class="org.apache.struts2.validator.validators.LocalDateRangeFieldValidator"/>
     <validator name="expression" class="org.apache.struts2.validator.validators.ExpressionValidator"/>
     <validator name="fieldexpression" class="org.apache.struts2.validator.validators.FieldExpressionValidator"/>
     <validator name="email" class="org.apache.struts2.validator.validators.EmailValidator"/>

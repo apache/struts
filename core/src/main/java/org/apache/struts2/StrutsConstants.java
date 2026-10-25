@@ -669,6 +669,15 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_COLLECTION = "struts.converter.collection";
     public static final String STRUTS_CONVERTER_ARRAY = "struts.converter.array";
     public static final String STRUTS_CONVERTER_DATE = "struts.converter.date";
+
+    /**
+     * When true, {@link org.apache.struts2.conversion.impl.DateConverter} reads the offset of an ISO date-time such as
+     * {@code 2026-10-25T05:14:42.000Z}, so {@code Z} means UTC; when false (the default) it is read as server-local time.
+     *
+     * @since 7.5.0
+     */
+    public static final String STRUTS_CONVERTER_DATE_ISO_OFFSET_AWARE = "struts.converter.date.isoOffsetAware";
+
     public static final String STRUTS_CONVERTER_NUMBER = "struts.converter.number";
     public static final String STRUTS_CONVERTER_STRING = "struts.converter.string";
 

@@ -22,6 +22,7 @@ import org.apache.struts2.ActionContext;
 import org.apache.struts2.text.StubTextProvider;
 import org.apache.struts2.StubValueStack;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.conversion.TypeConversionException;
 
@@ -29,6 +30,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -37,10 +39,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class DateConverterTest extends StrutsInternalTestCase {
 
     private String INPUT_TIME_STAMP_STR;
+    private TimeZone defaultTimeZone;
     private String INPUT_WHEN_LONG_CONSTRUCTOR_STR;
     private final Locale mxLocale = new Locale("es_MX", "MX");
     private final static String RES_TIME_STAMP_STR = "2020-03-20 00:00:00.0";
@@ -54,6 +58,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     private final static String LOCALTIME_STR = "01:59:10";
 
     private final static String INVALID_LOCALDATETIME = "2010-99-99T00:00";
+    private final static TimeZone TOKYO = TimeZone.getTimeZone("Asia/Tokyo");
     private final static Locale DUTCH = Locale.forLanguageTag("nl-NL");
     private final static String MESSAGE_PARSE_ERROR = "Could not parse date";
     private final static String MESSAGE_DEFAULT_CONSTRUCTOR_ERROR = "Couldn't create class null using default (long) constructor";
@@ -272,7 +277,68 @@ public class DateConverterTest extends StrutsInternalTestCase {
         }
     }
 
+    public void testIsoOffsetAwareIsOffByDefault() {
+        TimeZone.setDefault(TOKYO);
+        Object value = convertToDate(container.getInstance(DateConverter.class), "2026-10-24T10:15:30Z", Locale.US, null);
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
+    }
+
+    public void testIsoOffsetAwareConstantReadsZAsUtc() {
+        TimeZone.setDefault(TOKYO);
+        initDispatcher(Map.of(StrutsConstants.STRUTS_CONVERTER_DATE_ISO_OFFSET_AWARE, "true"));
+
+        Object value = convertToDate(container.getInstance(DateConverter.class), "2026-10-24T10:15:30Z", Locale.US, null);
+
+        assertEquals(Instant.parse("2026-10-24T10:15:30Z"), ((Date) value).toInstant());
+    }
+
+    public void testIsoOffsetAwareReadsMillisAndZAsUtc() {
+        TimeZone.setDefault(TOKYO);
+        Object value = convertToDate(isoOffsetAwareConverter(), "2026-10-24T10:15:30.123Z", Locale.US, null);
+
+        assertEquals(Instant.parse("2026-10-24T10:15:30.123Z"), ((Date) value).toInstant());
+    }
+
+    public void testIsoOffsetAwareHonoursANumericOffset() {
+        Object value = convertToDate(isoOffsetAwareConverter(), "2026-10-24T12:15:30+02:00", Locale.US, null);
+
+        assertEquals(Instant.parse("2026-10-24T10:15:30Z"), ((Date) value).toInstant());
+    }
+
+    public void testIsoOffsetAwareAcceptsAnyFractionLength() {
+        TimeZone.setDefault(TOKYO);
+        Object value = convertToDate(isoOffsetAwareConverter(), "2026-10-24T10:15:30.5Z", Locale.US, null);
+
+        assertEquals(Instant.parse("2026-10-24T10:15:30.500Z"), ((Date) value).toInstant());
+    }
+
+    public void testIsoOffsetAwareKeepsTheLocalReadingWithoutAnOffset() {
+        Object value = convertToDate(isoOffsetAwareConverter(), "2026-10-24T10:15:30", Locale.US, null);
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
+    }
+
+    public void testIsoOffsetAwareRejectsAYearOutsideTheDateRange() {
+        try {
+            convertToDate(isoOffsetAwareConverter(), "+999999999-12-31T00:00:00Z", Locale.US, null);
+            fail("TypeConversionException expected");
+        } catch (TypeConversionException e) {
+            assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
+        }
+    }
+
+    private static DateConverter isoOffsetAwareConverter() {
+        DateConverter converter = new DateConverter();
+        converter.setIsoOffsetAware("true");
+        return converter;
+    }
+
     private Object convertToDate(String input, Locale locale, String globalFormat) {
+        return convertToDate(new DateConverter(), input, locale, globalFormat);
+    }
+
+    private Object convertToDate(DateConverter converter, String input, Locale locale, String globalFormat) {
         ValueStack stack = new StubValueStack();
         Map<String, String> texts = new HashMap<>();
         if (globalFormat != null) {
@@ -281,7 +347,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         stack.push(new StubTextProvider(texts));
         ActionContext context = ActionContext.of().withLocale(locale).withValueStack(stack);
 
-        return new DateConverter().convertValue(context.getContextMap(), null, null, null, input, Date.class);
+        return converter.convertValue(context.getContextMap(), null, null, null, input, Date.class);
     }
 
     private static String dutchDateTime(String time) {
@@ -335,6 +401,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        defaultTimeZone = TimeZone.getDefault();
         // Due to JEP 252: Use CLDR Locale Data by Default
         DateFormat dFormat = DateFormat.getDateInstance(DateFormat.SHORT, mxLocale);
         if (dFormat.format(new Date()).contains("-")) { // Format when Java 9 or greater
@@ -344,6 +411,12 @@ public class DateConverterTest extends StrutsInternalTestCase {
         }
         SimpleDateFormat dateTime = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, mxLocale);
         INPUT_TIME_STAMP_STR = new SimpleDateFormat(dateTime.toPattern() + ".SSS", mxLocale).format(Timestamp.valueOf(RES_TIME_STAMP_STR));
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        TimeZone.setDefault(defaultTimeZone);
+        super.tearDown();
     }
 
 }

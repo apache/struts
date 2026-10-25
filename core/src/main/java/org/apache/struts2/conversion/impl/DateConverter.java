@@ -19,6 +19,8 @@
 package org.apache.struts2.conversion.impl;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +49,13 @@ public class DateConverter extends DefaultTypeConverter {
 
     private final static Logger LOG = LogManager.getLogger(DateConverter.class);
 
+    private boolean isoOffsetAware;
+
+    @Inject(value = StrutsConstants.STRUTS_CONVERTER_DATE_ISO_OFFSET_AWARE, required = false)
+    public void setIsoOffsetAware(String isoOffsetAware) {
+        this.isoOffsetAware = Boolean.parseBoolean(isoOffsetAware);
+    }
+
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName,
             Object value, Class toType) {
@@ -67,6 +76,12 @@ public class DateConverter extends DefaultTypeConverter {
 
                 df = selectFormat(new DateFormat[] { fullfmt, dtfmt, dfmt }, sa);
             } else if (java.util.Date.class == toType) {
+                if (isoOffsetAware) {
+                    Date isoDate = parseIsoOffsetDateTime(sa);
+                    if (isoDate != null) {
+                        return isoDate;
+                    }
+                }
                 df = selectFormat(getDateFormats(ActionContext.of(context), locale), sa);
             } else if (java.time.LocalDateTime.class == toType || java.time.LocalDate.class == toType
                     || java.time.LocalTime.class == toType) {
@@ -130,6 +145,20 @@ public class DateConverter extends DefaultTypeConverter {
             return convertDate(date, toType);
         }
         return result;
+    }
+
+    private static Date parseIsoOffsetDateTime(String input) {
+        OffsetDateTime dateTime;
+        try {
+            dateTime = OffsetDateTime.parse(input, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+        try {
+            return Date.from(dateTime.toInstant());
+        } catch (IllegalArgumentException e) {
+            throw new TypeConversionException("Could not parse date", e);
+        }
     }
 
     /**

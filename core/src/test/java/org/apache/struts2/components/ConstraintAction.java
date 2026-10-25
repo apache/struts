@@ -43,6 +43,15 @@ public class ConstraintAction extends ActionSupport {
     private LocalDateTime meetingAt;
     private LocalDate startDate;
     private String dateText;
+    private Date hiredOn;
+
+    public Date getHiredOn() {
+        return hiredOn;
+    }
+
+    public void setHiredOn(Date hiredOn) {
+        this.hiredOn = hiredOn;
+    }
 
     public LocalDate getStartDate() {
         return startDate;

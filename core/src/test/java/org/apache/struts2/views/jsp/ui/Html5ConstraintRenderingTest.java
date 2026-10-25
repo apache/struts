@@ -29,6 +29,7 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -181,6 +182,27 @@ public class Html5ConstraintRenderingTest extends AbstractUITagTest {
         assertTrue("expected required, min and max in: " + output, output.contains("type=\"date\" name=\"startDate\"")
             && output.contains("required=\"required\"") && output.contains("min=\"2026-01-01\"")
             && output.contains("max=\"2026-12-31\""));
+    }
+
+    /**
+     * The XML bounds are parsed into server-zone midnights and written back in the same zone, so a
+     * non-UTC default zone must still render the configured dates.
+     */
+    public void testRendersTheIsoRangeOfAJavaUtilDateBoundOnADateTextField() throws Exception {
+        TimeZone defaultZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"));
+        try {
+            String output = renderTag("true", () -> {
+                DateTextFieldTag date = new DateTextFieldTag();
+                date.setName("hiredOn");
+                return date;
+            });
+
+            assertTrue("expected min and max in: " + output, output.contains("type=\"date\" name=\"hiredOn\"")
+                && output.contains("min=\"2026-01-01\"") && output.contains("max=\"2026-12-31\""));
+        } finally {
+            TimeZone.setDefault(defaultZone);
+        }
     }
 
     /**

@@ -73,6 +73,13 @@
             <message>start within 2026</message>
         </field-validator>
     </field>
+    <field name="hiredOn">
+        <field-validator type="date">
+            <param name="min">2026-01-01</param>
+            <param name="max">2026-12-31</param>
+            <message>hired within 2026</message>
+        </field-validator>
+    </field>
     <field name="dateText">
         <field-validator type="required">
             <message>type a date</message>

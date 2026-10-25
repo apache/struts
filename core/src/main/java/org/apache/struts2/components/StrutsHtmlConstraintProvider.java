@@ -37,6 +37,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,11 +138,7 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         } else if (validator instanceof DoubleRangeFieldValidator doubleValidator) {
             addDoubleRange(attributes, doubleValidator, control);
         } else if (validator instanceof RangeValidatorSupport<?> rangeValidator) {
-            if (control == HtmlControlType.DATE) {
-                addDateRange(attributes, rangeValidator);
-            } else {
-                addRange(attributes, rangeValidator, control);
-            }
+            addRange(attributes, rangeValidator, control);
         }
     }
 
@@ -224,6 +221,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
         if (bound instanceof LocalDate localDate) {
             date = localDate;
         } else if (bound instanceof Date utilDate) {
+            // before the cutover DateConverter reads yyyy-MM-dd as a Julian date, the browser as a Gregorian one
+            if (utilDate.before(new GregorianCalendar().getGregorianChange())) {
+                return null;
+            }
             date = Instant.ofEpochMilli(utilDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         } else {
             return null;
@@ -272,6 +273,10 @@ public class StrutsHtmlConstraintProvider implements HtmlConstraintProvider {
     }
 
     protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator, HtmlControlType control) {
+        if (control == HtmlControlType.DATE) {
+            addDateRange(attributes, validator);
+            return;
+        }
         if (!isNumericRange(control)) {
             return;
         }

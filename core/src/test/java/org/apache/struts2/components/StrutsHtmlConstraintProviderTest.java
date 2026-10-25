@@ -37,6 +37,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -390,6 +391,32 @@ public class StrutsHtmlConstraintProviderTest {
                 HtmlControlType.TIME, HtmlControlType.DATETIME_LOCAL)) {
             assertThat(constraints(validator, control)).as(control.name()).isEmpty();
         }
+    }
+
+    @Test
+    public void aSubclassOverridingAddRangeStillHandlesTheDateControl() {
+        provider = new StrutsHtmlConstraintProvider() {
+            @Override
+            protected void addRange(Map<String, String> attributes, RangeValidatorSupport<?> validator,
+                                    HtmlControlType control) {
+                attributes.put("data-range", control.name());
+            }
+        };
+        LocalDateRangeFieldValidator validator = new LocalDateRangeFieldValidator();
+        validator.setMin(LocalDate.of(2026, 1, 1));
+
+        assertThat(constraints(validator, HtmlControlType.DATE)).containsOnly(Map.entry("data-range", "DATE"));
+    }
+
+    @Test
+    public void dateRangeOmitsABoundBeforeTheGregorianCutoverWhereTheConverterReadsJulianDates() throws Exception {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat converterFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateRangeFieldValidator validator = new DateRangeFieldValidator();
+        validator.setMin(converterFormat.parse("1500-01-01"));
+        validator.setMax(converterFormat.parse("2026-12-31"));
+
+        assertThat(constraints(validator, HtmlControlType.DATE)).containsOnly(Map.entry("max", "2026-12-31"));
     }
 
     @Test

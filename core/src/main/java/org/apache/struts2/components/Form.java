@@ -439,17 +439,18 @@ public class Form extends ClosingUIBean {
     }
 
     /**
-     * The declared type of the property a field binds to, found on the object parameter binding would
-     * write to and then walked through declared types rather than values, so a null intermediate object
-     * (which binding creates) does not hide it. Null for an indexed or unknown path.
+     * The declared type of the property a field binds to on the form's submission action, walked
+     * through declared types rather than values, so a null intermediate object (which binding creates)
+     * does not hide it. Null for an indexed or unknown path, and for a model-driven submission action
+     * the form is not rendered by, whose model type is only known at runtime.
      */
     Class<?> getPropertyType(String name) {
         if (name == null || name.isEmpty() || StringUtils.containsAny(name, '[', '(')) {
             return null;
         }
         String[] segments = name.split("\\.");
-        for (Object root : bindingRoots()) {
-            Class<?> type = declaredType(root.getClass(), segments[0]);
+        for (Class<?> root : bindingRoots()) {
+            Class<?> type = declaredType(root, segments[0]);
             if (type != null) {
                 for (int i = 1; i < segments.length && type != null; i++) {
                     type = declaredType(type, segments[i]);
@@ -460,17 +461,22 @@ public class Form extends ClosingUIBean {
         return null;
     }
 
-    private List<Object> bindingRoots() {
-        Object invoked = currentAction();
-        if (invoked == null) {
-            return new ArrayList<>(getStack().getRoot());
+    private List<Class<?>> bindingRoots() {
+        Class<?> actionClass = (Class<?>) getAttributes().get(ATTR_ACTION_CLASS);
+        if (actionClass == null) {
+            return Collections.emptyList();
         }
-        List<Object> roots = new ArrayList<>(2);
+        Object invoked = currentAction();
+        if (!actionClass.isInstance(invoked)) {
+            return ModelDriven.class.isAssignableFrom(actionClass)
+                ? Collections.emptyList() : Collections.singletonList(actionClass);
+        }
+        List<Class<?>> roots = new ArrayList<>(2);
         Object model = modelPushedAbove(invoked, getStack().getRoot());
         if (model != null) {
-            roots.add(model);
+            roots.add(model.getClass());
         }
-        roots.add(invoked);
+        roots.add(invoked.getClass());
         return roots;
     }
 

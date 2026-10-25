@@ -996,6 +996,10 @@ public abstract class UIBean extends Component {
             // duplicate attribute, of which the browser keeps the first
             constraints.keySet().removeIf(attributeName ->
                 "type".equalsIgnoreCase(attributeName) || isAlreadyRendered(attributeName));
+            // min is the step base, so it would move the developer's own step grid
+            if (isAlreadyRendered("step")) {
+                constraints.remove("min");
+            }
             if (!constraints.isEmpty()) {
                 addParameter("constraints", constraints);
             }

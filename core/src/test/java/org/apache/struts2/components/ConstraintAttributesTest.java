@@ -137,6 +137,21 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
     }
 
     /**
+     * A {@code min} becomes the step base, so on a field with {@code step="7"} it would move the
+     * developer's grid and block values the server accepts.
+     */
+    public void testADeveloperStepSuppressesTheDerivedMinButKeepsTheMax() throws Exception {
+        initDispatcherWith("true");
+        fieldName = "startDate";
+        dynamicAttributes.put("STEP", "7");
+
+        Map<String, String> constraints = renderFieldAndReturnConstraints("date");
+
+        assertFalse(constraints.containsKey("min"));
+        assertEquals("2026-12-31", constraints.get("max"));
+    }
+
+    /**
      * {@code html5/text.ftl} has already emitted a hardcoded {@code type} by the time the constraint
      * map renders, so a {@code type} from a provider would be a duplicate attribute the browser drops.
      */
@@ -445,6 +460,22 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         assertEquals(java.time.LocalDate.class, propertyTypeHandedToTheProvider());
     }
 
+    public void testThePropertyTypeIsReadFromTheSubmissionActionWhenAnotherActionRendersTheForm() throws Exception {
+        actionOverride = new RenderingAction();
+        initDispatcherWith("true");
+        fieldName = "birthday";
+
+        assertEquals(java.util.Date.class, propertyTypeHandedToTheProvider());
+    }
+
+    public void testAModelDrivenSubmissionActionRenderedByAnotherActionHandsTheProviderNoType() throws Exception {
+        actionName = "modelDrivenConstraintAction";
+        initDispatcherWith("true");
+        fieldName = "birthday";
+
+        assertNull(propertyTypeHandedToTheProvider());
+    }
+
     public void testAnIndexedFieldHandsTheProviderNoType() throws Exception {
         initDispatcherWith("true");
         fieldName = "user.address[0].street";
@@ -491,6 +522,19 @@ public class ConstraintAttributesTest extends AbstractUITagTest {
         @Override
         public ConstraintAction getModel() {
             return model;
+        }
+    }
+
+    public static class RenderingAction extends org.apache.struts2.ActionSupport {
+
+        private String birthday;
+
+        public String getBirthday() {
+            return birthday;
+        }
+
+        public void setBirthday(String birthday) {
+            this.birthday = birthday;
         }
     }
 

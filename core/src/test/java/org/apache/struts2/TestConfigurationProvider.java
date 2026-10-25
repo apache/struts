@@ -39,6 +39,7 @@ import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.components.ConstraintAction;
+import org.apache.struts2.components.ModelDrivenConstraintAction;
 import org.apache.struts2.interceptor.ModelDrivenInterceptor;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
 
@@ -103,7 +104,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
             .addInterceptor(new InterceptorMapping("validation", validationInterceptor))
             .build();
 
-        ActionConfig modelDrivenConstraintActionConfig = new ActionConfig.Builder("", "modelDrivenConstraintAction", ConstraintAction.class.getName())
+        ActionConfig modelDrivenConstraintActionConfig = new ActionConfig.Builder("", "modelDrivenConstraintAction", ModelDrivenConstraintAction.class.getName())
             .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
                     .addParam("location", "success.jsp")
                     .build())

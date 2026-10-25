@@ -28,7 +28,6 @@ import org.apache.struts2.conversion.TypeConversionException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -111,20 +110,20 @@ public class DateConverter extends DefaultTypeConverter {
             if (df == null) {
                 df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
             }
-            try {
-                df.setLenient(false); // let's use strict parsing (XW-341)
-                result = df.parse(sa);
-                if (!(Date.class == toType)) {
-                    try {
-                        Constructor<?> constructor = toType.getConstructor(long.class);
-                        return constructor.newInstance(result.getTime());
-                    } catch (Exception e) {
-                        throw new TypeConversionException(
-                                "Couldn't create class " + toType + " using default (long) constructor", e);
-                    }
+            df.setLenient(false); // let's use strict parsing (XW-341)
+            ParsePosition position = new ParsePosition(0);
+            result = df.parse(sa, position);
+            if (result == null || position.getIndex() != sa.length()) {
+                throw new TypeConversionException("Could not parse date");
+            }
+            if (!(Date.class == toType)) {
+                try {
+                    Constructor<?> constructor = toType.getConstructor(long.class);
+                    return constructor.newInstance(result.getTime());
+                } catch (Exception e) {
+                    throw new TypeConversionException(
+                            "Couldn't create class " + toType + " using default (long) constructor", e);
                 }
-            } catch (ParseException e) {
-                throw new TypeConversionException("Could not parse date", e);
             }
 
         } else if (value instanceof Date date) {
@@ -136,19 +135,11 @@ public class DateConverter extends DefaultTypeConverter {
     /**
      * Picks the first format that strictly parses the whole input, so a format that only matches leniently, or only
      * matches a prefix, does not hide a later one that fits (an ISO date under a {@code dd-MM-y} locale, for example).
-     * Without such a format it falls back to the first lenient match, which the caller then re-parses strictly.
      */
     protected DateFormat selectFormat(DateFormat[] formats, String input) {
         for (DateFormat format : formats) {
             if (parsesWholeInputStrictly(format, input)) {
                 return format;
-            }
-        }
-        for (DateFormat format : formats) {
-            try {
-                format.parse(input);
-                return format;
-            } catch (ParseException ignore) {
             }
         }
         return null;
@@ -234,14 +225,16 @@ public class DateConverter extends DefaultTypeConverter {
         DateFormat d3 = DateFormat.getDateInstance(DateFormat.LONG, locale);
 
         DateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat rfc3339Z = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateFormat rfc3339MillisZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         DateFormat rfc3339dateOnly = new SimpleDateFormat("yyyy-MM-dd");
 
         final DateFormat[] dateFormats;
 
         if (globalDateFormat == null) {
-            dateFormats = new DateFormat[] { dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly };
+            dateFormats = new DateFormat[] { dt1, dt2, dt3, rfc3339, rfc3339Z, rfc3339MillisZ, d1, d2, d3, rfc3339dateOnly };
         } else {
-            dateFormats = new DateFormat[] { globalDateFormat, dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly };
+            dateFormats = new DateFormat[] { globalDateFormat, dt1, dt2, dt3, rfc3339, rfc3339Z, rfc3339MillisZ, d1, d2, d3, rfc3339dateOnly };
         }
 
         return dateFormats;

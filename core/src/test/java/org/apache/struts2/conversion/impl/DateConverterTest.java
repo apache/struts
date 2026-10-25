@@ -28,6 +28,7 @@ import org.apache.struts2.conversion.TypeConversionException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,7 +44,6 @@ public class DateConverterTest extends StrutsInternalTestCase {
     private String INPUT_WHEN_LONG_CONSTRUCTOR_STR;
     private final Locale mxLocale = new Locale("es_MX", "MX");
     private final static String RES_TIME_STAMP_STR = "2020-03-20 00:00:00.0";
-    private final static String TIME_01_59_10 = "01:59:10 AM";
     private final static String DATE_STR = "2020-03-20";
     private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00";
     private final static String INVALID_DATE = "99/99/2010";
@@ -63,7 +63,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 
         ActionContext context = ActionContext.of().withLocale(mxLocale);
 
-        Object value = converter.convertValue(context.getContextMap(), null, null, null, TIME_01_59_10, Time.class);
+        Object value = converter.convertValue(context.getContextMap(), null, null, null, DateFormat.getTimeInstance(DateFormat.MEDIUM, mxLocale).format(Time.valueOf("01:59:10")), Time.class);
         assertEquals("01:59:10", value.toString());
     }
 
@@ -229,6 +229,49 @@ public class DateConverterTest extends StrutsInternalTestCase {
         assertEquals(Timestamp.valueOf("2026-10-24 10:15:30.123"), value);
     }
 
+    public void testDateWithTrailingTextIsRejected() {
+        try {
+            convertToDate("24-10-2026 at 10:15:30", DUTCH, null);
+            fail("TypeConversionException expected");
+        } catch (TypeConversionException e) {
+            assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
+        }
+    }
+
+    public void testIsoDateTimeWithATrailingZ() {
+        Object value = convertToDate("2026-10-24T10:15:30Z", Locale.US, null);
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30), toLocalDateTime(value));
+    }
+
+    public void testIsoDateTimeWithMillisAndATrailingZ() {
+        Object value = convertToDate("2026-10-24T10:15:30.123Z", Locale.US, null);
+
+        assertEquals(LocalDateTime.of(2026, 10, 24, 10, 15, 30, 123_000_000), toLocalDateTime(value));
+    }
+
+    public void testSqlTimestampWithTrailingTextIsRejected() {
+        ActionContext context = ActionContext.of().withLocale(DUTCH);
+
+        try {
+            new DateConverter().convertValue(context.getContextMap(), null, null, null, "24-10-2026 at 10:15:30", Timestamp.class);
+            fail("TypeConversionException expected");
+        } catch (TypeConversionException e) {
+            assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
+        }
+    }
+
+    public void testSqlTimeWithTrailingTextIsRejected() {
+        ActionContext context = ActionContext.of().withLocale(DUTCH);
+
+        try {
+            new DateConverter().convertValue(context.getContextMap(), null, null, null, "10:15:30 tomorrow", Time.class);
+            fail("TypeConversionException expected");
+        } catch (TypeConversionException e) {
+            assertEquals(MESSAGE_PARSE_ERROR, e.getMessage());
+        }
+    }
+
     private Object convertToDate(String input, Locale locale, String globalFormat) {
         ValueStack stack = new StubValueStack();
         Map<String, String> texts = new HashMap<>();
@@ -295,12 +338,12 @@ public class DateConverterTest extends StrutsInternalTestCase {
         // Due to JEP 252: Use CLDR Locale Data by Default
         DateFormat dFormat = DateFormat.getDateInstance(DateFormat.SHORT, mxLocale);
         if (dFormat.format(new Date()).contains("-")) { // Format when Java 9 or greater
-            INPUT_TIME_STAMP_STR = "2020-03-20 00:00:00.000";
             INPUT_WHEN_LONG_CONSTRUCTOR_STR = "2020-03-20";
         } else {// Format when Java 8 or lower
-            INPUT_TIME_STAMP_STR = "03/20/2020 00:00:00.000";
             INPUT_WHEN_LONG_CONSTRUCTOR_STR = "03/31/20";
         }
+        SimpleDateFormat dateTime = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, mxLocale);
+        INPUT_TIME_STAMP_STR = new SimpleDateFormat(dateTime.toPattern() + ".SSS", mxLocale).format(Timestamp.valueOf(RES_TIME_STAMP_STR));
     }
 
 }

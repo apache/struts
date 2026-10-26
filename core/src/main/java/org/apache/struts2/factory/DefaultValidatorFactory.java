@@ -18,11 +18,20 @@
  */
 package org.apache.struts2.factory;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ObjectFactory;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.util.reflection.ReflectionException;
 import org.apache.struts2.util.reflection.ReflectionProvider;
 import org.apache.struts2.validator.Validator;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.util.Map;
 
 /**
@@ -30,8 +39,11 @@ import java.util.Map;
  */
 public class DefaultValidatorFactory implements ValidatorFactory {
 
+    private static final Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
+
     private ObjectFactory objectFactory;
     private ReflectionProvider reflectionProvider;
+    private boolean devMode;
 
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
@@ -43,10 +55,37 @@ public class DefaultValidatorFactory implements ValidatorFactory {
         this.reflectionProvider = reflectionProvider;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
+    public void setDevMode(String devMode) {
+        this.devMode = BooleanUtils.toBoolean(devMode);
+    }
+
     public Validator buildValidator(String className, Map<String, Object> params, Map<String, Object> extraContext) throws Exception {
         Validator validator = (Validator) objectFactory.buildBean(className, extraContext);
-        reflectionProvider.setProperties(params, validator, extraContext);
+        if (params != null) {
+            params.forEach((name, value) -> setParam(className, validator, name, value, extraContext));
+        }
 
         return validator;
+    }
+
+    private void setParam(String className, Validator validator, String name, Object value, Map<String, Object> extraContext) {
+        try {
+            reflectionProvider.setProperty(name, value, validator, extraContext, true);
+        } catch (ReflectionException e) {
+            if (hasWritableProperty(validator, name)) {
+                LOG.log(devMode ? Level.ERROR : Level.WARN, "Validator [{}] ignores param [{}]: value [{}] cannot be converted ({})",
+                        className, name, value, ExceptionUtils.getRootCauseMessage(e));
+            }
+        }
+    }
+
+    private boolean hasWritableProperty(Validator validator, String name) {
+        try {
+            PropertyDescriptor descriptor = reflectionProvider.getPropertyDescriptor(validator.getClass(), name);
+            return descriptor != null && descriptor.getWriteMethod() != null;
+        } catch (IntrospectionException | ReflectionException e) {
+            return false;
+        }
     }
 }

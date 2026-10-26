@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.test;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
@@ -26,6 +27,7 @@ import org.apache.logging.log4j.core.config.Property;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.IntStream;
 
 /**
  * Collects what a class logs while open, as the formatted message followed by the exception, if any. Only levels
@@ -36,6 +38,7 @@ public class LogCapture implements AutoCloseable {
     private final Logger logger;
     private final AbstractAppender appender;
     private final List<String> messages = new CopyOnWriteArrayList<>();
+    private final List<Level> levels = new CopyOnWriteArrayList<>();
 
     public LogCapture(Class<?> source) {
         logger = (Logger) LogManager.getLogger(source);
@@ -43,6 +46,7 @@ public class LogCapture implements AutoCloseable {
             @Override
             public void append(LogEvent event) {
                 String message = event.getMessage().getFormattedMessage();
+                levels.add(event.getLevel());
                 messages.add(event.getThrown() == null ? message : message + " " + event.getThrown());
             }
         };
@@ -52,6 +56,13 @@ public class LogCapture implements AutoCloseable {
 
     public List<String> messages() {
         return messages;
+    }
+
+    public List<String> messages(Level level) {
+        return IntStream.range(0, messages.size())
+                .filter(i -> levels.get(i) == level)
+                .mapToObj(messages::get)
+                .toList();
     }
 
     @Override

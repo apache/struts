@@ -27,7 +27,6 @@ import org.apache.logging.log4j.core.config.Property;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.IntStream;
 
 /**
  * Collects what a class logs while open, as the formatted message followed by the exception, if any. Only levels
@@ -37,8 +36,10 @@ public class LogCapture implements AutoCloseable {
 
     private final Logger logger;
     private final AbstractAppender appender;
-    private final List<String> messages = new CopyOnWriteArrayList<>();
-    private final List<Level> levels = new CopyOnWriteArrayList<>();
+    private final List<Entry> entries = new CopyOnWriteArrayList<>();
+
+    private record Entry(Level level, String message) {
+    }
 
     public LogCapture(Class<?> source) {
         logger = (Logger) LogManager.getLogger(source);
@@ -46,8 +47,7 @@ public class LogCapture implements AutoCloseable {
             @Override
             public void append(LogEvent event) {
                 String message = event.getMessage().getFormattedMessage();
-                levels.add(event.getLevel());
-                messages.add(event.getThrown() == null ? message : message + " " + event.getThrown());
+                entries.add(new Entry(event.getLevel(), event.getThrown() == null ? message : message + " " + event.getThrown()));
             }
         };
         appender.start();
@@ -55,14 +55,11 @@ public class LogCapture implements AutoCloseable {
     }
 
     public List<String> messages() {
-        return messages;
+        return entries.stream().map(Entry::message).toList();
     }
 
     public List<String> messages(Level level) {
-        return IntStream.range(0, messages.size())
-                .filter(i -> levels.get(i) == level)
-                .mapToObj(messages::get)
-                .toList();
+        return entries.stream().filter(entry -> entry.level() == level).map(Entry::message).toList();
     }
 
     @Override

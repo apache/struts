@@ -64,7 +64,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -524,7 +523,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         Set<HttpMethod> httpMethods = EnumSet.noneOf(HttpMethod.class);
         for (String value : commaDelimitedStringToSet(actionElement.getAttribute("http-method"))) {
             try {
-                httpMethods.add(HttpMethod.valueOf(value.toUpperCase(Locale.ROOT)));
+                httpMethods.add(HttpMethod.parse(value));
             } catch (IllegalArgumentException e) {
                 throw new ConfigurationException(format("Invalid http-method [%s] on action [%s], allowed values: %s",
                         value, actionElement.getAttribute("name"), Arrays.toString(HttpMethod.values())), e, location);

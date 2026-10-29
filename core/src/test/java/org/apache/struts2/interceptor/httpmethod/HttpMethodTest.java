@@ -23,6 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 public class HttpMethodTest {
 
@@ -98,16 +99,8 @@ public class HttpMethodTest {
         // given : configuration is trusted input, an unknown name there is a real error
         String configuredMethod = "PROPFIND";
 
-        // when
-        Throwable expected = null;
-        try {
-            HttpMethod.parse(configuredMethod);
-        } catch (IllegalArgumentException e) {
-            expected = e;
-        }
-
-        // then
-        assertNotNull(expected);
+        // when / then
+        assertThrows(IllegalArgumentException.class, () -> HttpMethod.parse(configuredMethod));
     }
 
 }

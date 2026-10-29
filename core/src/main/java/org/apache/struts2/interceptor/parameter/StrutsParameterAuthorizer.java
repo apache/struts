@@ -171,6 +171,11 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * being a {@code Map} itself for instance. That is no more permissive than the blanket exemption this
      * scoping replaces.
      * <p>
+     * The fallback only applies when no other object in the value stack root declares the property either. A
+     * chain result leaves the previous action in the root below the chained action and its model, and OGNL
+     * writes to the first object in the root with a matching accessor, so a name declared there is held to the
+     * annotation requirement on that object, see {@link #findDeclaringObjectBelow}.
+     * <p>
      * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent,
      * so it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
      * {@code class} path that the ordinary non-ModelDriven path would have rejected for want of an annotation.
@@ -186,6 +191,12 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
                 LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
                 return false;
             }
+            Object declaringObject = findDeclaringObjectBelow(rootProperty, model, action, paramDepth);
+            if (declaringObject != null) {
+                LOG.debug("Property [{}] is declared on neither the model nor the action but on [{}] further down the value stack, applying the @StrutsParameter annotation requirement to it",
+                        rootProperty, declaringObject.getClass().getName());
+                return hasValidAnnotatedMember(rootProperty, declaringObject, paramDepth);
+            }
             LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;
@@ -193,6 +204,30 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
         LOG.debug("Property [{}] is declared on the ModelDriven action itself, applying the @StrutsParameter annotation requirement",
                 rootProperty);
         return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+    }
+
+    /**
+     * Finds the first object in the value stack root, other than the model and the action, that declares the
+     * property. {@code CompoundRootAccessor} writes a parameter to the first object in the root with a matching
+     * accessor, so a name declared on neither the model nor the action can still land on an object further down,
+     * such as the previous action left in the root by a chain result.
+     *
+     * @return the declaring object, or {@code null} if no other object in the root declares the property
+     */
+    protected Object findDeclaringObjectBelow(String rootProperty, Object model, Object action, long paramDepth) {
+        ActionContext context = ActionContext.getContext();
+        if (context == null || context.getValueStack() == null) {
+            return null;
+        }
+        for (Object candidate : context.getValueStack().getRoot()) {
+            if (candidate == null || candidate == model || candidate == action) {
+                continue;
+            }
+            if (declaresProperty(candidate, rootProperty, paramDepth)) {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     /**

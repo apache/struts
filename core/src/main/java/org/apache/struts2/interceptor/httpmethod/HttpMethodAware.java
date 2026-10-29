@@ -33,7 +33,8 @@ public interface HttpMethodAware {
     /**
      * Notifies action about http method used to perform request
      *
-     * @param httpMethod {@link jakarta.servlet.http.HttpServletRequest#getMethod()} translated to enum
+     * @param httpMethod {@link jakarta.servlet.http.HttpServletRequest#getMethod()} translated to enum, or {@code null} when the request method
+     *                   is not one of the {@link HttpMethod} constants
      */
     void setMethod(HttpMethod httpMethod);
 

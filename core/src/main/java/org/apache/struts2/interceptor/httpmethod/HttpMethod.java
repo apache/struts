@@ -18,6 +18,9 @@
  */
 package org.apache.struts2.interceptor.httpmethod;
 
+import java.util.Arrays;
+import java.util.Locale;
+
 /**
  * Enum represents possible http request types
  *
@@ -36,8 +39,18 @@ public enum HttpMethod {
     CONNECT,
     PATCH;
 
+    /**
+     * @return the matching method, or {@code null} when the request method is not one of the constants
+     */
+    public static HttpMethod parseOrNull(String httpRequestMethod) {
+        return Arrays.stream(values())
+            .filter(method -> method.name().equalsIgnoreCase(httpRequestMethod))
+            .findFirst()
+            .orElse(null);
+    }
+
     public static HttpMethod parse(String httpRequestMethod) {
-        return valueOf(httpRequestMethod.toUpperCase());
+        return valueOf(httpRequestMethod.toUpperCase(Locale.ROOT));
     }
 
 }

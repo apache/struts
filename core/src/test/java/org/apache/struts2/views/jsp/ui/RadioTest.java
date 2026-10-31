@@ -726,6 +726,36 @@ public class RadioTest extends AbstractUITagTest {
             strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testNameIsEscaped() throws Exception {
+        RadioTag tag = createTagWithQuoteInName("simple");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-14.txt"));
+    }
+
+    public void testNameIsEscapedHtml5() throws Exception {
+        RadioTag tag = createTagWithQuoteInName("html5");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-15.txt"));
+    }
+
+    private RadioTag createTagWithQuoteInName(String theme) {
+        TestAction testAction = (TestAction) action;
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("a", "A");
+        testAction.setMap(map);
+
+        RadioTag tag = new RadioTag();
+        tag.setTheme(theme);
+        tag.setPageContext(pageContext);
+        tag.setName("myname\" onfocus=\"alert(1)");
+        tag.setList("map");
+        return tag;
+    }
+
     private void prepareTagGeneric(RadioTag tag) {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

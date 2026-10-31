@@ -1,11 +1,11 @@
 <tr>
     <td class="tdLabel"></td>
     <td class="tdInput">
-        <input type="radio" name="myMap['name']" id="myMap__name__"value=""/>
+        <input type="radio" name="myMap[&#39;name&#39;]" id="myMap__name__"value=""/>
         <label for="myMap__name__">N/A</label>
-        <input type="radio" name="myMap['name']" id="myMap__name__Opt_" value="Opt."/>
+        <input type="radio" name="myMap[&#39;name&#39;]" id="myMap__name__Opt_" value="Opt."/>
         <label for="myMap__name__Opt_">Opt.</label>
-        <input type="radio" name="myMap['name']" id="myMap__name__Std_" checked="checked" value="Std."/>
+        <input type="radio" name="myMap[&#39;name&#39;]" id="myMap__name__Std_" checked="checked" value="Std."/>
         <label for="myMap__name__Std_">Std.</label>
     </td>
 </tr>

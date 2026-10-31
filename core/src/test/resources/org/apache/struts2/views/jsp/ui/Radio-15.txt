@@ -1,0 +1,2 @@
+<input type="radio" name="myname&quot; onfocus=&quot;alert(1)" id="myname__onfocus__alert_1_a" value="a"/>
+<label for="myname__onfocus__alert_1_a">A</label>

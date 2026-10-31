@@ -18,26 +18,14 @@
  * under the License.
  */
 -->
-<@s.script>
-function autoPopulate_${attributes.escapedId}(targetElement) {
-<#if attributes.headerKey?? && attributes.headerValue??>
-  if (targetElement.options[targetElement.selectedIndex].value == '${attributes.headerKey?js_string}') {
-    return;
-  }
-</#if>
-<#if attributes.emptyOption!false>
-  if (targetElement.options[targetElement.selectedIndex].value == '') {
-    return;
-  }
-</#if>
-  targetElement.form.elements['${attributes.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
-}
-</@s.script>
+<@s.script src="${base}${attributes.staticContentPath}/combobox.js" />
 <#include "/${attributes.templateDir}/html5/text.ftl" /><#rt/>
 
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#if attributes.list??>
-<select data-struts-combobox="${attributes.escapedId}"<#rt/>
+<select data-struts-combobox="${attributes.escapedId}" data-struts-combobox-target="${attributes.name}"<#rt/>
+<#if attributes.headerKey?? && attributes.headerValue??> data-struts-header-key="${attributes.headerKey}"</#if><#t/>
+<#if attributes.emptyOption!false> data-struts-empty-option="true"</#if><#t/>
  <#include "/${attributes.templateDir}/${attributes.expandTheme}/css.ftl" /><#rt/>
 <#if attributes.disabled!false>
  disabled="disabled"<#rt/>
@@ -97,18 +85,5 @@ function autoPopulate_${attributes.escapedId}(targetElement) {
 >${tmpListValue}</option><#rt/>
 </@s.iterator>
 </select><#rt/>
-<@s.script>
-	(function () {
-		var selects = document.querySelectorAll('select[data-struts-combobox="${attributes.escapedId}"]');
-		for (var i = 0; i < selects.length; i++) {
-			if (!selects[i].strutsComboboxBound) {
-				selects[i].strutsComboboxBound = true;
-				selects[i].addEventListener('change', function () {
-					autoPopulate_${attributes.escapedId}(this);
-				});
-			}
-		}
-	})();
-</@s.script>
 </#if>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlfooter.ftl" /><#rt/>

@@ -49,27 +49,37 @@ to consume resources in a non-linear relationship to the size of inputs.
 To be clear about the linear cases: that philosophy describes what we design against, not a threshold a
 report has to clear before we will accept it. Framework code that reads or retains request-derived input
 **without any bound** is in scope even where the growth is merely linear, and we have assigned CVEs for
-exactly that. What stays out of scope is the generic case above — where the cost to the server is
-proportionate, no framework limit is missing or ineffective, and the defence belongs to your servlet
-container, reverse proxy, or network.
+exactly that. The reason is the control test below: [`THREAT_MODEL.md`](THREAT_MODEL.md) §8.7 promises that
+framework code reads and retains request-derived input under a limit, and that promise is a claimed control.
+What stays out of scope is the generic case above — where the cost to the server is proportionate, no
+framework limit is missing or ineffective, and the defence belongs to your servlet container, reverse proxy,
+or network.
 
 ### Hardening or vulnerability: the control test
 
 The question we ask is not "can this input hurt a server" but "does the framework claim a control
-here, and does that control do what it says".
+here, and does that control do what it says". A control is claimed wherever the framework documents it: a
+setting, a limit, a filter, or one of the security properties in [`THREAT_MODEL.md`](THREAT_MODEL.md) §8.
 
 - **No control claimed.** Where the framework has never promised a bound or a check and the defence is
-  documented as the operator's or the application's (request-body size at the container, authentication,
-  CSRF tokens), a report that the framework does not supply it is handled as public hardening — a Jira
-  ticket, no bulletin, no CVE. The reporter is credited on the ticket.
+  documented as the operator's or the application's (authentication, CSRF tokens, connection and rate
+  limits at the container), a report that the framework does not supply it is handled as public hardening —
+  a Jira ticket, no bulletin, no CVE. The reporter is credited on the ticket.
 - **Control claimed but not enforced.** Where the framework documents a limit, a filter, or a policy and it
   does not hold for the inputs it targets, that is a vulnerability regardless of how the operator has
   configured anything else, and it is handled privately per this policy.
+- **Control still being extended.** A control the framework is rolling out across its input channels is
+  not broken on a channel it has not reached yet. A report that it does not cover such a channel is handled
+  as public hardening, and the fix must not regress a channel the control already covers. Extending the
+  `@StrutsParameter` control, new to the REST body path in 7.2.0, to the body properties it did not yet
+  reach ([WW-5642](https://issues.apache.org/jira/browse/WW-5642)) is the precedent. Where the control is
+  applied to a channel and does not hold there, the previous bullet applies.
 
 A consequence worth stating: **adding a control moves the line.** The same request that was a hardening
 report before a limit existed becomes a vulnerability report if the limit, once added, can be bypassed.
 The JSON plugin's input limits were added as hardening in
-[WW-5618](https://issues.apache.org/jira/browse/WW-5618) (6.9.0 / 7.2.1); the later finding that the
+[WW-5618](https://issues.apache.org/jira/browse/WW-5618) (6.9.0 / 7.2.1) — at that point the plugin
+promised no bound and §8.7 had not yet been written, so no control was claimed; the later finding that the
 length limit could be bypassed was CVE-2026-73633
 ([S2-072](https://cwiki.apache.org/confluence/display/WW/S2-072)). Those are two findings, not one, and
 they were credited separately.

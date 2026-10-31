@@ -65,6 +65,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -1131,6 +1132,57 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
         pi.applyParameters(a, stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
+    }
+
+    public void testExcludedValuePatternsApplyToEveryValueOfMultiValuedParameter() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        pi.setExcludedValuePatterns(".*\\$\\{.*?\\}.*");
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("single", new String[]{"fooValue"});
+        parameters.put("allGood", new String[]{"fooValue", "barValue"});
+        parameters.put("firstBad", new String[]{"${2+2}", "fooValue"});
+        parameters.put("secondBad", new String[]{"fooValue", "${2+2}"});
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+
+        assertEquals(Set.of("single", "allGood"), actual.keySet());
+    }
+
+    public void testAcceptedValuePatternsApplyToEveryValueOfMultiValuedParameter() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        pi.setAcceptedValuePatterns("^fooValue.*");
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("single", new String[]{"fooValue"});
+        parameters.put("allGood", new String[]{"fooValue", "fooValue2"});
+        parameters.put("secondBad", new String[]{"fooValue", "barValue"});
+        pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+
+        assertEquals(Set.of("single", "allGood"), actual.keySet());
+    }
+
+    public void testParameterValueAwareIsAskedAboutEveryValueOfMultiValuedParameter() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        Object a = (ParameterValueAware) parameterValue -> !"evil".equals(parameterValue);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("single", new String[]{"fooValue"});
+        parameters.put("allGood", new String[]{"fooValue", "barValue"});
+        parameters.put("firstBad", new String[]{"evil", "fooValue"});
+        parameters.put("secondBad", new String[]{"fooValue", "evil"});
+        pi.applyParameters(a, stack, HttpParameters.create(parameters).build());
+
+        assertEquals(Set.of("single", "allGood"), actual.keySet());
     }
 
 

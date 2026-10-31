@@ -63,7 +63,7 @@
     </#if>
 <input type="radio"<#rt/>
 <#if parameters.name?has_content>
- name="${parameters.name?no_esc}"<#rt/>
+ name="${parameters.name}"<#rt/>
 </#if>
  id="${parameters.id}${itemKeyStr?replace(".", "_")}"<#rt/>
 <#if tag.contains(parameters.nameValue!'', itemKey)>

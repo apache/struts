@@ -711,6 +711,7 @@ public abstract class UIBean extends Component {
         addParameter(THEME, gotTheme);
         addParameter("template", template != null ? findString(template) : getDefaultTemplate());
         addParameter("dynamicAttributes", dynamicAttributes);
+        addParameter("lazyEvaluation", lazyEvaluation());
         addParameter("themeExpansionToken", uiThemeExpansionToken);
         addParameter("expandTheme", uiThemeExpansionToken + gotTheme);
 

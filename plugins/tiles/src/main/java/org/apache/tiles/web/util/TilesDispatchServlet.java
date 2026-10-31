@@ -78,7 +78,7 @@ public class TilesDispatchServlet extends HttpServlet {
         String temp = getInitParameter("mutator");
         if (temp != null) {
             try {
-                mutator = (org.apache.tiles.web.util.AttributeContextMutator) ClassUtil.instantiate(temp);
+                mutator = ClassUtil.instantiate(temp, AttributeContextMutator.class, false);
             } catch (Exception e) {
                 throw new ServletException("Unable to instantiate specified context mutator.", e);
             }

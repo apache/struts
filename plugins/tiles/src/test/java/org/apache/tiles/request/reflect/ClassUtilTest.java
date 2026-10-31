@@ -28,6 +28,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link ClassUtil}.
@@ -90,6 +91,42 @@ public class ClassUtilTest {
     public void testInstantiate() {
         assertNotNull(ClassUtil.instantiate(TestClass.class.getName(), true));
         assertNull(ClassUtil.instantiate("this.class.does.not.Exist", true));
+    }
+
+    /**
+     * Test method for {@link ClassUtil#instantiate(String, Class, boolean)}.
+     */
+    @Test
+    public void testInstantiateWithBaseClass() {
+        TestBase instance = ClassUtil.instantiate(TestSubClass.class.getName(), TestBase.class, true);
+        assertNotNull(instance);
+        assertTrue(instance instanceof TestSubClass);
+    }
+
+    /**
+     * Test method for {@link ClassUtil#instantiate(String, Class, boolean)}.
+     */
+    @Test
+    public void testInstantiateWithBaseClassNotFound() {
+        assertNull(ClassUtil.instantiate("this.class.does.not.Exist", TestBase.class, true));
+    }
+
+    /**
+     * Test method for {@link ClassUtil#instantiate(String, Class, boolean)}.
+     */
+    @Test(expected = CannotInstantiateObjectException.class)
+    public void testInstantiateWithBaseClassNotFoundException() {
+        ClassUtil.instantiate("this.class.does.not.Exist", TestBase.class, false);
+    }
+
+    /**
+     * Test method for {@link ClassUtil#instantiate(String, Class, boolean)}. A class that is found
+     * but does not conform to the base class denotes a misconfigured name rather than a missing
+     * one, so it is reported even when missing classes are tolerated.
+     */
+    @Test(expected = CannotInstantiateObjectException.class)
+    public void testInstantiateWithBaseClassMismatch() {
+        ClassUtil.instantiate(TestClass.class.getName(), TestBase.class, true);
     }
 
     /**
@@ -165,6 +202,18 @@ public class ClassUtilTest {
      * A test static class.
      */
     public static class TestClass {
+    }
+
+    /**
+     * A base class to constrain a lookup to.
+     */
+    public static class TestBase {
+    }
+
+    /**
+     * A class that conforms to {@link TestBase}.
+     */
+    public static class TestSubClass extends TestBase {
     }
 
     /**

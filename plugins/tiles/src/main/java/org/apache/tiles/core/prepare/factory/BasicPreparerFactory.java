@@ -24,8 +24,8 @@ import org.apache.tiles.api.preparer.ViewPreparer;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.reflect.ClassUtil;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation of the {@link org.apache.tiles.core.prepare.factory.PreparerFactory}.
@@ -50,7 +50,7 @@ public class BasicPreparerFactory implements PreparerFactory {
      * Constructor.
      */
     public BasicPreparerFactory() {
-        this.preparers = new HashMap<>();
+        this.preparers = new ConcurrentHashMap<>();
     }
 
 
@@ -63,11 +63,23 @@ public class BasicPreparerFactory implements PreparerFactory {
      * @return ViewPreparer instance
      */
     public ViewPreparer getPreparer(String name, Request context) {
-        if (!preparers.containsKey(name)) {
-            preparers.put(name, createPreparer(name));
+        ViewPreparer preparer = preparers.get(name);
+        if (preparer != null) {
+            return preparer;
         }
 
-        return preparers.get(name);
+        preparer = createPreparer(name);
+        if (preparer == null) {
+            // A lookup that did not produce a preparer is not recorded. Caching it would make a
+            // single failure permanent for the lifetime of the factory, even when the cause was
+            // transient, and a cached null was previously reported as resolved by containsKey().
+            return null;
+        }
+
+        // Not computeIfAbsent: createPreparer may load classes and call back into the container,
+        // which must not run while a bin of this map is locked.
+        ViewPreparer existing = preparers.putIfAbsent(name, preparer);
+        return existing != null ? existing : preparer;
     }
 
     /**
@@ -78,7 +90,6 @@ public class BasicPreparerFactory implements PreparerFactory {
      */
     protected ViewPreparer createPreparer(String name) {
         LOG.debug("Creating ViewPreparer '{}'", name);
-        Object instance = ClassUtil.instantiate(name, true);
-        return (ViewPreparer) instance;
+        return ClassUtil.instantiate(name, ViewPreparer.class, true);
     }
 }

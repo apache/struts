@@ -29,13 +29,18 @@
   superset of the existing [`SECURITY.md`](SECURITY.md) and the published
   [Struts security guidance](https://struts.apache.org/security/); every
   load-bearing claim is tagged for provenance (see §14 for open questions).
-- **Last revised:** 2026-10-05 — re-baselined against Security Bulletins
-  **S2-075 … S2-078**, published 2026-10-05. The §12 trigger fired again on both counts:
+- **Last revised:** 2026-10-31 — added §8.8, output encoding by the framework's own
+  tags, which §8 had never stated although the project has CVE'd a failure of it
+  (CVE-2011-2087), and which §9's "no output encoding for the application's own data"
+  read as if it disclaimed; with the matching §9 cross-reference, §11a non-finding,
+  §14 question and §15 row. The previous revision, 2026-10-05, re-baselined against
+  Security Bulletins **S2-075 … S2-078**, published 2026-10-05. The §12 trigger fired again on both counts:
   7.4.0 / 6.12.0 added default controls (§5a), and S2-076 named a consumption class §8.7
   did not carry — amplification, where a small input drives unbounded output. The pass
   also corrected the FetchMetadata / COOP / COEP interceptors from "opt-in" to on by
-  default in `defaultStack` (§5a, §8.5). The previous revision, 2026-08-15, re-baselined
-  against S2-070 … S2-074 and added §8.6 and §8.7. Bulletin-to-section map in §16.
+  default in `defaultStack` (§5a, §8.5). The revision before that, 2026-08-15,
+  re-baselined against S2-070 … S2-074 and added §8.6 and §8.7. Bulletin-to-section map
+  in §16.
 - **Version binding:** versioned with the project; a report against version *N*
   is triaged against the model as it stood at *N*. The security envelope changed
   materially at **7.0** (several hardening knobs flipped to secure-by-default) and
@@ -391,13 +396,25 @@ Struts' security work.)*
    violation.** The test is whether a bound exists, not whether the curve bends — see
    §3, and `SECURITY.md`'s paragraph on the linear cases. *(documented — S2-072,
    S2-073, S2-074, S2-076, S2-077.)*
+8. **Output encoding by the framework's own tags.** A value a UI tag renders into the
+   markup it emits — an attribute value, a label, a message — is HTML-escaped by the
+   tag, under every bundled theme and rendering engine, unless the tag's own documented
+   attribute turns escaping off (`escape`, `escapeHtmlBody`). URL-valued attributes are
+   built by the URL renderer, which URL-encodes and ampersand-escapes them instead. This
+   is the framework encoding *its own output*: §9's "no output encoding for the
+   application's own data" covers markup the application writes, not a value it hands
+   to a tag. *Violation:* a tag writing a value it was given into HTML unescaped, so
+   request-derived data bound to a tag attribute or body lands in the page as markup.
+   *Severity:* moderate (XSS through framework-emitted markup), subject to the bulletin
+   rating scale's mitigation clauses. *(documented — CVE-2011-2087 / WW-3597.)*
 
 ## §9 Security properties the framework does *not* provide
 
 - **No security mechanism in the general sense.** Struts provides no authentication,
   authorization, session security, CSRF token store, input sanitisation, or output
   encoding *for the application's own data* — "it is just a pure web framework."
-  *(documented.)*
+  *(documented.)* A value the application hands to a framework tag is the framework's
+  output, and §8.8 covers it.
   - *False friend:* "Struts has no built-in login/access control" is **by design**,
     not a vulnerability.
 - **No protection against developer anti-patterns or non-default config** — unsafe
@@ -473,6 +490,9 @@ authoritative list; §14 Q12.)*
 - **"Raw `${}` EL / forced OGNL eval on my request parameter is exploitable."** The
   application fed untrusted input to expression evaluation — documented anti-pattern,
   not a framework flaw.
+- **"A tag with `escape="false"` / `escapeHtmlBody="false"` writes my HTML unescaped."**
+  That is the documented opt-out of §8.8, chosen in the application's own template —
+  `BY-DESIGN`. In-model only when a tag writes a value unescaped with escaping left on.
 - **"Config Browser Plugin exposes internal configuration."** Dev-only diagnostic;
   exposing it in production is operator misconfiguration. `OUT-OF-MODEL: non-default-config`.
 - **"I can enumerate / pass arbitrary parameters."** Parameter binding is the point of
@@ -592,6 +612,10 @@ so what remains is ratifying the *wording*, not the substance.
   keyed on request-derived values, or only the caches and body reads bounded in
   7.3.0/6.11.0? A triager needs to know whether an unbounded structure found elsewhere
   in the framework is `VALID` or `VALID-HARDENING`. (§8.7.)
+- **Q-encoding.** Confirm §8.8 as a framework property: a value handed to a bundled UI
+  tag is HTML-escaped in the markup the tag emits, under every bundled theme and
+  rendering engine, and a tag that writes it raw with escaping left on is `VALID`
+  rather than application responsibility under §9. (§8.8, from CVE-2011-2087.)
 
 **Wave 3 — surfaces & false-friends**
 
@@ -626,6 +650,7 @@ sections:
 | Allowlist / excluded classes/packages / expression length (7.0 defaults) | §5a, §8.1 |
 | DMI / Strict Method Invocation | §5a, §8.3 |
 | FetchMetadata / COOP / COEP | §5a, §8.5 |
+| Tags escape what they render; `escape` / `escapeHtmlBody` are the documented opt-outs | §8.8, §9, §11a |
 | OGNL JSM sandbox (modern-JDK limitation) | §5a, §9 |
 | Generic DoS not accepted; non-linear-in-input philosophy | §3, §9 |
 | Unbounded reads/state are in scope even when linear | §3, §8.7, §11a |

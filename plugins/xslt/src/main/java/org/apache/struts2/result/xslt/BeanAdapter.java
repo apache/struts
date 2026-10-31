@@ -31,9 +31,9 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is the most general type of adapter, utilizing reflective introspection to present a DOM view of all of
@@ -59,7 +59,7 @@ public class BeanAdapter extends AbstractAdapterElement {
     /**
      * Cache can savely be static because the cached information is the same for all instances of this class.
      */
-    private static Map<Class<?>, PropertyDescriptor[]> propertyDescriptorCache;
+    private static final Map<Class<?>, PropertyDescriptor[]> propertyDescriptorCache = new ConcurrentHashMap<>();
 
     public BeanAdapter() {
     }
@@ -144,12 +144,8 @@ public class BeanAdapter extends AbstractAdapterElement {
     /**
      * Caching facade method to Introspector.getBeanInfo(Class, Class).getPropertyDescriptors();
      */
-    private synchronized PropertyDescriptor[] getPropertyDescriptors(Object bean) {
+    private PropertyDescriptor[] getPropertyDescriptors(Object bean) {
         try {
-            if (propertyDescriptorCache == null) {
-                propertyDescriptorCache = new HashMap<>();
-            }
-
             PropertyDescriptor[] props = propertyDescriptorCache.get(bean.getClass());
 
             if (props == null) {

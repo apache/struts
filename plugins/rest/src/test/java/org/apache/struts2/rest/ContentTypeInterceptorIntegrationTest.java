@@ -20,6 +20,7 @@ package org.apache.struts2.rest;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mockobjects.dynamic.AnyConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
@@ -47,6 +48,7 @@ import org.apache.struts2.util.StrutsProxyService;
 import org.apache.struts2.util.ValueStack;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 public class ContentTypeInterceptorIntegrationTest extends TestCase {
 
     private ContentTypeInterceptor interceptor;
+    private StrutsParameterAuthorizer authorizer;
     private SecureRestAction action;
     private Object configuredAction;
     private Mock mockActionInvocation;
@@ -95,7 +98,7 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
                 new StrutsOgnlGuard());
         var proxyService = new StrutsProxyService(new StrutsProxyCacheFactory<>("1000", "basic"));
 
-        StrutsParameterAuthorizer authorizer = new StrutsParameterAuthorizer();
+        authorizer = new StrutsParameterAuthorizer();
         authorizer.setOgnlUtil(ognlUtil);
         authorizer.setProxyService(proxyService);
         authorizer.setRequireAnnotations(Boolean.TRUE.toString());
@@ -176,6 +179,24 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
                 action.getShallowAddress().getCity());
         assertNull("nested zip must be rejected (depth-1 not authorized)",
                 action.getShallowAddress().getZip());
+    }
+
+    public void testNestedContainerMembersAreRejectedAtTheDepthTheFormPathRejects() throws Exception {
+        assertTrue(authorizer.isAuthorized("addressRows[0][0]", action, action));
+        assertFalse(authorizer.isAuthorized("addressRows[0][0].city", action, action));
+
+        runWithBody("{\"addressRows\":[[{\"city\":\"Warsaw\"}]]}");
+
+        assertNotNull(action.getAddressRows().get(0).get(0));
+        assertNull(action.getAddressRows().get(0).get(0).getCity());
+    }
+
+    public void testTwoPhaseCopyRejectsNestedContainerMembersAtTheSameDepth() throws Exception {
+        setupInterceptorWithHandler(action, new PlainJacksonHandler());
+
+        runWithBody("{\"addressRows\":[[{\"city\":\"Warsaw\"}]]}");
+
+        assertNull(action.getAddressRows().get(0).get(0).getCity());
     }
 
     // --- WW-5789: a handler that binds nothing must leave the model as the params interceptor left it ---
@@ -371,6 +392,23 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         runWithBody("{\"name\":\"x\"}");
         assertNull("Jackson merges both setters into property [name] and invokes the explicitly named,"
                 + " unannotated setAdmin", merged.admin());
+    }
+
+    /** A handler without the authorization-aware marker, so the interceptor takes the two-phase copy. */
+    public static class PlainJacksonHandler implements ContentTypeHandler {
+        @Override
+        public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
+            new ObjectMapper().readerForUpdating(target).readValue(in);
+        }
+
+        @Override
+        public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) { return null; }
+
+        @Override
+        public String getContentType() { return "application/json"; }
+
+        @Override
+        public String getExtension() { return "json"; }
     }
 
     /** Stands in for a third-party handler that leaves the module's thread state behind. */

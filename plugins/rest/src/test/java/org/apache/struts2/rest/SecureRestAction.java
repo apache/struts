@@ -36,6 +36,7 @@ public class SecureRestAction extends ActionSupport {
     private Address shallowAddress;
     private List<String> tags;
     private List<Address> addresses;
+    private List<List<Address>> addressRows;
     private Map<String, String> attributes;
     private String[] aliases;
 
@@ -75,6 +76,12 @@ public class SecureRestAction extends ActionSupport {
 
     @StrutsParameter
     public void setAddresses(List<Address> addresses) { this.addresses = addresses; }
+
+    @StrutsParameter(depth = 2)
+    public List<List<Address>> getAddressRows() { return addressRows; }
+
+    @StrutsParameter
+    public void setAddressRows(List<List<Address>> addressRows) { this.addressRows = addressRows; }
 
     @StrutsParameter(depth = 1)
     public Map<String, String> getAttributes() { return attributes; }

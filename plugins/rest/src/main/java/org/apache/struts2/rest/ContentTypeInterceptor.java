@@ -328,6 +328,8 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                     LOG.warn("REST collection element [{}] skipped — no no-arg constructor for [{}]",
                             elementPath, element.getClass().getName());
                 }
+            } else if (isContainer(element)) {
+                result.add(deepCopyAuthorizedContainer(element, collectionPath + "[0]", authTarget, action));
             } else {
                 result.add(element);
             }
@@ -366,6 +368,8 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                     LOG.warn("REST map value [{}] skipped — no no-arg constructor for [{}]",
                             valuePath, value.getClass().getName());
                 }
+            } else if (isContainer(value)) {
+                result.put(entry.getKey(), deepCopyAuthorizedContainer(value, mapPath + "[0]", authTarget, action));
             } else {
                 result.put(entry.getKey(), value);
             }
@@ -398,11 +402,29 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                     LOG.warn("REST array element [{}] skipped — no no-arg constructor for [{}]",
                             elementPath, element.getClass().getName());
                 }
+            } else if (isContainer(element)) {
+                Array.set(result, i, deepCopyAuthorizedContainer(element, arrayPath + "[0]", authTarget, action));
             } else {
                 Array.set(result, i, element);
             }
         }
         return result;
+    }
+
+    private static boolean isContainer(Object value) {
+        return value instanceof Collection || value instanceof Map || (value != null && value.getClass().isArray());
+    }
+
+    /** A container nested in a container sits one index level deeper, as in {@code List<List<Bean>>}. */
+    private Object deepCopyAuthorizedContainer(Object value, String path, Object authTarget, Object action)
+            throws Exception {
+        if (value instanceof Collection) {
+            return deepCopyAuthorizedCollection((Collection<?>) value, path, authTarget, action);
+        }
+        if (value instanceof Map) {
+            return deepCopyAuthorizedMap((Map<?, ?>) value, path, authTarget, action);
+        }
+        return deepCopyAuthorizedArray(value, path, authTarget, action);
     }
 
     /**

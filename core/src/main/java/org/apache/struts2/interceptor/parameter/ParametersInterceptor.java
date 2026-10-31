@@ -549,11 +549,17 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameterValue(Parameter param, Object action) {
-        return isAcceptableParameterValueAware(param, action) && isAcceptableValue(param.getName(), param.getValue());
+        return isAcceptableParameterValueAware(param, action)
+                && Arrays.stream(valuesToCheck(param)).allMatch(value -> isAcceptableValue(param.getName(), value));
     }
 
     protected boolean isAcceptableParameterValueAware(Parameter param, Object action) {
-        return !(action instanceof ParameterValueAware valueAware) || valueAware.acceptableParameterValue(param.getValue());
+        return !(action instanceof ParameterValueAware valueAware)
+                || Arrays.stream(valuesToCheck(param)).allMatch(valueAware::acceptableParameterValue);
+    }
+
+    private String[] valuesToCheck(Parameter param) {
+        return param.isMultiple() ? param.getMultipleValues() : new String[]{param.getValue()};
     }
 
     /**

@@ -115,6 +115,36 @@ public class StringConverterTest extends StrutsInternalTestCase {
         assertEquals("0", value);
     }
 
+    public void testBigDecimalIntegerDigitsAreBounded() throws Exception {
+        // given
+        StringConverter converter = new StringConverter();
+        Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));
+
+        // when the number of integer digits is within the bound
+        Object value = converter.convertValue(context, null, null, null, new BigDecimal(BigInteger.ONE, -339), null);
+
+        // then the value is rendered in full
+        assertEquals("1" + StringUtils.repeat('0', 339), value);
+
+        // when the number of integer digits exceeds the bound
+        value = converter.convertValue(context, null, null, null, new BigDecimal(BigInteger.ONE, -340), null);
+
+        // then the value is rendered in its compact form rather than padded out to its scale
+        assertEquals("1E+340", value);
+
+        // when the scale is far beyond the bound
+        value = converter.convertValue(context, null, null, null, new BigDecimal(BigInteger.ONE, -100_000), null);
+
+        // then the length of the output is bounded by the converter, not by the scale of the value
+        assertEquals("1E+100000", value);
+
+        // when the scale sits at the edge of its range
+        value = converter.convertValue(context, null, null, null, new BigDecimal(BigInteger.ONE, Integer.MIN_VALUE + 1), null);
+
+        // then the bound still applies
+        assertEquals("1E+2147483647", value);
+    }
+
     public void testStringArrayToStringConversion() {
         // given
         StringConverter converter = new StringConverter();

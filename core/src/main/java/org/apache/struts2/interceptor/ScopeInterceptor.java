@@ -34,6 +34,7 @@ import org.apache.struts2.dispatcher.SessionMap;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -234,7 +235,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return o;
     }
 
-    private static final Map<Object, Object> locks = new IdentityHashMap<>();
+    private static final Map<Object, Object> locks = Collections.synchronizedMap(new IdentityHashMap<>());
 
     static void lock(Object o, ActionInvocation invocation) throws Exception {
         synchronized (o) {

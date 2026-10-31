@@ -115,7 +115,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
         assertEquals("0", value);
     }
 
-    public void testBigDecimalIntegerDigitsAreBounded() throws Exception {
+    public void testBigDecimalIntegerDigitsAreBounded() {
         // given
         StringConverter converter = new StringConverter();
         Map<String, Object> context = createContextWithLocale(new Locale("pl", "PL"));

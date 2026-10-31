@@ -409,7 +409,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.22.0</version>
                 <configuration>
-                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
+                    <relativizeSiteLinks>false</relativizeSiteLinks>
                 </configuration>
                 <dependencies>
                     <dependency>

@@ -35,9 +35,16 @@ public class NumberConverter extends DefaultTypeConverter {
 
     private static final Logger LOG = LogManager.getLogger(NumberConverter.class);
 
+    // Longest accepted numeric string; parsing it as BigInteger/BigDecimal is quadratic in its length
+    private static final int MAX_NUMBER_LENGTH = 1000;
+
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value instanceof String) {
             String stringValue = String.valueOf(value);
+
+            if (stringValue.length() > MAX_NUMBER_LENGTH) {
+                throw new TypeConversionException("Number too long: " + stringValue.length() + " characters, the maximum is " + MAX_NUMBER_LENGTH);
+            }
 
             if (toType == BigDecimal.class) {
                 return convertToBigDecimal(context, stringValue);

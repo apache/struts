@@ -225,6 +225,28 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(value, conversionErrors.get("date").getValue());
     }
 
+    public void testFieldErrorMessageAddedWhenNumberIsTooLong() {
+        SimpleAction action = new SimpleAction();
+        stack.push(action);
+
+        Map<String, Object> ognlStackContext = stack.getContext();
+        ognlStackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        String[] value = new String[]{"1".repeat(1001)};
+        assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "amount", value, BigDecimal.class));
+        stack.pop();
+
+        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        assertEquals(1, conversionErrors.size());
+        assertEquals(value, conversionErrors.get("amount").getValue());
+    }
+
+    public void testSurroundingWhitespaceIsNotCountedAgainstMaxNumberLength() {
+        String digits = "1".repeat(1000);
+
+        assertEquals(new BigDecimal(digits), converter.convertValue(context, null, null, null, new String[]{"  " + digits + "  "}, BigDecimal.class));
+    }
+
     public void testFieldErrorMessageAddedWhenConversionFailsOnModelDriven() {
         ModelDrivenAction action = new ModelDrivenAction();
         stack.push(action);

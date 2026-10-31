@@ -24,6 +24,7 @@ import org.apache.struts2.conversion.TypeConversionException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class NumberConverterTest extends XWorkTestCase {
     private final static String MSG_OUT_OF_RANGE_CASTING = "Overflow or underflow casting";
     private final static String MSG_OUT_OF_RANGE_CONVERTING = "Overflow or underflow converting";
     private final static String MSG_UNPARSEABLE_NUMBER = "Unparseable number";
+    private final static String MSG_NUMBER_TOO_LONG = "Number too long";
+    private final static String MSG_TEST_FAILS_NUMBER_TOO_LONG = "TypeConversionException expected when NUMBER TOO LONG";
     private final static String MSG_TEST_FAILS_OUT_OF_RANGE = "TypeConversionException expected when OUT OF RANGE";
     private final static String MSG_TEST_FAILS_UNPARSEABLE_NUMBER = "TypeConversionException expected when UNPARSEABLE NUMBER";
     private final static Locale LOCALE_MEXICO = new Locale("es_MX", "MX");
@@ -103,6 +106,37 @@ public class NumberConverterTest extends XWorkTestCase {
 
         // then
         assertEquals(BigDecimal.valueOf(100234.4), value);
+    }
+
+    public void testStringToBigDecimalConversionWithMaxLength() throws Exception {
+        // given
+        NumberConverter converter = new NumberConverter();
+        Map<String, Object> context = createContextWithLocale(new Locale("en", "US"));
+        String digits = StringUtils.repeat('1', 1000);
+
+        // when
+        Object value = converter.convertValue(context, null, null, null, digits, BigDecimal.class);
+
+        // then
+        assertEquals(new BigDecimal(digits), value);
+    }
+
+    public void testExceptionWhenNumberIsTooLong() {
+        // given
+        NumberConverter converter = new NumberConverter();
+        Map<String, Object> context = createContextWithLocale(new Locale("en", "US"));
+        String digits = StringUtils.repeat('1', 1001);
+
+        for (Class<?> type : new Class<?>[]{BigDecimal.class, BigInteger.class, Double.class, Integer.class, int.class}) {
+            // when
+            try {
+                converter.convertValue(context, null, null, null, digits, type);
+                fail(MSG_TEST_FAILS_NUMBER_TOO_LONG);
+            } catch (TypeConversionException ex) {
+                // then
+                assertTrue(ex.getMessage().startsWith(MSG_NUMBER_TOO_LONG));
+            }
+        }
     }
 
     public void testStringToDoubleConversionPL() throws Exception {

@@ -28,6 +28,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.mock.MockActionInvocation;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.util.ValueStack;
 
@@ -94,6 +95,36 @@ public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 		stack.setValue("birthday", ai.getInvocationContext().getParameters().get("birthday").getObject());
 
 		assertEquals(LocalDate.of(2000, 6, 15), person.getBirthday());
+	}
+
+	public void testUnparsableParameterNameDoesNotInjectLineBreaksIntoLog() throws Exception {
+		param.put("__year_name\n12:00:00 ERROR forged", new String[]{"notanumber"});
+		ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+
+		try (LogCapture logs = new LogCapture(DateTextFieldInterceptor.class)) {
+			interceptor.intercept(ai);
+
+			assertEquals(1, logs.messages().size());
+			String message = logs.messages().get(0);
+			assertTrue(message, message.contains("12:00:00 ERROR forged"));
+			assertFalse(message, message.contains("\n") || message.contains("\r"));
+		}
+		assertFalse(ai.getInvocationContext().getParameters().contains("name\n12:00:00 ERROR forged"));
+	}
+
+	public void testUnparsableParameterValueDoesNotInjectLineBreaksIntoLog() throws Exception {
+		param.put("__year_name", new String[]{"2000\r\n12:00:00 ERROR forged"});
+		ActionContext.getContext().withParameters(HttpParameters.create(param).build());
+
+		try (LogCapture logs = new LogCapture(DateTextFieldInterceptor.class)) {
+			interceptor.intercept(ai);
+
+			assertEquals(1, logs.messages().size());
+			String message = logs.messages().get(0);
+			assertTrue(message, message.contains("12:00:00 ERROR forged"));
+			assertFalse(message, message.contains("\n") || message.contains("\r"));
+		}
+		assertFalse(ai.getInvocationContext().getParameters().contains("name"));
 	}
 
 	public static class Person {

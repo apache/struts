@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 public class DateTextFieldInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
@@ -123,8 +125,8 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
                 Date value = formatter.parse(dateValue.toString());
                 newParams.put(dateEntry.getKey(), new Parameter.Request(dateEntry.getKey(), value));
             } catch (ParseException e) {
-                LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(),
-                        dateFormat.toString(), dateValue.toString());
+                LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", normalizeSpace(dateEntry.getKey()),
+                        dateFormat.toString(), normalizeSpace(dateValue.toString()));
             }
         }
 

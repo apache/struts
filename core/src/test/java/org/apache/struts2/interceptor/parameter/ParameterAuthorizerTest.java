@@ -404,7 +404,63 @@ public class ParameterAuthorizerTest {
         assertThat(authorizer.resolveTarget(action)).isSameAs(action);
     }
 
+    // --- ModelDriven fallback and objects further down the value stack (WW-5820) ---
+
+    private ModelActionWithOwnMembers chainedModelDrivenAction(Object previousAction) {
+        // A chain result runs the next action on the same value stack, so the previous action stays in the root
+        // below the chained action and its model.
+        var action = new ModelActionWithOwnMembers();
+        var valueStack = new StubValueStack();
+        valueStack.push(previousAction);
+        valueStack.push(action);
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+        return action;
+    }
+
+    @Test
+    public void modelDriven_propertyOnNeither_declaredUnannotatedBelowInStack_rejected() {
+        var action = chainedModelDrivenAction(new PreviousAction());
+        assertThat(authorizer.isAuthorized("foo", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_propertyOnNeither_declaredAnnotatedBelowInStack_authorized() {
+        var action = chainedModelDrivenAction(new AnnotatedPreviousAction());
+        assertThat(authorizer.isAuthorized("foo", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_propertyOnNothingInStack_stillTakesFallback() {
+        var action = chainedModelDrivenAction(new PreviousAction());
+        assertThat(authorizer.isAuthorized("mapKey", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_modelAndAnnotatedActionMembers_unaffectedByObjectsBelow() {
+        var action = chainedModelDrivenAction(new PreviousAction());
+        assertThat(authorizer.isAuthorized("name", action.getModel(), action)).isTrue();
+        assertThat(authorizer.isAuthorized("actionAllowed", action.getModel(), action)).isTrue();
+        assertThat(authorizer.isAuthorized("actionSecret", action.getModel(), action)).isFalse();
+    }
+
     // --- Inner test classes ---
+
+    public static class PreviousAction {
+        private String foo;
+
+        // NO @StrutsParameter
+        public void setFoo(String foo) { this.foo = foo; }
+        public String getFoo() { return foo; }
+    }
+
+    public static class AnnotatedPreviousAction {
+        private String foo;
+
+        @StrutsParameter
+        public void setFoo(String foo) { this.foo = foo; }
+        public String getFoo() { return foo; }
+    }
 
     public static class SecureAction {
         private String name;

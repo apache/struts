@@ -102,7 +102,7 @@ public class StringConverter extends DefaultTypeConverter {
     }
 
     protected String convertToString(Locale locale, Object value) {
-        if (BigDecimal.class.isInstance(value) && integerDigits((BigDecimal) value) > MAX_INTEGER_DIGITS) {
+        if (value instanceof BigDecimal && integerDigits((BigDecimal) value) > MAX_INTEGER_DIGITS) {
             return value.toString();
         }
         if (Number.class.isInstance(value)) {

@@ -40,14 +40,15 @@ public class DynamicAttributesHandler extends AbstractTagHandler {
     }
 
     protected void processDynamicAttributes(Attributes a) {
-        Map<String, String> dynamicAttributes = (Map<String, String>) context.getParameters().get("dynamicAttributes");
+        Map<String, Object> params = context.getParameters();
+        Map<String, String> dynamicAttributes = (Map<String, String>) params.get("dynamicAttributes");
+        boolean lazyEvaluation = Boolean.TRUE.equals(params.get("lazyEvaluation"));
         for (Map.Entry<String, String> entry : dynamicAttributes.entrySet()) {
-            if (ComponentUtils.isExpression(entry.getValue())) {
-                String value = ObjectUtils.defaultIfNull(findString(entry.getValue()), entry.getValue());
-                a.put(entry.getKey(), value);
-            } else {
-                a.put(entry.getKey(), entry.getValue());
+            String value = entry.getValue();
+            if (lazyEvaluation && ComponentUtils.isExpression(value)) {
+                value = ObjectUtils.defaultIfNull(findString(value), value);
             }
+            a.add(entry.getKey(), value);
         }
     }
 

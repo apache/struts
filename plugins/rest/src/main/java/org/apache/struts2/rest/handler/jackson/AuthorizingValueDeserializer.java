@@ -168,14 +168,17 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
 
     /**
      * For Collection / Map / Array properties, the path to push for nested element members is
-     * {@code path + "[0]"} -- matching {@code ParametersInterceptor} bracket-depth semantics. Scalar /
+     * {@code path + "[0]"} per container level -- matching {@code ParametersInterceptor} bracket-depth
+     * semantics, so {@code List<List<Bean>>} members sit under {@code path[0][0]}. Scalar /
      * bean-valued properties push the path unchanged.
      */
     private String prefixForNested(String pathOfThisProperty) {
-        if (propertyType != null
-                && (propertyType.isCollectionLikeType() || propertyType.isMapLikeType() || propertyType.isArrayType())) {
-            return pathOfThisProperty + "[0]";
+        StringBuilder prefix = new StringBuilder(pathOfThisProperty);
+        for (JavaType type = propertyType; type != null
+                && (type.isCollectionLikeType() || type.isMapLikeType() || type.isArrayType());
+             type = type.getContentType()) {
+            prefix.append("[0]");
         }
-        return pathOfThisProperty;
+        return prefix.toString();
     }
 }

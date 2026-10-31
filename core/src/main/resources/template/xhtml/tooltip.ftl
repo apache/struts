@@ -26,7 +26,7 @@
       	src='<@s.url value="${attributes.staticContentPath}/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
       <#if (attributes.jsTooltipEnabled!'false') == 'true'>
-          onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${attributes.tooltip}</#outputformat>'<#t/>
+          onmouseover="domTT_activate(this, event, 'content', '${attributes.tooltip}'<#t/>
           <#if attributes.tooltipDelay??><#t/>
           	<#t/>,'delay', '${attributes.tooltipDelay}'<#t/>
           </#if><#t/>

@@ -32,7 +32,7 @@
  data-struts-optiontransferselect="${action}" data-struts-left="${attributes.id}" data-struts-right="${attributes.doubleId!}"<#rt/>
 <#if attributes.headerKey??> data-struts-header-key="${attributes.headerKey}"</#if><#t/>
 <#if attributes.doubleHeaderKey??> data-struts-double-header-key="${attributes.doubleHeaderKey}"</#if><#t/>
-<#if onclick?has_content> onclick="<#outputformat 'JavaScript'>${onclick}</#outputformat>;"</#if><#t/>
+<#if onclick?has_content> onclick="${onclick};"</#if><#t/>
 </#macro>
 <table>
 <tr>
@@ -143,49 +143,49 @@
 	style="${attributes.doubleStyle}"
 	</#if><#t/>
     <#if attributes.doubleOnclick??><#t/>
-    onclick="<#outputformat 'JavaScript'>${attributes.doubleOnclick}</#outputformat>"
+    onclick="${attributes.doubleOnclick}"
     </#if><#t/>
     <#if attributes.doubleOndblclick??><#t/>
-    ondblclick="<#outputformat 'JavaScript'>${attributes.doubleOndblclick}</#outputformat>"
+    ondblclick="${attributes.doubleOndblclick}"
     </#if><#t/>
     <#if attributes.doubleOnmousedown??><#t/>
-    onmousedown="<#outputformat 'JavaScript'>${attributes.doubleOnmousedown}</#outputformat>"
+    onmousedown="${attributes.doubleOnmousedown}"
     </#if><#t/>
     <#if attributes.doubleOnmouseup??><#t/>
-    onmouseup="<#outputformat 'JavaScript'>${attributes.doubleOnmouseup}</#outputformat>"
+    onmouseup="${attributes.doubleOnmouseup}"
     </#if><#t/>
     <#if attributes.doubleOnmousemove??><#t/>
-    onmousemove="<#outputformat 'JavaScript'>${attributes.doubleOnmousemove}</#outputformat>"
+    onmousemove="${attributes.doubleOnmousemove}"
     </#if><#t/>
     <#if attributes.doubleOnmouseover??><#t/>
-    onmouseover="<#outputformat 'JavaScript'>${attributes.doubleOnmouseover}</#outputformat>"
+    onmouseover="${attributes.doubleOnmouseover}"
     </#if><#t/>
     <#if attributes.doubleOnmouseout??><#t/>
-    onmouseout="<#outputformat 'JavaScript'>${attributes.doubleOnmouseout}</#outputformat>"
+    onmouseout="${attributes.doubleOnmouseout}"
     </#if><#t/>
     <#if attributes.doubleOnfocus??><#t/>
-    onfocus="<#outputformat 'JavaScript'>${attributes.doubleOnfocus}</#outputformat>"
+    onfocus="${attributes.doubleOnfocus}"
     </#if><#t/>
     <#if attributes.doubleOnblur??><#t/>
-    onblur="<#outputformat 'JavaScript'>${attributes.doubleOnblur}</#outputformat>"
+    onblur="${attributes.doubleOnblur}"
     </#if><#t/>
     <#if attributes.doubleOnkeypress??><#t/>
-    onkeypress="<#outputformat 'JavaScript'>${attributes.doubleOnkeypress}</#outputformat>"
+    onkeypress="${attributes.doubleOnkeypress}"
     </#if><#t/>
     <#if attributes.doubleOnKeydown??><#t/>
-    onkeydown="<#outputformat 'JavaScript'>${attributes.doubleOnkeydown}</#outputformat>"
+    onkeydown="${attributes.doubleOnkeydown}"
     </#if><#t/>
     <#if attributes.doubleOnkeyup??><#t/>
-    onkeyup="<#outputformat 'JavaScript'>${attributes.doubleOnkeyup}</#outputformat>"
+    onkeyup="${attributes.doubleOnkeyup}"
     </#if><#t/>
     <#if attributes.doubleOnselect??><#t/>
-    onselect="<#outputformat 'JavaScript'>${attributes.doubleOnselect}</#outputformat>"
+    onselect="${attributes.doubleOnselect}"
     </#if><#t/>
     <#if attributes.doubleOnchange??><#t/>
-    onchange="<#outputformat 'JavaScript'>${attributes.doubleOnchange}</#outputformat>"
+    onchange="${attributes.doubleOnchange}"
     </#if><#t/>
     <#if attributes.doubleAccesskey??><#t/>
-    accesskey="<#outputformat 'JavaScript'>${attributes.doubleAccesskey}</#outputformat>"
+    accesskey="${attributes.doubleAccesskey}"
     </#if>
 	<#include "/${attributes.templateDir}/${attributes.expandTheme}/prefixed-dynamic-attributes.ftl" />
 	<@prefixedDynamicAttributes prefix="right-"/>

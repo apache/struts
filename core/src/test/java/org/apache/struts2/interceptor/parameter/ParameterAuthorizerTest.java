@@ -491,6 +491,20 @@ public class ParameterAuthorizerTest {
         assertThat(authorizer.isAuthorized("localizedTextProvider", action.getModel(), action)).isFalse();
     }
 
+    @Test
+    public void modelDriven_mapModel_classAtDepthZero_rejected() {
+        // A Map-backed model takes any depth-0 name through map.put, "class" included, so without checking
+        // "class" before the model it would be exempted where the non-ModelDriven path rejects it. "class" is
+        // Object.getClass() on everything, never request surface, so it is rejected whatever the model is.
+        var action = new MapModelAction();
+        var valueStack = new StubValueStack();
+        valueStack.push(action);
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.isAuthorized("class", action.getModel(), action)).isFalse();
+    }
+
     // --- Inner test classes ---
 
     public static class PreviousAction {

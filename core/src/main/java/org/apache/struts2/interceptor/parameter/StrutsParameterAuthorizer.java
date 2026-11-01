@@ -175,19 +175,21 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
      * accessor on the model that introspection here cannot see. That fallback guarantees only that the name reaches
      * no object this code can model, which is no more permissive than the blanket exemption this scoping replaces.
      * <p>
-     * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent, so
-     * it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
-     * {@code class} path that the ordinary non-ModelDriven path would have rejected for want of an annotation.
+     * {@code class} is rejected up front, before the model is even consulted: it is invisible to introspection here
+     * rather than absent, so it would otherwise slip through either the custom-accessor fallback or a Map-backed
+     * model's catch-all (a {@code Map} model takes any depth-0 name). Rejecting it first keeps a ModelDriven action
+     * from handing OGNL a {@code class} path that the ordinary non-ModelDriven path would have rejected for want of
+     * an annotation, matching main's behaviour exactly whatever the model is.
      */
     protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
+        if (CLASS_PROPERTY.equals(rootProperty)) {
+            LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so neither the custom-accessor fallback nor a Map-backed model's catch-all applies; rejecting");
+            return false;
+        }
         if (takesParameter(model, rootProperty, paramDepth)) {
             LOG.debug("Property [{}] is taken by the ModelDriven model, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;
-        }
-        if (CLASS_PROPERTY.equals(rootProperty)) {
-            LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
-            return false;
         }
         if (takesParameter(action, rootProperty, paramDepth)) {
             LOG.debug("Property [{}] is taken by the ModelDriven action itself, applying the @StrutsParameter annotation requirement",

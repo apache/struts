@@ -26,12 +26,15 @@ import org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory;
 import org.apache.struts2.ognl.OgnlUtil;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.ognl.StrutsProxyCacheFactory;
+import org.apache.struts2.text.DefaultTextProvider;
 import org.apache.struts2.util.StrutsProxyService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.struts2.ognl.OgnlCacheFactory.CacheType.LRU;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -444,6 +447,50 @@ public class ParameterAuthorizerTest {
         assertThat(authorizer.isAuthorized("actionSecret", action.getModel(), action)).isFalse();
     }
 
+    @Test
+    public void modelDriven_mapModel_namesakeUnannotatedBelowInStack_authorized() {
+        // A Map-backed model absorbs the parameter through map.put before the write can reach a namesake setter
+        // further down, so the model takes it and the exemption applies. CompoundRootAccessor stops at the model.
+        var action = new MapModelAction();
+        var valueStack = new StubValueStack();
+        valueStack.push(new PreviousAction());
+        valueStack.push(action);
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.isAuthorized("foo", action.getModel(), action)).isTrue();
+    }
+
+    @Test
+    public void modelDriven_propertyOnNothingInStack_previousMapModelBelow_rejected() {
+        // A previous action's Map model sitting below the action takes any name through map.put, so the parameter
+        // lands there rather than taking the fallback. A Map carries no annotated member, so it is rejected.
+        var action = new ModelActionWithOwnMembers();
+        var valueStack = new StubValueStack();
+        valueStack.push(new PreviousAction());
+        valueStack.push(new HashMap<String, Object>());
+        valueStack.push(action);
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.isAuthorized("mapKey", action.getModel(), action)).isFalse();
+    }
+
+    @Test
+    public void modelDriven_nonChained_textProviderPropertyBelowInStack_rejected() {
+        // A real OgnlValueStack keeps a DefaultTextProvider at the bottom of the root, so even a non-chained
+        // ModelDriven request has an object below the action whose own settable properties this scoping now holds
+        // to the annotation requirement. localizedTextProvider is one such unannotated property.
+        var action = new ModelActionWithOwnMembers();
+        var valueStack = new StubValueStack();
+        valueStack.push(new DefaultTextProvider());
+        valueStack.push(action);
+        valueStack.push(action.getModel());
+        ActionContext.of().withValueStack(valueStack).bind();
+
+        assertThat(authorizer.isAuthorized("localizedTextProvider", action.getModel(), action)).isFalse();
+    }
+
     // --- Inner test classes ---
 
     public static class PreviousAction {
@@ -526,6 +573,13 @@ public class ParameterAuthorizerTest {
         private String shared;
         public void setShared(String shared) { this.shared = shared; }
         public String getShared() { return shared; }
+    }
+
+    public static class MapModelAction implements ModelDriven<Map<String, Object>> {
+        private final Map<String, Object> model = new HashMap<>();
+
+        @Override
+        public Map<String, Object> getModel() { return model; }
     }
 
     public static class ReadOnlyShadowModel {

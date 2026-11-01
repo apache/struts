@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -158,63 +159,77 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
     /**
      * Decides authorization for a {@link ModelDriven} action, whose model is on top of the value stack.
      * <p>
-     * Returning an object from {@code getModel()} declares that object to be request surface, so anything the
-     * model itself can take is exempt from the {@link StrutsParameter} requirement. The exemption stops there:
-     * OGNL resolves the parameter name against the whole stack, which also holds the action, so a property
-     * declared on the action is still subject to the annotation requirement. Without that distinction a
-     * ModelDriven action would silently expose its own members.
+     * {@code CompoundRootAccessor} binds a parameter to the first object in the value stack root that would take
+     * it - the first with a matching accessor, or, failing that, the first modifiable {@code Map} - so this walks
+     * the root in that same order and judges the object that actually absorbs the write, see
+     * {@link #takesParameter} and {@link #findFirstObjectTakingParameterBelow}.
      * <p>
-     * A property declared on neither is allowed: typically it is bound by a custom OGNL property accessor on
-     * the model, such as a Map-backed model. That fallback guarantees less than it may appear to - only that
-     * the name reaches no member {@link #declaresProperty} can see. OGNL walks the whole stack, so such a name
-     * can still land on the action wherever the action absorbs it by a route introspection here does not model,
-     * being a {@code Map} itself for instance. That is no more permissive than the blanket exemption this
-     * scoping replaces.
+     * The model is on top, and returning it from {@code getModel()} declares it request surface, so when the model
+     * takes the parameter it is exempt from the {@link StrutsParameter} requirement. The exemption stops there: when
+     * the write instead lands on the action or on anything below it in the root, that object is held to the
+     * annotation requirement. Without that distinction a ModelDriven action would silently expose its own members,
+     * and a {@code Map} left in the root by a chain result would absorb any name unchecked. A {@code Map} below the
+     * action carries no annotated member, so a parameter that lands there is rejected.
      * <p>
-     * The fallback only applies when no other object in the value stack root declares the property either. A
-     * chain result leaves the previous action in the root below the chained action and its model, and OGNL
-     * writes to the first object in the root with a matching accessor, so a name declared there is held to the
-     * annotation requirement on that object, see {@link #findDeclaringObjectBelow}.
+     * When no object in the root takes the parameter it is allowed: typically it is bound by a custom OGNL property
+     * accessor on the model that introspection here cannot see. That fallback guarantees only that the name reaches
+     * no object this code can model, which is no more permissive than the blanket exemption this scoping replaces.
      * <p>
-     * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent,
-     * so it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
+     * {@code class} is the exception to that fallback: it is invisible to introspection here rather than absent, so
+     * it is rejected instead of taking the fallback, which keeps a ModelDriven action from handing OGNL a
      * {@code class} path that the ordinary non-ModelDriven path would have rejected for want of an annotation.
      */
     protected boolean isAuthorizedOnModelDrivenAction(String rootProperty, Object model, Object action, long paramDepth) {
-        if (declaresProperty(model, rootProperty, paramDepth)) {
-            LOG.debug("Property [{}] belongs to the ModelDriven model, exempting from @StrutsParameter annotation requirement",
+        if (takesParameter(model, rootProperty, paramDepth)) {
+            LOG.debug("Property [{}] is taken by the ModelDriven model, exempting from @StrutsParameter annotation requirement",
                     rootProperty);
             return true;
         }
-        if (!declaresProperty(action, rootProperty, paramDepth)) {
-            if (CLASS_PROPERTY.equals(rootProperty)) {
-                LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
-                return false;
-            }
-            Object declaringObject = findDeclaringObjectBelow(rootProperty, model, action, paramDepth);
-            if (declaringObject != null) {
-                LOG.debug("Property [{}] is declared on neither the model nor the action but on [{}] further down the value stack, applying the @StrutsParameter annotation requirement to it",
-                        rootProperty, declaringObject.getClass().getName());
-                return hasValidAnnotatedMember(rootProperty, declaringObject, paramDepth);
-            }
-            LOG.debug("Property [{}] is declared on neither the model nor the action, exempting from @StrutsParameter annotation requirement",
-                    rootProperty);
-            return true;
+        if (CLASS_PROPERTY.equals(rootProperty)) {
+            LOG.debug("Property [class] is not an unknown property but Object.getClass() on every object alike, so the fallback for a custom accessor does not apply; rejecting");
+            return false;
         }
-        LOG.debug("Property [{}] is declared on the ModelDriven action itself, applying the @StrutsParameter annotation requirement",
+        if (takesParameter(action, rootProperty, paramDepth)) {
+            LOG.debug("Property [{}] is taken by the ModelDriven action itself, applying the @StrutsParameter annotation requirement",
+                    rootProperty);
+            return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+        }
+        Object taker = findFirstObjectTakingParameterBelow(rootProperty, model, action, paramDepth);
+        if (taker != null) {
+            LOG.debug("Property [{}] is taken by [{}] further down the value stack, applying the @StrutsParameter annotation requirement to it",
+                    rootProperty, taker.getClass().getName());
+            return hasValidAnnotatedMember(rootProperty, taker, paramDepth);
+        }
+        LOG.debug("Property [{}] is taken by no object in the value stack root, exempting from @StrutsParameter annotation requirement",
                 rootProperty);
-        return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+        return true;
     }
 
     /**
-     * Finds the first object in the value stack root, other than the model and the action, that declares the
-     * property. {@code CompoundRootAccessor} writes a parameter to the first object in the root with a matching
-     * accessor, so a name declared on neither the model nor the action can still land on an object further down,
-     * such as the previous action left in the root by a chain result.
-     *
-     * @return the declaring object, or {@code null} if no other object in the root declares the property
+     * Whether {@code candidate} would absorb this parameter the way {@code CompoundRootAccessor} binds it: either it
+     * {@link #declaresProperty declares the property} through a bindable accessor or public field, or it is a
+     * {@code Map}, into which the accessor puts a terminal parameter under any name and through which it traverses a
+     * nested parameter whose key the map already holds. A {@code Map} cannot be told apart from an unmodifiable one
+     * without writing to it, so a modifiable {@code Map} is assumed for a terminal parameter, matching that
+     * accessor's own default of attempting the put and only moving on when it throws.
      */
-    protected Object findDeclaringObjectBelow(String rootProperty, Object model, Object action, long paramDepth) {
+    protected boolean takesParameter(Object candidate, String property, long paramDepth) {
+        if (declaresProperty(candidate, property, paramDepth)) {
+            return true;
+        }
+        return candidate instanceof Map && (paramDepth == 0 || ((Map<?, ?>) candidate).containsKey(property));
+    }
+
+    /**
+     * The first object in the value stack root below the model and the action that would take this parameter, in the
+     * order {@code CompoundRootAccessor} tries them. A name taken by neither the model nor the action can still land
+     * further down - on the previous action left in the root by a chain result, or on a {@code Map} standing in the
+     * root - and the accessor binds it to the first such object, so that is the object the annotation requirement
+     * applies to.
+     *
+     * @return the object that would take the parameter, or {@code null} if no object below the model and action does
+     */
+    protected Object findFirstObjectTakingParameterBelow(String rootProperty, Object model, Object action, long paramDepth) {
         ActionContext context = ActionContext.getContext();
         if (context == null || context.getValueStack() == null) {
             return null;
@@ -223,7 +238,7 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
             if (candidate == null || candidate == model || candidate == action) {
                 continue;
             }
-            if (declaresProperty(candidate, rootProperty, paramDepth)) {
+            if (takesParameter(candidate, rootProperty, paramDepth)) {
                 return candidate;
             }
         }

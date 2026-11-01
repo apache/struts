@@ -3,7 +3,7 @@
     <td class="tdInput">
 <input type="text" name="myFavouriteFruit" value="banana" id="myFavouriteFruit"/><br/>
 <script src="/static/combobox.js"></script>
-<select data-struts-combobox="myFavouriteFruit" data-struts-combobox-target="myFavouriteFruit" data-struts-header-key="-1" data-struts-empty-option="true">
+<select data-struts-combobox="myFavouriteFruit" data-struts-combobox-target-id="myFavouriteFruit" data-struts-header-key="-1" data-struts-empty-option="true">
 	<option value="-1">--- Please Select ---</option>
 	<option value=""></option>
     <option value="apple">apple</option>

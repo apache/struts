@@ -20,11 +20,12 @@
 /*
  * Copies the selected option of a combobox select into its text field. The select carries its settings in data-*
  * attributes:
- *     data-struts-combobox-target   name of the text field in the same form
- *     data-struts-header-key        value of the header option, which is not copied
- *     data-struts-empty-option      "true" when the empty option is rendered, which is not copied
- * The listener is registered once per page, in the capture phase, so it also covers comboboxes rendered later and
- * is not stopped by an ancestor's stopPropagation().
+ *     data-struts-combobox-target-id   id of the text field to copy the value into
+ *     data-struts-header-key           value of the header option, which is not copied
+ *     data-struts-empty-option         "true" when the empty option is rendered, which is not copied
+ * The field is resolved by id, not by name, so two comboboxes that share a name in one form each drive their own
+ * text field, and a same-named hidden input cannot capture the write. The listener is registered once per page, in
+ * the capture phase, so it also covers comboboxes rendered later and is not stopped by an ancestor's stopPropagation().
  */
 (function () {
     if (window.strutsComboboxListener) {
@@ -37,8 +38,8 @@
         if (!select || !select.getAttribute) {
             return;
         }
-        var target = select.getAttribute('data-struts-combobox-target');
-        if (target === null || !select.form || select.selectedIndex < 0) {
+        var targetId = select.getAttribute('data-struts-combobox-target-id');
+        if (targetId === null || select.selectedIndex < 0) {
             return;
         }
         var value = select.options[select.selectedIndex].value;
@@ -48,19 +49,7 @@
         if (select.getAttribute('data-struts-empty-option') === 'true' && value === '') {
             return;
         }
-        var field = select.form.elements[target];
-        if (field && typeof field.length === 'number' && field.tagName === undefined) {
-            // Two controls in the form share the name, so elements[target] is a RadioNodeList rather than the
-            // text field; assigning value to it would not reach the input. Resolve the first text input in it.
-            var resolved = null;
-            for (var i = 0; i < field.length; i++) {
-                if (field[i].tagName === 'INPUT') {
-                    resolved = field[i];
-                    break;
-                }
-            }
-            field = resolved;
-        }
+        var field = document.getElementById(targetId);
         if (field) {
             field.value = value;
         }

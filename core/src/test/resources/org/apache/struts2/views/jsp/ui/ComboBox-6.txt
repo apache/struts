@@ -1,0 +1,10 @@
+<input type="text" name="tag" value="" id="first"/><br/>
+<script src="/static/combobox.js"></script>
+<select data-struts-combobox="first" data-struts-combobox-target-id="first">
+    <option value="foo">foo</option>
+</select>
+<input type="text" name="tag" value="" id="second"/><br/>
+<script src="/static/combobox.js"></script>
+<select data-struts-combobox="second" data-struts-combobox-target-id="second">
+    <option value="foo">foo</option>
+</select>

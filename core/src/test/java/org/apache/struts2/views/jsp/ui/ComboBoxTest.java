@@ -339,7 +339,7 @@ public class ComboBoxTest extends AbstractUITagTest {
 
     public void testHtml5ThemeRendersDataAttributes() throws Exception {
         // The ComboBox-1..4 fixtures all render the xhtml -> simple path, so a typo in the html5 template's
-        // data-struts-combobox-target / data-struts-header-key / data-struts-empty-option lines would go
+        // data-struts-combobox-target-id / data-struts-header-key / data-struts-empty-option lines would go
         // unnoticed. Render the html5 theme explicitly and pin all three attributes.
         TestAction testAction = (TestAction) action;
         testAction.setFoo("banana");
@@ -364,6 +364,36 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-5.txt"));
+    }
+
+    public void testTwoSameNameCombosResolveByOwnId() throws Exception {
+        // Two comboboxes sharing a name in one form must each drive their own text field. Resolution keys on the
+        // field id (data-struts-combobox-target-id), not the shared name, so each select carries its own id and
+        // combobox.js resolves the right input by getElementById. Matching by name could not tell the pair apart.
+        TestAction testAction = (TestAction) action;
+        ArrayList collection = new ArrayList();
+        collection.add("foo");
+        testAction.setCollection(collection);
+
+        ComboBoxTag first = new ComboBoxTag();
+        first.setPageContext(pageContext);
+        first.setTheme("simple");
+        first.setName("tag");
+        first.setId("first");
+        first.setList("collection");
+        first.doStartTag();
+        first.doEndTag();
+
+        ComboBoxTag second = new ComboBoxTag();
+        second.setPageContext(pageContext);
+        second.setTheme("simple");
+        second.setName("tag");
+        second.setId("second");
+        second.setList("collection");
+        second.doStartTag();
+        second.doEndTag();
+
+        verify(ComboBoxTag.class.getResource("ComboBox-6.txt"));
     }
 
 }

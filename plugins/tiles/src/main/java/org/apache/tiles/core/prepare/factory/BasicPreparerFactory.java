@@ -69,15 +69,10 @@ public class BasicPreparerFactory implements PreparerFactory {
         }
 
         preparer = createPreparer(name);
-        if (preparer == null) {
-            // A lookup that did not produce a preparer is not recorded. Caching it would make a
-            // single failure permanent for the lifetime of the factory, even when the cause was
-            // transient, and a cached null was previously reported as resolved by containsKey().
+        if (preparer == null) {            
             return null;
         }
-
-        // Not computeIfAbsent: createPreparer may load classes and call back into the container,
-        // which must not run while a bin of this map is locked.
+        
         ViewPreparer existing = preparers.putIfAbsent(name, preparer);
         return existing != null ? existing : preparer;
     }

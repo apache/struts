@@ -18,11 +18,11 @@
  * under the License.
  */
 -->
-<@s.script src="${base}${attributes.staticContentPath}/combobox.js" />
 <#include "/${attributes.templateDir}/html5/text.ftl" /><#rt/>
 
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/controlheader.ftl" />
 <#if attributes.list??>
+<@s.script src="${base}${attributes.staticContentPath}/combobox.js" />
 <select data-struts-combobox="${attributes.escapedId}" data-struts-combobox-target="${attributes.name}"<#rt/>
 <#if attributes.headerKey?? && attributes.headerValue??> data-struts-header-key="${attributes.headerKey}"</#if><#t/>
 <#if attributes.emptyOption!false> data-struts-empty-option="true"</#if><#t/>

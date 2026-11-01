@@ -49,6 +49,18 @@
             return;
         }
         var field = select.form.elements[target];
+        if (field && typeof field.length === 'number' && field.tagName === undefined) {
+            // Two controls in the form share the name, so elements[target] is a RadioNodeList rather than the
+            // text field; assigning value to it would not reach the input. Resolve the first text input in it.
+            var resolved = null;
+            for (var i = 0; i < field.length; i++) {
+                if (field[i].tagName === 'INPUT') {
+                    resolved = field[i];
+                    break;
+                }
+            }
+            field = resolved;
+        }
         if (field) {
             field.value = value;
         }

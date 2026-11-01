@@ -1,8 +1,8 @@
 <tr>
     <td class="tdLabel"><label for="cb" class="label">mylabel:</label></td>
     <td class="tdInput">
-<script src="/static/combobox.js" nonce="r4nd0m"></script>
 <input type="text" name="foo" value="hello" id="cb"/><br/>
+<script src="/static/combobox.js" nonce="r4nd0m"></script>
 <select data-struts-combobox="cb" data-struts-combobox-target="foo">
     <option value="foo">foo</option>
     <option value="bar">bar</option>

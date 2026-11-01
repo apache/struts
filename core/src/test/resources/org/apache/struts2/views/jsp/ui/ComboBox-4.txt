@@ -1,8 +1,8 @@
  <tr>
      <td class="tdLabel"><label for="cb[&#39;&quot;.&quot;&#39;]=bc(){};//" class="label">mylabel:</label></td>
      <td class="tdInput">
- <script src="/static/combobox.js"></script>
  <input type="text" name="foo" value="hello" id="cb[&#39;&quot;.&quot;&#39;]=bc(){};//"/><br/>
+ <script src="/static/combobox.js"></script>
  <select data-struts-combobox="cb__________bc_______" data-struts-combobox-target="foo">
      <option value="foo">foo</option>
  </select>

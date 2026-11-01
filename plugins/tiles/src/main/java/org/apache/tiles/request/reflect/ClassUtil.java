@@ -57,19 +57,12 @@ public final class ClassUtil {
         if (classLoader == null) {
             classLoader = ClassUtil.class.getClassLoader();
         }
-        // The class is resolved without being initialised, so that the asSubclass check below runs
-        // before any of its code does. Initialisation still happens on first real use, e.g. when a
-        // constructor is invoked.
         return Class.forName(className, false, classLoader).asSubclass(baseClass);
     }
 
     /**
      * Returns an instance of the given class name, by calling the default
      * constructor.
-     * <p>
-     * The returned object is not constrained to any type, so a caller that requires one has to
-     * cast after the object has already been constructed. Prefer
-     * {@link #instantiate(String, Class, boolean)}, which applies the required type first.
      *
      * @param className The class name to load and to instantiate.
      * @return The new instance of the class name.
@@ -112,8 +105,6 @@ public final class ClassUtil {
             throw new CannotInstantiateObjectException("Factory class: '" + className + "' is not a '"
                 + baseClass.getName() + "'", e);
         }
-        // Resolution and construction are caught separately, so that an exception thrown by the
-        // constructor itself is never reported as a type mismatch.
         try {
             return namedClass.getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException | InstantiationException e) {
@@ -130,10 +121,6 @@ public final class ClassUtil {
     /**
      * Returns an instance of the given class name, by calling the default
      * constructor.
-     * <p>
-     * The returned object is not constrained to any type, so a caller that requires one has to
-     * cast after the object has already been constructed. Prefer
-     * {@link #instantiate(String, Class, boolean)}, which applies the required type first.
      *
      * @param className  The class name to load and to instantiate.
      * @param returnNull If <code>true</code>, if the class is not found it

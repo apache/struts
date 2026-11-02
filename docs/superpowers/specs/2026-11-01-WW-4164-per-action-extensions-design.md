@@ -112,8 +112,9 @@ govern both:
   interceptor checks only the action the URL mapped to. It passes for chained invocations
   (`chain` result), `<s:action>`, and any invocation whose proxy name/namespace differs from the
   request's `ActionMapping`. `action:`-prefix buttons (off by default via
-  `struts.mapper.action.prefix.enabled`) fall under that last rule, because the mapping's name is
-  rewritten but the URL still carries the form's extension. They are documented as not enforced.
+  `struts.mapper.action.prefix.enabled`) are enforced: `handleSpecialParameters` rewrites the
+  mapping's name and the proxy is built from that mapping, so the interceptor checks the button's
+  target action against the extension of the form's URL.
 - **Other mappers.** `RestActionMapper` extends `DefaultActionMapper` but overrides the mapping
   path, and the Restful/Prefix/Composite mappers have their own logic. Declaring `extension`
   under them is the application's responsibility: a doc note, and a startup WARN when an action
@@ -167,8 +168,8 @@ govern both:
 - Undeclared actions follow the global list only. A non-global extension is claimed only when the
   stripped name resolves to an action; otherwise the request falls through to the container as
   today (keeps static `.html`/JSP serving).
-- Enforcement only on the URL's own action. Chain, `<s:action>` and `action:` buttons are not
-  enforced.
+- Enforcement only on the URL's own action. Chain and `<s:action>` are not enforced; `action:`
+  buttons are, against the form URL's extension.
 - Non-default mappers: WARN + doc note, no API marker.
 
 ## Regression tests owed by the anti-goal

@@ -102,6 +102,14 @@ public class ActionExtensionResolverTest extends StrutsInternalTestCase {
         assertThat(resolve("/plain", "undeclared")).isNull();
     }
 
+    public void testNoDeclarationsAnywhereLeavesMappingUntouched() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("org/apache/struts2/config/providers/xwork-test-actions.xml"));
+        resolver.setConfiguration(configuration);
+        withCurrentExtension("xyz");
+
+        assertThat(resolve("", "Bar")).isNull();
+    }
+
     private String resolve(String namespace, String name) {
         ActionMapping target = new ActionMapping(name, namespace, null, null);
         resolver.applyTo(target);

@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.inject.Inject;
 
@@ -37,6 +38,7 @@ public class ActionExtensionResolver {
 
     private Configuration configuration;
     private List<String> extensions;
+    private volatile DeclarationState declarationState;
 
     /**
      * @param configuration the configuration used to look up the target action
@@ -60,7 +62,8 @@ public class ActionExtensionResolver {
      * Sets the extension of {@code target} to the current request's extension when the target accepts it, otherwise
      * to the target's first accepted extension, which is also used when the current request has no extension, as in
      * {@link DefaultActionMapper#lookupExtension(String)}. Leaves {@code target} unchanged when it already has an extension,
-     * when the target action is unknown, or when neither the target nor the global constant declares extensions.
+     * when no action in the configuration declares extensions, when the target action is unknown, or when neither the
+     * target nor the global constant declares extensions.
      *
      * @param target the mapping of the action the URL points at
      * @since 7.5.0
@@ -69,7 +72,11 @@ public class ActionExtensionResolver {
         if (target.getExtension() != null) {
             return;
         }
-        ActionConfig actionConfig = configuration.getRuntimeConfiguration()
+        RuntimeConfiguration runtimeConfiguration = configuration.getRuntimeConfiguration();
+        if (!anyActionDeclaresExtensions(runtimeConfiguration)) {
+            return;
+        }
+        ActionConfig actionConfig = runtimeConfiguration
             .getActionConfig(target.getNamespace(), StringUtils.substringBefore(target.getName(), "!"));
         if (actionConfig == null) {
             return;
@@ -82,11 +89,33 @@ public class ActionExtensionResolver {
         target.setExtension(current == null ? effective.get(0) : ActionExtensions.select(effective, current));
     }
 
+    private boolean anyActionDeclaresExtensions(RuntimeConfiguration runtimeConfiguration) {
+        DeclarationState cached = declarationState;
+        if (cached != null && cached.runtimeConfiguration == runtimeConfiguration) {
+            return cached.anyDeclared;
+        }
+        boolean anyDeclared = runtimeConfiguration.getActionConfigs().values().stream()
+            .flatMap(actionConfigs -> actionConfigs.values().stream())
+            .anyMatch(actionConfig -> actionConfig.getExtensions() != null);
+        declarationState = new DeclarationState(runtimeConfiguration, anyDeclared);
+        return anyDeclared;
+    }
+
     private String currentExtension() {
         ActionContext context = ActionContext.getContext();
         if (context == null || context.getActionMapping() == null) {
             return null;
         }
         return context.getActionMapping().getExtension();
+    }
+
+    private static final class DeclarationState {
+        private final RuntimeConfiguration runtimeConfiguration;
+        private final boolean anyDeclared;
+
+        private DeclarationState(RuntimeConfiguration runtimeConfiguration, boolean anyDeclared) {
+            this.runtimeConfiguration = runtimeConfiguration;
+            this.anyDeclared = anyDeclared;
+        }
     }
 }

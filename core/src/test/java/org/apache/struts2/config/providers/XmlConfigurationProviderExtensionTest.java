@@ -35,6 +35,7 @@ public class XmlConfigurationProviderExtensionTest extends StrutsInternalTestCas
 
     private static final String CONFIG = "org/apache/struts2/config/providers/struts-extension.xml";
     private static final String INVALID_CONFIG = "org/apache/struts2/config/providers/struts-extension-invalid.xml";
+    private static final String WHITESPACE_CONFIG = "org/apache/struts2/config/providers/struts-extension-whitespace.xml";
 
     public void testActionInheritsPackageChainExtension() {
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
@@ -82,6 +83,14 @@ public class XmlConfigurationProviderExtensionTest extends StrutsInternalTestCas
         assertThatThrownBy(() -> loadConfigurationProviders(provider))
             .isInstanceOf(ConfigurationException.class)
             .hasStackTraceContaining(".html");
+    }
+
+    public void testWhitespaceRejected() {
+        StrutsXmlConfigurationProvider provider = new StrutsXmlConfigurationProvider(WHITESPACE_CONFIG);
+        assertThatThrownBy(() -> loadConfigurationProviders(provider))
+            .isInstanceOf(ConfigurationException.class)
+            .hasStackTraceContaining("[ json]")
+            .hasStackTraceContaining("[Spaced]");
     }
 
     private ActionConfig actionConfig(String namespace, String name) {

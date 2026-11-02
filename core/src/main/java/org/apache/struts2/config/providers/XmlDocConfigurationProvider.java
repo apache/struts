@@ -26,7 +26,6 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.ConfigurationUtil;
 import org.apache.struts2.config.entities.ActionConfig;
-import org.apache.struts2.dispatcher.mapper.ActionExtensions;
 import org.apache.struts2.config.entities.ExceptionMappingConfig;
 import org.apache.struts2.config.entities.InterceptorConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
@@ -36,6 +35,7 @@ import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.config.entities.ResultTypeConfig;
 import org.apache.struts2.config.entities.UnknownHandlerConfig;
 import org.apache.struts2.config.impl.LocatableFactory;
+import org.apache.struts2.dispatcher.mapper.ActionExtensions;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.ContainerBuilder;
 import org.apache.struts2.inject.Inject;
@@ -546,8 +546,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
         List<String> extensions = ActionExtensions.parse(element.getAttribute("extension"));
         for (String extension : extensions) {
-            if (extension.startsWith(".") || extension.contains("/")) {
-                throw new ConfigurationException(format("Invalid extension [%s] on [%s], it must not start with '.' or contain '/'",
+            if (extension.startsWith(".") || extension.contains("/") || StringUtils.containsWhitespace(extension)) {
+                throw new ConfigurationException(format("Invalid extension [%s] on [%s], it must not start with '.' or contain '/' or whitespace",
                         extension, element.getAttribute("name")), location);
             }
         }

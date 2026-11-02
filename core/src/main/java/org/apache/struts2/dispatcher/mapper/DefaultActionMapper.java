@@ -264,6 +264,11 @@ public class DefaultActionMapper implements ActionMapper {
         return parseActionName(mapping);
     }
 
+    @Override
+    public boolean supportsDeclaredExtensions() {
+        return true;
+    }
+
     public boolean isSlashesInActionNames() {
         return allowSlashesInActionNames;
     }

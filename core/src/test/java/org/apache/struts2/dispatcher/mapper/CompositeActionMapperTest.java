@@ -74,6 +74,28 @@ public class CompositeActionMapperTest extends TestCase {
         assertNull(uri);
     }
 
+    public void testSupportsDeclaredExtensionsWhenAllMappersSupportThem() {
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), new DefaultActionMapper());
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), new Restful2ActionMapper());
+        CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2");
+
+        assertTrue(compositeActionMapper.supportsDeclaredExtensions());
+    }
+
+    public void testDoesNotSupportDeclaredExtensionsWhenOneMapperDoesNot() {
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), new DefaultActionMapper());
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), new RestfulActionMapper());
+        CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2");
+
+        assertFalse(compositeActionMapper.supportsDeclaredExtensions());
+    }
+
+    public void testDoesNotSupportDeclaredExtensionsWithoutMappers() {
+        CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "");
+
+        assertFalse(compositeActionMapper.supportsDeclaredExtensions());
+    }
+
 
     public static class InnerActionMapper1 implements ActionMapper {
         public static ActionMapping actionMapping = new ActionMapping();

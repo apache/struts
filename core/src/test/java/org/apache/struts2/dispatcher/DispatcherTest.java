@@ -45,6 +45,8 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.StrutsJUnit4InternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
+import org.apache.struts2.dispatcher.mapper.RestfulActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.junit.Test;
@@ -643,7 +645,7 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
             initDispatcher(params);
 
             assertThat(capture.messages(Level.WARN)).singleElement().asString()
-                    .contains("declared extensions may not be applied");
+                    .contains("[" + RestfulActionMapper.class.getName() + "] does not support declared extensions");
         }
     }
 
@@ -651,6 +653,19 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     public void testNoMapperWarningWithDefaultMapper() {
         Map<String, String> params = new HashMap<>();
         params.put("config", "struts-default.xml,struts-plugin.xml,org/apache/struts2/config/providers/struts-extension.xml");
+
+        try (LogCapture capture = new LogCapture(Dispatcher.class)) {
+            initDispatcher(params);
+
+            assertThat(capture.messages(Level.WARN)).noneMatch(message -> message.contains("declared extensions"));
+        }
+    }
+
+    @Test
+    public void testNoMapperWarningWithDefaultMapperSubclass() {
+        Map<String, String> params = new HashMap<>();
+        params.put("config", "struts-default.xml,struts-plugin.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        params.put(StrutsConstants.STRUTS_MAPPER_CLASS, ExtendedDefaultActionMapper.class.getName());
 
         try (LogCapture capture = new LogCapture(Dispatcher.class)) {
             initDispatcher(params);
@@ -776,6 +791,9 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
     static class DispatcherListenerState {
         public boolean isInitialized = false;
         public boolean isDestroyed = false;
+    }
+
+    public static class ExtendedDefaultActionMapper extends DefaultActionMapper {
     }
 
     public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {

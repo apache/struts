@@ -38,4 +38,8 @@
     <package name="wild" namespace="/wild">
         <action name="edit_*" class="org.apache.struts2.TestAction" extension="html"/>
     </package>
+
+    <package name="fallback" namespace="">
+        <action name="thing" class="org.apache.struts2.TestAction" extension="html"/>
+    </package>
 </struts>

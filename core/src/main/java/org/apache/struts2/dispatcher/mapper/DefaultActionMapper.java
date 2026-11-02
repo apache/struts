@@ -21,6 +21,7 @@ package org.apache.struts2.dispatcher.mapper;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.ConfigurationManager;
+import org.apache.struts2.config.RuntimeConfiguration;
 import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.inject.Container;
@@ -34,6 +35,7 @@ import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.PrefixTrie;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +136,8 @@ public class DefaultActionMapper implements ActionMapper {
     private boolean allowActionPrefix = false;
 
     protected List<String> extensions = List.of("action", "");
+
+    private volatile DeclaredExtensions declaredExtensions;
 
     protected Container container;
 
@@ -249,6 +253,7 @@ public class DefaultActionMapper implements ActionMapper {
         } else {
             this.extensions = null;
         }
+        this.declaredExtensions = null;
     }
 
     @Override
@@ -275,7 +280,8 @@ public class DefaultActionMapper implements ActionMapper {
         int indexOfSemicolon = uri.indexOf(';');
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
 
-        uri = dropExtension(uri, mapping);
+        String declaredUri = stripDeclaredExtension(uri, mapping, configManager);
+        uri = declaredUri != null ? declaredUri : dropExtension(uri, mapping);
         if (uri == null) {
             return null;
         }
@@ -466,6 +472,78 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         mapping.setMethod(methodName);
+    }
+
+    /**
+     * Strips an extension that only package or action {@code extension} attributes declare, but only when the
+     * remaining URI resolves to an action that itself declares extensions.
+     *
+     * @param uri           the request URI
+     * @param mapping       the action mapping to store the extension in
+     * @param configManager configuration manager
+     * @return the URI without the extension, or {@code null} when no declared-only extension claims it
+     * @since 7.5.0
+     */
+    protected String stripDeclaredExtension(String uri, ActionMapping mapping, ConfigurationManager configManager) {
+        RuntimeConfiguration runtimeConfiguration = configManager.getConfiguration().getRuntimeConfiguration();
+        if (runtimeConfiguration == null) {
+            return null;
+        }
+        for (String ext : declaredOnlyExtensions(runtimeConfiguration)) {
+            String suffix = "." + ext;
+            if (uri.endsWith(suffix)) {
+                String candidate = uri.substring(0, uri.length() - suffix.length());
+                if (declaresExtensions(candidate, runtimeConfiguration, configManager)) {
+                    mapping.setExtension(ext);
+                    return candidate;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean declaresExtensions(String candidate, RuntimeConfiguration runtimeConfiguration, ConfigurationManager configManager) {
+        ActionMapping probe = new ActionMapping();
+        parseNameAndNamespace(candidate, probe, configManager);
+        String name = probe.getName();
+        int bang = name.indexOf('!');
+        String actionName = bang == -1 ? name : name.substring(0, bang);
+        ActionConfig config = runtimeConfiguration.getActionConfig(probe.getNamespace(), actionName);
+        return config != null && config.getExtensions() != null;
+    }
+
+    private List<String> declaredOnlyExtensions(RuntimeConfiguration runtimeConfiguration) {
+        DeclaredExtensions cached = declaredExtensions;
+        if (cached != null && cached.runtimeConfiguration == runtimeConfiguration) {
+            return cached.declaredOnly;
+        }
+        Set<String> declared = new HashSet<>();
+        for (Map<String, ActionConfig> actionConfigs : runtimeConfiguration.getActionConfigs().values()) {
+            for (ActionConfig actionConfig : actionConfigs.values()) {
+                if (actionConfig.getExtensions() != null) {
+                    declared.addAll(actionConfig.getExtensions());
+                }
+            }
+        }
+        declared.remove("");
+        if (extensions != null) {
+            extensions.forEach(declared::remove);
+        }
+        List<String> declaredOnly = declared.stream()
+            .sorted(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()))
+            .toList();
+        declaredExtensions = new DeclaredExtensions(runtimeConfiguration, declaredOnly);
+        return declaredOnly;
+    }
+
+    private static final class DeclaredExtensions {
+        private final RuntimeConfiguration runtimeConfiguration;
+        private final List<String> declaredOnly;
+
+        private DeclaredExtensions(RuntimeConfiguration runtimeConfiguration, List<String> declaredOnly) {
+            this.runtimeConfiguration = runtimeConfiguration;
+            this.declaredOnly = declaredOnly;
+        }
     }
 
     /**

@@ -569,7 +569,12 @@ public class DefaultConfiguration implements Configuration {
 
         LOG.debug("Using pattern [{}] to match allowed methods when SMI is disabled!", methodRegex);
 
+        List<String> extensions = baseConfig.getExtensions() != null
+                ? baseConfig.getExtensions()
+                : packageContext.getFullExtensions();
+
         return new ActionConfig.Builder(baseConfig)
+                .extensions(extensions)
                 .addParams(params)
                 .addResultConfigs(results)
                 .defaultClassName(packageContext.getDefaultClassRef())  // fill in default if non class has been provided

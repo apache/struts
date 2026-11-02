@@ -69,6 +69,7 @@ public class ActionConfig extends Located implements Serializable {
     protected boolean strictMethodInvocation = true;
     protected AllowedMethods allowedMethods;
     private Set<HttpMethod> httpMethods;
+    private List<String> extensions;
 
     protected ActionConfig(String packageName, String name, String className) {
         this.packageName = packageName;
@@ -98,6 +99,7 @@ public class ActionConfig extends Located implements Serializable {
         this.allowedMethods = orig.allowedMethods;
         this.httpMethods = EnumSet.noneOf(HttpMethod.class);
         this.httpMethods.addAll(orig.httpMethods);
+        this.extensions = orig.extensions != null ? List.copyOf(orig.extensions) : null;
         this.location = orig.location;
         this.strictMethodInvocation = orig.strictMethodInvocation;
     }
@@ -128,6 +130,14 @@ public class ActionConfig extends Located implements Serializable {
      */
     public Set<HttpMethod> getHttpMethods() {
         return httpMethods;
+    }
+
+    /**
+     * @return action extensions in declared order, null when neither the action nor its package declares any
+     * @since 7.5.0
+     */
+    public List<String> getExtensions() {
+        return extensions;
     }
 
     /**
@@ -200,7 +210,11 @@ public class ActionConfig extends Located implements Serializable {
             return false;
         }
 
-        return Objects.equals(httpMethods, actionConfig.httpMethods);
+        if (!Objects.equals(httpMethods, actionConfig.httpMethods)) {
+            return false;
+        }
+
+        return Objects.equals(extensions, actionConfig.extensions);
     }
 
     @Override
@@ -216,6 +230,7 @@ public class ActionConfig extends Located implements Serializable {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (allowedMethods != null ? allowedMethods.hashCode() : 0);
         result = 31 * result + (httpMethods != null ? httpMethods.hashCode() : 0);
+        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
         return result;
     }
 
@@ -233,6 +248,9 @@ public class ActionConfig extends Located implements Serializable {
         sb.append(" - ").append(allowedMethods);
         if (!httpMethods.isEmpty()) {
             sb.append(" - ").append(httpMethods);
+        }
+        if (extensions != null) {
+            sb.append(" - extensions ").append(extensions);
         }
         sb.append("}");
         return sb.toString();
@@ -365,6 +383,14 @@ public class ActionConfig extends Located implements Serializable {
          */
         public Builder addHttpMethods(Collection<HttpMethod> methods) {
             target.httpMethods.addAll(methods);
+            return this;
+        }
+
+        /**
+         * @since 7.5.0
+         */
+        public Builder extensions(List<String> extensions) {
+            target.extensions = extensions != null ? List.copyOf(extensions) : null;
             return this;
         }
 

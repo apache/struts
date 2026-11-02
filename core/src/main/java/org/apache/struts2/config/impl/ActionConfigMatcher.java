@@ -146,6 +146,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
                 .setStrictMethodInvocation(orig.isStrictMethodInvocation())
                 .addAllowedMethod(orig.getAllowedMethods())
                 .addHttpMethods(orig.getHttpMethods())
+                .extensions(orig.getExtensions())
                 .addInterceptors(orig.getInterceptors())
                 .addExceptionMappings(exs)
                 .location(orig.getLocation())

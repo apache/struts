@@ -43,6 +43,7 @@
     abstract CDATA #IMPLIED
     final CDATA #IMPLIED
     strict-method-invocation (true|false) "true"
+    extension CDATA #IMPLIED
 >
 
 <!ELEMENT scoped-constant EMPTY>
@@ -106,6 +107,7 @@
     method CDATA #IMPLIED
     converter CDATA #IMPLIED
     http-method CDATA #IMPLIED
+    extension CDATA #IMPLIED
 >
 
 <!ELEMENT param (#PCDATA)>

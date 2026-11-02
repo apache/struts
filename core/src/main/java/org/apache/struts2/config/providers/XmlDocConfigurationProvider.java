@@ -26,6 +26,7 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.ConfigurationProvider;
 import org.apache.struts2.config.ConfigurationUtil;
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.dispatcher.mapper.ActionExtensions;
 import org.apache.struts2.config.entities.ExceptionMappingConfig;
 import org.apache.struts2.config.entities.InterceptorConfig;
 import org.apache.struts2.config.entities.InterceptorMapping;
@@ -503,6 +504,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement);
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
         Set<HttpMethod> httpMethods = buildHttpMethods(actionElement, location);
+        List<String> extensions = buildExtensions(actionElement, location);
 
         return new ActionConfig.Builder(packageContext.getName(), actionName, className)
                 .methodName(methodName)
@@ -513,6 +515,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .setStrictMethodInvocation(packageContext.isStrictMethodInvocation())
                 .addAllowedMethod(allowedMethods)
                 .addHttpMethods(httpMethods)
+                .extensions(extensions)
                 .location(location)
                 .build();
     }
@@ -531,6 +534,24 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             }
         }
         return httpMethods;
+    }
+
+    /**
+     * @return parsed extension list, or null when the element has no extension attribute
+     * @since 7.5.0
+     */
+    protected List<String> buildExtensions(Element element, Location location) {
+        if (!element.hasAttribute("extension")) {
+            return null;
+        }
+        List<String> extensions = ActionExtensions.parse(element.getAttribute("extension"));
+        for (String extension : extensions) {
+            if (extension.startsWith(".") || extension.contains("/")) {
+                throw new ConfigurationException(format("Invalid extension [%s] on [%s], it must not start with '.' or contain '/'",
+                        extension, element.getAttribute("name")), location);
+            }
+        }
+        return extensions;
     }
 
     protected void verifyAction(String className, Location loc) {
@@ -633,6 +654,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .isAbstract(isAbstract)
                 .isFinal(isFinal)
                 .strictMethodInvocation(strictDMI)
+                .extensions(buildExtensions(packageElement, DomHelper.getLocationObject(packageElement)))
                 .location(DomHelper.getLocationObject(packageElement));
 
         if (parent.isEmpty()) {

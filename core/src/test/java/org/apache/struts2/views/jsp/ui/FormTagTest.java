@@ -27,6 +27,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
@@ -40,6 +41,23 @@ import java.util.HashMap;
  */
 public class FormTagTest extends AbstractUITagTest {
 
+    public void testFormActionUsesDeclaredExtension() throws Exception {
+        initDispatcherWithConfigs("struts-default.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        createMocks();
+        ActionMapping current = new ActionMapping("current", "/", null, null);
+        current.setExtension("action");
+        ActionContext.getContext().withActionMapping(current);
+
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setNamespace("/child");
+        tag.setAction("inherits");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertTrue(writer.toString(), writer.toString().contains("action=\"/child/inherits.html\""));
+    }
 
     public void testFormWithActionAttributeContainingQueryString() throws Exception {
         FormTag tag = new FormTag();

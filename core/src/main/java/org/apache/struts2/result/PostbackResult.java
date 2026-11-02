@@ -24,6 +24,7 @@ import org.apache.struts2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.dispatcher.mapper.ActionExtensionResolver;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -86,6 +87,7 @@ public class PostbackResult extends StrutsResultSupport {
     private boolean cache = true;
 
     protected ActionMapper actionMapper;
+    private transient ActionExtensionResolver actionExtensionResolver;
 
     @Override
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
@@ -152,7 +154,9 @@ public class PostbackResult extends StrutsResultSupport {
             } else {
                 method = conditionalParse(method, invocation);
             }
-            postbackUri = request.getContextPath() + actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null));
+            ActionMapping mapping = new ActionMapping(actionName, namespace, method, null);
+            actionExtensionResolver.applyTo(mapping);
+            postbackUri = request.getContextPath() + actionMapper.getUriFromActionMapping(mapping);
         } else {
             String location = getLocation();
             // Do not prepend if the URL is a FQN
@@ -171,6 +175,15 @@ public class PostbackResult extends StrutsResultSupport {
     @Inject
     public final void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
+    }
+
+    /**
+     * @param actionExtensionResolver chooses the extension of the target action URL
+     * @since 7.5.0
+     */
+    @Inject
+    public void setActionExtensionResolver(ActionExtensionResolver actionExtensionResolver) {
+        this.actionExtensionResolver = actionExtensionResolver;
     }
 
     /**

@@ -24,6 +24,7 @@ import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.mapper.ActionExtensionResolver;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.url.QueryStringBuilder;
@@ -49,6 +50,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.setQueryStringBuilder(queryStringBuilder);
 
         Object action = new Object();
@@ -68,6 +70,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.setQueryStringBuilder(queryStringBuilder);
 
         request.setParameter("struts.enableJSONValidation", "true");
@@ -88,6 +91,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.setQueryStringBuilder(queryStringBuilder);
 
         request.setParameter("struts.enableJSONValidation", "true");

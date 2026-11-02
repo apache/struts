@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.mapper.ActionExtensionResolver;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ComponentUtils;
@@ -81,6 +82,7 @@ public class Component {
     protected ValueStack stack;
     protected Map<String, Object> attributes;
     protected ActionMapper actionMapper;
+    protected ActionExtensionResolver actionExtensionResolver;
     protected boolean throwExceptionOnELFailure;
     protected boolean performClearTagStateForTagPoolingServers = false;
     private UrlHelper urlHelper;
@@ -119,6 +121,15 @@ public class Component {
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
+    }
+
+    /**
+     * @param actionExtensionResolver chooses the extension of generated action URLs
+     * @since 7.5.0
+     */
+    @Inject
+    public void setActionExtensionResolver(ActionExtensionResolver actionExtensionResolver) {
+        this.actionExtensionResolver = actionExtensionResolver;
     }
 
     @Inject(StrutsConstants.STRUTS_EL_THROW_EXCEPTION)
@@ -422,6 +433,7 @@ public class Component {
         String finalMethod = method != null ? findString(method) : null;
         String finalNamespace = determineNamespace(namespace, getStack(), req);
         ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, finalMethod, parameters);
+        actionExtensionResolver.applyTo(mapping);
         String uri = actionMapper.getUriFromActionMapping(mapping);
         return urlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
     }

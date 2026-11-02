@@ -19,8 +19,10 @@
 package org.apache.struts2.result;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.dispatcher.mapper.ActionExtensionResolver;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.inject.Inject;
 import org.apache.struts2.util.reflection.ReflectionExceptionHandler;
 
 import java.io.Serial;
@@ -132,6 +134,8 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     protected String namespace;
     protected String method;
 
+    private transient ActionExtensionResolver actionExtensionResolver;
+
     public ServletActionRedirectResult() {
         super();
     }
@@ -176,11 +180,22 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
             method = conditionalParse(method, invocation);
         }
 
-        String tmpLocation = actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null));
+        ActionMapping mapping = new ActionMapping(actionName, namespace, method, null);
+        actionExtensionResolver.applyTo(mapping);
+        String tmpLocation = actionMapper.getUriFromActionMapping(mapping);
 
         setLocation(tmpLocation);
 
         super.execute(invocation);
+    }
+
+    /**
+     * @param actionExtensionResolver chooses the extension of the target action URL
+     * @since 7.5.0
+     */
+    @Inject
+    public void setActionExtensionResolver(ActionExtensionResolver actionExtensionResolver) {
+        this.actionExtensionResolver = actionExtensionResolver;
     }
 
     /**

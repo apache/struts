@@ -28,6 +28,7 @@ import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.url.StrutsQueryStringBuilder;
 import org.apache.struts2.url.StrutsUrlEncoder;
@@ -301,6 +302,38 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
         ObjectFactory factory = container.getInstance(ObjectFactory.class);
         ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, ActionContext.getContext().getContextMap());
         assertNotNull(result);
+    }
+
+    public void testRedirectUsesDeclaredExtension() throws Exception {
+        initDispatcherWithConfigs("struts-default.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        ActionContext context = ActionContext.getContext();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+        ActionMapping current = new ActionMapping("current", "/", null, null);
+        current.setExtension("action");
+        context.withActionMapping(current);
+
+        ServletActionRedirectResult result = new ServletActionRedirectResult();
+        result.setActionName("inherits");
+        result.setNamespace("/child");
+        result.setPrependServletContext(false);
+
+        IMocksControl control = createControl();
+        ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getProxy()).andReturn(mockActionProxy).anyTimes();
+        expect(mockInvocation.getResultCode()).andReturn("myResult").anyTimes();
+        expect(mockActionProxy.getConfig()).andReturn(new ActionConfig.Builder("", "", "").build()).anyTimes();
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+        expect(mockInvocation.getStack()).andReturn(context.getValueStack()).anyTimes();
+
+        control.replay();
+        container.inject(result);
+        result.execute(mockInvocation);
+
+        assertEquals("/child/inherits.html", res.getRedirectedUrl());
     }
 
 }

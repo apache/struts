@@ -119,6 +119,7 @@
     <bean type="org.apache.struts2.conversion.UserConversionPropertiesProvider" name="struts"
           class="org.apache.struts2.conversion.StrutsConversionPropertiesProcessor"/>
     <bean class="org.apache.struts2.conversion.UserConversionPropertiesProcessor" scope="singleton"/>
+    <bean class="org.apache.struts2.dispatcher.mapper.ActionExtensionResolver" scope="singleton"/>
 
     <bean class="org.apache.struts2.conversion.impl.XWorkBasicConverter"/>
 

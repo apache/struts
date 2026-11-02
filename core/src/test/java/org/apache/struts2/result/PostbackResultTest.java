@@ -23,7 +23,9 @@ import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.ActionProxy;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.mapper.ActionExtensionResolver;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.util.ValueStack;
 import org.easymock.IMocksControl;
@@ -58,6 +60,7 @@ public class PostbackResultTest extends StrutsInternalTestCase {
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.execute(mockInvocation);
         assertEquals("<!DOCTYPE html><html><body><form action=\"${1-1}/myAction0.action\" method=\"POST\">" +
                 "<script>setTimeout(function(){document.forms[0].submit();},0);</script></html>", res.getContentAsString());
@@ -86,6 +89,7 @@ public class PostbackResultTest extends StrutsInternalTestCase {
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.execute(mockInvocation);
         assertEquals("<!DOCTYPE html><html><body><form action=\"myNamespace0/myAction0.action\" method=\"POST\">" +
                 "<script>setTimeout(function(){document.forms[0].submit();},0);</script></html>", res.getContentAsString());
@@ -120,6 +124,7 @@ public class PostbackResultTest extends StrutsInternalTestCase {
         DefaultActionMapper mapper = (DefaultActionMapper) container.getInstance(ActionMapper.class);
         mapper.setAllowDynamicMethodCalls("true");
         result.setActionMapper(mapper);
+        result.setActionExtensionResolver(container.getInstance(ActionExtensionResolver.class));
         result.execute(mockInvocation);
         assertEquals("<!DOCTYPE html><html><body><form action=\"/myNamespace${1-1}/myAction${1-1}!myMethod${1-1}.action\" method=\"POST\">" +
                 "<script>setTimeout(function(){document.forms[0].submit();},0);</script></html>", res.getContentAsString());
@@ -247,6 +252,34 @@ public class PostbackResultTest extends StrutsInternalTestCase {
                 output.contains("action=\"/clean/path/action.do\""));
 
         control.verify();
+    }
+
+    public void testPostbackUsesDeclaredExtension() throws Exception {
+        initDispatcherWithConfigs("struts-default.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        ActionContext context = ActionContext.getContext();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+        ActionMapping current = new ActionMapping("current", "/", null, null);
+        current.setExtension("action");
+        context.withActionMapping(current);
+
+        PostbackResult result = new PostbackResult();
+        result.setActionName("inherits");
+        result.setNamespace("/child");
+        result.setPrependServletContext(false);
+
+        IMocksControl control = createControl();
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+        expect(mockInvocation.getStack()).andReturn(context.getValueStack()).anyTimes();
+
+        control.replay();
+        container.inject(result);
+        result.execute(mockInvocation);
+
+        assertTrue(res.getContentAsString(), res.getContentAsString().contains("<form action=\"/child/inherits.html\""));
     }
 
 }

@@ -176,6 +176,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         if (actionConfig != null) {
 
             ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.attributes);
+            formComponent.actionExtensionResolver.applyTo(mapping);
             String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
                 formComponent.request, formComponent.response, queryStringResult.getQueryParams(), scheme, formComponent.includeContext, true, false, false);
             formComponent.addParameter("action", result);

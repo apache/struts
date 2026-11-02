@@ -2104,6 +2104,24 @@ public class URLTagTest extends AbstractUITagTest {
         assertEquals("/books#v=twopage&q&f=false", writer.toString());
     }
 
+    public void testActionUrlUsesDeclaredExtension() throws Exception {
+        initDispatcherWithConfigs("struts-default.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        createMocks();
+        ActionMapping current = new ActionMapping("current", "/", null, null);
+        current.setExtension("action");
+        ActionContext.getContext().withActionMapping(current);
+
+        URLTag urlTag = new URLTag();
+        urlTag.setPageContext(pageContext);
+        urlTag.setAction("inherits");
+        urlTag.setNamespace("/child");
+
+        urlTag.doStartTag();
+        urlTag.doEndTag();
+
+        assertEquals("/child/inherits.html", writer.toString());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

@@ -93,7 +93,9 @@ govern both:
   to the container, which serves the static file or JSP. That must keep working once some package
   declares `html`. Rule: an extension found **only** in package/action lists, not in the global
   list, is stripped only if the stripped name and namespace resolve to an existing action
-  (exact match or wildcard, via the runtime configuration). Otherwise the mapper behaves as today
+  (exact match or wildcard, via the runtime configuration) **that declares an extension list**
+  itself or through its packages. An undeclared action never claims one, because the interceptor
+  passes undeclared actions. Otherwise the mapper behaves as today
   for that URL: it returns null, or treats the name literally when the global list has `""`.
   Whether that action *allows* the extension is still the interceptor's decision. That way a
   rejection always goes through the user-definable result.

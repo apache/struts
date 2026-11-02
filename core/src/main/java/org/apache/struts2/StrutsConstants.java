@@ -790,6 +790,13 @@ public final class StrutsConstants {
 
     public static final String STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS = "struts.parameters.requireAnnotations";
     public static final String STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION = "struts.parameters.requireAnnotations.transitionMode";
+    /**
+     * Whether {@link org.apache.struts2.interceptor.parameter.ParametersInterceptor} also checks
+     * {@link org.apache.struts2.interceptor.parameter.StrutsParameter} on the member OGNL resolves while binding.
+     *
+     * @since 7.6.0
+     */
+    public static final String STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_RESOLVED_MEMBER = "struts.parameters.requireAnnotations.enforceOnResolvedMember";
 
     public static final String STRUTS_CONTENT_TYPE_MATCHER = "struts.contentTypeMatcher";
 

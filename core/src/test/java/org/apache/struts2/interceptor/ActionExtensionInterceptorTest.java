@@ -48,7 +48,7 @@ public class ActionExtensionInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testUndeclaredPasses() throws Exception {
-        prepare(config(null), "second", "second", "html");
+        prepare(config(List.of()), "second", "second", "html");
 
         assertThat(interceptor.intercept(invocation)).isEqualTo("success");
     }

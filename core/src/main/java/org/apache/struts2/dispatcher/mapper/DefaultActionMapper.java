@@ -515,7 +515,7 @@ public class DefaultActionMapper implements ActionMapper {
         int bang = name.indexOf('!');
         String actionName = bang == -1 ? name : name.substring(0, bang);
         ActionConfig config = runtimeConfiguration.getMatchedActionConfig(probe.getNamespace(), actionName);
-        return config != null && config.getExtensions() != null;
+        return config != null && !config.getExtensions().isEmpty();
     }
 
     private DeclaredExtensions declaredExtensions(RuntimeConfiguration runtimeConfiguration) {
@@ -526,7 +526,7 @@ public class DefaultActionMapper implements ActionMapper {
         Set<String> declared = new HashSet<>();
         for (Map<String, ActionConfig> actionConfigs : runtimeConfiguration.getActionConfigs().values()) {
             for (ActionConfig actionConfig : actionConfigs.values()) {
-                if (actionConfig.getExtensions() != null) {
+                if (!actionConfig.getExtensions().isEmpty()) {
                     declared.addAll(actionConfig.getExtensions());
                 }
             }

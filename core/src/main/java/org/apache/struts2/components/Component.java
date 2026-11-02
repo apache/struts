@@ -82,9 +82,6 @@ public class Component {
     protected ValueStack stack;
     protected Map<String, Object> attributes;
     protected ActionMapper actionMapper;
-    /**
-     * @since 7.5.0
-     */
     protected ActionExtensionResolver actionExtensionResolver;
     protected boolean throwExceptionOnELFailure;
     protected boolean performClearTagStateForTagPoolingServers = false;

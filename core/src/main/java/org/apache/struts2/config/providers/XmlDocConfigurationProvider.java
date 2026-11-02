@@ -537,12 +537,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     }
 
     /**
-     * @return parsed extension list, or null when the element has no extension attribute
+     * @return parsed extension list, or empty when the element has no extension attribute
      * @since 7.5.0
      */
     protected List<String> buildExtensions(Element element, Location location) {
         if (!element.hasAttribute("extension")) {
-            return null;
+            return List.of();
         }
         List<String> extensions = ActionExtensions.parse(element.getAttribute("extension"));
         for (String extension : extensions) {

@@ -563,7 +563,7 @@ public class DefaultConfiguration implements Configuration {
 
         warnIfHttpMethodNotEnforced(baseConfig, interceptors);
 
-        List<String> extensions = baseConfig.getExtensions() != null
+        List<String> extensions = !baseConfig.getExtensions().isEmpty()
                 ? baseConfig.getExtensions()
                 : packageContext.getFullExtensions();
         warnIfExtensionNotEnforced(baseConfig, extensions, interceptors);
@@ -596,7 +596,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     private void warnIfExtensionNotEnforced(ActionConfig baseConfig, List<String> extensions, List<InterceptorMapping> interceptors) {
-        if (extensions != null
+        if (!extensions.isEmpty()
                 && interceptors.stream().noneMatch(mapping -> mapping.getInterceptor() instanceof ActionExtensionInterceptor)) {
             LOG.warn("Action [{}] in package [{}] declares extension {} but its interceptors do not include {}, the restriction will not be enforced",
                     baseConfig.getName(), baseConfig.getPackageName(), extensions, ActionExtensionInterceptor.class.getSimpleName());

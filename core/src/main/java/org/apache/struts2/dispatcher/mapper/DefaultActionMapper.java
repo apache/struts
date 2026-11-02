@@ -476,7 +476,8 @@ public class DefaultActionMapper implements ActionMapper {
 
     /**
      * Strips an extension that only package or action {@code extension} attributes declare, but only when the
-     * remaining URI resolves to an action that itself declares extensions.
+     * remaining URI matches an action (exactly or by wildcard, never through a {@code default-action-ref}) that itself
+     * declares extensions.
      *
      * @param uri           the request URI
      * @param mapping       the action mapping to store the extension in
@@ -508,7 +509,7 @@ public class DefaultActionMapper implements ActionMapper {
         String name = probe.getName();
         int bang = name.indexOf('!');
         String actionName = bang == -1 ? name : name.substring(0, bang);
-        ActionConfig config = runtimeConfiguration.getActionConfig(probe.getNamespace(), actionName);
+        ActionConfig config = runtimeConfiguration.getMatchedActionConfig(probe.getNamespace(), actionName);
         return config != null && config.getExtensions() != null;
     }
 

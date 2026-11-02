@@ -62,7 +62,8 @@ public class ActionExtensionResolver {
      * Sets the extension of {@code target} to the current request's extension when the target accepts it, otherwise
      * to the target's first accepted extension, which is also used when the current request has no extension, as in
      * {@link DefaultActionMapper#lookupExtension(String)}. Leaves {@code target} unchanged when it already has an extension,
-     * when no action in the configuration declares extensions, when the target action is unknown, or when neither the
+     * when no action in the configuration declares extensions, when the target action is unknown (a name reached only
+     * through the namespace's {@code default-action-ref} counts as unknown), or when neither the
      * target nor the global constant declares extensions.
      *
      * @param target the mapping of the action the URL points at
@@ -77,7 +78,7 @@ public class ActionExtensionResolver {
             return;
         }
         ActionConfig actionConfig = runtimeConfiguration
-            .getActionConfig(target.getNamespace(), StringUtils.substringBefore(target.getName(), "!"));
+            .getMatchedActionConfig(target.getNamespace(), StringUtils.substringBefore(target.getName(), "!"));
         if (actionConfig == null) {
             return;
         }

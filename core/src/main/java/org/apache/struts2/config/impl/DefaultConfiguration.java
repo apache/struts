@@ -640,36 +640,47 @@ public class DefaultConfiguration implements Configuration {
          */
         @Override
         public ActionConfig getActionConfig(String namespace, String name) {
-            ActionConfig config = findActionConfigInNamespace(namespace, name);
+            Lookup lookup = lookup(namespace, name);
+            return lookup == null ? null : lookup.config;
+        }
+
+        @Override
+        public ActionConfig getMatchedActionConfig(String namespace, String name) {
+            Lookup lookup = lookup(namespace, name);
+            return lookup == null || lookup.defaultAction ? null : lookup.config;
+        }
+
+        private Lookup lookup(String namespace, String name) {
+            Lookup lookup = lookupInNamespace(namespace, name);
 
             // try wildcarded namespaces
-            if (config == null) {
+            if (lookup == null) {
                 NamespaceMatch match = namespaceMatcher.match(namespace);
                 if (match != null) {
-                    config = findActionConfigInNamespace(match.getPattern(), name);
+                    lookup = lookupInNamespace(match.getPattern(), name);
 
                     // If config found, place all the matches found in the namespace processing in the action's parameters
-                    if (config != null) {
-                        config = new ActionConfig.Builder(config)
+                    if (lookup != null) {
+                        lookup = lookup.withConfig(new ActionConfig.Builder(lookup.config)
                                 .addParams(match.getVariables())
-                                .build();
+                                .build());
                     }
                 }
             }
 
             // fail over to empty namespace
-            if (config == null && shouldFallbackToEmptyNamespace(namespace)) {
-                config = findActionConfigInNamespace("", name);
+            if (lookup == null && shouldFallbackToEmptyNamespace(namespace)) {
+                lookup = lookupInNamespace("", name);
             }
 
-            return config;
+            return lookup;
         }
 
         private boolean shouldFallbackToEmptyNamespace(String namespace) {
             return StringUtils.isNotBlank(namespace) && ("/".equals(namespace) || fallbackToEmptyNamespace);
         }
 
-        private ActionConfig findActionConfigInNamespace(String namespace, String name) {
+        private Lookup lookupInNamespace(String namespace, String name) {
             if (namespace == null) {
                 namespace = "";
             }
@@ -680,15 +691,16 @@ public class DefaultConfiguration implements Configuration {
 
             ActionConfig config = actions.get(name);
             if (config != null) {
-                return config;
+                return Lookup.matched(config);
             }
 
             config = namespaceActionConfigMatchers.get(namespace).match(name);
             if (config != null) {
-                return config;
+                return Lookup.matched(config);
             }
 
-            return findDefaultActionConfig(namespace, actions);
+            config = findDefaultActionConfig(namespace, actions);
+            return config == null ? null : Lookup.defaultAction(config);
         }
 
         private ActionConfig findDefaultActionConfig(String namespace, Map<String, ActionConfig> actions) {
@@ -728,6 +740,28 @@ public class DefaultConfiguration implements Configuration {
             }
 
             return buff.toString();
+        }
+
+        private static final class Lookup {
+            private final ActionConfig config;
+            private final boolean defaultAction;
+
+            private Lookup(ActionConfig config, boolean defaultAction) {
+                this.config = config;
+                this.defaultAction = defaultAction;
+            }
+
+            private static Lookup matched(ActionConfig config) {
+                return new Lookup(config, false);
+            }
+
+            private static Lookup defaultAction(ActionConfig config) {
+                return new Lookup(config, true);
+            }
+
+            private Lookup withConfig(ActionConfig other) {
+                return new Lookup(other, defaultAction);
+            }
         }
     }
 

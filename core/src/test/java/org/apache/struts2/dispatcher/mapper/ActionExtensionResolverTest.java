@@ -85,6 +85,15 @@ public class ActionExtensionResolverTest extends StrutsInternalTestCase {
         assertThat(resolve("/child", "inherits!foo")).isEqualTo("html");
     }
 
+    public void testUnknownNameResolvedOnlyThroughDeclaringDefaultActionUntouched() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("org/apache/struts2/config/providers/struts-extension-default-action.xml"));
+        resolver.setConfiguration(configuration);
+        withCurrentExtension("action");
+
+        assertThat(resolve("", "manual")).isNull();
+        assertThat(resolve("", "index")).isEqualTo("html");
+    }
+
     public void testWithoutCurrentMappingUsesFirstAllowed() {
         assertThat(resolve("/child", "inherits")).isEqualTo("html");
     }

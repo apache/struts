@@ -48,6 +48,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     private static final String EXTENSION_CONFIG = "org/apache/struts2/config/providers/struts-extension.xml";
     private static final String EXTENSION_RELOAD_CONFIG = "org/apache/struts2/config/providers/struts-extension-reload.xml";
+    private static final String EXTENSION_DEFAULT_ACTION_CONFIG = "org/apache/struts2/config/providers/struts-extension-default-action.xml";
 
     private MockHttpServletRequest req;
     private ConfigurationManager configManager;
@@ -1097,6 +1098,31 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         assertThat(mapDeclared(mapper, "/child/inherits.html")).isNull();
         assertThat(mapDeclared(mapper, "/child/inherits.json").getExtension()).isEqualTo("json");
+    }
+
+    public void testDeclaringDefaultActionDoesNotClaimStaticFile() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+
+        assertThat(mapDeclared(declaredMapper(), "/docs/manual.html")).isNull();
+        assertThat(mapDeclared(declaredMapper(), "/manual.html")).isNull();
+    }
+
+    public void testDeclaringDefaultActionClaimsItsOwnName() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+
+        ActionMapping mapping = mapDeclared(declaredMapper(), "/index.html");
+
+        assertThat(mapping.getName()).isEqualTo("index");
+        assertThat(mapping.getExtension()).isEqualTo("html");
+    }
+
+    public void testWildcardBesideDeclaringDefaultActionStillClaimed() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+
+        ActionMapping mapping = mapDeclared(declaredMapper(), "/edit_user.html");
+
+        assertThat(mapping.getName()).isEqualTo("edit_user");
+        assertThat(mapping.getExtension()).isEqualTo("html");
     }
 
     private DefaultActionMapper declaredMapper() {

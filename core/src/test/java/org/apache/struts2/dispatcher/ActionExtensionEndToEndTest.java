@@ -87,6 +87,13 @@ public class ActionExtensionEndToEndTest extends StrutsInternalTestCase {
         assertThat(request.getAttribute(EXECUTED)).isNull();
     }
 
+    public void testStaticHtmlUnderDeclaringDefaultActionFallsThrough() throws Exception {
+        doFilter("/shop/manual.html");
+
+        assertThat(filterChain.getRequest()).isNotNull();
+        assertThat(request.getAttribute(EXECUTED)).isNull();
+    }
+
     public void testDeclaredActionServedOnItsExtension() throws Exception {
         doFilter("/shop/cart.html");
 

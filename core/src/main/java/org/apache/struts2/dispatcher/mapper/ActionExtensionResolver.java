@@ -28,6 +28,7 @@ import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.inject.Inject;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Chooses the extension of a generated action URL from the extensions the target action accepts, so links,
@@ -40,7 +41,7 @@ public class ActionExtensionResolver {
     private Configuration configuration;
     private List<String> extensions;
     private boolean allowDynamicMethodCalls;
-    private volatile DeclarationState declarationState;
+    private final AtomicReference<DeclarationState> declarationState = new AtomicReference<>();
 
     /**
      * @param configuration the configuration used to look up the target action
@@ -113,14 +114,14 @@ public class ActionExtensionResolver {
     }
 
     private boolean anyActionDeclaresExtensions(RuntimeConfiguration runtimeConfiguration) {
-        DeclarationState cached = declarationState;
+        DeclarationState cached = declarationState.get();
         if (cached != null && cached.runtimeConfiguration == runtimeConfiguration) {
             return cached.anyDeclared;
         }
         boolean anyDeclared = runtimeConfiguration.getActionConfigs().values().stream()
             .flatMap(actionConfigs -> actionConfigs.values().stream())
             .anyMatch(actionConfig -> !actionConfig.getExtensions().isEmpty());
-        declarationState = new DeclarationState(runtimeConfiguration, anyDeclared);
+        declarationState.set(new DeclarationState(runtimeConfiguration, anyDeclared));
         return anyDeclared;
     }
 

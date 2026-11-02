@@ -563,9 +563,9 @@ public class DefaultConfiguration implements Configuration {
 
         warnIfHttpMethodNotEnforced(baseConfig, interceptors);
 
-        List<String> extensions = !baseConfig.getExtensions().isEmpty()
-                ? baseConfig.getExtensions()
-                : packageContext.getFullExtensions();
+        List<String> extensions = baseConfig.getExtensions().isEmpty()
+                ? packageContext.getFullExtensions()
+                : baseConfig.getExtensions();
         warnIfExtensionNotEnforced(baseConfig, extensions, interceptors);
 
         String methodRegex = container.getInstance(String.class, StrutsConstants.STRUTS_SMI_METHOD_REGEX);

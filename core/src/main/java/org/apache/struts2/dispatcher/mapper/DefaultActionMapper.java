@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
@@ -137,7 +138,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected List<String> extensions = List.of("action", "");
 
-    private volatile DeclaredExtensions declaredExtensions;
+    private final AtomicReference<DeclaredExtensions> declaredExtensions = new AtomicReference<>();
 
     protected Container container;
 
@@ -253,7 +254,7 @@ public class DefaultActionMapper implements ActionMapper {
         } else {
             this.extensions = null;
         }
-        this.declaredExtensions = null;
+        this.declaredExtensions.set(null);
     }
 
     @Override
@@ -529,7 +530,7 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     private DeclaredExtensions declaredExtensions(RuntimeConfiguration runtimeConfiguration) {
-        DeclaredExtensions cached = declaredExtensions;
+        DeclaredExtensions cached = declaredExtensions.get();
         if (cached != null && cached.runtimeConfiguration == runtimeConfiguration) {
             return cached;
         }
@@ -549,7 +550,7 @@ public class DefaultActionMapper implements ActionMapper {
             .sorted(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()))
             .toList();
         DeclaredExtensions computed = new DeclaredExtensions(runtimeConfiguration, declaredOnly, emptyDeclaredOnly);
-        declaredExtensions = computed;
+        declaredExtensions.set(computed);
         return computed;
     }
 

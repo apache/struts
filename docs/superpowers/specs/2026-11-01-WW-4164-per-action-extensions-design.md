@@ -37,7 +37,8 @@ govern both:
 - Convention plugin / annotation support (an `@Action`-level or class-level extension). Follow-up
   ticket, to be filed once this lands.
 - `RestActionMapper`, `Restful*ActionMapper`, `PrefixBasedActionMapper`, `CompositeActionMapper`:
-  no changes. They keep using the global list.
+  no mapping changes. They keep using the global list, except where they reach
+  `DefaultActionMapper.getMapping` (`Restful2ActionMapper` and other subclasses calling `super`).
 - Redirecting a wrong-extension request to the canonical URL.
 - Resolving ambiguous names by trying several strip candidates (e.g. an action literally named
   `report.json` in a package whose list is empty-only). The mapper strips in one fixed order; the
@@ -118,8 +119,12 @@ govern both:
 - **Other mappers.** `RestActionMapper` extends `DefaultActionMapper` but overrides the mapping
   path, and the Restful/Prefix/Composite mappers have their own logic. Declaring `extension`
   under them is the application's responsibility: a doc note, and a startup WARN when an action
-  declares an extension list while the configured `ActionMapper` is not exactly
-  `DefaultActionMapper`. No marker on `ActionMapping`.
+  declares an extension list while the configured `ActionMapper` returns false from
+  `ActionMapper.supportsDeclaredExtensions()`. The interface default is false;
+  `DefaultActionMapper` (and so its subclasses, including `Restful2ActionMapper`) returns true,
+  `RestActionMapper` overrides back to false, and `CompositeActionMapper` /
+  `PrefixBasedActionMapper` return true only when they have delegates and every delegate does.
+  No marker on `ActionMapping`.
 - **Rejection**: return a configurable result name (placeholder `bad-extension`, property like
   `HttpMethodInterceptor.badRequestResultName`) when the action can resolve it (action result,
   package global result, `*`, or an unknown handler — same lookup as `HttpMethodInterceptor`).
@@ -172,7 +177,7 @@ govern both:
   today (keeps static `.html`/JSP serving).
 - Enforcement only on the URL's own action. Chain and `<s:action>` are not enforced; `action:`
   buttons are, against the form URL's extension.
-- Non-default mappers: WARN + doc note, no API marker.
+- Non-supporting mappers: WARN + doc note, driven by `ActionMapper.supportsDeclaredExtensions()`; no marker on `ActionMapping`.
 
 ## Regression tests owed by the anti-goal
 

@@ -61,6 +61,10 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         };
     }
 
+    public void testSupportsDeclaredExtensions() {
+        assertTrue(mapper.supportsDeclaredExtensions());
+    }
+
     public void testGetIndex() throws Exception {
         req.setRequestURI("/my/namespace/foo/");
         req.setServletPath("/my/namespace/foo/");

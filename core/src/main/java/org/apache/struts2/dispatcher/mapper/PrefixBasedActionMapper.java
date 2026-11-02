@@ -144,4 +144,9 @@ public class PrefixBasedActionMapper extends DefaultActionMapper implements Acti
         return null;
     }
 
+    @Override
+    public boolean supportsDeclaredExtensions() {
+        return !actionMappers.isEmpty() && actionMappers.values().stream().allMatch(ActionMapper::supportsDeclaredExtensions);
+    }
+
 }

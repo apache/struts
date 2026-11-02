@@ -74,4 +74,14 @@ public interface ActionMapper {
      * @return The URI string that represents this mapping
      */
     String getUriFromActionMapping(ActionMapping mapping);
+
+    /**
+     * Whether this mapper honours the extension lists declared on packages and actions
+     *
+     * @return true if declared extensions are applied when mapping a request
+     * @since 7.5.0
+     */
+    default boolean supportsDeclaredExtensions() {
+        return false;
+    }
 }

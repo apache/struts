@@ -59,7 +59,6 @@ import org.apache.struts2.config.entities.PackageConfig;
 import org.apache.struts2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.inject.Container;
@@ -753,15 +752,16 @@ public class Dispatcher {
     }
 
     private void warnIfExtensionsIgnoredByMapper(Container container) {
-        if (container.getInstance(ActionMapper.class).getClass() == DefaultActionMapper.class) {
+        ActionMapper mapper = container.getInstance(ActionMapper.class);
+        if (mapper.supportsDeclaredExtensions()) {
             return;
         }
         boolean declared = container.getInstance(Configuration.class).getRuntimeConfiguration().getActionConfigs().values().stream()
                 .flatMap(actions -> actions.values().stream())
                 .anyMatch(config -> !config.getExtensions().isEmpty());
         if (declared) {
-            LOG.warn("Actions declare the extension attribute but the configured {} is not {}, the declared extensions may not be applied",
-                    ActionMapper.class.getSimpleName(), DefaultActionMapper.class.getSimpleName());
+            LOG.warn("Actions declare the extension attribute but the configured {} [{}] does not support declared extensions, they are not applied",
+                    ActionMapper.class.getSimpleName(), mapper.getClass().getName());
         }
     }
 

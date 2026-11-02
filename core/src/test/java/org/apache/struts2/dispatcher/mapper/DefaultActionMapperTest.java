@@ -75,6 +75,10 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         };
     }
 
+    public void testSupportsDeclaredExtensions() {
+        assertTrue(new DefaultActionMapper().supportsDeclaredExtensions());
+    }
+
     public void testGetMapping() {
         req.setRequestURI("/my/namespace/actionName.action");
         req.setServletPath("/my/namespace/actionName.action");

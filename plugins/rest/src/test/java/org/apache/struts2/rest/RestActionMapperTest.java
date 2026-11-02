@@ -55,6 +55,10 @@ public class RestActionMapperTest extends TestCase {
         };
     }
 
+    public void testDoesNotSupportDeclaredExtensions() {
+        assertFalse(mapper.supportsDeclaredExtensions());
+    }
+
     public void testRootMapping() throws Exception {
         req.setRequestURI("/myapp/");
         req.setServletPath("/");

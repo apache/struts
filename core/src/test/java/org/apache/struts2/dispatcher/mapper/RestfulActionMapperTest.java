@@ -35,6 +35,10 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
 
     private RestfulActionMapper mapper;
 
+    public void testDoesNotSupportDeclaredExtensions() {
+        assertFalse(mapper.supportsDeclaredExtensions());
+    }
+
     public void testGetUri() {
         ActionMapping am = new ActionMapping();
         am.setName("view");

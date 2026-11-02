@@ -185,6 +185,11 @@ public class RestActionMapper extends DefaultActionMapper {
         this.allowDynamicMethodCalls = "true".equalsIgnoreCase(allowDynamicMethodCalls);
     }
 
+    @Override
+    public boolean supportsDeclaredExtensions() {
+        return false;
+    }
+
     public ActionMapping getMapping(HttpServletRequest request,
             ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();

@@ -108,4 +108,9 @@ public class CompositeActionMapper implements ActionMapper {
         LOG.debug("exhausted from ActionMapper that could return an ActionMapping");
         return null;
     }
+
+    @Override
+    public boolean supportsDeclaredExtensions() {
+        return !actionMappers.isEmpty() && actionMappers.stream().allMatch(ActionMapper::supportsDeclaredExtensions);
+    }
 }

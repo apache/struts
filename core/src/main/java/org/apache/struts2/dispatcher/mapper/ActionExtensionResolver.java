@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsConstants;
@@ -38,6 +39,7 @@ public class ActionExtensionResolver {
 
     private Configuration configuration;
     private List<String> extensions;
+    private boolean allowDynamicMethodCalls;
     private volatile DeclarationState declarationState;
 
     /**
@@ -59,12 +61,23 @@ public class ActionExtensionResolver {
     }
 
     /**
+     * @param enableDynamicMethodCalls whether {@code name!method} names are split at their last {@code !}
+     * @since 7.5.0
+     */
+    @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
+    public void setAllowDynamicMethodCalls(String enableDynamicMethodCalls) {
+        this.allowDynamicMethodCalls = BooleanUtils.toBoolean(enableDynamicMethodCalls);
+    }
+
+    /**
      * Sets the extension of {@code target} to the current request's extension when the target accepts it, otherwise
-     * to the target's first accepted extension, which is also used when the current request has no extension, as in
-     * {@link DefaultActionMapper#lookupExtension(String)}. Leaves {@code target} unchanged when it already has an extension,
-     * when no action in the configuration declares extensions, when the target action is unknown (a name reached only
-     * through the namespace's {@code default-action-ref} counts as unknown), or when neither the
-     * target nor the global constant declares extensions.
+     * to the target's first accepted extension. For a target declaring extensions an extensionless request counts as
+     * the empty extension; the first accepted extension is used when there is no current request, or for an
+     * extensionless request to an undeclared target, as in {@link DefaultActionMapper#lookupExtension(String)}.
+     * Leaves {@code target} unchanged when it already has an extension, when no action in the configuration declares
+     * extensions, when the target action is unknown (a name reached only through the namespace's
+     * {@code default-action-ref} counts as unknown), or when neither the target nor the global constant declares
+     * extensions.
      *
      * @param target the mapping of the action the URL points at
      * @since 7.5.0
@@ -77,17 +90,26 @@ public class ActionExtensionResolver {
         if (!anyActionDeclaresExtensions(runtimeConfiguration)) {
             return;
         }
-        String actionName = StringUtils.substringBefore(StringUtils.substringBefore(target.getName(), "?"), "!");
-        ActionConfig actionConfig = runtimeConfiguration.getMatchedActionConfig(target.getNamespace(), actionName);
+        ActionConfig actionConfig = runtimeConfiguration.getMatchedActionConfig(target.getNamespace(), actionName(target.getName()));
         if (actionConfig == null) {
             return;
         }
-        List<String> effective = !actionConfig.getExtensions().isEmpty() ? actionConfig.getExtensions() : extensions;
-        if (effective == null) {
+        ActionMapping currentMapping = currentMapping();
+        List<String> declared = actionConfig.getExtensions();
+        if (!declared.isEmpty()) {
+            target.setExtension(currentMapping == null ? declared.get(0) : ActionExtensions.select(declared, currentMapping.getExtension()));
             return;
         }
-        String current = currentExtension();
-        target.setExtension(current == null ? effective.get(0) : ActionExtensions.select(effective, current));
+        if (extensions == null) {
+            return;
+        }
+        String current = currentMapping == null ? null : currentMapping.getExtension();
+        target.setExtension(current == null ? extensions.get(0) : ActionExtensions.select(extensions, current));
+    }
+
+    private String actionName(String name) {
+        String withoutQuery = StringUtils.substringBefore(name, "?");
+        return allowDynamicMethodCalls ? StringUtils.substringBeforeLast(withoutQuery, "!") : withoutQuery;
     }
 
     private boolean anyActionDeclaresExtensions(RuntimeConfiguration runtimeConfiguration) {
@@ -102,12 +124,9 @@ public class ActionExtensionResolver {
         return anyDeclared;
     }
 
-    private String currentExtension() {
+    private ActionMapping currentMapping() {
         ActionContext context = ActionContext.getContext();
-        if (context == null || context.getActionMapping() == null) {
-            return null;
-        }
-        return context.getActionMapping().getExtension();
+        return context == null ? null : context.getActionMapping();
     }
 
     private static final class DeclarationState {

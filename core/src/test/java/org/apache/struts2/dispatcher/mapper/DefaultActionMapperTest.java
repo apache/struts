@@ -49,6 +49,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     private static final String EXTENSION_CONFIG = "org/apache/struts2/config/providers/struts-extension.xml";
     private static final String EXTENSION_RELOAD_CONFIG = "org/apache/struts2/config/providers/struts-extension-reload.xml";
     private static final String EXTENSION_DEFAULT_ACTION_CONFIG = "org/apache/struts2/config/providers/struts-extension-default-action.xml";
+    private static final String EXTENSION_BANG_CONFIG = "org/apache/struts2/config/providers/struts-extension-bang.xml";
 
     private MockHttpServletRequest req;
     private ConfigurationManager configManager;
@@ -1144,6 +1145,42 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         assertThat(mapDeclared(mapper, "/plain/undeclared")).isNull();
         assertThat(mapDeclared(mapper, "/plain/undeclared.action").getName()).isEqualTo("undeclared");
+    }
+
+    public void testDeclaringDefaultActionDoesNotClaimDisallowedName() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+
+        assertThat(mapDeclared(declaredMapper(), "/manual(1).html")).isNull();
+    }
+
+    public void testDeclaredExtensionClaimedForLiteralBangNameWithoutDmi() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_BANG_CONFIG));
+
+        ActionMapping mapping = mapDeclared(declaredMapper(), "/bang-only/report!daily.html");
+
+        assertThat(mapping.getName()).isEqualTo("report!daily");
+        assertThat(mapping.getMethod()).isNull();
+        assertThat(mapping.getExtension()).isEqualTo("html");
+    }
+
+    public void testDeclaredExtensionClaimedForDmiName() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_BANG_CONFIG));
+        DefaultActionMapper mapper = declaredMapper();
+        mapper.setAllowDynamicMethodCalls("true");
+
+        ActionMapping mapping = mapDeclared(mapper, "/dmi/report!daily.html");
+
+        assertThat(mapping.getName()).isEqualTo("report");
+        assertThat(mapping.getMethod()).isEqualTo("daily");
+        assertThat(mapping.getExtension()).isEqualTo("html");
+    }
+
+    public void testDeclaredExtensionProbeSplitsDmiNameAtLastBang() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_BANG_CONFIG));
+        DefaultActionMapper mapper = declaredMapper();
+        mapper.setAllowDynamicMethodCalls("true");
+
+        assertThat(mapDeclared(mapper, "/dmi/report!x!daily.html")).isNull();
     }
 
     private DefaultActionMapper declaredMapper() {

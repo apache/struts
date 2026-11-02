@@ -511,7 +511,7 @@ public class DefaultActionMapper implements ActionMapper {
     private boolean declaresExtensions(String candidate, RuntimeConfiguration runtimeConfiguration, ConfigurationManager configManager) {
         ActionMapping probe = new ActionMapping();
         parseNameAndNamespace(candidate, probe, configManager);
-        if (!keepsRequestedName(candidate, probe.getName())) {
+        if (!keepsRequestedName(candidate, probe)) {
             return false;
         }
         parseActionName(probe);
@@ -519,9 +519,13 @@ public class DefaultActionMapper implements ActionMapper {
         return config != null && !config.getExtensions().isEmpty();
     }
 
-    private static boolean keepsRequestedName(String uri, String name) {
-        String lastSegment = uri.substring(uri.lastIndexOf('/') + 1);
-        return name.equals(lastSegment) || name.endsWith("/" + lastSegment);
+    private boolean keepsRequestedName(String uri, ActionMapping probe) {
+        String name = probe.getName();
+        if (!allowSlashesInActionNames) {
+            return uri.substring(uri.lastIndexOf('/') + 1).equals(name);
+        }
+        String namespace = "/".equals(probe.getNamespace()) ? "" : probe.getNamespace();
+        return uri.equals(name) || uri.equals(namespace + "/" + name);
     }
 
     private DeclaredExtensions declaredExtensions(RuntimeConfiguration runtimeConfiguration) {

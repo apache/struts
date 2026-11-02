@@ -1153,6 +1153,25 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertThat(mapDeclared(declaredMapper(), "/manual(1).html")).isNull();
     }
 
+    public void testDeclaringDefaultActionDoesNotClaimDisallowedNameWithSlashes() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+        DefaultActionMapper mapper = declaredMapper();
+        mapper.setSlashesInActionNames("true");
+
+        assertThat(mapDeclared(mapper, "/x(1)/index.html")).isNull();
+    }
+
+    public void testDeclaringDefaultActionClaimsItsOwnNameWithSlashes() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_DEFAULT_ACTION_CONFIG));
+        DefaultActionMapper mapper = declaredMapper();
+        mapper.setSlashesInActionNames("true");
+
+        ActionMapping mapping = mapDeclared(mapper, "/index.html");
+
+        assertThat(mapping.getName()).isEqualTo("index");
+        assertThat(mapping.getExtension()).isEqualTo("html");
+    }
+
     public void testDeclaredExtensionClaimedForLiteralBangNameWithoutDmi() {
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_BANG_CONFIG));
 

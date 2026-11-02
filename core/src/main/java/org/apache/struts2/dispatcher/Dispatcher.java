@@ -756,7 +756,7 @@ public class Dispatcher {
         if (container.getInstance(ActionMapper.class).getClass() == DefaultActionMapper.class) {
             return;
         }
-        boolean declared = configurationManager.getConfiguration().getRuntimeConfiguration().getActionConfigs().values().stream()
+        boolean declared = container.getInstance(Configuration.class).getRuntimeConfiguration().getActionConfigs().values().stream()
                 .flatMap(actions -> actions.values().stream())
                 .anyMatch(config -> !config.getExtensions().isEmpty());
         if (declared) {

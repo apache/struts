@@ -27,6 +27,7 @@ import org.apache.struts2.action.Action;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import org.springframework.mock.web.MockFilterChain;
@@ -60,7 +61,8 @@ public class ActionExtensionEndToEndTest extends StrutsInternalTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        PrepareOperations.clearDevModeOverride();
+        super.setUp();
+        StrutsTestCaseHelper.tearDown(dispatcher);
         Map<String, String> params = new HashMap<>();
         params.put("config", "struts-default.xml,org/apache/struts2/dispatcher/struts-extension-one-package.xml");
         params.put(StrutsConstants.STRUTS_ACTION_EXTENSION, "action,,");

@@ -38,8 +38,8 @@ public class ActionExtensionsTest extends TestCase {
         assertThat(ActionExtensions.parse("")).isEqualTo(List.of(""));
     }
 
-    public void testParseNull() {
-        assertThat(ActionExtensions.parse(null)).isNull();
+    public void testParseNullIsEmpty() {
+        assertThat(ActionExtensions.parse(null)).isEmpty();
     }
 
     public void testAllowsNullAsEmpty() {

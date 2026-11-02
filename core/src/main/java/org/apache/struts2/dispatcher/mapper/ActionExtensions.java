@@ -38,12 +38,12 @@ public final class ActionExtensions {
      * Parses a comma separated extension list; a trailing comma adds an empty entry.
      *
      * @param value the raw value, may be {@code null}
-     * @return an unmodifiable list in declared order, or {@code null} when {@code value} is {@code null}
+     * @return an unmodifiable list in declared order, or an empty list when {@code value} is {@code null}
      * @since 7.5.0
      */
     public static List<String> parse(String value) {
         if (value == null) {
-            return null;
+            return List.of();
         }
         if (value.isEmpty()) {
             return List.of("");

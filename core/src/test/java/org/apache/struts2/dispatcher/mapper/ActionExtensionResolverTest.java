@@ -80,6 +80,7 @@ public class ActionExtensionResolverTest extends StrutsInternalTestCase {
     }
 
     public void testDmiNameResolvesActionConfig() {
+        resolver.setAllowDynamicMethodCalls("true");
         withCurrentExtension("action");
 
         assertThat(resolve("/child", "inherits!foo")).isEqualTo("html");
@@ -123,6 +124,42 @@ public class ActionExtensionResolverTest extends StrutsInternalTestCase {
         withCurrentExtension("xyz");
 
         assertThat(resolve("", "Bar")).isNull();
+    }
+
+    public void testLiteralBangNameWithoutDmi() {
+        useBangConfig();
+        withCurrentExtension("action");
+
+        assertThat(resolve("/bang", "report!daily")).isEqualTo("html");
+    }
+
+    public void testBangNameWithDmiResolvesActionBeforeLastBang() {
+        useBangConfig();
+        resolver.setAllowDynamicMethodCalls("true");
+        withCurrentExtension("action");
+
+        assertThat(resolve("/bang", "report!daily")).isEqualTo("json");
+    }
+
+    public void testExtensionlessPageKeepsAllowedEmptyExtension() {
+        withCurrentExtension(null);
+
+        assertThat(resolve("/child", "own")).isEmpty();
+    }
+
+    public void testExtensionlessPageUsesFirstWhenEmptyNotAllowed() {
+        withCurrentExtension(null);
+
+        assertThat(resolve("/child", "inherits")).isEqualTo("html");
+    }
+
+    public void testWithoutCurrentMappingDeclaredTargetUsesFirst() {
+        assertThat(resolve("/child", "own")).isEqualTo("json");
+    }
+
+    private void useBangConfig() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("org/apache/struts2/config/providers/struts-extension-bang.xml"));
+        resolver.setConfiguration(configuration);
     }
 
     private String resolve(String namespace, String name) {

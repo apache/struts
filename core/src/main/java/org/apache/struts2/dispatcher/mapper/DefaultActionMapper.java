@@ -511,11 +511,17 @@ public class DefaultActionMapper implements ActionMapper {
     private boolean declaresExtensions(String candidate, RuntimeConfiguration runtimeConfiguration, ConfigurationManager configManager) {
         ActionMapping probe = new ActionMapping();
         parseNameAndNamespace(candidate, probe, configManager);
-        String name = probe.getName();
-        int bang = name.indexOf('!');
-        String actionName = bang == -1 ? name : name.substring(0, bang);
-        ActionConfig config = runtimeConfiguration.getMatchedActionConfig(probe.getNamespace(), actionName);
+        if (!keepsRequestedName(candidate, probe.getName())) {
+            return false;
+        }
+        parseActionName(probe);
+        ActionConfig config = runtimeConfiguration.getMatchedActionConfig(probe.getNamespace(), probe.getName());
         return config != null && !config.getExtensions().isEmpty();
+    }
+
+    private static boolean keepsRequestedName(String uri, String name) {
+        String lastSegment = uri.substring(uri.lastIndexOf('/') + 1);
+        return name.equals(lastSegment) || name.endsWith("/" + lastSegment);
     }
 
     private DeclaredExtensions declaredExtensions(RuntimeConfiguration runtimeConfiguration) {

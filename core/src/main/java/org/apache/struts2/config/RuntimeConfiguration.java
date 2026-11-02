@@ -43,6 +43,19 @@ public interface RuntimeConfiguration extends Serializable {
     ActionConfig getActionConfig(String namespace, String name);
 
     /**
+     * Same lookup as {@link #getActionConfig(String, String)}, but returns {@code null} when the result comes only from
+     * a namespace's {@code default-action-ref}, so only exact and wildcard matches of {@code name} are returned.
+     *
+     * @param namespace the namespace of the Action, {@code null} means the empty namespace
+     * @param name      the name of the Action
+     * @return the matched ActionConfig, or {@code null}
+     * @since 7.5.0
+     */
+    default ActionConfig getMatchedActionConfig(String namespace, String name) {
+        return getActionConfig(namespace, name);
+    }
+
+    /**
      * returns a Map of all the registered ActionConfigs.  Again, these ActionConfigs are fully expanded so that any
      * inherited interceptors, results, etc. will be included
      *

@@ -24,6 +24,7 @@
     "https://struts.apache.org/dtds/struts-7.5.dtd">
 <struts>
     <package name="shop" extends="struts-default" namespace="/shop" extension="html">
+        <default-action-ref name="cart"/>
         <action name="cart" class="org.apache.struts2.dispatcher.ActionExtensionEndToEndTest$RecordingAction"/>
     </package>
 

@@ -643,7 +643,7 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
             initDispatcher(params);
 
             assertThat(capture.messages(Level.WARN)).singleElement().asString()
-                    .contains("declared extensions will not be applied");
+                    .contains("declared extensions may not be applied");
         }
     }
 

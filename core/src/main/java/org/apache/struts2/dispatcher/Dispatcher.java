@@ -760,7 +760,7 @@ public class Dispatcher {
                 .flatMap(actions -> actions.values().stream())
                 .anyMatch(config -> config.getExtensions() != null);
         if (declared) {
-            LOG.warn("Actions declare the extension attribute but the configured {} is not {}, the declared extensions will not be applied",
+            LOG.warn("Actions declare the extension attribute but the configured {} is not {}, the declared extensions may not be applied",
                     ActionMapper.class.getSimpleName(), DefaultActionMapper.class.getSimpleName());
         }
     }

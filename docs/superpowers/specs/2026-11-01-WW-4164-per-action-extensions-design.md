@@ -132,9 +132,11 @@ govern both:
   `getUriFromActionMapping`, through one shared helper that:
   1. looks up the target `ActionConfig` (namespace + name) in the runtime configuration;
   2. takes the target's effective list (its declared list, or the global list when it declares
-     none). It keeps the current request's extension when that list contains it (null current
-     counts as `""`), otherwise uses the list's first entry, and sets the result on the
-     `ActionMapping`. With no attributes anywhere, the current extension was stripped by the global
+     none). It keeps the current request's extension when that list contains it, otherwise uses
+     the list's first entry, and sets the result on the `ActionMapping`. For a declared target with
+     a current request mapping, a null current extension counts as `""`. With no current request
+     mapping, or for an undeclared target whose current extension is null, it uses the first entry,
+     which reproduces today's `lookupExtension`. With no attributes anywhere, the current extension was stripped by the global
      list and is kept, which reproduces today's output;
   3. if the action is unknown, the global list is null and nothing is declared, or the caller
      already set an extension: change nothing (the mapper's `lookupExtension` fallback applies as

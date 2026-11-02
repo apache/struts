@@ -77,8 +77,8 @@ public class ActionExtensionResolver {
         if (!anyActionDeclaresExtensions(runtimeConfiguration)) {
             return;
         }
-        ActionConfig actionConfig = runtimeConfiguration
-            .getMatchedActionConfig(target.getNamespace(), StringUtils.substringBefore(target.getName(), "!"));
+        String actionName = StringUtils.substringBefore(StringUtils.substringBefore(target.getName(), "?"), "!");
+        ActionConfig actionConfig = runtimeConfiguration.getMatchedActionConfig(target.getNamespace(), actionName);
         if (actionConfig == null) {
             return;
         }

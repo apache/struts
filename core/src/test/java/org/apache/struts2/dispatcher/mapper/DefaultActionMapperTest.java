@@ -1125,6 +1125,27 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertThat(mapping.getExtension()).isEqualTo("html");
     }
 
+    public void testDeclaredEmptyExtensionReachableWhenGlobalListLacksIt() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_CONFIG));
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setExtensions("action");
+
+        ActionMapping mapping = mapDeclared(mapper, "/plain/none");
+
+        assertThat(mapping.getName()).isEqualTo("none");
+        assertThat(mapping.getNamespace()).isEqualTo("/plain");
+        assertThat(mapping.getExtension()).isNull();
+    }
+
+    public void testUndeclaredActionStaysUnreachableWithoutExtensionWhenGlobalListLacksEmpty() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(EXTENSION_CONFIG));
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setExtensions("action");
+
+        assertThat(mapDeclared(mapper, "/plain/undeclared")).isNull();
+        assertThat(mapDeclared(mapper, "/plain/undeclared.action").getName()).isEqualTo("undeclared");
+    }
+
     private DefaultActionMapper declaredMapper() {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("action,");

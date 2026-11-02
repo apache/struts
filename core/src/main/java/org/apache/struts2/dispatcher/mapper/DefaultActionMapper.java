@@ -477,7 +477,8 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Strips an extension that only package or action {@code extension} attributes declare, but only when the
      * remaining URI matches an action (exactly or by wildcard, never through a {@code default-action-ref}) that itself
-     * declares extensions.
+     * declares extensions. When only those attributes declare the empty extension, an extensionless URI matching such
+     * an action is returned as is.
      *
      * @param uri           the request URI
      * @param mapping       the action mapping to store the extension in
@@ -490,7 +491,8 @@ public class DefaultActionMapper implements ActionMapper {
         if (runtimeConfiguration == null) {
             return null;
         }
-        for (String ext : declaredOnlyExtensions(runtimeConfiguration)) {
+        DeclaredExtensions declared = declaredExtensions(runtimeConfiguration);
+        for (String ext : declared.declaredOnly) {
             String suffix = "." + ext;
             if (uri.endsWith(suffix)) {
                 String candidate = uri.substring(0, uri.length() - suffix.length());
@@ -499,6 +501,9 @@ public class DefaultActionMapper implements ActionMapper {
                     return candidate;
                 }
             }
+        }
+        if (declared.emptyDeclaredOnly && hasNoExtension(uri) && declaresExtensions(uri, runtimeConfiguration, configManager)) {
+            return uri;
         }
         return null;
     }
@@ -513,10 +518,10 @@ public class DefaultActionMapper implements ActionMapper {
         return config != null && config.getExtensions() != null;
     }
 
-    private List<String> declaredOnlyExtensions(RuntimeConfiguration runtimeConfiguration) {
+    private DeclaredExtensions declaredExtensions(RuntimeConfiguration runtimeConfiguration) {
         DeclaredExtensions cached = declaredExtensions;
         if (cached != null && cached.runtimeConfiguration == runtimeConfiguration) {
-            return cached.declaredOnly;
+            return cached;
         }
         Set<String> declared = new HashSet<>();
         for (Map<String, ActionConfig> actionConfigs : runtimeConfiguration.getActionConfigs().values()) {
@@ -526,25 +531,33 @@ public class DefaultActionMapper implements ActionMapper {
                 }
             }
         }
-        declared.remove("");
+        boolean emptyDeclaredOnly = declared.remove("") && extensions != null && !extensions.contains("");
         if (extensions != null) {
             extensions.forEach(declared::remove);
         }
         List<String> declaredOnly = declared.stream()
             .sorted(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()))
             .toList();
-        declaredExtensions = new DeclaredExtensions(runtimeConfiguration, declaredOnly);
-        return declaredOnly;
+        DeclaredExtensions computed = new DeclaredExtensions(runtimeConfiguration, declaredOnly, emptyDeclaredOnly);
+        declaredExtensions = computed;
+        return computed;
     }
 
     private static final class DeclaredExtensions {
         private final RuntimeConfiguration runtimeConfiguration;
         private final List<String> declaredOnly;
+        private final boolean emptyDeclaredOnly;
 
-        private DeclaredExtensions(RuntimeConfiguration runtimeConfiguration, List<String> declaredOnly) {
+        private DeclaredExtensions(RuntimeConfiguration runtimeConfiguration, List<String> declaredOnly, boolean emptyDeclaredOnly) {
             this.runtimeConfiguration = runtimeConfiguration;
             this.declaredOnly = declaredOnly;
+            this.emptyDeclaredOnly = emptyDeclaredOnly;
         }
+    }
+
+    private static boolean hasNoExtension(String name) {
+        int index = name.lastIndexOf('.');
+        return index == -1 || name.indexOf('/', index) >= 0;
     }
 
     /**
@@ -563,8 +576,7 @@ public class DefaultActionMapper implements ActionMapper {
                 // This should also handle cases such as /foo/bar-1.0/description. It is tricky to
                 // distinquish /foo/bar-1.0 but perhaps adding a numeric check in the future could
                 // work
-                int index = name.lastIndexOf('.');
-                if (index == -1 || name.indexOf('/', index) >= 0) {
+                if (hasNoExtension(name)) {
                     return name;
                 }
             } else {

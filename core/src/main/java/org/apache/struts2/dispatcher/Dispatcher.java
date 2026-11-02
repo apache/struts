@@ -758,7 +758,7 @@ public class Dispatcher {
         }
         boolean declared = configurationManager.getConfiguration().getRuntimeConfiguration().getActionConfigs().values().stream()
                 .flatMap(actions -> actions.values().stream())
-                .anyMatch(config -> config.getExtensions() != null);
+                .anyMatch(config -> !config.getExtensions().isEmpty());
         if (declared) {
             LOG.warn("Actions declare the extension attribute but the configured {} is not {}, the declared extensions may not be applied",
                     ActionMapper.class.getSimpleName(), DefaultActionMapper.class.getSimpleName());

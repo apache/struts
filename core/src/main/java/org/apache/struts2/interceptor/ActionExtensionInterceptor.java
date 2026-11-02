@@ -52,7 +52,7 @@ public class ActionExtensionInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionProxy proxy = invocation.getProxy();
         List<String> allowed = proxy.getConfig().getExtensions();
-        if (allowed == null) {
+        if (allowed.isEmpty()) {
             return invocation.invoke();
         }
 

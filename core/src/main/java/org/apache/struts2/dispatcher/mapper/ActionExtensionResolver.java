@@ -82,7 +82,7 @@ public class ActionExtensionResolver {
         if (actionConfig == null) {
             return;
         }
-        List<String> effective = actionConfig.getExtensions() != null ? actionConfig.getExtensions() : extensions;
+        List<String> effective = !actionConfig.getExtensions().isEmpty() ? actionConfig.getExtensions() : extensions;
         if (effective == null) {
             return;
         }
@@ -97,7 +97,7 @@ public class ActionExtensionResolver {
         }
         boolean anyDeclared = runtimeConfiguration.getActionConfigs().values().stream()
             .flatMap(actionConfigs -> actionConfigs.values().stream())
-            .anyMatch(actionConfig -> actionConfig.getExtensions() != null);
+            .anyMatch(actionConfig -> !actionConfig.getExtensions().isEmpty());
         declarationState = new DeclarationState(runtimeConfiguration, anyDeclared);
         return anyDeclared;
     }

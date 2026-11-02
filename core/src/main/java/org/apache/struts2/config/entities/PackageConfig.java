@@ -59,7 +59,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     protected boolean isFinal = false; // a final package is unextendable
     protected boolean needsRefresh;
     protected boolean strictMethodInvocation = true;
-    private List<String> extensions;
+    private List<String> extensions = List.of();
     private Map<String, String> scopedConstants;
     private Map<String, String> allScopedConstants;
 
@@ -95,7 +95,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         this.parents = new ArrayList<>(orig.parents);
         this.location = orig.location;
         this.strictMethodInvocation = orig.strictMethodInvocation;
-        this.extensions = orig.extensions != null ? List.copyOf(orig.extensions) : null;
+        this.extensions = orig.extensions;
         this.scopedConstants = new LinkedHashMap<>(orig.scopedConstants);
         this.allScopedConstants = orig.allScopedConstants;
     }
@@ -324,7 +324,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     }
 
     /**
-     * @return extensions declared on this package, or null when it declares none
+     * @return extensions declared on this package, or empty when it declares none
      * @since 7.5.0
      */
     public List<String> getExtensions() {
@@ -332,20 +332,20 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     }
 
     /**
-     * @return extensions declared on this package, else on the first parent that declares them, else null
+     * @return extensions declared on this package, else on the first parent that declares them, else empty
      * @since 7.5.0
      */
     public List<String> getFullExtensions() {
-        if (extensions != null) {
+        if (!extensions.isEmpty()) {
             return extensions;
         }
         for (PackageConfig parent : parents) {
             List<String> parentExtensions = parent.getFullExtensions();
-            if (parentExtensions != null) {
+            if (!parentExtensions.isEmpty()) {
                 return parentExtensions;
             }
         }
-        return null;
+        return List.of();
     }
 
     /**
@@ -449,7 +449,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
             return false;
         if (!Objects.equals(defaultClassRef, that.defaultClassRef))
             return false;
-        if (!Objects.equals(extensions, that.extensions)) return false;
+        if (!extensions.equals(that.extensions)) return false;
         if (!name.equals(that.name)) return false;
         return Objects.equals(namespace, that.namespace);
     }
@@ -474,7 +474,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         result = 31 * result + (isFinal ? 1 : 0);
         result = 31 * result + (needsRefresh ? 1 : 0);
         result = 31 * result + (strictMethodInvocation ? 1 : 0);
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
+        result = 31 * result + extensions.hashCode();
         return result;
     }
 
@@ -709,7 +709,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
          * @since 7.5.0
          */
         public Builder extensions(List<String> extensions) {
-            target.extensions = extensions != null ? List.copyOf(extensions) : null;
+            target.extensions = extensions != null ? List.copyOf(extensions) : List.of();
             return this;
         }
 

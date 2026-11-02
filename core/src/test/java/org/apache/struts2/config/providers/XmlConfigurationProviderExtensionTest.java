@@ -49,10 +49,10 @@ public class XmlConfigurationProviderExtensionTest extends StrutsInternalTestCas
         assertThat(actionConfig("/child", "own").getExtensions()).isEqualTo(List.of("json", ""));
     }
 
-    public void testUndeclaredIsNull() {
+    public void testUndeclaredIsEmpty() {
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
 
-        assertThat(actionConfig("/plain", "undeclared").getExtensions()).isNull();
+        assertThat(actionConfig("/plain", "undeclared").getExtensions()).isEmpty();
     }
 
     public void testEmptyAttributeMeansNoExtensionOnly() {

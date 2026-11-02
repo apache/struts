@@ -93,6 +93,7 @@ import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.ognl.accessor.CompoundRootAccessor;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.ognl.accessor.XWorkMethodAccessor;
+import org.apache.struts2.interceptor.ActionExtensionInterceptor;
 import org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor;
 import org.apache.struts2.interceptor.parameter.OgnlParameterAllowlister;
 import org.apache.struts2.interceptor.parameter.ParameterAllowlister;
@@ -562,16 +563,17 @@ public class DefaultConfiguration implements Configuration {
 
         warnIfHttpMethodNotEnforced(baseConfig, interceptors);
 
+        List<String> extensions = baseConfig.getExtensions() != null
+                ? baseConfig.getExtensions()
+                : packageContext.getFullExtensions();
+        warnIfExtensionNotEnforced(baseConfig, extensions, interceptors);
+
         String methodRegex = container.getInstance(String.class, StrutsConstants.STRUTS_SMI_METHOD_REGEX);
         if (methodRegex == null) {
             methodRegex = ActionConfig.DEFAULT_METHOD_REGEX;
         }
 
         LOG.debug("Using pattern [{}] to match allowed methods when SMI is disabled!", methodRegex);
-
-        List<String> extensions = baseConfig.getExtensions() != null
-                ? baseConfig.getExtensions()
-                : packageContext.getFullExtensions();
 
         return new ActionConfig.Builder(baseConfig)
                 .extensions(extensions)
@@ -590,6 +592,14 @@ public class DefaultConfiguration implements Configuration {
                 && interceptors.stream().noneMatch(mapping -> mapping.getInterceptor() instanceof HttpMethodInterceptor)) {
             LOG.warn("Action [{}] in package [{}] declares http-method {} but its interceptors do not include {}, the restriction will not be enforced",
                     baseConfig.getName(), baseConfig.getPackageName(), baseConfig.getHttpMethods(), HttpMethodInterceptor.class.getSimpleName());
+        }
+    }
+
+    private void warnIfExtensionNotEnforced(ActionConfig baseConfig, List<String> extensions, List<InterceptorMapping> interceptors) {
+        if (extensions != null
+                && interceptors.stream().noneMatch(mapping -> mapping.getInterceptor() instanceof ActionExtensionInterceptor)) {
+            LOG.warn("Action [{}] in package [{}] declares extension {} but its interceptors do not include {}, the restriction will not be enforced",
+                    baseConfig.getName(), baseConfig.getPackageName(), extensions, ActionExtensionInterceptor.class.getSimpleName());
         }
     }
 

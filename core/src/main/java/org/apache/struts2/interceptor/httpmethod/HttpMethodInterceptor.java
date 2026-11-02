@@ -19,10 +19,9 @@
 package org.apache.struts2.interceptor.httpmethod;
 
 import org.apache.struts2.ActionInvocation;
-import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.action.Action;
-import org.apache.struts2.config.entities.ActionConfig;
 import org.apache.struts2.interceptor.AbstractInterceptor;
+import org.apache.struts2.interceptor.ResultResolution;
 import org.apache.struts2.util.AnnotationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -158,7 +157,7 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
      */
     protected String rejectRequest(ActionInvocation invocation, Collection<HttpMethod> allowedMethods) throws IOException {
         String resultName = getBadRequestResultName(invocation);
-        if (canResolveResult(invocation, resultName)) {
+        if (ResultResolution.canResolve(invocation, resultName)) {
             return resultName;
         }
 
@@ -168,17 +167,6 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         response.setHeader("Allow", allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", ")));
         response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         return Action.NONE;
-    }
-
-    private boolean canResolveResult(ActionInvocation invocation, String resultName) {
-        ActionConfig config = invocation.getProxy().getConfig();
-        if (config.getResults().containsKey(resultName) || config.getResults().containsKey("*")) {
-            return true;
-        }
-        UnknownHandlerManager unknownHandlerManager = invocation.getInvocationContext().getContainer().getInstance(UnknownHandlerManager.class);
-        return unknownHandlerManager.hasUnknownHandlers()
-            && unknownHandlerManager.handleUnknownResult(invocation.getInvocationContext(),
-                invocation.getProxy().getActionName(), config, resultName) != null;
     }
 
     protected List<HttpMethod> readAllowedMethods(AnnotatedElement element) {

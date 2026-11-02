@@ -42,6 +42,7 @@ import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.StrutsJUnit4InternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -630,6 +631,32 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
 
         assertEquals("Unparseable struts.locale and rejected request locale must fall back to system default",
                 Locale.getDefault(), dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testWarnsWhenNonDefaultMapperIgnoresDeclaredExtensions() {
+        Map<String, String> params = new HashMap<>();
+        params.put("config", "struts-default.xml,struts-plugin.xml,org/apache/struts2/config/providers/struts-extension.xml");
+        params.put(StrutsConstants.STRUTS_MAPPER_CLASS, "restful");
+
+        try (LogCapture capture = new LogCapture(Dispatcher.class)) {
+            initDispatcher(params);
+
+            assertThat(capture.messages(Level.WARN)).singleElement().asString()
+                    .contains("declared extensions will not be applied");
+        }
+    }
+
+    @Test
+    public void testNoMapperWarningWithDefaultMapper() {
+        Map<String, String> params = new HashMap<>();
+        params.put("config", "struts-default.xml,struts-plugin.xml,org/apache/struts2/config/providers/struts-extension.xml");
+
+        try (LogCapture capture = new LogCapture(Dispatcher.class)) {
+            initDispatcher(params);
+
+            assertThat(capture.messages(Level.WARN)).noneMatch(message -> message.contains("declared extensions"));
+        }
     }
 
     @Test

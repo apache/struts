@@ -86,6 +86,7 @@
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="fetchMetadata" class="org.apache.struts2.interceptor.FetchMetadataInterceptor"/>
             <interceptor name="httpMethod" class="org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor" />
+            <interceptor name="actionExtension" class="org.apache.struts2.interceptor.ActionExtensionInterceptor"/>
 
             <!-- Empty stack - performs no operations -->
             <interceptor-stack name="emptyStack">
@@ -97,6 +98,7 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="httpMethod"/>
+                <interceptor-ref name="actionExtension"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="datetime"/>
@@ -159,6 +161,7 @@
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="httpMethod"/>
+                <interceptor-ref name="actionExtension"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="modelDriven"/>
@@ -191,6 +194,7 @@
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="httpMethod"/>
+                <interceptor-ref name="actionExtension"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="csp">
                     <param name="disabled">false</param>

@@ -22,6 +22,9 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.impl.DefaultConfiguration;
+import org.apache.struts2.test.LogCapture;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -61,6 +64,17 @@ public class XmlConfigurationProviderExtensionTest extends StrutsInternalTestCas
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
 
         assertThat(actionConfig("/wild", "edit_user").getExtensions()).isEqualTo(List.of("html"));
+    }
+
+    public void testWarnsWhenStackLacksActionExtensionInterceptor() {
+        try (LogCapture capture = new LogCapture(DefaultConfiguration.class)) {
+            loadConfigurationProviders(new StrutsXmlConfigurationProvider(CONFIG));
+
+            assertThat(capture.messages(Level.WARN))
+                .anyMatch(message -> message.contains("Action [inherits] in package [child] declares extension [html]")
+                    && message.contains("ActionExtensionInterceptor"))
+                .noneMatch(message -> message.contains("Action [undeclared]"));
+        }
     }
 
     public void testLeadingDotRejected() {

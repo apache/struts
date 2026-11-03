@@ -21,6 +21,8 @@ package org.apache.struts2.views.jsp;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.TestAction;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -263,6 +265,61 @@ public class NumberTagTest extends AbstractTagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testBigDecimalIntegerDigitsAreBounded() throws Exception {
+        // when the number of integer digits is within the bound
+        // then the value is rendered in full
+        BigDecimal withinBound = new BigDecimal(BigInteger.ONE, -339);
+        assertEquals(NumberFormat.getInstance(Locale.US).format(withinBound), renderNumber(withinBound, null));
+
+        // when the number of integer digits exceeds the bound
+        // then the value is rendered in its compact form rather than padded out to its scale
+        assertEquals("1E+340", renderNumber(new BigDecimal(BigInteger.ONE, -340), null));
+
+        // when the scale sits at the edge of its range
+        // then the bound still applies
+        assertEquals("1E+2147483647", renderNumber(new BigDecimal(BigInteger.ONE, Integer.MIN_VALUE + 1), null));
+    }
+
+    public void testBigDecimalCurrencyWithinBoundIsUnchanged() throws Exception {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        BigDecimal value = new BigDecimal(BigInteger.ONE, -339);
+
+        assertEquals(format.format(value), renderNumber(value, "currency"));
+        assertEquals("$1,234.50", renderNumber(new BigDecimal("1234.5"), "currency"));
+    }
+
+    public void testBigDecimalCurrencyIntegerDigitsAreBounded() throws Exception {
+        assertEquals("1E+340", renderNumber(new BigDecimal(BigInteger.ONE, -340), "currency"));
+    }
+
+    private String renderNumber(BigDecimal value, String type) throws Exception {
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        stack.push(new AmountHolder(value));
+
+        NumberTag tag = new NumberTag();
+        tag.setPageContext(pageContext);
+        tag.setName("amount");
+        tag.setType(type);
+
+        writer.getBuffer().setLength(0);
+        tag.doStartTag();
+        tag.doEndTag();
+        stack.pop();
+        return writer.toString();
+    }
+
+    public static class AmountHolder {
+        private final BigDecimal amount;
+
+        public AmountHolder(BigDecimal amount) {
+            this.amount = amount;
+        }
+
+        public BigDecimal getAmount() {
+            return amount;
+        }
     }
 
 }

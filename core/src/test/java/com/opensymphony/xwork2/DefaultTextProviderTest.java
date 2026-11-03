@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -116,6 +118,14 @@ public class DefaultTextProviderTest extends XWorkTestCase {
         assertEquals("this is default", tp.getText("not.in.bundle", "this is default", args, null));
         assertEquals("this is default Santa", tp.getText("not.in.bundle", "this is default {0}", args, null));
         assertEquals("this is default Santa speaking loud", tp.getText("not.in.bundle", "this is default {0} speaking {1}", args, null));
+    }
+
+    public void testBigDecimalArgumentIntegerDigitsAreBounded() {
+        List<Object> args = Collections.singletonList(new BigDecimal(BigInteger.ONE, -340));
+
+        assertEquals("v=1E+340", tp.getText("not.in.bundle", "v={0}", args));
+        assertEquals("v=1E+340", tp.getText("not.in.bundle", "v={0,number}", args));
+        assertEquals("1E+340 items", tp.getText("not.in.bundle", "{0,choice,0#none|1#{0} items}", args));
     }
 
     public void testGetBundle() throws Exception {

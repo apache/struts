@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.BigDecimalBounds;
 import org.apache.struts2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -148,7 +149,7 @@ public class Number extends ContextBean {
             setNumberFormatParameters(format);
             setRoundingMode(format);
 
-            String msg = format.format(number);
+            String msg = BigDecimalBounds.exceedsMaxIntegerDigits(number) ? number.toString() : format.format(number);
             try {
                 if (getVar() == null) {
                     writer.write(msg);

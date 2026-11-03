@@ -229,7 +229,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
        }
 
         if (action instanceof Validateable && programmatic) {
-            // keep exception that might occured in validateXXX or validateDoXXX
+            // keep exception that might occurred in validateXXX or validateDoXXX
             Exception exception = null;
 
             Validateable validateable = (Validateable) action;
@@ -241,7 +241,7 @@ public class ValidationInterceptor extends MethodFilterInterceptor {
             catch(Exception e) {
                 // If any exception occurred while doing reflection, we want
                 // validate() to be executed
-                LOG.warn("an exception occured while executing the prefix method", e);
+                LOG.warn("an exception occurred while executing the prefix method", e);
                 exception = e;
             }
 

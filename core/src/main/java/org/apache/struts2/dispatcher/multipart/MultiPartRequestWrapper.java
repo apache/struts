@@ -217,9 +217,9 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * Returns <tt>true</tt> if any errors occured when parsing the HTTP multipart request, <tt>false</tt> otherwise.
+     * Returns <tt>true</tt> if any errors occurred when parsing the HTTP multipart request, <tt>false</tt> otherwise.
      *
-     * @return <tt>true</tt> if any errors occured when parsing the HTTP multipart request, <tt>false</tt> otherwise.
+     * @return <tt>true</tt> if any errors occurred when parsing the HTTP multipart request, <tt>false</tt> otherwise.
      */
     public boolean hasErrors() {
         return !errors.isEmpty();

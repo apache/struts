@@ -22,9 +22,10 @@ import org.apache.struts2.ActionContext;
 import org.apache.struts2.ObjectFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.tiles.api.preparer.ViewPreparer;
 import org.apache.tiles.core.prepare.factory.BasicPreparerFactory;
+import org.apache.tiles.request.reflect.CannotInstantiateObjectException;
+import org.apache.tiles.request.reflect.ClassUtil;
 
 /**
  * This is a basic ViewPreparer factory that uses {@link ObjectFactory} to create the ViewPreparer
@@ -41,12 +42,33 @@ public class StrutsPreparerFactory extends BasicPreparerFactory {
             return super.createPreparer(name);
         }
 
+        checkType(name);
+
+        Object preparer;
         try {
             ObjectFactory factory = actionContext.getContainer().getInstance(ObjectFactory.class);
-            return (ViewPreparer) factory.buildBean(name, ActionContext.getContext().getContextMap());
+            preparer = factory.buildBean(name, actionContext.getContextMap());
         } catch (Exception e) {
-            LOG.error(new ParameterizedMessage("Cannot create a ViewPreparer [{}], fallback to super.createPreparer!", name), e);
+            LOG.warn("Cannot create a ViewPreparer [{}], fallback to super.createPreparer: {}", name, e.toString());
+            LOG.debug("Cannot create a ViewPreparer [{}]", name, e);
             return super.createPreparer(name);
+        }
+
+        if (preparer instanceof ViewPreparer viewPreparer) {
+            return viewPreparer;
+        }
+        throw new CannotInstantiateObjectException("Preparer: '" + name + "' is not a '"
+            + ViewPreparer.class.getName() + "'", null);
+    }
+
+    private void checkType(String name) {
+        try {
+            ClassUtil.getClass(name, ViewPreparer.class);
+        } catch (ClassNotFoundException e) {
+            LOG.debug("Preparer [{}] does not name a class, leaving it to the object factory", name);
+        } catch (ClassCastException e) {
+            throw new CannotInstantiateObjectException("Preparer: '" + name + "' is not a '"
+                + ViewPreparer.class.getName() + "'", e);
         }
     }
 }

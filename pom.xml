@@ -127,7 +127,7 @@
         <jaxb-impl.version>4.0.9</jaxb-impl.version>
         <log4j2.version>2.26.1</log4j2.version>
         <mockito.version>5.24.0</mockito.version>
-        <ognl.version>3.4.16</ognl.version>
+        <ognl.version>3.4.17</ognl.version>
         <spring.version>6.2.19</spring.version>
         <struts-annotations.version>2.0</struts-annotations.version>
         <tomcat-embed.version>10.1.59</tomcat-embed.version>

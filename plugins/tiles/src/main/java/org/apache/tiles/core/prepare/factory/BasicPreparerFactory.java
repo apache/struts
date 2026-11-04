@@ -69,10 +69,10 @@ public class BasicPreparerFactory implements PreparerFactory {
         }
 
         preparer = createPreparer(name);
-        if (preparer == null) {            
+        if (preparer == null) {
             return null;
         }
-        
+
         ViewPreparer existing = preparers.putIfAbsent(name, preparer);
         return existing != null ? existing : preparer;
     }

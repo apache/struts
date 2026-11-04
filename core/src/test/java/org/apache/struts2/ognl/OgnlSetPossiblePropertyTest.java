@@ -122,7 +122,7 @@ public class OgnlSetPossiblePropertyTest extends XWorkTestCase {
         Method writeMethod = OgnlRuntime.getWriteMethod(HolderWhoseFieldWithPublicWriteMethod.ExcludedField.class, "excludedFieldString");
         vs.setValue("excludedField.excludedFieldString", "EXPLOITED");
 
-        assertEquals("setexcludedfieldstring", writeMethod.getName());
+        assertNull(writeMethod);
         assertNotEquals("EXPLOITED", holder.excludedField.excludedFieldString);
     }
 

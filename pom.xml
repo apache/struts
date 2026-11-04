@@ -520,13 +520,6 @@
                     <relativizeSiteLinks>false</relativizeSiteLinks>
                     <pomPackagingOnly>false</pomPackagingOnly>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-core</artifactId>
-                        <version>2.1.0</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>site-inheritance</id>

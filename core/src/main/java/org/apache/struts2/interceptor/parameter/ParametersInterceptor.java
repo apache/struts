@@ -558,7 +558,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 || Arrays.stream(valuesToCheck(param)).allMatch(valueAware::acceptableParameterValue);
     }
 
-    private String[] valuesToCheck(Parameter param) {
+    protected String[] valuesToCheck(Parameter param) {
         return param.isMultiple() ? param.getMultipleValues() : new String[]{param.getValue()};
     }
 

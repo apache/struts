@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import org.apache.struts2.action.Action;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionProxy;
@@ -1149,6 +1151,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
 
         assertEquals(Set.of("single", "allGood"), actual.keySet());
+        assertArrayEquals(new String[]{"fooValue"}, (String[]) actual.get("single"));
+        assertArrayEquals(new String[]{"fooValue", "barValue"}, (String[]) actual.get("allGood"));
     }
 
     public void testAcceptedValuePatternsApplyToEveryValueOfMultiValuedParameter() throws Exception {
@@ -1161,10 +1165,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("single", new String[]{"fooValue"});
         parameters.put("allGood", new String[]{"fooValue", "fooValue2"});
+        parameters.put("firstBad", new String[]{"barValue", "fooValue"});
         parameters.put("secondBad", new String[]{"fooValue", "barValue"});
         pi.applyParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
 
         assertEquals(Set.of("single", "allGood"), actual.keySet());
+        assertArrayEquals(new String[]{"fooValue"}, (String[]) actual.get("single"));
+        assertArrayEquals(new String[]{"fooValue", "fooValue2"}, (String[]) actual.get("allGood"));
     }
 
     public void testParameterValueAwareIsAskedAboutEveryValueOfMultiValuedParameter() throws Exception {
@@ -1183,6 +1190,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.applyParameters(a, stack, HttpParameters.create(parameters).build());
 
         assertEquals(Set.of("single", "allGood"), actual.keySet());
+        assertArrayEquals(new String[]{"fooValue"}, (String[]) actual.get("single"));
+        assertArrayEquals(new String[]{"fooValue", "barValue"}, (String[]) actual.get("allGood"));
     }
 
 

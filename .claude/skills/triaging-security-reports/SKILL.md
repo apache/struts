@@ -1,6 +1,6 @@
 ---
 name: triaging-security-reports
-description: Use when a vulnerability or security report arrives for triage, when assessing a CVE/RCE/OGNL/injection claim against the code, or when drafting a reply to a security researcher — to research the claim from source without trusting the reporter and without fabricating your own facts.
+description: Use when a vulnerability or security report arrives for triage, when assessing a CVE/RCE/OGNL/injection claim against the code, when deciding whether a finding is the framework's fault or the application's, or when drafting a reply to a security researcher — to research the claim from source without trusting the reporter and without fabricating your own facts.
 ---
 
 # Triaging Security Reports
@@ -59,13 +59,47 @@ struts.parameters.requireAnnotations=true     # default.properties OVERRIDES it
 
 **The effective default is `true`.** Always trace the full chain: field initializer → `@Inject` setter → `default.properties` → any struts.xml override. State the *effective runtime* value, and cite the file that actually wins.
 
+## Trace the path from the request to the sink
+
+A sink that fires is a *mechanism*. It becomes a framework finding only when **framework code carries
+the untrusted input to it**. Every assessment therefore contains a path table, walked this session,
+from the HTTP request to the operation the report names:
+
+| Hop | What carries the input | file:line read / test executed |
+|---|---|---|
+| request → framework entry | e.g. `Dispatcher`, a mapper, a multipart parser | … |
+| framework gate(s) | name/value checks, converters, allowlists | … |
+| framework → sink | the call that performs the dangerous operation | … |
+
+Every hop is either a file:line you read, a probe you ran, or the literal words **"not traced"**. A
+hop covered only by a memory note, an earlier triage, or the reporter's own description is "not
+traced". When the report names a second channel ("also reflected via tags", "also via cookies"), that
+channel gets its own row.
+
+The table decides ownership, which is the verdict's first sentence:
+
+- **The framework accepts the input and operates on it** — a request parameter bound through type
+  conversion, a header the framework parses, a body the framework reads, a value a framework tag
+  formats. The developer only declared a type or used a tag as documented. **Framework fault**,
+  whatever the developer could have validated afterwards.
+- **The developer hands the input to a framework evaluation capability** — `findValue(request
+  string)`, `getText(request string)`, a template-authored `%{}` around a request value, an action
+  that moves an upload to the web root. **Application fault.** State the boundary and which hop the
+  application owns.
+- **Both**: the framework-owned part (a deny-list gap, a missing bound) is still a framework finding
+  at its own severity, usually hardening; the application-owned part is not.
+
+Prefer an executed walk: push the payload through the real entry point (`ParametersInterceptor`,
+the tag, the converter) beside a direct call to the sink. Same string, two routes, one fires — that
+differential is the ownership evidence.
+
 ## Vulnerability vs. operator responsibility
 
 "In the default configuration" is a crutch — drop it. Decide the real question:
 
 - **Is it a vulnerability?** Then it's a vulnerability whether or not it's the default. Handle it privately per `SECURITY.md`.
 - **Does it require an operator to opt into an insecure configuration?** A documented, opt-in setting (e.g. `cookiesName=*`, `devMode=true`) that works as advertised is the operator's responsibility, provided the docs carry the warning. Say "X works as documented; the operator owns the security implications of enabling it" — not "not a vuln *in the default config*."
-- **Is the RCE/escalation only reachable via application code the framework can't constrain?** (e.g. an action that moves an uploaded file to a web root.) Then it's an application concern, not a framework vulnerability — state that boundary explicitly.
+- **Is the sink only reachable through application code?** Then the path table says so, and the ownership rule above applies — state that boundary explicitly.
 
 ## Drafting the reply — only when you are asked
 
@@ -107,6 +141,8 @@ Once you *have* been asked:
 - About to state a "default" from a field initializer — did you check `default.properties`?
 - Citing the reporter's line number without having traced its call path.
 - Asserting "no gate / no check exists" without having grepped for it.
+- The sink fires in a direct probe and you are about to write the verdict — where is the path table? A mechanism without a request path is not yet a finding.
+- About to confirm an earlier verdict, or fill a path hop, from a memory note — that hop is "not traced" until you read it this session.
 - Two of your own claims contradict each other → at least one is unverified. Stop and verify both.
 - Promising a fix/warning "we'll add" without checking it isn't already there.
 - Writing "not a vulnerability in the default configuration" → reframe as vuln-or-not + operator responsibility.
@@ -121,6 +157,9 @@ Once you *have* been asked:
 | "The field defaults to false, so the gate is off by default" | `default.properties` may override it to true. Check the effective value. |
 | "I'll add a mitigation to strengthen the rejection" | An unverified mitigation that's wrong discredits the whole response. Verify or omit. |
 | "It rejects the payload, obviously" | Confirm the specific PoC string fails the specific filter (e.g. full-match regex `ACCEPTED_PATTERN`). |
+| "The gadget fires, so the report is confirmed" | The gadget is the mechanism. The verdict needs the path: does framework code carry a request value into it? |
+| "The developer declared the type / used the tag, so it's their problem" | Declaring a `BigDecimal` property or rendering a value with `<s:property>` is documented use. The framework does the parsing or formatting; the fault is the framework's. |
+| "The earlier triage already walked the request channels" | Then it is quick to walk again. A hop you did not read this session goes in the table as "not traced". |
 | "We should add a startup warning" | Grep first — the warning frequently already exists. |
 | "Not a vuln in default config" | Either it's a vuln or it's operator-owned opt-in. The default-config hedge muddies both. |
 | "Triage is done, so drafting the reply is the next step" | Triage ends at the assessment. Replying is a separate task the user starts. |

@@ -28,9 +28,9 @@
       <#if (attributes.jsTooltipEnabled!'false') == 'true'>
           onmouseover="domTT_activate(this, event, 'content', '${attributes.tooltip?js_string}'<#t/>
           <#if attributes.tooltipDelay??><#t/>
-          	<#t/>,'delay', '${attributes.tooltipDelay}'<#t/>
+          	<#t/>,'delay', '${attributes.tooltipDelay?js_string}'<#t/>
           </#if><#t/>
-          <#t/>,'styleClass', '${attributes.tooltipCssClass!"StrutsTTClassic"}'<#t/>
+          <#t/>,'styleClass', '${(attributes.tooltipCssClass!"StrutsTTClassic")?js_string}'<#t/>
           <#t/>)" />
       <#else>
       	title="${attributes.tooltip}"

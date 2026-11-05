@@ -150,6 +150,60 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
         assertTrue(out, out.contains("'content', 'it\\&#39;s &lt;script&gt;alert(1)&lt;\\/script&gt;'"));
     }
 
+    public void testJsTooltipDelayApostropheCannotBreakOutOfTheJsString() throws Exception {
+        String payload = "1000'+alert(1)+'";
+
+        FormTag formTag = new FormTag();
+        formTag.setTheme("xhtml");
+        formTag.setPageContext(pageContext);
+        formTag.setAction("testAction");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setTheme("xhtml");
+        tag.setPageContext(pageContext);
+        tag.setName("foo");
+        tag.setLabel("foo");
+        tag.setTooltip("foo");
+        tag.setTooltipConfig("#{'jsTooltipEnabled':'true'}");
+        tag.setTooltipDelay(payload);
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        String out = writer.toString();
+        assertFalse(out, out.contains("'1000'+"));
+        assertTrue(out, out.contains("'delay', '1000\\&#39;+alert(1)+\\&#39;'"));
+    }
+
+    public void testJsTooltipCssClassApostropheCannotBreakOutOfTheJsString() throws Exception {
+        String payload = "x'+alert(1)+'";
+
+        FormTag formTag = new FormTag();
+        formTag.setTheme("xhtml");
+        formTag.setPageContext(pageContext);
+        formTag.setAction("testAction");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setTheme("xhtml");
+        tag.setPageContext(pageContext);
+        tag.setName("foo");
+        tag.setLabel("foo");
+        tag.setTooltip("foo");
+        tag.setTooltipConfig("#{'jsTooltipEnabled':'true'}");
+        tag.setTooltipCssClass(payload);
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        String out = writer.toString();
+        assertFalse(out, out.contains("'x'+"));
+        assertTrue(out, out.contains("'styleClass', 'x\\&#39;+alert(1)+\\&#39;'"));
+    }
+
     private String render(Tag tag) throws JspException {
         tag.setPageContext(pageContext);
         tag.doStartTag();

@@ -1,6 +1,6 @@
 ---
 name: triaging-security-reports
-description: Use when a vulnerability or security report arrives for triage, when assessing a CVE/RCE/OGNL/injection claim against the code, when deciding whether a finding is the framework's fault or the application's, or when drafting a reply to a security researcher — to research the claim from source without trusting the reporter and without fabricating your own facts.
+description: Use when a vulnerability or security report arrives for triage, when assessing a CVE/RCE/OGNL/injection claim against the code, when deciding whether a finding is the framework's fault or the application's, when drafting a reply to a security researcher, or when a claim that is already public (a Full Disclosure post, a blog, a scanner advisory) needs the project's position stated for users and scanner vendors — to research the claim from source without trusting the reporter and without fabricating your own facts.
 ---
 
 # Triaging Security Reports
@@ -101,6 +101,36 @@ differential is the ownership evidence.
 - **Does it require an operator to opt into an insecure configuration?** A documented, opt-in setting (e.g. `cookiesName=*`, `devMode=true`) that works as advertised is the operator's responsibility, provided the docs carry the warning. Say "X works as documented; the operator owns the security implications of enabling it" — not "not a vuln *in the default config*."
 - **Is the sink only reachable through application code?** Then the path table says so, and the ownership rule above applies — state that boundary explicitly.
 
+## A public report closes in public
+
+Where the report was published decides what the project owes after the verdict, so the assessment
+states it in one line, right after the verdict:
+
+```
+Disclosure: private (security@ only)  |  public — <where>, <date>, <link>
+```
+
+A report is public when its text is already readable by anyone: a Full Disclosure or oss-security
+post, a blog, a public GitHub or Jira issue, a scanner or SCA advisory id, a social-media thread.
+The verdict does not change with the channel. The follow-up does:
+
+- **Private, any verdict** — the reporter gets the reply; nothing is published before the PMC decides.
+- **Public, vulnerability** — the bulletin is the public statement
+  ([`creating-security-bulletins`](../creating-security-bulletins/SKILL.md)).
+- **Public, not a vulnerability** — any `OUT-OF-MODEL`, `BY-DESIGN`, `KNOWN-NON-FINDING` or
+  `DUPLICATE` disposition, or `VALID-HARDENING` alone — a `[NOT-VULNERABILITY]` notice on
+  `user@struts.apache.org` is owed, and the assessment says so in a second line:
+
+  ```
+  Outcome notice: owed — [NOT-VULNERABILITY] <subject>
+  ```
+
+  Until that notice exists, users and scanner vendors have only the reporter's version of the
+  claim. The notice is the one statement they can point to, and it is written once.
+
+Posting the notice is the PMC's decision and drafting it is a task the user starts — the gate
+below applies to it exactly as to a reporter reply. The assessment's part is the two lines above.
+
 ## Drafting the reply — only when you are asked
 
 **Triage ends with the assessment. Do not draft, create, or send a reply until the user asks you to.**
@@ -134,6 +164,41 @@ Once you *have* been asked:
   decision comes later and report the question to the user; do not answer it.
 - Acknowledge anything the reporter got right (e.g. correct CVE-fix verification) — it builds the relationship and signals you actually read it.
 - Keep it private: no public issue, PR, Jira, or list thread before triage. Never open a PR that is itself the security fix (see [`CLAUDE.md`](../../../CLAUDE.md)).
+  After triage, a public report closed as a non-vulnerability gets its `[NOT-VULNERABILITY]` notice
+  (below); a private report gets its reply and nothing public.
+
+### The `[NOT-VULNERABILITY]` notice
+
+Asked for the user-list notice on a public report, write it as these parts, in this order. It is
+the shape the Logging PMC posts on `log4j-user@` (search that list for `[NOT-VULNERABILITY]` for
+live examples):
+
+1. **Subject** — `[NOT-VULNERABILITY] <public id, where one exists>: <what the report claims, as one
+   functional clause>`. Example: `[NOT-VULNERABILITY] sonatype-2026-006746: FilteredObjectInputStream
+   is no safer than ObjectInputStream on untrusted data`.
+2. **Header block** — the report (link, publication date, publisher), the disposition from
+   [`THREAT_MODEL.md`](../../../THREAT_MODEL.md) §13, and `TLP:CLEAR`.
+3. **In short** — the verdict in two sentences: not a vulnerability in Apache Struts, and the one reason.
+4. **What the report describes** — the claim and the mechanism, in words. No payload, no PoC string.
+5. **What the framework does with that input** — the request-to-sink path from your table, hop by
+   hop, each hop grounded in a file you read this session or a documentation page. This is the part
+   a scanner vendor will quote.
+6. **Why that is not a vulnerability** — the ownership boundary, which hop the application or the
+   operator owns, with the `THREAT_MODEL.md` / [`SECURITY.md`](../../../SECURITY.md) section that says so.
+7. **What the project is doing** — the hardening ticket, where one exists, in functional terms
+   (`WW-XXXX adds java.beans to the default excluded packages`). Nothing more: no fix version, no
+   date, no statement about bulletins or CVEs.
+8. **What users should do** — usually nothing. The setting to keep on; what to check in their own code.
+9. **References** — the report, the ticket, `THREAT_MODEL.md`, `SECURITY.md`, the security guide page.
+10. **Closing** — new evidence goes to `security@struts.apache.org`; questions go to the list. Signed
+    "on behalf of the Apache Struts PMC" by the PMC member who posts it, from their `@apache.org`
+    address; the draft itself carries no name.
+
+Every sentence in the notice comes from the report or from your assessment. Its readers are
+described only by what you can link: when a user-list thread asking about the report exists, cite
+it; when none exists, the notice says nothing about who has asked. The reporter is referred to by
+the report, not by name, and the notice carries no view of them, their motives, or any other
+exchange with them.
 
 ## Red Flags — STOP
 
@@ -148,6 +213,9 @@ Once you *have* been asked:
 - Writing "not a vulnerability in the default configuration" → reframe as vuln-or-not + operator responsibility.
 - About to create a reply draft that nobody asked for — the verdict is the deliverable, the draft is a separate task.
 - About to write a severity rating, a bulletin, a fix version, or a CVE (or its timing) into a reply as though it were decided — it isn't yours to decide.
+- The report is public and your assessment ends with "a public statement is the PMC's call" — the `Disclosure:` and `Outcome notice:` lines are missing.
+- Writing "several users have asked" into a notice with no list thread to link.
+- A notice that names a release, a date, a bulletin decision, or the reporter.
 
 ## Common Mistakes
 
@@ -165,3 +233,5 @@ Once you *have* been asked:
 | "Triage is done, so drafting the reply is the next step" | Triage ends at the assessment. Replying is a separate task the user starts. |
 | "A draft is harmless — it isn't sent" | The draft is the artifact. Creating it unasked decides for the user that the project is ready to answer. |
 | "The reporter asked about a CVE, so I should answer it" | Report the question to the user. CVE timing is a PMC choice (not a fixed rule), so answering it commits the project to a process decision that isn't yours. |
+| "The verdict is the same whoever posted it, so where it was posted doesn't matter" | The verdict is the same. What the project owes afterwards is not: a public claim closed as a non-vulnerability stays "confirmed" in every scanner feed until the project's own notice exists. |
+| "Posting publicly is a communications call, not triage" | Posting is the PMC's. Saying that a notice is owed, and what its subject is, is the assessment's. |

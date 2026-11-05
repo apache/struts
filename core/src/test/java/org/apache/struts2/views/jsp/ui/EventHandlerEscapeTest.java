@@ -118,7 +118,36 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         String out = writer.toString();
-        assertTrue(out, out.contains("'content', '" + ESCAPED + "'"));
+        // ?js_string backslash-escapes the quote before the HTML entity encoding applies on top.
+        assertTrue(out, out.contains("'content', 'x\\&quot; autofocus onfocus=\\&quot;alert(1)'"));
+    }
+
+    public void testJsTooltipApostropheCannotBreakOutOfTheJsString() throws Exception {
+        String payload = "it's <script>alert(1)</script>";
+
+        FormTag formTag = new FormTag();
+        formTag.setTheme("xhtml");
+        formTag.setPageContext(pageContext);
+        formTag.setAction("testAction");
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setTheme("xhtml");
+        tag.setPageContext(pageContext);
+        tag.setName("foo");
+        tag.setLabel("foo");
+        tag.setTooltip(payload);
+        tag.setTooltipConfig("#{'jsTooltipEnabled':'true'}");
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        String out = writer.toString();
+        // The raw apostrophe must not reach the markup unescaped: that would close the
+        // JS string literal early and let the rest run as script on mouseover.
+        assertFalse(out, out.contains("'it's"));
+        assertTrue(out, out.contains("'content', 'it\\&#39;s &lt;script&gt;alert(1)&lt;\\/script&gt;'"));
     }
 
     private String render(Tag tag) throws JspException {

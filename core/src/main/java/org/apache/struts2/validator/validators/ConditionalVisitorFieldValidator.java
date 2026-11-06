@@ -75,7 +75,7 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
     }
 
     /**
-     * Validate the expression contained in the "expression" paramter.
+     * Validate the expression contained in the "expression" parameter.
      *
      * @param object the object you're validating
      * @return true if expression evaluates to true (implying a validation

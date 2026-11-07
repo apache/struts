@@ -47,6 +47,17 @@ public abstract class AbstractMatcher<E> implements Serializable {
     private static final Pattern WILDCARD_PATTERN = Pattern.compile("\\{(.)}");
 
     /**
+     * <p>Values a wildcard-matched request path segment may take when it is substituted
+     * into a class-name-bearing slot (action/result/exception-mapping {@code class}).
+     * Rejects '.', '/', and any other character that could walk the substituted value
+     * out of the package the template author wrote, or that an {@code ObjectFactory}
+     * could otherwise treat specially.</p>
+     *
+     * @since 7.5.0
+     */
+    private static final Pattern SAFE_CLASS_NAME_SEGMENT = Pattern.compile("[A-Za-z0-9_$]*");
+
+    /**
      * <p> Handles all wildcard pattern matching. </p>
      */
     PatternMatcher<Object> wildcard;
@@ -199,6 +210,31 @@ public abstract class AbstractMatcher<E> implements Serializable {
      * @return The new value
      */
     protected String convertParam(String val, Map<String, String> vars) {
+        return convertParam(val, vars, false);
+    }
+
+    /**
+     * <p> Inserts into a value wildcard-matched strings where specified
+     * with the {x} syntax.  If a wildcard-matched value isn't found, the
+     * replacement token is turned into an empty string.
+     * </p>
+     *
+     * <p>Use {@code safeForClassName = true} for any slot that ends up being loaded as a
+     * class or bean name (action/result/exception-mapping {@code class}). A substituted
+     * value that would carry a '.', '/', or other non-identifier character into the class
+     * name is dropped (treated as empty) instead of substituted, so a wildcard segment
+     * cannot walk the resulting class name out of the package the template author wrote.
+     * The method-name slot already has an equivalent guard
+     * ({@link org.apache.struts2.config.entities.ActionConfig#isAllowedMethod(String)});
+     * this is the same guard for the class-name slot. Literal characters in {@code val}
+     * itself are never filtered -- only the values substituted in for {x}.</p>
+     *
+     * @param val  The value to convert
+     * @param vars A Map of wildcard-matched strings
+     * @param safeForClassName restrict substituted values to {@code [A-Za-z0-9_$]*}
+     * @return The new value
+     */
+    protected String convertParam(String val, Map<String, String> vars, boolean safeForClassName) {
         if (val == null) {
             return null;
         }
@@ -207,7 +243,13 @@ public abstract class AbstractMatcher<E> implements Serializable {
 
         StringBuilder result = new StringBuilder();
         while (wildcardMatcher.find()) {
-            wildcardMatcher.appendReplacement(result, vars.getOrDefault(wildcardMatcher.group(1), ""));
+            String replacement = vars.getOrDefault(wildcardMatcher.group(1), "");
+            if (safeForClassName && !SAFE_CLASS_NAME_SEGMENT.matcher(replacement).matches()) {
+                LOG.warn("Wildcard-matched segment '{}' rejected for class-name slot '{}' -- " +
+                        "contains characters other than [A-Za-z0-9_$]", replacement, val);
+                replacement = "";
+            }
+            wildcardMatcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
         }
         wildcardMatcher.appendTail(result);
 

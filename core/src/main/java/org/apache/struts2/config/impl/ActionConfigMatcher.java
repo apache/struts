@@ -114,7 +114,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
             return null;
         }
 
-        String className = convertParam(orig.getClassName(), vars);
+        String className = convertParam(orig.getClassName(), vars, true);
         String pkgName = convertParam(orig.getPackageName(), vars);
 
         Map<String,String> params = replaceParameters(orig.getParams(), vars);
@@ -123,7 +123,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         for (String name : orig.getResults().keySet()) {
             ResultConfig result = orig.getResults().get(name);
             name = convertParam(name, vars);
-            ResultConfig r = new ResultConfig.Builder(name, convertParam(result.getClassName(), vars))
+            ResultConfig r = new ResultConfig.Builder(name, convertParam(result.getClassName(), vars, true))
                     .addParams(replaceParameters(result.getParams(), vars))
                     .build();
             results.put(name, r);
@@ -132,7 +132,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         List<ExceptionMappingConfig> exs = new ArrayList<ExceptionMappingConfig>();
         for (ExceptionMappingConfig ex : orig.getExceptionMappings()) {
             String name = convertParam(ex.getName(), vars);
-            String exClassName = convertParam(ex.getExceptionClassName(), vars);
+            String exClassName = convertParam(ex.getExceptionClassName(), vars, true);
             String exResult = convertParam(ex.getResult(), vars);
             Map<String,String> exParams = replaceParameters(ex.getParams(), vars);
             ExceptionMappingConfig e = new ExceptionMappingConfig.Builder(name, exClassName, exResult).addParams(exParams).build();

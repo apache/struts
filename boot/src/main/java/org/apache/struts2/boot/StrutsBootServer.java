@@ -20,6 +20,7 @@ package org.apache.struts2.boot;
 
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.SessionTrackingMode;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.connector.Connector;
@@ -30,6 +31,7 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -71,8 +74,17 @@ public final class StrutsBootServer implements AutoCloseable {
             hideErrorReportDetails(tomcat);
             Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
             Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
+            hardenSessionTracking(context);
             context.addServletContainerInitializer(
-                    (classes, servletContext) -> servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry),
+                    (classes, servletContext) -> {
+                        servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry);
+                        // Without a web.xml, a bare embedded context defaults to the servlet-spec
+                        // tracking modes (COOKIE + URL): a session id supplied as ";jsessionid="
+                        // in the URL is accepted and kept alive with no Set-Cookie, which is a
+                        // session-fixation vector (the id can be planted via a link/Referer
+                        // before the victim authenticates). Restrict to COOKIE only.
+                        servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+                    },
                     null);
             Tomcat.addServlet(context, "default", new DefaultServlet());
             context.addServletMappingDecoded("/", "default");
@@ -175,6 +187,20 @@ public final class StrutsBootServer implements AutoCloseable {
             String reason = initFailure == null ? "context state " + context.getState() : rootMessage(initFailure);
             throw new ConfigurationException("Struts Boot failed to start: " + reason, initFailure);
         }
+    }
+
+    /**
+     * The session id cookie (JSESSIONID) otherwise carries no SameSite attribute at all under
+     * the embedded default, which is weaker than every modern browser's own unset-cookie
+     * default (treated as Lax). Secure is deliberately not forced here: Boot opens a plain
+     * HTTP listener by default (§5/§5a transport is the operator's), and a Secure cookie would
+     * simply be refused by the browser on that default deployment -- an operator who terminates
+     * TLS in front of Boot sets this themselves, as with any other servlet container.
+     */
+    private static void hardenSessionTracking(Context context) {
+        Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
+        cookieProcessor.setSameSiteCookies("lax");
+        context.setCookieProcessor(cookieProcessor);
     }
 
     private static void hideErrorReportDetails(Tomcat tomcat) {

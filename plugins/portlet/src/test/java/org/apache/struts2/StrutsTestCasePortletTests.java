@@ -83,6 +83,7 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
      */
     protected String executeAction(String uri) throws ServletException, UnsupportedEncodingException {
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         ActionMapping mapping = getActionMapping(request);
 
         assertNotNull(mapping);
@@ -100,6 +101,7 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
      */
     protected ActionProxy getActionProxy(String uri) {
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         ActionMapping mapping = getActionMapping(request);
         String namespace = mapping.getNamespace();
         String name = mapping.getName();
@@ -167,6 +169,7 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
     protected ActionMapping getActionMapping(String url) {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setRequestURI(url);
+        req.setServletPath(url);
         return getActionMapping(req);
     }
 

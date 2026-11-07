@@ -51,6 +51,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         req = new MockHttpServletRequest();
         req.setupGetParameterMap(new HashMap());
         req.setupGetContextPath("/my/namespace");
+        req.setupPathInfo(null);
 
         config = new DefaultConfiguration();
         PackageConfig pkg = new PackageConfig.Builder("myns")
@@ -270,10 +271,10 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     }
 
     @SuppressWarnings("rawtypes")
-    public void testGetUriWithSemicolonPresent() {
+    public void testGetUriWithPathParametersStrippedByTheContainer() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action;abc=123rty56");
-        req.setupGetServletPath("/my/namespace/actionName.action;abc=123rty56");
+        req.setupGetServletPath("/my/namespace/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
 

@@ -20,6 +20,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.BoundedMessageFormat;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
@@ -101,7 +102,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
                 params = EMPTY_ARGS;
             }
 
-            return format.format(params);
+            return BoundedMessageFormat.format(format, params);
         }
         return text;        
     }

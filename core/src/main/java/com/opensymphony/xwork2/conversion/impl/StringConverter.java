@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.util.BigDecimalBounds;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
@@ -46,17 +47,6 @@ public class StringConverter extends DefaultTypeConverter {
      * {@link BigDecimal} scaled past this limit is rounded to it.
      */
     private static final int MAX_FRACTION_DIGITS = 340;
-
-    /**
-     * Upper bound on the number of integer digits emitted when formatting a number.
-     * <p>
-     * Covers every {@code double} value in full - the widest is {@link Double#MAX_VALUE}
-     * at 309 integer digits. A {@link BigDecimal} wider than this is rendered by
-     * {@link BigDecimal#toString()} instead, so the length of the output follows its
-     * precision rather than its scale.
-     */
-    private static final int MAX_INTEGER_DIGITS = 340;
-
 
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
@@ -102,7 +92,7 @@ public class StringConverter extends DefaultTypeConverter {
     }
 
     protected String convertToString(Locale locale, Object value) {
-        if (value instanceof BigDecimal && integerDigits((BigDecimal) value) > MAX_INTEGER_DIGITS) {
+        if (BigDecimalBounds.exceedsMaxIntegerDigits(value)) {
             return value.toString();
         }
         if (Number.class.isInstance(value)) {
@@ -120,10 +110,6 @@ public class StringConverter extends DefaultTypeConverter {
         } else {
             return Objects.toString(value, null);
         }
-    }
-
-    private static long integerDigits(BigDecimal value) {
-        return (long) value.precision() - value.scale();
     }
 
 }

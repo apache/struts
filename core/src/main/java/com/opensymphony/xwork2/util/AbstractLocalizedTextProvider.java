@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.util.BoundedMessageFormat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -457,7 +458,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     protected String formatWithNullDetection(MessageFormat mf, Object[] args) {
-        String message = mf.format(args);
+        String message = BoundedMessageFormat.format(mf, args);
         if ("null".equals(message)) {
             return null;
         } else {

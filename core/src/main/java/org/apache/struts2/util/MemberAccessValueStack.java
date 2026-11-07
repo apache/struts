@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.interceptor.parameter.ParameterMemberGuard;
+
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -30,5 +32,14 @@ public interface MemberAccessValueStack {
     void useExcludeProperties(Set<Pattern> excludeProperties);
 
     void useAcceptProperties(Set<Pattern> acceptedProperties);
+
+    /**
+     * Applies a guard to every member OGNL resolves on this stack until it is replaced.
+     *
+     * @param guard the guard to apply, or {@code null} to remove the current one
+     * @since 7.6.0
+     */
+    default void useParameterMemberGuard(ParameterMemberGuard guard) {
+    }
 
 }

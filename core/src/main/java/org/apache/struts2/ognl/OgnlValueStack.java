@@ -23,6 +23,7 @@ import org.apache.struts2.text.TextProvider;
 import org.apache.struts2.conversion.impl.XWorkConverter;
 import org.apache.struts2.inject.Container;
 import org.apache.struts2.inject.Inject;
+import org.apache.struts2.interceptor.parameter.ParameterMemberGuard;
 import org.apache.struts2.ognl.accessor.RootAccessor;
 import org.apache.struts2.util.ClearableValueStack;
 import org.apache.struts2.util.CompoundRoot;
@@ -521,5 +522,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Override
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         securityMemberAccess.useExcludeProperties(excludeProperties);
+    }
+
+    @Override
+    public void useParameterMemberGuard(ParameterMemberGuard guard) {
+        securityMemberAccess.useParameterMemberGuard(guard);
     }
 }

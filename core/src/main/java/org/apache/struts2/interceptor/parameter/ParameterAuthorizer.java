@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import java.util.Collection;
+
 /**
  * Service for determining whether a given parameter name is authorized for injection into a target object, based on
  * {@link StrutsParameter} annotation presence and depth.
@@ -64,5 +66,24 @@ public interface ParameterAuthorizer {
      */
     default Object resolveTarget(Object action) {
         return action;
+    }
+
+    /**
+     * Creates the guard that applies while OGNL binds one parameter, so that the authorization decided by
+     * {@link #isAuthorized} also holds for the members OGNL actually resolves. Create a new guard per parameter: it
+     * may keep state for the duration of that parameter's binding.
+     *
+     * <p>This is a {@code default} method to preserve the interface as a functional interface (SAM) for
+     * lambda-based test stubs.</p>
+     *
+     * @param parameterName the parameter name about to be bound
+     * @param target        the object returned by {@link #resolveTarget} for this action
+     * @param action        the action instance
+     * @param root          the value stack root the parameter is bound against
+     * @return the guard to apply while binding this parameter; never {@code null}
+     * @since 7.6.0
+     */
+    default ParameterMemberGuard memberGuard(String parameterName, Object target, Object action, Collection<?> root) {
+        return ParameterMemberGuard.PERMIT_ALL;
     }
 }

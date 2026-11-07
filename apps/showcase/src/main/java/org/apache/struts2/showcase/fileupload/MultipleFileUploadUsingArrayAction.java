@@ -63,7 +63,7 @@ public class MultipleFileUploadUsingArrayAction extends ActionSupport implements
 
     private String[] getUploadFileNames() {
         return this.uploadedFiles.stream()
-                .map(UploadedFile::getOriginalName)
+                .map(UploadedFile::getSanitizedOriginalName)
                 .toArray(String[]::new);
     }
 

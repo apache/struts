@@ -96,21 +96,18 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
     }
 
-    public void testValidTopLevelNavigation() throws Exception {
-        request.addHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
-        request.addHeader(SEC_FETCH_DEST_HEADER, DEST_SCRIPT);
-        request.setMethod("GET");
+    public void testCrossSiteTopLevelGetAndHeadNavigationAllowed() throws Exception {
+        for (String method : Arrays.asList("GET", "HEAD")) {
+            request.removeHeader(SEC_FETCH_SITE_HEADER);
+            request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+            request.removeHeader(SEC_FETCH_MODE_HEADER);
+            request.addHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+            request.removeHeader(SEC_FETCH_DEST_HEADER);
+            request.addHeader(SEC_FETCH_DEST_HEADER, DEST_DOCUMENT);
+            request.setMethod(method);
 
-        assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
-    }
-
-    public void testCrossSiteTopLevelGetNavigationAllowed() throws Exception {
-        request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
-        request.addHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
-        request.addHeader(SEC_FETCH_DEST_HEADER, DEST_DOCUMENT);
-        request.setMethod("GET");
-
-        assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+            assertNotEquals("Expected interceptor to accept cross-site " + method + " navigation", SC_FORBIDDEN, interceptor.intercept(mai));
+        }
     }
 
     public void testCrossSiteNavigationWithUnsafeMethodRejected() throws Exception {

@@ -191,6 +191,9 @@
     </@s.iterator>
 
     var ${parameters.escapedId}Temp = document.${parameters.formName}.${parameters.doubleId};
+    <#if parameters.doubleNameValue?? && parameters.doubleMultiple!false>
+    var ${parameters.escapedId}Selected = [<#list parameters.doubleNameValues as selectedValue>"${selectedValue?js_string}"<#sep>, </#list>];
+    </#if>
     <#assign itemCount = startCount/>
     <#assign redirectTo = 0/>
     <@s.iterator value="parameters.list">
@@ -214,9 +217,9 @@
         for (var i = 0; i < ${parameters.escapedId}Group[x].length; i++) {
             ${parameters.escapedId}Temp.options[i] = new Option(${parameters.escapedId}Group[x][i].text, ${parameters.escapedId}Group[x][i].value);
         <#if parameters.doubleNameValue??>
-            <#if parameters.doubleMultiple??>
-                for (var j = 0; j < ${parameters.doubleNameValue}.length; j++) {
-                    if (${parameters.escapedId}Temp.options[i].value == ${parameters.doubleNameValue?js_string}[j]) {
+            <#if parameters.doubleMultiple!false>
+                for (var j = 0; j < ${parameters.escapedId}Selected.length; j++) {
+                    if (${parameters.escapedId}Temp.options[i].value == ${parameters.escapedId}Selected[j]) {
                         ${parameters.escapedId}Temp.options[i].selected = true;
                         selected = true;
                     }

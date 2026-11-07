@@ -19,10 +19,14 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -168,21 +172,9 @@ public abstract class DoubleListUIBean extends ListUIBean {
             }
         }
 
-        Class<?> valueClazz = getValueClassType();
-
-        if (valueClazz != null) {
-            if (doubleValue != null) {
-                addParameter("doubleNameValue", findValue(doubleValue, valueClazz));
-            } else if (doubleName != null) {
-                addParameter("doubleNameValue", findValue(doubleName, valueClazz));
-            }
-        } else {
-            if (doubleValue != null) {
-                addParameter("doubleNameValue", findValue(doubleValue));
-            } else if (doubleName != null) {
-                addParameter("doubleNameValue", findValue(doubleName));
-            }
-        }
+        Object doubleNameValue = findDoubleNameValue();
+        addParameter("doubleNameValue", doubleNameValue);
+        addParameter("doubleNameValues", toStrings(doubleNameValue));
 
         Form form = (Form) findAncestor(Form.class);
         if (doubleId != null) {
@@ -265,6 +257,30 @@ public abstract class DoubleListUIBean extends ListUIBean {
         if (doubleAccesskey != null) {
             addParameter("doubleAccesskey", findString(doubleAccesskey));
         }
+    }
+
+    private Object findDoubleNameValue() {
+        String expression = doubleValue != null ? doubleValue : doubleName;
+        if (expression == null) {
+            return null;
+        }
+        Class<?> valueClazz = getValueClassType();
+        return valueClazz != null ? findValue(expression, valueClazz) : findValue(expression);
+    }
+
+    private static List<String> toStrings(Object value) {
+        List<String> strings = new ArrayList<>();
+        Iterator<?> items = MakeIterator.convert(value);
+        if (items == null) {
+            return strings;
+        }
+        while (items.hasNext()) {
+            Object item = items.next();
+            if (item != null) {
+                strings.add(item.toString());
+            }
+        }
+        return strings;
     }
 
     @StrutsTagAttribute(description = "The second iterable source to populate from.", required = true)

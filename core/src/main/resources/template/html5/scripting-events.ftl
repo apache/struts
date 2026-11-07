@@ -19,44 +19,44 @@
  */
 -->
 <#if attributes.onclick??>
- onclick="<#outputformat 'JavaScript'>${attributes.onclick}</#outputformat>"<#rt/>
+ onclick="${attributes.onclick}"<#rt/>
 </#if>
 <#if attributes.ondblclick??>
- ondblclick="<#outputformat 'JavaScript'>${attributes.ondblclick}</#outputformat>"<#rt/>
+ ondblclick="${attributes.ondblclick}"<#rt/>
 </#if>
 <#if attributes.onmousedown??>
- onmousedown="<#outputformat 'JavaScript'>${attributes.onmousedown}</#outputformat>"<#rt/>
+ onmousedown="${attributes.onmousedown}"<#rt/>
 </#if>
 <#if attributes.onmouseup??>
- onmouseup="<#outputformat 'JavaScript'>${attributes.onmouseup}</#outputformat>"<#rt/>
+ onmouseup="${attributes.onmouseup}"<#rt/>
 </#if>
 <#if attributes.onmouseover??>
- onmouseover="<#outputformat 'JavaScript'>${attributes.onmouseover}</#outputformat>"<#rt/>
+ onmouseover="${attributes.onmouseover}"<#rt/>
 </#if>
 <#if attributes.onmousemove??>
- onmousemove="<#outputformat 'JavaScript'>${attributes.onmousemove}</#outputformat>"<#rt/>
+ onmousemove="${attributes.onmousemove}"<#rt/>
 </#if>
 <#if attributes.onmouseout??>
- onmouseout="<#outputformat 'JavaScript'>${attributes.onmouseout}</#outputformat>"<#rt/>
+ onmouseout="${attributes.onmouseout}"<#rt/>
 </#if>
 <#if attributes.onfocus??>
- onfocus="<#outputformat 'JavaScript'>${attributes.onfocus}</#outputformat>"<#rt/>
+ onfocus="${attributes.onfocus}"<#rt/>
 </#if>
 <#if attributes.onblur??>
- onblur="<#outputformat 'JavaScript'>${attributes.onblur}</#outputformat>"<#rt/>
+ onblur="${attributes.onblur}"<#rt/>
 </#if>
 <#if attributes.onkeypress??>
- onkeypress="<#outputformat 'JavaScript'>${attributes.onkeypress}</#outputformat>"<#rt/>
+ onkeypress="${attributes.onkeypress}"<#rt/>
 </#if>
 <#if attributes.onkeydown??>
- onkeydown="<#outputformat 'JavaScript'>${attributes.onkeydown}</#outputformat>"<#rt/>
+ onkeydown="${attributes.onkeydown}"<#rt/>
 </#if>
 <#if attributes.onkeyup??>
- onkeyup="<#outputformat 'JavaScript'>${attributes.onkeyup}</#outputformat>"<#rt/>
+ onkeyup="${attributes.onkeyup}"<#rt/>
 </#if>
 <#if attributes.onselect??>
- onselect="<#outputformat 'JavaScript'>${attributes.onselect}</#outputformat>"<#rt/>
+ onselect="${attributes.onselect}"<#rt/>
 </#if>
 <#if attributes.onchange??>
- onchange="<#outputformat 'JavaScript'>${attributes.onchange}</#outputformat>"<#rt/>
+ onchange="${attributes.onchange}"<#rt/>
 </#if>

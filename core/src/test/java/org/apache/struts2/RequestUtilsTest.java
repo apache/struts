@@ -25,6 +25,7 @@ package org.apache.struts2;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 
@@ -32,54 +33,61 @@ public class RequestUtilsTest extends TestCase {
 
     private HttpServletRequest requestMock;
 
-    public void testGetServletPathWithServletPathSet() throws Exception {
+    public void testServletPathWithoutPathInfo() {
         expect(requestMock.getServletPath()).andStubReturn("/mycontext/");
-        expect(requestMock.getRequestURI()).andStubReturn("/mycontext/");
-        replay(requestMock);
-        assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        verify(requestMock);
-    }
-
-    public void testGetServletPathWithRequestURIAndEmptyContextPath() throws Exception {
-        expect(requestMock.getServletPath()).andStubReturn(null);
-        expect(requestMock.getRequestURI()).andStubReturn("/mycontext/test.jsp");
-        expect(requestMock.getContextPath()).andStubReturn("");
-        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
-        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
-        replay(requestMock);
-        assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        verify(requestMock);
-    }
-
-    public void testGetServletPathWithRequestURIAndContextPathSet() throws Exception {
-        expect(requestMock.getServletPath()).andStubReturn(null);
-        expect(requestMock.getRequestURI()).andStubReturn("/servlet/mycontext/test.jsp");
-        expect(requestMock.getContextPath()).andStubReturn("/servlet");
-        expect(requestMock.getContextPath()).andStubReturn("/servlet");
-        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
-        expect(requestMock.getPathInfo()).andStubReturn("test.jsp");
-        replay(requestMock);
-        assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        verify(requestMock);
-    }
-
-    public void testGetServletPathWithRequestURIAndContextPathSetButNoPatchInfo() throws Exception {
-        expect(requestMock.getServletPath()).andStubReturn(null);
-        expect(requestMock.getRequestURI()).andStubReturn("/servlet/mycontext/");
-        expect(requestMock.getContextPath()).andStubReturn("/servlet");
-        expect(requestMock.getContextPath()).andStubReturn("/servlet");
         expect(requestMock.getPathInfo()).andStubReturn(null);
         replay(requestMock);
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
-        verify(requestMock);
     }
-    
-    public void testGetServletPathWithSemicolon() throws Exception {
-        expect(requestMock.getRequestURI()).andStubReturn("/friend/mycontext/jim;bob");
-        expect(requestMock.getServletPath()).andStubReturn("/mycontext/jim");
+
+    public void testServletPathFollowedByPathInfoForPrefixMapping() {
+        expect(requestMock.getServletPath()).andStubReturn("/app");
+        expect(requestMock.getPathInfo()).andStubReturn("/admin/index.action");
         replay(requestMock);
-        assertEquals("/mycontext/jim;bob", RequestUtils.getServletPath(requestMock));
-        verify(requestMock);
+        assertEquals("/app/admin/index.action", RequestUtils.getServletPath(requestMock));
+    }
+
+    public void testPathInfoAloneWhenServletPathIsEmpty() {
+        expect(requestMock.getServletPath()).andStubReturn("");
+        expect(requestMock.getPathInfo()).andStubReturn("/admin/index.action");
+        replay(requestMock);
+        assertEquals("/admin/index.action", RequestUtils.getServletPath(requestMock));
+    }
+
+    public void testEmptyPathWhenContainerReportsNeither() {
+        expect(requestMock.getServletPath()).andStubReturn(null);
+        expect(requestMock.getPathInfo()).andStubReturn(null);
+        replay(requestMock);
+        assertEquals("", RequestUtils.getServletPath(requestMock));
+    }
+
+    public void testRequestUriIsNeverConsulted() {
+        expect(requestMock.getServletPath()).andStubReturn("/mycontext/jim");
+        expect(requestMock.getPathInfo()).andStubReturn(null);
+        replay(requestMock);
+        assertEquals("/mycontext/jim", RequestUtils.getServletPath(requestMock));
+    }
+
+    public void testUriPrefersIncludedServletPath() {
+        expect(requestMock.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH)).andStubReturn("/included.action");
+        replay(requestMock);
+        assertEquals("/included.action", RequestUtils.getUri(requestMock));
+    }
+
+    public void testUriIsTheContainerPath() {
+        expect(requestMock.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH)).andStubReturn(null);
+        expect(requestMock.getServletPath()).andStubReturn("");
+        expect(requestMock.getPathInfo()).andStubReturn("/admin/index.action");
+        replay(requestMock);
+        assertEquals("/admin/index.action", RequestUtils.getUri(requestMock));
+    }
+
+    public void testUriIsEmptyWhenContainerReportsNoPath() {
+        expect(requestMock.getAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH)).andStubReturn(null);
+        expect(requestMock.getServletPath()).andStubReturn("");
+        expect(requestMock.getPathInfo()).andStubReturn(null);
+        replay(requestMock);
+        assertEquals("", RequestUtils.getUri(requestMock));
     }
 
     public void testParseRFC1123() {

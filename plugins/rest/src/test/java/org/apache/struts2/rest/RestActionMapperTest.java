@@ -155,7 +155,7 @@ public class RestActionMapperTest extends TestCase {
         assertEquals("edit", mapping.getMethod());
     }
 
-    public void testEditSemicolonMapping() throws Exception {
+    public void testSemicolonEditIsNotSpecial() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido;edit");
         req.setServletPath("/animals/dog/fido;edit");
         req.setMethod("GET");
@@ -164,8 +164,8 @@ public class RestActionMapperTest extends TestCase {
 
         assertEquals("/animals", mapping.getNamespace());
         assertEquals("dog", mapping.getName());
-        assertEquals("fido", ((String[]) mapping.getParams().get("id"))[0]);
-        assertEquals("edit", mapping.getMethod());
+        assertEquals("fido;edit", ((String[]) mapping.getParams().get("id"))[0]);
+        assertEquals("show", mapping.getMethod());
     }
 
     public void testGetJsessionIdSemicolonMapping() throws Exception {
@@ -183,7 +183,7 @@ public class RestActionMapperTest extends TestCase {
 
     public void testGetJsessionIdSemicolonMappingWithMethod() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
-        req.setServletPath("/animals/dog/fido");
+        req.setServletPath("/animals/dog/fido!update");
         req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -196,7 +196,7 @@ public class RestActionMapperTest extends TestCase {
 
     public void testGetJsessionIdSemicolonMappingWithMethodAllowDMI() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido!update;jsessionid=29fefpv23do1g");
-        req.setServletPath("/animals/dog/fido");
+        req.setServletPath("/animals/dog/fido!update");
         req.setMethod("GET");
 
         // allow DMI
@@ -212,7 +212,7 @@ public class RestActionMapperTest extends TestCase {
 
     public void testMappingWithMethodAndId() throws Exception {
         req.setRequestURI("/myapp/animals/dog/fido/test/some-id!create;jsessionid=29fefpv23do1g");
-        req.setServletPath("/animals/dog/fido/test/some-id");
+        req.setServletPath("/animals/dog/fido/test/some-id!create");
         req.setMethod("GET");
         mapper.setAllowDynamicMethodCalls("true");
         ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -225,7 +225,7 @@ public class RestActionMapperTest extends TestCase {
 
     public void testMappingForStaticFiles() throws Exception {
         req.setRequestURI("/myApp/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe");
-        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image");
+        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe");
         req.setMethod("GET");
         mapper.setAllowDynamicMethodCalls("true");
         final ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -238,7 +238,7 @@ public class RestActionMapperTest extends TestCase {
 
     public void testMappingForStaticFilesWithJsessionId() throws Exception {
         req.setRequestURI("/myApp/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe;jsessionid=29fefpv23do1g");
-        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image");
+        req.setServletPath("/custom/menu/Yosemite/Vernal_Fall/Vernal_Fall_Image!iframe");
         req.setMethod("GET");
         mapper.setAllowDynamicMethodCalls("true");
         final ActionMapping mapping = mapper.getMapping(req, configManager);
@@ -259,10 +259,6 @@ public class RestActionMapperTest extends TestCase {
     public void testParseNameAndNamespaceWithNamespaces() {
         tryUri("/my/foo/23", "/my", "foo/23");
         tryUri("/my/foo/", "/my", "foo/");
-    }
-
-    public void testParseNameAndNamespaceWithEdit() {
-        tryUri("/my/foo/23;edit", "/my", "foo/23;edit");
     }
 
     /**

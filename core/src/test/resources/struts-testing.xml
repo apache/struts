@@ -28,21 +28,21 @@
         <interceptors>
             <interceptor-stack name="defaultInterceptorStack">
                 <interceptor-ref name="defaultStack">
-                    <param name="fetchMetadata.setExemptedPaths">/fetchMetadataExemptedGlobal,/someOtherPath</param>
+                    <param name="fetchMetadata.setExemptedPaths">/fetchMetadataExemptedGlobal.action,/someOtherPath.action</param>
                 </interceptor-ref>
             </interceptor-stack>
         </interceptors>
 
         <action name="fetchMetadataExempted" class="com.opensymphony.xwork2.SimpleAction">
             <interceptor-ref name="defaultInterceptorStack">
-               <param name="fetchMetadata.setExemptedPaths">/fetchMetadataExempted</param>
+               <param name="fetchMetadata.setExemptedPaths">/fetchMetadataExempted.action</param>
             </interceptor-ref>
             <result name="success">hello.jsp</result>
         </action>
 
         <action name="fetchMetadataNotExempted" class="com.opensymphony.xwork2.SimpleAction">
             <interceptor-ref name="defaultInterceptorStack">
-                <param name="fetchMetadata.setExemptedPaths">/nonMatchingActionPath</param>
+                <param name="fetchMetadata.setExemptedPaths">/nonMatchingActionPath.action</param>
             </interceptor-ref>
             <result name="success">hello.jsp</result>
         </action>

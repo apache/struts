@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.RequestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +61,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        String path = request.getContextPath();
+        String path = RequestUtils.getUri(request);
 
         if (isExempted(path)) {
             // no need to add headers

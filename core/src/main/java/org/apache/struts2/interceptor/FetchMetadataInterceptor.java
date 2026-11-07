@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.struts2.RequestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,9 +68,9 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
 
         addVaryHeaders(invocation);
 
-        String contextPath = request.getContextPath();
+        String path = RequestUtils.getUri(request);
         // Apply exemptions: paths/endpoints meant to be served cross-origin
-        if (exemptedPaths.contains(contextPath)) {
+        if (exemptedPaths.contains(path)) {
             return invocation.invoke();
         }
 
@@ -78,7 +79,7 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
             return invocation.invoke();
         }
 
-        LOG.warn("Fetch metadata rejected cross-origin request to: {}", contextPath);
+        LOG.warn("Fetch metadata rejected cross-origin request to: {}", path);
         return SC_FORBIDDEN;
     }
 

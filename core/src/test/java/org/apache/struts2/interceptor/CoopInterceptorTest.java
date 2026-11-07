@@ -38,7 +38,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
     String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
     public void testHeaderIsSetNonExemptedPath() throws Exception {
-        request.setContextPath("/some");
+        request.setServletPath("/some.action");
         interceptor.intercept(mai);
 
         String header = response.getHeader(COOP_HEADER);
@@ -47,16 +47,34 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testHeaderIsNotSetExemptedPath() throws Exception {
-        request.setContextPath("/foo");
+        request.setServletPath("/foo");
         interceptor.intercept(mai);
 
         String header = response.getHeader(COOP_HEADER);
         assertTrue("Coop header exists in exempted path", Strings.isEmpty(header));
     }
 
+    public void testHeaderIsNotSetExemptedPathInfo() throws Exception {
+        interceptor.setExemptedPaths("/rest/orders");
+        request.setServletPath("/rest");
+        request.setPathInfo("/orders");
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(COOP_HEADER);
+        assertTrue("Coop header exists in exempted path", Strings.isEmpty(header));
+    }
+
+    public void testHeaderIsSetWhenOnlyContextPathIsExempted() throws Exception {
+        request.setContextPath("/foo");
+        request.setServletPath("/index.action");
+        interceptor.intercept(mai);
+
+        assertEquals("Coop header is not same-origin", SAME_ORIGIN, response.getHeader(COOP_HEADER));
+    }
+
     public void testChangeDefaultMode() throws Exception {
         interceptor.setMode("unsafe-none");
-        request.setContextPath("/some");
+        request.setServletPath("/some.action");
         interceptor.intercept(mai);
 
         String header = response.getHeader(COOP_HEADER);
@@ -65,7 +83,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testErrorNotRecognizedMode() {
-        request.setContextPath("/some");
+        request.setServletPath("/some.action");
 
         try{
             interceptor.setMode("foobar");

@@ -35,6 +35,8 @@ import org.apache.struts2.test.TestBean2;
 import org.apache.struts2.util.Bar;
 import org.apache.struts2.util.ValueStack;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -911,6 +913,50 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         String result = provider.findText(CacheFixture.class, "cache.static", Locale.ENGLISH, null, null, valueStack);
         assertEquals("Static cached value", result);
         assertTrue("class hierarchy cache should populate", provider.classHierarchyCacheSize() >= 1);
+    }
+
+    public void testBigDecimalArgumentWithinBoundIsUnchanged() {
+        BigDecimal withinBound = new BigDecimal(BigInteger.ONE, -339);
+        Date date = new Date(0);
+        Object[] args = {withinBound, "text", date};
+        String pattern = "{0} {0,number} {0,number,#,##0.00} {1} {2} {2,date,short} {0,choice,0#none|1#{0} items}";
+
+        assertEquals(new MessageFormat(pattern, Locale.US).format(args), formatMessage(pattern, args));
+    }
+
+    public void testBigDecimalArgumentIntegerDigitsAreBounded() {
+        BigDecimal overBound = new BigDecimal(BigInteger.ONE, -340);
+
+        assertEquals("v=1E+340", formatMessage("v={0}", overBound));
+        assertEquals("v=1E+340", formatMessage("v={0,number}", overBound));
+        assertEquals("v=1E+340", formatMessage("v={0,number,currency}", overBound));
+        assertEquals("v=1E+2147483647", formatMessage("v={0}", new BigDecimal(BigInteger.ONE, Integer.MIN_VALUE + 1)));
+    }
+
+    public void testOtherArgumentsAreUnchangedWhenOneIsOverTheBound() {
+        BigDecimal overBound = new BigDecimal(BigInteger.ONE, -340);
+        Date date = new Date(0);
+        String pattern = "{1} {1,number,#,##0.00} {2} {3} {3,date,short} {4}";
+        Object[] args = {overBound, new BigDecimal("1234.5"), "text", date, null};
+
+        assertEquals("1E+340 " + new MessageFormat(pattern, Locale.US).format(args),
+                formatMessage("{0} " + pattern, args));
+    }
+
+    public void testBigDecimalArgumentInNestedChoiceIsBounded() {
+        BigDecimal overBound = new BigDecimal(BigInteger.ONE, -340);
+
+        assertEquals("1E+340 items", formatMessage("{0,choice,0#none|1#{0} items}", overBound));
+        assertEquals("3 of 1E+340", formatMessage("{0,choice,0#none|1#{0} of {1}}", 3, overBound));
+        String twoLevels = "{0,choice,0#none|1#{1,choice,0'#'zero'|'1'#'{1} deep}}";
+        assertEquals("7 deep", new MessageFormat(twoLevels, Locale.US).format(new Object[]{1, 7}));
+        assertEquals("1E+340 deep", formatMessage(twoLevels, 1, overBound));
+        assertEquals("none", formatMessage("{0,choice,0#none|1#{1}}", 0, overBound));
+    }
+
+    private String formatMessage(String pattern, Object... args) {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        return localizedTextProvider.findText(StrutsLocalizedTextProviderTest.class, "not.in.any.bundle", Locale.US, pattern, args, stack);
     }
 
     @Override

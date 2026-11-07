@@ -107,7 +107,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
                 params = EMPTY_ARGS;
             }
 
-            return format.format(params);
+            return BoundedMessageFormat.format(format, params);
         }
         return text;
     }

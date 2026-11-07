@@ -421,7 +421,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     protected String formatWithNullDetection(MessageFormat mf, Object[] args) {
-        String message = mf.format(args);
+        String message = BoundedMessageFormat.format(mf, args);
         if ("null".equals(message)) {
             return null;
         } else {

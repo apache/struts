@@ -66,9 +66,6 @@ import java.util.HashMap;
  *   <li><code>struts.mapper.deleteMethodName</code> - The method name to call for a DELETE
  *       request with an id parameter. Defaults to 'destroy'.
  *   </li>
- *   <li><code>struts.mapper.editMethodName</code> - The method name to call for a GET
- *       request with an id parameter and the 'edit' view specified. Defaults to 'edit'.
- *   </li>
  *   <li><code>struts.mapper.newMethodName</code> - The method name to call for a GET
  *       request with no id parameter and the 'new' view specified. Defaults to 'editNew'.
  *   </li>
@@ -79,7 +76,6 @@ import java.util.HashMap;
  * <ul> 
  *  <li><code>GET:    /movies                =&gt; method="index"</code></li>
  *  <li><code>GET:    /movies/Thrillers      =&gt; method="show", id="Thrillers"</code></li>
- *  <li><code>GET:    /movies/Thrillers;edit =&gt; method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movies/Thrillers/edit =&gt; method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movies/new            =&gt; method="editNew"</code></li>
  *  <li><code>POST:   /movies                =&gt; method="create"</code></li>
@@ -108,7 +104,6 @@ public class RestActionMapper extends DefaultActionMapper {
     private String indexMethodName = "index";
     private String getMethodName = "show";
     private String postMethodName = "create";
-    private String editMethodName = "edit";
     private String newMethodName = "editNew";
     private String deleteMethodName = "destroy";
     private String putMethodName = "update";
@@ -145,9 +140,15 @@ public class RestActionMapper extends DefaultActionMapper {
         this.postMethodName = postMethodName;
     }
 
+    /**
+     * @deprecated since 6.13.0, has no effect on the mapper: the {@code /edit} form names the method itself and
+     * the {@code ;edit} form is no longer recognised. {@code RestWorkflowInterceptor} still reads the setting.
+     * To be removed in 8.0.0.
+     */
+    @Deprecated
     @Inject(required = false, value = RestConstants.REST_MAPPER_EDIT_METHOD_NAME)
     public void setEditMethodName(String editMethodName) {
-        this.editMethodName = editMethodName;
+        // no-op
     }
 
     @Inject(required = false, value = RestConstants.REST_MAPPER_NEW_METHOD_NAME)
@@ -210,12 +211,6 @@ public class RestActionMapper extends DefaultActionMapper {
         // Only try something if the action name is specified
         if (StringUtils.isNotEmpty(fullName)) {
 
-            // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
-            int scPos = fullName.indexOf(';');
-            if (scPos > -1 && !"edit".equals(fullName.substring(scPos + 1))) {
-                fullName = fullName.substring(0, scPos);
-            }
-
             int lastSlashPos = fullName.lastIndexOf('/');
             String id = null;
             if (lastSlashPos > -1) {
@@ -258,13 +253,8 @@ public class RestActionMapper extends DefaultActionMapper {
                 // Handle uris with an id at the end
                 } else if (id != null) {
                     
-                    // Viewing the form to edit an item e.g. foo/1;edit
-                    if (isGet(request) && id.endsWith(";edit")) {
-                        id = id.substring(0, id.length() - ";edit".length());
-                        mapping.setMethod(editMethodName);
-                        
                     // Viewing the form to create a new item e.g. foo/new
-                    } else if (isGet(request) && "new".equals(id)) {
+                    if (isGet(request) && "new".equals(id)) {
                         mapping.setMethod(newMethodName);
 
                     // Removing an item e.g. foo/1
@@ -307,14 +297,6 @@ public class RestActionMapper extends DefaultActionMapper {
         if (exclamation != -1) {
             String actionName = name.substring(0, exclamation);
             String actionMethod = name.substring(exclamation + 1);
-
-            // WW-4585
-            // add any ; appendix to name, it will be handled later in getMapping method
-            int scPos = actionMethod.indexOf(';');
-            if (scPos != -1) {
-                actionName = actionName + actionMethod.substring(scPos);
-                actionMethod = actionMethod.substring(0, scPos);
-            }
 
             mapping.setName(actionName);
             if (allowDynamicMethodCalls) {

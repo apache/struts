@@ -129,9 +129,12 @@ public class TwoFilterIntegrationTest {
         Filter dummyForward = newFilter((req, res, chain) -> {
             MockHttpServletRequest castReq = (MockHttpServletRequest) req;
             String oldUri = castReq.getRequestURI();
+            String oldServletPath = castReq.getServletPath();
             castReq.setRequestURI("/hello.action");
+            castReq.setServletPath("/hello.action");
             chain.doFilter(castReq, res);
             castReq.setRequestURI(oldUri);
+            castReq.setServletPath(oldServletPath);
         });
         MockHttpServletResponse response = run(
                 "/excluded/hello.action",
@@ -169,6 +172,7 @@ public class TwoFilterIntegrationTest {
         };
         filterInitParams.forEach(filterConfig::addInitParameter);
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         for (Filter filter : filters) {
             filter.init(filterConfig);
         }

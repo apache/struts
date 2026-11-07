@@ -50,10 +50,6 @@ public class ExecuteOperations {
         // there is no action in this request, should we look for a static resource?
         String resourcePath = RequestUtils.getServletPath(request);
 
-        if ("".equals(resourcePath) && null != request.getPathInfo()) {
-            resourcePath = request.getPathInfo();
-        }
-
         StaticContentLoader staticResourceLoader = dispatcher.getStaticContentLoader();
         if (staticResourceLoader.canHandle(resourcePath)) {
             staticResourceLoader.findStaticResource(resourcePath, request, response);

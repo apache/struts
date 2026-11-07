@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ResourceUtil {
     public static String getResourceBase(HttpServletRequest req) {
         String path = RequestUtils.getServletPath(req);
-        if (path == null || "".equals(path)) {
+        if (path.isEmpty()) {
             return "";
         }
 

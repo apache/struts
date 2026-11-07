@@ -52,13 +52,35 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testExemptedPath() throws Exception{
-        request.setContextPath("/foo");
+        request.setServletPath("/foo");
         interceptor.setEnforcingMode("true");
 
         interceptor.intercept(mai);
 
         String header = response.getHeader(COEP_ENFORCING_HEADER);
         assertTrue("COEP applied to exempted path", Strings.isEmpty(header));
+    }
+
+    public void testExemptedPathInfo() throws Exception {
+        interceptor.setExemptedPaths("/rest/orders");
+        request.setServletPath("/rest");
+        request.setPathInfo("/orders");
+        interceptor.setEnforcingMode("true");
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(COEP_ENFORCING_HEADER);
+        assertTrue("COEP applied to exempted path", Strings.isEmpty(header));
+    }
+
+    public void testHeaderSetWhenOnlyContextPathIsExempted() throws Exception {
+        request.setContextPath("/foo");
+        request.setServletPath("/index.action");
+        interceptor.setEnforcingMode("true");
+
+        interceptor.intercept(mai);
+
+        assertEquals("COEP header value is incorrect", HEADER_CONTENT, response.getHeader(COEP_ENFORCING_HEADER));
     }
 
     public void testReportingHeader() throws Exception {

@@ -28,6 +28,7 @@ import org.apache.struts2.util.ValueStack;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.SoftCacheStorage;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.HTMLOutputFormat;
 import freemarker.core.TemplateClassResolver;
@@ -161,6 +162,7 @@ public class FreemarkerManager {
     private static final Logger LOG = LogManager.getLogger(FreemarkerManager.class);
     public static final String CONFIG_SERVLET_CONTEXT_KEY = "freemarker.Configuration";
     public static final String KEY_EXCEPTION = "exception";
+    static final int MAX_CACHED_TEMPLATES = 10000;
 
 
     protected String templatePath;
@@ -335,6 +337,9 @@ public class FreemarkerManager {
         if (mruMaxStrongSize > 0) {
             LOG.debug("Sets Configuration.CACHE_STORAGE_KEY to strong:{}", mruMaxStrongSize);
             configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
+        } else {
+            LOG.debug("Sets Configuration cache storage to a SoftCacheStorage bounded to {} entries", MAX_CACHED_TEMPLATES);
+            configuration.setCacheStorage(new BoundedSoftCacheStorage(MAX_CACHED_TEMPLATES));
         }
         if (templateUpdateDelay != null) {
             LOG.debug("Sets Configuration.TEMPLATE_UPDATE_DELAY_KEY to {}", templateUpdateDelay);
@@ -562,6 +567,26 @@ public class FreemarkerManager {
 
         if (exception != null) {
             model.put(KEY_EXCEPTION, exception);
+        }
+    }
+
+    /**
+     * A {@link SoftCacheStorage} (concurrent, no locking on lookups) that is emptied once it holds {@code maxSize} entries; the bound is approximate under concurrency.
+     */
+    static class BoundedSoftCacheStorage extends SoftCacheStorage {
+
+        private final int maxSize;
+
+        BoundedSoftCacheStorage(int maxSize) {
+            this.maxSize = maxSize;
+        }
+
+        @Override
+        public void put(Object key, Object value) {
+            if (getSize() >= maxSize && get(key) == null) {
+                clear();
+            }
+            super.put(key, value);
         }
     }
 

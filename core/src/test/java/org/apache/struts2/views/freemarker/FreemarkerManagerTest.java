@@ -19,6 +19,8 @@
 package org.apache.struts2.views.freemarker;
 
 import org.apache.struts2.util.fs.DefaultFileManagerFactory;
+import freemarker.cache.CacheStorageWithGetSize;
+import freemarker.cache.ConcurrentCacheStorage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -30,6 +32,7 @@ import jakarta.servlet.ServletContext;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -137,6 +140,23 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
         // then
         assertFalse(manager.config.getWhitespaceStripping());
+    }
+
+    public void testTemplateCacheIsBoundedByDefault() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        Configuration configuration = manager.getConfiguration(servletContext);
+
+        // when
+        for (int i = 0; i < FreemarkerManager.MAX_CACHED_TEMPLATES + 100; i++) {
+            configuration.getTemplate("org/apache/struts2/views/freemarker/nested.ftl", new Locale("xx", "YY", "v" + i));
+        }
+
+        // then
+        CacheStorageWithGetSize storage = (CacheStorageWithGetSize) configuration.getCacheStorage();
+        assertTrue(storage.getSize() <= FreemarkerManager.MAX_CACHED_TEMPLATES);
+        assertTrue(((ConcurrentCacheStorage) storage).isConcurrent());
     }
 }
 

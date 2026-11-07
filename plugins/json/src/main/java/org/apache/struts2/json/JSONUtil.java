@@ -565,6 +565,30 @@ public class JSONUtil {
         return StringUtils.contains(request.getHeader("Accept-Encoding"), "gzip");
     }
 
+    /**
+     * A JSONP {@code callback} request parameter value must be a (dotted) JavaScript
+     * identifier, matching every real-world JSONP server implementation's own validation.
+     * {@link JSONResult#addCallbackIfApplicable(HttpServletRequest, String)} and
+     * {@link JSONInterceptor#addCallbackIfApplicable(HttpServletRequest, String)} both
+     * concatenate the callback parameter's raw value directly around the serialized JSON
+     * ({@code callbackName + "(" + json + ")"}) with no check at all -- any character,
+     * including {@code )}, {@code ;}, and further script text, passes straight into the
+     * response body that a consumer loads as a {@code <script src="...">}. An unvalidated
+     * value there lets the parameter inject and execute arbitrary script in whatever page
+     * includes the JSONP endpoint, not merely a differently-named callback function.
+     *
+     * @param callbackName the raw {@code request.getParameter(callbackParameter)} value
+     * @return true if {@code callbackName} is safe to use as-is as a JS callback identifier
+     * @since 7.5.0
+     */
+    public static boolean isValidJsonpCallbackName(String callbackName) {
+        return callbackName != null && callbackName.length() <= 128
+                && JSONP_CALLBACK_PATTERN.matcher(callbackName).matches();
+    }
+
+    private static final Pattern JSONP_CALLBACK_PATTERN =
+            Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
+
     public static final String REGEXP_PATTERN = "regexp";
     public static final String WILDCARD_PATTERN = "wildcard";
     /* package */ static final String SPLIT_PATTERN = "split";

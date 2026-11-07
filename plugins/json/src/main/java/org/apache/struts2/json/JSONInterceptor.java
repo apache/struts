@@ -541,8 +541,14 @@ public class JSONInterceptor extends AbstractInterceptor {
     protected String addCallbackIfApplicable(HttpServletRequest request, String json) {
         if ((callbackParameter != null) && (callbackParameter.length() > 0)) {
             String callbackName = request.getParameter(callbackParameter);
-            if ((callbackName != null) && (callbackName.length() > 0))
+            if ((callbackName != null) && (callbackName.length() > 0)) {
+                if (!JSONUtil.isValidJsonpCallbackName(callbackName)) {
+                    LOG.warn("Rejecting JSONP callback parameter '{}' -- not a valid (dotted) "
+                            + "JS identifier, refusing to wrap the response with it", callbackName);
+                    return json;
+                }
                 json = callbackName + "(" + json + ")";
+            }
         }
         return json;
     }

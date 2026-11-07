@@ -34,6 +34,7 @@ import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collection;
@@ -151,21 +152,46 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
     public void testPathInExemptedPaths() throws Exception {
         request.addHeader(SEC_FETCH_SITE_HEADER, "foo");
-        request.setContextPath("/foo");
+        request.setServletPath("/foo");
 
         assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
     }
 
     public void testPathNotInExemptedPaths() throws Exception {
         request.addHeader(SEC_FETCH_SITE_HEADER, "foo");
-        request.setContextPath("/foobar");
+        request.setServletPath("/foobar");
 
         assertEquals("Expected interceptor to NOT accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
     }
 
+    public void testPathInfoInExemptedPaths() throws Exception {
+        interceptor.setExemptedPaths("/rest/orders");
+        request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+        request.setServletPath("/rest");
+        request.setPathInfo("/orders");
+
+        assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+    }
+
+    public void testContextPathInExemptedPathsDoesNotExempt() throws Exception {
+        request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+        request.setContextPath("/foo");
+        request.setServletPath("/index.action");
+
+        assertEquals("Expected interceptor to NOT accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+    }
+
+    public void testIncludedPathInExemptedPaths() throws Exception {
+        request.addHeader(SEC_FETCH_SITE_HEADER, SITE_CROSS_SITE);
+        request.setServletPath("/outer.action");
+        request.setAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH, "/foo");
+
+        assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
+    }
+
     public void testVaryHeaderAcceptedReq() throws Exception {
         request.addHeader(SEC_FETCH_SITE_HEADER, "foo");
-        request.setContextPath("/foo");
+        request.setServletPath("/foo");
 
         interceptor.intercept(mai);
 
@@ -223,11 +249,11 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         FetchMetadataInterceptor configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
         request.removeHeader(SEC_FETCH_SITE_HEADER);
         request.addHeader(SEC_FETCH_SITE_HEADER, "foo");
-        request.setContextPath("/foo");
+        request.setServletPath("/foo");
         assertEquals("Expected interceptor to NOT accept this request [/foo]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
-        request.setContextPath("/fetchMetadataExemptedGlobal");
+        request.setServletPath("/fetchMetadataExemptedGlobal.action");
         assertNotEquals("Expected interceptor to accept this request [/fetchMetadataExemptedGlobal]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
-        request.setContextPath("/someOtherPath");
+        request.setServletPath("/someOtherPath.action");
         assertNotEquals("Expected interceptor to accept this request [/someOtherPath]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
 
         // The test configuration in "struts-testing.xml" should also contain three actions configured differently for the "fetchMetadata" interceptor.
@@ -258,8 +284,8 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
         request.removeHeader(SEC_FETCH_SITE_HEADER);
         request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataExemptedActionConfig.getName());
-        request.setContextPath("/" + fetchMetadataExemptedActionConfig.getName());
-        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+        request.setServletPath("/" + fetchMetadataExemptedActionConfig.getName() + ".action");
+        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedActionConfig.getName() + ".action" + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
 
         // Test fetchMetadata interceptor for the "fetchMetadataNotExempted" action.
         currentActionInterceptors = fetchMetadataNotExemptedActionConfig.getInterceptors();
@@ -278,8 +304,8 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
         request.removeHeader(SEC_FETCH_SITE_HEADER);
         request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataNotExemptedActionConfig.getName());
-        request.setContextPath("/" + fetchMetadataNotExemptedActionConfig.getName());
-        assertEquals("Expected interceptor to NOT accept this request [" + "/" + fetchMetadataNotExemptedActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+        request.setServletPath("/" + fetchMetadataNotExemptedActionConfig.getName() + ".action");
+        assertEquals("Expected interceptor to NOT accept this request [" + "/" + fetchMetadataNotExemptedActionConfig.getName() + ".action" + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
 
         // Test fetchMetadata interceptor for the "fetchMetadataExemptedGlobal" action.
         currentActionInterceptors = fetchMetadataExemptedGlobalActionConfig.getInterceptors();
@@ -298,8 +324,8 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
         request.removeHeader(SEC_FETCH_SITE_HEADER);
         request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataExemptedGlobalActionConfig.getName());
-        request.setContextPath("/" + fetchMetadataExemptedGlobalActionConfig.getName());
-        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedGlobalActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+        request.setServletPath("/" + fetchMetadataExemptedGlobalActionConfig.getName() + ".action");
+        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedGlobalActionConfig.getName() + ".action" + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
     }
 
 }

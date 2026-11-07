@@ -19,6 +19,7 @@
 package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.RequestUtils;
 import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.interceptor.PreResultListener;
 import org.apache.struts2.util.TextParseUtil;
@@ -58,7 +59,7 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletRequest req = invocation.getInvocationContext().getServletRequest();
-        final String path = req.getContextPath();
+        final String path = RequestUtils.getUri(req);
 
         if (exemptedPaths.contains(path)) {
             // no need to add headers

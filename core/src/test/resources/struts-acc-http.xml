@@ -1,0 +1,15 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 7.5//EN" "https://struts.apache.org/dtds/struts-7.5.dtd">
+<struts>
+    <package name="acc">
+        <result-types><result-type name="httpheader" class="org.apache.struts2.result.HttpHeaderResult" default="true"/></result-types>
+        <interceptors><interceptor name="httpMethod" class="org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor"/></interceptors>
+        <default-interceptor-ref name="httpMethod"/>
+        <action name="ExecutePost" class="org.apache.struts2.access.AccHttpActions$ExecutePost"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="NamedPost" class="org.apache.struts2.access.AccHttpActions$NamedPost" method="save"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="ClassPost" class="org.apache.struts2.access.AccHttpActions$ClassPost"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="SubOfClassPost" class="org.apache.struts2.access.AccHttpActions$SubOfClassPost"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="SubOverride" class="org.apache.struts2.access.AccHttpActions$SubOverride" method="save"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="SubOfImplementsMethodMarker" class="org.apache.struts2.access.AccHttpActions$SubOfImplementsMethodMarker" method="save"><result type="httpheader"><param name="status">204</param></result></action>
+        <action name="SubOfImplementsClassMarker" class="org.apache.struts2.access.AccHttpActions$SubOfImplementsClassMarker"><result type="httpheader"><param name="status">204</param></result></action>
+    </package>
+</struts>

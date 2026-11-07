@@ -1,0 +1,50 @@
+<tr>
+    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
+    <td class="tdInput">
+<select name="foo" id="foo" onchange="fooRedirect(this.selectedIndex)">
+    <option value="BE" selected="selected">Belgium</option>
+    <option value="FR">France</option>
+</select>
+<br/>
+<select name="region" id="region" multiple="multiple">
+</select>
+<input type="hidden" id="__multiselect_region" name="__multiselect_region" value=""/>
+<script>
+    var fooGroup = new Array(2 + 0);
+    for (var i = 0; i < (2 + 0); i++) {
+    fooGroup[i] = [];
+    }
+
+    fooGroup[0][0] = new Option("Antwerp", "AN");
+    fooGroup[0][1] = new Option("Gent", "GN");
+    fooGroup[0][2] = new Option("Brugge", "BRG");
+    fooGroup[1][0] = new Option("Paris", "PA");
+    fooGroup[1][1] = new Option("Bordeaux", "BOR");
+
+    var fooTemp = document.inputForm.region;
+    var fooSelected = ["AN", "GN"];
+    fooRedirect(0);
+
+    function fooRedirect(x) {
+    	var selected = false;
+        for (var m = fooTemp.options.length - 1; m >= 0; m--) {
+            fooTemp.remove(m);
+        }
+
+        for (var i = 0; i < fooGroup[x].length; i++) {
+            fooTemp.options[i] = new Option(fooGroup[x][i].text, fooGroup[x][i].value);
+            for (var j = 0; j < fooSelected.length; j++) {
+                if (fooTemp.options[i].value == fooSelected[j]) {
+                    fooTemp.options[i].selected = true;
+                    selected = true;
+                }
+            }
+        }
+
+        if ((fooTemp.options.length > 0)  && (! selected)) {
+            fooTemp.options[0].selected = true;
+        }
+    }
+</script>
+    </td>
+</tr>

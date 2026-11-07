@@ -88,7 +88,7 @@ public class DynamicFileUploadAction extends ActionSupport implements Preparable
             this.uploadedFile = uploadedFiles.get(0);
             this.fileName = uploadedFile.getName();
             this.contentType = uploadedFile.getContentType();
-            this.originalName = uploadedFile.getOriginalName();
+            this.originalName = uploadedFile.getSanitizedOriginalName();
             this.inputName = uploadedFile.getInputName();
         }
     }

@@ -33,7 +33,7 @@ public class ResourceUtilTest extends TestCase {
 
     public void testGetResourceBase() throws Exception {
         expect(requestMock.getServletPath()).andReturn("/mycontext/");
-        expect(requestMock.getRequestURI()).andReturn("/mycontext/");
+        expect(requestMock.getPathInfo()).andReturn(null);
         replay(requestMock);
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));
         verify(requestMock);
@@ -41,7 +41,7 @@ public class ResourceUtilTest extends TestCase {
         reset(requestMock);
 
         expect(requestMock.getServletPath()).andReturn("/mycontext/test.jsp");
-        expect(requestMock.getRequestURI()).andReturn("/mycontext/test.jsp");
+        expect(requestMock.getPathInfo()).andReturn(null);
         replay(requestMock);
         
         assertEquals("/mycontext", ResourceUtil.getResourceBase(requestMock));

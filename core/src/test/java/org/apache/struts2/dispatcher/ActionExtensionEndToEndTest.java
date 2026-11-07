@@ -161,6 +161,7 @@ public class ActionExtensionEndToEndTest extends StrutsInternalTestCase {
     private void doFilter(String uri) throws ServletException, IOException {
         request = new MockHttpServletRequest(servletContext);
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         response = new MockHttpServletResponse();
         filterChain = new MockFilterChain();
         filter.doFilter(request, response, filterChain);

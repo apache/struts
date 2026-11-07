@@ -24,7 +24,7 @@ import org.apache.struts2.RequestUtils;
 public class ResourceUtil {
     public static String getResourceBase(HttpServletRequest req) {
         String path = RequestUtils.getServletPath(req);
-        if (path == null || path.isEmpty()) {
+        if (path.isEmpty()) {
             return "";
         }
 

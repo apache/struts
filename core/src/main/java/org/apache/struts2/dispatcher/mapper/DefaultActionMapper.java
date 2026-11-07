@@ -283,9 +283,6 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping mapping = new ActionMapping();
         String uri = RequestUtils.getUri(request);
 
-        int indexOfSemicolon = uri.indexOf(';');
-        uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
-
         String declaredUri = stripDeclaredExtension(uri, mapping, configManager);
         uri = declaredUri != null ? declaredUri : dropExtension(uri, mapping);
         if (uri == null) {

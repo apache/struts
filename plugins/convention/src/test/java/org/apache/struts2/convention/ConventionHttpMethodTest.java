@@ -129,6 +129,7 @@ public class ConventionHttpMethodTest extends StrutsJUnit4TestCase<Object> {
     private void dispatch(String httpMethod, String uri) throws Exception {
         request.setMethod(httpMethod);
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         ActionMapping mapping = getActionMapping(request);
         assertNotNull(mapping);
         Dispatcher.getInstance().serviceAction(request, response, mapping);

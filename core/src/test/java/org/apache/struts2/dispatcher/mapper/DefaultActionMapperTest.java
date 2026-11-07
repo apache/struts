@@ -284,16 +284,24 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     }
 
     @SuppressWarnings("rawtypes")
-    public void testGetUriWithSemicolonPresent() {
+    public void testGetUriWithPathParametersStrippedByTheContainer() {
         req.setParameters(new HashMap());
         req.setRequestURI("/my/namespace/actionName.action;abc=123rty56");
-        req.setServletPath("/my/namespace/actionName.action;abc=123rty56");
-
-
+        req.setServletPath("/my/namespace/actionName.action");
 
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
         assertEquals("/my/namespace/actionName.action", mapper.getUriFromActionMapping(mapping));
+    }
+
+    @SuppressWarnings("rawtypes")
+    public void testSemicolonInTheServletPathIsNotSpecial() {
+        req.setParameters(new HashMap());
+        req.setRequestURI("/my/namespace/actionName.action;abc=123rty56");
+        req.setServletPath("/my/namespace/actionName.action;abc=123rty56");
+
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        assertNull(mapper.getMapping(req, configManager));
     }
 
     @SuppressWarnings("rawtypes")

@@ -55,6 +55,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/foo.action");
+        request.setServletPath("/foo.action");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
@@ -76,6 +77,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/hello.action");
+        request.setServletPath("/hello.action");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
@@ -97,6 +99,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/hello.action");
+        request.setServletPath("/hello.action");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
@@ -112,6 +115,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
             }
         };
         request.setRequestURI("hello.jsp");
+        request.setServletPath("hello.jsp");
         filter.doFilter(request, response, filterChain2);
         assertEquals(200, response.getStatus());
         assertNull(ActionContext.getContext());
@@ -133,6 +137,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/hello.action");
+        request.setServletPath("/hello.action");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
@@ -159,6 +164,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/foo.txt");
+        request.setServletPath("/foo.txt");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
@@ -181,6 +187,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/static/utils.js");
+        request.setServletPath("/static/utils.js");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);

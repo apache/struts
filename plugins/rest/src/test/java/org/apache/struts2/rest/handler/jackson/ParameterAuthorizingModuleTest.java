@@ -151,6 +151,30 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         assertNull(result.addresses.get(0).zip);
     }
 
+    public void testNestedListUsesOneIndexPerContainerLevel() throws Exception {
+        bind((path, t, a) -> "addressRows".equals(path) || "addressRows[0][0].city".equals(path), new Person());
+        Person result = mapper.readValue(
+                "{\"addressRows\":[[{\"city\":\"Warsaw\",\"zip\":\"00-001\"}]]}", Person.class);
+        assertEquals("Warsaw", result.addressRows.get(0).get(0).city);
+        assertNull(result.addressRows.get(0).get(0).zip);
+    }
+
+    public void testMapOfListUsesOneIndexPerContainerLevel() throws Exception {
+        bind((path, t, a) -> "addressesByKey".equals(path) || "addressesByKey[0][0].city".equals(path), new Person());
+        Person result = mapper.readValue(
+                "{\"addressesByKey\":{\"home\":[{\"city\":\"Warsaw\",\"zip\":\"00-001\"}]}}", Person.class);
+        assertEquals("Warsaw", result.addressesByKey.get("home").get(0).city);
+        assertNull(result.addressesByKey.get("home").get(0).zip);
+    }
+
+    public void testArrayOfArrayUsesOneIndexPerContainerLevel() throws Exception {
+        bind((path, t, a) -> "addressGrid".equals(path) || "addressGrid[0][0].city".equals(path), new Person());
+        Person result = mapper.readValue(
+                "{\"addressGrid\":[[{\"city\":\"Warsaw\",\"zip\":\"00-001\"}]]}", Person.class);
+        assertEquals("Warsaw", result.addressGrid[0][0].city);
+        assertNull(result.addressGrid[0][0].zip);
+    }
+
     public void testArrayUsesIndexedPath() throws Exception {
         bind((path, t, a) -> "addressArray".equals(path) || "addressArray[0].city".equals(path), new Person());
         Person result = mapper.readValue(
@@ -1168,6 +1192,9 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         public java.util.List<Address> addresses;
         public Address[] addressArray;
         public java.util.Map<String, Address> addressMap;
+        public java.util.List<java.util.List<Address>> addressRows;
+        public java.util.Map<String, java.util.List<Address>> addressesByKey;
+        public Address[][] addressGrid;
         public RecordAddress recordAddress;
     }
 

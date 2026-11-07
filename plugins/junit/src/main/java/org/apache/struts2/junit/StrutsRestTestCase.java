@@ -69,6 +69,7 @@ public class StrutsRestTestCase<T> extends StrutsJUnit4TestCase<T> {
      */
     protected String executeAction(String httpMethod, String uri) throws ServletException, UnsupportedEncodingException {
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         request.setMethod(httpMethod);
 
         ActionMapping mapping = getActionMapping(request);
@@ -106,6 +107,7 @@ public class StrutsRestTestCase<T> extends StrutsJUnit4TestCase<T> {
      */
     protected ActionProxy getActionProxy(String httpMethod, String uri) {
         request.setRequestURI(uri);
+        request.setServletPath(uri);
         request.setMethod(httpMethod);
 
         ActionMapping mapping = getActionMapping(request);

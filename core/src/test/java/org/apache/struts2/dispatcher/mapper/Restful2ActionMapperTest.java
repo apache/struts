@@ -45,6 +45,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         req = new MockHttpServletRequest();
         req.setupGetParameterMap(new HashMap());
         req.setupGetContextPath("/my/namespace");
+        req.setupPathInfo(null);
 
         config = new DefaultConfiguration();
         PackageConfig pkg = new PackageConfig.Builder("myns")

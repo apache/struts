@@ -68,6 +68,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test2.action");
+        request.setServletPath("/tutorial/test2.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         assertEquals("beforenestedafter", stringWriter.toString());
@@ -83,6 +84,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test5.action");
+        request.setServletPath("/tutorial/test5.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         assertEquals("beforenestedafter", stringWriter.toString());
@@ -116,6 +118,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test6.action");
+        request.setServletPath("/tutorial/test6.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
@@ -155,6 +158,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test7.action");
+        request.setServletPath("/tutorial/test7.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String expected = "<input type=\"radio\" name=\"client\" id=\"client_foo\" value=\"foo\"/><label for=\"client_foo\">foo</label>\n"
@@ -177,6 +181,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test8.action");
+        request.setServletPath("/tutorial/test8.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String expected = "<input type=\"text\"autofocus=\"autofocus\"/>";
@@ -221,6 +226,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         request.setRequestURI("/tutorial/test9.action");
+        request.setServletPath("/tutorial/test9.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String result = stringWriter.toString();
@@ -263,6 +269,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         request.getSession().setAttribute("nonce", "aNonce");
 
         request.setRequestURI("/tutorial/test10.action");
+        request.setServletPath("/tutorial/test10.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
@@ -317,6 +324,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         });
 
         request.setRequestURI("/tutorial/test11.action");
+        request.setServletPath("/tutorial/test11.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String result = stringWriter.toString();

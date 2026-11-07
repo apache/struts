@@ -79,4 +79,26 @@ public class JSONUtilTest extends TestCase {
         assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);
     }
 
+    /**
+     * Shared helper used by both JSONP sink sites ({@link JSONResult#addCallbackIfApplicable}
+     * and {@link JSONInterceptor#addCallbackIfApplicable}) to reject a callback parameter
+     * value that is not a plain (dotted) JS identifier -- the check both call sites were
+     * missing.
+     */
+    public void testIsValidJsonpCallbackName() {
+        // control: identifiers real JSONP clients actually send
+        assertTrue(JSONUtil.isValidJsonpCallbackName("exec"));
+        assertTrue(JSONUtil.isValidJsonpCallbackName("_cb$1"));
+        assertTrue(JSONUtil.isValidJsonpCallbackName("jQuery123.ajaxCallback"));
+
+        // benign marker values standing in for "the callback parameter carries more than a
+        // function name" -- none of these are real exploit payloads
+        assertFalse(JSONUtil.isValidJsonpCallbackName("cb);STRUTS_PROBE_MARKER;("));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("cb\nSTRUTS_PROBE_MARKER"));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("</script><STRUTS_PROBE_MARKER>"));
+        assertFalse(JSONUtil.isValidJsonpCallbackName(""));
+        assertFalse(JSONUtil.isValidJsonpCallbackName(null));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("a".repeat(129)));
+    }
+
 }

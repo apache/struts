@@ -16,6 +16,7 @@
       "Bash(git log:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
+      "Bash(gh pr review:*)",
       "Bash(gh pr create:*)",
       "mcp__jetbrains"
     ],

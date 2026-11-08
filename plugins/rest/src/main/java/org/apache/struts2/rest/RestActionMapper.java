@@ -86,6 +86,13 @@ import java.util.HashMap;
  * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,
  * the HTTP parameter "_method" will be used.
  * </p>
+ * <p>
+ * The {@code httpMethod} interceptor checks the actual request method, not {@code _method}.
+ * A handler used by a POST form must allow POST, even when {@code _method} routes it to
+ * {@code update} or {@code destroy}. {@code @HttpPut} and {@code @HttpDelete} alone require
+ * actual PUT and DELETE requests; add {@code @HttpPost} to also accept tunneled POST forms.
+ * XML {@code http-method} restrictions must likewise allow the actual request method.
+ * </p>
  * <!-- END SNIPPET: description -->
  */
 public class RestActionMapper extends DefaultActionMapper {

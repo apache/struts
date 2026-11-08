@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.httpmethod;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.action.Action;
 import org.apache.struts2.interceptor.AbstractInterceptor;
@@ -32,11 +33,13 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,6 +56,11 @@ import java.util.stream.Collectors;
  * {@link HttpPut}, {@link HttpDelete} and {@link HttpGetOrPost}
  * <p>
  * You can combine any of these annotations to achieve required allowed methods' filtering.
+ * <p>
+ * Method annotations apply to the invoked method, including the implicit {@code execute()} method.
+ * Its annotation takes precedence; otherwise annotated declarations are looked up through the class
+ * and interface hierarchy. Class annotations are looked up only when no method annotation is found.
+ * Restrictions apply to {@link HttpServletRequest#getMethod()}, not a {@code _method} parameter.
  * <p>
  * The allowed methods can also be declared on the action in XML with the {@code http-method} attribute.
  * When both the attribute and annotations are present, the request method must satisfy both.
@@ -97,18 +105,20 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
             ((HttpMethodAware) (action)).setMethod(HttpMethod.parse(request.getMethod()));
         }
 
-        if (invocation.getProxy().isMethodSpecified()) {
-            Method method = action.getClass().getMethod(invocation.getProxy().getMethod());
-            if (AnnotationUtils.isAnnotatedBy(method, HTTP_METHOD_ANNOTATIONS)) {
+        Method method = resolveInvokedMethod(invocation);
+        if (method != null) {
+            AnnotatedElement methodElement = findNearestAnnotatedOverride(action.getClass(), method);
+            if (methodElement != null) {
                 LOG.debug("Action's method: {} annotated with: {}, checking if request: {} meets allowed methods!",
                     invocation.getProxy().getMethod(), AllowedHttpMethod.class.getSimpleName(), request.getMethod());
-                return doIntercept(invocation, method);
+                return doIntercept(invocation, methodElement);
             }
         }
-        if (AnnotationUtils.isAnnotatedBy(action.getClass(), HTTP_METHOD_ANNOTATIONS)) {
+        AnnotatedElement classElement = findNearestAnnotatedType(action.getClass());
+        if (classElement != null) {
             LOG.debug("Action: {} annotated with: {}, checking if request: {} meets allowed methods!",
                 action, AllowedHttpMethod.class.getSimpleName(), request.getMethod());
-            return doIntercept(invocation, action.getClass());
+            return doIntercept(invocation, classElement);
         }
 
         Set<HttpMethod> configuredMethods = invocation.getProxy().getConfig().getHttpMethods();
@@ -131,6 +141,83 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         }
 
         return checkAllowedMethods(invocation, allowedMethods);
+    }
+
+    private Method resolveInvokedMethod(ActionInvocation invocation) throws NoSuchMethodException {
+        String methodName = invocation.getProxy().getMethod();
+        if (methodName == null || methodName.isEmpty()) {
+            return null;
+        }
+        try {
+            return invocation.getAction().getClass().getMethod(methodName);
+        } catch (NoSuchMethodException e) {
+            if (invocation.getProxy().isMethodSpecified()) {
+                throw e;
+            }
+            // An absent implicit execute() can be handled by an UnknownHandler during invocation.
+            return null;
+        }
+    }
+
+    /** Resolves the invoked method first, then annotated declarations at each class and its interfaces. */
+    private AnnotatedElement findNearestAnnotatedOverride(Class<?> actionClass, Method method) {
+        if (!isPublicInstanceMethod(method)) {
+            return null;
+        }
+        if (AnnotationUtils.isAnnotatedBy(method, HTTP_METHOD_ANNOTATIONS)) {
+            return method;
+        }
+        for (Class<?> type = actionClass; type != null; type = type.getSuperclass()) {
+            AnnotatedElement found = declaredOverrideAnnotatedIn(type, method);
+            if (found != null) {
+                return found;
+            }
+            for (Class<?> iface : interfacesAtLevel(type)) {
+                found = declaredOverrideAnnotatedIn(iface, method);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private AnnotatedElement declaredOverrideAnnotatedIn(Class<?> type, Method method) {
+        try {
+            Method candidate = type.getDeclaredMethod(method.getName(), method.getParameterTypes());
+            return isPublicInstanceMethod(candidate) && AnnotationUtils.isAnnotatedBy(candidate, HTTP_METHOD_ANNOTATIONS)
+                ? candidate : null;
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private boolean isPublicInstanceMethod(Method method) {
+        return Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers());
+    }
+
+    /** Checks each class before its interfaces, including their superinterfaces, then its superclass. */
+    private AnnotatedElement findNearestAnnotatedType(Class<?> actionClass) {
+        for (Class<?> type = actionClass; type != null; type = type.getSuperclass()) {
+            if (AnnotationUtils.isAnnotatedBy(type, HTTP_METHOD_ANNOTATIONS)) {
+                return type;
+            }
+            for (Class<?> iface : interfacesAtLevel(type)) {
+                if (AnnotationUtils.isAnnotatedBy(iface, HTTP_METHOD_ANNOTATIONS)) {
+                    return iface;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Set<Class<?>> interfacesAtLevel(Class<?> type) {
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+        for (Class<?> iface : type.getInterfaces()) {
+            interfaces.add(iface);
+            interfaces.addAll(ClassUtils.getAllInterfaces(iface));
+        }
+        return interfaces;
     }
 
     private String checkAllowedMethods(ActionInvocation invocation, Set<HttpMethod> allowedMethods) throws Exception {

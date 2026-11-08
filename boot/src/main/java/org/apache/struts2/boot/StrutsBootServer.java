@@ -20,6 +20,7 @@ package org.apache.struts2.boot;
 
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.SessionTrackingMode;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.connector.Connector;
@@ -30,6 +31,7 @@ import org.apache.struts2.config.ConfigurationException;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -71,6 +74,7 @@ public final class StrutsBootServer implements AutoCloseable {
             hideErrorReportDetails(tomcat);
             Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
             Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
+            restrictSessionTracking(context);
             context.addServletContainerInitializer(
                     (classes, servletContext) -> servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry),
                     null);
@@ -175,6 +179,20 @@ public final class StrutsBootServer implements AutoCloseable {
             String reason = initFailure == null ? "context state " + context.getState() : rootMessage(initFailure);
             throw new ConfigurationException("Struts Boot failed to start: " + reason, initFailure);
         }
+    }
+
+    /**
+     * Restricts the embedded context to cookie-only session tracking with {@code SameSite=Lax};
+     * Secure is left to the operator's TLS setup.
+     */
+    private static void restrictSessionTracking(Context context) {
+        // Tomcat defaults to COOKIE+URL when no web.xml sets <tracking-mode>; keep cookies only.
+        context.addServletContainerInitializer(
+                (classes, servletContext) -> servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE)),
+                null);
+        Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
+        cookieProcessor.setSameSiteCookies("lax");
+        context.setCookieProcessor(cookieProcessor);
     }
 
     private static void hideErrorReportDetails(Tomcat tomcat) {

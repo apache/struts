@@ -125,6 +125,41 @@ public class StrutsBootTomcatTest {
         assertThat(response.body()).doesNotContain("at org.apache").doesNotContain("Apache Tomcat/");
     }
 
+    /** The session cookie carries {@code SameSite=Lax}. */
+    @Test
+    public void testSessionCookieHasSameSiteLax() throws Exception {
+        HttpResponse<String> response = get(server.baseUrl() + "/sessionProbe.action");
+
+        assertThat(response.headers().firstValue("Set-Cookie")).hasValueSatisfying(cookie ->
+                assertThat(cookie).contains("SameSite=Lax"));
+    }
+
+    /** A session id supplied only in the URL is not resumed; the cookie-based flow still is. */
+    @Test
+    public void testUrlSuppliedSessionIdIsNotHonored() throws Exception {
+        HttpResponse<String> first = get(server.baseUrl() + "/sessionProbe.action");
+        assertThat(first.body()).contains("COUNTER=1");
+        String sessionId = extractSessionId(first);
+
+        HttpResponse<String> viaUrl = get(server.baseUrl() + "/sessionProbe.action;jsessionid=" + sessionId);
+        assertThat(viaUrl.body()).contains("COUNTER=1");
+        assertThat(extractSessionId(viaUrl)).isNotEqualTo(sessionId);
+
+        // Control: the ordinary cookie-based flow still resumes the same session.
+        HttpResponse<String> viaCookie = CLIENT.send(
+                HttpRequest.newBuilder(URI.create(server.baseUrl() + "/sessionProbe.action"))
+                        .header("Cookie", "JSESSIONID=" + sessionId)
+                        .GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertThat(viaCookie.body()).contains("COUNTER=2");
+    }
+
+    private static String extractSessionId(HttpResponse<String> response) {
+        String setCookie = response.headers().firstValue("Set-Cookie")
+                .orElseThrow(() -> new AssertionError("Expected a Set-Cookie header"));
+        return setCookie.substring("JSESSIONID=".length(), setCookie.indexOf(';'));
+    }
+
     @Test
     public void testAddressRestrictsListeningInterface() throws Exception {
         try (StrutsBootServer local = StrutsBoot.start(HelloApp.class, "--struts.boot.port=0", "--struts.boot.address=127.0.0.1")) {

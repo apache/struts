@@ -540,6 +540,207 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
     }
 
+    public void testMissingExplicitMethodThrowsForGet() throws Exception {
+        assertMissingExplicitMethodThrows("GET");
+    }
+
+    public void testMissingExplicitMethodThrowsForPost() throws Exception {
+        assertMissingExplicitMethodThrows("POST");
+    }
+
+    private void assertMissingExplicitMethodThrows(String httpMethod) throws Exception {
+        prepareActionInvocation(new HttpMethodsTestAction(), actionConfig());
+        actionProxy.setMethod("missingMethod");
+        actionProxy.setMethodSpecified(true);
+        MockHttpServletResponse response = prepareRequest(httpMethod);
+
+        try {
+            interceptor.intercept(invocation);
+            fail("An explicitly configured missing method must throw");
+        } catch (NoSuchMethodException expected) {
+            assertTrue(expected.getMessage().contains("missingMethod"));
+        }
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testMissingImplicitExecuteReachesInvocation() throws Exception {
+        prepareActionInvocation(new Object(), actionConfig());
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(false);
+        invocation.setResultCode("unknown-handler-result");
+        MockHttpServletResponse response = prepareRequest("GET");
+
+        assertEquals("unknown-handler-result", interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testMissingImplicitExecuteStillChecksClassAnnotation() throws Exception {
+        prepareActionInvocation(new PostOnlyWithoutExecute(), actionConfig());
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(false);
+        invocation.setResultCode("success");
+        MockHttpServletResponse response = prepareRequest("GET");
+
+        assertEquals(Action.NONE, interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals("POST", response.getHeader("Allow"));
+
+        response = prepareRequest("POST");
+        assertEquals("success", interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testMissingImplicitExecuteStillChecksConfiguredHttpMethods() throws Exception {
+        ActionConfig config = new ActionConfig.Builder(actionConfig())
+            .addHttpMethods(List.of(HttpMethod.POST))
+            .build();
+        prepareActionInvocation(new Object(), config);
+        actionProxy.setMethod("execute");
+        actionProxy.setMethodSpecified(false);
+        invocation.setResultCode("success");
+        MockHttpServletResponse response = prepareRequest("GET");
+
+        assertEquals(Action.NONE, interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals("POST", response.getHeader("Allow"));
+
+        response = prepareRequest("POST");
+        assertEquals("success", interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testMethodAnnotationOnSuperinterfaceIsEnforced() throws Exception {
+        assertPostOnly(new TransitiveMethodAction(), "save");
+    }
+
+    public void testTypeAnnotationOnSuperinterfaceIsEnforced() throws Exception {
+        assertPostOnly(new TransitiveTypeAction(), "execute");
+    }
+
+    public void testInheritedClassMethodAnnotationPrecedesInterfaceAnnotation() throws Exception {
+        assertPostOnly(new ClassMethodAndInterfaceAction(), "save");
+    }
+
+    private void assertPostOnly(Object action, String method) throws Exception {
+        prepareActionInvocation(action, actionConfig());
+        actionProxy.setMethod(method);
+        actionProxy.setMethodSpecified(true);
+        invocation.setResultCode("success");
+        MockHttpServletResponse response = prepareRequest("GET");
+
+        assertEquals(Action.NONE, interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals("POST", response.getHeader("Allow"));
+
+        response = prepareRequest("POST");
+        assertEquals("success", interceptor.intercept(invocation));
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    public void testPrivateAncestorMethodDoesNotRestrictPublicActionMethod() throws Exception {
+        assertUnrestrictedMethod(new PublicMethodOverPrivateHelperAction());
+    }
+
+    public void testPrivateStaticAncestorMethodDoesNotRestrictPublicActionMethod() throws Exception {
+        assertUnrestrictedMethod(new PublicMethodOverStaticHelperAction());
+    }
+
+    public void testPackagePrivateAncestorMethodDoesNotRestrictPublicActionMethod() throws Exception {
+        assertUnrestrictedMethod(new PublicMethodOverPackageHelperAction());
+    }
+
+    public void testStaticInterfaceMethodDoesNotRestrictPublicActionMethod() throws Exception {
+        assertUnrestrictedMethod(new PublicMethodWithStaticInterfaceAction());
+    }
+
+    private void assertUnrestrictedMethod(Object action) throws Exception {
+        prepareActionInvocation(action, actionConfig());
+        actionProxy.setMethod("save");
+        actionProxy.setMethodSpecified(true);
+        invocation.setResultCode("success");
+        for (String method : List.of("GET", "POST")) {
+            MockHttpServletResponse response = prepareRequest(method);
+            assertEquals("success", interceptor.intercept(invocation));
+            assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        }
+    }
+
+    @HttpPost
+    public static class PostOnlyWithoutExecute {
+    }
+
+    public interface PostMethod {
+        @HttpPost
+        String save();
+    }
+
+    public interface DerivedPostMethod extends PostMethod {
+    }
+
+    public static class TransitiveMethodAction implements DerivedPostMethod {
+        public String save() { return "success"; }
+    }
+
+    @HttpPost
+    public interface PostType {
+    }
+
+    public interface DerivedPostType extends PostType {
+    }
+
+    public static class TransitiveTypeAction implements DerivedPostType {
+        public String execute() { return "success"; }
+    }
+
+    public static class PostMethodBase {
+        @HttpPost
+        public String save() { return "success"; }
+    }
+
+    public interface GetMethod {
+        @HttpGet
+        String save();
+    }
+
+    public static class ClassMethodAndInterfaceAction extends PostMethodBase implements GetMethod {
+    }
+
+    public static class PrivateHelperBase {
+        @HttpPost
+        private String save() { return "helper"; }
+    }
+
+    public static class PublicMethodOverPrivateHelperAction extends PrivateHelperBase {
+        public String save() { return "success"; }
+    }
+
+    public static class StaticHelperBase {
+        @HttpPost
+        private static String save() { return "helper"; }
+    }
+
+    public static class PublicMethodOverStaticHelperAction extends StaticHelperBase {
+        public String save() { return "success"; }
+    }
+
+    public static class PackageHelperBase {
+        @HttpPost
+        String save() { return "helper"; }
+    }
+
+    public static class PublicMethodOverPackageHelperAction extends PackageHelperBase {
+        public String save() { return "success"; }
+    }
+
+    public interface StaticMethod {
+        @HttpPost
+        static String save() { return "helper"; }
+    }
+
+    public static class PublicMethodWithStaticInterfaceAction implements StaticMethod {
+        public String save() { return "success"; }
+    }
+
     private ActionProxy proxyFor(String namespace, String actionName, String httpMethod, MockHttpServletResponse response) {
         loadConfigurationProviders(new StrutsXmlConfigurationProvider(
             "org/apache/struts2/config/providers/struts-http-method.xml"));

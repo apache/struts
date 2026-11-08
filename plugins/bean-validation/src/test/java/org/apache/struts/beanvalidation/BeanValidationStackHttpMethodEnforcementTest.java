@@ -31,11 +31,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Plugin-side analogue of plugins/rest's RestStackHttpMethodEnforcementTest. An action annotated
- * {@code @HttpPost} must not run for a GET. Core's defaultStack carries the httpMethod interceptor;
- * beanValidationDefaultStack (forked from it, WW-5718) did not - see ~/hunt/reports2/deep-httpmethod.md.
- */
+/** The Bean Validation default stack enforces HTTP method annotations. */
 public class BeanValidationStackHttpMethodEnforcementTest extends XWorkTestCase {
 
     @Override
@@ -49,9 +45,9 @@ public class BeanValidationStackHttpMethodEnforcementTest extends XWorkTestCase 
                 new StrutsBeanSelectionProvider());
     }
 
-    private int getAndReportStatus(String namespace) throws Exception {
+    private MockHttpServletResponse invoke(String namespace, String verb) throws Exception {
         PostOnlyAction.invoked = false;
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", namespace + "/mark");
+        MockHttpServletRequest request = new MockHttpServletRequest(verb, namespace + "/mark");
         MockHttpServletResponse response = new MockHttpServletResponse();
         Map<String, Object> ctx = new HashMap<>();
         ctx.put(StrutsStatics.HTTP_REQUEST, request);
@@ -59,16 +55,28 @@ public class BeanValidationStackHttpMethodEnforcementTest extends XWorkTestCase 
         ctx.putAll(ActionContext.of(ctx).withParameters(org.apache.struts2.dispatcher.HttpParameters.create(new HashMap<String, Object>()).build()).getContextMap());
         ActionProxy proxy = actionProxyFactory.createActionProxy(namespace, "mark", null, ctx);
         proxy.execute();
-        return response.getStatus();
+        return response;
     }
 
-    public void testControlCoreDefaultStackRejectsGetOnPostOnlyAction() throws Exception {
-        assertEquals(405, getAndReportStatus("/core"));
+    private void assertGetRejected(String namespace) throws Exception {
+        MockHttpServletResponse response = invoke(namespace, "GET");
+        assertEquals(405, response.getStatus());
+        assertEquals("POST", response.getHeader("Allow"));
         assertFalse("action must not run", PostOnlyAction.invoked);
     }
 
+    public void testControlCoreDefaultStackRejectsGetOnPostOnlyAction() throws Exception {
+        assertGetRejected("/core");
+    }
+
     public void testBeanValidationDefaultStackRejectsGetOnPostOnlyAction() throws Exception {
-        getAndReportStatus("/bv");
-        assertFalse("@HttpPost action ran for GET under beanValidationDefaultStack", PostOnlyAction.invoked);
+        assertGetRejected("/bv");
+    }
+
+    public void testBeanValidationDefaultStackAllowsPostOnPostOnlyAction() throws Exception {
+        MockHttpServletResponse response = invoke("/bv", "POST");
+        assertEquals(200, response.getStatus());
+        assertNull(response.getHeader("Allow"));
+        assertTrue("action must run", PostOnlyAction.invoked);
     }
 }

@@ -21,8 +21,7 @@ package org.apache.struts.beanvalidation;
 import org.apache.struts2.ActionSupport;
 import org.apache.struts2.interceptor.httpmethod.HttpPost;
 
-/** State-changing action that declares itself POST-only via the implicit execute() method - the
- *  shape most showcase/example actions actually use (no method= override). */
+/** Action that declares itself POST-only. */
 @HttpPost
 public class PostOnlyAction extends ActionSupport {
     public static volatile boolean invoked;

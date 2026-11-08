@@ -39,6 +39,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -469,6 +470,19 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertEquals(Action.NONE, resultName);
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
         assertEquals("GET", response.getHeader("Allow"));
+    }
+
+    public void testHttpMethodAwareActionWithUnknownRequestMethod() throws Exception {
+        HttpMethodsTestAction action = new HttpMethodsTestAction();
+        prepareActionInvocation(action, actionConfig());
+        MockHttpServletResponse response = prepareRequest("PROPFIND");
+
+        String resultName = interceptor.intercept(invocation);
+
+        assertEquals(Action.NONE, resultName);
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+        assertEquals("POST", response.getHeader("Allow"));
+        assertNull(action.getHttpMethod());
     }
 
     public void testHttpMethodAttributeRejectsWith405AndAllowHeader() throws Exception {

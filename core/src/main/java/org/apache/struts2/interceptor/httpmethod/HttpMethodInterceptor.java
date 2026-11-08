@@ -92,9 +92,10 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
 
         if (action instanceof HttpMethodAware) {
-            LOG.debug("Action: {} implements: {}, setting request method: {}",
-                action, HttpMethodAware.class.getSimpleName(), request.getMethod());
-            ((HttpMethodAware) (action)).setMethod(HttpMethod.parse(request.getMethod()));
+            HttpMethod requestedHttpMethod = HttpMethod.parseOrNull(request.getMethod());
+            LOG.debug("Action: {} implements: {}, setting request method: {} (parsed as: {})",
+                action, HttpMethodAware.class.getSimpleName(), request.getMethod(), requestedHttpMethod);
+            ((HttpMethodAware) (action)).setMethod(requestedHttpMethod);
         }
 
         if (invocation.getProxy().isMethodSpecified()) {

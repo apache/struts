@@ -539,6 +539,25 @@ public class JSONResultTest extends StrutsTestCase {
         assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
+    // control case: testJSONP()
+    public void testJSONPCallbackMustBeValidIdentifier() throws Exception {
+        JSONResult result = new JSONResult();
+        result.setCallbackParameter("callback");
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setWriter(new StrutsJSONWriter());
+        result.setJsonUtil(jsonUtil);
+
+        String notAnIdentifier = "cb);STRUTS_PROBE_MARKER;(";
+        request.addParameter("callback", notAnIdentifier);
+
+        executeTest2Action(result);
+        String json = response.getContentAsString();
+
+        assertFalse("Non-identifier callback value must not be concatenated into the response",
+                json.contains(notAnIdentifier));
+        assertFalse(json.contains("STRUTS_PROBE_MARKER"));
+    }
+
     public void testNoCache() throws Exception {
         JSONResult result = new JSONResult();
         result.setNoCache(true);

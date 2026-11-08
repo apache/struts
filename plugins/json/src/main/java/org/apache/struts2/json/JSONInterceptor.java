@@ -541,8 +541,13 @@ public class JSONInterceptor extends AbstractInterceptor {
     protected String addCallbackIfApplicable(HttpServletRequest request, String json) {
         if ((callbackParameter != null) && (callbackParameter.length() > 0)) {
             String callbackName = request.getParameter(callbackParameter);
-            if ((callbackName != null) && (callbackName.length() > 0))
+            if ((callbackName != null) && (callbackName.length() > 0)) {
+                if (!JSONUtil.isValidJsonpCallbackName(callbackName)) {
+                    LOG.warn("JSONP callback parameter [{}] is not a valid identifier; rejected", normalizeSpace(callbackName));
+                    return json;
+                }
                 json = callbackName + "(" + json + ")";
+            }
         }
         return json;
     }

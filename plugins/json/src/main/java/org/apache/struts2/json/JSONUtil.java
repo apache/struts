@@ -62,6 +62,9 @@ public class JSONUtil {
     /** Chunk size used to read input incrementally while applying the length limit. */
     private static final int READ_CHUNK_SIZE = 8192;
 
+    private static final Pattern JSONP_CALLBACK_PATTERN =
+            Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
+
     private JSONReader reader;
     private JSONWriter writer;
 
@@ -563,6 +566,19 @@ public class JSONUtil {
 
     public static boolean isGzipInRequest(HttpServletRequest request) {
         return StringUtils.contains(request.getHeader("Accept-Encoding"), "gzip");
+    }
+
+    /**
+     * Checks a JSONP callback name: a dotted ASCII identifier ({@code [A-Za-z_$][A-Za-z0-9_$]*},
+     * segments joined by {@code .}) of at most 128 characters.
+     *
+     * @param callbackName the requested callback name
+     * @return true if {@code callbackName} has that shape
+     * @since 7.5.0
+     */
+    public static boolean isValidJsonpCallbackName(String callbackName) {
+        return callbackName != null && callbackName.length() <= 128
+                && JSONP_CALLBACK_PATTERN.matcher(callbackName).matches();
     }
 
     public static final String REGEXP_PATTERN = "regexp";

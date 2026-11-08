@@ -79,4 +79,17 @@ public class JSONUtilTest extends TestCase {
         assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);
     }
 
+    public void testIsValidJsonpCallbackName() {
+        assertTrue(JSONUtil.isValidJsonpCallbackName("exec"));
+        assertTrue(JSONUtil.isValidJsonpCallbackName("_cb$1"));
+        assertTrue(JSONUtil.isValidJsonpCallbackName("jQuery123.ajaxCallback"));
+
+        assertFalse(JSONUtil.isValidJsonpCallbackName("cb);STRUTS_PROBE_MARKER;("));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("cb\nSTRUTS_PROBE_MARKER"));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("</script><STRUTS_PROBE_MARKER>"));
+        assertFalse(JSONUtil.isValidJsonpCallbackName(""));
+        assertFalse(JSONUtil.isValidJsonpCallbackName(null));
+        assertFalse(JSONUtil.isValidJsonpCallbackName("a".repeat(129)));
+    }
+
 }

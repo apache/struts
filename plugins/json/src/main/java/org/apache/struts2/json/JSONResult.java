@@ -282,6 +282,10 @@ public class JSONResult implements Result {
         if ((callbackParameter != null) && (callbackParameter.length() > 0)) {
             String callbackName = request.getParameter(callbackParameter);
             if (StringUtils.isNotEmpty(callbackName)) {
+                if (!JSONUtil.isValidJsonpCallbackName(callbackName)) {
+                    LOG.warn("JSONP callback parameter [{}] is not a valid identifier; rejected", StringUtils.normalizeSpace(callbackName));
+                    return json;
+                }
                 json = callbackName + "(" + json + ")";
             }
         }

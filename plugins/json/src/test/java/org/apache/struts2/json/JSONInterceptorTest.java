@@ -240,6 +240,35 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
+    public void testSMDInvalidJSONPCallbackLeavesJsonUnwrapped() throws Exception {
+        String json = executeSMDWithCallback("cb);STRUTS_PROBE_MARKER;(");
+
+        assertEquals(TestUtils.normalize(JSONResultTest.class.getResource("smd-11.txt")), TestUtils.normalize(json, true));
+        assertFalse(json.contains("STRUTS_PROBE_MARKER"));
+    }
+
+    public void testSMDValidJSONPCallbackWrapsJson() throws Exception {
+        String json = executeSMDWithCallback("exec");
+
+        assertTrue(json.startsWith("exec(") && json.endsWith(")"));
+        assertEquals(TestUtils.normalize(JSONResultTest.class.getResource("smd-11.txt")),
+                TestUtils.normalize(json.substring("exec(".length(), json.length() - 1), true));
+    }
+
+    private String executeSMDWithCallback(String callback) throws Exception {
+        setRequestContent("smd-6.txt");
+        this.request.addHeader("Content-Type", "application/json-rpc");
+        this.request.addParameter("callback", callback);
+
+        JSONInterceptor interceptor = createInterceptor();
+        interceptor.setEnableSMD(true);
+        interceptor.setCallbackParameter("callback");
+        this.invocation.setAction(new SMDActionTest1());
+
+        interceptor.intercept(this.invocation);
+        return response.getContentAsString();
+    }
+
     public void testSMDReturnObject() throws Exception {
         // request
         setRequestContent("smd-10.txt");

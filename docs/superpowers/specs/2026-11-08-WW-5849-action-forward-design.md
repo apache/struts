@@ -131,6 +131,11 @@ the target in the same request; the target's own result renders, as with `chain`
 8. **Depth limit, not name-history matching.** A constant caps nested forwards per request (counting
    `forward` only, not `<s:action>` or redirects); default 5; exceeding it throws `StrutsException`.
    No `skipActions` equivalent.
+   - **Cycle check at startup.** Because targets are static, the configuration defines the full
+     forward graph (explicit `forward` results plus Convention's implicit forwards). When the
+     configuration is built, cycles in that graph are detected and logged as a warning naming the
+     actions involved; in devMode they fail startup. Runtime result codes are unknown at startup,
+     so the depth limit stays as the runtime backstop.
 9. **Only explicit triggers.** No interceptor copies data, and `<s:action>` is unaffected.
 10. **The target runs its full interceptor stack**, including security and HTTP-method interceptors,
     which see the original request.

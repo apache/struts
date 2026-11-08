@@ -2,6 +2,8 @@
 
 The smallest Struts Boot application: one action, one FreeMarker template, no `web.xml`, no `struts.xml`.
 
+Struts Boot is experimental: its API and defaults may change between minor releases.
+
 ## Three steps
 
 1. Depend on `org.apache.struts:struts2-boot-starter`, at the same version as the rest of Struts. Importing

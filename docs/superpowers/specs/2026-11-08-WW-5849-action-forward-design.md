@@ -155,10 +155,16 @@ the opt-in and, where they need data, an explicit `forward` result (Convention's
 ### Migration aid
 
 During the deprecation phase (rollout step 2), `chain` logs — once per chain, at a level users can
-enable without noise — which properties `ChainingInterceptor` actually copied onto which target.
-Users derive each `forward` result's hand-off list from real traffic instead of reading code. The
-migration guide walks through: opt in the target, add the hand-off list from the log, drop the
-`chain` interceptor reference.
+enable without noise — two things:
+
+- which properties `ChainingInterceptor` actually copied onto which target, so users derive each
+  `forward` result's hand-off list from real traffic instead of reading code;
+- each chain target that has not opted in as a forward target, so users know which actions need the
+  opt-in before switching.
+
+`chain` itself does not change behaviour in 7.x; the logs are the only addition. The migration guide
+walks through: opt in the targets the log names, add the hand-off list from the log, change
+`type="chain"` to `type="forward"`, drop the `chain` interceptor reference.
 
 ### Rollout
 

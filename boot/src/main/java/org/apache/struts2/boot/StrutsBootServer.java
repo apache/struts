@@ -74,17 +74,9 @@ public final class StrutsBootServer implements AutoCloseable {
             hideErrorReportDetails(tomcat);
             Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
             Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
-            hardenSessionTracking(context);
+            restrictSessionTracking(context);
             context.addServletContainerInitializer(
-                    (classes, servletContext) -> {
-                        servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry);
-                        // Without a web.xml, a bare embedded context defaults to the servlet-spec
-                        // tracking modes (COOKIE + URL): a session id supplied as ";jsessionid="
-                        // in the URL is accepted and kept alive with no Set-Cookie, which is a
-                        // session-fixation vector (the id can be planted via a link/Referer
-                        // before the victim authenticates). Restrict to COOKIE only.
-                        servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
-                    },
+                    (classes, servletContext) -> servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry),
                     null);
             Tomcat.addServlet(context, "default", new DefaultServlet());
             context.addServletMappingDecoded("/", "default");
@@ -190,14 +182,14 @@ public final class StrutsBootServer implements AutoCloseable {
     }
 
     /**
-     * The session id cookie (JSESSIONID) otherwise carries no SameSite attribute at all under
-     * the embedded default, which is weaker than every modern browser's own unset-cookie
-     * default (treated as Lax). Secure is deliberately not forced here: Boot opens a plain
-     * HTTP listener by default (§5/§5a transport is the operator's), and a Secure cookie would
-     * simply be refused by the browser on that default deployment -- an operator who terminates
-     * TLS in front of Boot sets this themselves, as with any other servlet container.
+     * Restricts the embedded context to cookie-only session tracking with {@code SameSite=Lax};
+     * Secure is left to the operator's TLS setup.
      */
-    private static void hardenSessionTracking(Context context) {
+    private static void restrictSessionTracking(Context context) {
+        // Tomcat defaults to COOKIE+URL when no web.xml sets <tracking-mode>; keep cookies only.
+        context.addServletContainerInitializer(
+                (classes, servletContext) -> servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE)),
+                null);
         Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
         cookieProcessor.setSameSiteCookies("lax");
         context.setCookieProcessor(cookieProcessor);

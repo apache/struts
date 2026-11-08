@@ -238,6 +238,8 @@ documented anti-pattern is `OUT-OF-MODEL`. *(documented/inferred — §14 Q-defa
   - error responses render without exception report or server version
   - `DefaultServlet` serves only an empty per-run docBase
   - Tomcat's base directory is a fresh owner-only temp directory, deleted on shutdown
+  - session tracking is cookie-only
+  - the session cookie carries `SameSite=Lax`
   - `devMode` is never switched on
 
   A deviation from these defaults is a Struts finding. Anything the developer adds on

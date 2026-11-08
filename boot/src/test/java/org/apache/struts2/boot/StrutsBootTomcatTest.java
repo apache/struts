@@ -125,10 +125,7 @@ public class StrutsBootTomcatTest {
         assertThat(response.body()).doesNotContain("at org.apache").doesNotContain("Apache Tomcat/");
     }
 
-    /**
-     * The session id cookie must carry SameSite -- the
-     * embedded default (no web.xml, bare {@code Context}) sets none at all.
-     */
+    /** The session cookie carries {@code SameSite=Lax}. */
     @Test
     public void testSessionCookieHasSameSiteLax() throws Exception {
         HttpResponse<String> response = get(server.baseUrl() + "/sessionProbe.action");
@@ -137,23 +134,14 @@ public class StrutsBootTomcatTest {
                 assertThat(cookie).contains("SameSite=Lax"));
     }
 
-    /**
-     * Without a web.xml, a bare embedded {@code Context}
-     * defaults to the servlet-spec tracking modes (COOKIE + URL), so a session id supplied
-     * only via {@code ;jsessionid=} in the URL (no cookie at all) is honoured and kept alive
-     * with no fresh {@code Set-Cookie} -- the session-fixation vector. Control: the normal
-     * cookie-based flow must still carry a session across requests.
-     */
+    /** A session id supplied only in the URL is not resumed; the cookie-based flow still is. */
     @Test
     public void testUrlSuppliedSessionIdIsNotHonored() throws Exception {
         HttpResponse<String> first = get(server.baseUrl() + "/sessionProbe.action");
         assertThat(first.body()).contains("COUNTER=1");
         String sessionId = extractSessionId(first);
 
-        // Attacker-style request: the session id travels only in the URL, never as a cookie.
         HttpResponse<String> viaUrl = get(server.baseUrl() + "/sessionProbe.action;jsessionid=" + sessionId);
-        // GREEN: a brand-new session is created (counter resets to 1, a fresh id is issued) --
-        // the URL-supplied id from the first request was not resumed.
         assertThat(viaUrl.body()).contains("COUNTER=1");
         assertThat(extractSessionId(viaUrl)).isNotEqualTo(sessionId);
 

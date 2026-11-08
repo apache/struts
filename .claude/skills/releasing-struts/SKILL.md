@@ -124,6 +124,10 @@ answer is the last release, not the last wiki revision.
 
 - **A closed Nexus staging repo, not just a successful `release:perform`.** Until it is closed
   the URL in the Version Notes resolves to nothing and every tester is blocked.
+- **A test period between the `[TEST]` mail and the `[VOTE]`, about a week by recommendation.**
+  Its length is the release manager's call, not a gate you enforce: when phase 3 is done, state
+  the recommended earliest vote date and stop. Do not draft or offer the vote mail on your own
+  initiative; the release manager opens phase 4.
 - **72 hours, and three binding `+1`.** PMC votes are the binding ones; `private@` is on the
   vote mail so binding voters see it.
 - **24 hours after the `dist` move, before announcing.** ASF mirroring guidance. Announcing into

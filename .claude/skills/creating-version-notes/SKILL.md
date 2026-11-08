@@ -297,7 +297,7 @@ for the `[VOTE]`.
 
 Keep the security posture of the pages: the mail links the release notes, it does not summarise what is in them, so no severity, CVE or S2-XXX reaches it either.
 
-**The vote is the next step, and it is a different mail.** Once the test build is announced, `creating-release-vote-mail` composes the `[VOTE] Apache Struts X.Y.Z` call — to `dev@` alone, rendered from the page this skill produced. Do not draft it from here: its recipients, subject and body all differ from the announcement above.
+**The vote is a later step, and it is a different mail.** Once the test build is announced, the release waits for testers — about a week by recommendation, the release manager decides. When they call the vote, `creating-release-vote-mail` composes the `[VOTE] Apache Struts X.Y.Z` call — to `dev@` alone, rendered from the page this skill produced. Do not draft it from here: its recipients, subject and body all differ from the announcement above, and the test mail going out is not the trigger.
 
 ## Re-read the page immediately before you write to it
 

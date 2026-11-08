@@ -62,6 +62,9 @@ public class JSONUtil {
     /** Chunk size used to read input incrementally while applying the length limit. */
     private static final int READ_CHUNK_SIZE = 8192;
 
+    private static final Pattern JSONP_CALLBACK_PATTERN =
+            Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
+
     private JSONReader reader;
     private JSONWriter writer;
 
@@ -566,28 +569,17 @@ public class JSONUtil {
     }
 
     /**
-     * A JSONP {@code callback} request parameter value must be a (dotted) JavaScript
-     * identifier, matching every real-world JSONP server implementation's own validation.
-     * {@link JSONResult#addCallbackIfApplicable(HttpServletRequest, String)} and
-     * {@link JSONInterceptor#addCallbackIfApplicable(HttpServletRequest, String)} both
-     * concatenate the callback parameter's raw value directly around the serialized JSON
-     * ({@code callbackName + "(" + json + ")"}) with no check at all -- any character,
-     * including {@code )}, {@code ;}, and further script text, passes straight into the
-     * response body that a consumer loads as a {@code <script src="...">}. An unvalidated
-     * value there lets the parameter inject and execute arbitrary script in whatever page
-     * includes the JSONP endpoint, not merely a differently-named callback function.
+     * Checks a JSONP callback name: a dotted ASCII identifier ({@code [A-Za-z_$][A-Za-z0-9_$]*},
+     * segments joined by {@code .}) of at most 128 characters.
      *
-     * @param callbackName the raw {@code request.getParameter(callbackParameter)} value
-     * @return true if {@code callbackName} is safe to use as-is as a JS callback identifier
+     * @param callbackName the requested callback name
+     * @return true if {@code callbackName} has that shape
      * @since 7.5.0
      */
     public static boolean isValidJsonpCallbackName(String callbackName) {
         return callbackName != null && callbackName.length() <= 128
                 && JSONP_CALLBACK_PATTERN.matcher(callbackName).matches();
     }
-
-    private static final Pattern JSONP_CALLBACK_PATTERN =
-            Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
 
     public static final String REGEXP_PATTERN = "regexp";
     public static final String WILDCARD_PATTERN = "wildcard";

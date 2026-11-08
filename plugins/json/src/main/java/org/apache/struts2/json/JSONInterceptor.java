@@ -543,8 +543,7 @@ public class JSONInterceptor extends AbstractInterceptor {
             String callbackName = request.getParameter(callbackParameter);
             if ((callbackName != null) && (callbackName.length() > 0)) {
                 if (!JSONUtil.isValidJsonpCallbackName(callbackName)) {
-                    LOG.warn("Rejecting JSONP callback parameter '{}' -- not a valid (dotted) "
-                            + "JS identifier, refusing to wrap the response with it", callbackName);
+                    LOG.warn("JSONP callback parameter [{}] is not a valid identifier; rejected", normalizeSpace(callbackName));
                     return json;
                 }
                 json = callbackName + "(" + json + ")";

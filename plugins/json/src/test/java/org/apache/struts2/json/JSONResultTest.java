@@ -539,13 +539,7 @@ public class JSONResultTest extends StrutsTestCase {
         assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
-    /**
-     * The callback parameter was concatenated into the response with no identifier check,
-     * so any character the client put in the callback query parameter -- not just a
-     * different function name -- landed directly in front of the JSON body. Benign probe
-     * only: "cb);STRUTS_PROBE_MARKER;(" is a marker string, not a working exploit payload;
-     * nothing here is executed as script.
-     */
+    // control case: testJSONP()
     public void testJSONPCallbackMustBeValidIdentifier() throws Exception {
         JSONResult result = new JSONResult();
         result.setCallbackParameter("callback");
@@ -553,16 +547,12 @@ public class JSONResultTest extends StrutsTestCase {
         jsonUtil.setWriter(new StrutsJSONWriter());
         result.setJsonUtil(jsonUtil);
 
-        // Benign marker value standing in for arbitrary script text; a real identifier-only
-        // callback ("exec") is covered by testJSONP() above as the control case.
         String notAnIdentifier = "cb);STRUTS_PROBE_MARKER;(";
         request.addParameter("callback", notAnIdentifier);
 
         executeTest2Action(result);
         String json = response.getContentAsString();
 
-        // Fix: an invalid callback name must not be used to wrap the JSON -- the response
-        // must not contain the raw, non-identifier parameter value at all.
         assertFalse("Non-identifier callback value must not be concatenated into the response",
                 json.contains(notAnIdentifier));
         assertFalse(json.contains("STRUTS_PROBE_MARKER"));

@@ -87,6 +87,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean ordered = false;
     protected boolean requireAnnotations = false;
     protected boolean requireAnnotationsTransitionMode = false;
+    protected boolean requireAnnotationsOnResolvedMember = false;
 
     private ValueStackFactory valueStackFactory;
     private OgnlUtil ognlUtil;
@@ -158,6 +159,18 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION, required = false)
     public void setRequireAnnotationsTransitionMode(String transitionMode) {
         this.requireAnnotationsTransitionMode = BooleanUtils.toBoolean(transitionMode);
+    }
+
+    /**
+     * When enabled together with {@link #setRequireAnnotations}, every parameter is bound under the
+     * {@link ParameterAuthorizer#memberGuard guard} of the authorizer, so {@link StrutsParameter} is also checked on the
+     * member OGNL actually resolves. Off by default.
+     *
+     * @since 7.6.0
+     */
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_RESOLVED_MEMBER, required = false)
+    public void setRequireAnnotationsOnResolvedMember(String requireAnnotationsOnResolvedMember) {
+        this.requireAnnotationsOnResolvedMember = BooleanUtils.toBoolean(requireAnnotationsOnResolvedMember);
     }
 
     @Inject
@@ -325,13 +338,26 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void applyParametersOnStack(ValueStack stack, Map<String, Parameter> parameters, Object action) {
-        for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
-            try {
-                stack.setParameter(entry.getKey(), entry.getValue().getObject());
-            } catch (RuntimeException e) {
-                if (devMode) {
-                    notifyDeveloperParameterException(action, entry.getKey(), e.getMessage());
+        MemberAccessValueStack guardedStack = requireAnnotations && requireAnnotationsOnResolvedMember
+                && stack instanceof MemberAccessValueStack accessValueStack ? accessValueStack : null;
+        Object target = guardedStack != null ? parameterAuthorizer.resolveTarget(action) : null;
+        try {
+            for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
+                try {
+                    if (guardedStack != null) {
+                        guardedStack.useParameterMemberGuard(
+                                parameterAuthorizer.memberGuard(entry.getKey(), target, action, stack.getRoot()));
+                    }
+                    stack.setParameter(entry.getKey(), entry.getValue().getObject());
+                } catch (RuntimeException e) {
+                    if (devMode) {
+                        notifyDeveloperParameterException(action, entry.getKey(), e.getMessage());
+                    }
                 }
+            }
+        } finally {
+            if (guardedStack != null) {
+                guardedStack.useParameterMemberGuard(null);
             }
         }
     }

@@ -38,6 +38,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -126,7 +127,7 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
             return true;
         }
 
-        long paramDepth = parameterName.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+        long paramDepth = parameterDepth(parameterName);
 
         int nestingIndex = indexOfAny(parameterName, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? parameterName : parameterName.substring(0, nestingIndex);
@@ -154,6 +155,27 @@ public class StrutsParameterAuthorizer implements ParameterAuthorizer {
         }
 
         return hasValidAnnotatedMember(normalisedRootProperty, target, paramDepth);
+    }
+
+    private static long parameterDepth(String parameterName) {
+        return parameterName.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+    }
+
+    /**
+     * Applies the same rule as {@link #isAuthorized} to the members OGNL resolves, see
+     * {@link StrutsParameterMemberGuard}.
+     */
+    @Override
+    public ParameterMemberGuard memberGuard(String parameterName, Object target, Object action, Collection<?> root) {
+        if (!requireAnnotations || parameterName == null) {
+            return ParameterMemberGuard.PERMIT_ALL;
+        }
+        long paramDepth = parameterDepth(parameterName);
+        if (requireAnnotationsTransitionMode && paramDepth == 0) {
+            return ParameterMemberGuard.PERMIT_ALL;
+        }
+        Object exemptModel = target != action && action instanceof ModelDriven ? target : null;
+        return new StrutsParameterMemberGuard(this, paramDepth, exemptModel, root, devMode);
     }
 
     /**

@@ -187,7 +187,11 @@ import java.util.List;
  *            this.uploadedFile = uploadedFiles.get(0);
  *            this.fileName = uploadedFile.getName();
  *            this.contentType = uploadedFile.getContentType();
- *            this.originalName = uploadedFile.getOriginalName();
+ *            // getOriginalName() is the raw, client-supplied file name -- untrusted, may
+ *            // contain "../" or an absolute path. Never use it to build a filesystem path.
+ *            // Use getSanitizedOriginalName() (basename only) for display, or for building
+ *            // a path under a directory your application controls.
+ *            this.originalName = uploadedFile.getSanitizedOriginalName();
  *        }
  *    }
  *

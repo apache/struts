@@ -21,10 +21,10 @@
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/form-validate.ftl" />
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/form-common.ftl" />
 <#if (attributes.validate!false)>
-  onreset="<#outputformat 'JavaScript'>${attributes.onreset!'clearErrorMessages(this);clearErrorLabels(this);'}</#outputformat>"
+  onreset="${attributes.onreset!'clearErrorMessages(this);clearErrorLabels(this);'}"
 <#else>
   <#if attributes.onreset??>
-  onreset="<#outputformat 'JavaScript'>${attributes.onreset}</#outputformat>"
+  onreset="${attributes.onreset}"
   </#if>
 </#if>
 >

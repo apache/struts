@@ -114,7 +114,11 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
             return null;
         }
 
-        String className = convertParam(orig.getClassName(), vars, true);
+        if (!hasSafeClassNames(orig, vars)) {
+            return null;
+        }
+
+        String className = convertParam(orig.getClassName(), vars);
         String pkgName = convertParam(orig.getPackageName(), vars);
 
         Map<String,String> params = replaceParameters(orig.getParams(), vars);
@@ -123,7 +127,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         for (String name : orig.getResults().keySet()) {
             ResultConfig result = orig.getResults().get(name);
             name = convertParam(name, vars);
-            ResultConfig r = new ResultConfig.Builder(name, convertParam(result.getClassName(), vars, true))
+            ResultConfig r = new ResultConfig.Builder(name, convertParam(result.getClassName(), vars))
                     .addParams(replaceParameters(result.getParams(), vars))
                     .build();
             results.put(name, r);
@@ -132,7 +136,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         List<ExceptionMappingConfig> exs = new ArrayList<ExceptionMappingConfig>();
         for (ExceptionMappingConfig ex : orig.getExceptionMappings()) {
             String name = convertParam(ex.getName(), vars);
-            String exClassName = convertParam(ex.getExceptionClassName(), vars, true);
+            String exClassName = convertParam(ex.getExceptionClassName(), vars);
             String exResult = convertParam(ex.getResult(), vars);
             Map<String,String> exParams = replaceParameters(ex.getParams(), vars);
             ExceptionMappingConfig e = new ExceptionMappingConfig.Builder(name, exClassName, exResult).addParams(exParams).build();
@@ -151,5 +155,22 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
                 .addExceptionMappings(exs)
                 .location(orig.getLocation())
                 .build();
+    }
+
+    private boolean hasSafeClassNames(ActionConfig orig, Map<String, String> vars) {
+        if (!isSafeForClassName(orig.getClassName(), vars)) {
+            return false;
+        }
+        for (ResultConfig result : orig.getResults().values()) {
+            if (!isSafeForClassName(result.getClassName(), vars)) {
+                return false;
+            }
+        }
+        for (ExceptionMappingConfig ex : orig.getExceptionMappings()) {
+            if (!isSafeForClassName(ex.getExceptionClassName(), vars)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

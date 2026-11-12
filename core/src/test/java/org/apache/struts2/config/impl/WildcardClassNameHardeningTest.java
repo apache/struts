@@ -20,76 +20,74 @@ package org.apache.struts2.config.impl;
 
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.config.entities.ActionConfig;
+import org.apache.struts2.config.entities.ExceptionMappingConfig;
+import org.apache.struts2.config.entities.ResultConfig;
 import org.apache.struts2.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-/**
- * The wildcard "{n}" substitution that fills in a
- * {@code class=} (and method/package) template is unconfined -- any matched path
- * segment, including one containing '.' or '/'-decoded dots, lands verbatim in the
- * resulting class name. A sibling slot (the method name) IS gated, by
- * {@link ActionConfig#isAllowedMethod(String)} at ActionConfigMatcher.java:113. There is
- * no equivalent gate for the class name at ActionConfigMatcher.java:117 /
- * AbstractMatcher.convertParam():201-215.
- *
- * Benign probe only: the "attacker" value is a harmless literal package/class suffix
- * ("util.Harmless"), not a real sensitive class, and no class is actually loaded here --
- * this test only proves the ActionConfig the matcher hands back contains the attacker's
- * wildcard segment unconfined in getClassName(), which is what a default ObjectFactory
- * would later pass to Class.forName/buildBean with no further check
- * (DefaultActionFactory.buildAction -> objectFactory.buildBean(config.getClassName(), ...)).
- */
 public class WildcardClassNameHardeningTest extends XWorkTestCase {
 
-    public void testClassNameWildcardRejectsNonIdentifierSegment() {
+    private ActionConfigMatcher matcherFor(ActionConfig config) {
         Map<String, ActionConfig> map = new HashMap<>();
-        // A typical CRUD-style wildcard mapping a developer might write:
-        // <action name="*" class="actions.{1}Action"> -- intended for simple names
-        // like "user" or "order", never audited against the request path.
-        map.put("*", new ActionConfig.Builder("package", "*", "actions.{1}Action")
+        map.put(config.getName(), config);
+        return new ActionConfigMatcher(new WildcardHelper(), map, false);
+    }
+
+    public void testActionClassNameRejectsSegmentWithDot() {
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "*", "actions.{1}Action")
                 .methodName("execute")
                 .build());
 
-        ActionConfigMatcher matcher = new ActionConfigMatcher(new WildcardHelper(), map, false);
+        assertNull(matcher.match("util.Harmless"));
+        assertEquals("actions.UserAction", matcher.match("User").getClassName());
+    }
 
-        // Benign "attacker" path segment: contains '.' so it walks the class name into a
-        // different package than the template author intended. No real/dangerous class
-        // name is used -- this is a structural probe, not an exploit payload.
-        ActionConfig matched = matcher.match("util.Harmless");
+    public void testResultClassNameRejectsSegmentWithDot() {
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "*", "actions.FixedAction")
+                .addResultConfig(new ResultConfig.Builder("success", "results.{1}Result").build())
+                .build());
 
-        assertNotNull("ActionConfig should be matched", matched);
-        // GREEN (post-fix): the '.' in the matched segment is not a safe class-name
-        // character, so the substitution is dropped instead of walking the class out of
-        // the mapped package -- the attacker-controlled segment no longer changes the
-        // resolved package.
-        assertEquals("Class-name wildcard substitution must reject non-identifier characters",
-                "actions.Action", matched.getClassName());
+        assertNull(matcher.match("util.Harmless"));
+        assertEquals("results.UserResult", matcher.match("User").getResults().get("success").getClassName());
+    }
 
-        // Benign identifier-only segment still substitutes normally.
-        ActionConfig normal = matcher.match("User");
-        assertEquals("actions.UserAction", normal.getClassName());
+    public void testExceptionMappingClassNameRejectsSegmentWithDot() {
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "*", "actions.FixedAction")
+                .addExceptionMapping(new ExceptionMappingConfig.Builder("ex", "errors.{1}Exception", "error").build())
+                .build());
+
+        assertNull(matcher.match("util.Harmless"));
+        assertEquals("errors.UserException", matcher.match("User").getExceptionMappings().get(0).getExceptionClassName());
+    }
+
+    public void testClassNameAcceptsNonAsciiIdentifierAndDollar() {
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "*", "actions.{1}Action")
+                .build());
+
+        assertEquals("actions.ÜserAction", matcher.match("Üser").getClassName());
+        assertEquals("actions.Inner$1Action", matcher.match("Inner$1").getClassName());
+    }
+
+    public void testDollarAndBackslashAreSubstitutedLiterally() {
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "*", "actions.FixedAction")
+                .addParam("value", "{1}")
+                .build());
+
+        assertEquals("a$1b", matcher.match("a$1b").getParams().get("value"));
+        assertEquals("a\\b", matcher.match("a\\b").getParams().get("value"));
     }
 
     public void testMethodNameWildcardIsGated() {
-        // Control: the sibling slot (method name) IS gated by isAllowedMethod, so a
-        // non-allowed substituted method value causes convert() to return null instead
-        // of an ActionConfig that would invoke an arbitrary method.
-        Map<String, ActionConfig> map = new HashMap<>();
-        map.put("run/*", new ActionConfig.Builder("package", "run/*", "actions.RunAction")
+        ActionConfigMatcher matcher = matcherFor(new ActionConfig.Builder("package", "run/*", "actions.RunAction")
                 .methodName("{1}")
-                .addAllowedMethod(java.util.Set.of("execute"))
+                .addAllowedMethod(Set.of("execute"))
                 .setStrictMethodInvocation(true)
                 .build());
 
-        ActionConfigMatcher matcher = new ActionConfigMatcher(new WildcardHelper(), map, false);
-
-        ActionConfig notAllowed = matcher.match("run/deleteAll");
-        assertNull("GREEN control: method substitution is gated by isAllowedMethod", notAllowed);
-
-        ActionConfig allowed = matcher.match("run/execute");
-        assertNotNull(allowed);
-        assertEquals("execute", allowed.getMethodName());
+        assertNull(matcher.match("run/deleteAll"));
+        assertEquals("execute", matcher.match("run/execute").getMethodName());
     }
 }

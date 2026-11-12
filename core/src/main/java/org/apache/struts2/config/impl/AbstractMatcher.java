@@ -19,6 +19,7 @@
 package org.apache.struts2.config.impl;
 
 import org.apache.struts2.util.PatternMatcher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,15 +48,11 @@ public abstract class AbstractMatcher<E> implements Serializable {
     private static final Pattern WILDCARD_PATTERN = Pattern.compile("\\{(.)}");
 
     /**
-     * <p>Values a wildcard-matched request path segment may take when it is substituted
-     * into a class-name-bearing slot (action/result/exception-mapping {@code class}).
-     * Rejects '.', '/', and any other character that could walk the substituted value
-     * out of the package the template author wrote, or that an {@code ObjectFactory}
-     * could otherwise treat specially.</p>
-     *
-     * @since 7.5.0
+     * Characters a wildcard-matched segment may contain when it is substituted into a class name:
+     * Unicode letters and digits, '_' and '$'. Excludes '.', '/' and everything else that could move
+     * the resulting class name out of the package the mapping's author wrote.
      */
-    private static final Pattern SAFE_CLASS_NAME_SEGMENT = Pattern.compile("[A-Za-z0-9_$]*");
+    private static final Pattern SAFE_CLASS_NAME_SEGMENT = Pattern.compile("[\\p{L}\\p{Nd}_$]*");
 
     /**
      * <p> Handles all wildcard pattern matching. </p>
@@ -210,31 +207,6 @@ public abstract class AbstractMatcher<E> implements Serializable {
      * @return The new value
      */
     protected String convertParam(String val, Map<String, String> vars) {
-        return convertParam(val, vars, false);
-    }
-
-    /**
-     * <p> Inserts into a value wildcard-matched strings where specified
-     * with the {x} syntax.  If a wildcard-matched value isn't found, the
-     * replacement token is turned into an empty string.
-     * </p>
-     *
-     * <p>Use {@code safeForClassName = true} for any slot that ends up being loaded as a
-     * class or bean name (action/result/exception-mapping {@code class}). A substituted
-     * value that would carry a '.', '/', or other non-identifier character into the class
-     * name is dropped (treated as empty) instead of substituted, so a wildcard segment
-     * cannot walk the resulting class name out of the package the template author wrote.
-     * The method-name slot already has an equivalent guard
-     * ({@link org.apache.struts2.config.entities.ActionConfig#isAllowedMethod(String)});
-     * this is the same guard for the class-name slot. Literal characters in {@code val}
-     * itself are never filtered -- only the values substituted in for {x}.</p>
-     *
-     * @param val  The value to convert
-     * @param vars A Map of wildcard-matched strings
-     * @param safeForClassName restrict substituted values to {@code [A-Za-z0-9_$]*}
-     * @return The new value
-     */
-    protected String convertParam(String val, Map<String, String> vars, boolean safeForClassName) {
         if (val == null) {
             return null;
         }
@@ -243,17 +215,38 @@ public abstract class AbstractMatcher<E> implements Serializable {
 
         StringBuilder result = new StringBuilder();
         while (wildcardMatcher.find()) {
-            String replacement = vars.getOrDefault(wildcardMatcher.group(1), "");
-            if (safeForClassName && !SAFE_CLASS_NAME_SEGMENT.matcher(replacement).matches()) {
-                LOG.warn("Wildcard-matched segment '{}' rejected for class-name slot '{}' -- " +
-                        "contains characters other than [A-Za-z0-9_$]", replacement, val);
-                replacement = "";
-            }
-            wildcardMatcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+            wildcardMatcher.appendReplacement(result, Matcher.quoteReplacement(vars.getOrDefault(wildcardMatcher.group(1), "")));
         }
         wildcardMatcher.appendTail(result);
 
         return result.toString();
+    }
+
+    /**
+     * <p> Checks that every wildcard-matched value that {@link #convertParam(String, Map)} would
+     * substitute into {@code val} is safe to use as part of a class name. Callers reject the
+     * whole match when this returns {@code false}, as they do for a disallowed method name. </p>
+     *
+     * @param val  The class name template, may be {@code null}
+     * @param vars A Map of wildcard-matched strings
+     * @return {@code false} if a substituted value contains a character other than a letter,
+     * digit, '_' or '$'
+     */
+    protected boolean isSafeForClassName(String val, Map<String, String> vars) {
+        if (val == null) {
+            return true;
+        }
+
+        Matcher wildcardMatcher = WILDCARD_PATTERN.matcher(val);
+        while (wildcardMatcher.find()) {
+            String value = vars.getOrDefault(wildcardMatcher.group(1), "");
+            if (!SAFE_CLASS_NAME_SEGMENT.matcher(value).matches()) {
+                LOG.warn("Wildcard-matched value [{}] is not allowed in class name [{}]; match rejected",
+                        StringUtils.normalizeSpace(value), val);
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

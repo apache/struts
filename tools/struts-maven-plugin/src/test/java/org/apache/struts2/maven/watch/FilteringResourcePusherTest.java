@@ -25,6 +25,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.DefaultMavenFileFilter;
 import org.apache.maven.shared.filtering.DefaultMavenResourcesFiltering;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.junit.rules.TemporaryFolder;
 import org.sonatype.plexus.build.incremental.ThreadBuildContext;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,8 +62,9 @@ public class FilteringResourcePusherTest {
         DefaultMavenResourcesFiltering filtering =
                 new DefaultMavenResourcesFiltering(new DefaultMavenFileFilter(new ThreadBuildContext()), new ThreadBuildContext());
         MavenSession session = new MavenSession(null, new DefaultMavenExecutionRequest(), new DefaultMavenExecutionResult(), project);
-        return new FilteringResourcePusher(filtering, project, session,
-                ResourcesPluginSettings.from(configuration, "UTF-8"), output);
+        ResourcesPluginSettings settings = ResourcesPluginSettings.from(configuration, "UTF-8");
+        return new FilteringResourcePusher(filtering, project, session, settings, output,
+                settings.filterFiles(project.getBuild().getFilters(), temp.getRoot().toPath()));
     }
 
     private SourceFile write(String relativePath, byte[] content, boolean filtering, String targetPath) throws IOException {
@@ -178,5 +181,45 @@ public class FilteringResourcePusherTest {
         pusher(null).delete(file);
 
         assertThat(output.resolve("a.properties")).doesNotExist();
+    }
+
+    @Test
+    public void pushSubstitutesPropertiesFromPluginLevelFilters() throws IOException {
+        Files.writeString(temp.getRoot().toPath().resolve("extra.properties"), "extra=from-plugin-filter\n");
+        SourceFile file = write("a.properties", "name=${extra}\n", true);
+
+        pusher(configuration("<filters><filter>extra.properties</filter></filters>")).push(file);
+
+        assertThat(output.resolve("a.properties")).hasContent("name=from-plugin-filter");
+    }
+
+    @Test
+    public void pushSubstitutesPropertiesFromBuildFilters() throws IOException {
+        Files.writeString(temp.getRoot().toPath().resolve("build.properties"), "fromBuild=yes\n");
+        project.getBuild().addFilter("build.properties");
+        SourceFile file = write("a.properties", "v=${fromBuild}\n", true);
+
+        pusher(null).push(file);
+
+        assertThat(output.resolve("a.properties")).hasContent("v=yes");
+    }
+
+    @Test
+    public void useBuildFiltersFalseIgnoresBuildFilters() throws IOException {
+        Files.writeString(temp.getRoot().toPath().resolve("build.properties"), "fromBuild=yes\n");
+        project.getBuild().addFilter("build.properties");
+        SourceFile file = write("a.properties", "v=${fromBuild}\n", true);
+
+        pusher(configuration("<useBuildFilters>false</useBuildFilters>")).push(file);
+
+        assertThat(output.resolve("a.properties")).hasContent("v=${fromBuild}");
+    }
+
+    private static Xpp3Dom configuration(String children) {
+        try {
+            return Xpp3DomBuilder.build(new StringReader("<configuration>" + children + "</configuration>"));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

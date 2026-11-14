@@ -37,14 +37,16 @@ public final class FilteringResourcePusher implements ResourcePusher {
     private final MavenSession session;
     private final ResourcesPluginSettings settings;
     private final Path outputDirectory;
+    private final List<String> filterFiles;
 
     public FilteringResourcePusher(MavenResourcesFiltering filtering, MavenProject project, MavenSession session,
-                                   ResourcesPluginSettings settings, Path outputDirectory) {
+                                   ResourcesPluginSettings settings, Path outputDirectory, List<Path> filterFiles) {
         this.filtering = filtering;
         this.project = project;
         this.session = session;
         this.settings = settings;
         this.outputDirectory = outputDirectory;
+        this.filterFiles = filterFiles.stream().map(Path::toString).toList();
     }
 
     @Override
@@ -58,7 +60,11 @@ public final class FilteringResourcePusher implements ResourcePusher {
 
         MavenResourcesExecution execution = new MavenResourcesExecution(
                 List.of(resource), outputDirectory.toFile(), project, settings.getEncoding(),
-                project.getBuild().getFilters(), List.of(), session);
+                filterFiles, List.of(), session);
+        execution.setInjectProjectBuildFilters(false);
+        execution.setEscapeWindowsPaths(settings.isEscapeWindowsPaths());
+        execution.setSupportMultiLineFiltering(settings.isSupportMultiLineFiltering());
+        execution.setFilterFilenames(settings.isFileNameFiltering());
         execution.setPropertiesEncoding(settings.getPropertiesEncoding());
         execution.setDelimiters(settings.getDelimiters(), settings.isUseDefaultDelimiters());
         execution.setEscapeString(settings.getEscapeString());

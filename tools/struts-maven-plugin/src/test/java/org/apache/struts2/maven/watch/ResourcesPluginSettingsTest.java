@@ -26,6 +26,7 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +43,53 @@ public class ResourcesPluginSettingsTest {
         assertThat(settings.isAddDefaultExcludes()).isTrue();
         assertThat(settings.getNonFilteredFileExtensions()).isEmpty();
         assertThat(settings.getEscapeString()).isNull();
+        assertThat(settings.isEscapeWindowsPaths()).isTrue();
+        assertThat(settings.isSupportMultiLineFiltering()).isFalse();
+        assertThat(settings.isFileNameFiltering()).isFalse();
+        assertThat(settings.filterFiles(List.of("build.properties"), Path.of("/base")))
+                .containsExactly(Path.of("/base/build.properties"));
+        assertThat(settings.warnings()).isEmpty();
+    }
+
+    @Test
+    public void readsFilterFileAndEscapingSettings() throws Exception {
+        Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(
+                "<configuration><filters><filter>plugin.properties</filter></filters>"
+                        + "<escapeWindowsPaths>false</escapeWindowsPaths>"
+                        + "<supportMultiLineFiltering>true</supportMultiLineFiltering>"
+                        + "<fileNameFiltering>true</fileNameFiltering></configuration>"));
+
+        ResourcesPluginSettings settings = ResourcesPluginSettings.from(configuration, "UTF-8");
+
+        assertThat(settings.isEscapeWindowsPaths()).isFalse();
+        assertThat(settings.isSupportMultiLineFiltering()).isTrue();
+        assertThat(settings.isFileNameFiltering()).isTrue();
+        assertThat(settings.filterFiles(List.of("build.properties"), Path.of("/base")))
+                .containsExactly(Path.of("/base/build.properties"), Path.of("/base/plugin.properties"));
+    }
+
+    @Test
+    public void useBuildFiltersFalseKeepsOnlyPluginFilters() throws Exception {
+        Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(
+                "<configuration><useBuildFilters>false</useBuildFilters>"
+                        + "<filters><filter>plugin.properties</filter></filters></configuration>"));
+
+        ResourcesPluginSettings settings = ResourcesPluginSettings.from(configuration, "UTF-8");
+
+        assertThat(settings.filterFiles(List.of("build.properties"), Path.of("/base")))
+                .containsExactly(Path.of("/base/plugin.properties"));
+    }
+
+    @Test
+    public void warnsAboutOutputDirectoryAndSkip() throws Exception {
+        Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(
+                "<configuration><outputDirectory>/elsewhere</outputDirectory><skip>true</skip></configuration>"));
+
+        ResourcesPluginSettings settings = ResourcesPluginSettings.from(configuration, "UTF-8");
+
+        assertThat(settings.warnings()).hasSize(2);
+        assertThat(settings.warnings().get(0)).contains("<outputDirectory>", "/elsewhere");
+        assertThat(settings.warnings().get(1)).contains("<skip>");
     }
 
     @Test

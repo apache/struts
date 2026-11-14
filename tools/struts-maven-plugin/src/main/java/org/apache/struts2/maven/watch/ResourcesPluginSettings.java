@@ -23,6 +23,7 @@ import org.apache.maven.model.PluginExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -40,28 +41,33 @@ public final class ResourcesPluginSettings {
     private final String escapeString;
     private final List<String> nonFilteredFileExtensions;
     private final boolean addDefaultExcludes;
+    private final List<String> filters;
+    private final boolean useBuildFilters;
+    private final boolean escapeWindowsPaths;
+    private final boolean supportMultiLineFiltering;
+    private final boolean fileNameFiltering;
+    private final String outputDirectory;
+    private final boolean skip;
 
-    private ResourcesPluginSettings(String encoding, String propertiesEncoding, LinkedHashSet<String> delimiters,
-                                    boolean useDefaultDelimiters, String escapeString,
-                                    List<String> nonFilteredFileExtensions, boolean addDefaultExcludes) {
-        this.encoding = encoding;
-        this.propertiesEncoding = propertiesEncoding;
-        this.delimiters = delimiters;
-        this.useDefaultDelimiters = useDefaultDelimiters;
-        this.escapeString = escapeString;
-        this.nonFilteredFileExtensions = Collections.unmodifiableList(nonFilteredFileExtensions);
-        this.addDefaultExcludes = addDefaultExcludes;
+    private ResourcesPluginSettings(Xpp3Dom configuration, String projectEncoding) {
+        this.encoding = text(configuration, "encoding", projectEncoding);
+        this.propertiesEncoding = text(configuration, "propertiesEncoding", null);
+        this.delimiters = new LinkedHashSet<>(texts(configuration, "delimiters"));
+        this.useDefaultDelimiters = flag(configuration, "useDefaultDelimiters", "true");
+        this.escapeString = text(configuration, "escapeString", null);
+        this.nonFilteredFileExtensions = Collections.unmodifiableList(texts(configuration, "nonFilteredFileExtensions"));
+        this.addDefaultExcludes = flag(configuration, "addDefaultExcludes", "true");
+        this.filters = Collections.unmodifiableList(texts(configuration, "filters"));
+        this.useBuildFilters = flag(configuration, "useBuildFilters", "true");
+        this.escapeWindowsPaths = flag(configuration, "escapeWindowsPaths", "true");
+        this.supportMultiLineFiltering = flag(configuration, "supportMultiLineFiltering", "false");
+        this.fileNameFiltering = flag(configuration, "fileNameFiltering", "false");
+        this.outputDirectory = text(configuration, "outputDirectory", null);
+        this.skip = flag(configuration, "skip", "false");
     }
 
     public static ResourcesPluginSettings from(Xpp3Dom configuration, String projectEncoding) {
-        return new ResourcesPluginSettings(
-                text(configuration, "encoding", projectEncoding),
-                text(configuration, "propertiesEncoding", null),
-                new LinkedHashSet<>(texts(configuration, "delimiters")),
-                flag(configuration, "useDefaultDelimiters"),
-                text(configuration, "escapeString", null),
-                texts(configuration, "nonFilteredFileExtensions"),
-                flag(configuration, "addDefaultExcludes"));
+        return new ResourcesPluginSettings(configuration, projectEncoding);
     }
 
     public static Xpp3Dom effectiveResourcesConfiguration(MavenProject project) {
@@ -83,8 +89,8 @@ public final class ResourcesPluginSettings {
         return child == null || child.getValue() == null ? fallback : child.getValue();
     }
 
-    private static boolean flag(Xpp3Dom configuration, String name) {
-        return Boolean.parseBoolean(text(configuration, name, "true"));
+    private static boolean flag(Xpp3Dom configuration, String name, String defaultValue) {
+        return Boolean.parseBoolean(text(configuration, name, defaultValue));
     }
 
     private static List<String> texts(Xpp3Dom configuration, String name) {
@@ -126,5 +132,38 @@ public final class ResourcesPluginSettings {
 
     public boolean isAddDefaultExcludes() {
         return addDefaultExcludes;
+    }
+
+    public List<Path> filterFiles(List<String> buildFilters, Path basedir) {
+        List<String> combined = new ArrayList<>();
+        if (useBuildFilters) {
+            combined.addAll(buildFilters);
+        }
+        combined.addAll(filters);
+        return combined.stream().map(basedir::resolve).toList();
+    }
+
+    public boolean isEscapeWindowsPaths() {
+        return escapeWindowsPaths;
+    }
+
+    public boolean isSupportMultiLineFiltering() {
+        return supportMultiLineFiltering;
+    }
+
+    public boolean isFileNameFiltering() {
+        return fileNameFiltering;
+    }
+
+    public List<String> warnings() {
+        List<String> warnings = new ArrayList<>();
+        if (outputDirectory != null) {
+            warnings.add("maven-resources-plugin <outputDirectory> " + outputDirectory
+                    + " is ignored; struts:watch writes to the project's build output directory");
+        }
+        if (skip) {
+            warnings.add("maven-resources-plugin <skip> is true; struts:watch pushes resources regardless");
+        }
+        return warnings;
     }
 }

@@ -95,20 +95,22 @@ public class WatchMojo extends AbstractMojo {
         ResourcesPluginSettings settings = ResourcesPluginSettings.from(
                 ResourcesPluginSettings.effectiveResourcesConfiguration(project),
                 project.getProperties().getProperty("project.build.sourceEncoding"));
+        for (String warning : settings.warnings()) {
+            getLog().warn(warning);
+        }
+        List<Path> filterFiles = settings.filterFiles(project.getBuild().getFilters(), basedir);
         List<WatchedRoot> roots = project.getResources().stream()
                 .map(resource -> WatchedRoot.of(resource, basedir))
                 .toList();
         ResourceScanner scanner = new ResourceScanner(roots, settings.isAddDefaultExcludes());
         FilteringResourcePusher filteringPusher =
-                new FilteringResourcePusher(resourcesFiltering, project, session, settings, outputDirectory);
+                new FilteringResourcePusher(resourcesFiltering, project, session, settings, outputDirectory,
+                        filterFiles);
         ResourcePusher pusher = loggingPusher(filteringPusher, basedir);
 
         pushStaleOutputs(scanner.scan(), filteringPusher::outputPathOf, pusher,
                 (message, e) -> getLog().error(message, e));
 
-        List<Path> filterFiles = project.getBuild().getFilters().stream()
-                .map(filter -> basedir.resolve(filter))
-                .toList();
         ResourceWatcher watcher = new ResourceWatcher(scanner, pusher, filterFiles,
                 message -> getLog().debug(message), (message, e) -> getLog().error(message, e));
         watcher.start();

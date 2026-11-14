@@ -30,7 +30,7 @@
 
     <artifactId>struts-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>Struts 2 Maven Plugin</name>
+    <name>Struts 2 Maven Plugin [EXPERIMENTAL]</name>
 
     <properties>
         <maven.api.version>3.9.16</maven.api.version>

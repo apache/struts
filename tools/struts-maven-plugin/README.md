@@ -3,6 +3,8 @@
 `struts:watch` copies edited resources (`struts.xml`, `*.properties`, FreeMarker templates, validation files) into
 `target/classes` while an application runs, so Struts' own reload picks them up without a rebuild or restart.
 
+The Struts Maven Plugin is experimental: its goals, parameters and defaults may change between minor releases.
+
 It pushes resource changes only. It does not compile or reload Java classes: use a restart or debugger hotswap for
 those. Webapp files (JSP, FTL under `src/main/webapp`) are already served from source.
 

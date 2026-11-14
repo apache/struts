@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
@@ -102,7 +103,8 @@ public class WatchMojo extends AbstractMojo {
                 new FilteringResourcePusher(resourcesFiltering, project, session, settings, outputDirectory);
         ResourcePusher pusher = loggingPusher(filteringPusher, basedir);
 
-        pushStaleOutputs(scanner.scan(), filteringPusher::outputPathOf, pusher);
+        pushStaleOutputs(scanner.scan(), filteringPusher::outputPathOf, pusher,
+                (message, e) -> getLog().error(message, e));
 
         List<Path> filterFiles = project.getBuild().getFilters().stream()
                 .map(filter -> basedir.resolve(filter))
@@ -136,14 +138,14 @@ public class WatchMojo extends AbstractMojo {
     }
 
     static void pushStaleOutputs(Map<SourceFile, FileStamp> scan, Function<SourceFile, Path> outputPathOf,
-                                 ResourcePusher pusher) {
+                                 ResourcePusher pusher, BiConsumer<String, Exception> error) {
         for (Map.Entry<SourceFile, FileStamp> entry : scan.entrySet()) {
             File output = outputPathOf.apply(entry.getKey()).toFile();
             if (!output.isFile() || output.lastModified() < entry.getValue().lastModified()) {
                 try {
                     pusher.push(entry.getKey());
                 } catch (IOException | RuntimeException e) {
-                    throw new IllegalStateException("Cannot push " + entry.getKey().relativePath(), e);
+                    error.accept("Failed to push " + entry.getKey().relativePath(), e);
                 }
             }
         }

@@ -103,9 +103,40 @@ public class WatchMojoTest {
             }
         };
 
-        WatchMojo.pushStaleOutputs(scan, file -> out.resolve(file.relativePath()), pusher);
+        WatchMojo.pushStaleOutputs(scan, file -> out.resolve(file.relativePath()), pusher, (m, e) -> { });
 
         assertThat(pushed).containsExactlyInAnyOrder("stale.txt", "missing.txt");
+    }
+
+    @Test
+    public void stalePushFailureIsReportedAndRemainingFilesArePushed() throws Exception {
+        Path src = temp.newFolder("src2").toPath();
+        Path out = temp.newFolder("out2").toPath();
+        WatchedRoot root = new WatchedRoot(src, List.of(), List.of(), null, false);
+        Map<SourceFile, FileStamp> scan = new LinkedHashMap<>();
+        for (String name : List.of("bad.txt", "good.txt")) {
+            File f = write(src.resolve(name), 1000);
+            scan.put(new SourceFile(root, name), new FileStamp(f.lastModified(), f.length()));
+        }
+        List<String> pushed = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+        ResourcePusher pusher = new ResourcePusher() {
+            public void push(SourceFile file) throws java.io.IOException {
+                if (file.relativePath().equals("bad.txt")) {
+                    throw new java.io.IOException("locked");
+                }
+                pushed.add(file.relativePath());
+            }
+
+            public void delete(SourceFile file) {
+            }
+        };
+
+        WatchMojo.pushStaleOutputs(scan, file -> out.resolve(file.relativePath()), pusher,
+                (message, e) -> errors.add(message));
+
+        assertThat(pushed).containsExactly("good.txt");
+        assertThat(errors).containsExactly("Failed to push bad.txt");
     }
 
     private File write(Path path, long lastModified) throws Exception {

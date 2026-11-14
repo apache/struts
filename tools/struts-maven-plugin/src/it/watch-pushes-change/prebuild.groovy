@@ -18,9 +18,16 @@
  */
 
 def messages = new File(basedir, 'src/main/resources/messages.properties')
+def buildLog = new File(basedir, 'build.log')
 def editor = new Thread({
-    Thread.sleep(8000)
-    messages.text = messages.text.replace('-v1', '-v2\n')
+    long giveUp = System.nanoTime() + 60_000_000_000L
+    while (System.nanoTime() < giveUp) {
+        if (buildLog.exists() && buildLog.text.contains('Watching 1 resource root(s)')) {
+            messages.text = messages.text.replace('-v1', '-v2\n')
+            return
+        }
+        Thread.sleep(100)
+    }
 })
 editor.setDaemon(true)
 editor.start()

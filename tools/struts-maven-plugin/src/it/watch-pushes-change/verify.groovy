@@ -19,4 +19,7 @@
 
 def classes = new File(basedir, 'target/classes/messages.properties')
 assert classes.text.contains('msg=hi-v2') : "filtered v2 missing: ${classes.text}"
-assert new File(basedir, 'build.log').text.contains('pushed messages.properties')
+def log = new File(basedir, 'build.log').text
+int watching = log.indexOf('Watching 1 resource root(s)')
+assert watching >= 0
+assert log.indexOf('pushed messages.properties', watching) > watching : 'no push after the watch loop started'

@@ -45,7 +45,7 @@
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <configuration>
-                    <timeout>20</timeout>
+                    <timeout>30</timeout>
                     <pollInterval>200</pollInterval>
                 </configuration>
             </plugin>

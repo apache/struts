@@ -95,4 +95,16 @@ public class ResourceScannerTest {
 
         assertThat(new ResourceScanner(List.of(root(dir, List.of(), List.of())), true).scan()).isEmpty();
     }
+
+    @Test
+    public void overlappingRootsAreListedInRootOrder() throws Exception {
+        Path dir = temp.newFolder("res").toPath();
+        Files.writeString(dir.resolve("a.txt"), "a");
+        WatchedRoot first = new WatchedRoot(dir, List.of(), List.of(), "first", false);
+        WatchedRoot second = new WatchedRoot(dir, List.of(), List.of(), "second", false);
+
+        Map<SourceFile, FileStamp> scan = new ResourceScanner(List.of(first, second), true).scan();
+
+        assertThat(scan.keySet()).containsExactly(new SourceFile(first, "a.txt"), new SourceFile(second, "a.txt"));
+    }
 }

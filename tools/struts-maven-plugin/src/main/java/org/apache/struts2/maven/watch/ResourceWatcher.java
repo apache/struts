@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,10 +74,10 @@ public class ResourceWatcher {
         Map<Path, FileStamp> currentFilterStamps = filterStamps();
         Set<SourceFile> handled = new HashSet<>();
 
-        Set<SourceFile> paths = new HashSet<>(current.keySet());
+        Set<SourceFile> paths = new LinkedHashSet<>(current.keySet());
         paths.addAll(previous.keySet());
         paths.addAll(acted.keySet());
-        Map<SourceFile, FileStamp> nextActed = new HashMap<>(acted);
+        Map<SourceFile, FileStamp> nextActed = new LinkedHashMap<>(acted);
         for (SourceFile file : paths) {
             FileStamp now = current.get(file);
             if (Objects.equals(now, previous.get(file)) && !Objects.equals(now, acted.get(file))) {

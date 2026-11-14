@@ -206,4 +206,37 @@ public class ResourceWatcherTest {
 
         assertThat(remaining.get()).isNegative();
     }
+
+    @Test
+    public void overlappingRootsArePushedInScanOrder() {
+        List<WatchedRoot> roots = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            roots.add(new WatchedRoot(Path.of("same"), List.of(), List.of(), "t" + i, false));
+        }
+        Map<SourceFile, FileStamp> before = new LinkedHashMap<>();
+        Map<SourceFile, FileStamp> after = new LinkedHashMap<>();
+        for (WatchedRoot root : roots) {
+            before.putAll(scan(root, "a", 1));
+            after.putAll(scan(root, "a", 2));
+        }
+        List<String> targets = new ArrayList<>();
+        ResourcePusher recording = new ResourcePusher() {
+            @Override
+            public void push(SourceFile file) {
+                targets.add(file.root().targetPath());
+            }
+
+            @Override
+            public void delete(SourceFile file) {
+            }
+        };
+        FakeScanner scanner = new FakeScanner().add(before).add(after);
+        ResourceWatcher watcher = new ResourceWatcher(scanner, recording, List.of(), m -> { }, (m, e) -> { });
+
+        watcher.start();
+        watcher.pollOnce();
+        watcher.pollOnce();
+
+        assertThat(targets).containsExactly("t0", "t1", "t2", "t3", "t4", "t5");
+    }
 }

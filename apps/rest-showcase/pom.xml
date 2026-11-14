@@ -135,11 +135,6 @@
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <scanClassesPattern>
-                        <includes>
-                            <include>**/*.class</include>
-                        </includes>
-                    </scanClassesPattern>
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webAppConfig>
                         <contextPath>/struts2-rest-showcase</contextPath>

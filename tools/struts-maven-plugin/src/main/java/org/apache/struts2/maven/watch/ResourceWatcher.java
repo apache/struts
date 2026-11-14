@@ -62,7 +62,13 @@ public class ResourceWatcher {
     }
 
     public void pollOnce() {
-        Map<SourceFile, FileStamp> current = scanner.scan();
+        Map<SourceFile, FileStamp> current;
+        try {
+            current = scanner.scan();
+        } catch (RuntimeException e) {
+            error.accept("Failed to scan resources", e);
+            return;
+        }
         Map<Path, FileStamp> currentFilterStamps = filterStamps();
         Set<SourceFile> handled = new HashSet<>();
 

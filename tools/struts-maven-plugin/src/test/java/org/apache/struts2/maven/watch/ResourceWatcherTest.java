@@ -66,6 +66,8 @@ public class ResourceWatcherTest {
 
     private static class FakeScanner extends ResourceScanner {
         private final Deque<Map<SourceFile, FileStamp>> scans = new ArrayDeque<>();
+        private int failOnCall = -1;
+        private int calls;
 
         FakeScanner() {
             super(List.of(), true);
@@ -78,6 +80,9 @@ public class ResourceWatcherTest {
 
         @Override
         public Map<SourceFile, FileStamp> scan() {
+            if (++calls == failOnCall) {
+                throw new IllegalStateException("vanished");
+            }
             return scans.size() > 1 ? scans.poll() : scans.peek();
         }
     }
@@ -178,6 +183,16 @@ public class ResourceWatcherTest {
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0)).contains("a");
         assertThat(pushed).containsExactly("b");
+    }
+
+    @Test
+    public void scanFailureIsReportedAndWatchingContinues() {
+        FakeScanner scanner = new FakeScanner().add(scan(plain, "a", 1)).add(scan(plain, "a", 2));
+        scanner.failOnCall = 3;
+        drive(watcher(scanner, List.of()), 3);
+
+        assertThat(errors).hasSize(1);
+        assertThat(pushed).containsExactly("a");
     }
 
     @Test

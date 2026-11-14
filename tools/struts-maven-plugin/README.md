@@ -31,22 +31,32 @@ is needed.
 Next to a server started in another terminal, the goal blocks until Ctrl+C:
 
 ```sh
-mvn struts:watch -pl <module>
+mvn struts:watch
 ```
 
-Or bound to `process-resources` in the background, switched on from the command line, together with the Jetty plugin. This `<execution>` goes inside the plugin declaration above:
+In a multi-module build, run it from the root with `-pl <module>`. Do not add `-am`: it puts the module's dependencies
+into the build too, and the goal then fails because it supports a single module.
+
+Or bound to `process-resources` in the background, switched on from the command line, together with the Jetty plugin:
 
 ```xml
-<execution>
-    <id>watch</id>
-    <phase>process-resources</phase>
-    <goals>
-        <goal>watch</goal>
-    </goals>
-    <configuration>
-        <background>true</background>
-    </configuration>
-</execution>
+<plugin>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts-maven-plugin</artifactId>
+    <version>X.Y.Z</version>
+    <executions>
+        <execution>
+            <id>watch</id>
+            <phase>process-resources</phase>
+            <goals>
+                <goal>watch</goal>
+            </goals>
+            <configuration>
+                <background>true</background>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
 ```
 
 ```sh
@@ -57,7 +67,8 @@ Without `-Dstruts.watch` a background execution does nothing.
 
 Each push is logged, for example `pushed struts.xml -> target/classes/struts.xml`. Files whose output is missing or
 older than the source are pushed once at startup. Filtering follows the module's `maven-resources-plugin`
-configuration.
+configuration, including its plugin-level `<filters>`. The pom is read once at startup: restart the goal after changing
+the resource or filtering configuration.
 
 ## Parameters
 
@@ -87,5 +98,6 @@ the reload switches off, so to try it there flip them locally.
 
 ## Limitations
 
-- Single module only: in a multi-reactor build the goal fails with a message to run it with `-pl <module>`.
+- Single module only: in a multi-module build the goal fails with a message to run it with `-pl <module>` (without
+  `-am`).
 - No Java class reloading, no Gradle support, no Struts Boot support.

@@ -34,6 +34,8 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
@@ -43,6 +45,8 @@ public class WatchMojo extends AbstractMojo {
 
     static final String MULTI_MODULE_MESSAGE =
             "struts:watch supports a single module; run it in the module that owns the resources, e.g. -pl <module>";
+
+    private static final Set<Path> BACKGROUND_WATCHERS = ConcurrentHashMap.newKeySet();
 
     /**
      * Milliseconds between scans of the resource directories.
@@ -86,8 +90,40 @@ public class WatchMojo extends AbstractMojo {
         }
         checkSingleModule();
 
-        Path basedir = project.getBasedir().toPath();
         Path outputDirectory = new File(project.getBuild().getOutputDirectory()).toPath();
+        if (background) {
+            watchInBackground(outputDirectory);
+            return;
+        }
+        ResourceWatcher watcher = prepareWatcher(outputDirectory);
+        getLog().info("Watching " + project.getResources().size() + " resource root(s); press Ctrl+C to stop");
+        long deadline = timeout > 0 ? System.nanoTime() + Duration.ofSeconds(timeout).toNanos() : 0;
+        BooleanSupplier keepRunning = () -> deadline == 0 || System.nanoTime() - deadline < 0;
+        watcher.run(Duration.ofMillis(pollInterval), keepRunning);
+    }
+
+    private void watchInBackground(Path outputDirectory) {
+        if (!claimBackgroundWatcher(outputDirectory)) {
+            getLog().info("struts:watch is already watching " + outputDirectory + " in this JVM; not starting another");
+            return;
+        }
+        try {
+            ResourceWatcher watcher = prepareWatcher(outputDirectory);
+            Duration interval = Duration.ofMillis(pollInterval);
+            Runnable task = backgroundTask(() -> watcher.run(interval, () -> true), outputDirectory,
+                    (message, e) -> getLog().error(message, e));
+            Thread thread = new Thread(task, "struts-watch");
+            thread.setDaemon(true);
+            thread.start();
+        } catch (RuntimeException | Error e) {
+            releaseBackgroundWatcher(outputDirectory);
+            throw e;
+        }
+        getLog().info("Watching " + project.getResources().size() + " resource root(s) in the background");
+    }
+
+    private ResourceWatcher prepareWatcher(Path outputDirectory) {
+        Path basedir = project.getBasedir().toPath();
         for (String warning : new StrutsReloadInspector(outputDirectory).warnings()) {
             getLog().warn(warning);
         }
@@ -114,19 +150,31 @@ public class WatchMojo extends AbstractMojo {
         ResourceWatcher watcher = new ResourceWatcher(scanner, pusher, filterFiles,
                 message -> getLog().debug(message), (message, e) -> getLog().error(message, e));
         watcher.start();
+        return watcher;
+    }
 
-        Duration interval = Duration.ofMillis(pollInterval);
-        if (background) {
-            Thread thread = new Thread(() -> watcher.run(interval, () -> true), "struts-watch");
-            thread.setDaemon(true);
-            thread.start();
-            getLog().info("Watching " + roots.size() + " resource root(s) in the background");
-            return;
-        }
-        getLog().info("Watching " + roots.size() + " resource root(s); press Ctrl+C to stop");
-        long deadline = timeout > 0 ? System.nanoTime() + Duration.ofSeconds(timeout).toNanos() : 0;
-        BooleanSupplier keepRunning = () -> deadline == 0 || System.nanoTime() - deadline < 0;
-        watcher.run(interval, keepRunning);
+    static boolean claimBackgroundWatcher(Path outputDirectory) {
+        return BACKGROUND_WATCHERS.add(registryKey(outputDirectory));
+    }
+
+    static void releaseBackgroundWatcher(Path outputDirectory) {
+        BACKGROUND_WATCHERS.remove(registryKey(outputDirectory));
+    }
+
+    private static Path registryKey(Path outputDirectory) {
+        return outputDirectory.toAbsolutePath().normalize();
+    }
+
+    static Runnable backgroundTask(Runnable work, Path outputDirectory, BiConsumer<String, Throwable> error) {
+        return () -> {
+            try {
+                work.run();
+            } catch (Throwable e) {
+                error.accept("struts:watch background watcher for " + outputDirectory + " stopped", e);
+            } finally {
+                releaseBackgroundWatcher(outputDirectory);
+            }
+        };
     }
 
     boolean shouldRun() {

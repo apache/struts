@@ -20,10 +20,12 @@ package org.apache.struts2.maven.watch;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.ArgumentCaptor;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -35,7 +37,10 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class WatchMojoTest {
@@ -137,6 +142,69 @@ public class WatchMojoTest {
 
         assertThat(pushed).containsExactly("good.txt");
         assertThat(errors).containsExactly("Failed to push bad.txt");
+    }
+
+    @Test
+    public void secondBackgroundWatcherForTheSameOutputDirectoryIsRefused() throws Exception {
+        Path out = temp.newFolder("claimed").toPath();
+        Path other = temp.newFolder("other").toPath();
+        try {
+            assertThat(WatchMojo.claimBackgroundWatcher(out)).isTrue();
+            assertThat(WatchMojo.claimBackgroundWatcher(out.resolve("x").resolve(".."))).isFalse();
+            assertThat(WatchMojo.claimBackgroundWatcher(other)).isTrue();
+
+            WatchMojo.releaseBackgroundWatcher(out);
+
+            assertThat(WatchMojo.claimBackgroundWatcher(out)).isTrue();
+        } finally {
+            WatchMojo.releaseBackgroundWatcher(out);
+            WatchMojo.releaseBackgroundWatcher(other);
+        }
+    }
+
+    @Test
+    public void boundExecutionReturnsWhenAWatcherAlreadyRunsForTheOutputDirectory() throws Exception {
+        Path out = temp.newFolder("running").toPath();
+        WatchMojo mojo = new WatchMojo();
+        mojo.background = true;
+        mojo.enabled = true;
+        MavenSession session = mock(MavenSession.class);
+        when(session.getProjects()).thenReturn(List.of(new MavenProject()));
+        mojo.session = session;
+        mojo.project = new MavenProject();
+        mojo.project.getBuild().setOutputDirectory(out.toString());
+        Log log = mock(Log.class);
+        mojo.setLog(log);
+        WatchMojo.claimBackgroundWatcher(out);
+        try {
+            mojo.execute();
+        } finally {
+            WatchMojo.releaseBackgroundWatcher(out);
+        }
+
+        ArgumentCaptor<CharSequence> info = ArgumentCaptor.forClass(CharSequence.class);
+        verify(log).info(info.capture());
+        assertThat(info.getValue().toString()).contains("already watching");
+        verify(log, never()).warn(any(CharSequence.class));
+    }
+
+    @Test
+    public void backgroundTaskReportsEscapingThrowableAndReleasesItsClaim() throws Exception {
+        Path out = temp.newFolder("dying").toPath();
+        List<Throwable> reported = new ArrayList<>();
+        Error failure = new LinkageError("boom");
+        WatchMojo.claimBackgroundWatcher(out);
+
+        WatchMojo.backgroundTask(() -> {
+            throw failure;
+        }, out, (message, e) -> reported.add(e)).run();
+
+        assertThat(reported).containsExactly(failure);
+        try {
+            assertThat(WatchMojo.claimBackgroundWatcher(out)).isTrue();
+        } finally {
+            WatchMojo.releaseBackgroundWatcher(out);
+        }
     }
 
     private File write(Path path, long lastModified) throws Exception {

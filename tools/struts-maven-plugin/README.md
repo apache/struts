@@ -65,6 +65,24 @@ mvn jetty:run -Dstruts.watch
 
 Without `-Dstruts.watch` a background execution does nothing.
 
+To keep it on while developing, set the property in a profile rather than in the pom's top-level `<properties>`.
+Switched on there, every `package`, `install` and CI build would start a watcher, and a multi-module build would fail
+the single-module check:
+
+```xml
+<profiles>
+    <profile>
+        <id>dev</id>
+        <properties>
+            <struts.watch>true</struts.watch>
+        </properties>
+    </profile>
+</profiles>
+```
+
+Run `mvn jetty:run -Pdev`, or list `dev` under `<activeProfiles>` in your own `~/.m2/settings.xml` so plain
+`mvn jetty:run` watches on your machine while CI never does.
+
 Each push is logged, for example `pushed struts.xml -> target/classes/struts.xml`. Files whose output is missing or
 older than the source are pushed once at startup. Filtering follows the module's `maven-resources-plugin`
 configuration, including its plugin-level `<filters>`. The pom is read once at startup: restart the goal after changing

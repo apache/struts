@@ -35,6 +35,7 @@
     <properties>
         <maven.api.version>3.9.16</maven.api.version>
         <maven.plugin.tools.version>3.16.0</maven.plugin.tools.version>
+        <skipITs>false</skipITs>
     </properties>
 
     <build>
@@ -71,6 +72,8 @@
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <projectsDirectory>src/it</projectsDirectory>
+                    <settingsFile>src/it/settings.xml</settingsFile>
+                    <skipInvocation>${skipITs}</skipInvocation>
                     <preBuildHookScript>prebuild</preBuildHookScript>
                     <postBuildHookScript>verify</postBuildHookScript>
                     <streamLogsOnFailures>true</streamLogsOnFailures>

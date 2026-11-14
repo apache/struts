@@ -10,7 +10,7 @@ those. Webapp files (JSP, FTL under `src/main/webapp`) are already served from s
 
 The application must have reloading on: `struts.devMode=true` (with the reload switches not explicitly `false`), or
 `struts.configuration.xml.reload=true` and `struts.i18n.reload=true`. An explicit `false` wins over `devMode`. The goal
-logs a warning at startup when it can see the switches are off (best effort: it reads only `struts.xml` and
+logs a warning at startup when it can see the switches are off, or when `struts.devMode` is not found at all (best effort: it reads only `struts.xml` and
 `struts.properties` in the output directory).
 
 Declare the plugin in the application's `pom.xml`; the `struts:` prefix resolves from there, no `pluginGroups` entry
@@ -20,19 +20,21 @@ is needed.
 <plugin>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts-maven-plugin</artifactId>
-    <version>${struts.version}</version>
+    <version>X.Y.Z</version>
 </plugin>
 ```
+
+`X.Y.Z` is the Struts version; the plugin is released together with Struts.
 
 ## Running it
 
 Next to a server started in another terminal, the goal blocks until Ctrl+C:
 
-```
+```sh
 mvn struts:watch -pl <module>
 ```
 
-Or bound to `process-resources` in the background, switched on from the command line, together with the Jetty plugin:
+Or bound to `process-resources` in the background, switched on from the command line, together with the Jetty plugin. This `<execution>` goes inside the plugin declaration above:
 
 ```xml
 <execution>
@@ -47,7 +49,7 @@ Or bound to `process-resources` in the background, switched on from the command 
 </execution>
 ```
 
-```
+```sh
 mvn jetty:run -Dstruts.watch
 ```
 

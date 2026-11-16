@@ -43,15 +43,32 @@ not deployed to Maven repositories; build it from source.
 
 Settings are read from `struts.properties` on the classpath. A `--key=value` argument overrides the file.
 
-| Key                        | Default | Meaning                                    |
-|----------------------------|---------|--------------------------------------------|
-| `struts.boot.port`         | `8080`  | HTTP port; `0` picks a free port           |
-| `struts.boot.context-path` | `""`    | Context path the application is served at  |
-| `struts.boot.address`      | all     | Interface to listen on, e.g. `127.0.0.1`   |
+| Key                                   | Default | Meaning                                                    |
+|---------------------------------------|---------|------------------------------------------------------------|
+| `struts.boot.port`                    | `8080`  | HTTP port; `0` picks a free port                           |
+| `struts.boot.context-path`            | `""`    | Context path the application is served at                  |
+| `struts.boot.address`                 | all     | Interface to listen on, e.g. `127.0.0.1`                   |
+| `struts.boot.session.cookie.secure`   | `false` | `true` marks the session cookie `Secure`                   |
+| `struts.boot.session.cookie.sameSite` | `lax`   | `SameSite` attribute: `lax`, `strict`, `none` or `unset`   |
+
+The values of the two session cookie settings ignore case and surrounding spaces. Any other value, an empty one
+included, stops the application at startup with an error that names the setting and the value. Keys are matched exactly:
+a key that is not in this table, `struts.boot.session.cookie.samesite` for example, is ignored, and so is an argument
+without `=`.
 
 ## Defaults worth knowing
 
 - Tomcat listens on all interfaces, not only on localhost; set `struts.boot.address` to restrict it.
+- Sessions are tracked by cookie only. The session cookie carries `SameSite=Lax`, and `Secure` is not forced on it:
+  over the plain HTTP listener the starter opens, it is sent without `Secure`. Set
+  `struts.boot.session.cookie.secure=true` when TLS ends in front of the application, at a reverse proxy for example.
+- `struts.boot.session.cookie.sameSite` sets the default of Tomcat's cookie processor, so it also applies to every
+  other cookie the application adds without a `SameSite` attribute of its own. With `unset` the processor adds no
+  `SameSite` attribute; one the application sets on a cookie itself is kept.
+- For `SameSite=None`, the cookie reaching the browser must also carry `Secure`. Set
+  `struts.boot.session.cookie.secure=true` in Boot, or configure your HTTPS reverse proxy to add the `Secure`
+  attribute. The starter does not check this combination. The `secure` setting only reaches the session cookie; a
+  cookie the application adds itself needs its own `Secure`.
 - Error pages show the status only, without stack traces or the Tomcat version.
 - `struts.devMode` stays off.
 - Each start uses a fresh temporary base directory (`struts-boot-<uuid>`) that is deleted on shutdown.

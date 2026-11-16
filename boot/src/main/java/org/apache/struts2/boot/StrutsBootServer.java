@@ -74,7 +74,7 @@ public final class StrutsBootServer implements AutoCloseable {
             hideErrorReportDetails(tomcat);
             Path docBase = Files.createDirectory(baseDir.resolve("webapp"));
             Context context = tomcat.addContext(settings.contextPath(), docBase.toString());
-            restrictSessionTracking(context);
+            restrictSessionTracking(context, settings);
             context.addServletContainerInitializer(
                     (classes, servletContext) -> servletContext.setAttribute(ActionRegistry.SERVLET_CONTEXT_ATTRIBUTE, registry),
                     null);
@@ -182,16 +182,22 @@ public final class StrutsBootServer implements AutoCloseable {
     }
 
     /**
-     * Restricts the embedded context to cookie-only session tracking with {@code SameSite=Lax};
-     * Secure is left to the operator's TLS setup.
+     * Restricts the embedded context to cookie-only session tracking and applies the session cookie
+     * settings: {@code SameSite=Lax} and no forced {@code Secure} unless configured otherwise, see
+     * {@link BootSettings#sessionCookieSameSite()} and {@link BootSettings#sessionCookieSecure()}.
+     * {@code SameSite} is set on the cookie processor, as before, so it stays the default for every
+     * cookie of the context that has no {@code SameSite} attribute of its own.
      */
-    private static void restrictSessionTracking(Context context) {
+    private static void restrictSessionTracking(Context context, BootSettings settings) {
         // Tomcat defaults to COOKIE+URL when no web.xml sets <tracking-mode>; keep cookies only.
         context.addServletContainerInitializer(
-                (classes, servletContext) -> servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE)),
+                (classes, servletContext) -> {
+                    servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+                    servletContext.getSessionCookieConfig().setSecure(settings.sessionCookieSecure());
+                },
                 null);
         Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
-        cookieProcessor.setSameSiteCookies("lax");
+        cookieProcessor.setSameSiteCookies(settings.sessionCookieSameSite());
         context.setCookieProcessor(cookieProcessor);
     }
 

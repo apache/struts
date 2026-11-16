@@ -119,8 +119,8 @@ framework, not by the operator. *(documented — `boot/`, `apps/boot-hello/READM
 - **Operator** — deploys the WAR, sets `devMode` off, restricts dev-only plugins,
   configures the container and JVM. **Trusted.** *(documented.)*
   With Boot, the operator still owns the JVM, the host, the network perimeter and the
-  `struts.boot.*` settings (port, bind address, context path); the container defaults
-  the starter applies are Struts' (§5).
+  `struts.boot.*` settings (port, bind address, context path, session cookie
+  attributes); the container defaults the starter applies are Struts' (§5).
 
 **Component families.**
 
@@ -239,7 +239,10 @@ documented anti-pattern is `OUT-OF-MODEL`. *(documented/inferred — §14 Q-defa
   - `DefaultServlet` serves only an empty per-run docBase
   - Tomcat's base directory is a fresh owner-only temp directory, deleted on shutdown
   - session tracking is cookie-only
-  - the session cookie carries `SameSite=Lax`
+  - the session cookie carries `SameSite=Lax`, as does any other cookie without a
+    `SameSite` attribute of its own (override `struts.boot.session.cookie.sameSite`)
+  - `Secure` is not forced on the session cookie (override
+    `struts.boot.session.cookie.secure`)
   - `devMode` is never switched on
 
   A deviation from these defaults is a Struts finding. Anything the developer adds on

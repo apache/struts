@@ -22,6 +22,8 @@ import org.apache.struts2.config.ConfigurationException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -31,16 +33,23 @@ public final class BootSettings {
     private static final String PORT_KEY = PREFIX + "port";
     private static final String CONTEXT_PATH_KEY = PREFIX + "context-path";
     private static final String ADDRESS_KEY = PREFIX + "address";
+    private static final String SESSION_COOKIE_SECURE_KEY = PREFIX + "session.cookie.secure";
+    private static final String SESSION_COOKIE_SAME_SITE_KEY = PREFIX + "session.cookie.sameSite";
+    private static final List<String> SAME_SITE_VALUES = List.of("lax", "strict", "none", "unset");
     private static final String ARGUMENT_PREFIX = "--";
 
     private final int port;
     private final String contextPath;
     private final String address;
+    private final boolean sessionCookieSecure;
+    private final String sessionCookieSameSite;
 
-    private BootSettings(int port, String contextPath, String address) {
+    private BootSettings(int port, String contextPath, String address, boolean sessionCookieSecure, String sessionCookieSameSite) {
         this.port = port;
         this.contextPath = contextPath;
         this.address = address;
+        this.sessionCookieSecure = sessionCookieSecure;
+        this.sessionCookieSameSite = sessionCookieSameSite;
     }
 
     public static BootSettings load(String[] args) {
@@ -56,7 +65,9 @@ public final class BootSettings {
         return new BootSettings(
                 parsePort(merged.getProperty(PORT_KEY, "8080")),
                 normaliseContextPath(merged.getProperty(CONTEXT_PATH_KEY, "")),
-                blankToNull(merged.getProperty(ADDRESS_KEY)));
+                blankToNull(merged.getProperty(ADDRESS_KEY)),
+                parseSecure(merged.getProperty(SESSION_COOKIE_SECURE_KEY, "false")),
+                parseSameSite(merged.getProperty(SESSION_COOKIE_SAME_SITE_KEY, "lax")));
     }
 
     public int port() {
@@ -69,6 +80,20 @@ public final class BootSettings {
 
     public Optional<String> address() {
         return Optional.ofNullable(address);
+    }
+
+    /** Whether {@code Secure} is forced on the session cookie; {@code false} unless configured. */
+    public boolean sessionCookieSecure() {
+        return sessionCookieSecure;
+    }
+
+    /**
+     * The {@code SameSite} value, in lower case, the container adds to the session cookie and to any
+     * other cookie without a {@code SameSite} attribute of its own: {@code lax} (the default),
+     * {@code strict}, {@code none}, or {@code unset} to add none.
+     */
+    public String sessionCookieSameSite() {
+        return sessionCookieSameSite;
     }
 
     private static void applyArgument(Properties target, String arg) {
@@ -103,6 +128,26 @@ public final class BootSettings {
         } catch (NumberFormatException e) {
             throw new ConfigurationException("Invalid " + PORT_KEY + ": '" + value + "' is not a number", e);
         }
+    }
+
+    private static boolean parseSecure(String value) {
+        String normalised = value.trim().toLowerCase(Locale.ROOT);
+        if (normalised.equals("true")) {
+            return true;
+        }
+        if (normalised.equals("false")) {
+            return false;
+        }
+        throw new ConfigurationException("Invalid " + SESSION_COOKIE_SECURE_KEY + ": '" + value + "' is not true or false");
+    }
+
+    private static String parseSameSite(String value) {
+        String normalised = value.trim().toLowerCase(Locale.ROOT);
+        if (!SAME_SITE_VALUES.contains(normalised)) {
+            throw new ConfigurationException("Invalid " + SESSION_COOKIE_SAME_SITE_KEY + ": '" + value
+                    + "' is not one of " + String.join(", ", SAME_SITE_VALUES));
+        }
+        return normalised;
     }
 
     private static Properties readStrutsProperties() {

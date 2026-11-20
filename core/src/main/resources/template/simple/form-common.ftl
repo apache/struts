@@ -33,10 +33,7 @@
  name="${attributes.name}"<#rt/>
 </#if>
 <#if attributes.onsubmit?has_content>
- onsubmit="<#outputformat 'JavaScript'>${attributes.onsubmit}</#outputformat>"<#rt/>
-</#if>
-<#if attributes.onreset?has_content>
- onreset="<#outputformat 'JavaScript'>${attributes.onreset}</#outputformat>"<#rt/>
+ onsubmit="${attributes.onsubmit}"<#rt/>
 </#if>
 <#if attributes.action?has_content>
  action="${attributes.action}"<#rt/>

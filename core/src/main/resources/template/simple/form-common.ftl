@@ -35,9 +35,6 @@
 <#if attributes.onsubmit?has_content>
  onsubmit="${attributes.onsubmit}"<#rt/>
 </#if>
-<#if attributes.onreset?has_content>
- onreset="${attributes.onreset}"<#rt/>
-</#if>
 <#if attributes.action?has_content>
  action="${attributes.action}"<#rt/>
 </#if>

@@ -172,7 +172,7 @@
     <#if attributes.doubleOnkeypress??><#t/>
     onkeypress="${attributes.doubleOnkeypress}"
     </#if><#t/>
-    <#if attributes.doubleOnKeydown??><#t/>
+    <#if attributes.doubleOnkeydown??><#t/>
     onkeydown="${attributes.doubleOnkeydown}"
     </#if><#t/>
     <#if attributes.doubleOnkeyup??><#t/>

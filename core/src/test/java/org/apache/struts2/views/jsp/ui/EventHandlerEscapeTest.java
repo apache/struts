@@ -41,7 +41,9 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
             String out = render(tag);
 
             assertTrue(theme + ": " + out, out.contains("title=\"" + ESCAPED + "\""));
+            assertFalse(theme + ": " + out, out.contains("title=\"" + PAYLOAD + "\""));
             assertTrue(theme + ": " + out, out.contains("onclick=\"" + ESCAPED + "\""));
+            assertFalse(theme + ": " + out, out.contains("onclick=\"" + PAYLOAD + "\""));
             assertTrue(theme + ": " + out, out.contains("onchange=\"a &amp;&amp; b &lt; c\""));
         }
     }
@@ -68,7 +70,89 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
 
             assertTrue(theme + ": " + out, out.contains("onsubmit=\"" + ESCAPED + "\""));
             assertTrue(theme + ": " + out, out.contains("onreset=\"" + ESCAPED + "\""));
+            assertFalse(theme + ": " + out, out.contains("onsubmit=\"" + PAYLOAD + "\""));
+            assertFalse(theme + ": " + out, out.contains("onreset=\"" + PAYLOAD + "\""));
+            assertEquals(theme + ": " + out, 1, countOccurrences(out, "onreset="));
         }
+    }
+
+    public void testFormRendersSingleOnresetInEveryTheme() throws Exception {
+        for (String theme : THEMES) {
+            for (boolean validate : new boolean[]{true, false}) {
+                FormTag withHandler = new FormTag();
+                withHandler.setTheme(theme);
+                withHandler.setValidate(String.valueOf(validate));
+                withHandler.setOnreset("doIt();");
+                String out = render(withHandler);
+                assertEquals(theme + " validate=" + validate + ": " + out, 1, countOccurrences(out, "onreset="));
+                assertTrue(theme + " validate=" + validate + ": " + out, out.contains("onreset=\"doIt();\""));
+
+                FormTag withoutHandler = new FormTag();
+                withoutHandler.setTheme(theme);
+                withoutHandler.setValidate(String.valueOf(validate));
+                out = render(withoutHandler);
+                boolean xhtmlDefault = validate && (theme.equals("xhtml") || theme.equals("css_xhtml"));
+                assertEquals(theme + " validate=" + validate + ": " + out, xhtmlDefault ? 1 : 0, countOccurrences(out, "onreset="));
+                assertEquals(theme + " validate=" + validate + ": " + out, xhtmlDefault,
+                        out.contains("onreset=\"clearErrorMessages(this);clearErrorLabels(this);\""));
+            }
+        }
+    }
+
+    public void testAlreadyEncodedScriptingEventsAreEncodedAgain() throws Exception {
+        for (String theme : THEMES) {
+            TextFieldTag tag = new TextFieldTag();
+            tag.setTheme(theme);
+            tag.setName("foo");
+            tag.setOnclick("if (a &amp;&amp; b) go()");
+            tag.setOnchange("show('O&#39;Brien')");
+
+            String out = render(tag);
+
+            assertTrue(theme + ": " + out, out.contains("onclick=\"if (a &amp;amp;&amp;amp; b) go()\""));
+            assertTrue(theme + ": " + out, out.contains("onchange=\"show(&#39;O&amp;#39;Brien&#39;)\""));
+        }
+    }
+
+    public void testAlreadyEncodedFormEventsAreEncodedAgain() throws Exception {
+        for (String theme : THEMES) {
+            FormTag tag = new FormTag();
+            tag.setTheme(theme);
+            tag.setOnsubmit("if (a &amp;&amp; b) go()");
+            tag.setOnreset("if (a &amp;&amp; b) go()");
+
+            String out = render(tag);
+
+            assertTrue(theme + ": " + out, out.contains("onsubmit=\"if (a &amp;amp;&amp;amp; b) go()\""));
+            assertTrue(theme + ": " + out, out.contains("onreset=\"if (a &amp;amp;&amp;amp; b) go()\""));
+        }
+    }
+
+    public void testAlreadyEncodedDoubleSelectEventsAreEncodedAgain() throws Exception {
+        DoubleSelectTag tag = new DoubleSelectTag();
+        tag.setName("foo");
+        tag.setDoubleName("bar");
+        tag.setList("{'a'}");
+        tag.setDoubleList("{'b'}");
+        tag.setFormName("inputForm");
+        tag.setDoubleOnclick("if (a &amp;&amp; b) go()");
+
+        String out = render(tag);
+
+        assertTrue(out, out.contains("onclick=\"if (a &amp;amp;&amp;amp; b) go()\""));
+    }
+
+    public void testAlreadyEncodedOptionTransferSelectEventsAreEncodedAgain() throws Exception {
+        OptionTransferSelectTag tag = new OptionTransferSelectTag();
+        tag.setName("foo");
+        tag.setList("{'a'}");
+        tag.setDoubleName("bar");
+        tag.setDoubleList("{'b'}");
+        tag.setDoubleOnclick("if (a &amp;&amp; b) go()");
+
+        String out = render(tag);
+
+        assertTrue(out, out.contains("onclick=\"if (a &amp;amp;&amp;amp; b) go()\""));
     }
 
     public void testDoubleSelectEventsAreEscaped() throws Exception {
@@ -80,7 +164,10 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
         tag.setFormName("inputForm");
         tag.setDoubleOnclick(PAYLOAD);
 
-        assertTrue(render(tag).contains("onclick=\"" + ESCAPED + "\""));
+        String out = render(tag);
+
+        assertTrue(out, out.contains("onclick=\"" + ESCAPED + "\""));
+        assertFalse(out, out.contains("onclick=\"" + PAYLOAD + "\""));
     }
 
     public void testOptionTransferSelectEventsAreEscaped() throws Exception {
@@ -90,12 +177,17 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
         tag.setDoubleName("bar");
         tag.setDoubleList("{'b'}");
         tag.setDoubleOnclick(PAYLOAD);
+        tag.setDoubleOnkeydown(PAYLOAD);
         tag.setDoubleAccesskey(PAYLOAD);
 
         String out = render(tag);
 
         assertTrue(out, out.contains("onclick=\"" + ESCAPED + "\""));
+        assertTrue(out, out.contains("onkeydown=\"" + ESCAPED + "\""));
         assertTrue(out, out.contains("accesskey=\"" + ESCAPED + "\""));
+        assertFalse(out, out.contains("onclick=\"" + PAYLOAD + "\""));
+        assertFalse(out, out.contains("onkeydown=\"" + PAYLOAD + "\""));
+        assertFalse(out, out.contains("accesskey=\"" + PAYLOAD + "\""));
     }
 
     public void testJsTooltipIsEscaped() throws Exception {
@@ -204,7 +296,17 @@ public class EventHandlerEscapeTest extends AbstractUITagTest {
         assertTrue(out, out.contains("'styleClass', 'x\\&#39;+alert(1)+\\&#39;'"));
     }
 
+    private static int countOccurrences(String text, String token) {
+        int count = 0;
+        for (int i = text.indexOf(token); i >= 0; i = text.indexOf(token, i + token.length())) {
+            count++;
+        }
+        return count;
+    }
+
     private String render(Tag tag) throws JspException {
+        // the writer is shared by the whole test, so drop what earlier renders wrote
+        writer.getBuffer().setLength(0);
         tag.setPageContext(pageContext);
         tag.doStartTag();
         tag.doEndTag();

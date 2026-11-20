@@ -62,7 +62,4 @@
  accept-charset="${attributes.acceptcharset}"<#rt/>
 </#if>
 <#include "/${attributes.templateDir}/${attributes.expandTheme}/dynamic-attributes.ftl" /><#rt/>
-<#if attributes.onreset?has_content>
- onreset="${attributes.onreset}"<#rt/>
-</#if>
 ><#rt/>

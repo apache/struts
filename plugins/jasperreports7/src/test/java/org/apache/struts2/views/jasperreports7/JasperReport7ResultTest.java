@@ -383,6 +383,23 @@ public class JasperReport7ResultTest extends StrutsTestCase {
         assertThat(response.getContentType()).isEqualTo("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         assertThat(response.getContentAsByteArray()).hasSizeGreaterThan(0);
     }
+    public void testDocumentNameIsQuotedInContentDisposition() throws Exception {
+        // given
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        stack.push(new Object() {
+            public String getReportName() {
+                return "sales \"Q1\"; 2026\r\nX-Injected: 1";
+            }
+        });
+        result.setDocumentName("${reportName}");
+
+        // when
+        result.execute(this.invocation);
+
+        // then
+        assertThat(response.getHeader("Content-disposition"))
+                .isEqualTo("inline; filename=\"sales \\\"Q1\\\"; 2026X-Injected: 1.xml\"");
+    }
 
     @Override
     protected void setUp() throws Exception {

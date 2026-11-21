@@ -78,7 +78,7 @@ import java.util.TimeZone;
  * <li><b>contentDisposition</b> - disposition (defaults to "inline", values are
  * typically <i>filename="document.pdf"</i>).</li>
  * <li><b>documentName</b> - name of the document (will generate the http header
- * <code>Content-disposition = X; filename=X.[format]</code>).</li>
+ * <code>Content-disposition = X; filename="X.[format]"</code>).</li>
  * <li>
  * <b>reportParameters</b> - an expression used to retrieve a map of
  * report parameters from the value stack. The parameters may be accessed
@@ -303,9 +303,7 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
 
             if (documentName != null) {
                 tmp.append("; filename=");
-                tmp.append(documentName);
-                tmp.append(".");
-                tmp.append(format);
+                tmp.append(quoteFileName(documentName + "." + format));
             }
 
             response.setHeader("Content-disposition", tmp.toString());
@@ -337,6 +335,28 @@ public class JasperReport7Result extends StrutsResultSupport implements JasperRe
         }
 
         parsedReportParameters = conditionalParse(reportParameters, invocation);
+    }
+
+    /**
+     * Formats a file name as an RFC 6266 quoted-string, so spaces, semicolons and quotes in the
+     * document name cannot end the parameter or the header. Control characters are dropped,
+     * backslash and double quote are escaped.
+     *
+     * @param fileName the file name to quote
+     * @return the quoted file name
+     */
+    private static String quoteFileName(String fileName) {
+        StringBuilder quoted = new StringBuilder(fileName.length() + 2).append('"');
+        for (char c : fileName.toCharArray()) {
+            if (c < 0x20 || c == 0x7F) {
+                continue;
+            }
+            if (c == '"' || c == '\\') {
+                quoted.append('\\');
+            }
+            quoted.append(c);
+        }
+        return quoted.append('"').toString();
     }
 
     /**

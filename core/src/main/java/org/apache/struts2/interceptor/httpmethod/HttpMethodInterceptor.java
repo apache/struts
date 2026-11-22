@@ -235,7 +235,8 @@ public class HttpMethodInterceptor extends AbstractInterceptor {
     }
 
     private boolean isAllowed(String requestedMethod, Set<HttpMethod> allowedMethods) {
-        return allowedMethods.stream().anyMatch(method -> method.name().equalsIgnoreCase(requestedMethod));
+        HttpMethod method = HttpMethod.parseOrNull(requestedMethod);
+        return method != null && allowedMethods.contains(method);
     }
 
     /**

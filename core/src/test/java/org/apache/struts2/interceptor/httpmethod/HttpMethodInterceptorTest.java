@@ -39,7 +39,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -485,6 +484,20 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
         assertNull(action.getHttpMethod());
     }
 
+    public void testUnrestrictedHttpMethodAwareActionWithUnknownRequestMethodIsInvoked() throws Exception {
+        UnrestrictedHttpMethodAwareAction action = new UnrestrictedHttpMethodAwareAction();
+        action.setMethod(HttpMethod.GET);
+        prepareActionInvocation(action, actionConfig());
+        invocation.setResultCode("success");
+        MockHttpServletResponse response = prepareRequest("PROPFIND");
+
+        String resultName = interceptor.intercept(invocation);
+
+        assertEquals("success", resultName);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertNull(action.getHttpMethod());
+    }
+
     public void testHttpMethodAttributeRejectsWith405AndAllowHeader() throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
         ActionProxy proxy = proxyFor("", "PostOnly", "GET", response);
@@ -681,6 +694,24 @@ public class HttpMethodInterceptorTest extends StrutsInternalTestCase {
 
     @HttpPost
     public static class PostOnlyWithoutExecute {
+    }
+
+    public static class UnrestrictedHttpMethodAwareAction implements HttpMethodAware {
+        private HttpMethod httpMethod;
+
+        @Override
+        public void setMethod(HttpMethod httpMethod) {
+            this.httpMethod = httpMethod;
+        }
+
+        public HttpMethod getHttpMethod() {
+            return httpMethod;
+        }
+
+        @Override
+        public String getBadRequestResultName() {
+            return null;
+        }
     }
 
     public interface PostMethod {

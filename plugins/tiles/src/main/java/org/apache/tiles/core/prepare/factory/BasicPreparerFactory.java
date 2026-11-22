@@ -24,8 +24,8 @@ import org.apache.tiles.api.preparer.ViewPreparer;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.reflect.ClassUtil;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation of the {@link org.apache.tiles.core.prepare.factory.PreparerFactory}.
@@ -50,7 +50,7 @@ public class BasicPreparerFactory implements PreparerFactory {
      * Constructor.
      */
     public BasicPreparerFactory() {
-        this.preparers = new HashMap<>();
+        this.preparers = new ConcurrentHashMap<>();
     }
 
 
@@ -63,11 +63,18 @@ public class BasicPreparerFactory implements PreparerFactory {
      * @return ViewPreparer instance
      */
     public ViewPreparer getPreparer(String name, Request context) {
-        if (!preparers.containsKey(name)) {
-            preparers.put(name, createPreparer(name));
+        ViewPreparer preparer = preparers.get(name);
+        if (preparer != null) {
+            return preparer;
         }
 
-        return preparers.get(name);
+        preparer = createPreparer(name);
+        if (preparer == null) {
+            return null;
+        }
+
+        ViewPreparer existing = preparers.putIfAbsent(name, preparer);
+        return existing != null ? existing : preparer;
     }
 
     /**
@@ -78,7 +85,6 @@ public class BasicPreparerFactory implements PreparerFactory {
      */
     protected ViewPreparer createPreparer(String name) {
         LOG.debug("Creating ViewPreparer '{}'", name);
-        Object instance = ClassUtil.instantiate(name, true);
-        return (ViewPreparer) instance;
+        return ClassUtil.instantiate(name, ViewPreparer.class, true);
     }
 }

@@ -799,6 +799,11 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertArrayEquals(new String[]{" keep "}, (String[]) converter.convertValue(context, null, null, null, new String[]{" keep "}, String[].class));
     }
 
+    public void testRequestParameterBoundToStringKeepsSurroundingWhitespace() {
+        assertEquals(" summer2026 ", converter.convertValue(context, null, null, null, new String[]{" summer2026 "}, String.class));
+        assertEquals(" summer2026 ", converter.convertValue(context, null, null, null, new String[]{" summer2026 "}, CharSequence.class));
+    }
+
     public void testCustomTypeConverterReceivesUntrimmedValue() {
         XWorkConverter freshConverter = container.inject(XWorkConverter.class);
         freshConverter.setTypeConverterHolder(new StrutsTypeConverterHolder());

@@ -163,7 +163,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     }
 
     private Object trimSurroundingWhitespace(Object value, Class toType) {
-        if (toType.isArray() || Collection.class.isAssignableFrom(toType) || toType == Character.class || toType == char.class) {
+        if (toType.isAssignableFrom(String.class) || toType.isArray() || Collection.class.isAssignableFrom(toType) || toType == Character.class || toType == char.class) {
             return value;
         }
         if (value instanceof String str) {

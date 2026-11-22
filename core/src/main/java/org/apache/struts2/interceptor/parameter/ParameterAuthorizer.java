@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.interceptor.parameter;
 
+import org.apache.struts2.ognl.ParameterMemberGuard;
+
 import java.util.Collection;
 
 /**

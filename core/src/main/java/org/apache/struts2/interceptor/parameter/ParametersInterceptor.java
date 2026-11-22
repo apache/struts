@@ -339,7 +339,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected void applyParametersOnStack(ValueStack stack, Map<String, Parameter> parameters, Object action) {
         MemberAccessValueStack guardedStack = requireAnnotations && requireAnnotationsOnResolvedMember
-                && stack instanceof MemberAccessValueStack accessValueStack ? accessValueStack : null;
+                ? guardableStack(stack) : null;
         Object target = guardedStack != null ? parameterAuthorizer.resolveTarget(action) : null;
         try {
             for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
@@ -360,6 +360,21 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 guardedStack.useParameterMemberGuard(null);
             }
         }
+    }
+
+    /**
+     * The stack the member guard can be applied to, or {@code null} with a one-time warning when it cannot be: the
+     * stack is not a {@link MemberAccessValueStack}, or it does not override
+     * {@link MemberAccessValueStack#useParameterMemberGuard}. Parameters are then bound as with the flag off.
+     */
+    private MemberAccessValueStack guardableStack(ValueStack stack) {
+        if (stack instanceof MemberAccessValueStack accessValueStack && accessValueStack.useParameterMemberGuard(null)) {
+            return accessValueStack;
+        }
+        logWarningForFirstOccurrence("strutsParameterMemberGuard", LOG,
+                "[{}] is enabled, but value stack [{}] cannot apply the parameter member guard, so parameters are bound without it",
+                StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_RESOLVED_MEMBER, stack.getClass().getName());
+        return null;
     }
 
     protected void notifyDeveloperParameterException(Object action, String property, String message) {

@@ -26,6 +26,7 @@ import org.apache.struts2.ModelDriven;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlUtil;
+import org.apache.struts2.ognl.ParameterMemberGuard;
 import org.apache.struts2.util.ProxyService;
 
 import java.beans.BeanInfo;

@@ -21,6 +21,7 @@ package org.apache.struts2.ognl.accessor;
 import org.apache.struts2.dispatcher.InternalDestroyable;
 import org.apache.struts2.inject.Inject;
 import org.apache.struts2.ognl.OgnlValueStack;
+import org.apache.struts2.ognl.SecurityMemberAccess;
 import org.apache.struts2.util.CompoundRoot;
 import org.apache.struts2.util.ValueStack;
 import ognl.MethodFailedException;
@@ -109,6 +110,8 @@ public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
                     OgnlRuntime.setProperty(context, o, name, value);
 
                     return;
+                } else if (isParameterRefused(context)) {
+                    return;
                 } else if (o instanceof Map) {
                     @SuppressWarnings("unchecked")
                     Map<Object, Object> map = (Map<Object, Object>) o;
@@ -137,6 +140,14 @@ public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
         }
     }
 
+    /**
+     * Whether the parameter being bound has been refused by the parameter member guard. The rest of the root is then
+     * not tried: a {@code Map} further down would bind the value through {@code put()} without asking member access.
+     */
+    private static boolean isParameterRefused(OgnlContext context) {
+        return context.getMemberAccess() instanceof SecurityMemberAccess memberAccess && memberAccess.isParameterRefused();
+    }
+
     @Override
     public Object getProperty(OgnlContext context, Object target, Object name) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
@@ -158,7 +169,13 @@ public class CompoundRootAccessor implements RootAccessor, InternalDestroyable {
                 }
 
                 try {
-                    if (OgnlRuntime.hasGetProperty(context, o, name) || (o instanceof Map map && map.containsKey(name))) {
+                    if (OgnlRuntime.hasGetProperty(context, o, name)) {
+                        return OgnlRuntime.getProperty(context, o, name);
+                    }
+                    if (isParameterRefused(context)) {
+                        return null;
+                    }
+                    if (o instanceof Map map && map.containsKey(name)) {
                         return OgnlRuntime.getProperty(context, o, name);
                     }
                 } catch (OgnlException e) {

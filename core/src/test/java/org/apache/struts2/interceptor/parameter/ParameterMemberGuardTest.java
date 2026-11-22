@@ -19,18 +19,24 @@
 package org.apache.struts2.interceptor.parameter;
 
 import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionSupport;
 import org.apache.struts2.ModelDriven;
 import org.apache.struts2.XWorkTestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.ognl.ParameterMemberGuard;
 import org.apache.struts2.util.MemberAccessValueStack;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
 import org.apache.struts2.util.reflection.ReflectionContextState;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Binds through a real OGNL value stack, so these tests see the members OGNL actually resolves. No authorizer
@@ -237,6 +243,113 @@ public class ParameterMemberGuardTest extends XWorkTestCase {
         assertEquals("value", action.secret);
     }
 
+    public void testNestedObjectAlsoInTheRootBindsThroughItsAnnotatedGetter() {
+        var action = new GuardedAction();
+        action.nested = new Nested();
+        stack.push(action);
+        stack.push(action.nested);
+
+        bind(action, action, "nested.name");
+
+        assertEquals("value", action.nested.name);
+    }
+
+    public void testNestedObjectAlsoInTheRootIsNotReachedThroughAnUnannotatedGetter() {
+        var action = new GuardedAction();
+        action.unannotated = new Nested();
+        stack.push(action);
+        stack.push(action.unannotated);
+
+        bind(action, action, "unannotated.name");
+
+        assertNull(action.unannotated.name);
+    }
+
+    public void testRefusedParameterIsNotBoundByAMapLowerInTheRoot() {
+        var below = new HashMap<String, Object>();
+        var action = new GuardedAction();
+        stack.push(below);
+        stack.push(action);
+
+        bind(action, action, "secret");
+
+        assertNull(action.secret);
+        assertFalse(below.containsKey("secret"));
+    }
+
+    public void testRefusedRootIsNotTakenFromAMapLowerInTheRoot() {
+        var fromMap = new Nested();
+        var below = new HashMap<String, Object>(Map.of("unannotated", fromMap));
+        var action = new GuardedAction();
+        stack.push(below);
+        stack.push(action);
+
+        bind(action, action, "unannotated.name");
+
+        assertNull(fromMap.name);
+        assertNull(action.unannotated);
+    }
+
+    public void testCapitalizedNameOfAnAnnotatedFieldBindsThroughItsSetter() {
+        var action = new GuardedAction();
+        bindOn(action, "FieldBacked");
+        assertEquals("value", action.fieldBacked);
+    }
+
+    public void testRefusalIsReportedOnceInDevMode() {
+        authorizer.setDevMode(Boolean.TRUE.toString());
+        var action = new CountingAction();
+        container.inject(action);
+
+        bindOn(action, "secret");
+
+        assertNull(action.secret);
+        assertEquals(1, action.notifications);
+    }
+
+    public void testRefusedRootGetterIsReportedOnceAndNotCreatedInDevMode() {
+        authorizer.setDevMode(Boolean.TRUE.toString());
+        var action = new CountingAction();
+        container.inject(action);
+
+        bindOn(action, "unannotated.name");
+
+        assertNull(action.unannotated);
+        assertEquals(1, action.notifications);
+    }
+
+    public void testNullHandlerStoreMustBeTheBeanSetterOfWhatTheGetterReturns() throws Exception {
+        var action = new StoringAction();
+        stack.push(action);
+
+        assertTrue(permitsAfterRootGetter(action, StoringAction.class.getMethod("setNested", Nested.class)));
+        assertFalse(permitsAfterRootGetter(action, StoringAction.class.getMethod("putNested", Nested.class)));
+        assertFalse(permitsAfterRootGetter(action, StoringAction.class.getMethod("setNested", String.class)));
+    }
+
+    public void testOgnlValueStackAppliesTheGuard() {
+        assertTrue(((MemberAccessValueStack) stack).useParameterMemberGuard(null));
+    }
+
+    public void testStackNotOverridingTheGuardMethodReportsItCannotApplyIt() {
+        MemberAccessValueStack custom = new MemberAccessValueStack() {
+            @Override
+            public void useExcludeProperties(Set<Pattern> excludeProperties) {
+            }
+
+            @Override
+            public void useAcceptProperties(Set<Pattern> acceptedProperties) {
+            }
+        };
+        assertFalse(custom.useParameterMemberGuard(ParameterMemberGuard.PERMIT_ALL));
+    }
+
+    private boolean permitsAfterRootGetter(StoringAction action, Method candidate) throws Exception {
+        var guard = authorizer.memberGuard("nested.name", action, action, stack.getRoot());
+        assertTrue(guard.permits(action, StoringAction.class.getMethod("getNested"), "nested"));
+        return guard.permits(action, candidate, "nested");
+    }
+
     private ParametersInterceptor driftedInterceptor() {
         var interceptor = new ParametersInterceptor();
         container.inject(interceptor);
@@ -372,6 +485,49 @@ public class ParameterMemberGuardTest extends XWorkTestCase {
 
         public void setSecret(String secret) {
             this.secret = secret;
+        }
+    }
+
+    public static class CountingAction extends ActionSupport {
+        private String secret;
+        private Nested unannotated;
+        private int notifications;
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+
+        public Nested getUnannotated() {
+            return unannotated;
+        }
+
+        public void setUnannotated(Nested unannotated) {
+            this.unannotated = unannotated;
+        }
+
+        @Override
+        public void addActionMessage(String message) {
+            notifications++;
+        }
+    }
+
+    public static class StoringAction {
+        private Nested nested;
+
+        @StrutsParameter(depth = 1)
+        public Nested getNested() {
+            return nested;
+        }
+
+        public void setNested(Nested nested) {
+            this.nested = nested;
+        }
+
+        public void setNested(String ignored) {
+        }
+
+        public void putNested(Nested nested) {
+            this.nested = nested;
         }
     }
 }

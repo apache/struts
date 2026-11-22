@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.inject.Inject;
-import org.apache.struts2.interceptor.parameter.ParameterMemberGuard;
 import org.apache.struts2.util.ProxyService;
 
 import java.lang.reflect.AccessibleObject;
@@ -499,6 +498,16 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     public void useParameterMemberGuard(ParameterMemberGuard guard) {
         this.parameterMemberGuard = guard == null ? ParameterMemberGuard.PERMIT_ALL : guard;
+    }
+
+    /**
+     * @return {@code true} once the current parameter member guard has refused a member, so that binding that does not
+     * ask member access (a {@code Map} in the value stack root) refuses the parameter too
+     * @see ParameterMemberGuard#hasRefused()
+     * @since 7.6.0
+     */
+    public boolean isParameterRefused() {
+        return parameterMemberGuard.hasRefused();
     }
 
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {

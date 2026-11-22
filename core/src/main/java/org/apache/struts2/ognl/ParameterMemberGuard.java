@@ -16,19 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor.parameter;
+package org.apache.struts2.ognl;
 
 import java.lang.reflect.Member;
 
 /**
  * Decides, while one parameter is being bound, whether OGNL may use a member it has actually resolved.
  * <p>
- * {@link ParameterAuthorizer#isAuthorized} runs before OGNL and has to predict which accessor or field OGNL will go
- * through. This guard runs where OGNL resolves the member, so a difference between that prediction and OGNL's name
- * resolution fails closed. It adds to the authorizer and does not replace it: Map-backed models and custom property
- * accessors never reach it.
+ * {@link org.apache.struts2.interceptor.parameter.ParameterAuthorizer#isAuthorized} runs before OGNL and has to predict
+ * which accessor or field OGNL will go through. This guard runs where OGNL resolves the member, so a difference between
+ * that prediction and OGNL's name resolution fails closed. It adds to the authorizer and does not replace it: a
+ * Map-backed model and custom property accessors never reach it.
+ * <p>
+ * It lives next to {@link SecurityMemberAccess}, which applies it, so that this package does not depend on the
+ * interceptor that creates it.
  *
- * @see ParameterAuthorizer#memberGuard
+ * @see org.apache.struts2.interceptor.parameter.ParameterAuthorizer#memberGuard
  * @since 7.6.0
  */
 @FunctionalInterface
@@ -46,4 +49,15 @@ public interface ParameterMemberGuard {
      * @return {@code true} if OGNL may use the member for the parameter being bound
      */
     boolean permits(Object owner, Member member, String propertyName);
+
+    /**
+     * Whether this guard has refused a member for the parameter being bound. Once it has, the whole parameter is
+     * refused: {@link org.apache.struts2.ognl.accessor.CompoundRootAccessor} then stops walking the value stack root,
+     * so a {@code Map} further down, which binds without asking member access, does not take the value either.
+     *
+     * @return {@code true} once a member has been refused
+     */
+    default boolean hasRefused() {
+        return false;
+    }
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import org.apache.struts2.interceptor.parameter.ParameterMemberGuard;
+import org.apache.struts2.ognl.ParameterMemberGuard;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -35,11 +35,16 @@ public interface MemberAccessValueStack {
 
     /**
      * Applies a guard to every member OGNL resolves on this stack until it is replaced.
+     * <p>
+     * The default cannot apply a guard and returns {@code false}, so a stack that does not override this method is
+     * reported instead of being silently left unguarded.
      *
      * @param guard the guard to apply, or {@code null} to remove the current one
+     * @return {@code true} if this stack applies the guard
      * @since 7.6.0
      */
-    default void useParameterMemberGuard(ParameterMemberGuard guard) {
+    default boolean useParameterMemberGuard(ParameterMemberGuard guard) {
+        return false;
     }
 
 }

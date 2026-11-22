@@ -31,7 +31,7 @@ fix them in a PR to `apache/struts-site`. Only what is genuinely agent-specific 
 |---|---|---|
 | 1 | Prepare | Branch green, version decided, parent poms released |
 | 2 | Cut | Tag pushed, artifacts in a **closed** Nexus staging repo |
-| 3 | Stage | Assemblies in `dist/dev`, Version Notes page live, `[TEST]` mail sent |
+| 3 | Stage | Assemblies in `dist/dev`, Version Notes page complete, unrestricted and listed on the Migration Guide, `[TEST]` mail sent |
 | 4 | Vote | 72 h elapsed, three binding `+1`, result mail sent |
 | 5 | Promote | Nexus repo released, `dist/dev` → `dist/release`, 24 h rsync waited |
 | 6 | Publish | Site PR merged, GitHub release un-flagged, `[ANN]` mail delivered |

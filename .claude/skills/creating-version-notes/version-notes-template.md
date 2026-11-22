@@ -13,7 +13,7 @@ from a copy of the previous release's page — see the Iron Rule in `SKILL.md`.
 | Field | What goes in it |
 |---|---|
 | Version | The release being announced, e.g. `6.11.0`. Appears in the intro sentence, the page title, the Maven snippet, and both JIRA link labels. |
-| Parent page | Always `Migration Guide`, page id `13981`. Create the page as its child, and add it to that page's index — see `SKILL.md`. |
+| Parent page | Always `Migration Guide`, page id `13981`. Create the page as its child, and add it to that page's index — see `SKILL.md`. A restricted draft is listed only at phase 3, once unrestricted. |
 | Prior notes page | Title of the previous **released** version's page in the same series, e.g. `Version Notes 6.10.0`. Skip versions that were cut but never released. |
 | JIRA version id | The numeric id for `ReleaseNote.jspa?version=`. Obtain from the WW project's versions — it is not the version name. `6.10.0` is `12357065`, `7.2.1` is `12355751`. |
 | DONE filter id | Saved-filter id for `issues/?filter=`, labelled `Struts X.Y.Z DONE`. Each release needs its own; a reused id lists the wrong release. |
@@ -130,6 +130,7 @@ Repeat the issue `<h2>` block per type present, in the order given above.
 - [ ] Staging Repository block present.
 - [ ] No unpublished severity, CVE, or S2-XXX reference anywhere on the page, and any security summary truncated at a clause boundary was reported to the release manager.
 - [ ] Page created as a child of Migration Guide (`13981`).
+- [ ] If it began as a restricted draft: every line re-checked against the release branch, the prior-notes link re-checked, `DONE_FILTER_ID` replaced, and the restrictions removed only once the page is complete — `confluence_get_page_restrictions` reads back empty and an anonymous fetch returns `200` before the `[TEST]` mail goes out.
 - [ ] **Listed at the top of the matching `Version Notes N.x` section on the Migration Guide**, and that edit verified against raw storage — the version diff renders empty even when the change landed.
 - [ ] Page re-fetched immediately before every write.
 

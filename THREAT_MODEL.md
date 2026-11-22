@@ -492,6 +492,18 @@ authoritative list; §14 Q12.)*
 - **"Raw `${}` EL / forced OGNL eval on my request parameter is exploitable."** The
   application fed untrusted input to expression evaluation — documented anti-pattern,
   not a framework flaw.
+- **"A wildcard in `class=` lets my request path choose the class."** In a mapping such as
+  `<action name="*" class="com.example.{1}Action">`, the `{N}` value comes from the request
+  path and may carry any character the action-name filter allows, `.` included, so a request
+  can reach any class or Spring bean whose name fits the template's prefix and suffix. The
+  template is developer-written configuration (§6), no configuration shipped with the
+  framework substitutes into `class=`, and the resulting name is only resolved as a class or
+  bean and instantiated as the action, never evaluated.
+  `OUT-OF-MODEL: application-responsibility`. In-model only when shipped configuration does
+  this, when a wildcard value reaches expression evaluation by the framework (S2-015), or
+  when it gets past a control that does gate a slot — a substituted method that runs despite
+  strict method invocation and the allowed-methods list is `VALID: control-not-enforced`.
+  *(documented — WW-5839.)*
 - **"A tag with `escape="false"` / `escapeHtmlBody="false"` writes my HTML unescaped."**
   That is the documented opt-out of §8.8, chosen in the application's own template —
   `BY-DESIGN`. In-model only when a tag writes a value unescaped with escaping left on.

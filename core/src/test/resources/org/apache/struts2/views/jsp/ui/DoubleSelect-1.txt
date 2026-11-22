@@ -1,7 +1,7 @@
 <tr>
     <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
     <td class="tdInput">
-<select name="foo" id="foo" class="c1" style="s1" onmousedown="window.status='onmousedown';" onmouseup="window.status='onmouseup';" onmouseover="window.status='onmouseover';" onmousemove="window.status='onmousemove';" onmouseout="window.status='onmouseout';" onchange="fooRedirect(this.selectedIndex)">
+<select name="foo" id="foo" class="c1" style="s1" onmousedown="window.status=&#39;onmousedown&#39;;" onmouseup="window.status=&#39;onmouseup&#39;;" onmouseover="window.status=&#39;onmouseover&#39;;" onmousemove="window.status=&#39;onmousemove&#39;;" onmouseout="window.status=&#39;onmouseout&#39;;" onchange="fooRedirect(this.selectedIndex)">
     <option value="BE">Belgium</option>
     <option value="FR">France</option>
 </select>

@@ -1,6 +1,6 @@
 ---
 name: creating-version-notes
-description: Use when preparing, updating, or reviewing the release documentation for a Struts release or release candidate on any maintenance line (6.x, 7.x) - the Version Notes page on the cwiki, its Migration Guide entry, the GitHub release notes, and the test-build announcement mail.
+description: Use when preparing, updating, or reviewing the release documentation for a Struts release or release candidate on any maintenance line (6.x, 7.x) - the Version Notes page on the cwiki, its Migration Guide entry, the GitHub release notes, and the test-build announcement mail - or when, between releases, a merged PR needs a Breaking changes or Deprecations line or someone asks to start the next release's notes early.
 ---
 
 # Creating Version Notes
@@ -13,7 +13,7 @@ A Version Notes page answers one question for a user deciding whether to upgrade
 
 **One skill covers every maintenance line.** 6.x and 7.x pages share an identical structure. The line changes the data (version, prior page, JIRA ids), never the process.
 
-**This is phase 3 of a seven-phase release.** `releasing-struts` holds the sequence, the gates and the mechanics either side of it; this skill owns the paperwork.
+**This is phase 3 of a seven-phase release.** `releasing-struts` holds the sequence, the gates and the mechanics either side of it; this skill owns the paperwork. The page itself starts earlier, as a restricted draft that collects the authored lines during the cycle — see below.
 
 ## The Iron Rule
 
@@ -33,13 +33,41 @@ Half-updated links are the signature failure: the number gets fixed and the labe
 
 **[`version-notes-template.md`](version-notes-template.md) is the source of truth**: field guidance, storage-format skeleton with those defects corrected, and the pre-publication checklist.
 
+A restricted draft of this release, created from the template earlier in the cycle, *is* that start. At phase 3, continue it; never create a second page beside it.
+
+## The restricted draft: started early, published at phase 3
+
+Authored lines — Breaking changes, Deprecations — go onto the release's own Version Notes page as their PRs merge, and the page stays view-restricted until phase 3 of that release. Their only home between releases is that draft: not a file, a memory note, or the ticket.
+
+**When a merged PR needs a line, or someone asks to start the notes**, take X.Y.Z from the ticket's fix version, or the version the release manager names — never from the `-SNAPSHOT` — and search space `WW` for the exact title `Version Notes X.Y.Z`. Each release, and so each maintenance line, has its own draft; 6.x and 7.x never share a page.
+
+- **It exists and is listed on the Migration Guide** → that version has shipped; the ticket's fix version is wrong. Stop and ask the release manager.
+- **A draft exists** → re-fetch it and add the line. For the first item under a heading, create the heading in its place from *Page section order* with `confluence_update_page_section` on the preceding heading, re-supplying that section's body as for the Security section. Then confirm the headings below it appear exactly once.
+- **No draft exists** → create one as below, then add the line.
+
+**Creating the draft:**
+
+1. `confluence_create_page`, parent Migration Guide (`13981`), with the boilerplate only: everything above *Maven users*, *Maven users* with all three code macros, *Issue Detail* with the real JIRA version id, *Issue List* with the literal `DONE_FILTER_ID` until the filter exists, *Other resources*. No issue-type sections and no empty headings.
+2. Immediately `confluence_set_page_restrictions` with `read_users` and `edit_users` set to the account the cwiki tools authenticate as — the release manager's. The page is public from the create until this call, so its first body holds nothing but boilerplate; the title, which only repeats a public Jira fix version, is all that can leak.
+3. Confirm: `confluence_get_page_restrictions` lists only that account under `read`, and an anonymous `curl -s -o /dev/null -w '%{http_code}' https://cwiki.apache.org/confluence/rest/api/content/<id>` returns `404`. Anonymous search can keep listing the title for about a minute after restricting — `curl -s -G https://cwiki.apache.org/confluence/rest/api/content/search --data-urlencode 'cql=title="Version Notes X.Y.Z"'` must report `"size":0` before the first line goes on.
+4. Leave the Migration Guide alone until phase 3.
+
+**A line on the draft meets the release-time rules** — one sentence plus the ticket link, derived from the merged diff, neutrally framed: lifting the restriction publishes whatever is there. A PR that has not merged gets no line yet.
+
+**At phase 3, the draft is the page:**
+
+1. Re-check every line against the release branch — a ticket may have been retargeted or reverted since its line went on — and check the prior-notes link still names the previous **released** version.
+2. Derive and reconcile the issue-type sections and Rejected requests, and replace `DONE_FILTER_ID` with the new filter.
+3. If the release number chosen differs from the draft's, rename the page and every version on it — title, intro, Maven snippet, both JIRA labels and the version id.
+4. With the page complete, remove the restrictions (`confluence_set_page_restrictions` with no lists), confirm `confluence_get_page_restrictions` reads back empty and the anonymous fetch returns `200`, then add the Migration Guide entry. The `[TEST]` mail links this page, so it goes out only after this step.
+
 ## Collect every input before writing
 
 Each row is derived from a named source. A value you cannot source is a visible placeholder, never a guess.
 
 | Input | Where it comes from |
 |---|---|
-| Version | The release being voted or announced |
+| Version | The release being voted or announced; for a draft, the fix version on the ticket whose line starts it |
 | Parent page | Always **Migration Guide** (page id `13981`) — every Version Notes page is a child of it |
 | Prior notes page title | The previous **released** version in the same series — see below |
 | JIRA version id | Numeric id behind `ReleaseNote.jspa?version=` — from the WW project's versions, **not** the version name |
@@ -322,7 +350,11 @@ After writing, diff against the version you meant to build on. The diff should s
 - A severity, CVE, or S2-XXX reference on the page that has not been published
 - Bulletins public but no `Security` section, or bulletin links added inline to the type sections instead
 - Breaking changes assembled by pasting ticket summaries
-- Creating the page without adding it to the Migration Guide index
+- A merged PR's Breaking changes or Deprecations line kept in a file, a memory note or the ticket instead of on the draft page
+- A draft page left unrestricted, or listed on the Migration Guide before phase 3
+- A draft still restricted when the `[TEST]` mail goes out
+- Creating a second page at release, or a second draft for the same line, when a restricted draft already exists
+- Creating the page, or lifting a draft's restriction, without adding it to the Migration Guide index
 - Trusting an empty version diff on the Migration Guide as proof the edit landed
 - Publishing GitHub release notes without checking which tag the Full Changelog compares against
 - Splitting the GitHub sections by author instead of by whether the entry carries a ticket
@@ -341,6 +373,8 @@ After writing, diff against the version you meant to build on. The diff should s
 | "No commit mentions the ticket, so it wasn't backported" | Read the linked PR's changed files. Titles name symptoms, and squash-merges rewrite hashes. |
 | "The pom version doesn't match the ticket, that's a gap" | Patch bumps ship untick eted by design. Only ticketed bumps get an entry. |
 | "The page is created, so the work is done" | It is invisible until listed on the Migration Guide. |
+| "No page exists for the next release, so park the line somewhere until phase 3" | Create the restricted draft and put the line on it. |
+| "An unlisted page is private enough" | Anyone with the URL, or a search, can read it. Restrict it. |
 | "The version diff is empty, so nothing changed" | The diff renders markdown, which drops `ac:link` bodies. Check raw storage. |
 | "GitHub generated the changelog, so the range is right" | It guesses the previous tag by reachability. Renamed branches make it reach too far back. Verify with `git log PREV..THIS`. |
 | "Dependabot authored it, so it goes under Dependencies" | Ticketed bumps stay in What's Changed. The ticket decides, not the author. |

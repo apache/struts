@@ -90,7 +90,6 @@
                                     <arg value="-L" />
                                     <arg value="-np" />
                                     <arg value="--directory-prefix=${project.build.directory}/docs" />
-                                    <arg value="--no-check-certificate" />
                                     <arg value="-r" />
                                     <arg value="-i" />
                                     <arg value="src/main/resources/docs-urls.txt" />

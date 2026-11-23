@@ -320,6 +320,48 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     /**
+     * @return actual size of already uploaded files
+     */
+    protected Long actualSizeOfUploadedFiles() {
+        return uploadedFiles.values().stream()
+                .map(files -> files.stream().map(UploadedFile::length).reduce(0L, Long::sum))
+                .reduce(0L, Long::sum);
+    }
+
+    /**
+     * Checks whether accepting a file of the given size would exceed {@link #maxSizeOfFiles}
+     * and records an error if it would.
+     *
+     * @param fileSize size of the file being considered
+     * @param fileName name of the file being considered
+     * @return true if the file must be rejected
+     */
+    protected boolean exceedsMaxSizeOfFiles(long fileSize, String fileName) {
+        if (maxSizeOfFiles == null) {
+            return false;
+        }
+        long currentFilesSize = actualSizeOfUploadedFiles();
+        if (fileSize <= maxSizeOfFiles - currentFilesSize) {
+            return false;
+        }
+        addMaxSizeOfFilesError(fileName, currentFilesSize);
+        return true;
+    }
+
+    protected void addMaxSizeOfFilesError(String fileName, long currentFilesSize) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("File: {} exceeds allowed max size: {}, actual size of already uploaded files: {}",
+                    normalizeSpace(fileName), maxSizeOfFiles, currentFilesSize);
+        }
+        LocalizedMessage errorMessage = buildErrorMessage(
+                FileUploadSizeException.class,
+                String.format("File %s exceeds allowed max size %s", fileName, maxSizeOfFiles),
+                new Object[]{maxSizeOfFiles, currentFilesSize}
+        );
+        addErrorIfAbsent(errorMessage);
+    }
+
+    /**
      * Fail-closed guard: throws when accepting another file would exceed {@link #maxFiles}.
      * A negative {@link #maxFiles} means "no limit", matching commons-fileupload2's own
      * {@code fileCountMax = -1} convention (see {@code AbstractFileUpload.setFileCountMax}).

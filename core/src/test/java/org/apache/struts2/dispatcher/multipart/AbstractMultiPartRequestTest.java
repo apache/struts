@@ -862,6 +862,53 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(countAfter).isLessThanOrEqualTo(countBefore);
     }
 
+    @Test
+    public void maxSizeOfFilesRejectsSingleFileOverLimit() throws IOException {
+        String content = formFile("file1", "test1.csv", "12345678901") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxSizeOfFiles("10");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getFile("file1")).isEmpty();
+        assertThat(multiPart.getErrors())
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadSizeException");
+    }
+
+    @Test
+    public void maxSizeOfFilesRejectsFileCrossingLimit() throws IOException {
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file2", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxSizeOfFiles("10");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getFile("file1")).hasSize(1);
+        assertThat(multiPart.getFile("file2")).isEmpty();
+        assertThat(multiPart.getErrors())
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadSizeException");
+    }
+
+    @Test
+    public void maxSizeOfFilesAcceptsFilesUpToLimit() throws IOException {
+        String content = formFile("file1", "test1.csv", "12345") +
+                formFile("file2", "test2.csv", "67890") +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxSizeOfFiles("10");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors()).isEmpty();
+        assertThat(multiPart.getFile("file1")).hasSize(1);
+        assertThat(multiPart.getFile("file2")).hasSize(1);
+    }
+
     protected String formFile(String fieldName, String filename, String content) {
         return endline +
                 "--" + boundary + endline +

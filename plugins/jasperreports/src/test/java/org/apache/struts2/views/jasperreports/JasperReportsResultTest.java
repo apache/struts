@@ -268,6 +268,21 @@ public class JasperReportsResultTest extends StrutsTestCase {
         assertTrue(sb.toString().contains("Hello Qux Quux!"));
     }
 
+    public void testDocumentNameIsQuotedInContentDisposition() throws Exception {
+        result.setDataSource("{#{'firstName':'ignore', 'lastName':'ignore'}}");
+        stack.push(new Object() {
+            public String getReportName() {
+                return "sales \"Q1\"; 2026\tdraft";
+            }
+        });
+        result.setDocumentName("${reportName}");
+
+        result.execute(this.invocation);
+
+        assertEquals("inline; filename=\"sales \\\"Q1\\\"; 2026draft.xml\"",
+            response.getHeader("Content-disposition"));
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

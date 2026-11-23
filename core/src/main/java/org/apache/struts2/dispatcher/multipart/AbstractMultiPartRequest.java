@@ -305,14 +305,18 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     protected boolean exceedsMaxStringLength(String fieldName, String fieldValue) {
-        if (maxStringLength != null && fieldValue.length() > maxStringLength) {
+        return exceedsMaxStringLength(fieldName, fieldValue.length());
+    }
+
+    protected boolean exceedsMaxStringLength(String fieldName, long length) {
+        if (maxStringLength != null && length > maxStringLength) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Form field: {} of size: {} bytes exceeds limit of: {}.",
-                        normalizeSpace(fieldName), fieldValue.length(), maxStringLength);
+                        normalizeSpace(fieldName), length, maxStringLength);
             }
             LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(),
                     STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY, null,
-                    new Object[]{fieldName, maxStringLength, fieldValue.length()});
+                    new Object[]{fieldName, maxStringLength, length});
             addErrorIfAbsent(localizedMessage);
             return true;
         }

@@ -94,6 +94,13 @@
                                     <arg value="-i" />
                                     <arg value="src/main/resources/docs-urls.txt" />
                                 </exec>
+                                <fail message="The documentation fetch produced no files in ${project.build.directory}/docs; the all and docs assemblies would be published without documentation.">
+                                    <condition>
+                                        <resourcecount when="less" count="1">
+                                            <fileset dir="${project.build.directory}/docs" erroronmissingdir="false" />
+                                        </resourcecount>
+                                    </condition>
+                                </fail>
                             </target>
                         </configuration>
                     </execution>

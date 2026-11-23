@@ -199,6 +199,48 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         assertNull(action.getAddressRows().get(0).get(0).getCity());
     }
 
+    public void testScalarContainerElementsAreRejectedAtTheDepthTheFormPathRejects() throws Exception {
+        ScalarContainersAction scalars = new ScalarContainersAction();
+        setupInterceptorWithAction(scalars);
+        assertTrue(authorizer.isAuthorized("tags", scalars, scalars));
+        assertFalse(authorizer.isAuthorized("tags[0]", scalars, scalars));
+
+        runWithBody("{\"tags\":[\"admin\"],\"attributes\":{\"role\":\"admin\"},\"aliases\":[\"admin\"]}");
+
+        assertNull(scalars.getTags());
+        assertNull(scalars.getAttributes());
+        assertNull(scalars.getAliases());
+    }
+
+    public void testTwoPhaseCopyRejectsScalarContainerElementsAtTheSameDepth() throws Exception {
+        ScalarContainersAction scalars = new ScalarContainersAction();
+        setupInterceptorWithHandler(scalars, new PlainJacksonHandler());
+
+        runWithBody("{\"tags\":[\"admin\"],\"attributes\":{\"role\":\"admin\"},\"aliases\":[\"admin\"]}");
+
+        assertTrue(scalars.getTags() == null || scalars.getTags().isEmpty());
+        assertTrue(scalars.getAttributes() == null || scalars.getAttributes().isEmpty());
+        assertTrue(scalars.getAliases() == null || scalars.getAliases()[0] == null);
+    }
+
+    public void testScalarContainerElementsAreAppliedWhenDepthAllows() throws Exception {
+        runWithBody("{\"tags\":[\"a\"],\"attributes\":{\"k\":\"v\"},\"aliases\":[\"b\"]}");
+
+        assertEquals(List.of("a"), action.getTags());
+        assertEquals(Map.of("k", "v"), action.getAttributes());
+        assertEquals("b", action.getAliases()[0]);
+    }
+
+    public void testTwoPhaseCopyAppliesScalarContainerElementsWhenDepthAllows() throws Exception {
+        setupInterceptorWithHandler(action, new PlainJacksonHandler());
+
+        runWithBody("{\"tags\":[\"a\"],\"attributes\":{\"k\":\"v\"},\"aliases\":[\"b\"]}");
+
+        assertEquals(List.of("a"), action.getTags());
+        assertEquals(Map.of("k", "v"), action.getAttributes());
+        assertEquals("b", action.getAliases()[0]);
+    }
+
     // --- WW-5789: a handler that binds nothing must leave the model as the params interceptor left it ---
 
     public void testFormUrlEncodedBodyKeepsValuesBoundOnTheModel() throws Exception {
@@ -469,6 +511,28 @@ public class ContentTypeInterceptorIntegrationTest extends TestCase {
         public void setUnauthorized(SecureRestAction.Address unauthorized) {
             this.unauthorized = unauthorized;
         }
+    }
+
+    /** Scalar containers annotated on the setter only, so {@code tags} is authorized but {@code tags[0]} is not. */
+    public static class ScalarContainersAction extends ActionSupport {
+        private List<String> tags;
+        private Map<String, String> attributes;
+        private String[] aliases;
+
+        public List<String> getTags() { return tags; }
+
+        @StrutsParameter
+        public void setTags(List<String> tags) { this.tags = tags; }
+
+        public Map<String, String> getAttributes() { return attributes; }
+
+        @StrutsParameter
+        public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
+
+        public String[] getAliases() { return aliases; }
+
+        @StrutsParameter
+        public void setAliases(String[] aliases) { this.aliases = aliases; }
     }
 
     public static class UnannotatedAnySetterAction extends ActionSupport {

@@ -31,6 +31,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Enforces {@code @StrutsParameter} authorization on a property's value deserializer, and owns the
@@ -157,13 +159,62 @@ final class AuthorizingValueDeserializer extends DelegatingDeserializer {
     }
 
     private boolean authorize(String path, JsonParser p) throws IOException {
-        if (DynamicKeyAuthorizationContext.isAuthorized(path)) {
+        String rejectedPath = rejectedPath(path);
+        if (rejectedPath == null) {
             return true;
         }
-        LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization", path);
+        LOG.warn("REST body parameter [{}] rejected by @StrutsParameter authorization", rejectedPath);
         ParameterAuthorizationContext.markRedacted();
         p.skipChildren();
         return false;
+    }
+
+    /**
+     * Scalar container elements have no member deserializer of their own to authorize them, so
+     * their indexed path ({@code items[0]}) is checked here together with the property itself, the
+     * same way {@code ParametersInterceptor} checks the flat name {@code items[0]}.
+     */
+    private String rejectedPath(String path) {
+        if (!DynamicKeyAuthorizationContext.isAuthorized(path)) {
+            return path;
+        }
+        if (holdsScalarElements()) {
+            String elementPath = prefixForNested(path);
+            if (!DynamicKeyAuthorizationContext.isAuthorized(elementPath)) {
+                return elementPath;
+            }
+        }
+        return null;
+    }
+
+    private boolean holdsScalarElements() {
+        JavaType type = propertyType;
+        if (type == null || !isContainer(type)) {
+            return false;
+        }
+        while (type.getContentType() != null && isContainer(type)) {
+            type = type.getContentType();
+        }
+        return isScalar(type.getRawClass());
+    }
+
+    private static boolean isContainer(JavaType type) {
+        return type.isCollectionLikeType() || type.isMapLikeType() || type.isArrayType();
+    }
+
+    private static boolean isScalar(Class<?> type) {
+        if (type.isPrimitive() || type.isEnum()) {
+            return true;
+        }
+        String name = type.getName();
+        return name.startsWith("java.lang.")
+                || name.startsWith("java.math.")
+                || name.startsWith("java.time.")
+                || name.startsWith("java.net.")
+                || name.startsWith("java.io.")
+                || name.startsWith("java.nio.")
+                || (name.startsWith("java.util.")
+                && !Collection.class.isAssignableFrom(type) && !Map.class.isAssignableFrom(type));
     }
 
     /**

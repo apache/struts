@@ -330,7 +330,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
             } else if (isContainer(element)) {
                 result.add(deepCopyAuthorizedContainer(element, collectionPath + "[0]", authTarget, action));
-            } else {
+            } else if (isAuthorizedScalar(collectionPath + "[0]", authTarget, action)) {
                 result.add(element);
             }
         }
@@ -370,7 +370,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
             } else if (isContainer(value)) {
                 result.put(entry.getKey(), deepCopyAuthorizedContainer(value, mapPath + "[0]", authTarget, action));
-            } else {
+            } else if (isAuthorizedScalar(mapPath + "[0]", authTarget, action)) {
                 result.put(entry.getKey(), value);
             }
         }
@@ -404,11 +404,19 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
                 }
             } else if (isContainer(element)) {
                 Array.set(result, i, deepCopyAuthorizedContainer(element, arrayPath + "[0]", authTarget, action));
-            } else {
+            } else if (isAuthorizedScalar(arrayPath + "[0]", authTarget, action)) {
                 Array.set(result, i, element);
             }
         }
         return result;
+    }
+
+    private boolean isAuthorizedScalar(String elementPath, Object authTarget, Object action) {
+        if (parameterAuthorizer.isAuthorized(elementPath, authTarget, action)) {
+            return true;
+        }
+        LOG.warn("REST container element [{}] rejected by @StrutsParameter authorization", elementPath);
+        return false;
     }
 
     private static boolean isContainer(Object value) {

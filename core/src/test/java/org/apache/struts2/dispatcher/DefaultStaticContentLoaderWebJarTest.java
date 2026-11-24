@@ -23,6 +23,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -92,6 +94,33 @@ public class DefaultStaticContentLoaderWebJarTest {
         verify(response, never())
             .sendError(HttpServletResponse.SC_NOT_FOUND);
         assertThat(captured.size()).isGreaterThan(0);
+    }
+
+    @Test
+    public void servesSemicolonNamedResourceFromDecodedProviderUrl() throws Exception {
+        DefaultStaticContentLoader webJarLoader = newLoader(true);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getContextPath()).thenReturn("/myapp");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ByteArrayOutputStream captured = new ByteArrayOutputStream();
+        when(response.getOutputStream()).thenReturn(new WebJarTestServletOutputStream(captured));
+        var provider = new org.apache.struts2.webjars.StrutsWebJarUrlProvider();
+
+        String url = provider.resolveUrl("ww5866-test/theme;dark.css", request).orElseThrow();
+        assertThat(url).isEqualTo("/myapp/static/webjars/ww5866-test/1.0.0/theme%3Bdark.css");
+        // Model the decoded, context-relative path supplied by a servlet container.
+        // This does not exercise a container's path-parameter parsing.
+        String decodedPath = URI.create(url).getPath().substring(request.getContextPath().length());
+        webJarLoader.findStaticResource(decodedPath, request, response);
+
+        try (var expected = getClass().getResourceAsStream(
+                "/META-INF/resources/webjars/ww5866-test/1.0.0/theme;dark.css")) {
+            assertThat(expected).isNotNull();
+            assertThat(captured.toByteArray()).isEqualTo(expected.readAllBytes());
+        }
+        assertThat(captured.toString(StandardCharsets.UTF_8)).contains("--ww5866-theme: dark;");
+        verify(response).setContentType("text/css");
+        verify(response, never()).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test

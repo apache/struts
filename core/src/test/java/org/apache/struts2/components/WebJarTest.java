@@ -20,10 +20,14 @@ package org.apache.struts2.components;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.struts2.util.ValueStack;
+import org.apache.struts2.webjars.StrutsWebJarUrlProvider;
 import org.apache.struts2.webjars.WebJarUrlProvider;
 import org.junit.Test;
 
 import java.io.StringWriter;
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.xml.sax.InputSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -77,5 +81,71 @@ public class WebJarTest {
         webJar.end(writer, "");
 
         assertThat(writer.toString()).isEmpty();
+    }
+
+    @Test
+    public void writesEncodedUrlFromRealProvider() {
+        ValueStack stack = mock(ValueStack.class);
+        String logicalPath = "jquery/dir one/a\"?#%+\u65b0\u805e.js";
+        when(stack.findString(logicalPath)).thenReturn(logicalPath);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getContextPath()).thenReturn("/myapp");
+        WebJar webJar = newComponent(stack, request, new StrutsWebJarUrlProvider());
+        webJar.setPath(logicalPath);
+        StringWriter writer = new StringWriter();
+
+        webJar.start(writer);
+        webJar.end(writer, "");
+
+        assertThat(writer.toString()).startsWith("/myapp/static/webjars/jquery/")
+            .endsWith("/dir%20one/a%22%3F%23%25+%E6%96%B0%E8%81%9E.js");
+    }
+
+    @Test
+    public void storesEncodedUrlInVarWithoutWritingOrEncodingItAgain() {
+        ValueStack stack = mock(ValueStack.class);
+        String logicalPath = "jquery/a b%20.js";
+        when(stack.findString(logicalPath)).thenReturn(logicalPath);
+        when(stack.findString("assetUrl")).thenReturn("assetUrl");
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getContextPath()).thenReturn("/myapp");
+        WebJar webJar = newComponent(stack, request, new StrutsWebJarUrlProvider());
+        webJar.setPath(logicalPath);
+        webJar.setVar("assetUrl");
+        StringWriter writer = new StringWriter();
+
+        webJar.start(writer);
+        webJar.end(writer, "");
+
+        assertThat(writer.toString()).isEmpty();
+        assertThat(stack.getContext().get("assetUrl")).asString()
+            .startsWith("/myapp/static/webjars/jquery/")
+            .endsWith("/a%20b%2520.js");
+    }
+
+    @Test
+    public void realProviderOutputFitsInDoubleQuotedAttribute() throws Exception {
+        ValueStack stack = mock(ValueStack.class);
+        String logicalPath = "jquery/a\" b.js";
+        when(stack.findString(logicalPath)).thenReturn(logicalPath);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getContextPath()).thenReturn("/myapp");
+        WebJar webJar = newComponent(stack, request, new StrutsWebJarUrlProvider());
+        webJar.setPath(logicalPath);
+        StringWriter writer = new StringWriter();
+        writer.write("<script src=\"");
+        webJar.start(writer);
+        webJar.end(writer, "");
+        writer.write("\"></script>");
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        var document = factory.newDocumentBuilder().parse(new InputSource(new StringReader(writer.toString())));
+        var element = document.getDocumentElement();
+        assertThat(element.getTagName()).isEqualTo("script");
+        assertThat(element.getAttributes().getLength()).isEqualTo(1);
+        assertThat(element.getAttribute("src")).startsWith("/myapp/static/webjars/jquery/")
+            .endsWith("/a%22%20b.js");
+        assertThat(element.getChildNodes().getLength()).isZero();
     }
 }

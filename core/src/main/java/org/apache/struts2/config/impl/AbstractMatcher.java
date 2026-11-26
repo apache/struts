@@ -19,6 +19,7 @@
 package org.apache.struts2.config.impl;
 
 import org.apache.struts2.util.PatternMatcher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +46,13 @@ public abstract class AbstractMatcher<E> implements Serializable {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMatcher.class);
     private static final Pattern WILDCARD_PATTERN = Pattern.compile("\\{(.)}");
+
+    /**
+     * Characters a wildcard-matched segment may contain when it is substituted into a class name:
+     * Unicode letters and digits, '_' and '$'. Excludes '.', '/' and everything else that could move
+     * the resulting class name out of the package the mapping's author wrote.
+     */
+    private static final Pattern SAFE_CLASS_NAME_SEGMENT = Pattern.compile("[\\p{L}\\p{Nd}_$]*");
 
     /**
      * <p> Handles all wildcard pattern matching. </p>
@@ -207,11 +215,38 @@ public abstract class AbstractMatcher<E> implements Serializable {
 
         StringBuilder result = new StringBuilder();
         while (wildcardMatcher.find()) {
-            wildcardMatcher.appendReplacement(result, vars.getOrDefault(wildcardMatcher.group(1), ""));
+            wildcardMatcher.appendReplacement(result, Matcher.quoteReplacement(vars.getOrDefault(wildcardMatcher.group(1), "")));
         }
         wildcardMatcher.appendTail(result);
 
         return result.toString();
+    }
+
+    /**
+     * <p> Checks that every wildcard-matched value that {@link #convertParam(String, Map)} would
+     * substitute into {@code val} is safe to use as part of a class name. Callers reject the
+     * whole match when this returns {@code false}, as they do for a disallowed method name. </p>
+     *
+     * @param val  The class name template, may be {@code null}
+     * @param vars A Map of wildcard-matched strings
+     * @return {@code false} if a substituted value contains a character other than a letter,
+     * digit, '_' or '$'
+     */
+    protected boolean isSafeForClassName(String val, Map<String, String> vars) {
+        if (val == null) {
+            return true;
+        }
+
+        Matcher wildcardMatcher = WILDCARD_PATTERN.matcher(val);
+        while (wildcardMatcher.find()) {
+            String value = vars.getOrDefault(wildcardMatcher.group(1), "");
+            if (!SAFE_CLASS_NAME_SEGMENT.matcher(value).matches()) {
+                LOG.warn("Wildcard-matched value [{}] is not allowed in class name [{}]; match rejected",
+                        StringUtils.normalizeSpace(value), val);
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

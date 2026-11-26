@@ -114,6 +114,10 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
             return null;
         }
 
+        if (!hasSafeClassNames(orig, vars)) {
+            return null;
+        }
+
         String className = convertParam(orig.getClassName(), vars);
         String pkgName = convertParam(orig.getPackageName(), vars);
 
@@ -151,5 +155,22 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
                 .addExceptionMappings(exs)
                 .location(orig.getLocation())
                 .build();
+    }
+
+    private boolean hasSafeClassNames(ActionConfig orig, Map<String, String> vars) {
+        if (!isSafeForClassName(orig.getClassName(), vars)) {
+            return false;
+        }
+        for (ResultConfig result : orig.getResults().values()) {
+            if (!isSafeForClassName(result.getClassName(), vars)) {
+                return false;
+            }
+        }
+        for (ExceptionMappingConfig ex : orig.getExceptionMappings()) {
+            if (!isSafeForClassName(ex.getExceptionClassName(), vars)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

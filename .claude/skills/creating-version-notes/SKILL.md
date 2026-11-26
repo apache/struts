@@ -281,7 +281,7 @@ Bcc: private@struts.apache.org
 
 Both audiences want it — committers to check the staged artifacts, users to test against their own applications — and a build announced to only one of them reaches half the people who could find a problem during the vote.
 
-The body is fixed apart from four substitutions:
+The body is fixed apart from five substitutions:
 
 ```
 Hello,
@@ -300,7 +300,7 @@ Standalone artifacts
 https://dist.apache.org/repos/dist/dev/struts/X.Y.Z/
 
 Release notes
-https://cwiki.apache.org/confluence/display/WW/Version+Notes+X.Y.Z
+https://cwiki.apache.org/confluence/spaces/WW/pages/<PAGE_ID>/Version+Notes+X.Y.Z
 
 Kind regards
 --
@@ -313,6 +313,7 @@ Kind regards
 | `<WHAT>` | What the issue list actually contains — `mostly bug fixes` for 6.11.0, `a few improvements and bug fixes` for 7.3.0 |
 | `<RISK>` | Empty when the release has no Breaking changes; ` but it contains significant changes` when it does. 6.11.0 had none and said nothing; 7.3.0 had seven and said so |
 | Tag / paths | Tag underscored (`STRUTS_7_3_0`), dist path and page title dotted (`7.3.0`) |
+| `<PAGE_ID>` | The Version Notes page's numeric id, from its address on cwiki. Link the `spaces/WW/pages/<PAGE_ID>/…` form, which is where a `display/WW/…` link redirects |
 
 Do not take the recipients from a previous announcement: 6.11.0 went to `dev@` alone and 7.3.0 to `user@` alone, and both were mistakes. Address every announcement to the two lists above.
 

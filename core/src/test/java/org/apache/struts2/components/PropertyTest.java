@@ -120,6 +120,16 @@ public class PropertyTest extends StrutsInternalTestCase {
         assertEquals("foo-value", escaper.value);
     }
 
+    public void testEscapeXmlReplacesDefaultHtmlEscaping() {
+        final ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new FooBar("1 < 2 & 3", "bar-value"));
+        final Property property = newProperty(stack);
+        property.setEscapeXml(true);
+        property.setValue("foo");
+
+        assertPropertyOutput("1 &lt; 2 &amp; 3", property);
+    }
+
     public void testDefaultHtmlAndJavaScriptStillChain() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("x'; alert(1); //\\ <b>", "bar-value"));

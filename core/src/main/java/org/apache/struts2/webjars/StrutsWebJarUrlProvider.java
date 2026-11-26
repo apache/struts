@@ -28,6 +28,7 @@ import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.inject.Inject;
 import org.webjars.WebJarVersionLocator;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -99,7 +100,7 @@ public class StrutsWebJarUrlProvider implements WebJarUrlProvider {
             return Optional.empty();
         }
         String[] p = parts.get();
-        String versioned = locator.path(p[0], p[1]);
+        String versioned = locator.path(p[0], encodeFilePath(p[1]));
         if (versioned == null) {
             return Optional.empty();
         }
@@ -110,6 +111,26 @@ public class StrutsWebJarUrlProvider implements WebJarUrlProvider {
         }
         url.append(uiStaticContentPath).append(WEBJARS_URL_SEGMENT).append(versioned);
         return Optional.of(url.toString());
+    }
+
+    /**
+     * Encode raw resource names as UTF-8 URL path segments, preserving the separators.
+     * A percent sign is resource-name data, not an already encoded URL escape.
+     */
+    private String encodeFilePath(String filePath) {
+        StringBuilder encoded = new StringBuilder();
+        for (byte value : filePath.getBytes(StandardCharsets.UTF_8)) {
+            int c = value & 0xff;
+            if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9'
+                || "/-._~!$&'()*+,=:@".indexOf(c) >= 0) {
+                encoded.append((char) c);
+            } else {
+                encoded.append('%');
+                encoded.append("0123456789ABCDEF".charAt(c >>> 4));
+                encoded.append("0123456789ABCDEF".charAt(c & 0x0f));
+            }
+        }
+        return encoded.toString();
     }
 
     /**

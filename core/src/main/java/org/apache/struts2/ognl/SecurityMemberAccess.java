@@ -74,6 +74,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
+    private ParameterMemberGuard parameterMemberGuard = ParameterMemberGuard.PERMIT_ALL;
 
     private Set<String> excludedClasses = Set.of(Object.class.getName());
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
@@ -224,6 +225,11 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (!isAcceptableProperty(propertyName)) {
+            return false;
+        }
+
+        if (!parameterMemberGuard.permits(target, member, propertyName)) {
+            LOG.debug("Access to [{}] on target [{}] is blocked by the parameter member guard", member, target);
             return false;
         }
 
@@ -484,6 +490,24 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         this.excludeProperties = excludeProperties;
+    }
+
+    /**
+     * @param guard applied to every member this instance is asked about, or {@code null} to remove the current one
+     * @since 7.6.0
+     */
+    public void useParameterMemberGuard(ParameterMemberGuard guard) {
+        this.parameterMemberGuard = guard == null ? ParameterMemberGuard.PERMIT_ALL : guard;
+    }
+
+    /**
+     * @return {@code true} once the current parameter member guard has refused a member, so that binding that does not
+     * ask member access (a {@code Map} in the value stack root) refuses the parameter too
+     * @see ParameterMemberGuard#hasRefused()
+     * @since 7.6.0
+     */
+    public boolean isParameterRefused() {
+        return parameterMemberGuard.hasRefused();
     }
 
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {

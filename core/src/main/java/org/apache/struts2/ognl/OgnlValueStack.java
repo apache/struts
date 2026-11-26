@@ -522,4 +522,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         securityMemberAccess.useExcludeProperties(excludeProperties);
     }
+
+    @Override
+    public boolean useParameterMemberGuard(ParameterMemberGuard guard) {
+        securityMemberAccess.useParameterMemberGuard(guard);
+        return true;
+    }
 }

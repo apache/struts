@@ -821,6 +821,11 @@ public final class StrutsConstants {
      */
     public static final String STRUTS_DATE_FORMATTER = "struts.date.formatter";
 
+    /**
+     * See {@link org.apache.struts2.components.Property#setTagEscaper(org.apache.struts2.components.escape.TagEscaper)}
+     */
+    public static final String STRUTS_TAG_ESCAPER = "struts.tag.escaper";
+
     public static final String STRUTS_URL_QUERY_STRING_BUILDER = "struts.url.queryStringBuilder";
     public static final String STRUTS_URL_QUERY_STRING_PARSER = "struts.url.queryStringParser";
     public static final String STRUTS_URL_ENCODER = "struts.url.encoder";

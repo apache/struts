@@ -32,6 +32,7 @@ import org.apache.struts2.UnknownHandlerManager;
 import org.apache.struts2.components.HtmlConstraintProvider;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.components.date.DateFormatter;
+import org.apache.struts2.components.escape.TagEscaper;
 import org.apache.struts2.conversion.ConversionAnnotationProcessor;
 import org.apache.struts2.conversion.ConversionFileProcessor;
 import org.apache.struts2.conversion.ConversionPropertiesProcessor;
@@ -453,6 +454,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(NotExcludedAcceptedPatternsChecker.class, StrutsConstants.STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.SINGLETON);
 
         alias(DateFormatter.class, StrutsConstants.STRUTS_DATE_FORMATTER, builder, props, Scope.SINGLETON);
+        alias(TagEscaper.class, StrutsConstants.STRUTS_TAG_ESCAPER, builder, props, Scope.SINGLETON);
 
         alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);

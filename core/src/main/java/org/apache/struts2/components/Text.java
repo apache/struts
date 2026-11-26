@@ -19,7 +19,10 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.util.ValueStack;
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.components.escape.EscapeConfig;
+import org.apache.struts2.components.escape.TagEscaper;
+import org.apache.struts2.components.escape.TagOrigin;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,9 +67,9 @@ import java.util.List;
  *
  * <ul>
  *      <li>name* (String) - the i18n message key</li>
- *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false</li>
- *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
- *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
+ *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted</li>
+ *      <li>escapeJavaScript (Boolean) - Escape for a JavaScript string literal, applied after HTML escaping and before XML escaping when those are set (escapeXml replaces HTML escaping). Escapes / as \/, so &lt;/b&gt; becomes &lt;\/b&gt;. Defaults to false</li>
+ *      <li>escapeXml (Boolean) - Escape XML, replacing HTML escaping. Defaults to false</li>
  *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
  * </ul>
  *
@@ -133,6 +136,8 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
 
+    private TagEscaper tagEscaper;
+
     public Text(ValueStack stack) {
         super(stack);
     }
@@ -142,17 +147,17 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape HTML. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted", type="Boolean", defaultValue="false")
     public void setEscapeHtml(boolean escape) {
         this.escapeHtml = escape;
     }
 
-    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape for a JavaScript string literal, applied after HTML escaping and before XML escaping when those are set (escapeXml replaces HTML escaping). Escapes / as \\/, which breaks HTML markup in the value", type="Boolean", defaultValue="false")
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
 
-    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape XML, replacing HTML escaping", type="Boolean", defaultValue="false")
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }
@@ -211,21 +216,21 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         values.add(value);
     }
 
-    private String prepare(String value) {
-        String result = value;
-        if (escapeHtml) {
-            result = StringEscapeUtils.escapeHtml4(result);
-        }
-        if (escapeJavaScript) {
-            result = StringEscapeUtils.escapeEcmaScript(result);
-        }
-        if (escapeXml) {
-            result = StringEscapeUtils.escapeXml10(result);
-        }
-        if (escapeCsv) {
-            result = StringEscapeUtils.escapeCsv(result);
-        }
+    /**
+     * An instance of {@link TagEscaper}, selected with {@link org.apache.struts2.StrutsConstants#STRUTS_TAG_ESCAPER}
+     */
+    @Inject
+    public void setTagEscaper(TagEscaper tagEscaper) {
+        this.tagEscaper = tagEscaper;
+    }
 
-        return result;
+    private String prepare(String value) {
+        EscapeConfig config = EscapeConfig.builder(TagOrigin.TEXT)
+                .html(escapeHtml)
+                .javaScript(escapeJavaScript)
+                .xml(escapeXml)
+                .csv(escapeCsv)
+                .build();
+        return tagEscaper.escape(config, value);
     }
 }

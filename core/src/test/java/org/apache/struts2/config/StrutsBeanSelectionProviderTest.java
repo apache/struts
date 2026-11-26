@@ -25,7 +25,11 @@ import org.apache.struts2.text.LocalizedTextProvider;
 import org.apache.struts2.test.StubConfigurationProvider;
 import org.apache.struts2.StrutsConstants;
 
+import org.apache.struts2.components.escape.EscapeConfig;
+import org.apache.struts2.components.escape.StrutsTagEscaper;
+import org.apache.struts2.components.escape.TagEscaper;
 import org.apache.struts2.inject.ContainerBuilder;
+import org.apache.struts2.inject.Scope;
 import org.apache.struts2.util.location.LocatableProperties;
 
 public class StrutsBeanSelectionProviderTest extends XWorkTestCase {
@@ -46,6 +50,25 @@ public class StrutsBeanSelectionProviderTest extends XWorkTestCase {
         localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
         assertEquals("Replaced message for token tag", localizedTextProvider.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
+    }
+
+    public void testTagEscaperIsSelectedByConstant() {
+        ContainerBuilder builder = new ContainerBuilder();
+        builder.factory(TagEscaper.class, "struts", StrutsTagEscaper.class, Scope.SINGLETON);
+        builder.factory(TagEscaper.class, "custom", CustomTagEscaper.class, Scope.SINGLETON);
+        LocatableProperties props = new LocatableProperties();
+        props.setProperty(StrutsConstants.STRUTS_TAG_ESCAPER, "custom");
+
+        new StrutsBeanSelectionProvider().register(builder, props);
+
+        assertTrue(builder.create(false).getInstance(TagEscaper.class) instanceof CustomTagEscaper);
+    }
+
+    public static class CustomTagEscaper implements TagEscaper {
+        @Override
+        public String escape(EscapeConfig config, String value) {
+            return value;
+        }
     }
 
 }

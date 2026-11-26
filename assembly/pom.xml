@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>7.5.2-SNAPSHOT</version>
+        <version>7.6.0-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -90,7 +90,6 @@
                                     <arg value="-L" />
                                     <arg value="-np" />
                                     <arg value="--directory-prefix=${project.build.directory}/docs" />
-                                    <arg value="--no-check-certificate" />
                                     <arg value="-r" />
                                     <arg value="-i" />
                                     <arg value="src/main/resources/docs-urls.txt" />

@@ -1,4 +1,4 @@
 <tr>
     <td class="tdLabel"><label for="the_id" class="label">mylabel:</label></td>
-    <td class="tdInput"><textarea name="myname" cols="20" rows="30" disabled="disabled" readonly="readonly" tabindex="5" id="the_id" title="mytitle" maxlength="100" minlength="10" onclick="alert('onclick');" onkeyup="alert('hello');" onchange="alert('goodbye');">bar</textarea></td>
+    <td class="tdInput"><textarea name="myname" cols="20" rows="30" disabled="disabled" readonly="readonly" tabindex="5" id="the_id" title="mytitle" maxlength="100" minlength="10" onclick="alert(&#39;onclick&#39;);" onkeyup="alert(&#39;hello&#39;);" onchange="alert(&#39;goodbye&#39;);">bar</textarea></td>
 </tr>

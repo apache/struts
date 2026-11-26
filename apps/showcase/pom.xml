@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>7.5.2-SNAPSHOT</version>
+        <version>7.6.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-showcase</artifactId>
@@ -251,7 +251,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <id>reserve-jetty-ports</id>

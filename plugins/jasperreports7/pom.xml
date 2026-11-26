@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>7.5.2-SNAPSHOT</version>
+        <version>7.6.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-jasperreports7-plugin</artifactId>
@@ -34,7 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jasperreports7.version>7.0.7</jasperreports7.version>
-        <tomcat-embed.version>11.0.27</tomcat-embed.version>
+        <tomcat-embed.version>10.1.62</tomcat-embed.version>
     </properties>
 
     <dependencies>

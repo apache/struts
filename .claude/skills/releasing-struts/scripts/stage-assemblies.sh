@@ -55,7 +55,7 @@ mkdir "$VERSION"
 cd "$VERSION"
 
 echo "Getting distro $VERSION from the staging repository"
-if ! wget -erobots=off -nv -l 1 --accept=zip,md5,sha1,asc -r --no-check-certificate -nd -nH "$STAGING_URL"; then
+if ! wget -erobots=off -nv -l 1 --accept=zip,md5,sha1,asc -r -nd -nH "$STAGING_URL"; then
     echo "Download failed. Is the staging repository closed in Nexus?" >&2
     exit 1
 fi

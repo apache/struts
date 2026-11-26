@@ -31,7 +31,7 @@ fix them in a PR to `apache/struts-site`. Only what is genuinely agent-specific 
 |---|---|---|
 | 1 | Prepare | Branch green, version decided, parent poms released |
 | 2 | Cut | Tag pushed, artifacts in a **closed** Nexus staging repo |
-| 3 | Stage | Assemblies in `dist/dev`, Version Notes page live, `[TEST]` mail sent |
+| 3 | Stage | Assemblies in `dist/dev`, Version Notes page complete, unrestricted and listed on the Migration Guide, `[TEST]` mail sent |
 | 4 | Vote | 72 h elapsed, three binding `+1`, result mail sent |
 | 5 | Promote | Nexus repo released, `dist/dev` → `dist/release`, 24 h rsync waited |
 | 6 | Publish | Site PR merged, GitHub release un-flagged, `[ANN]` mail delivered |
@@ -124,6 +124,10 @@ answer is the last release, not the last wiki revision.
 
 - **A closed Nexus staging repo, not just a successful `release:perform`.** Until it is closed
   the URL in the Version Notes resolves to nothing and every tester is blocked.
+- **A test period between the `[TEST]` mail and the `[VOTE]`, about a week by recommendation.**
+  Its length is the release manager's call, not a gate you enforce: when phase 3 is done, state
+  the recommended earliest vote date and stop. Do not draft or offer the vote mail on your own
+  initiative; the release manager opens phase 4.
 - **72 hours, and three binding `+1`.** PMC votes are the binding ones; `private@` is on the
   vote mail so binding voters see it.
 - **24 hours after the `dist` move, before announcing.** ASF mirroring guidance. Announcing into

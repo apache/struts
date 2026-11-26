@@ -19,9 +19,9 @@
 </td>
 <td class="tdTransferSelect">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Left" data-struts-optiontransferselect="addToLeft" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" data-struts-double-header-key="Double Header Key" onclick="alert('Moving Left');" /><br/><br/>
+			value="Left" data-struts-optiontransferselect="addToLeft" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" data-struts-double-header-key="Double Header Key" onclick="alert(&#39;Moving Left&#39;);" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Right" data-struts-optiontransferselect="addToRight" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" data-struts-double-header-key="Double Header Key" onclick="alert('Moving Right');" /><br/><br/>
+			value="Right" data-struts-optiontransferselect="addToRight" data-struts-left="id" data-struts-right="doubleId" data-struts-header-key="Header Key" data-struts-double-header-key="Double Header Key" onclick="alert(&#39;Moving Right&#39;);" /><br/><br/>
 </td>
 <td>
 	<label for="rightTitle">Title Right</label><br/>

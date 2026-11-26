@@ -12,10 +12,12 @@ boilerplate, around a plain-text rendering of the release's Version Notes page.
 
 **Core principle:** the mail is a *rendering* of the page, not a second account of the release.
 
-**This is the step after `creating-version-notes`.** That skill produces the page, the GitHub
-release and the `[TEST]` announcement; this one consumes all three. If they do not exist yet,
-you are in the wrong skill. `releasing-struts` holds the surrounding phases and what happens
-once the vote passes.
+**This is the step after `creating-version-notes`, and after the test period.** That skill
+produces the page, the GitHub release and the `[TEST]` announcement; this one consumes all three.
+If they do not exist yet, you are in the wrong skill. Between them sits the test period, about a
+week by recommendation, whose length is the release manager's call: run this skill when they ask
+for the vote, never because the `[TEST]` mail has gone out. `releasing-struts` holds the
+surrounding phases and what happens once the vote passes.
 
 [`vote-mail-template.md`](vote-mail-template.md) is the source of truth for the artifact.
 

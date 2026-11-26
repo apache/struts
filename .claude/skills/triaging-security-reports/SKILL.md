@@ -128,6 +128,12 @@ The verdict does not change with the channel. The follow-up does:
   Until that notice exists, users and scanner vendors have only the reporter's version of the
   claim. The notice is the one statement they can point to, and it is written once.
 
+  When the disposition owes a ticket — a functional bug, or `VALID-HARDENING` with no fix merged —
+  the ticket exists before the notice is drafted, so the notice can name it. If the notice is
+  requested and no ticket exists, the deliverable is one line naming the ticket that is needed
+  (`WW ticket needed first: REST plugin reads chunked bodies under the bounded reader`), not a
+  notice that says "tracked in the issue tracker".
+
 Posting the notice is the PMC's decision and drafting it is a task the user starts — the gate
 below applies to it exactly as to a reporter reply. The assessment's part is the two lines above.
 
@@ -161,7 +167,15 @@ Once you *have* been asked:
   the bulletin, but that timing is the PMC's call (ASF actually permits allocating earlier and
   sharing the id with the reporter — see [`creating-security-bulletins`](../creating-security-bulletins/SKILL.md)),
   so a reply must not promise a CVE or its timing. When the reporter asks for one of these, say the
-  decision comes later and report the question to the user; do not answer it.
+  decision comes later and report the question to the user; do not answer it. Explaining the
+  project's CVE or credit policy to the reporter *is* answering it: "a hardening ticket gets no
+  CVE" or "a confirmed vulnerability gets a CVE with your name on it" decides the question for
+  the PMC. The reply carries the outcome; the policy question goes to the user.
+- **A reporter whose claims are already public gets the outcomes, not a debate.** When the author
+  of public posts writes in, the reply states the verdict per post, names the tickets that exist,
+  says a `[NOT-VULNERABILITY]` notice follows where one is owed, and asks for further material
+  through `security@`, one report per mail. It goes in a thread about those outcomes, not in a
+  thread about a dispute.
 - Acknowledge anything the reporter got right (e.g. correct CVE-fix verification) — it builds the relationship and signals you actually read it.
 - Keep it private: no public issue, PR, Jira, or list thread before triage. Never open a PR that is itself the security fix (see [`CLAUDE.md`](../../../CLAUDE.md)).
   After triage, a public report closed as a non-vulnerability gets its `[NOT-VULNERABILITY]` notice
@@ -173,11 +187,15 @@ Asked for the user-list notice on a public report, write it as these parts, in t
 the shape the Logging PMC posts on `log4j-user@` (search that list for `[NOT-VULNERABILITY]` for
 live examples):
 
-1. **Subject** — `[NOT-VULNERABILITY] <public id, where one exists>: <what the report claims, as one
-   functional clause>`. Example: `[NOT-VULNERABILITY] sonatype-2026-006746: FilteredObjectInputStream
-   is no safer than ObjectInputStream on untrusted data`.
-2. **Header block** — the report (link, publication date, publisher), the disposition from
-   [`THREAT_MODEL.md`](../../../THREAT_MODEL.md) §13, and `TLP:CLEAR`.
+1. **Subject** — `[NOT-VULNERABILITY] <source>: <what the report claims, as one functional clause>`.
+   `<source>` is the advisory id when the report is a scanner or CVE record, and the venue plus the
+   post's own publication date in ISO form when it is a list post, blog or issue. An archive path
+   such as `2026/Nov/2` is an address, not a date, and never stands in for one. Examples:
+   `[NOT-VULNERABILITY] sonatype-2026-006746: FilteredObjectInputStream is no safer than
+   ObjectInputStream on untrusted data`; `[NOT-VULNERABILITY] Full Disclosure, 2026-10-29: the REST
+   plugin ignores a chunked request body instead of binding it`.
+2. **Header block** — `Report: <venue>, <YYYY-MM-DD>, <URL>` with the post's own date, the
+   disposition from [`THREAT_MODEL.md`](../../../THREAT_MODEL.md) §13, and `TLP:CLEAR`.
 3. **In short** — the verdict in two sentences: not a vulnerability in Apache Struts, and the one reason.
 4. **What the report describes** — the claim and the mechanism, in words. No payload, no PoC string.
 5. **What the framework does with that input** — the request-to-sink path from your table, hop by
@@ -185,9 +203,10 @@ live examples):
    a scanner vendor will quote.
 6. **Why that is not a vulnerability** — the ownership boundary, which hop the application or the
    operator owns, with the `THREAT_MODEL.md` / [`SECURITY.md`](../../../SECURITY.md) section that says so.
-7. **What the project is doing** — the hardening ticket, where one exists, in functional terms
-   (`WW-XXXX adds java.beans to the default excluded packages`). Nothing more: no fix version, no
-   date, no statement about bulletins or CVEs.
+7. **What the project is doing** — the ticket, in functional terms (`WW-XXXX adds java.beans to the
+   default excluded packages`); it exists before this part is written (see "A public report closes
+   in public"). When the verdict owes no change, say so in one sentence. Nothing more: no fix
+   version, no date, no statement about bulletins or CVEs.
 8. **What users should do** — usually nothing. The setting to keep on; what to check in their own code.
 9. **References** — the report, the ticket, `THREAT_MODEL.md`, `SECURITY.md`, the security guide page.
 10. **Closing** — new evidence goes to `security@struts.apache.org`; questions go to the list. Signed
@@ -216,6 +235,9 @@ exchange with them.
 - The report is public and your assessment ends with "a public statement is the PMC's call" — the `Disclosure:` and `Outcome notice:` lines are missing.
 - Writing "several users have asked" into a notice with no list thread to link.
 - A notice that names a release, a date, a bulletin decision, or the reporter.
+- A notice subject with no venue and ISO date, or an archive path where the date belongs.
+- About to write "tracked in the public issue tracker" with no `WW-` id — the ticket comes first.
+- About to explain the CVE or credit policy in a reply — that is the reserved question, answered as background.
 
 ## Common Mistakes
 
@@ -235,3 +257,6 @@ exchange with them.
 | "The reporter asked about a CVE, so I should answer it" | Report the question to the user. CVE timing is a PMC choice (not a fixed rule), so answering it commits the project to a process decision that isn't yours. |
 | "The verdict is the same whoever posted it, so where it was posted doesn't matter" | The verdict is the same. What the project owes afterwards is not: a public claim closed as a non-vulnerability stays "confirmed" in every scanner feed until the project's own notice exists. |
 | "Posting publicly is a communications call, not triage" | Posting is the PMC's. Saying that a notice is owed, and what its subject is, is the assessment's. |
+| "No ticket exists yet, so the notice says 'tracked publicly'" | A notice without the id is rewritten the day the ticket appears. The ticket comes first; until then the deliverable is the one line naming it. |
+| "The post has no id, so the subject carries only the claim" | A list post's source is its venue and ISO date. The archive path is an address and goes in the header as the URL. |
+| "I'm not promising a CVE, I'm explaining our policy" | Explaining the policy to the reporter decides their question. State the outcome; report the question to the user. |

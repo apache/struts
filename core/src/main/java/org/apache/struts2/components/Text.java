@@ -19,7 +19,10 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.util.ValueStack;
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.struts2.components.escape.EscapeConfig;
+import org.apache.struts2.components.escape.TagEscaper;
+import org.apache.struts2.components.escape.TagOrigin;
+import org.apache.struts2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -133,6 +136,8 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
 
+    private TagEscaper tagEscaper;
+
     public Text(ValueStack stack) {
         super(stack);
     }
@@ -211,21 +216,21 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         values.add(value);
     }
 
-    private String prepare(String value) {
-        String result = value;
-        if (escapeHtml) {
-            result = StringEscapeUtils.escapeHtml4(result);
-        }
-        if (escapeJavaScript) {
-            result = StringEscapeUtils.escapeEcmaScript(result);
-        }
-        if (escapeXml) {
-            result = StringEscapeUtils.escapeXml10(result);
-        }
-        if (escapeCsv) {
-            result = StringEscapeUtils.escapeCsv(result);
-        }
+    /**
+     * An instance of {@link TagEscaper}, selected with {@link org.apache.struts2.StrutsConstants#STRUTS_TAG_ESCAPER}
+     */
+    @Inject
+    public void setTagEscaper(TagEscaper tagEscaper) {
+        this.tagEscaper = tagEscaper;
+    }
 
-        return result;
+    private String prepare(String value) {
+        EscapeConfig config = EscapeConfig.builder(TagOrigin.TEXT)
+                .html(escapeHtml)
+                .javaScript(escapeJavaScript)
+                .xml(escapeXml)
+                .csv(escapeCsv)
+                .build();
+        return tagEscaper.escape(config, value);
     }
 }

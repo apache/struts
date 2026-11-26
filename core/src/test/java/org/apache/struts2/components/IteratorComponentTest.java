@@ -54,7 +54,7 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setValue("items");
         ic.setVar("val");
 
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
 
         ic.getComponentStack().push(prop);
         ic.getComponentStack().push(prop);
@@ -88,8 +88,8 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setStep("2");
         ic.setStatus("status");
 
-        Property prop = new Property(stack);
-        Property status = new Property(stack);
+        Property prop = newProperty(stack);
+        Property status = newProperty(stack);
         status.setValue("#status.index");
 
         ic.getComponentStack().push(prop);
@@ -127,7 +127,7 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setValue("items");
         ic.setVar("val");
         ic.setBegin("1");
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
 
         ic.getComponentStack().push(prop);
         ic.getComponentStack().push(prop);
@@ -162,7 +162,7 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
         ic.setValue("items");
         ic.setVar("val");
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
 
         ic.getComponentStack().push(prop);
         ic.getComponentStack().push(prop);
@@ -198,7 +198,7 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
         ic.setValue("items");
         ic.setVar("val");
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
 
         ic.getComponentStack().push(prop);
         ic.getComponentStack().push(prop);
@@ -231,8 +231,8 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setEnd("3");
         ic.setStatus("status");
 
-        Property prop = new Property(stack);
-        Property status = new Property(stack);
+        Property prop = newProperty(stack);
+        Property status = newProperty(stack);
         status.setValue("#status.count");
 
         ic.getComponentStack().push(prop);
@@ -275,9 +275,9 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setValue("list2");
         ic.setStatus("status");
 
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
         prop.setValue("name");
-        Property status = new Property(stack);
+        Property status = newProperty(stack);
         status.setValue("#status.indexStr");
 
         ic.getComponentStack().push(status);
@@ -321,9 +321,9 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         ic.setValue("objectArray");
         ic.setStatus("status");
 
-        Property prop = new Property(stack);
+        Property prop = newProperty(stack);
         prop.setValue("name");
-        Property status = new Property(stack);
+        Property status = newProperty(stack);
         status.setValue("#status.countStr");
 
         ic.getComponentStack().push(status);
@@ -350,6 +350,12 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
         // then
         assertEquals("1 Anton 2 Tym 3 Luk ", out.getBuffer().toString());
+    }
+
+    private Property newProperty(ValueStack stack) {
+        Property property = new Property(stack);
+        container.inject(property);
+        return property;
     }
 
     static class FooAction {

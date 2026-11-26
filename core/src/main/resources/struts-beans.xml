@@ -244,6 +244,9 @@
     <bean type="org.apache.struts2.components.date.DateFormatter" name="dateTimeFormatter"
           class="org.apache.struts2.components.date.DateTimeFormatterAdapter" scope="singleton"/>
 
+    <bean type="org.apache.struts2.components.escape.TagEscaper" name="struts"
+          class="org.apache.struts2.components.escape.StrutsTagEscaper" scope="singleton"/>
+
     <bean type="org.apache.struts2.ognl.ExpressionCacheFactory" name="struts"
           class="org.apache.struts2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
     <bean type="org.apache.struts2.ognl.BeanInfoCacheFactory" name="struts"

@@ -22,6 +22,10 @@ import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.escape.EscapeConfig;
+import org.apache.struts2.components.escape.StrutsTagEscaper;
+import org.apache.struts2.components.escape.TagEscaper;
+import org.apache.struts2.components.escape.TagOrigin;
 import org.apache.struts2.util.StrutsTypeConverter;
 
 import org.apache.struts2.ActionContext;
@@ -46,7 +50,7 @@ public class PropertyTest extends StrutsInternalTestCase {
     public void testNormalBehaviour() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("foo");
         assertPropertyOutput("foo-value", property);
@@ -54,7 +58,7 @@ public class PropertyTest extends StrutsInternalTestCase {
 
     public void testDefaultShouldBeOutputIfBeanNotAvailable() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("foo");
         assertPropertyOutput("default", property);
@@ -63,7 +67,7 @@ public class PropertyTest extends StrutsInternalTestCase {
     public void testDefaultShouldBeOutputIfPropertyIsNull() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar(null, "bar-value"));
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("foo");
         assertPropertyOutput("default", property);
@@ -72,7 +76,7 @@ public class PropertyTest extends StrutsInternalTestCase {
     public void testTopValueShouldReturnTopOfValueStack() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("top");
         assertPropertyOutput("foo-value/bar-value", property);
@@ -82,7 +86,7 @@ public class PropertyTest extends StrutsInternalTestCase {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         converter.registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());
         stack.push(new FooBar("foo-value", "bar-value"));
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("top");
         assertPropertyOutput("*foo-value + bar-value*", property);
@@ -92,10 +96,56 @@ public class PropertyTest extends StrutsInternalTestCase {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         converter.registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());
         stack.push(new FooBar("foo-value", null));
-        final Property property = new Property(stack);
+        final Property property = newProperty(stack);
         property.setDefault("default");
         property.setValue("top");
         assertPropertyOutput("default", property);
+    }
+
+    public void testDefaultTagEscaperIsStrutsTagEscaper() {
+        assertTrue(container.getInstance(TagEscaper.class) instanceof StrutsTagEscaper);
+    }
+
+    public void testCustomTagEscaperReceivesPropertyConfig() {
+        final ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new FooBar("foo-value", "bar-value"));
+        final Property property = newProperty(stack);
+        RecordingTagEscaper escaper = new RecordingTagEscaper();
+        property.setTagEscaper(escaper);
+        property.setEscapeJavaScript(true);
+        property.setValue("foo");
+
+        assertPropertyOutput("[escaped]", property);
+        assertEquals(EscapeConfig.builder(TagOrigin.PROPERTY).html(true).javaScript(true).build(), escaper.config);
+        assertEquals("foo-value", escaper.value);
+    }
+
+    public void testDefaultHtmlAndJavaScriptStillChain() {
+        final ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new FooBar("x'; alert(1); //\\ <b>", "bar-value"));
+        final Property property = newProperty(stack);
+        property.setEscapeJavaScript(true);
+        property.setValue("foo");
+
+        assertPropertyOutput("x\\'; alert(1); \\/\\/\\\\ &lt;b&gt;", property);
+    }
+
+    private Property newProperty(ValueStack stack) {
+        Property property = new Property(stack);
+        container.inject(property);
+        return property;
+    }
+
+    static final class RecordingTagEscaper implements TagEscaper {
+        EscapeConfig config;
+        String value;
+
+        @Override
+        public String escape(EscapeConfig config, String value) {
+            this.config = config;
+            this.value = value;
+            return "[escaped]";
+        }
     }
 
     private static void assertPropertyOutput(String expectedOutput, Property property) {

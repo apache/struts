@@ -12,6 +12,7 @@ Companion to [`SKILL.md`](SKILL.md), which covers *how* to fill the slots; this 
 |---|---|
 | `<X.Y.Z>` | The release being voted on, dotted — subject, opening sentence, Version Notes URL, dist path |
 | `<X_Y_Z>` | The same version underscored, for the `STRUTS_` git tag only |
+| `<PAGE_ID>` | The Version Notes page's numeric id, from its address on cwiki. Link the `spaces/WW/pages/<PAGE_ID>/…` form, which is where a `display/WW/…` link redirects |
 | `<SHAPE SENTENCE>` | See below — authored per release |
 | Page sections | Breaking changes, Deprecations, Rejected requests, and the issue-type sections, copied from the Version Notes page. Omit any the page omits. |
 
@@ -74,7 +75,7 @@ Dependency
 [WW-XXXX] - <summary>
 
 Release notes:
-* https://cwiki.apache.org/confluence/display/WW/Version+Notes+<X.Y.Z>
+* https://cwiki.apache.org/confluence/spaces/WW/pages/<PAGE_ID>/Version+Notes+<X.Y.Z>
 
 Github release
 * https://github.com/apache/struts/releases/tag/STRUTS_<X_Y_Z>

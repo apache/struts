@@ -19,6 +19,8 @@
 package org.apache.struts2.components.escape;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.struts2.test.LogCapture;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,9 +63,24 @@ public class StrutsTagEscaperTest {
     }
 
     @Test
-    public void htmlThenXmlDoubleEscapes() {
+    public void xmlSupersedesHtml() {
         assertThat(escaper.escape(config().html(true).xml(true).build(), VALUE))
-                .isEqualTo("&amp;quot;x&apos; &amp;amp; &amp;lt;b&amp;gt;&amp;lt;/b&amp;gt;");
+                .isEqualTo("&quot;x&apos; &amp; &lt;b&gt;&lt;/b&gt;");
+    }
+
+    @Test
+    public void xmlSupersedesHtmlAndStillChainsCsv() {
+        assertThat(escaper.escape(config().html(true).xml(true).csv(true).build(), VALUE))
+                .isEqualTo(StringEscapeUtils.escapeCsv(StringEscapeUtils.escapeXml10(VALUE)));
+    }
+
+    @Test
+    public void xmlSupersedingHtmlLogsNoWarning() {
+        try (LogCapture log = new LogCapture(StrutsTagEscaper.class)) {
+            escaper.escape(config().html(true).xml(true).build(), VALUE);
+
+            assertThat(log.messages(Level.WARN)).isEmpty();
+        }
     }
 
     @Test

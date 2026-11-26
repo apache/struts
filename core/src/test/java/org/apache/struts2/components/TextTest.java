@@ -20,6 +20,7 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.TestAction;
 import org.apache.struts2.components.escape.EscapeConfig;
 import org.apache.struts2.components.escape.TagOrigin;
 
@@ -36,6 +37,15 @@ public class TextTest extends StrutsInternalTestCase {
         assertEquals("[escaped]", render(text, ""));
         assertEquals(EscapeConfig.builder(TagOrigin.TEXT).xml(true).build(), escaper.config);
         assertEquals("unknown.text.key", escaper.value);
+    }
+
+    public void testTextXmlSupersedesHtml() {
+        ActionContext.getContext().getValueStack().push(new TestAction());
+        Text text = newText("foo.escape.html");
+        text.setEscapeHtml(true);
+        text.setEscapeXml(true);
+
+        assertEquals("1 &lt; 2", render(text, ""));
     }
 
     private Text newText(String name) {

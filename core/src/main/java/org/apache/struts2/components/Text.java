@@ -67,9 +67,9 @@ import java.util.List;
  *
  * <ul>
  *      <li>name* (String) - the i18n message key</li>
- *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false</li>
- *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
- *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
+ *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted</li>
+ *      <li>escapeJavaScript (Boolean) - Escape for a JavaScript string literal, applied after HTML escaping unless escapeHtml is false. Escapes / as \/, so &lt;/b&gt; becomes &lt;\/b&gt;. Defaults to false</li>
+ *      <li>escapeXml (Boolean) - Escape XML, replacing HTML escaping. Defaults to false</li>
  *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
  * </ul>
  *
@@ -147,17 +147,17 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape HTML. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted", type="Boolean", defaultValue="false")
     public void setEscapeHtml(boolean escape) {
         this.escapeHtml = escape;
     }
 
-    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape for a JavaScript string literal, applied after HTML escaping unless escapeHtml is false. Escapes / as \\/, which breaks HTML markup in the value", type="Boolean", defaultValue="false")
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
 
-    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape XML, replacing HTML escaping", type="Boolean", defaultValue="false")
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }

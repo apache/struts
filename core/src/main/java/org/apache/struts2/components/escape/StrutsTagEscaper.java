@@ -21,7 +21,8 @@ package org.apache.struts2.components.escape;
 import org.apache.commons.text.StringEscapeUtils;
 
 /**
- * Default {@link TagEscaper}: applies the selected escapers in the order HTML, JavaScript, XML, CSV.
+ * Default {@link TagEscaper}: applies the selected escapers in the order HTML, JavaScript, XML, CSV. XML escaping
+ * replaces HTML escaping, as it already covers the HTML-sensitive characters.
  * <p>
  * Each step is a protected hook, so an application needing different handling for one context (e.g. letting a
  * safelist of HTML markup through) can extend this class and override that hook only.
@@ -31,7 +32,7 @@ public class StrutsTagEscaper implements TagEscaper {
     @Override
     public String escape(EscapeConfig config, String value) {
         String result = value;
-        if (config.html()) {
+        if (config.html() && !config.xml()) {
             result = escapeHtml(result);
         }
         if (config.javaScript()) {

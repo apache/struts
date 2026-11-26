@@ -44,9 +44,9 @@ import java.io.Writer;
  * <ul>
  *      <li>default (String) - The default value to be used if <u>value</u> attribute is null</li>
  *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
- *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to true</li>
- *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
- *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
+ *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to true. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted</li>
+ *      <li>escapeJavaScript (Boolean) - Escape for a JavaScript string literal, applied after HTML escaping unless escapeHtml is false. Escapes / as \/, so &lt;/b&gt; becomes &lt;\/b&gt;. Defaults to false</li>
+ *      <li>escapeXml (Boolean) - Escape XML, replacing HTML escaping. Defaults to false</li>
  *      <li>value (Object) - value to be displayed</li>
  * </ul>
  *
@@ -107,12 +107,12 @@ public class Property extends Component {
         this.defaultValue = defaultValue;
     }
 
-    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description="Whether to escape HTML. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted", type="Boolean", defaultValue="true")
     public void setEscapeHtml(boolean escape) {
         this.escapeHtml = escape;
     }
 
-    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape for a JavaScript string literal, applied after HTML escaping unless escapeHtml is false. Escapes / as \\/, which breaks HTML markup in the value", type="Boolean", defaultValue="false")
     public void setEscapeJavaScript(boolean escapeJavaScript) {
         this.escapeJavaScript = escapeJavaScript;
     }
@@ -131,7 +131,7 @@ public class Property extends Component {
         this.escapeCsv = escapeCsv;
     }
 
-    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Whether to escape XML, replacing HTML escaping", type="Boolean", defaultValue="false")
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }

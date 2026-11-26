@@ -35,7 +35,7 @@
         <td class="tag-attribute">true</td>
         <td class="tag-attribute">false</td>
         <td class="tag-attribute">Boolean</td>
-        <td class="tag-attribute">Whether to escape HTML</td>
+        <td class="tag-attribute">Whether to escape HTML. When false the value is emitted as raw HTML, an XSS risk unless the value is trusted</td>
     </tr>
     <tr>
         <td class="tag-attribute">escapeJavaScript</td>
@@ -43,7 +43,7 @@
         <td class="tag-attribute">false</td>
         <td class="tag-attribute">false</td>
         <td class="tag-attribute">Boolean</td>
-        <td class="tag-attribute">Whether to escape Javascript</td>
+        <td class="tag-attribute">Whether to escape for a JavaScript string literal, applied after HTML escaping unless escapeHtml is false. Escapes / as \/, which breaks HTML markup in the value</td>
     </tr>
     <tr>
         <td class="tag-attribute">escapeXml</td>
@@ -51,7 +51,7 @@
         <td class="tag-attribute">false</td>
         <td class="tag-attribute">false</td>
         <td class="tag-attribute">Boolean</td>
-        <td class="tag-attribute">Whether to escape XML</td>
+        <td class="tag-attribute">Whether to escape XML, replacing HTML escaping</td>
     </tr>
     <tr>
         <td class="tag-attribute">performClearTagStateForTagPoolingServers</td>

@@ -88,6 +88,7 @@
         <module>core</module>
         <module>plugins</module>
         <module>boot</module>
+        <module>tools</module>
         <module>apps</module>
     </modules>
 

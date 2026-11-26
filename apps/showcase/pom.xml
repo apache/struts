@@ -190,6 +190,23 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>watch</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>watch</goal>
+                        </goals>
+                        <configuration>
+                            <background>true</background>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-dependency-plugin</artifactId>
               <executions>
@@ -285,6 +302,11 @@
                         <port>8090</port>
                     </httpConnector>
                     <scan>10</scan>
+                    <scanClassesPattern>
+                        <includes>
+                            <include>**/*.class</include>
+                        </includes>
+                    </scanClassesPattern>
                     <webApp>
                       <extraClasspath>
                         ${project.build.directory}/extraclasspath/struts2-velocity-tools-view-jakarta.jar,

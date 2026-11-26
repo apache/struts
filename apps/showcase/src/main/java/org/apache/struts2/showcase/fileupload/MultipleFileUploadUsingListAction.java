@@ -47,7 +47,7 @@ public class MultipleFileUploadUsingListAction extends ActionSupport implements 
 
     private List<String> getUploadFileNames() {
         return this.uploads.stream()
-                .map(UploadedFile::getOriginalName)
+                .map(UploadedFile::getSanitizedOriginalName)
                 .collect(Collectors.toList());
     }
 

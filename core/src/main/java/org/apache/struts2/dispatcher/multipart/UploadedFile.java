@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,9 +43,37 @@ public interface UploadedFile extends Serializable {
     String getName();
 
     /**
-     * @return original file name from upload source
+     * The raw file name submitted by the client in the multipart {@code Content-Disposition}
+     * header -- <strong>untrusted input</strong>. It is not sanitised or path-stripped by the
+     * framework, may contain directory-traversal sequences ({@code ../}), drive/UNC prefixes,
+     * or other path metacharacters, and must not be used directly to build a filesystem path.
+     * The framework itself never does so: the local, on-disk copy is named from
+     * {@link #getName()}, an internally generated (UUID-based) name. Use
+     * {@link #getSanitizedOriginalName()} for a basename-only variant suitable for display or
+     * for building a path under an application-controlled directory.
+     *
+     * @return original file name from upload source, exactly as the client supplied it
      */
     String getOriginalName();
+
+    /**
+     * {@link #getOriginalName()} with any directory/drive component stripped, leaving only the
+     * final path segment (equivalent to {@code FilenameUtils.getName(getOriginalName())}). Still
+     * client-controlled and not otherwise validated -- it may still contain characters unsafe
+     * for a particular filesystem, or be empty -- but it cannot carry a {@code ../} or an
+     * absolute/UNC path component into a caller that naively concatenates it onto a directory.
+     * Restores, as a default method available to every {@link UploadedFile} implementation, the
+     * path-stripping behaviour the pre-7.0 {@code getFileNames()}/{@code getCanonicalName()}
+     * accessors on {@code MultiPartRequest} provided; that pair has no caller in the current
+     * action-based upload flow ({@code ActionFileUploadInterceptor} hands actions
+     * {@link #getOriginalName()} directly, unsanitised).
+     *
+     * @return the last path segment of {@link #getOriginalName()}
+     * @since 7.5.0
+     */
+    default String getSanitizedOriginalName() {
+        return FilenameUtils.getName(getOriginalName());
+    }
 
     /**
      * @return indicates if this is a real file or maybe just in-memory stream

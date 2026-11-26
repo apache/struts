@@ -129,6 +129,47 @@ abstract class AbstractMultiPartRequestTest {
         });
     }
 
+    /**
+     * The client-supplied file name is handed to the action
+     * verbatim via {@link UploadedFile#getOriginalName()} -- it is not path-stripped the way
+     * the pre-7.0 {@code MultiPartRequest#getFileNames(String)}/{@code getCanonicalName()} pair
+     * sanitised it. Benign probe only: "../evil.csv" is a marker value, not a real traversal
+     * attempt (no path is ever opened with it here).
+     */
+    @Test
+    public void originalNameIsRawButSanitizedAccessorStripsPath() throws IOException {
+        // given
+        String content = formFile("file1", "../evil.csv", "1,2,3,4") +
+                endline + "--" + boundary + "--";
+
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        // when
+        multiPart.setBufferSize("1");
+        multiPart.parse(mockRequest, tempDir);
+
+        // then
+        assertThat(multiPart.getErrors()).isEmpty();
+
+        assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
+            // Documents current (unsanitised) behaviour of the action-facing accessor --
+            // this is the raw client value, not a safe filesystem name.
+            assertThat(file.getOriginalName()).isEqualTo("../evil.csv");
+            // Fix: the new accessor strips the directory component, same as the pre-7.0
+            // getCanonicalName()/getFileNames() pair did.
+            assertThat(file.getSanitizedOriginalName()).isEqualTo("evil.csv");
+            // The on-disk temp file is never named from client input in the first place.
+            assertThat(file.getName()).doesNotContain("..").doesNotContain("evil.csv");
+        });
+
+        // Control: legacy getFileNames(fieldName) already sanitises (FilenameUtils.getName),
+        // confirming the sanitizing logic this test restores access to for the action-based
+        // flow still exists and behaves the same way.
+        assertThat(multiPart.getFileNames("file1")).containsExactly("evil.csv");
+    }
+
     @Test
     public void uploadedMultipleFilesToDisk() throws IOException {
         // given

@@ -48,7 +48,9 @@ public class EscapeConfigTest {
         EscapeConfig first = EscapeConfig.builder(TagOrigin.TEXT).html(true).xml(true).build();
         EscapeConfig second = EscapeConfig.builder(TagOrigin.TEXT).html(true).xml(true).build();
 
-        assertThat(first).isEqualTo(second).hasSameHashCodeAs(second);
-        assertThat(first).isNotEqualTo(EscapeConfig.builder(TagOrigin.PROPERTY).html(true).xml(true).build());
+        assertThat(first)
+                .isEqualTo(second)
+                .hasSameHashCodeAs(second)
+                .isNotEqualTo(EscapeConfig.builder(TagOrigin.PROPERTY).html(true).xml(true).build());
     }
 }

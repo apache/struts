@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * <p>
  * Interceptor that is based off of {@link MultiPartRequestWrapper}, which is automatically applied for any request that
@@ -264,7 +266,7 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor i
 
             if (uploadedFiles == null || uploadedFiles.length == 0) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
+                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{normalizeSpace(inputName)}));
                 }
             } else {
                 for (UploadedFile uploadedFile : uploadedFiles) {

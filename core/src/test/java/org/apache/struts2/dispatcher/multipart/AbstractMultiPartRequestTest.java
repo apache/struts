@@ -19,7 +19,12 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.test.LogCapture;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.After;
 import org.junit.Before;
@@ -633,6 +638,32 @@ abstract class AbstractMultiPartRequestTest {
         tempFile1.delete();
         tempFile2.delete();
         tempFile3.delete();
+    }
+
+    @Test
+    public void createTemporaryFileDoesNotInjectLineBreaksIntoLog() {
+        AbstractMultiPartRequest testRequest = createMultipartRequest();
+        Path testLocation = Paths.get(tempDir);
+
+        Logger logger = (Logger) LogManager.getLogger(AbstractMultiPartRequest.class);
+        Level previousLevel = logger.getLevel();
+        Configurator.setLevel(logger.getName(), Level.DEBUG);
+        File tempFile;
+        try (LogCapture logs = new LogCapture(AbstractMultiPartRequest.class)) {
+            tempFile = testRequest.createTemporaryFile("test.csv\n12:00:00 ERROR forged", testLocation);
+
+            assertThat(logs.messages())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(message -> {
+                        assertThat(message).contains("12:00:00 ERROR forged");
+                        assertThat(message).doesNotContain("\n").doesNotContain("\r");
+                    });
+        } finally {
+            Configurator.setLevel(logger.getName(), previousLevel);
+        }
+
+        tempFile.delete();
     }
 
     @Test

@@ -545,7 +545,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected File createTemporaryFile(String fileName, Path location) {
         String uid = UUID.randomUUID().toString().replace("-", "_");
         File file = location.resolve("upload_" + uid + ".tmp").toFile();
-        LOG.debug("Creating temporary file: {} (originally: {})", file.getName(), fileName);
+        LOG.debug("Creating temporary file: {} (originally: {})", file.getName(), normalizeSpace(fileName));
         return file;
     }
 

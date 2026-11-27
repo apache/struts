@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(AbstractFileUploadInterceptor.class);
@@ -133,7 +135,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
         // If it's missing the upload failed
         if (file == null || file.isMissing()) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{normalizeSpace(inputName)});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
@@ -143,7 +145,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
         if (policy.isUnresolved()) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOAD_POLICY_UNRESOLVED_KEY, new String[]{
-                inputName, originalFilename, String.join(", ", policy.getUnresolvedParams())
+                normalizeSpace(inputName), normalizeSpace(originalFilename), String.join(", ", policy.getUnresolvedParams())
             });
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
@@ -154,21 +156,21 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
         if (exceedsMaximumSize(policy, file)) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
-                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
+                normalizeSpace(inputName), normalizeSpace(originalFilename), file.getName(), "" + file.length(), getMaximumSizeStr(action, policy.getMaximumSize())
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
         if ((!policy.getAllowedTypes().isEmpty()) && (!containsItem(policy.getAllowedTypes(), contentType))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{
-                inputName, originalFilename, file.getName(), contentType
+                normalizeSpace(inputName), normalizeSpace(originalFilename), file.getName(), normalizeSpace(contentType)
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);
         }
         if ((!policy.getAllowedExtensions().isEmpty()) && (!hasAllowedExtension(policy.getAllowedExtensions(), originalFilename))) {
             String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{
-                inputName, originalFilename, file.getName(), contentType
+                normalizeSpace(inputName), normalizeSpace(originalFilename), file.getName(), normalizeSpace(contentType)
             });
             errorMessages.add(errMsg);
             LOG.warn(errMsg);

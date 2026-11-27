@@ -33,6 +33,7 @@ import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.locale.DefaultLocaleProvider;
 import org.apache.struts2.mock.MockActionInvocation;
 import org.apache.struts2.mock.MockActionProxy;
+import org.apache.struts2.test.LogCapture;
 import org.apache.struts2.util.ClassLoaderUtil;
 import org.apache.struts2.util.ValueStack;
 import org.apache.struts2.util.ValueStackFactory;
@@ -43,6 +44,8 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -165,6 +168,25 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .contains("inputName");
     }
 
+    public void testAcceptFileWithNoFileDoesNotInjectLineBreaksIntoLog() {
+        interceptor.setAllowedTypes("text/plain");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+        try (LogCapture logs = new LogCapture(AbstractFileUploadInterceptor.class)) {
+            boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, null,
+                    "filename.html", "text/html", "inputName\n12:00:00 ERROR forged");
+
+            assertThat(notOk).isFalse();
+            assertThat(logs.messages())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(message -> {
+                        assertThat(message).contains("12:00:00 ERROR forged");
+                        assertThat(message).doesNotContain("\n").doesNotContain("\r");
+                    });
+        }
+    }
+
     public void testAcceptFileWithNoContent() {
         interceptor.setAllowedTypes("text/plain");
 
@@ -241,6 +263,54 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 .first()
                 .asString()
                 .contains("The file is too large to be uploaded", "inputName", "log4j2.xml", "allowed mx size is 10");
+    }
+
+    public void testAcceptFileWithMaxSizeDoesNotInjectLineBreaksIntoLog() throws Exception {
+        interceptor.setMaximumSize(10L);
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
+        File file = new File(new URI(url.toString()));
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html")
+                .withOriginalName("filename.html\r\n12:00:00 ERROR forged").build();
+        try (LogCapture logs = new LogCapture(AbstractFileUploadInterceptor.class)) {
+            boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, uploadedFile,
+                    "filename.html\r\n12:00:00 ERROR forged", "text/html", "inputName");
+
+            assertThat(notOk).isFalse();
+            assertThat(logs.messages())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(message -> {
+                        assertThat(message).contains("12:00:00 ERROR forged");
+                        assertThat(message).doesNotContain("\n").doesNotContain("\r");
+                    });
+        }
+    }
+
+    public void testAcceptFileWithDisallowedContentTypeDoesNotInjectLineBreaksIntoLog() throws Exception {
+        interceptor.setAllowedTypes("text/plain");
+
+        ValidationAwareSupport validation = new ValidationAwareSupport();
+
+        URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
+        File file = new File(new URI(url.toString()));
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html\r\n12:00:00 ERROR forged")
+                .withOriginalName("filename.html").build();
+        try (LogCapture logs = new LogCapture(AbstractFileUploadInterceptor.class)) {
+            boolean notOk = interceptor.acceptFile(interceptor.copyConfiguredPolicy(), validation, uploadedFile,
+                    "filename.html", "text/html\r\n12:00:00 ERROR forged", "inputName");
+
+            assertThat(notOk).isFalse();
+            assertThat(logs.messages())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(message -> {
+                        assertThat(message).contains("12:00:00 ERROR forged");
+                        assertThat(message).doesNotContain("\n").doesNotContain("\r");
+                    });
+        }
     }
 
     public void testAcceptFileWithNegativeMaxSizeHasNoLimit() throws Exception {
@@ -351,6 +421,60 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.intercept(mai);
 
         assertThat(action.hasErrors()).isTrue();
+    }
+
+    public void testMissingUploadedFileArrayForInputNameDoesNotInjectLineBreaksIntoLog() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data");
+        req.setContent(null); // there is no content
+
+        String forgedInputName = "upload\r12:00:00 ERROR forged";
+        MultiPartRequestWrapper multiWrapper = createEmptyFileFieldWrapper(req, forgedInputName);
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        ActionContext.getContext().withServletRequest(multiWrapper);
+
+        try (LogCapture logs = new LogCapture(ActionFileUploadInterceptor.class)) {
+            interceptor.intercept(mai);
+
+            assertThat(logs.messages())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(message -> {
+                        assertThat(message).contains("12:00:00 ERROR forged");
+                        assertThat(message).doesNotContain("\n").doesNotContain("\r");
+                    });
+        }
+    }
+
+    /**
+     * Wraps a real {@link MultiPartRequestWrapper} but reports a file field whose uploaded file
+     * array is empty, exercising the defensive "no file for this field" branch directly.
+     */
+    private MultiPartRequestWrapper createEmptyFileFieldWrapper(MockHttpServletRequest req, String inputName) {
+        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        jak.setMaxSize("-1");
+        jak.setMaxFileSize("-1");
+        jak.setMaxFiles("-1");
+        jak.setMaxStringLength("-1");
+        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider()) {
+            @Override
+            public Enumeration<String> getFileParameterNames() {
+                return Collections.enumeration(List.of(inputName));
+            }
+
+            @Override
+            public UploadedFile[] getFiles(String fieldName) {
+                return new UploadedFile[0];
+            }
+        };
     }
 
     public void testSuccessUploadOfATextFileMultipartRequest() throws Exception {

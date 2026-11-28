@@ -27,11 +27,12 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -96,16 +97,30 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @throws IOException if an error occurs reading the stream
      */
     private String readStream(InputStream inputStream) throws IOException {
-        // Use try-with-resources to ensure ByteArrayOutputStream is properly closed
-        try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024]; // 1KB buffer for efficient reading
-            // Read the stream in chunks to avoid loading everything into memory at once
-            for (int length; (length = inputStream.read(buffer)) != -1; ) {
-                result.write(buffer, 0, length);
+        StringBuilder result = new StringBuilder();
+        readStream(inputStream, result, Long.MAX_VALUE);
+        return result.toString();
+    }
+
+    /**
+     * Reads the stream as UTF-8, keeping at most {@code maxLength} characters in {@code result}.
+     * The rest of the stream is still read so the full length can be reported.
+     *
+     * @return the total number of characters in the stream
+     */
+    private long readStream(InputStream inputStream, StringBuilder result, long maxLength) throws IOException {
+        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        char[] buffer = new char[1024];
+        long total = 0;
+        for (int length; (length = reader.read(buffer)) != -1; ) {
+            if (total + length <= maxLength) {
+                result.append(buffer, 0, length);
+            } else if (total < maxLength) {
+                result.append(buffer, 0, (int) (maxLength - total));
             }
-            // Convert to string using UTF-8 encoding
-            return result.toString(StandardCharsets.UTF_8);
+            total += length;
         }
+        return total;
     }
 
     /**
@@ -137,13 +152,15 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         enforceMaxParameterCount(parameterCount, fieldName);
         parameterCount++;
 
-        String fieldValue = readStream(fileItemInput.getInputStream());
-        if (exceedsMaxStringLength(fieldName, fieldValue)) {
+        StringBuilder fieldValue = new StringBuilder();
+        long length = readStream(fileItemInput.getInputStream(), fieldValue,
+                maxStringLength != null ? maxStringLength : Long.MAX_VALUE);
+        if (exceedsMaxStringLength(fieldName, length)) {
             return;
         }
 
         List<String> values = parameters.computeIfAbsent(fieldName, k -> new ArrayList<>());
-        values.add(fieldValue);
+        values.add(fieldValue.toString());
     }
 
     /**

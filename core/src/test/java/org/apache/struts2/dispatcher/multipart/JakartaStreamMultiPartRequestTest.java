@@ -99,6 +99,48 @@ public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestT
     }
 
     @Test
+    public void readStreamKeepsAtMostMaxLengthCharacters() throws Exception {
+        InputStream input = new java.io.ByteArrayInputStream("A".repeat(100_000).getBytes(StandardCharsets.UTF_8));
+        StringBuilder result = new StringBuilder();
+
+        Method readStreamMethod = JakartaStreamMultiPartRequest.class.getDeclaredMethod(
+                "readStream", InputStream.class, StringBuilder.class, long.class);
+        readStreamMethod.setAccessible(true);
+        long length = (long) readStreamMethod.invoke(new JakartaStreamMultiPartRequest(), input, result, 10L);
+
+        assertThat(length).isEqualTo(100_000L);
+        assertThat(result).hasSize(10);
+    }
+
+    @Test
+    public void readStreamCountsCharactersNotBytes() throws Exception {
+        InputStream input = new java.io.ByteArrayInputStream("ąęś".getBytes(StandardCharsets.UTF_8));
+        StringBuilder result = new StringBuilder();
+
+        Method readStreamMethod = JakartaStreamMultiPartRequest.class.getDeclaredMethod(
+                "readStream", InputStream.class, StringBuilder.class, long.class);
+        readStreamMethod.setAccessible(true);
+        long length = (long) readStreamMethod.invoke(new JakartaStreamMultiPartRequest(), input, result, 3L);
+
+        assertThat(length).isEqualTo(3L);
+        assertThat(result.toString()).isEqualTo("ąęś");
+    }
+
+    @Test
+    public void maxStringLengthReportsActualLengthOfLargeField() throws IOException {
+        String content = formField("longText", "x".repeat(100_000)) +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        multiPart.setMaxStringLength("10");
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getParameterValues("longText")).isNull();
+        assertThat(multiPart.getErrors()).singleElement()
+                .satisfies(error -> assertThat(error.getArgs()).containsExactly("longText", 10L, 100_000L));
+    }
+
+    @Test
     public void readStreamHandlesExceptionsProperly() throws Exception {
         // Create a stream that throws an exception
         InputStream faultyStream = new InputStream() {

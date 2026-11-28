@@ -119,4 +119,118 @@ public class BootSettingsTest {
         assertThatThrownBy(() -> BootSettings.load(fileProperties, args))
                 .isInstanceOf(ConfigurationException.class);
     }
+
+    @Test
+    public void testSessionCookieDefaults() {
+        BootSettings settings = BootSettings.load(new Properties(), new String[0]);
+
+        assertThat(settings.sessionCookieSecure()).isFalse();
+        assertThat(settings.sessionCookieSameSite()).isEqualTo("lax");
+    }
+
+    @Test
+    public void testSessionCookieSecureFromFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.secure", "true");
+
+        assertThat(BootSettings.load(file, new String[0]).sessionCookieSecure()).isTrue();
+    }
+
+    @Test
+    public void testSessionCookieSecureArgumentBeatsFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.secure", "true");
+
+        BootSettings settings = BootSettings.load(file, new String[]{"--struts.boot.session.cookie.secure=false"});
+
+        assertThat(settings.sessionCookieSecure()).isFalse();
+    }
+
+    @Test
+    public void testSessionCookieSecureIgnoresCaseAndSpaces() {
+        assertThat(sessionCookieSecure(" TRUE ")).isTrue();
+        assertThat(sessionCookieSecure("False")).isFalse();
+    }
+
+    @Test
+    public void testSessionCookieSameSiteValues() {
+        assertThat(sessionCookieSameSite("lax")).isEqualTo("lax");
+        assertThat(sessionCookieSameSite("strict")).isEqualTo("strict");
+        assertThat(sessionCookieSameSite("none")).isEqualTo("none");
+        assertThat(sessionCookieSameSite("unset")).isEqualTo("unset");
+        assertThat(sessionCookieSameSite(" Strict ")).isEqualTo("strict");
+        assertThat(sessionCookieSameSite("NONE")).isEqualTo("none");
+    }
+
+    @Test
+    public void testSessionCookieSameSiteFromFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.sameSite", "unset");
+
+        assertThat(BootSettings.load(file, new String[0]).sessionCookieSameSite()).isEqualTo("unset");
+    }
+
+    @Test
+    public void testSessionCookieSameSiteArgumentBeatsFile() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.sameSite", "strict");
+
+        BootSettings settings = BootSettings.load(file, new String[]{"--struts.boot.session.cookie.sameSite=none"});
+
+        assertThat(settings.sessionCookieSameSite()).isEqualTo("none");
+    }
+
+    private static boolean sessionCookieSecure(String value) {
+        return BootSettings.load(new Properties(), new String[]{"--struts.boot.session.cookie.secure=" + value})
+                .sessionCookieSecure();
+    }
+
+    private static String sessionCookieSameSite(String value) {
+        return BootSettings.load(new Properties(), new String[]{"--struts.boot.session.cookie.sameSite=" + value})
+                .sessionCookieSameSite();
+    }
+
+    @Test
+    public void testInvalidSessionCookieSecureThrows() {
+        for (String value : new String[]{"yes", "1", "", " "}) {
+            String[] args = {"--struts.boot.session.cookie.secure=" + value};
+            assertThatThrownBy(() -> BootSettings.load(new Properties(), args))
+                    .isInstanceOf(ConfigurationException.class)
+                    .hasMessageContaining("struts.boot.session.cookie.secure")
+                    .hasMessageContaining("'" + value + "'");
+        }
+    }
+
+    @Test
+    public void testInvalidSessionCookieSameSiteThrows() {
+        for (String value : new String[]{"bogus", "true", "", " "}) {
+            String[] args = {"--struts.boot.session.cookie.sameSite=" + value};
+            assertThatThrownBy(() -> BootSettings.load(new Properties(), args))
+                    .isInstanceOf(ConfigurationException.class)
+                    .hasMessageContaining("struts.boot.session.cookie.sameSite")
+                    .hasMessageContaining("'" + value + "'");
+        }
+    }
+
+    @Test
+    public void testInvalidSessionCookieSecureFromFileThrows() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.secure", "on");
+
+        assertThatThrownBy(() -> BootSettings.load(file, new String[0]))
+                .isInstanceOf(ConfigurationException.class)
+                .hasMessageContaining("struts.boot.session.cookie.secure")
+                .hasMessageContaining("'on'");
+    }
+
+    @Test
+    public void testInvalidSessionCookieSameSiteFromFileThrows() {
+        Properties file = new Properties();
+        file.setProperty("struts.boot.session.cookie.sameSite", "relaxed");
+
+        assertThatThrownBy(() -> BootSettings.load(file, new String[0]))
+                .isInstanceOf(ConfigurationException.class)
+                .hasMessageContaining("struts.boot.session.cookie.sameSite")
+                .hasMessageContaining("'relaxed'");
+    }
 }

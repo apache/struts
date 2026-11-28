@@ -19,6 +19,7 @@
 package org.apache.struts2.boot;
 
 import org.apache.struts2.boot.fixture.BrokenApp;
+import org.apache.struts2.boot.fixture.CookieProbeAction;
 import org.apache.struts2.boot.fixture.HelloApp;
 import org.apache.struts2.boot.fixture.UserAction;
 import org.apache.struts2.config.ConfigurationException;
@@ -42,6 +43,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -125,13 +127,112 @@ public class StrutsBootTomcatTest {
         assertThat(response.body()).doesNotContain("at org.apache").doesNotContain("Apache Tomcat/");
     }
 
-    /** The session cookie carries {@code SameSite=Lax}. */
+    /** By default the session cookie carries {@code SameSite=Lax} and no {@code Secure}. */
     @Test
-    public void testSessionCookieHasSameSiteLax() throws Exception {
-        HttpResponse<String> response = get(server.baseUrl() + "/sessionProbe.action");
+    public void testSessionCookieDefaultsToSameSiteLaxWithoutSecure() throws Exception {
+        assertThat(sessionCookieAttributes(server)).contains("HttpOnly", "SameSite=Lax").doesNotContain("Secure");
+    }
 
-        assertThat(response.headers().firstValue("Set-Cookie")).hasValueSatisfying(cookie ->
-                assertThat(cookie).contains("SameSite=Lax"));
+    @Test
+    public void testSessionCookieSecureTrueAddsSecure() throws Exception {
+        assertThat(sessionCookieAttributesWith("--struts.boot.session.cookie.secure=true"))
+                .contains("Secure", "HttpOnly", "SameSite=Lax");
+    }
+
+    @Test
+    public void testSessionCookieSecureFalseOmitsSecure() throws Exception {
+        assertThat(sessionCookieAttributesWith("--struts.boot.session.cookie.secure=false"))
+                .contains("HttpOnly", "SameSite=Lax").doesNotContain("Secure");
+    }
+
+    @Test
+    public void testSessionCookieSameSiteLax() throws Exception {
+        assertThat(sameSiteAttributesWith("--struts.boot.session.cookie.sameSite=lax")).containsExactly("SameSite=Lax");
+    }
+
+    @Test
+    public void testSessionCookieSameSiteStrict() throws Exception {
+        assertThat(sameSiteAttributesWith("--struts.boot.session.cookie.sameSite=strict")).containsExactly("SameSite=Strict");
+    }
+
+    @Test
+    public void testSessionCookieSameSiteNone() throws Exception {
+        assertThat(sameSiteAttributesWith("--struts.boot.session.cookie.sameSite=none")).containsExactly("SameSite=None");
+    }
+
+    /** {@code unset} sends no {@code SameSite} attribute at all. */
+    @Test
+    public void testSessionCookieSameSiteUnset() throws Exception {
+        assertThat(sameSiteAttributesWith("--struts.boot.session.cookie.sameSite=unset")).isEmpty();
+    }
+
+    @Test
+    public void testSessionCookieSecureWithSameSiteNone() throws Exception {
+        assertThat(sessionCookieAttributesWith("--struts.boot.session.cookie.secure=true",
+                "--struts.boot.session.cookie.sameSite=none")).contains("Secure", "HttpOnly", "SameSite=None");
+    }
+
+    /** By default a cookie the application adds without its own {@code SameSite} gets {@code SameSite=Lax} too. */
+    @Test
+    public void testApplicationCookieDefaultsToSameSiteLax() throws Exception {
+        HttpResponse<String> response = get(server.baseUrl() + "/cookieProbe.action");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(cookieAttributes(response, CookieProbeAction.PLAIN_COOKIE)).containsExactly("SameSite=Lax");
+        assertThat(cookieAttributes(response, CookieProbeAction.OWN_SAME_SITE_COOKIE)).containsExactly("SameSite=Strict");
+    }
+
+    /**
+     * {@code sameSite} is the default for every cookie without its own {@code SameSite}, while
+     * {@code secure} only reaches the session cookie.
+     */
+    @Test
+    public void testSameSiteSettingAppliesToApplicationCookiesButSecureDoesNot() throws Exception {
+        try (StrutsBootServer configured = StrutsBoot.start(HelloApp.class, loopbackWith(
+                "--struts.boot.session.cookie.secure=true", "--struts.boot.session.cookie.sameSite=none"))) {
+            HttpResponse<String> response = get(configured.baseUrl() + "/cookieProbe.action");
+
+            assertThat(response.statusCode()).isEqualTo(200);
+            assertThat(cookieAttributes(response, CookieProbeAction.PLAIN_COOKIE)).containsExactly("SameSite=None");
+            assertThat(cookieAttributes(response, CookieProbeAction.OWN_SAME_SITE_COOKIE)).containsExactly("SameSite=Strict");
+        }
+    }
+
+    /** {@code unset} adds nothing, and leaves a {@code SameSite} the application set itself alone. */
+    @Test
+    public void testSameSiteUnsetKeepsApplicationCookieAttributes() throws Exception {
+        try (StrutsBootServer configured = StrutsBoot.start(HelloApp.class, loopbackWith(
+                "--struts.boot.session.cookie.sameSite=unset"))) {
+            HttpResponse<String> response = get(configured.baseUrl() + "/cookieProbe.action");
+
+            assertThat(response.statusCode()).isEqualTo(200);
+            assertThat(cookieAttributes(response, CookieProbeAction.PLAIN_COOKIE)).isEmpty();
+            assertThat(cookieAttributes(response, CookieProbeAction.OWN_SAME_SITE_COOKIE)).containsExactly("SameSite=Strict");
+        }
+    }
+
+    @Test
+    public void testInvalidSessionCookieSecureFailsStartup() throws Exception {
+        Set<Path> before = bootTempDirs();
+
+        assertThatThrownBy(() -> startAndClose("--struts.boot.session.cookie.secure=yes"))
+                .isInstanceOf(ConfigurationException.class)
+                .hasMessageContaining("struts.boot.session.cookie.secure")
+                .hasMessageContaining("'yes'");
+
+        assertThat(bootTempDirs()).isEqualTo(before);
+    }
+
+    @Test
+    public void testInvalidSessionCookieSameSiteFailsStartup() throws Exception {
+        Set<Path> before = bootTempDirs();
+
+        assertThatThrownBy(() -> startAndClose("--struts.boot.session.cookie.sameSite=bogus"))
+                .isInstanceOf(ConfigurationException.class)
+                .hasMessageContaining("struts.boot.session.cookie.sameSite")
+                .hasMessageContaining("'bogus'");
+
+        assertThat(bootTempDirs()).isEqualTo(before);
     }
 
     /** A session id supplied only in the URL is not resumed; the cookie-based flow still is. */
@@ -158,6 +259,42 @@ public class StrutsBootTomcatTest {
         String setCookie = response.headers().firstValue("Set-Cookie")
                 .orElseThrow(() -> new AssertionError("Expected a Set-Cookie header"));
         return setCookie.substring("JSESSIONID=".length(), setCookie.indexOf(';'));
+    }
+
+    private static List<String> sameSiteAttributesWith(String... arguments) throws IOException, InterruptedException {
+        return sessionCookieAttributesWith(arguments).stream()
+                .filter(attribute -> attribute.startsWith("SameSite"))
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> sessionCookieAttributesWith(String... arguments) throws IOException, InterruptedException {
+        try (StrutsBootServer configured = StrutsBoot.start(HelloApp.class, loopbackWith(arguments))) {
+            return sessionCookieAttributes(configured);
+        }
+    }
+
+    /** The attributes of the session cookie a new session gets, without the {@code JSESSIONID=...} pair. */
+    private static List<String> sessionCookieAttributes(StrutsBootServer target) throws IOException, InterruptedException {
+        return cookieAttributes(get(target.baseUrl() + "/sessionProbe.action"), "JSESSIONID");
+    }
+
+    /** The attributes of the one {@code Set-Cookie} header for the named cookie, without the name=value pair. */
+    private static List<String> cookieAttributes(HttpResponse<String> response, String cookieName) {
+        List<String> headers = response.headers().allValues("Set-Cookie").stream()
+                .filter(header -> header.startsWith(cookieName + "="))
+                .collect(Collectors.toList());
+        assertThat(headers).as("Set-Cookie headers for %s", cookieName).hasSize(1);
+        return Stream.of(headers.get(0).split(";")).skip(1).map(String::trim).collect(Collectors.toList());
+    }
+
+    /** Starts a server and closes it at once, so a start that wrongly succeeds leaves nothing running. */
+    private static void startAndClose(String... arguments) {
+        StrutsBoot.start(HelloApp.class, loopbackWith(arguments)).close();
+    }
+
+    private static String[] loopbackWith(String... arguments) {
+        return Stream.concat(Stream.of("--struts.boot.port=0", "--struts.boot.address=127.0.0.1"), Stream.of(arguments))
+                .toArray(String[]::new);
     }
 
     @Test

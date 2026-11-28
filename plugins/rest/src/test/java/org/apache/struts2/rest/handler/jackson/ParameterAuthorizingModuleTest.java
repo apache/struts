@@ -1173,6 +1173,55 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         }
     }
 
+    public void testScalarListElements_requireIndexedPath() throws Exception {
+        bind((path, t, a) -> "items".equals(path), new ScalarContainers());
+        ScalarContainers result = mapper.readValue("{\"items\":[\"admin\"]}", ScalarContainers.class);
+        assertNull(result.items);
+    }
+
+    public void testScalarMapValues_requireIndexedPath() throws Exception {
+        bind((path, t, a) -> "attributes".equals(path), new ScalarContainers());
+        ScalarContainers result = mapper.readValue("{\"attributes\":{\"role\":\"admin\"}}", ScalarContainers.class);
+        assertNull(result.attributes);
+    }
+
+    public void testScalarArrayElements_requireIndexedPath() throws Exception {
+        bind((path, t, a) -> "aliases".equals(path) || "counts".equals(path), new ScalarContainers());
+        ScalarContainers result = mapper.readValue("{\"aliases\":[\"admin\"],\"counts\":[1]}", ScalarContainers.class);
+        assertNull(result.aliases);
+        assertNull(result.counts);
+    }
+
+    public void testScalarContainerElements_boundWhenIndexedPathAuthorized() throws Exception {
+        Set<String> allowed = Set.of("items", "items[0]", "attributes", "attributes[0]", "aliases", "aliases[0]",
+                "counts", "counts[0]");
+        bind((path, t, a) -> allowed.contains(path), new ScalarContainers());
+        ScalarContainers result = mapper.readValue(
+                "{\"items\":[\"a\"],\"attributes\":{\"k\":\"v\"},\"aliases\":[\"b\"],\"counts\":[1]}",
+                ScalarContainers.class);
+        assertEquals(List.of("a"), result.items);
+        assertEquals(Map.of("k", "v"), result.attributes);
+        assertEquals("b", result.aliases[0]);
+        assertEquals(1, result.counts[0]);
+    }
+
+    public void testNestedScalarContainer_requiresOneIndexPerLevel() throws Exception {
+        bind((path, t, a) -> "rows".equals(path) || "rows[0]".equals(path), new ScalarContainers());
+        ScalarContainers rejected = mapper.readValue("{\"rows\":[[\"x\"]]}", ScalarContainers.class);
+        assertNull(rejected.rows);
+
+        ParameterAuthorizationContext.unbind();
+        bind((path, t, a) -> path.startsWith("rows"), new ScalarContainers());
+        ScalarContainers accepted = mapper.readValue("{\"rows\":[[\"x\"]]}", ScalarContainers.class);
+        assertEquals(List.of(List.of("x")), accepted.rows);
+    }
+
+    public void testBeanContainerElements_unchanged() throws Exception {
+        bind((path, t, a) -> "addresses".equals(path) || "addresses[0].city".equals(path), new Person());
+        Person result = mapper.readValue("{\"addresses\":[{\"city\":\"Warsaw\"}]}", Person.class);
+        assertEquals("Warsaw", result.addresses.get(0).city);
+    }
+
     private ObjectMapper enforcingMapper() {
         return new ObjectMapper().registerModule(new ParameterAuthorizingModule(true));
     }
@@ -1183,6 +1232,14 @@ public class ParameterAuthorizingModuleTest extends TestCase {
         xmlMapper.registerModule(new ParameterAuthorizingModule(true));
         xmlMapper.registerModule(new JacksonXmlModule());
         return xmlMapper;
+    }
+
+    public static class ScalarContainers {
+        public List<String> items;
+        public Map<String, String> attributes;
+        public String[] aliases;
+        public int[] counts;
+        public List<List<String>> rows;
     }
 
     public static class Person {

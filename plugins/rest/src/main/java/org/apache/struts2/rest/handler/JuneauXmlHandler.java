@@ -170,7 +170,12 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
     private Collection<Object> copyAuthorizedCollection(Collection<?> source, String prefix) throws IOException {
         Collection<Object> result = newCollection(source);
         String elementPath = prefix + "[0]";
+        boolean scalarsAuthorized = ParameterAuthorizationContext.isAuthorized(elementPath);
         for (Object element : source) {
+            if (isScalar(element) && !scalarsAuthorized) {
+                LOG.warn("REST container element [{}] rejected by @StrutsParameter authorization", elementPath);
+                continue;
+            }
             result.add(copyAuthorizedElement(element, elementPath));
         }
         return result;
@@ -179,7 +184,12 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
     private Map<Object, Object> copyAuthorizedMap(Map<?, ?> source, String prefix) throws IOException {
         Map<Object, Object> result = newMap(source);
         String elementPath = prefix + "[0]";
+        boolean scalarsAuthorized = ParameterAuthorizationContext.isAuthorized(elementPath);
         for (Map.Entry<?, ?> entry : source.entrySet()) {
+            if (isScalar(entry.getValue()) && !scalarsAuthorized) {
+                LOG.warn("REST container element [{}] rejected by @StrutsParameter authorization", elementPath);
+                continue;
+            }
             result.put(entry.getKey(), copyAuthorizedElement(entry.getValue(), elementPath));
         }
         return result;
@@ -189,14 +199,23 @@ public class JuneauXmlHandler implements AuthorizationAwareContentTypeHandler {
         int length = Array.getLength(sourceArray);
         Object result = Array.newInstance(sourceArray.getClass().getComponentType(), length);
         String elementPath = prefix + "[0]";
+        boolean scalarsAuthorized = ParameterAuthorizationContext.isAuthorized(elementPath);
         for (int i = 0; i < length; i++) {
             Object element = Array.get(sourceArray, i);
+            if (isScalar(element) && !scalarsAuthorized) {
+                LOG.warn("REST container element [{}] rejected by @StrutsParameter authorization", elementPath);
+                continue;
+            }
             Object copied = copyAuthorizedElement(element, elementPath);
             if (copied != null || !sourceArray.getClass().getComponentType().isPrimitive()) {
                 Array.set(result, i, copied);
             }
         }
         return result;
+    }
+
+    private static boolean isScalar(Object element) {
+        return element == null || isLeaf(element.getClass());
     }
 
     private Object copyAuthorizedElement(Object element, String elementPath) throws IOException {

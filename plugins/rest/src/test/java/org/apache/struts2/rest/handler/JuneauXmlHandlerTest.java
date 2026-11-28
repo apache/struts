@@ -21,6 +21,7 @@ package org.apache.struts2.rest.handler;
 import org.apache.struts2.ActionContext;
 import org.apache.struts2.ActionInvocation;
 import org.apache.struts2.XWorkTestCase;
+import org.apache.struts2.interceptor.parameter.ParameterAuthorizationContext;
 import org.apache.struts2.mock.MockActionInvocation;
 
 import java.io.Reader;
@@ -101,6 +102,31 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
         assertThat(obj.getParents())
                 .hasSize(2)
                 .containsExactly("Adam", "Ewa");
+    }
+
+    public void testScalarCollectionElementsRequireIndexedPath() throws Exception {
+        SimpleBean obj = new SimpleBean();
+        ParameterAuthorizationContext.bind((path, t, a) -> !"parents[0]".equals(path), obj, obj);
+        try {
+            handler.toObject(ai, new StringReader(xml), obj);
+        } finally {
+            ParameterAuthorizationContext.unbind();
+        }
+
+        assertEquals("Jan", obj.getName());
+        assertThat(obj.getParents()).isEmpty();
+    }
+
+    public void testScalarCollectionElementsBoundWhenIndexedPathAuthorized() throws Exception {
+        SimpleBean obj = new SimpleBean();
+        ParameterAuthorizationContext.bind((path, t, a) -> true, obj, obj);
+        try {
+            handler.toObject(ai, new StringReader(xml), obj);
+        } finally {
+            ParameterAuthorizationContext.unbind();
+        }
+
+        assertThat(obj.getParents()).containsExactly("Adam", "Ewa");
     }
 
     public void testMalformedXmlIsWrappedInIOException() {

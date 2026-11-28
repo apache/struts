@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.fileupload2.core.FileItemInput;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -32,6 +33,8 @@ import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -77,6 +80,36 @@ public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestT
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
                 .containsExactly("struts.messages.upload.error.FileUploadSizeException");
+    }
+
+    @Test
+    public void maxSizeOfFilesBoundsBytesWrittenToDisk() throws IOException {
+        String content = formFile("file1", "test1.csv", "x".repeat(1024 * 1024)) +
+                endline + "--" + boundary + "--";
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        List<Long> written = new ArrayList<>();
+        JakartaStreamMultiPartRequest recording = new JakartaStreamMultiPartRequest() {
+            @Override
+            protected boolean streamFileToDisk(FileItemInput fileItemInput, File file, long maxBytes) throws IOException {
+                boolean complete = super.streamFileToDisk(fileItemInput, file, maxBytes);
+                written.add(file.length());
+                return complete;
+            }
+        };
+        recording.setBufferSize("1");
+        recording.setMaxSizeOfFiles("10");
+        try {
+            recording.parse(mockRequest, tempDir);
+
+            assertThat(written).singleElement().satisfies(size -> assertThat(size).isLessThanOrEqualTo(10L));
+            assertThat(recording.getFile("file1")).isEmpty();
+            assertThat(recording.getErrors())
+                    .map(LocalizedMessage::getTextKey)
+                    .containsExactly("struts.messages.upload.error.FileUploadSizeException");
+        } finally {
+            recording.cleanUp();
+        }
     }
 
     @Test

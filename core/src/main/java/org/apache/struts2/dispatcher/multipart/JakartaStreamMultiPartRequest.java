@@ -20,11 +20,9 @@ package org.apache.struts2.dispatcher.multipart;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileItemInput;
-import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -146,35 +144,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         values.add(fieldValue);
     }
 
-    /**
-     * @return actual size of already uploaded files
-     */
-    protected Long actualSizeOfUploadedFiles() {
-        return uploadedFiles.values().stream()
-                .map(files -> files.stream().map(UploadedFile::length).reduce(0L, Long::sum))
-                .reduce(0L, Long::sum);
-    }
-
-    private void exceedsMaxSizeOfFiles(FileItemInput fileItemInput, File file, Long currentFilesSize) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("File: {} of size: {} exceeds allowed max size: {}, actual size of already uploaded files: {}",
-                    normalizeSpace(fileItemInput.getName()), file.length(), maxSizeOfFiles, currentFilesSize
-            );
-        }
-        LocalizedMessage errorMessage = buildErrorMessage(
-                FileUploadSizeException.class,
-                String.format("Size %s of file %s exceeds allowed max size %s", file.length(),
-                        fileItemInput.getName(), maxSizeOfFiles),
-                new Object[]{maxSizeOfFiles, currentFilesSize}
-        );
-        if (!errors.contains(errorMessage)) {
-            errors.add(errorMessage);
-        }
-        if (!file.delete() && LOG.isWarnEnabled()) {
-            LOG.warn("Cannot delete file: {} which exceeds maximum size: {} of all files!",
-                    normalizeSpace(fileItemInput.getName()), maxSizeOfFiles);
-        }
-    }
 
     /**
      * Processes a file field from the multipart request using streaming API.
@@ -217,7 +186,16 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         fileCount++;
 
         File file = createTemporaryFile(fileItemInput.getName(), location);
-        streamFileToDisk(fileItemInput, file);
+        if (maxSizeOfFiles == null) {
+            streamFileToDisk(fileItemInput, file);
+        } else {
+            long currentFilesSize = actualSizeOfUploadedFiles();
+            if (!streamFileToDisk(fileItemInput, file, maxSizeOfFiles - currentFilesSize)) {
+                deleteFile(file.toPath());
+                addMaxSizeOfFilesError(fileItemInput.getName(), currentFilesSize);
+                return;
+            }
+        }
 
         // Reject empty files (0 bytes) as they are not considered valid uploads
         if (rejectEmptyFile(file.length(), fileItemInput.getName(), fileItemInput.getFieldName())) {
@@ -226,12 +204,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
 
-        Long currentFilesSize = maxSizeOfFiles != null ? actualSizeOfUploadedFiles() : null;
-        if (maxSizeOfFiles != null && currentFilesSize + file.length() >= maxSizeOfFiles) {
-            exceedsMaxSizeOfFiles(fileItemInput, file, currentFilesSize);
-        } else {
-            createUploadedFile(fileItemInput, file);
-        }
+        createUploadedFile(fileItemInput, file);
     }
 
     /**
@@ -241,14 +214,32 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param file          the file
      */
     protected void streamFileToDisk(FileItemInput fileItemInput, File file) throws IOException {
+        streamFileToDisk(fileItemInput, file, Long.MAX_VALUE);
+    }
+
+    /**
+     * Streams the file upload stream to the specified file, writing at most {@code maxBytes}.
+     *
+     * @param fileItemInput file item input
+     * @param file          the file
+     * @param maxBytes      maximum number of bytes that may be written
+     * @return false if the upload is larger than {@code maxBytes}, in which case the file is incomplete
+     */
+    protected boolean streamFileToDisk(FileItemInput fileItemInput, File file, long maxBytes) throws IOException {
         InputStream input = fileItemInput.getInputStream();
+        long written = 0;
         try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file: {} using buffer size: {}", normalizeSpace(fileItemInput.getName()), bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
+                if (length > maxBytes - written) {
+                    return false;
+                }
                 output.write(buffer, 0, length);
+                written += length;
             }
         }
+        return true;
     }
 
     /**

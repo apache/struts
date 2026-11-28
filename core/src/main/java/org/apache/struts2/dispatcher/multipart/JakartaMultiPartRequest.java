@@ -218,6 +218,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         if (rejectEmptyFile(item.getSize(), item.getName(), fieldName)) {
             return;
         }
+
+        if (exceedsMaxSizeOfFiles(item.getSize(), item.getName())) {
+            return;
+        }
         
         List<UploadedFile> values = uploadedFiles.computeIfAbsent(fieldName, k -> new ArrayList<>());
 
